@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ControlView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+	<RelativeLayout 
+	    android:id="@+id/ctrl_scroll"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+    
+	
+    <Button
+        android:id="@+id/StartPrint"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:text="@string/btn_start" />
+
+    <Button
+        android:id="@+id/StopPrint"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/StartPrint"
+        android:textSize="20dp"
+        android:text="@string/btn_stop" />
+	
+    <Button
+        android:id="@+id/btnClean"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/StopPrint"
+        android:textSize="20dp"
+        android:text="@string/btn_clean" />
+	
+    <Button
+        android:id="@+id/btnOpen"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btnClean"
+        android:textSize="20dp"
+    	android:text="@string/btn_open"
+        />
+	
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btnOpen"
+        android:textSize="20dp"
+    	android:text="@string/btn_send"
+        />
+	
+    <Button
+        android:id="@+id/btnSetparam"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btnSend"
+        android:textSize="20dp"
+    	android:text="@string/btn_set"
+        />
+	
+    <Button
+        android:id="@+id/btnGetinfo"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@+id/StartPrint"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btnSetparam"
+        android:textSize="15dp"
+    	android:text="@string/btn_get"
+        />
+	<Button
+	    android:id="@+id/btnPrint"
+	    android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/StartPrint"
+        android:layout_marginTop="2dp"
+        android:layout_alignLeft="@id/StartPrint"
+        android:textSize="15dp"
+    	android:text="@string/btn_print"
+	    />
+	
+	<Button
+	    android:id="@+id/btnFinish"
+	    android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignTop="@id/btnPrint"
+        android:layout_toRightOf="@id/btnPrint"
+        android:layout_marginLeft="10dp"
+        android:textSize="15dp"
+    	android:text="@string/btn_finish"
+	    />
+	
+	
+    
+<!-- close it for test
+    <HorizontalScrollView 
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="270dp" 
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" 
+            >
+            <com.industry.printer.PreviewScrollView
+                android:id="@+id/ctl_message"
+                android:layout_width="3000dp"
+                android:layout_height="fill_parent"
+                android:background="#ffffff"
+                >
+                
+            </com.industry.printer.PreviewScrollView>
+        </LinearLayout>
+    </HorizontalScrollView>
+ -->
+     
+     <TextView 
+         android:id="@+id/tvopenfile"
+         android:layout_below="@id/btnFinish"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/str_openfile"
+         android:textSize="20sp"
+         android:textColor="#000000"
+         />
+     <TextView 
+         android:id="@+id/tvfile"
+         android:layout_alignBottom="@id/tvopenfile"
+         android:layout_toRightOf="@id/tvopenfile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textSize="20sp"
+         android:textColor="#000000"
+         />
+     
+     <Button 
+         android:id="@+id/btn_mvbackward"
+         android:layout_alignBottom="@id/tvopenfile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:text="@string/str_mvbackward"
+         android:textSize="15sp"
+         />
+     
+     <Button 
+         android:id="@+id/btn_mvforward"
+         android:layout_alignBottom="@id/tvopenfile"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toLeftOf="@id/btn_mvbackward"
+         android:text="@string/str_mvforward"
+         android:textSize="15sp"
+         />
+     <ListView
+         android:id="@+id/lv_messages"
+         android:layout_width="fill_parent"
+         android:layout_height="200dp"
+         android:layout_below="@id/tvopenfile"
+         android:layout_marginTop="5dp"
+         android:background="#ffffff"
+         >
+         
+     </ListView>
+</RelativeLayout>
+</ScrollView>

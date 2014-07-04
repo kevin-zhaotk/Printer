@@ -1,0 +1,27 @@
+LOCAL_PATH := $(call my-dir)
+
+$(shell date +%Y-%m-%d > $(LOCAL_PATH)/assets/Version)
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := $(call all-java-files-under, src)
+
+LOCAL_PACKAGE_NAME := Printer
+LOCAL_CERTIFICATE := platform
+
+LOCAL_REQUIRED_MODULES := libUsbSerial_jni
+
+LOCAL_PROGUARD_FLAG_FILES := proguard.flags
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_STATIC_JAVA_LIBRARIES := zxingcore
+
+include $(BUILD_PACKAGE)
+
+include $(CLEAR_VARS)
+
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := zxingcore:libs/zxingcore.jar
+
+include $(BUILD_MULTI_PREBUILT)
+
+include $(call all-makefiles-under,$(LOCAL_PATH))

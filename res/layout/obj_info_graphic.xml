@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<ScrollView android:id="@+id/viewInfo"
+	            android:layout_weight="5"
+	        	android:layout_width="fill_parent"
+	        	android:layout_height="fill_parent">
+	        	    
+	    <RelativeLayout
+	        android:id="@+id/objectInfoTable"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:background="#ffffff">
+	        
+	        <include android:id="@+id/base_info_graphic" layout="@layout/obj_info_base"/>
+	        
+	    </RelativeLayout>
+	</ScrollView>
+	<include layout="@layout/obj_info_button" />	    
+</LinearLayout>

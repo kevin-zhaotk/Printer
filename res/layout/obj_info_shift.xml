@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<ScrollView android:id="@+id/viewInfo"
+	            android:layout_weight="5"
+	        	android:layout_width="fill_parent"
+	        	android:layout_height="fill_parent">
+	        	    
+	    <RelativeLayout
+	        android:id="@+id/objectInfoTable"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:background="#ffffff">
+	        
+	        <include android:id="@+id/base_info_shift" layout="@layout/obj_info_base"/>
+	       
+	       <EditText
+	           android:id="@+id/edit_shift1"
+	           android:layout_marginLeft="150dp"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/base_info_shift"
+	           android:hint="@string/strDefault"
+	            />
+	        
+	       <EditText
+	           android:id="@+id/edit_shiftValue1"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/base_info_shift"
+	           android:layout_toRightOf="@id/edit_shift1"
+	           android:layout_marginLeft="10dp"
+	           android:hint="@string/strDefault"
+	           />
+	        
+	        <TextView
+	            android:id="@+id/view_shift1"
+	            android:layout_marginLeft="10dp"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignBaseline="@id/edit_shift1"
+	            android:textSize="20dp"
+	            android:text="@string/strShift1"
+	            android:textColor="#000000"
+	            />
+	        
+	        <EditText
+	            android:id="@+id/edit_shift2"
+	            android:layout_width="100dp"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/edit_shift1"
+	            android:layout_alignLeft="@id/edit_shift1"
+	            android:clickable="false"
+	           android:hint="@string/strDefault"
+	            />
+	        
+	       <EditText
+	           android:id="@+id/edit_shiftValue2"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/edit_shift1"
+	           android:layout_toRightOf="@id/edit_shift2"
+	           android:layout_marginLeft="10dp"
+	           android:clickable="false"
+	           android:hint="@string/strDefault"
+	           />
+	        
+	        <TextView
+	            android:id="@+id/view_shift2"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@id/view_shift1"
+	            android:layout_alignBaseline="@id/edit_shift2"
+	            android:textSize="20dp"
+	            android:text="@string/strShift2"
+	            android:textColor="#000000"
+	            />
+	        
+	        <EditText
+	            android:id="@+id/edit_shift3"
+	            android:layout_width="100dp"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/edit_shift2"
+	            android:layout_alignLeft="@id/edit_shift1"
+	            android:clickable="false"
+	           android:hint="@string/strDefault"
+	            />
+	        
+	       <EditText
+	           android:id="@+id/edit_shiftValue3"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/edit_shift2"
+	           android:layout_toRightOf="@id/edit_shift3"
+	           android:layout_marginLeft="10dp"
+	           android:clickable="false"
+	           android:hint="@string/strDefault"
+	           />
+	        
+	        <TextView
+	            android:id="@+id/view_shift3"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@id/view_shift1"
+	            android:layout_alignBaseline="@id/edit_shift3"
+	            android:textSize="20dp"
+	            android:text="@string/strShift3"
+	            android:textColor="#000000"
+	            />
+	        
+	        <EditText
+	            android:id="@+id/edit_shift4"
+	            android:layout_width="100dp"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/edit_shift3"
+	            android:layout_alignLeft="@id/edit_shift1"
+	            android:clickable="false"
+	           android:hint="@string/strDefault"
+	            />
+	        
+	       <EditText
+	           android:id="@+id/edit_shiftValue4"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/edit_shift3"
+	           android:layout_toRightOf="@id/edit_shift4"
+	           android:layout_marginLeft="10dp"
+	           android:clickable="false"
+	           android:hint="@string/strDefault"
+	           />
+	        
+	        <TextView
+	            android:id="@+id/view_shift4"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@id/view_shift1"
+	            android:layout_alignBaseline="@id/edit_shift4"
+	            android:textSize="20dp"
+	            android:text="@string/strShift4"
+	            android:textColor="#000000"
+	            />
+	        
+	        <EditText
+	            android:id="@+id/edit_shift5"
+	            android:layout_width="100dp"
+	            android:layout_height="wrap_content"
+	            android:layout_below="@id/edit_shift4"
+	            android:layout_alignLeft="@id/edit_shift1"
+	            android:clickable="false"
+	           android:hint="@string/strDefault"
+	            />
+	        
+	       <EditText
+	           android:id="@+id/edit_shiftValue5"
+	           android:layout_width="100dp"
+	           android:layout_height="wrap_content"
+	           android:layout_below="@id/edit_shift4"
+	           android:layout_toRightOf="@id/edit_shift5"
+	           android:layout_marginLeft="10dp"
+	           android:clickable="false"
+	           android:hint="@string/strDefault"
+	           />
+	        
+	        <TextView
+	            android:id="@+id/view_shift5"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignLeft="@id/view_shift1"
+	            android:layout_alignBaseline="@id/edit_shift5"
+	            android:textSize="20dp"
+	            android:text="@string/strShift5"
+	            android:textColor="#000000"
+	            />
+	    </RelativeLayout>
+	</ScrollView>
+	<include layout="@layout/obj_info_button" />	
+    
+</LinearLayout>

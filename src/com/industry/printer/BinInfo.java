@@ -1,0 +1,92 @@
+package com.industry.printer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import org.apache.http.util.ByteArrayBuffer;
+
+import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BinCreater;
+
+import android.graphics.Bitmap;
+import android.util.Log;
+
+public class BinInfo {
+	public static final String TAG="BinInfo";
+	
+	public int mColumn;				
+	public int mBitsperColumn;	
+	public int mColOne;			
+	public byte[] mBits;
+	//public int[]	mPixels;
+	
+	public void BinInfo()
+	{
+		mColumn = 0;
+		mBitsperColumn=0;
+		mColOne=0;
+		mBits=null;
+	}
+	
+    public void getBgBuffer(String f) throws IOException
+    {
+    	byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
+    	//mBmpBits
+    	/*
+    	 
+    	 */
+    	File file = new File(f);
+		FileInputStream fs = new FileInputStream(file);
+		fs.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
+		Debug.d(TAG, "fs.available()="+fs.available()+", head.length="+head.length);
+		mBits=new byte[fs.available()];
+		if(mBits == null)
+			return;
+    	mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
+    	mBitsperColumn = (head[3]&0xff) << 16 | (head[4] & 0xff)<<8 | (head[5]&0xff);
+    	//mPixels = new int[columns*row];
+    	Debug.d(TAG, "columns = "+mColumn+", mBitsperColumn="+mBitsperColumn+", mBits.len="+mBits.length);
+    	fs.read(mBits, 0, mBits.length);
+    	fs.close();
+    	return;//bmp.createScaledBitmap(bmp, columns, 150, true);
+    }
+    
+    public void getVarBuffer(String var, String f) throws IOException
+    {
+    	int n;
+    	int byteOneCol;
+    	byte[] buffer=null;
+  
+   		File file = new File(f);
+   		if(!file.exists() || !file.isFile())
+   		{
+   			Debug.d(TAG, "file exist ? "+file.exists() + ", isfile? "+file.isFile());
+   			return ;
+   		}
+   		/*
+   		 *read out the width of each number
+   		 */
+   		buffer = new byte[(int) file.length()];
+   		FileInputStream fs = new FileInputStream(file);
+   		fs.read(buffer);
+   		mColumn = buffer[0] << 16| buffer[1] <<8 | buffer[2];
+   		mBitsperColumn=buffer[3] << 16| buffer[4] <<8 | buffer[5];
+   		mColOne = buffer[6] << 16| buffer[7] <<8 | buffer[8];
+   		Debug.d(TAG, "*******f="+f+", mBitsperColumn="+mBitsperColumn);
+   		Debug.d(TAG, "*******mColumn="+mColumn+", mColOne ="+mColOne);
+   		byteOneCol = mBitsperColumn%8==0? mBitsperColumn/8 : mBitsperColumn/8 +1;
+   		Debug.d(TAG, "*******byteOneCol ="+byteOneCol );
+   		ByteArrayBuffer ba = new ByteArrayBuffer(mColOne*byteOneCol*var.length());
+   		for(int i=0; i<var.length(); i++)
+   		{
+   			n = Integer.parseInt(var.substring(i, i+1));
+   			ba.append(buffer, n*mColOne*byteOneCol+16, mColOne*byteOneCol);
+   		}
+    	fs.close();	
+   		mBits=ba.buffer();
+   		Debug.d(TAG, "*******mBits.len="+mBits.length );
+    	return ;
+    }
+}

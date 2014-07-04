@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <string name="app_version">version:2014.05.07</string>
+    <string name="app_name">Printer</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="ControlTab">Control</string>
+	<string name="Edit">Edit</string>
+	<string name="Settings">Settings</string>
+	<string name="btn_start">Start</string>
+	<string name="btn_stop">Stop</string>
+	<string name="btn_clean">Clean</string>
+	<string name="btn_open">Open</string>
+	<string name="btn_send">Send</string>
+	<string name="btn_set">Set</string>
+	<string name="btn_get">GetInfo</string>
+	<string name="btn_print">Print</string>
+	<string name="btn_finish">Finish</string>
+	<string name="btn_header1">Head_1</string>
+	<string name="btn_header2">Head_2</string>
+	<string name="btn_header3">Head_3</string>
+	<string name="btn_header4">Head_4</string>
+	<string name="strBtnNew">new</string>
+	<string name="btn_new">new</string>
+	<string name="strDate">Date:</string>
+	
+	<string name="str_openfile">file:</string>
+	<string name="str_mvforward">Forward</string>
+	<string name="str_mvbackward">Backward</string>
+	<string name="str_del">Del</string>
+	<string name="str_btn_shift">Shift</string>
+	<string name="str_btn_second">Scnd</string>
+	
+	<string name="str_btn_upgrade">Upgrade</string>
+	<string name="str_btn_setDate">Set Date</string>
+	<string name="str_btn_setTime">Set Time</string>
+	<string name="str_btn_image">Image</string>
+	<!-- object info table -->
+	<string name="strWidth">Width</string>
+	<string name="strHigh">Height</string>
+	<string name="strXcor">X-Cor</string>
+	<string name="strYcor">Y-Cor</string>
+	<string name="strCnt">Content</string>
+	<string name="strDefault">0</string>
+	<string name="txtDefault">text</string>
+	<string name="strDragable">Dragable</string>
+	<string name="strShow">Show</string>
+	<string name="strFont">Font</string>
+	<string name="strLinewidth">Line Width</string>
+	<string name="strBits">Digits</string>
+	<string name="strDirect">Direction</string>
+	<string name="strShift1">Shift1</string>
+	<string name="strShift2">Shift2</string>
+	<string name="strShift3">Shift3</string>
+	<string name="strShift4">Shift4</string>
+	<string name="strShift5">Shift5</string>
+	<string name="strInfoname">InfoName</string>
+	<string name="strHeadType">PrinterType</string>
+	
+	<string-array name="strPrinterArray">
+	    <item>12.7 mm HP head</item>
+	    <item>12.7 mm HP standard</item>
+	    <item>25.4 mm HP dual</item>
+	    <item>16.3 mm Xaar head</item>
+	    <item>133 mm Xaar dual</item>
+	</string-array>
+	
+	<string-array name="strFontArray">
+	    <item>Arial</item>
+	    <item>宋体</item>
+	    <item>楷体</item>
+	</string-array>
+	
+	<string-array name="strFontFile">
+	    <item>Arial</item>
+	    <item>Songti</item>
+	    <item>Kaiti</item>
+	</string-array>
+	<string-array name="strDirectArray">
+	    <item>increase</item>
+	    <item>decrease</item>
+	</string-array>
+	<string name="strCode">Code Type</string>
+	<string-array name="strCodeArray">
+	    <item>ENA128</item>
+	    <item>QR</item>
+	</string-array>
+	
+	<string-array name="strLineArray">
+	    <item>Solid Line</item>
+	    <item>Dash Line</item>
+	    <item>Dot Line</item>
+	    <item>Dash Dot Line</item>
+	    <item>Dash Dot Dot Line</item>
+	</string-array>
+	<string name="strLinetype">Line Type</string>
+	<string name="str_ok">OK</string>
+	<string name="strNativeBtn">Cancel</string>
+	
+	<string name="strRtFmt">Time Format</string>
+	<string-array name="strTimeFormat">
+	    <item>YYYY-MM-DD HH:NN</item>
+	    <item>YYYY-MM-DD</item>
+	    <item>MM-DD-YYYY</item>
+	    <item>DD-MM-YYYY</item>
+	    <item>YY-MM-DD</item>
+	    <item>MM-DD-YY</item>
+	    <item>DD-MM-YY</item>
+	    <item>YYYY/MM/DD</item>
+	    <item>MM/DD/YYYY</item>
+	    <item>DD/MM/YYYY</item>
+	    <item>YY/MM/DD</item>
+	    <item>MM/DD/YY</item>
+	    <item>DD/MM/YY</item>
+	    
+	</string-array>
+	<!-- object list -->
+	<string name="objectListName">Show List</string>
+	<string name="objectInfoName">Show Info</string>
+	<string name="object_Msg">Message</string>
+	<string name="object_text">Text Object</string>
+	<string name="object_realtime">Real-Time Object</string>
+	<string name="object_counter">Counter Object</string>
+	<string name="object_bar">Barcode Object</string>
+	<string name="object_pic">Graphic Object</string>
+	<string name="object_julian">Julian-Date Object</string>
+	<string name="object_line">Line Object</string>
+	<string name="object_rect">Rect Object</string>
+	<string name="object_ellipse">Ellipse Object</string>
+	<string name="object_shift">Shift Object</string>
+	<string name="object_second">Second Obejct</string>
+	<!-- Settings frame -->
+	<string name="strDelay_key">delay_key</string>
+	<string name="strDelayname">00.Delay</string>
+	<string name="strDelay_summary">Set Delay</string>
+	<string name="strTrigger_key">trigger_key</string>
+	<string name="strTriggername">01.Trigger</string>
+	<string name="strTrigger_summary">Set Trigger Mode</string>
+	<string name="strDirection_key">direction_key</string>
+	<string name="strDirectionname">02.Direction</string>
+	<string name="strDirection_summary">Choose Direction</string>
+	<string name="strEncoder_key">encoder_key</string>
+	<string name="strEncodername">03.Encoder</string>
+	<string name="strEncoder_summary">Set Encoder mode</string>
+	<string name="strHoriRes_key">horires_key</string>
+	<string name="strHoriResname">04.Hori</string>
+	<string name="strHoriRes_summary">Setting Hori Res</string>
+	<string name="strVertRes_key">vertres_key</string>
+	<string name="strVertResname">05.Vert</string>
+	<string name="strVertRes_summary">Setting Vert Res</string>
+	<string name="strResvname">06.Reserved</string>
+	<string name="strPrSpeedname">07.Print speed</string>
+	<string name="strDelayunit">ms</string>
+	<string name="strResunit">dpi</string>
+	<string name="strPrSpeedunit">mm/min</string>
+	<string name="strResvname8">08.Reserved</string>
+	<string name="strResvname9">09.Reserved</string>
+	<string name="strResvname10">10.Reserved</string>
+	<string name="strResvname11">11.Reserved</string>
+	<string name="strResvname12">12.Reserved</string>
+	<string name="strResvname13">13.Reserved</string>
+	<string name="strResvname14">14.Reserved</string>
+	<string name="strResvname15">15.Reserved</string>
+	<string name="strResvname16">16.Reserved</string>
+	<string name="strResvname17">17.Reserved</string>
+	<string name="strResvname18">18.Reserved</string>
+	<string name="strResvname19">19.Reserved</string>
+	<string name="strResvname20">20.Reserved</string>
+	<string name="strResvname21">21.Reserved</string>
+	<string name="strResvname22">22.Reserved</string>
+	<string name="strResvname23">23.Reserved</string>
+	<string name="strResvname24">24.Reserved</string>
+	<string name="strResvname25">25.Reserved</string>
+	<string name="strResvname26">26.Reserved</string>
+	<string name="strResvname27">27.Reserved</string>
+	<string name="strResvname28">28.Reserved</string>
+	<string name="strResvname29">29.Reserved</string>
+	<string name="strBtnSave">Ok</string>
+	
+	<string-array name="trigger_mode_name">
+	    <item>On</item>
+	    <item>Off</item>
+	</string-array>
+	
+	<string-array name="trigger_mode_value">
+	    <item>0</item>
+	    <item>1</item>
+	</string-array>
+	
+	<string-array name="direction_name">
+	    <item>Left-To-Right</item>
+	    <item>Right-To-Left</item>
+	</string-array>
+	
+	<string-array name="direction_value">
+	    <item>0</item>
+	    <item>1</item>
+	</string-array>
+	
+	<string-array name="encoder_name">
+	    <item>On</item>
+	    <item>Off</item>
+	</string-array>
+	
+	<string-array name="encoder_value">
+	    <item>0</item>
+	    <item>1</item>
+	</string-array>
+	
+	<string-array name="horires_name">
+	    <item>300</item>
+	    <item>600</item>
+	</string-array>
+	
+	<string-array name="horires_value">
+	    <item>300</item>
+	    <item>600</item>
+	</string-array>
+	
+	<string-array name="vertres_name">
+	    <item>300</item>
+	    <item>600</item>
+	</string-array>
+	
+	<string-array name="vertres_value">
+	    <item>300</item>
+	    <item>600</item>
+	</string-array>
+	
+	<string-array name="object_list_msg">
+	    <item>Message Name</item>
+	</string-array>
+	
+	
+	<string-array name="storage_dev">
+	    <item>SDCard</item>
+	    <item>USB</item>
+	</string-array>
+	
+	<string name="str_fileicon_des">file icon</string>
+	<string name="str_file_save"> Ok </string>
+	<string name="str_file_cancel">Cancel</string>
+	
+	<string name="str_month">Month</string>
+	<string name="str_year">Year</string>
+	<string name="str_date">Date</string>
+	<string name="str_hour">Hour</string>
+	<string name="str_minute">Minute</string>
+	<string name="cor_unit">dp</string>
+	
+	<string name="str_trans">toRight</string>
+</resources>
