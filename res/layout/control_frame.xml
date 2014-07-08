@@ -130,28 +130,28 @@
     </HorizontalScrollView>
  -->
      
-     <TextView 
-         android:id="@+id/tvopenfile"
+     <Button 
+         android:id="@+id/btnopenfile"
          android:layout_below="@id/btnFinish"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:text="@string/str_openfile"
-         android:textSize="20sp"
-         android:textColor="#000000"
+         android:textSize="25sp"
+         android:textColor="#404040"
          />
      <TextView 
          android:id="@+id/tvfile"
-         android:layout_alignBottom="@id/tvopenfile"
-         android:layout_toRightOf="@id/tvopenfile"
+         android:layout_alignBaseline="@id/btnopenfile"
+         android:layout_toRightOf="@id/btnopenfile"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:textSize="20sp"
-         android:textColor="#000000"
+         android:textSize="25sp"
+         android:textColor="#404040"
          />
      
      <Button 
          android:id="@+id/btn_mvbackward"
-         android:layout_alignBottom="@id/tvopenfile"
+         android:layout_alignBottom="@id/btnopenfile"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentRight="true"
@@ -161,22 +161,28 @@
      
      <Button 
          android:id="@+id/btn_mvforward"
-         android:layout_alignBottom="@id/tvopenfile"
+         android:layout_alignBottom="@id/btnopenfile"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_toLeftOf="@id/btn_mvbackward"
          android:text="@string/str_mvforward"
          android:textSize="15sp"
          />
-     <ListView
-         android:id="@+id/lv_messages"
-         android:layout_width="fill_parent"
-         android:layout_height="200dp"
-         android:layout_below="@id/tvopenfile"
+     <HorizontalScrollView 
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         	android:layout_below="@id/btnopenfile"
          android:layout_marginTop="5dp"
-         android:background="#ffffff"
+         >
+     	<ListView
+        	android:id="@+id/lv_messages"
+        	android:layout_width="fill_parent"
+        	android:layout_height="200dp"
+         	android:listSelector="@drawable/listitem_select"
+         	android:background="#ffffff"
          >
          
      </ListView>
+     </HorizontalScrollView>
 </RelativeLayout>
 </ScrollView>

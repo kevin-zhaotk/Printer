@@ -32,10 +32,6 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
 
 
-
-
-
-import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -78,6 +74,7 @@ public class ControlTabActivity extends Activity {
 	public Button mPrint;
 	public Button mFinish;
 	
+	public Button	mBtnfile;
 	public TextView mMsgFile;
 	public Button	mForward;
 	public Button 	mBackward;
@@ -154,9 +151,6 @@ public class ControlTabActivity extends Activity {
 				
 				//mPreviewRefreshHandler.sendEmptyMessage(0);
 				//UsbSerial.printStart(mFd);
-				readCsv();
-				Debug.d(TAG,"Mapsize="+mMessageMap.size());
-				mMessageList.setAdapter(mMessageAdapter);
 				//
 				//UsbSerial.setAllParam(mFd, null);
 				//UsbSerial.readAllParam(mFd);
@@ -318,6 +312,29 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		
+		mBtnfile = (Button) findViewById(R.id.btnopenfile);
+		mBtnfile.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, "/mnt/usb");
+				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
+
+					@Override
+					public void onClick() {
+						// TODO Auto-generated method stub
+						String f = FileBrowserDialog.file();
+						mMsgFile.setText(f);
+						readCsv(f);
+						mMessageList.setAdapter(mMessageAdapter);
+					}
+					
+				});
+				dialog.show();
+			}
+			
+		});
 		mMsgFile = (TextView) findViewById(R.id.tvfile);
 		mForward = (Button) findViewById(R.id.btn_mvforward);
 		mForward.setOnClickListener(new OnClickListener(){
@@ -325,6 +342,15 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
+				int i = mMessageList.getCheckedItemPosition();
+				if(i>1)
+				{
+					Map<String,String> item = mMessageMap.remove(i);
+					Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
+					mMessageMap.add(i-1, item);
+				}
+				mMessageList.setAdapter(mMessageAdapter);
 				
 			}
 			
@@ -336,6 +362,14 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				int i = mMessageList.getCheckedItemPosition();
+				if(i<mMessageList.getCount()-1)
+				{
+					Map<String,String> item = mMessageMap.remove(i);
+					Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
+					mMessageMap.add(i+1, item);
+				}
+				mMessageList.setAdapter(mMessageAdapter);
 				
 			}
 			
@@ -351,6 +385,8 @@ public class ControlTabActivity extends Activity {
 													R.id.tv_text3,R.id.tv_text4,R.id.tv_text5,R.id.tv_text6});
 		
 		mMessageList = (ListView) findViewById(R.id.lv_messages);
+		mMessageList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		
 		mMessageList.setOnItemClickListener(new ListView.OnItemClickListener(){
 
 			@Override
@@ -358,10 +394,15 @@ public class ControlTabActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				Debug.d(TAG, "******message list clicked: "+position);
+				if(position==0)
+				{
+					mMessageList.setItemChecked(position, false);
+				}
 			}
 			
 		});
-		
+		initMsglist();
+		mMessageList.setAdapter(mMessageAdapter);
 	}
 	
 	@Override
@@ -701,14 +742,31 @@ public class ControlTabActivity extends Activity {
 		}
 	}
 	
+	public void initMsglist()
+	{
+		Map<String, String> m = new HashMap<String,String>();
+		m.put("index", "");
+		m.put("pic1", "    1");
+		m.put("pic2", "    2");
+		m.put("pic3", "    3");
+		m.put("pic4", "    4");
+		m.put("text1", "    5");
+		m.put("text2", "    6");
+		m.put("text3", "    7");
+		m.put("text4", "    8");
+		m.put("text5", "    9");
+		m.put("text6", "    10");
+		mMessageMap.add(m);
+	}
 	
-	public void readCsv()
+	public void readCsv(String csvfile)
 	{
 		CsvReader reader;
 		mMessageMap.clear();
 		Map<String, String> m;
+		initMsglist();
 		try {
-			reader = new CsvReader("/mnt/usb/test.csv");
+			reader = new CsvReader(csvfile);
 			reader.readRecord();	/*read the first row*/
 			/*TO-DO parse head information*/
 			reader.readRecord();	/*read the second row*/

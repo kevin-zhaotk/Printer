@@ -59,6 +59,12 @@ public class FileBrowserDialog extends Dialog {
 		mCurPath =BinCreater.FILE_PATH;
 	}
 
+	public FileBrowserDialog(Context context, String path)
+	{
+		this(context);
+		mCurPath = path;
+	}
+	
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
 	        // TODO Auto-generated method stub
