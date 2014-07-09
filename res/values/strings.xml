@@ -28,6 +28,8 @@
 	<string name="str_openfile">file:</string>
 	<string name="str_mvforward">Forward</string>
 	<string name="str_mvbackward">Backward</string>
+	<string name="str_preview">Preview</string>
+	
 	<string name="str_del">Del</string>
 	<string name="str_btn_shift">Shift</string>
 	<string name="str_btn_second">Scnd</string>

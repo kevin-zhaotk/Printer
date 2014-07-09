@@ -17,6 +17,7 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.FileFormat.CsvReader;
+import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Debug;
@@ -76,6 +77,7 @@ public class ControlTabActivity extends Activity {
 	
 	public Button	mBtnfile;
 	public TextView mMsgFile;
+	public Button 	mBtnview;
 	public Button	mForward;
 	public Button 	mBackward;
 	public LinkedList<Map<String, String>>	mMessageMap;
@@ -336,6 +338,18 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		mMsgFile = (TextView) findViewById(R.id.tvfile);
+		
+		mBtnview = (Button)findViewById(R.id.btn_preview);
+		mPreview.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
+			}
+			
+		});
+		
 		mForward = (Button) findViewById(R.id.btn_mvforward);
 		mForward.setOnClickListener(new OnClickListener(){
 
