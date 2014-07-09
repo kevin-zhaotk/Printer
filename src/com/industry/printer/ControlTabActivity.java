@@ -18,6 +18,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.FileFormat.CsvReader;
 import com.industry.printer.FileFormat.DotMatrixFont;
+import com.industry.printer.FileFormat.Tlk_Parser;
 import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Debug;
@@ -32,6 +33,9 @@ import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
 
+
+
+import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -340,12 +344,20 @@ public class ControlTabActivity extends Activity {
 		mMsgFile = (TextView) findViewById(R.id.tvfile);
 		
 		mBtnview = (Button)findViewById(R.id.btn_preview);
-		mPreview.setOnClickListener(new OnClickListener(){
+		mBtnview.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
+				int pos = mMessageList.getCheckedItemPosition();
+				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
+				String index = m.get("index");
+				Map<String, TlkObject> list = new HashMap<String, TlkObject>();
+				String path = new File(mMsgFile.getText().toString()).getParent();
+				Tlk_Parser.pase(path+"/"+index+".tlk", list);
+				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
+				prv.show();
 			}
 			
 		});
