@@ -5,10 +5,15 @@
     android:background="#ffffff" >
 
     <LinearLayout
-        android:layout_width="2000dp"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-         >
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        >
+        <com.industry.printer.PreviewScrollView 
+            android:id="@+id/sv_preview"
+            android:layout_width="2000dp"
+            android:layout_height="200dp"
+            android:background="#ffffff"
+        />
     </LinearLayout>
     
 

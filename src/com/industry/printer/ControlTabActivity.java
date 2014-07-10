@@ -352,10 +352,16 @@ public class ControlTabActivity extends Activity {
 				DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
 				int pos = mMessageList.getCheckedItemPosition();
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
-				String index = m.get("index");
-				Map<String, TlkObject> list = new HashMap<String, TlkObject>();
-				String path = new File(mMsgFile.getText().toString()).getParent();
-				Tlk_Parser.pase(path+"/"+index+".tlk", list);
+				if(m!= null)
+				{
+					String index = m.get("index");
+					Map<String, TlkObject> list = new HashMap<String, TlkObject>();
+					if(mMsgFile!=null)
+					{
+						String path = new File(mMsgFile.getText().toString()).getParent();
+						Tlk_Parser.pase(path+"/"+index+".tlk", list);
+					}
+				}
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show();
 			}

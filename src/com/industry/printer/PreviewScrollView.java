@@ -52,7 +52,8 @@ public class PreviewScrollView extends View {
 	public void createBitmap(int[]src, int w, int h)
 	{
 		mPreBitmap = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
-		mPreBitmap = Bitmap.createScaledBitmap(mPreBitmap, w, 150, true);
+		//mPreBitmap = Bitmap.createScaledBitmap(mPreBitmap, w, 150, true);
+		
 	}
 	
 	public void drawBitmap(int x, int y, Bitmap bm)
@@ -74,10 +75,48 @@ public class PreviewScrollView extends View {
 	@Override  
 	 protected void onDraw(Canvas canvas) {
 		Debug.d(TAG, "====>onDraw");
-		 if(mPreBitmap == null)
-			 return;
+		 //if(mPreBitmap == null)
+			 //return;
+		Paint p = new Paint();
+		int[] bit = {0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
+				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
+				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
+				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00};
 		 //p.setAlpha(128);
-		 canvas.drawBitmap(mPreBitmap, 0, 0, p);
+		mPreBitmap = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
+		Canvas c = new Canvas(mPreBitmap);
+		for(int i=0; i<bit.length; i++)
+		{
+			if(i%4==0)	//P1
+			{
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
+				}
+			}
+			else if(i%4==1)	//P2
+			{
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
+				}
+			} 
+			else if(i%4==2)	//P3
+			{
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32-16, j+8, p);
+				}
+			}
+			else if(i%4==3)	//P4
+			{
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32-16, j+8, p);
+				}
+			} 
+		}
+		canvas.drawBitmap(mPreBitmap, 0, 0, p);
 		 
 	 }  
 
