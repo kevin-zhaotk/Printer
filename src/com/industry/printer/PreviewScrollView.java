@@ -87,28 +87,28 @@ public class PreviewScrollView extends View {
 		Canvas c = new Canvas(mPreBitmap);
 		for(int i=0; i<bit.length; i++)
 		{
-			if(i%4==0)	//P1
+			if(i%8%4==0)	//P1
 			{
 				for(int j=0; j<8; j++)
 				{
 					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
 				}
 			}
-			else if(i%4==1)	//P2
+			else if(i%8%4==1)	//P2
 			{
 				for(int j=0; j<8; j++)
 				{
 					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
 				}
 			} 
-			else if(i%4==2)	//P3
+			else if(i%8%4==2)	//P3
 			{
 				for(int j=0; j<8; j++)
 				{
 					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32-16, j+8, p);
 				}
 			}
-			else if(i%4==3)	//P4
+			else if(i%8%4==3)	//P4
 			{
 				for(int j=0; j<8; j++)
 				{
