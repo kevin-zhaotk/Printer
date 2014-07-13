@@ -2,11 +2,16 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Vector;
 
+import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.MessageObject;
+import com.industry.printer.object.TlkObject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,6 +29,7 @@ public class PreviewScrollView extends View {
 	public Paint p;
 	
 	public static Bitmap	mPreBitmap;
+	public Vector<TlkObject> mList;
 	
 	public PreviewScrollView(Context context) {
 		super(context);
@@ -56,6 +62,13 @@ public class PreviewScrollView extends View {
 		
 	}
 	
+	public void setObjectList(Vector<TlkObject> list)
+	{
+		mList = list;
+		Debug.d(TAG, "mList size="+mList.size());
+	}
+	
+	
 	public void drawBitmap(int x, int y, Bitmap bm)
 	{
 		 if(mPreBitmap == null)
@@ -78,46 +91,84 @@ public class PreviewScrollView extends View {
 		 //if(mPreBitmap == null)
 			 //return;
 		Paint p = new Paint();
-		int[] bit = {0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
-				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
-				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00,
-				0xff, 0x00, 0xff, 0x00,0xff, 0x00, 0xff, 0x00};
+		int[] bit2 = {
+				0x86,  0x00,  0xC7,  0x00,  0xE3,  0x00,  0x73,  0x00,  
+				0x3B,  0x00,  0x1F,  0x00,  0x0E,  0x00,  0x00,  0x00,
+				0x03,  0x00,  0x03,  0x00,  0x03,  0x00,  0x03,  0x00,
+				0x03,  0x00,  0x03,  0x00,  0x03,  0x00,  0x00,  0x00 
+		};
 		 //p.setAlpha(128);
-		mPreBitmap = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
-		Canvas c = new Canvas(mPreBitmap);
-		for(int i=0; i<bit.length; i++)
+		int[] bit1={0xFC, 0x02, 0xFD, 0x02, 0x01, 0x02, 0x01,  0x02,  
+			0xFD,  0x02,  0xFC,  0x00,  0x00,  0x00,  0x00,  0x00, 
+			0x00,  0x01,  0x02,  0x01,  0x02,  0x01,  0x02,  0x01,  
+			0x02,  0x01,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00
+		};
+		//int bit[]=new int[3*32];
+		DotMatrixFont font = new DotMatrixFont("/mnt/usb/font.txt");
+		
+		//TlkObject[] v = (TlkObject[])mList.values().toArray();
+		
+		for(int i=0; i<mList.size(); i++)
 		{
-			if(i%8%4==0)	//P1
-			{
-				for(int j=0; j<8; j++)
-				{
-					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
-				}
-			}
-			else if(i%8%4==1)	//P2
-			{
-				for(int j=0; j<8; j++)
-				{
-					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32, j, p);
-				}
-			} 
-			else if(i%8%4==2)	//P3
-			{
-				for(int j=0; j<8; j++)
-				{
-					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32-16, j+8, p);
-				}
-			}
-			else if(i%8%4==3)	//P4
-			{
-				for(int j=0; j<8; j++)
-				{
-					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*i/32-16, j+8, p);
-				}
-			} 
+			TlkObject o = mList.get(i);
+			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
+			if(o.mContent == null)
+				continue;
+			int bit[] = new int[32*o.mContent.length()];
+			Debug.d(TAG, "bit lenght="+bit.length);
+			font.getDotbuf(o.mContent, bit);
+			
+			mPreBitmap=getBitmapFrombuffer(bit);
+			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
+			canvas.drawBitmap(mPreBitmap, o.x, o.y, p);
 		}
-		canvas.drawBitmap(mPreBitmap, 0, 0, p);
 		 
 	 }  
 
+	public Bitmap getBitmapFrombuffer(int[] bit)
+	{
+		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
+		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
+		Canvas c = new Canvas(bmp);
+		for(int i=0; i<bit.length; i++)
+		{
+			if(i%32>=0 && i%32 <8)	//P1
+			{
+				//Debug.d(TAG, "P1 i="+i);
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*(i/32), j, p);
+					//Debug.d(TAG, "x="+(i-16*(i/32))+", y="+j);
+				}
+			}
+			else if(i%32>=8 && i%32 <16)	//P2
+			{
+				//Debug.d(TAG, "P2 i="+i);
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*(i/32), j, p);
+					//Debug.d(TAG, "x="+(i-16*(i/32))+", y="+j);
+				}
+			} 
+			else if(i%32>=16 && i%32 < 24)	//P3
+			{
+				//Debug.d(TAG, "P3 i="+i);
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*(i/32)-16, j+8, p);
+					//Debug.d(TAG, "x="+(i-16*(i/32)-16)+", y="+(j+8));
+				}
+			}
+			else if(i%32>=24 && i%32 <32)	//P4
+			{
+				//Debug.d(TAG, "P4 i="+i);
+				for(int j=0; j<8; j++)
+				{
+					if((bit[i]>>j&0x01)==1) c.drawPoint(i-16*(i/32)-16, j+8, p);
+					//Debug.d(TAG, "x="+(i-16*(i/32)-16)+", y="+(j+8));
+				}
+			} 
+		}
+		return bmp;
+	}
 }

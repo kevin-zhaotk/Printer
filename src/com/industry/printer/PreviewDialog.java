@@ -1,5 +1,10 @@
 package com.industry.printer;
 
+import java.util.Map;
+import java.util.Vector;
+
+import com.industry.printer.object.TlkObject;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +12,7 @@ import android.view.Window;
 
 public class PreviewDialog extends Dialog {
 
+	public PreviewScrollView mView;
 	public PreviewDialog(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -18,6 +24,12 @@ public class PreviewDialog extends Dialog {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.preview_dialog);
-		
+		mView = (PreviewScrollView) findViewById(R.id.sv_preview);
+	}
+	
+	public void show(Vector<TlkObject> list)
+	{	
+		super.show();
+		mView.setObjectList(list);
 	}
 }

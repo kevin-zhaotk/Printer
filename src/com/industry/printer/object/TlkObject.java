@@ -6,6 +6,7 @@ public class TlkObject {
 	public int x;
 	public int y;
 	public String font;
+	public String mContent;
 	
 	public TlkObject()
 	{
@@ -33,5 +34,10 @@ public class TlkObject {
 	public void setFont(String s)
 	{
 		font = s;
+	}
+	
+	public void setContent(String s)
+	{
+		mContent = s;
 	}
 }

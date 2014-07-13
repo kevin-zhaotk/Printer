@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -349,21 +350,28 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
+				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
 				int pos = mMessageList.getCheckedItemPosition();
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
 				if(m!= null)
 				{
 					String index = m.get("index");
-					Map<String, TlkObject> list = new HashMap<String, TlkObject>();
+					Vector<TlkObject> list = new Vector<TlkObject>();
 					if(mMsgFile!=null)
 					{
 						String path = new File(mMsgFile.getText().toString()).getParent();
-						Tlk_Parser.pase(path+"/"+index+".tlk", list);
+						Tlk_Parser.parse(path+"/"+index+".tlk", list);
+						setContent(list);
+						Debug.d(TAG, "list size="+list.size());
 					}
+					
+					//set contents of text object
+					
+					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
+					
+					prv.show(list);
 				}
-				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
-				prv.show();
+				
 			}
 			
 		});
@@ -463,7 +471,24 @@ public class ControlTabActivity extends Activity {
 		}
 	};
 	
-	
+	public void setContent(Vector<TlkObject> list)
+	{
+		for(TlkObject o:list)
+		{
+			for(int i=1;i<mMessageList.getCount(); i++)
+			{
+				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(i);
+				Debug.d(TAG, "*******index="+m.get("index"));
+				if(Integer.parseInt(m.get("index")) == o.index)
+				{
+					Debug.d(TAG, "index "+o.index+"found");
+					o.setContent(m.get("text"+o.index));
+					break;
+				}
+			}
+		}
+		
+	}
 	
 	public Handler mPreviewRefreshHandler = new Handler(){
 		public void handleMessage(Message msg) { 

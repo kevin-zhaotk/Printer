@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
@@ -16,13 +17,14 @@ public class Tlk_Parser {
 
 	public static final String TAG="Tlk_Parser";
 	
-	public static void pase(String f, Map<String, TlkObject> list)
+	public static void parse(String f, Vector<TlkObject> list)
 	{
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(f)));
 			String s;
 			while((s = reader.readLine()) != null)
 			{
+				
 				String[] line = s.split("\\^");
 				int index = Integer.parseInt(line[1]);
 				if((index >= 1 && index <= 16)||(index >=21 && index <=23))	
@@ -34,7 +36,7 @@ public class Tlk_Parser {
 					obj.setFont(line[19]);
 					Debug.d(TAG,"index="+index+", x="+obj.x+", y="+obj.y+", font="+obj.font);
 					
-					list.put(String.valueOf(index), obj);
+					list.add(obj);
 				}
 			}
 			reader.close();
