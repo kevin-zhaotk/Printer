@@ -91,20 +91,9 @@ public class PreviewScrollView extends View {
 		 //if(mPreBitmap == null)
 			 //return;
 		Paint p = new Paint();
-		int[] bit2 = {
-				0x86,  0x00,  0xC7,  0x00,  0xE3,  0x00,  0x73,  0x00,  
-				0x3B,  0x00,  0x1F,  0x00,  0x0E,  0x00,  0x00,  0x00,
-				0x03,  0x00,  0x03,  0x00,  0x03,  0x00,  0x03,  0x00,
-				0x03,  0x00,  0x03,  0x00,  0x03,  0x00,  0x00,  0x00 
-		};
-		 //p.setAlpha(128);
-		int[] bit1={0xFC, 0x02, 0xFD, 0x02, 0x01, 0x02, 0x01,  0x02,  
-			0xFD,  0x02,  0xFC,  0x00,  0x00,  0x00,  0x00,  0x00, 
-			0x00,  0x01,  0x02,  0x01,  0x02,  0x01,  0x02,  0x01,  
-			0x02,  0x01,  0x00,  0x00,  0x00,  0x00,  0x00,  0x00
-		};
+		int[] bit = null;
 		//int bit[]=new int[3*32];
-		DotMatrixFont font = new DotMatrixFont("/mnt/usb/font.txt");
+		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
 		
 		//TlkObject[] v = (TlkObject[])mList.values().toArray();
 		
@@ -114,18 +103,28 @@ public class PreviewScrollView extends View {
 			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
 			if(o.mContent == null)
 				continue;
-			int bit[] = new int[32*o.mContent.length()];
+			DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 			Debug.d(TAG, "bit lenght="+bit.length);
-			font.getDotbuf(o.mContent, bit);
+			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
+			{
+				bit = new int[32*o.mContent.length()];
+				font.getDotbuf(o.mContent, bit);
+				mPreBitmap=getTextBitmapFrombuffer(bit);
+			}
+			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
+			{
+				bit = new int[128*8];
+				font.getDotbuf(bit);
+				mPreBitmap=getPicBitmapFrombuffer(bit);
+			}
 			
-			mPreBitmap=getBitmapFrombuffer(bit);
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
 			canvas.drawBitmap(mPreBitmap, o.x, o.y, p);
 		}
 		 
 	 }  
 
-	public Bitmap getBitmapFrombuffer(int[] bit)
+	public Bitmap getTextBitmapFrombuffer(int[] bit)
 	{
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
@@ -168,6 +167,57 @@ public class PreviewScrollView extends View {
 					//Debug.d(TAG, "x="+(i-16*(i/32)-16)+", y="+(j+8));
 				}
 			} 
+		}
+		return bmp;
+	}
+	
+	public Bitmap getPicBitmapFrombuffer(int[] bit)
+	{
+		Bitmap bmp = Bitmap.createBitmap(64,128, Config.ARGB_8888);
+		Canvas c = new Canvas(bmp);
+		for(int i=0; i<bit.length; i++)
+		{
+			/*****P1*****/
+			if(i>=0 && i<= 255)
+			{
+				/*the 1st 8*8 area*/
+				for(int j=0;j<8; j++)
+				{
+					if((bit[i]>>j&0x01) ==0x01) 
+						c.drawPoint(i%32, j+(i/32)*8, p);
+				}
+			}
+			
+			/*****P2*****/
+			if(i>=256 && i<= 511)
+			{
+				/*the 1st 8*8 area*/
+				for(int j=0;j<8; j++)
+				{
+					if((bit[i]>>j&0x01) ==0x01) 
+						c.drawPoint(i%32+32, j+(i/32)*8, p);
+				}
+			}
+			/*****P3*****/
+			if(i>=512 && i<= 767)
+			{
+				/*the 1st 8*8 area*/
+				for(int j=0;j<8; j++)
+				{
+					if((bit[i]>>j&0x01) ==0x01) 
+						c.drawPoint(i%32, j+(i/32+8)*8, p);
+				}
+			}
+			/*****P4*****/
+			if(i>=768 && i<= 1023)
+			{
+				/*the 1st 8*8 area*/
+				for(int j=0;j<8; j++)
+				{
+					if((bit[i]>>j&0x01) ==0x01) 
+						c.drawPoint(i%32+32, j+(i/32+8)*8, p);
+				}
+			}
 		}
 		return bmp;
 	}

@@ -22,6 +22,11 @@ public class DotMatrixFont {
 
 	public final String TAG="DotMatrixFont";
 	
+	public static final String FONT_FILE_PATH="/mnt/usb/system/font/";
+	public static final String LOGO_FILE_PATH="/mnt/usb/system/logo/";
+	public static final String TLK_FILE_PATH="/mnt/usb/system/TLK/";
+	
+	
 	public int mWidth;
 	public int mHeight;
 	BufferedReader mReader;
@@ -143,6 +148,116 @@ public class DotMatrixFont {
 					dot[k]=dot[k].trim();
 					buf[i*32+24+k] = Integer.parseInt(dot[k], 16);
 					Debug.d(TAG, "buf["+(i*32+24+k)+"]="+buf[i*32+24+k]);
+				}
+			}
+			mReader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Debug.d(TAG, "e="+e.getMessage());
+		}
+		
+	}
+	
+	
+	public void getDotbuf(int[] buf)
+	{
+		
+		int ascii;
+		String s;
+		String[] dot=null;
+		try {
+			
+			mReader = new BufferedReader(new FileReader(mfile));
+			mReader.mark((int)mfile.length()+1);
+			/*read out the header*/
+			s=mReader.readLine();
+			{
+				/*read P1 head*/
+				s=mReader.readLine();
+				if(s==null || !s.startsWith("P1"))
+					return;
+				/*read P1 content*/
+				
+				
+				Debug.d(TAG,"********P1*********");
+				for(int i=0;i<4; i++)
+				{
+					s=mReader.readLine();
+					if(s==null)
+						return;
+					dot = s.split("  ");
+					for(int k=0;k<8 && k<dot.length; k++)
+					{
+						dot[k]=dot[k].trim();
+						buf[i*8+k] = Integer.parseInt(dot[k],16);
+						Debug.d(TAG, "buf["+(i*8+k)+"]="+buf[(i*8+k)]);
+					}
+				}
+				/*read space line*/
+				s=mReader.readLine();
+				/*read P2 head*/
+				s=mReader.readLine();
+				if(s==null || !s.startsWith("P2"))
+					return;
+				/*read P2 content*/
+				for(int i=0;i<4;i++)
+				{
+					s=mReader.readLine();
+					if(s==null)
+						return;
+					Debug.d(TAG,"********P2*********");
+					dot = s.split("  ");
+					for(int k=0;k<8 && k<dot.length; k++)
+					{
+						dot[k]=dot[k].trim();
+						buf[i*8+32+k] = Integer.parseInt(dot[k],16);
+						Debug.d(TAG, "buf["+(i*8+32+k)+"]="+buf[i*8+32+k]);
+					}
+				}
+				/*read space line*/
+				s=mReader.readLine();
+				/*read P3 head*/
+				Debug.d(TAG,"********P3*********");
+				s=mReader.readLine();
+				if(s==null || !s.startsWith("P3"))
+					return;
+				/*read P3 content*/
+				for(int i=0;i<4;i++)
+				{
+					s=mReader.readLine();
+					if(s==null)
+						break;
+					
+					dot = s.split("  ");
+					for(int k=0;k<8 && k<dot.length; k++)
+					{
+						dot[k]=dot[k].trim();
+						buf[i*8+64+k] = Integer.parseInt(dot[k], 16);
+						Debug.d(TAG, "buf["+(i*8+64+k)+"]="+buf[i*8+64+k]);
+					}
+				}
+				
+				/*read space line*/
+				s=mReader.readLine();
+				/*read P4 head*/
+				s=mReader.readLine();
+				if(s==null || !s.startsWith("P4"))
+					return;
+				/*read P4 content*/
+				
+				Debug.d(TAG,"********P4*********");
+				for(int i=0;i<4;i++)
+				{
+					s=mReader.readLine();
+					if(s==null)
+						return;
+					dot = s.split("  ");
+					for(int k=0;k<8 && k<dot.length; k++)
+					{
+						dot[k]=dot[k].trim();
+						buf[i*8+96+k] = Integer.parseInt(dot[k], 16);
+						Debug.d(TAG, "buf["+(i*8+96+k)+"]="+buf[i*8+96+k]);
+					}
 				}
 			}
 			mReader.close();

@@ -40,4 +40,20 @@ public class TlkObject {
 	{
 		mContent = s;
 	}
+	
+	public boolean isTextObject()
+	{
+		if(index>=1 && index<=16)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isPicObject()
+	{
+		if(index>=21 && index<=23)
+			return true;
+		else
+			return false;
+	}
 }
