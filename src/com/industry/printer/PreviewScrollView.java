@@ -101,18 +101,22 @@ public class PreviewScrollView extends View {
 		{
 			TlkObject o = mList.get(i);
 			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
-			if(o.mContent == null)
+			if(o.isTextObject() && o.mContent == null)
 				continue;
-			DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-			Debug.d(TAG, "bit lenght="+bit.length);
+			//DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+			//Debug.d(TAG, "bit lenght="+bit.length);
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
+				Debug.d(TAG, "=========text object");
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 				bit = new int[32*o.mContent.length()];
 				font.getDotbuf(o.mContent, bit);
 				mPreBitmap=getTextBitmapFrombuffer(bit);
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
+				Debug.d(TAG, "=========pic object");
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
 				bit = new int[128*8];
 				font.getDotbuf(bit);
 				mPreBitmap=getPicBitmapFrombuffer(bit);
@@ -195,7 +199,7 @@ public class PreviewScrollView extends View {
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32+32, j+(i/32)*8, p);
+						c.drawPoint(i%32+32, j+(i/32-8)*8, p);
 				}
 			}
 			/*****P3*****/
@@ -205,7 +209,7 @@ public class PreviewScrollView extends View {
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32, j+(i/32+8)*8, p);
+						c.drawPoint(i%32, j+(i/32-16)*8, p);
 				}
 			}
 			/*****P4*****/
@@ -215,7 +219,7 @@ public class PreviewScrollView extends View {
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32+32, j+(i/32+8)*8, p);
+						c.drawPoint(i%32+32, j+(i/32-24)*8, p);
 				}
 			}
 		}

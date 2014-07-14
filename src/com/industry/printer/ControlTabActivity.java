@@ -361,7 +361,7 @@ public class ControlTabActivity extends Activity {
 					{
 						//String path = new File(mMsgFile.getText().toString()).getParent();
 						Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+index+".tlk", list);
-						setContent(list);
+						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
 					
@@ -418,16 +418,15 @@ public class ControlTabActivity extends Activity {
 		mMessageAdapter = new SimpleAdapter(mContext, 
 											mMessageMap,
 											R.layout.pmessagelistviewlayout,
-											new String[]{"index","pic1", "pic2", "pic3",
+											new String[]{"index","pic1", "pic2", "pic3","pic4",
 													"text1","text2","text3","text4","text5","text6",
 													"text7","text8","text9","text10","text11","text12",
 													"text13","text14","text15","text16"},
-											new int[]{R.id.tv_index, R.id.tv_pic1,R.id.tv_pic2, 
-													R.id.tv_pic3, R.id.tv_pic4,R.id.tv_text1,R.id.tv_text2,
-													R.id.tv_text3,R.id.tv_text4,R.id.tv_text5,R.id.tv_text6,
-													R.id.tv_text7,R.id.tv_text8,R.id.tv_text9,R.id.tv_text10,
-													R.id.tv_text11,R.id.tv_text12,R.id.tv_text13,R.id.tv_text14,
-													R.id.tv_text15,R.id.tv_text16});
+											new int[]{R.id.tv_index, R.id.tv_pic1,R.id.tv_pic2,R.id.tv_pic3,R.id.tv_pic4, 
+													R.id.tv_text1,R.id.tv_text2,R.id.tv_text3,R.id.tv_text4,
+													R.id.tv_text5,R.id.tv_text6,R.id.tv_text7,R.id.tv_text8,
+													R.id.tv_text9,R.id.tv_text10,R.id.tv_text11,R.id.tv_text12,
+													R.id.tv_text13,R.id.tv_text14,R.id.tv_text15,R.id.tv_text16});
 		
 		mMessageList = (ListView) findViewById(R.id.lv_messages);
 		mMessageList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -476,7 +475,7 @@ public class ControlTabActivity extends Activity {
 		}
 	};
 	
-	public void setContent(Vector<TlkObject> list)
+	public void setContent(String index,Vector<TlkObject> list)
 	{
 		for(TlkObject o:list)
 		{
@@ -484,9 +483,9 @@ public class ControlTabActivity extends Activity {
 			{
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(i);
 				Debug.d(TAG, "*******index="+m.get("index"));
-				if(Integer.parseInt(m.get("index")) == o.index)
+				if(m.get("index").equals(index))
 				{
-					Debug.d(TAG, "index "+o.index+"found");
+					Debug.d(TAG, "index "+o.index+" found");
 					o.setContent(m.get("text"+o.index));
 					break;
 				}
@@ -818,6 +817,18 @@ public class ControlTabActivity extends Activity {
 		m.put("text4", "    8");
 		m.put("text5", "    9");
 		m.put("text6", "    10");
+		m.put("text7", "    11");
+		m.put("text8", "    12");
+		m.put("text9", "    13");
+		m.put("text10", "    14");
+		m.put("text11", "    15");
+		m.put("text12", "    16");
+		m.put("text13", "    17");
+		m.put("text14", "    18");
+		m.put("text15", "    19");
+		m.put("text16", "    20");
+		
+		
 		mMessageMap.add(m);
 	}
 	
@@ -847,7 +858,7 @@ public class ControlTabActivity extends Activity {
 						m.put("pic"+i, reader.get(i));
 						Debug.d(TAG, "pic"+i+" = "+reader.get(i));
 					}
-					else if(i>=5 &&i<11)	//text
+					else if(i>=5 &&i<21)	//text
 					{
 						m.put("text"+(i-4), reader.get(i));
 						Debug.d(TAG, "text"+(i-4)+" = "+reader.get(i));

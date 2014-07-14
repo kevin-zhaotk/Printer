@@ -51,7 +51,7 @@ public class TlkObject {
 	
 	public boolean isPicObject()
 	{
-		if(index>=21 && index<=23)
+		if(index>=21 && index<=24)
 			return true;
 		else
 			return false;
