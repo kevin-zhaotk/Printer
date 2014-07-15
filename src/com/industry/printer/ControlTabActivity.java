@@ -60,6 +60,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ControlTabActivity extends Activity {
 	public static final String TAG="ControlTabActivity";
@@ -332,6 +333,12 @@ public class ControlTabActivity extends Activity {
 					public void onClick() {
 						// TODO Auto-generated method stub
 						String f = FileBrowserDialog.file();
+						if(f==null || !f.toLowerCase().endsWith(".csv"))
+						{
+							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
+							return;
+						}
+							
 						mMsgFile.setText(f);
 						readCsv(f);
 						mMessageList.setAdapter(mMessageAdapter);
