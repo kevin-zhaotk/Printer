@@ -209,7 +209,7 @@ public class ControlTabActivity extends Activity {
 				}
 				*/
 				Debug.d(TAG, "is root="+isroot);
-				FileBrowserDialog fdialog = new FileBrowserDialog(ControlTabActivity.this);
+				FileBrowserDialog fdialog = new FileBrowserDialog(ControlTabActivity.this,DotMatrixFont.USB_SYS_PATH);
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
@@ -327,7 +327,7 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, "/mnt/usb");
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
@@ -442,12 +442,12 @@ public class ControlTabActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				int i = mMessageList.getCheckedItemPosition();
-				if(i<mMessageList.getCount()-1)
-				{
-					Map<String,String> item = mMessageMap.remove(i);
-					Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
-					mMessageMap.add(i+1, item);
-				}
+				if(i<0 || i>=mMessageList.getCount()-1)
+					return;
+				
+				Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
+				Map<String,String> item = mMessageMap.remove(i);
+				mMessageMap.add(i+1, item);
 				mMessageList.setAdapter(mMessageAdapter);
 				
 			}

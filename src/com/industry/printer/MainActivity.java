@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
@@ -11,7 +12,9 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -37,6 +40,10 @@ public class MainActivity extends TabActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		Configuration config = getResources().getConfiguration(); 
+		DisplayMetrics dm = getResources() .getDisplayMetrics(); 
+		config.locale = Locale.SIMPLIFIED_CHINESE; 
+		getResources().updateConfiguration(config, dm); 
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		/*get write permission of ttyACM0*/
@@ -69,9 +76,9 @@ public class MainActivity extends TabActivity {
 		mTab = getTabHost();
 		
 		
-		mTab.addTab(mTab.newTabSpec("Control").setIndicator("Control").setContent(new Intent(this, ControlTabActivity.class)));
-		mTab.addTab(mTab.newTabSpec("Edit").setIndicator("Edit").setContent(new Intent(this, EditTabActivity.class)));
-		mTab.addTab(mTab.newTabSpec("Settings").setIndicator("Settings").setContent(new Intent(this, SettingsTabActivity.class)));
+		mTab.addTab(mTab.newTabSpec("Control").setIndicator(getResources().getString(R.string.ControlTab)).setContent(new Intent(this, ControlTabActivity.class)));
+		mTab.addTab(mTab.newTabSpec("Edit").setIndicator(getResources().getString(R.string.Edit)).setContent(new Intent(this, EditTabActivity.class)));
+		mTab.addTab(mTab.newTabSpec("Settings").setIndicator(getResources().getString(R.string.Settings)).setContent(new Intent(this, SettingsTabActivity.class)));
 		//mTab.addTab(mTab.newTabSpec("Control_man").setIndicator("Control_man").setContent(new Intent(this, ControlManTabActivity.class)));
 		/*adjust control tab title*/
 		TextView v1= (TextView) mTab.getTabWidget().getChildAt(0).findViewById(android.R.id.title);

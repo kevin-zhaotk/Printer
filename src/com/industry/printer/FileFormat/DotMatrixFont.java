@@ -22,6 +22,8 @@ public class DotMatrixFont {
 
 	public final String TAG="DotMatrixFont";
 	
+	public static final String USB_PATH="/mnt/usb/";
+	public static final String USB_SYS_PATH="/mnt/usb/system/";
 	public static final String FONT_FILE_PATH="/mnt/usb/system/font/";
 	public static final String LOGO_FILE_PATH="/mnt/usb/system/logo/";
 	public static final String TLK_FILE_PATH="/mnt/usb/system/TLK/";
