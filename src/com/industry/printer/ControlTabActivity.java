@@ -38,7 +38,6 @@ import com.industry.printer.object.RealtimeYear;
 
 import com.industry.printer.object.TlkObject;
 
-import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -341,7 +340,7 @@ public class ControlTabActivity extends Activity {
 							return;
 						}
 							
-						mMsgFile.setText(new File(f).getName());
+						mBtnfile.setText(new File(f).getName());
 						readCsv(f);
 						mMessageList.setAdapter(mMessageAdapter);
 					}
@@ -351,7 +350,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		mMsgFile = (TextView) findViewById(R.id.tvfile);
+		//mMsgFile = (TextView) findViewById(R.id.tvfile);
 		
 		
 		mBtnTlkfile = (Button) findViewById(R.id.btnTlkfile);
@@ -397,10 +396,10 @@ public class ControlTabActivity extends Activity {
 				{
 					String index = m.get("index");
 					Vector<TlkObject> list = new Vector<TlkObject>();
-					if(mMsgFile!=null)
+					//if(mMsgFile!=null)
 					{
 						//String path = new File(mMsgFile.getText().toString()).getParent();
-						Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+index+".tlk", list);
+						Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list);
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}

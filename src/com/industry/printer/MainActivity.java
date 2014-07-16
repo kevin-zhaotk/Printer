@@ -13,9 +13,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.os.SystemProperties;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodInfo;
@@ -66,11 +68,24 @@ public class MainActivity extends TabActivity {
 		Debug.d(TAG, "ControlTab get root "+ isroot);
 		mTab = getTabHost();
 		
+		
 		mTab.addTab(mTab.newTabSpec("Control").setIndicator("Control").setContent(new Intent(this, ControlTabActivity.class)));
 		mTab.addTab(mTab.newTabSpec("Edit").setIndicator("Edit").setContent(new Intent(this, EditTabActivity.class)));
 		mTab.addTab(mTab.newTabSpec("Settings").setIndicator("Settings").setContent(new Intent(this, SettingsTabActivity.class)));
 		//mTab.addTab(mTab.newTabSpec("Control_man").setIndicator("Control_man").setContent(new Intent(this, ControlManTabActivity.class)));
+		/*adjust control tab title*/
+		TextView v1= (TextView) mTab.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
+		v1.setTextSize(30);
+		v1.setGravity(Gravity.CENTER_VERTICAL);
+		/*adjust edit tab title*/
+		TextView v2= (TextView) mTab.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
+		v2.setTextSize(30);
+		v2.setGravity(Gravity.CENTER_VERTICAL);
 		
+		/*adjust Setting tab title*/
+		TextView v3= (TextView) mTab.getTabWidget().getChildAt(2).findViewById(android.R.id.title);
+		v3.setTextSize(30);
+		v3.setGravity(Gravity.CENTER_VERTICAL);
 		
 		//set current tab
 		mTab.setCurrentTab(0);

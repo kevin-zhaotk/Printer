@@ -133,29 +133,21 @@
      <Button 
          android:id="@+id/btnopenfile"
          android:layout_below="@id/btnFinish"
-         android:layout_width="wrap_content"
+         android:layout_width="150dp"
          android:layout_height="wrap_content"
          android:text="@string/str_openfile"
-         android:textSize="25sp"
-         android:textColor="#404040"
-         />
-     <TextView 
-         android:id="@+id/tvfile"
-         android:layout_alignBaseline="@id/btnopenfile"
-         android:layout_toRightOf="@id/btnopenfile"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:textSize="25sp"
+         android:textSize="20sp"
          android:textColor="#404040"
          />
      
      <Button 
          android:id="@+id/btnTlkfile"
          android:layout_below="@id/btnFinish"
-         android:layout_width="100dp"
+         android:layout_toRightOf="@id/btnopenfile"
+         android:layout_width="150dp"
          android:layout_height="wrap_content"
          android:text="@string/str_tlkfile"
-         android:textSize="25sp"
+         android:textSize="20sp"
          android:textColor="#404040"
          />
      
