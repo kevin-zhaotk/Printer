@@ -150,6 +150,16 @@
          />
      
      <Button 
+         android:id="@+id/btnTlkfile"
+         android:layout_below="@id/btnFinish"
+         android:layout_width="100dp"
+         android:layout_height="wrap_content"
+         android:text="@string/str_tlkfile"
+         android:textSize="25sp"
+         android:textColor="#404040"
+         />
+     
+     <Button 
          android:id="@+id/btn_mvbackward"
          android:layout_alignBottom="@id/btnopenfile"
          android:layout_width="wrap_content"

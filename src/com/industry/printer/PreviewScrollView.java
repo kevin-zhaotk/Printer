@@ -123,7 +123,7 @@ public class PreviewScrollView extends View {
 			}
 			
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			canvas.drawBitmap(mPreBitmap, o.x, o.y, p);
+			canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*4, mPreBitmap.getHeight()*4, false), o.x*4, o.y*4, p);
 		}
 		 
 	 }  

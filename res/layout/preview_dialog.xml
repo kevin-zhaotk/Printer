@@ -11,7 +11,7 @@
         <com.industry.printer.PreviewScrollView 
             android:id="@+id/sv_preview"
             android:layout_width="2000dp"
-            android:layout_height="200dp"
+            android:layout_height="256dp"
             android:background="#ffffff"
         />
     </LinearLayout>

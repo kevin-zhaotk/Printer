@@ -38,6 +38,7 @@ import com.industry.printer.object.RealtimeYear;
 
 import com.industry.printer.object.TlkObject;
 
+import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -82,6 +83,7 @@ public class ControlTabActivity extends Activity {
 	public Button mFinish;
 	
 	public Button	mBtnfile;
+	public Button	mBtnTlkfile;
 	public TextView mMsgFile;
 	public Button 	mBtnview;
 	public Button	mForward;
@@ -339,7 +341,7 @@ public class ControlTabActivity extends Activity {
 							return;
 						}
 							
-						mMsgFile.setText(f);
+						mMsgFile.setText(new File(f).getName());
 						readCsv(f);
 						mMessageList.setAdapter(mMessageAdapter);
 					}
@@ -350,6 +352,37 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		mMsgFile = (TextView) findViewById(R.id.tvfile);
+		
+		
+		mBtnTlkfile = (Button) findViewById(R.id.btnTlkfile);
+		mBtnTlkfile.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.TLK_FILE_PATH);
+				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
+
+					@Override
+					public void onClick() {
+						// TODO Auto-generated method stub
+						String f = FileBrowserDialog.file();
+						if(f==null || !f.toLowerCase().endsWith(".tlk"))
+						{
+							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
+							return;
+						}
+							
+						mBtnTlkfile.setText(new File(f).getName());
+					}
+					
+				});
+				dialog.show();
+			}
+			
+		});
+		
+		
 		
 		mBtnview = (Button)findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(new OnClickListener(){
