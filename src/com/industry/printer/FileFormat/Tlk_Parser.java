@@ -27,7 +27,7 @@ public class Tlk_Parser {
 				
 				String[] line = s.split("\\^");
 				int index = Integer.parseInt(line[1]);
-				if((index >= 1 && index <= 16)||(index >=21 && index <=23))	
+				if((index >= 1 && index <= 16)||(index >=21 && index <=24))	
 				{
 					TlkObject obj = new TlkObject();
 					obj.setIndex(index);
