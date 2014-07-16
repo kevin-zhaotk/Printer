@@ -119,6 +119,10 @@ public class MainActivity extends TabActivity {
 		
 	}
 	
-	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+	  // TODO Auto-generated method stub
+	 
+	}
 
 }
