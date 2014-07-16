@@ -48,6 +48,10 @@ public class Tlk_Parser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch(NumberFormatException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static void parseLine(String line)

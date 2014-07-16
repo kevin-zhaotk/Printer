@@ -177,7 +177,7 @@ public class PreviewScrollView extends View {
 	
 	public Bitmap getPicBitmapFrombuffer(int[] bit)
 	{
-		Bitmap bmp = Bitmap.createBitmap(64,128, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(128,64, Config.ARGB_8888);
 		Canvas c = new Canvas(bmp);
 		for(int i=0; i<bit.length; i++)
 		{
@@ -188,38 +188,42 @@ public class PreviewScrollView extends View {
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32, j+(i/32)*8, p);
+						c.drawPoint(i%64, j+(i/64)*8, p);
+					//Debug.d(TAG, "i="+i+", j="+j+", x="+i%32+" ,y="+(j+(i/32)*8));
 				}
 			}
 			
 			/*****P2*****/
-			if(i>=256 && i<= 511)
+			else if(i>=256 && i<= 511)
 			{
 				/*the 1st 8*8 area*/
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32+32, j+(i/32-8)*8, p);
+						c.drawPoint(i%64+64, j+(i/64-4)*8, p);
+					//Debug.d(TAG, "i="+i+", j="+j+", x="+(i%64+64)+" ,y="+(j+(i/64-4)*8));
 				}
 			}
 			/*****P3*****/
-			if(i>=512 && i<= 767)
+			else if(i>=512 && i<= 767)
 			{
 				/*the 1st 8*8 area*/
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32, j+(i/32-16)*8, p);
+						c.drawPoint(i%64, 32+j+(i/64-8)*8, p);
+					Debug.d(TAG, "i="+i+", j="+j+", x="+i%64+" ,y="+(32+j+(i/64-8)*8));
 				}
 			}
 			/*****P4*****/
-			if(i>=768 && i<= 1023)
+			else if(i>=768 && i<= 1023)
 			{
 				/*the 1st 8*8 area*/
 				for(int j=0;j<8; j++)
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
-						c.drawPoint(i%32+32, j+(i/32-24)*8, p);
+						c.drawPoint(i%64+64, 32+j+(i/64-12)*8, p);
+					Debug.d(TAG, "i="+i+", j="+j+", x="+(i%64+64)+" ,y="+(32+j+(i/64-12)*8));
 				}
 			}
 		}

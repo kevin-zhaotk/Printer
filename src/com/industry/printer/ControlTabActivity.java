@@ -87,7 +87,7 @@ public class ControlTabActivity extends Activity {
 	public Button	mForward;
 	public Button 	mBackward;
 	public LinkedList<Map<String, String>>	mMessageMap;
-	public SimpleAdapter mMessageAdapter;
+	public PreviewAdapter mMessageAdapter;
 	public ListView mMessageList;
 	
 	public PreviewScrollView mPreview;
@@ -422,7 +422,7 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		mMessageMap = new LinkedList<Map<String, String>>();
-		mMessageAdapter = new SimpleAdapter(mContext, 
+		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
 											R.layout.pmessagelistviewlayout,
 											new String[]{"index","pic1", "pic2", "pic3","pic4",
