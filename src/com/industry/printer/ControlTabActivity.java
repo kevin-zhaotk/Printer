@@ -39,7 +39,6 @@ import com.industry.printer.object.RealtimeYear;
 
 import com.industry.printer.object.TlkObject;
 
-import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;

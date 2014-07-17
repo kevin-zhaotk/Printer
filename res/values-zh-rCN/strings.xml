@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_version">软件版本:2014.05.07</string>
+    <string name="app_version">软件版本:</string>
     <string name="app_name">打印机</string>
     <string name="action_settings">设置</string>
     <string name="hello_world">Hello world!</string>
@@ -152,8 +152,8 @@
 	<string name="strVertRes_key">vertres_key</string>
 	<string name="strVertResname">05.垂直</string>
 	<string name="strVertRes_summary">Setting Vert Res</string>
-	<string name="strResvname">06.保留</string>
-	<string name="strPrSpeedname">07.速度</string>
+	<string name="strfontwidth">06.字宽</string>
+	<string name="strPrSpeedname">07.墨点</string>
 	<string name="strDelayunit">ms</string>
 	<string name="strResunit">dpi</string>
 	<string name="strPrSpeedunit">mm/min</string>
@@ -252,5 +252,27 @@
 	<string name="str_minute">分</string>
 	<string name="cor_unit">dp</string>
 	
-	<string name="str_trans">toRight</string>
+	<string name="str_trans">==></string>
+	
+	<string name="str_column_index">序号</string>
+	<string name="str_column_pic1">图形1</string>
+	<string name="str_column_pic2">图形2</string>
+	<string name="str_column_pic3">图形3</string>
+	<string name="str_column_pic4">图形4</string>
+	<string name="str_column_text1">文本1</string>
+	<string name="str_column_text2">文本2</string>
+	<string name="str_column_text3">文本3</string>
+	<string name="str_column_text4">文本4</string>
+	<string name="str_column_text5">文本5</string>
+	<string name="str_column_text6">文本6</string>
+	<string name="str_column_text7">文本7</string>
+	<string name="str_column_text8">文本8</string>
+	<string name="str_column_text9">文本9</string>
+	<string name="str_column_text10">文本10</string>
+	<string name="str_column_text11">文本11</string>
+	<string name="str_column_text12">文本12</string>
+	<string name="str_column_text13">文本13</string>
+	<string name="str_column_text14">文本14</string>
+	<string name="str_column_text15">文本15</string>
+	<string name="str_column_text16">文本16</string>
 </resources>

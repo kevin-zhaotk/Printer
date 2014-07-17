@@ -32,9 +32,10 @@ public class PreviewAdapter extends SimpleAdapter {
 		{
 			view = super.getView(position, convertView, parent);
 		}
-		int[] color = {Color.WHITE, Color.rgb(0x1c, 0x86, 0xee)};
-		view.setBackgroundColor(color[position%2]);
+		//int[] color = {Color.WHITE, Color.rgb(0x1c, 0x86, 0xee)};
+		//view.setBackgroundColor(color[position%2]);
 		//((TextView) view).setTextColor(Color.BLACK);
+		
 		return super.getView(position, convertView, parent);
 	}
 }

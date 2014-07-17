@@ -96,7 +96,7 @@ public static final String TAG="SettingsTabActivity";
 		{
 			Debug.d(TAG, "version read error: "+e.getMessage());
 		}
-		mVersion.setText("Version:"+new String(buffer));
+		mVersion.setText(getResources().getString(R.string.app_version)+new String(buffer));
 		/*
         mPreference=PreferenceManager.getDefaultSharedPreferences(this);
         mDelay = (EditTextPreference) findPreference(getString(R.string.strDelay_key));

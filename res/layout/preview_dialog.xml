@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="800dp"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
     android:background="#ffffff" >
 
     <LinearLayout
@@ -10,8 +10,8 @@
         >
         <com.industry.printer.PreviewScrollView 
             android:id="@+id/sv_preview"
-            android:layout_width="2000dp"
-            android:layout_height="256dp"
+            android:layout_width="10000dp"
+            android:layout_height="match_parent"
             android:background="#ffffff"
         />
     </LinearLayout>

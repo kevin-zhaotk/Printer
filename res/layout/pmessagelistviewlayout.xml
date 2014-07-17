@@ -18,6 +18,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textAppearance="@style/"
 	    />
 	
 	<View
@@ -29,7 +30,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_pic1"
-	    android:layout_width="100dip"
+	    android:layout_width="80dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -44,7 +45,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_pic2"
-	    android:layout_width="100dip"
+	    android:layout_width="80dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -59,7 +60,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_pic3"
-	    android:layout_width="100dip"
+	    android:layout_width="80dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -74,7 +75,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_pic4"
-	    android:layout_width="100dip"
+	    android:layout_width="80dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -89,7 +90,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text1"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -104,7 +105,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text2"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -119,7 +120,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text3"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -134,7 +135,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text4"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -149,7 +150,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text5"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -164,7 +165,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text6"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -178,7 +179,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text7"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -192,7 +193,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text8"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -206,7 +207,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text9"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -220,7 +221,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text10"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -235,7 +236,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text11"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -250,7 +251,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text12"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -264,7 +265,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text13"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -278,7 +279,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text14"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -292,7 +293,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text15"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
@@ -306,7 +307,7 @@
 	
 	<TextView
 	    android:id="@+id/tv_text16"
-	    android:layout_width="100dip"
+	    android:layout_width="160dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
