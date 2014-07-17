@@ -19,6 +19,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.FileFormat.CsvReader;
 import com.industry.printer.FileFormat.DotMatrixFont;
+import com.industry.printer.FileFormat.FilenameSuffixFilter;
 import com.industry.printer.FileFormat.Tlk_Parser;
 import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
@@ -38,6 +39,7 @@ import com.industry.printer.object.RealtimeYear;
 
 import com.industry.printer.object.TlkObject;
 
+import android.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -327,7 +329,7 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH);
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH, FilenameSuffixFilter.CSV_SUFFIX);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
@@ -359,7 +361,7 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.TLK_FILE_PATH);
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.TLK_FILE_PATH, FilenameSuffixFilter.TLK_SUFFIX);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
@@ -845,27 +847,27 @@ public class ControlTabActivity extends Activity {
 	public void initMsglist()
 	{
 		Map<String, String> m = new HashMap<String,String>();
-		m.put("index", "");
-		m.put("pic1", "    1");
-		m.put("pic2", "    2");
-		m.put("pic3", "    3");
-		m.put("pic4", "    4");
-		m.put("text1", "    5");
-		m.put("text2", "    6");
-		m.put("text3", "    7");
-		m.put("text4", "    8");
-		m.put("text5", "    9");
-		m.put("text6", "    10");
-		m.put("text7", "    11");
-		m.put("text8", "    12");
-		m.put("text9", "    13");
-		m.put("text10", "    14");
-		m.put("text11", "    15");
-		m.put("text12", "    16");
-		m.put("text13", "    17");
-		m.put("text14", "    18");
-		m.put("text15", "    19");
-		m.put("text16", "    20");
+		m.put("index", getResources().getString(R.string.str_column_index));
+		m.put("pic1", getResources().getString(R.string.str_column_pic1));
+		m.put("pic2", getResources().getString(R.string.str_column_pic2));
+		m.put("pic3", getResources().getString(R.string.str_column_pic3));
+		m.put("pic4", getResources().getString(R.string.str_column_pic4));
+		m.put("text1", getResources().getString(R.string.str_column_text1));
+		m.put("text2", getResources().getString(R.string.str_column_text2));
+		m.put("text3", getResources().getString(R.string.str_column_text3));
+		m.put("text4", getResources().getString(R.string.str_column_text4));
+		m.put("text5", getResources().getString(R.string.str_column_text5));
+		m.put("text6", getResources().getString(R.string.str_column_text6));
+		m.put("text7", getResources().getString(R.string.str_column_text7));
+		m.put("text8", getResources().getString(R.string.str_column_text8));
+		m.put("text9", getResources().getString(R.string.str_column_text9));
+		m.put("text10",getResources().getString(R.string.str_column_text10));
+		m.put("text11", getResources().getString(R.string.str_column_text11));
+		m.put("text12", getResources().getString(R.string.str_column_text12));
+		m.put("text13", getResources().getString(R.string.str_column_text13));
+		m.put("text14", getResources().getString(R.string.str_column_text14));
+		m.put("text15", getResources().getString(R.string.str_column_text15));
+		m.put("text16", getResources().getString(R.string.str_column_text16));
 		
 		
 		mMessageMap.add(m);

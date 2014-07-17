@@ -253,4 +253,49 @@
 	<string name="cor_unit">dp</string>
 	
 	<string name="str_trans">toRight</string>
+	
+	<string name="str_column_index">index</string>
+	<string name="str_column_pic1">pic1</string>
+	<string name="str_column_pic2">pic2</string>
+	<string name="str_column_pic3">pic3</string>
+	<string name="str_column_pic4">pic4</string>
+	<string name="str_column_text1">text1</string>
+	<string name="str_column_text2">text2</string>
+	<string name="str_column_text3">text3</string>
+	<string name="str_column_text4">text4</string>
+	<string name="str_column_text5">text5</string>
+	<string name="str_column_text6">text6</string>
+	<string name="str_column_text7">text7</string>
+	<string name="str_column_text8">text8</string>
+	<string name="str_column_text9">text9</string>
+	<string name="str_column_text10">text10</string>
+	<string name="str_column_text11">text11</string>
+	<string name="str_column_text12">text12</string>
+	<string name="str_column_text13">text13</string>
+	<string name="str_column_text14">text14</string>
+	<string name="str_column_text15">text15</string>
+	<string name="str_column_text16">text16</string>
+	
+	
+	<string name="str_column_index">序号</string>
+	<string name="str_column_pic1">图形1</string>
+	<string name="str_column_pic1">图形2</string>
+	<string name="str_column_pic1">图形3</string>
+	<string name="str_column_pic1">图形4</string>
+	<string name="str_column_text1">文本1</string>
+	<string name="str_column_text2">文本2</string>
+	<string name="str_column_text3">文本3</string>
+	<string name="str_column_text4">文本4</string>
+	<string name="str_column_text5">文本5</string>
+	<string name="str_column_text6">文本6</string>
+	<string name="str_column_text7">文本7</string>
+	<string name="str_column_text8">文本8</string>
+	<string name="str_column_text9">文本9</string>
+	<string name="str_column_text10">文本10</string>
+	<string name="str_column_text11">文本11</string>
+	<string name="str_column_text12">文本12</string>
+	<string name="str_column_text13">文本13</string>
+	<string name="str_column_text14">文本14</string>
+	<string name="str_column_text15">文本15</string>
+	<string name="str_column_text16">文本16</string>
 </resources>

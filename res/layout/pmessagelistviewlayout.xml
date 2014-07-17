@@ -17,6 +17,7 @@
 	    android:layout_width="40dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -31,6 +32,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -45,6 +47,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -59,6 +62,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -73,6 +77,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -87,6 +92,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -101,6 +107,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -115,6 +122,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -129,6 +137,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -143,6 +152,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -157,6 +167,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -170,6 +181,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -183,6 +195,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -196,6 +209,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -209,6 +223,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -223,6 +238,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	
 	<View
@@ -237,6 +253,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -250,6 +267,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -263,6 +281,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -276,6 +295,7 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -289,5 +309,6 @@
 	    android:layout_width="100dip"
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
+	    android:gravity="center"
 	    />
 </LinearLayout>

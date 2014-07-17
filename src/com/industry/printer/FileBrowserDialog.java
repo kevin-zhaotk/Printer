@@ -1,11 +1,13 @@
 package com.industry.printer;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.industry.printer.FileFormat.FilenameSuffixFilter;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 
@@ -36,6 +38,7 @@ public class FileBrowserDialog extends Dialog {
 	public EditText mPath;
 	public static String mCurPath;
 	public static String objDir;
+	public String mSuffix;
 	public Button mSave;
 	public Button mCancel;
 	public EditText mName;
@@ -57,6 +60,7 @@ public class FileBrowserDialog extends Dialog {
 				new int []{R.id.file_icon, R.id.file_name});
 		//mCurPath="/storage/external_storage/sda1";
 		mCurPath =BinCreater.FILE_PATH;
+		mSuffix = null;
 	}
 
 	public FileBrowserDialog(Context context, String path)
@@ -65,6 +69,12 @@ public class FileBrowserDialog extends Dialog {
 		mCurPath = path;
 	}
 	
+	public FileBrowserDialog(Context context, String path, String suffix)
+	{
+		this(context);
+		mCurPath = path;
+		mSuffix = suffix;
+	}
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
 	        // TODO Auto-generated method stub
@@ -146,7 +156,11 @@ public class FileBrowserDialog extends Dialog {
 		 mPath.setText(mCurPath);
 		 mContent.clear();
 		 Debug.d(TAG, ""+file.getPath()+", exists = "+file.exists());
-		 File [] files = file.listFiles();
+		 File [] files;
+		 if(mSuffix == null)
+			 files = file.listFiles();
+		 else
+			 files = file.listFiles(new FilenameSuffixFilter(mSuffix));
 		 if(files == null)
 		 {
 			 Debug.d(TAG, "Please plugin a USB device ");
@@ -155,10 +169,10 @@ public class FileBrowserDialog extends Dialog {
 		 }
 		 Debug.d(TAG, "files ="+files);
 		 Map<String, Object> m = new HashMap<String, Object>();
-		 m.put("icon", R.drawable.icon_directory);
-		 m.put("name", "..");
-		 m.put("path", file.getParent());
-		 mContent.add(m);
+		 //m.put("icon", R.drawable.icon_directory);
+		 //m.put("name", "..");
+		 //m.put("path", file.getParent());
+		 //mContent.add(m);
 		 for(int i=0; files != null && i< files.length; i++)
 		 {
 			 Debug.d(TAG,"file name="+files[i].toString());
