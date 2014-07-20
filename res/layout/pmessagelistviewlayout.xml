@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    >"
+    android:background="@drawable/item_selector"
+    >
     
 	<View
 	    android:layout_width="0.5px"
@@ -18,7 +19,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
-	    android:textAppearance="@style/"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -34,6 +35,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -49,6 +51,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -64,6 +67,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -79,6 +83,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -94,6 +99,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -109,6 +115,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -124,6 +131,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -139,6 +147,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -154,6 +163,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -169,6 +179,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -183,6 +194,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -197,6 +209,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -211,6 +224,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -225,6 +239,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -240,6 +255,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	
 	<View
@@ -255,6 +271,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -269,6 +286,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -283,6 +301,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -297,6 +316,7 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 	<View
 	    android:layout_width="0.5px"
@@ -311,5 +331,6 @@
 	    android:layout_height="40dp"
 	    android:textSize="20sp"
 	    android:gravity="center"
+	    android:textColor="#000000"
 	    />
 </LinearLayout>

@@ -45,6 +45,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -290,7 +291,7 @@ public class ControlTabActivity extends Activity {
 		
 		//mPollThread = new PollStateThread();
 		mPrintThread = new PrintingThread();
-		mPrintThread.start();
+		//mPrintThread.start();
 		/*
 		 * Start Printing Thread
 		 */
@@ -481,7 +482,13 @@ public class ControlTabActivity extends Activity {
 				if(position==0)
 				{
 					mMessageList.setItemChecked(position, false);
+					mMessageAdapter.setChecked(-1);
 				}
+				else
+				{
+					mMessageAdapter.setChecked(position);
+				}
+				mMessageAdapter.notifyDataSetChanged();
 			}
 			
 		});
@@ -727,13 +734,18 @@ public class ControlTabActivity extends Activity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
+			Debug.d(TAG, "******intent="+intent.getAction());
 			if(ACTION_REOPEN_SERIAL.equals(intent.getAction()))
 			{
 				if(openSerial())
+				{
+					stopThread(mPrintThread);
 					mPrintThread.start();
+				}
 			}
 			else if(ACTION_CLOSE_SERIAL.equals(intent.getAction()))
 			{
+				stopThread(mPrintThread);
 				mFd = 0;
 			}
 		}
@@ -785,6 +797,18 @@ public class ControlTabActivity extends Activity {
 	 */
 	public class PrintingThread extends Thread{
 		
+		public boolean isRunning;
+		
+		public PrintingThread()
+		{
+			isRunning=false;
+		}
+		
+		public void start()
+		{
+			isRunning=true;
+		}
+		
 		public void run()
 		{
 			//isPrinting = true;
@@ -795,7 +819,7 @@ public class ControlTabActivity extends Activity {
 			UsbSerial.printStart(mFd);
 			UsbSerial.sendSetting(mFd);
 			UsbSerial.sendSettingData(mFd, sdata);
-			while(mFd > 0)
+			while(isRunning == true)
 			{
 				//pdata = new byte[128];	//
 				if(!isPrinting)
@@ -837,10 +861,19 @@ public class ControlTabActivity extends Activity {
 	{
 		if(t != null)
 		{
+			((PrintingThread) t).isRunning=false;
 			Thread tmp = t;
 			t = null;
 			tmp.interrupt();
 		}
+	}
+	
+	public synchronized void startThread(Thread t)
+	{
+		if(t != null)
+			return;
+		t = new PrintingThread();
+		t.start();
 	}
 	
 	public void initMsglist()
@@ -921,5 +954,46 @@ public class ControlTabActivity extends Activity {
 		}
 		
 		
+	}
+	
+	
+	public Bitmap getBitmap(Vector<TlkObject> list)
+	{
+		Bitmap bmp, rBmp;
+		Paint p = new Paint();
+		int[] bit = null;
+		//int bit[]=new int[3*32];
+		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
+		
+		//TlkObject[] v = (TlkObject[])mList.values().toArray();
+		
+		for(int i=0; i<list.size(); i++)
+		{
+			TlkObject o = list.get(i);
+			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
+			if(o.isTextObject() && o.mContent == null)
+				continue;
+			//DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+			//Debug.d(TAG, "bit lenght="+bit.length);
+			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
+			{
+				Debug.d(TAG, "=========text object");
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+				bit = new int[32*o.mContent.length()];
+				font.getDotbuf(o.mContent, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit);
+			}
+			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
+			{
+				Debug.d(TAG, "=========pic object");
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				bit = new int[128*8];
+				font.getDotbuf(bit);
+				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit);
+			}
+			
+			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
+			canvas.drawBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth()*4, bmp.getHeight()*4, false), o.x, o.y, p);
+		}
 	}
 }

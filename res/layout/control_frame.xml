@@ -155,8 +155,8 @@
      <Button 
          android:id="@+id/btn_mvbackward"
          android:layout_alignBottom="@id/btnopenfile"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="60dp"
+         android:layout_height="50dp"
          android:layout_alignParentRight="true"
          android:text="@string/str_mvbackward"
          android:textSize="15sp"
@@ -165,8 +165,8 @@
      <Button 
          android:id="@+id/btn_mvforward"
          android:layout_alignBottom="@id/btnopenfile"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="60dp"
+         android:layout_height="50dp"
          android:layout_toLeftOf="@id/btn_mvbackward"
          android:text="@string/str_mvforward"
          android:textSize="15sp"
@@ -174,17 +174,17 @@
      <Button
          android:id="@+id/btn_preview"
          android:layout_alignBottom="@id/btnopenfile"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="60dp"
+         android:layout_height="50dp"
          android:layout_toLeftOf="@id/btn_mvforward"
          android:text="@string/str_preview"
          android:textSize="15sp"
          />
+
      <HorizontalScrollView 
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          	android:layout_below="@id/btnopenfile"
-         android:layout_marginTop="5dp"
          >
      	<ListView
         	android:id="@+id/lv_messages"

@@ -123,12 +123,12 @@ public class PreviewScrollView extends View {
 			}
 			
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*4, mPreBitmap.getHeight()*4, false), o.x*4, o.y*4, p);
+			canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*4, mPreBitmap.getHeight()*4, false), o.x, o.y, p);
 		}
 		 
 	 }  
 
-	public Bitmap getTextBitmapFrombuffer(int[] bit)
+	public static Bitmap getTextBitmapFrombuffer(int[] bit)
 	{
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
@@ -175,7 +175,7 @@ public class PreviewScrollView extends View {
 		return bmp;
 	}
 	
-	public Bitmap getPicBitmapFrombuffer(int[] bit)
+	public static Bitmap getPicBitmapFrombuffer(int[] bit)
 	{
 		Bitmap bmp = Bitmap.createBitmap(128,64, Config.ARGB_8888);
 		Canvas c = new Canvas(bmp);
