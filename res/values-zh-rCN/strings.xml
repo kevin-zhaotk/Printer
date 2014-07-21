@@ -255,10 +255,10 @@
 	<string name="str_trans">==></string>
 	
 	<string name="str_column_index">序号</string>
-	<string name="str_column_pic1">图形1</string>
-	<string name="str_column_pic2">图形2</string>
-	<string name="str_column_pic3">图形3</string>
-	<string name="str_column_pic4">图形4</string>
+	<string name="str_column_pic1">图1</string>
+	<string name="str_column_pic2">图2</string>
+	<string name="str_column_pic3">图3</string>
+	<string name="str_column_pic4">图4</string>
 	<string name="str_column_text1">文本1</string>
 	<string name="str_column_text2">文本2</string>
 	<string name="str_column_text3">文本3</string>
