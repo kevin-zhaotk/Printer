@@ -21,7 +21,7 @@ public class BinCreater {
 	public static final String TAG="BinCreater";
 	
 	//public static final String FILE_PATH="/storage/external_storage/sda1";
-	public static final String FILE_PATH="/storage/sd_internal/MSG";
+	public static final String FILE_PATH="/mnt/usb/";
 	
 	public static final int RESERVED_FOR_HEADER=16;
 	public static int mBmpBytes[];
@@ -29,7 +29,7 @@ public class BinCreater {
 	
 	public static void create(Bitmap bmp, String f, int colEach)
 	{
-		Bitmap img =	convertGreyImg(scaleHeight(bmp, 880));
+		Bitmap img =	convertGreyImg(bmp);
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		Debug.d(TAG, "byteCount="+img.getByteCount());
 		mBmpBytes = new int[img.getByteCount()/2];
@@ -39,7 +39,7 @@ public class BinCreater {
          */
 		img.getPixels(mBmpBytes, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
         //Debug.d(TAG, "getExternalStorageDirectory="+Environment.getExternalStorageDirectory().toString());
-		byte2bit(colEach);
+		byte2bit(img.getWidth());
 		saveBin(f);
 	}
 	
@@ -56,23 +56,33 @@ public class BinCreater {
 	  
     public static Bitmap convertGreyImg(Bitmap bmp) { 
     	int width = bmp.getWidth();         
-        int height = bmp.getHeight();      
+        int height = bmp.getHeight(); 
+        Debug.d(TAG, "=====width="+width+", height="+height);
         int []pixels = new int[width * height]; 
 
         bmp.getPixels(pixels, 0, width, 0, 0, width, height); 
-        int alpha = 0x00 << 24;  
+        //int alpha = 0x00 << 24;  
         for(int i = 0; i < height; i++)  { 
             for(int j = 0; j < width; j++) { 
                 int grey = pixels[width * i + j]; 
-
+                
                 int red = ((grey  & 0x00FF0000 ) >> 16); 
                 int green = ((grey & 0x0000FF00) >> 8); 
-                int blue = (grey & 0x000000FF); 
-
-                grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11); 
+                int blue = (grey & 0x000000FF);
+                if((grey & 0xFF000000) != 0)
+                {
+                	pixels[width * i + j] = 1;
+                }
+                else
+                {
+                	grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
+                	pixels[width * i + j] = 0;
+                }
+                
                 //grey = alpha | ((grey >128?255:0) << 16) | ((grey >128?255:0) << 8) | (grey >128?255:0); //grey >128?255:0; //
                 //grey = alpha | (grey  << 16) | (grey  << 8) | grey ; 
-                pixels[width * i + j] = grey == 0xff? 0x0 : 0xffffff; 
+                 
+                
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             } 
         } 
@@ -124,41 +134,42 @@ public class BinCreater {
 	}
     
     
-    public static boolean byte2bit(int colEach)
+    public static boolean byte2bit(int width)
     {
-    	int width= mBmpBytes.length/880;
+    	//int width= mBmpBytes.length/880;
+    	int cols=mBmpBytes.length/width;
     	if(mBmpBytes == null || mBmpBits==null || mBmpBits.length < mBmpBytes.length/8)
     	{
     		Debug.d(TAG, "There is no enough space for store bmpbits");
     		return false;
     	}
-    	
+    	Debug.d(TAG, "cols="+cols+",width="+width);
     	mBmpBits[2] = (byte) (width & 0x0ff);
     	mBmpBits[1] = (byte) ((width>>8) & 0x0ff);
     	mBmpBits[0] = (byte) ((width>>16) & 0x0ff);
     	
     	
-    	mBmpBits[5] = (byte) (880 & 0x0ff);
-    	mBmpBits[4] = (byte) ((880 >>8) & 0x0ff);
-    	mBmpBits[3] = (byte) ((880>>16) & 0x0ff);
+    	mBmpBits[5] = (byte) (cols & 0x0ff);
+    	mBmpBits[4] = (byte) ((cols >>8) & 0x0ff);
+    	mBmpBits[3] = (byte) ((cols>>16) & 0x0ff);
     	
-    	
+    	/*
     	mBmpBits[8] = (byte) (colEach & 0x0ff);
     	mBmpBits[7] = (byte) ((colEach>>8) & 0x0ff);
     	mBmpBits[6] = (byte) ((colEach>>16) & 0x0ff);
-    	
+    	*/
     	for(int k=0; k<width; k++)
     	{
-    		for(int i=0; i<880; i++)
+    		for(int i=0; i<cols; i++)
     		{
     			//Debug.d(TAG, "mBmpBytes["+(i*width+k)+"]=0x"+Integer.toHexString( mBmpBytes[i*width+k]));
         			if((mBmpBytes[i*width+k] & 0x00ffffff) != 0)
         			{
-        				mBmpBits[(k*880)/8 +i/8+RESERVED_FOR_HEADER] |= (0x01<<(7-i%8));
+        				mBmpBits[(k*cols)/8 +i/8+RESERVED_FOR_HEADER] |= (0x01<<(7-i%8));
         			}
         			else
         			{
-        				mBmpBits[(k*880)/8 +i/8+RESERVED_FOR_HEADER] &= ~(0x01<<(7-i%8));
+        				mBmpBits[(k*cols)/8 +i/8+RESERVED_FOR_HEADER] &= ~(0x01<<(7-i%8));
         			}
         		//Debug.d(TAG, "mBmpBits["+(i/8+RESERVED_FOR_HEADER)+"]=0x"+Integer.toHexString( mBmpBits[i/8+RESERVED_FOR_HEADER]));	
     		}

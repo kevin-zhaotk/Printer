@@ -26,26 +26,26 @@ import android.view.View;
 public class PreviewScrollView extends View {
 
 	public static final String TAG="PreviewScrollView";
-	public Paint p;
+	public Paint mPaint;
 	
 	public static Bitmap	mPreBitmap;
 	public Vector<TlkObject> mList;
 	
 	public PreviewScrollView(Context context) {
 		super(context);
-		p = new Paint();
+		mPaint = new Paint();
 		// TODO Auto-generated constructor stub
 	}
 	
 	public PreviewScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		p = new Paint();
+		mPaint = new Paint();
 		// TODO Auto-generated constructor stub
 	}
 	
 	public PreviewScrollView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		p = new Paint();
+		mPaint = new Paint();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -77,11 +77,11 @@ public class PreviewScrollView extends View {
 		 }
 		 Bitmap bmp = Bitmap.createBitmap(bm);
 		 bmp.eraseColor(Color.WHITE);
-		 p.setAlpha(0);
+		 mPaint.setAlpha(0);
 		 
-		 p.setAlpha(128);
+		 mPaint.setAlpha(128);
 		 Canvas can = new Canvas(mPreBitmap);
-		 can.drawBitmap(bm, x, y, p);
+		 can.drawBitmap(bm, x, y, mPaint);
 	}
 
 	
@@ -111,7 +111,7 @@ public class PreviewScrollView extends View {
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 				bit = new int[32*o.mContent.length()];
 				font.getDotbuf(o.mContent, bit);
-				mPreBitmap=getTextBitmapFrombuffer(bit);
+				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
@@ -119,7 +119,7 @@ public class PreviewScrollView extends View {
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
 				bit = new int[128*8];
 				font.getDotbuf(bit);
-				mPreBitmap=getPicBitmapFrombuffer(bit);
+				mPreBitmap=getPicBitmapFrombuffer(bit, mPaint);
 			}
 			
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
@@ -128,7 +128,7 @@ public class PreviewScrollView extends View {
 		 
 	 }  
 
-	public static Bitmap getTextBitmapFrombuffer(int[] bit)
+	public static Bitmap getTextBitmapFrombuffer(int[] bit, Paint p)
 	{
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
@@ -175,7 +175,7 @@ public class PreviewScrollView extends View {
 		return bmp;
 	}
 	
-	public static Bitmap getPicBitmapFrombuffer(int[] bit)
+	public static Bitmap getPicBitmapFrombuffer(int[] bit, Paint p)
 	{
 		Bitmap bmp = Bitmap.createBitmap(128,64, Config.ARGB_8888);
 		Canvas c = new Canvas(bmp);
@@ -212,7 +212,7 @@ public class PreviewScrollView extends View {
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
 						c.drawPoint(i%64, 32+j+(i/64-8)*8, p);
-					Debug.d(TAG, "i="+i+", j="+j+", x="+i%64+" ,y="+(32+j+(i/64-8)*8));
+					//Debug.d(TAG, "i="+i+", j="+j+", x="+i%64+" ,y="+(32+j+(i/64-8)*8));
 				}
 			}
 			/*****P4*****/
@@ -223,7 +223,7 @@ public class PreviewScrollView extends View {
 				{
 					if((bit[i]>>j&0x01) ==0x01) 
 						c.drawPoint(i%64+64, 32+j+(i/64-12)*8, p);
-					Debug.d(TAG, "i="+i+", j="+j+", x="+(i%64+64)+" ,y="+(32+j+(i/64-12)*8));
+					//Debug.d(TAG, "i="+i+", j="+j+", x="+(i%64+64)+" ,y="+(32+j+(i/64-12)*8));
 				}
 			}
 		}

@@ -45,6 +45,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -405,9 +409,39 @@ public class ControlTabActivity extends Activity {
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
+					int len = calculateBufsize(list);
+					Debug.d(TAG, "bin length="+len);
+					//int[] buffer = new int[len+16];
+					int bit[];
+					Bitmap bmp=null;
+					Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
 					
+					Canvas can = new Canvas(gBmp);
+					Paint p = new Paint();
+					p.setColor(Color.rgb(128, 128, 128));
+					
+					for(TlkObject o: list)
+					{
+						if(o.isTextObject())
+						{
+							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+							bit = new int[32*o.mContent.length()];
+							font.getDotbuf(o.mContent, bit);
+							bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+						}
+						else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
+						{
+							Debug.d(TAG, "=========pic object");
+							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+							bit = new int[128*8];
+							font.getDotbuf(bit);
+							bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+						}
+						can.drawBitmap(bmp, o.x, o.y, p);
+					}
+					BinCreater.saveBitmap(gBmp, "pre.bmp");
 					//set contents of text object
-					
+					BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
 					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 					
 					prv.show(list);
@@ -957,43 +991,23 @@ public class ControlTabActivity extends Activity {
 	}
 	
 	
-	public Bitmap getBitmap(Vector<TlkObject> list)
+	
+	public int calculateBufsize(Vector<TlkObject> list)
 	{
-		Bitmap bmp, rBmp;
-		Paint p = new Paint();
-		int[] bit = null;
-		//int bit[]=new int[3*32];
-		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
-		
-		//TlkObject[] v = (TlkObject[])mList.values().toArray();
-		
+		int length=0;
 		for(int i=0; i<list.size(); i++)
 		{
 			TlkObject o = list.get(i);
-			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
-			if(o.isTextObject() && o.mContent == null)
-				continue;
-			//DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-			//Debug.d(TAG, "bit lenght="+bit.length);
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
-				Debug.d(TAG, "=========text object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				bit = new int[32*o.mContent.length()];
-				font.getDotbuf(o.mContent, bit);
-				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit);
+				length = (16*o.mContent.length()+o.x) > length?(16*o.mContent.length()+o.x):length;
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
-				Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
-				bit = new int[128*8];
-				font.getDotbuf(bit);
-				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit);
+				length = (o.x+128) > length?(o.x+128):length;
 			}
-			
-			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			canvas.drawBitmap(Bitmap.createScaledBitmap(bmp, bmp.getWidth()*4, bmp.getHeight()*4, false), o.x, o.y, p);
 		}
+		return length;
 	}
+	
 }
