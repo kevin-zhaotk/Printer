@@ -47,6 +47,9 @@
         <activity
             android:name="com.industry.printer.SettingsTabActivity">
         </activity>
+        <activity
+            android:name="com.industry.printer.ManualCtrlActivity">
+        </activity>
         
     </application>
 

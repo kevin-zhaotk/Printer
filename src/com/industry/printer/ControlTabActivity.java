@@ -441,7 +441,8 @@ public class ControlTabActivity extends Activity {
 					}
 					BinCreater.saveBitmap(gBmp, "pre.bmp");
 					//set contents of text object
-					BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
+					BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
+					//BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
 					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 					
 					prv.show(list);

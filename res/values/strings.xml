@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 	<string name="ControlTab">Control</string>
+	<string name="manualCtrlTab">Control man</string>
 	<string name="Edit">Edit</string>
 	<string name="Settings">Settings</string>
 	<string name="btn_start">Start</string>

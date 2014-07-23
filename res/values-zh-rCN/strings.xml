@@ -6,6 +6,7 @@
     <string name="action_settings">设置</string>
     <string name="hello_world">Hello world!</string>
 	<string name="ControlTab">控制</string>
+	<string name="manualCtrlTab">编辑控制</string>
 	<string name="Edit">编辑</string>
 	<string name="Settings">设置</string>
 	<string name="btn_start">开始</string>
