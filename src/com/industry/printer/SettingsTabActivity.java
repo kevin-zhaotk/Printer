@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
@@ -15,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -75,6 +78,8 @@ public static final String TAG="SettingsTabActivity";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setLocale();
+		
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//this.addPreferencesFromResource(R.xml.settings_layout);
 		mContext = getApplicationContext();		
@@ -204,6 +209,15 @@ public static final String TAG="SettingsTabActivity";
 			}
 			
 		});
+	}
+	
+	public void setLocale()
+	{
+		Configuration config = getResources().getConfiguration(); 
+		DisplayMetrics dm = getResources().getDisplayMetrics(); 
+		config.locale = Locale.SIMPLIFIED_CHINESE; 
+		getResources().updateConfiguration(config, dm); 
+		
 	}
 	
 	public void savePreference()
