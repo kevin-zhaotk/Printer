@@ -41,15 +41,15 @@ public class SettingsTabActivity extends Activity{
 public static final String TAG="SettingsTabActivity";
 	
 	SharedPreferences mPreference=null;
-	public final String PREFERENCE_NAME="Settings";
+	public final static String PREFERENCE_NAME="Settings";
 	
-	public final String PREF_DELAY="delay";
-	public final String PREF_TRIGER="triger";
-	public final String PREF_DIRECTION="direction";
-	public final String PREF_ENCODER="encoder";
-	public final String PREF_HORIRES="horires";
-	public final String PREF_VERTRES="vertres";
-	public final String PREF_PRINTSPEED="printspeed";
+	public static final String PREF_DELAY="delay";
+	public static final String PREF_TRIGER="triger";
+	public static final String PREF_DIRECTION="direction";
+	public static final String PREF_ENCODER="encoder";
+	public static final String PREF_HORIRES="horires";
+	public static final String PREF_VERTRES="vertres";
+	public static final String PREF_PRINTSPEED="printspeed";
 	
 	public TextView mTime;
 	public TextView mVersion;
@@ -125,18 +125,27 @@ public static final String TAG="SettingsTabActivity";
         mHorires.setSummary(mHorires.getEntry());
         mVertres.setSummary(mVertres.getEntry());
         */
+		//delay param 02
 		mDelay = (EditText) findViewById(R.id.et_delay);
+		//print frequency param 01
 		mPrSpeed = (EditText) findViewById(R.id.et_printspeed);
+		//
 		mHRes = (EditText) findViewById(R.id.et_horires);
 		mVRes = (EditText) findViewById(R.id.et_vertres);
+		//triger param 04
 		mTriger = (Spinner) findViewById(R.id.sp_triger);
 		mDirection = (Spinner) findViewById(R.id.sp_direction);
+		//sync param 05
 		mEncoder = (Spinner) findViewById(R.id.sp_encoder);
-		
+		//param 06 Aggravate
+		//param 07  Fixed length,unit 0.1mm 
+		//param 08  timer,unit:ms  
+		//param 09  print head tempreture
+		//param 10  box tempreture
 		mPreference = getSharedPreferences(PREFERENCE_NAME, 0);
 		mDelay.setText(String.valueOf( mPreference.getInt(PREF_DELAY, 0)));
-		mTriger.setSelection((int) mPreference.getLong(PREF_TRIGER, 0));
-		mDirection.setSelection((int) mPreference.getLong(PREF_DIRECTION, 0));
+		mTriger.setSelection(mPreference.getBoolean(PREF_TRIGER, true)==true?0:1);
+		mDirection.setSelection(mPreference.getBoolean(PREF_DIRECTION, true)==true?0:1);
 		mEncoder.setSelection((int)mPreference.getLong(PREF_ENCODER, 0));
 		mHRes.setText(String.valueOf( mPreference.getInt(PREF_HORIRES, 0)));
 		mVRes.setText(String.valueOf( mPreference.getInt(PREF_VERTRES, 0)));

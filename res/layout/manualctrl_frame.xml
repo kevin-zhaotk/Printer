@@ -310,7 +310,6 @@
         	android:id="@+id/manual_lv_messages"
         	android:layout_below="@id/id_headtable"
         	android:layout_width="fill_parent"
-        	android:descendantFocusability="beforeDescendants"
         	android:layout_height="200dp"
          	android:listSelector="@drawable/listitem_select"
          	android:background="#ffffff"

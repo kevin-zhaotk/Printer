@@ -13,7 +13,7 @@
 	    android:visibility="visible" 
 	    />
 	
-	<TextView
+	<CheckBox
 	    android:id="@+id/manual_index"
 	    android:layout_width="50px"
 	    android:layout_height="50px"

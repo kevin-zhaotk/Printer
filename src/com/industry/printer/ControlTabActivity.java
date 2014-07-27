@@ -44,6 +44,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -185,13 +186,17 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		
+		/*
+		 *clean the print head
+		 *this command unsupported now 
+		 */
 		mBtnClean = (Button) findViewById(R.id.btnClean);
 		mBtnClean.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				UsbSerial.clean(mFd);
+				//UsbSerial.clean(mFd);
 			}
 			
 		});
@@ -405,44 +410,15 @@ public class ControlTabActivity extends Activity {
 					//if(mMsgFile!=null)
 					{
 						//String path = new File(mMsgFile.getText().toString()).getParent();
-						Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list);
+						if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list))
+						{
+							Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
+							return;
+						}
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
-					int len = calculateBufsize(list);
-					Debug.d(TAG, "bin length="+len);
-					//int[] buffer = new int[len+16];
-					int bit[];
-					Bitmap bmp=null;
-					Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
-					
-					Canvas can = new Canvas(gBmp);
-					Paint p = new Paint();
-					p.setColor(Color.rgb(128, 128, 128));
-					
-					for(TlkObject o: list)
-					{
-						if(o.isTextObject())
-						{
-							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-							bit = new int[32*o.mContent.length()];
-							font.getDotbuf(o.mContent, bit);
-							bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-						}
-						else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
-						{
-							Debug.d(TAG, "=========pic object");
-							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
-							bit = new int[128*8];
-							font.getDotbuf(bit);
-							bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-						}
-						can.drawBitmap(bmp, o.x, o.y, p);
-					}
-					BinCreater.saveBitmap(gBmp, "pre.bmp");
-					//set contents of text object
-					BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
-					//BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
+					makeBinBuffer(list);
 					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 					
 					prv.show(list);
@@ -1011,4 +987,72 @@ public class ControlTabActivity extends Activity {
 		return length;
 	}
 	
+	public void makeBinBuffer(Vector<TlkObject>list)
+	{
+		int len = calculateBufsize(list);
+		Debug.d(TAG, "bin length="+len);
+		//int[] buffer = new int[len+16];
+		int bit[];
+		Bitmap bmp=null;
+		Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
+		
+		Canvas can = new Canvas(gBmp);
+		can.drawColor(Color.WHITE);
+		Paint p = new Paint();
+		p.setARGB(255, 0, 0, 0);
+		
+		for(TlkObject o: list)
+		{
+			if(o.isTextObject())
+			{
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+				bit = new int[32*o.mContent.length()];
+				font.getDotbuf(o.mContent, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			}
+			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
+			{
+				Debug.d(TAG, "=========pic object");
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				bit = new int[128*8];
+				font.getDotbuf(bit);
+				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+			}
+			can.drawBitmap(bmp, o.x, o.y, p);
+		}
+		BinCreater.saveBitmap(gBmp, "pre.bmp");
+		//set contents of text object
+		//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
+		BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
+	}
+	
+	
+	/*
+	 * make set param buffer
+	 * 1.  Byte 2-3,param 00,	reserved
+	 * 2.  Byte 4-5,param 01,	print speed, unit HZ,43kHZ for highest
+	 * 3.  Byte 6-7, param 02,	delay,unit: 0.1mmm
+	 * 13. Byte 8-9, param 03,	reserved
+	 * 14. Byte 10-11, param 04,00 00  on, 00 01 off
+	 * 15. Byte 12-13, param 05,sync  00 00  on, 00 01 off
+	 * 16. Byte 14-15, param 06
+	 * 17. Byte 16-17, param 07, length, unit 0.1mm
+	 * 18. Byte 18-19, param 08, timer, unit ms
+	 * 19. Byte 20-21, param 09, print head Temperature
+	 * 20. Byte 20-21, param 10,  Ink cartridge Temperature
+	 * 21. others reserved  
+	 */
+	public void makeParams(byte[] params)
+	{
+		if(params==null || params.length<128)
+		{
+			Debug.d(TAG,"params is null or less than 128, realloc it");
+			params = new byte[128];
+		}
+		SharedPreferences preference = getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
+		int speed = preference.getInt(SettingsTabActivity.PREF_PRINTSPEED, 0);
+		int delay = preference.getInt(SettingsTabActivity.PREF_DELAY, 0);
+		boolean triger = preference.getBoolean(SettingsTabActivity.PREF_TRIGER, true);
+		boolean encoder = preference.getBoolean(SettingsTabActivity.PREF_ENCODER, true);
+	}
 }

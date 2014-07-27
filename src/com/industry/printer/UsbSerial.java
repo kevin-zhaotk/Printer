@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.industry.printer.Usb.CRC16;
@@ -435,7 +436,6 @@ public class UsbSerial {
 			ret = 0;
 		return ret;
 	}
-	
 	
 }
 

@@ -278,4 +278,5 @@
 	<string name="str_column_text16">text16</string>
 	
 	
+	<string name="str_notlkfile">Please select a TLK file</string>
 </resources>

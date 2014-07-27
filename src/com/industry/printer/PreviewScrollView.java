@@ -96,7 +96,7 @@ public class PreviewScrollView extends View {
 		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
 		
 		//TlkObject[] v = (TlkObject[])mList.values().toArray();
-		
+		p.setARGB(255, 0, 0, 0);
 		for(int i=0; i<mList.size(); i++)
 		{
 			TlkObject o = mList.get(i);
@@ -107,11 +107,12 @@ public class PreviewScrollView extends View {
 			//Debug.d(TAG, "bit lenght="+bit.length);
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
-				Debug.d(TAG, "=========text object");
+				Debug.d(TAG, "=========text object content="+o.mContent);
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 				bit = new int[32*o.mContent.length()];
 				font.getDotbuf(o.mContent, bit);
 				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
+				BinCreater.saveBitmap(mPreBitmap, "text.png");
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
@@ -123,16 +124,28 @@ public class PreviewScrollView extends View {
 			}
 			
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*4, mPreBitmap.getHeight()*4, false), o.x, o.y, p);
+			if(mPreBitmap!= null)
+			{
+				Debug.d(TAG,"#########");
+				canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth(), mPreBitmap.getHeight()*4, false), o.x, o.y*4, p);
+			}
+				
 		}
 		 
 	 }  
 
 	public static Bitmap getTextBitmapFrombuffer(int[] bit, Paint p)
 	{
+		if(bit==null || bit.length<=0)
+		{
+			Debug.d(TAG,"##########bit.length="+bit.length);
+			return null;
+		}
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
+		
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
 		Canvas c = new Canvas(bmp);
+		c.drawColor(Color.WHITE);
 		for(int i=0; i<bit.length; i++)
 		{
 			if(i%32>=0 && i%32 <8)	//P1

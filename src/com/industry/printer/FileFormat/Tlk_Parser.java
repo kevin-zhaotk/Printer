@@ -17,7 +17,7 @@ public class Tlk_Parser {
 
 	public static final String TAG="Tlk_Parser";
 	
-	public static void parse(String f, Vector<TlkObject> list)
+	public static boolean parse(String f, Vector<TlkObject> list)
 	{
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(f)));
@@ -44,14 +44,18 @@ public class Tlk_Parser {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 		catch(NumberFormatException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 	
 	public static void parseLine(String line)

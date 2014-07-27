@@ -26,13 +26,18 @@ import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class ManualCtrlActivity extends Activity {
@@ -62,39 +67,10 @@ public class ManualCtrlActivity extends Activity {
 											new String[]{"index","text1","text2","text3","text4","text5","text6"},
 											new int[]{R.id.manual_index,R.id.manual_text1,R.id.manual_text2,R.id.manual_text3,R.id.manual_text4,
 													R.id.manual_text5,R.id.manual_text6});
-		
+		mMessageAdapter.setMode(true);
 		mMessageList = (ListView) findViewById(R.id.manual_lv_messages);
 		mMessageList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		mMessageList.requestFocus();
-		mMessageList.setOnItemSelectedListener(new OnItemSelectedListener(){
-
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "=======onItemSelected");
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "=====onNothingSelected");
-			}
-			
-		});
 		
-		mMessageList.setOnItemClickListener(new ListView.OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "******message list clicked: "+position);
-				mMessageAdapter.setChecked(position);
-				mMessageAdapter.notifyDataSetChanged();
-			}
-			
-		});
 
 		mBtnTlkfile = (Button) findViewById(R.id.manual_btnTlkfile);
 		mBtnTlkfile.setOnClickListener(new OnClickListener(){
@@ -131,7 +107,8 @@ public class ManualCtrlActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				int pos = mMessageList.getCheckedItemPosition();
+				Debug.d(TAG, "====preview button pressed");
+				int pos = 0;//mMessageList.getCheckedItemPosition();
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
 				if(m!= null)
 				{
@@ -140,7 +117,11 @@ public class ManualCtrlActivity extends Activity {
 					//if(mMsgFile!=null)
 					{
 						//String path = new File(mMsgFile.getText().toString()).getParent();
-						Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list);
+						if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list))
+						{
+							Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
+							return;
+						}
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
@@ -156,8 +137,8 @@ public class ManualCtrlActivity extends Activity {
 					p.setColor(Color.rgb(128, 128, 128));
 					
 					for(TlkObject o: list)
-					{
-						if(o.isTextObject())
+						{
+						if(o.isTextObject() && o.mContent!=null)
 						{
 							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 							bit = new int[32*o.mContent.length()];
@@ -172,7 +153,8 @@ public class ManualCtrlActivity extends Activity {
 							font.getDotbuf(bit);
 							bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
 						}
-						can.drawBitmap(bmp, o.x, o.y, p);
+						if(bmp!=null)
+							can.drawBitmap(bmp, o.x, o.y, p);
 					}
 					BinCreater.saveBitmap(gBmp, "pre.bmp");
 					//set contents of text object
@@ -193,7 +175,7 @@ public class ManualCtrlActivity extends Activity {
 	
 	public void initMsglist()
 	{
-		for(int i=1;i<=4;i++)
+		for(int i=1;i<=1;i++)
 		{
 			Map<String,String> map = new HashMap<String,String>();
 			map.put("index", String.valueOf(i));
@@ -211,15 +193,38 @@ public class ManualCtrlActivity extends Activity {
 	{
 		for(TlkObject o:list)
 		{
-			for(int i=1;i<mMessageList.getCount(); i++)
+			//for(int i=0;i<mMessageList.getCount(); i++)
 			{
-				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(i);
-				Debug.d(TAG, "*******index="+m.get("index"));
-				if(m.get("index").equals(index))
-				{
-					Debug.d(TAG, "index "+o.index+" found");
-					o.setContent(m.get("text"+o.index));
+				LinearLayout lay = (LinearLayout)mMessageList.getChildAt(0);
+				
+				if(o.index<=0 || o.index > 5)
 					break;
+				if(o.index==1)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
+				}
+				else if(o.index==2)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
+				}else if(o.index==3)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
+				}else if(o.index==4)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
+				}else if(o.index==5)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
 				}
 			}
 		}
@@ -232,7 +237,9 @@ public class ManualCtrlActivity extends Activity {
 		for(int i=0; i<list.size(); i++)
 		{
 			TlkObject o = list.get(i);
-			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
+			if(o == null)
+				break;
+			else if(o.isTextObject() && o.mContent != null)	//each text object take over 16*16/8 * length=32Bytes*length
 			{
 				length = (16*o.mContent.length()+o.x) > length?(16*o.mContent.length()+o.x):length;
 			}

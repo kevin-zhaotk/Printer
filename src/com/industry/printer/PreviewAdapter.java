@@ -5,11 +5,17 @@ import java.util.Map;
 
 import com.industry.printer.Utils.Debug;
 
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -19,11 +25,16 @@ public class PreviewAdapter extends SimpleAdapter {
 	public static final String TAG="PreviewAdapter";
 	public int mChecked;
 	public int mlastChecked;
+	public Context mContext;
+	public boolean mManual;
+	
 	public PreviewAdapter(Context context, List<? extends Map<String, ?>> data,
 			int resource, String[] from, int[] to) {
 		super(context, data, resource, from, to);
 		mChecked=-1;
 		mlastChecked = -1;
+		mContext = context;
+		mManual = false;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -52,6 +63,22 @@ public class PreviewAdapter extends SimpleAdapter {
 		{
 			view.setBackgroundColor(Color.WHITE);
 		}
+		
+		if(mManual == true)
+		{
+			 
+			EditText t1 = (EditText)view.findViewById(R.id.manual_text1);
+			Debug.d(TAG, "===t1 content="+t1.getText().toString());
+			t1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+				
+				@Override
+				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+					// TODO Auto-generated method stub
+					Debug.d(TAG, "===v="+v.getEditableText().toString());
+					return false;
+				}
+			});
+		}
 		return super.getView(position, convertView, parent);
 	}
 	
@@ -60,4 +87,10 @@ public class PreviewAdapter extends SimpleAdapter {
 		mlastChecked = mChecked;
 		mChecked = position;
 	}
+	
+	public void setMode(boolean manual)
+	{
+		mManual = manual;
+	}
+	
 }

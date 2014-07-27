@@ -276,4 +276,6 @@
 	<string name="str_column_text14">文本14</string>
 	<string name="str_column_text15">文本15</string>
 	<string name="str_column_text16">文本16</string>
+	
+	<string name="str_notlkfile">请先选择一个正确的TLK文件</string>
 </resources>
