@@ -276,6 +276,7 @@ public class ControlTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				UsbSerial.sendSetting(mFd);
 				byte[] data = new byte[128];
+				makeParams(data);
 				UsbSerial.sendSettingData(mFd, data);
 			}
 			
@@ -352,8 +353,8 @@ public class ControlTabActivity extends Activity {
 						}
 							
 						mBtnfile.setText(new File(f).getName());
-						readCsv(f);
-						mMessageList.setAdapter(mMessageAdapter);
+						//readCsv(f);
+						//mMessageList.setAdapter(mMessageAdapter);
 					}
 					
 				});
@@ -827,8 +828,18 @@ public class ControlTabActivity extends Activity {
 			byte[] pdata = new byte[128];
 			byte[] info = new byte[16];
 			
-			UsbSerial.printStart(mFd);
-			UsbSerial.sendSetting(mFd);
+			if(UsbSerial.printStart(mFd)==0)
+			{
+				isRunning = false;
+				return;
+			}
+			if(UsbSerial.sendSetting(mFd)==0)
+			{
+				UsbSerial.printStop(mFd);
+				isRunning = false;
+				return;
+			}	
+			makeParams(sdata);
 			UsbSerial.sendSettingData(mFd, sdata);
 			while(isRunning == true)
 			{
@@ -863,6 +874,8 @@ public class ControlTabActivity extends Activity {
 					UsbSerial.printData(mFd, pdata);
 				}
 			}
+			
+				
 			Log.d(TAG, "PrintingThread exit, mfd="+mFd);
 			//isPrinting = false;
 		}
@@ -879,12 +892,11 @@ public class ControlTabActivity extends Activity {
 		}
 	}
 	
-	public synchronized void startThread(Thread t)
+	public synchronized Thread startThread(Thread t)
 	{
-		if(t != null)
-			return;
 		t = new PrintingThread();
 		t.start();
+		return t;
 	}
 	
 	public void initMsglist()
@@ -916,7 +928,7 @@ public class ControlTabActivity extends Activity {
 		mMessageMap.add(m);
 	}
 	
-	public void readCsv(String csvfile)
+	public void readCsv(String csvfile, Vector<TlkObject> list)
 	{
 		CsvReader reader;
 		mMessageMap.clear();
@@ -1033,7 +1045,7 @@ public class ControlTabActivity extends Activity {
 	 * 2.  Byte 4-5,param 01,	print speed, unit HZ,43kHZ for highest
 	 * 3.  Byte 6-7, param 02,	delay,unit: 0.1mmm
 	 * 13. Byte 8-9, param 03,	reserved
-	 * 14. Byte 10-11, param 04,00 00  on, 00 01 off
+	 * 14. Byte 10-11, param 04,triger 00 00  on, 00 01 off
 	 * 15. Byte 12-13, param 05,sync  00 00  on, 00 01 off
 	 * 16. Byte 14-15, param 06
 	 * 17. Byte 16-17, param 07, length, unit 0.1mm
@@ -1051,8 +1063,59 @@ public class ControlTabActivity extends Activity {
 		}
 		SharedPreferences preference = getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
 		int speed = preference.getInt(SettingsTabActivity.PREF_PRINTSPEED, 0);
+		params[4] = (byte) ((speed>>16)&0xff);
+		params[5] = (byte) ((speed)&0xff);
 		int delay = preference.getInt(SettingsTabActivity.PREF_DELAY, 0);
+		params[6] = (byte) ((delay>>16)&0xff);
+		params[7] = (byte) ((delay)&0xff);
 		boolean triger = preference.getBoolean(SettingsTabActivity.PREF_TRIGER, true);
+		params[10] = 0x00;
+		params[11] = (byte) (triger==true?0x00:0x01);
 		boolean encoder = preference.getBoolean(SettingsTabActivity.PREF_ENCODER, true);
+		params[12] = 0x00;
+		params[13] = (byte) (encoder==true?0x00:0x01);
+		int bold = preference.getInt(SettingsTabActivity.PREF_BOLD, 0);
+		params[14] = (byte) ((bold>>16)&0xff);
+		params[15] = (byte) ((bold)&0xff);
+		int fixlen = preference.getInt(SettingsTabActivity.PREF_FIX_LEN, 0);
+		params[16] = (byte) ((fixlen>>16)&0xff);
+		params[17] = (byte) ((fixlen)&0xff);
+		int fixtime= preference.getInt(SettingsTabActivity.PREF_FIX_TIME, 0);
+		params[18] = (byte) ((fixtime>>16)&0xff);
+		params[19] = (byte) ((fixtime)&0xff);
+		int headtemp = preference.getInt(SettingsTabActivity.PREF_HEAD_TEMP, 0);
+		params[20] = (byte) ((headtemp>>16)&0xff);
+		params[21] = (byte) ((headtemp)&0xff);
+		int resvtemp = preference.getInt(SettingsTabActivity.PREF_RESV_TEMP, 0);
+		params[22] = (byte) ((resvtemp>>16)&0xff);
+		params[23] = (byte) ((resvtemp)&0xff);
+		int fontwidth = preference.getInt(SettingsTabActivity.PREF_FONT_WIDTH, 0);
+		int dots = preference.getInt(SettingsTabActivity.PREF_DOT_NUMBER, 0);
+		
+		
 	}
+	
+	public static final int FILE_CSV_CHANGED=1;
+	public static final int FILE_TLK_CHANGED=2;
+	public Handler fileChangedHandler = new Handler(){
+		@Override
+		public void  handleMessage(Message msg)
+		{
+			switch(msg.what)
+			{
+			case FILE_CSV_CHANGED:
+			case FILE_TLK_CHANGED:
+				if(mBtnTlkfile.getText().toString()!=null && mBtnTlkfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.TLK_SUFFIX)
+					&& mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
+				{
+					
+				}
+				break;
+			default:
+				Debug.d(TAG, "unsupported message "+msg.what);
+			}
+		}
+	}; 
+	
+	
 }
