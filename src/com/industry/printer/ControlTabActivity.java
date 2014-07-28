@@ -118,6 +118,7 @@ public class ControlTabActivity extends Activity {
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
+	Map<Vector<TlkObject>, byte[]> mBinBuffer;
 	/*
 	 * whether the print-head is doing print work
 	 * if no, poll state Thread will read print-header state
@@ -825,7 +826,7 @@ public class ControlTabActivity extends Activity {
 	public class PrintingThread extends Thread{
 		
 		public boolean isRunning;
-		
+		public int curPos=0;
 		public PrintingThread()
 		{
 			isRunning=false;
@@ -885,10 +886,23 @@ public class ControlTabActivity extends Activity {
 							e.printStackTrace();
 						}
 					}
-					UsbSerial.sendDataCtrl(mFd, BinCreater.mBmpBits.length-16);
-					pdata = new byte[BinCreater.mBmpBits.length-16];
-					new ByteArrayInputStream(BinCreater.mBmpBits).read(pdata, 16, BinCreater.mBmpBits.length-16);
-					UsbSerial.printData(mFd,  pdata);
+					if(mTlkList==null || mTlkList.isEmpty())
+					{
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						continue;
+					}
+					if(curPos>mTlkList.size())
+						curPos = 0;
+					Vector<TlkObject> list = mTlkList.get(curPos);
+					byte[] buffer = mBinBuffer.get(list);
+					UsbSerial.sendDataCtrl(mFd, buffer.length);
+					UsbSerial.printData(mFd,  buffer);
+					curPos++;
 				}
 			}
 			
@@ -1054,7 +1068,7 @@ public class ControlTabActivity extends Activity {
 		BinCreater.saveBitmap(gBmp, "pre.bmp");
 		//set contents of text object
 		//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
-		BinCreater.create(gBmp, "/mnt/usb/1.bin", 0);
+		BinCreater.create(gBmp, 0);
 	}
 	
 	
@@ -1124,10 +1138,11 @@ public class ControlTabActivity extends Activity {
 			{
 			case FILE_CSV_CHANGED:
 			case FILE_TLK_CHANGED:
+				//
 				if(mBtnTlkfile.getText().toString()!=null && mBtnTlkfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.TLK_SUFFIX)
 					&& mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
 				{
-					Vector<TlkObject> list = new Vector<TlkObject>();
+					//Vector<TlkObject> list = new Vector<TlkObject>();
 					//if(mMsgFile!=null)
 					{
 						mTlkList.clear();
@@ -1150,6 +1165,17 @@ public class ControlTabActivity extends Activity {
 						}
 						
 						Debug.d(TAG, "list size="+mTlkList.size());
+					}
+					//make bin buffer
+					{
+						for(Vector<TlkObject> list:mTlkList)
+						{
+							makeBinBuffer(list);
+							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
+							byte buffer[] = new byte[BinCreater.mBmpBits.length];
+							stream.read(buffer);
+							mBinBuffer.put(list, buffer);
+						}
 					}
 				}
 				break;

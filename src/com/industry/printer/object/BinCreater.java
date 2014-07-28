@@ -27,21 +27,17 @@ public class BinCreater {
 	public static int mBmpBytes[];
 	public static byte mBmpBits[];
 	
-	public static void create(Bitmap bmp, String f, int colEach)
+	public static void create(Bitmap bmp, int colEach)
 	{
 		mBmpBytes = new int[bmp.getByteCount()/2];
-		mBmpBits = new byte[bmp.getWidth()*(bmp.getHeight()%8==0 ? bmp.getHeight()/8 : bmp.getHeight()/8+1)+16];
+		mBmpBits = new byte[bmp.getWidth()*(bmp.getHeight()%8==0 ? bmp.getHeight()/8 : bmp.getHeight()/8+1)];
 		
 		Bitmap img =	convertGreyImg(bmp);
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
-		Debug.d(TAG, "byteCount="+img.getByteCount());
-		/*
-         * 
-         */
-		img.getPixels(mBmpBytes, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
-        //Debug.d(TAG, "getExternalStorageDirectory="+Environment.getExternalStorageDirectory().toString());
-		//byte2bit(img.getHeight());
-		saveBin(f);
+		//Debug.d(TAG, "byteCount="+img.getByteCount());
+		
+		//img.getPixels(mBmpBytes, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
+        
 	}
 	
 	
@@ -62,9 +58,11 @@ public class BinCreater {
         int []pixels = new int[width * height]; 
         int colEach = height%8==0?height/8:height/8+1;
         Debug.d(TAG, "=====width="+width+", height="+height+", colEach="+colEach);
-        mBmpBits[2] = (byte) (width & 0x0ff);
-    	mBmpBits[1] = (byte) ((width>>8) & 0x0ff);
-    	mBmpBits[0] = (byte) ((width>>16) & 0x0ff);
+        /*move to saveBin for head info fill*/
+        //mBmpBits[2] = (byte) (width & 0x0ff);
+    	//mBmpBits[1] = (byte) ((width>>8) & 0x0ff);
+    	//mBmpBits[0] = (byte) ((width>>16) & 0x0ff);
+        
         bmp.getPixels(pixels, 0, width, 0, 0, width, height); 
         //int alpha = 0x00 << 24;  
         Debug.d(TAG, "=================");
@@ -92,17 +90,18 @@ public class BinCreater {
                 System.out.print("pixels["+(width * i + j)+"]="+grey+",");
                 pixels[width * i + j] = grey>128? 0x0:0xffffff;
                 if(grey>128)
-                	mBmpBits[j*colEach+i/8+16] &= ~(0x01<<(i%8));
+                	mBmpBits[j*colEach+i/8] &= ~(0x01<<(i%8));
                 else
-                	mBmpBits[j*colEach+i/8+16] |= 0x01<<(i%8); 
+                	mBmpBits[j*colEach+i/8] |= 0x01<<(i%8); 
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
             System.out.println("==========================");
         } 
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
-        result.setPixels(pixels, 0, width, 0, 0, width, height); 
-        saveBitmap(result, "bk.png");
-        
+        result.setPixels(pixels, 0, width, 0, 0, width, height);
+        /*just for debug*/
+        //saveBitmap(result, "bk.png");
+        //saveBin("/mnt/usb/1.bin", width);
         return result; 
     }
     
@@ -188,13 +187,18 @@ public class BinCreater {
     	return true;
     }
     
-    public static boolean saveBin(String f)
+    public static boolean saveBin(String f, int width)
     {
+    	byte head[]=new byte[16];
+    	head[2] = (byte) (width & 0x0ff);
+    	head[1] = (byte) ((width>>8) & 0x0ff);
+    	head[0] = (byte) ((width>>16) & 0x0ff);
     	try{
     		File file = new File(f);
     		FileOutputStream fs = new FileOutputStream(file);
     		ByteArrayOutputStream barr = new ByteArrayOutputStream();
-    		barr.write(mBmpBits);
+    		barr.write(head);
+    		barr.write(mBmpBits,16,mBmpBits.length);
     		barr.writeTo(fs);
     		fs.flush();
     		fs.close();
