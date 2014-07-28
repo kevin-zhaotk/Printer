@@ -43,17 +43,17 @@ public static final String TAG="SettingsTabActivity";
 	SharedPreferences mPreference=null;
 	public final static String PREFERENCE_NAME="Settings";
 /*	
-	1.  Byte 2-3£¬  setting 00£¬  Reserved. 
-	2.  Byte 4-5£¬  setting 01£¬  printing frequency.  Unit: Hz, (0-43K Hz£©
-	3.  Byte 6-7,  setting 02£¬  Delay.               Unit: 0.1mmm  
-	4.  Byte 8-9£¬  setting 03£¬  Reserved. 
-	5.  Byte 10-11,  setting 04£¬ Photocell.           00 00 : ON.  00 01 OFF. 
-	6.  Byte 12-13,  setting 05£¬ Encoder.             00 00 : ON.  00 01 OFF.  
-	7.  Byte 14-15,  setting 06£¬  Bold.  
-	8.  Byte 16-17,  setting 07£¬  Fix length trigger.  Unit: 0.1mmm 
-	9.  Byte 18-19,  setting 08£¬  Fix time  trigger.  Unit: ms
-	10. Byte 20-21,  setting 09£¬  Temperature of print head.  Unit: ¡æ   00-130.
-	11. Byte 20-21,   setting 09£¬  Temperature of reservoir.  Unit: ¡æ   00-130.
+	1.  Byte 2-3,  setting 00,  Reserved. 
+	2.  Byte 4-5,  setting 01,  printing frequency.  Unit: Hz, (0-43K Hz)
+	3.  Byte 6-7,  setting 02,  Delay.               Unit: 0.1mmm  
+	4.  Byte 8-9,  setting 03,  Reserved. 
+	5.  Byte 10-11,  setting 04, Photocell.           00 00 : ON.  00 01 OFF. 
+	6.  Byte 12-13,  setting 05, Encoder.             00 00 : ON.  00 01 OFF.  
+	7.  Byte 14-15,  setting 06,  Bold.  
+	8.  Byte 16-17,  setting 07,  Fix length trigger.  Unit: 0.1mmm 
+	9.  Byte 18-19,  setting 08,  Fix time  trigger.  Unit: ms
+	10. Byte 20-21,  setting 09,  Temperature of print head.  Unit: C 00-130.
+	11. Byte 20-21,   setting 09,  Temperature of reservoir.  Unit: C   00-130.
 	12. Others ,     Setting 10-63,  Reserved. 
 */
 	public static final String PREF_PRINTSPEED="printspeed";	//01

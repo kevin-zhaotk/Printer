@@ -137,7 +137,6 @@
 	<!-- Settings frame -->
 	<string name="strParam0">00.保留</string>
 	<string name="strPrSpeedname">01.打印频率</string>
-	<string name="strPrSpeedUnit">HZ</string>
 	<string name="strDelay_key">delay_key</string>
 	<string name="strDelayname">02.延时</string>
 	<string name="strDelay_summary">Set Delay</string>
@@ -169,7 +168,7 @@
 	<string name="strResunit">dpi</string>
 	<string name="strLenunit">0.1mmm</string>
 	<string name="strTempunit">C</string>
-	<string name="strPrSpeedunit">mm/min</string>
+	<string name="strPrSpeedUnit">HZ</string>
 	<string name="strResvname8">08.保留</string>
 	<string name="strResvname9">09.保留</string>
 	<string name="strResvname10">10.保留</string>

@@ -143,7 +143,7 @@
 		    android:layout_toRightOf="@id/et_delay"
 		    android:layout_marginLeft="10dp"
 		    android:layout_alignBaseline="@id/tv_delay"
-		    android:text="@string/strDelayunit"
+		    android:text="@string/strTimeunit"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -309,7 +309,7 @@
 		    android:layout_below="@id/tv_fixlen_triger"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
-		    android:layout_alignBaseline="@id/tv_resv1"
+		    android:layout_alignBaseline="@id/tv_fixtime_triger"
 		    />
 		<TextView android:id="@+id/tv_fixtime_unit"
 		    android:layout_width="wrap_content"
@@ -372,7 +372,7 @@
 		    android:clickable="false"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
-		    android:layout_alignBaseline="@id/tv_resv2"
+		    android:layout_alignBaseline="@id/tv_reseTemp"
 		    />
 		<TextView android:id="@+id/tv_reseTemp_unit"
 		    android:layout_width="wrap_content"

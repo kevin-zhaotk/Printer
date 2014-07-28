@@ -1,5 +1,6 @@
 package com.industry.printer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -116,7 +117,7 @@ public class ControlTabActivity extends Activity {
 	public BinInfo mBg;
 	
 	public static FileInputStream mFileInputStream;
-	
+	Vector<Vector<TlkObject>> mTlkList;
 	/*
 	 * whether the print-head is doing print work
 	 * if no, poll state Thread will read print-header state
@@ -134,7 +135,7 @@ public class ControlTabActivity extends Activity {
 		setContentView(R.layout.control_frame);
 		
 		isPrinting = false;
-		
+		mTlkList = new Vector<Vector<TlkObject>>();
 		mObjList = new Vector<BaseObject>();
 		mContext = this.getApplicationContext();
 		IntentFilter filter = new IntentFilter();
@@ -300,7 +301,7 @@ public class ControlTabActivity extends Activity {
 		
 		
 		//mPollThread = new PollStateThread();
-		mPrintThread = new PrintingThread();
+		mPrintThread = (PrintingThread) startThread();
 		//mPrintThread.start();
 		/*
 		 * Start Printing Thread
@@ -353,8 +354,9 @@ public class ControlTabActivity extends Activity {
 						}
 							
 						mBtnfile.setText(new File(f).getName());
-						//readCsv(f);
-						//mMessageList.setAdapter(mMessageAdapter);
+						readCsv(f);
+						mMessageList.setAdapter(mMessageAdapter);
+						fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
 					}
 					
 				});
@@ -385,6 +387,7 @@ public class ControlTabActivity extends Activity {
 						}
 							
 						mBtnTlkfile.setText(new File(f).getName());
+						fileChangedHandler.sendEmptyMessage(FILE_TLK_CHANGED);
 					}
 					
 				});
@@ -403,6 +406,13 @@ public class ControlTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
 				int pos = mMessageList.getCheckedItemPosition();
+				if(pos<0 || pos>=mMessageList.getCount())
+					return;
+				Debug.d(TAG, "-------selected pos="+pos);
+				Vector<TlkObject> list = mTlkList.get(pos);
+				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
+				prv.show(list);
+				/*
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
 				if(m!= null)
 				{
@@ -423,8 +433,9 @@ public class ControlTabActivity extends Activity {
 					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 					
 					prv.show(list);
+					
 				}
-				
+				*/
 			}
 			
 		});
@@ -442,6 +453,8 @@ public class ControlTabActivity extends Activity {
 					Map<String,String> item = mMessageMap.remove(i);
 					Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
 					mMessageMap.add(i-1, item);
+					Vector<TlkObject> vec= mTlkList.remove(i);
+					mTlkList.add(i-1, vec);
 				}
 				mMessageList.setAdapter(mMessageAdapter);
 				
@@ -462,6 +475,8 @@ public class ControlTabActivity extends Activity {
 				Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
 				Map<String,String> item = mMessageMap.remove(i);
 				mMessageMap.add(i+1, item);
+				Vector<TlkObject> vec= mTlkList.remove(i);
+				mTlkList.add(i, vec);
 				mMessageList.setAdapter(mMessageAdapter);
 				
 			}
@@ -825,7 +840,7 @@ public class ControlTabActivity extends Activity {
 		{
 			//isPrinting = true;
 			byte[] sdata = new byte[128];
-			byte[] pdata = new byte[128];
+			byte[] pdata;// = new byte[128];
 			byte[] info = new byte[16];
 			
 			if(UsbSerial.printStart(mFd)==0)
@@ -870,8 +885,10 @@ public class ControlTabActivity extends Activity {
 							e.printStackTrace();
 						}
 					}
-					UsbSerial.sendDataCtrl(mFd, pdata.length);
-					UsbSerial.printData(mFd, pdata);
+					UsbSerial.sendDataCtrl(mFd, BinCreater.mBmpBits.length-16);
+					pdata = new byte[BinCreater.mBmpBits.length-16];
+					new ByteArrayInputStream(BinCreater.mBmpBits).read(pdata, 16, BinCreater.mBmpBits.length-16);
+					UsbSerial.printData(mFd,  pdata);
 				}
 			}
 			
@@ -892,9 +909,9 @@ public class ControlTabActivity extends Activity {
 		}
 	}
 	
-	public synchronized Thread startThread(Thread t)
+	public synchronized Thread startThread()
 	{
-		t = new PrintingThread();
+		PrintingThread t = new PrintingThread();
 		t.start();
 		return t;
 	}
@@ -928,7 +945,8 @@ public class ControlTabActivity extends Activity {
 		mMessageMap.add(m);
 	}
 	
-	public void readCsv(String csvfile, Vector<TlkObject> list)
+	
+	public void readCsv(String csvfile)//, Vector<TlkObject> list)
 	{
 		CsvReader reader;
 		mMessageMap.clear();
@@ -952,6 +970,7 @@ public class ControlTabActivity extends Activity {
 					else if(i> 0 && i< 5)	//pic
 					{
 						m.put("pic"+i, reader.get(i));
+						//list.
 						Debug.d(TAG, "pic"+i+" = "+reader.get(i));
 					}
 					else if(i>=5 &&i<21)	//text
@@ -1108,7 +1127,30 @@ public class ControlTabActivity extends Activity {
 				if(mBtnTlkfile.getText().toString()!=null && mBtnTlkfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.TLK_SUFFIX)
 					&& mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
 				{
-					
+					Vector<TlkObject> list = new Vector<TlkObject>();
+					//if(mMsgFile!=null)
+					{
+						mTlkList.clear();
+						
+						for(int i=0;i<mMessageList.getCount();i++)
+						{
+							Vector<TlkObject> tmpList = new Vector<TlkObject>();
+							//String path = new File(mMsgFile.getText().toString()).getParent();
+							if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), tmpList))
+							{
+								Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
+								return;
+							}
+						
+							
+							String index = ((Map<String, String>)mMessageList.getItemAtPosition(i)).get("index");
+							Debug.d(TAG, "=========index="+index+", i="+i);
+							setContent(index, tmpList);
+							mTlkList.add(tmpList);
+						}
+						
+						Debug.d(TAG, "list size="+mTlkList.size());
+					}
 				}
 				break;
 			default:

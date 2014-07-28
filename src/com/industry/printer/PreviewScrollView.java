@@ -97,6 +97,8 @@ public class PreviewScrollView extends View {
 		
 		//TlkObject[] v = (TlkObject[])mList.values().toArray();
 		p.setARGB(255, 0, 0, 0);
+		if(mList==null)
+			return;
 		for(int i=0; i<mList.size(); i++)
 		{
 			TlkObject o = mList.get(i);
