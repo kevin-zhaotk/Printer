@@ -195,7 +195,7 @@ public static final String TAG="SettingsTabActivity";
 		mPreference = getSharedPreferences(PREFERENCE_NAME, 0);
 		mPrSpeed.setText(String.valueOf( mPreference.getInt(PREF_PRINTSPEED, 0)));
 		mDelay.setText(String.valueOf( mPreference.getInt(PREF_DELAY, 0)));
-		mTriger.setSelection(mPreference.getBoolean(PREF_TRIGER, true)==true?0:1);
+		mTriger.setSelection((int)mPreference.getLong(PREF_TRIGER, 0));
 		mEncoder.setSelection((int)mPreference.getLong(PREF_ENCODER, 0));
 		mBold.setText(String.valueOf(mPreference.getInt(PREF_BOLD, 0)));
 		mFixlen.setText(String.valueOf(mPreference.getInt(PREF_FIX_LEN, 0)));
@@ -290,13 +290,19 @@ public static final String TAG="SettingsTabActivity";
 	
 	public void savePreference()
 	{
+		mPreference.edit().putInt(PREF_PRINTSPEED, Integer.parseInt(mPrSpeed.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_DELAY, Integer.parseInt(mDelay.getText().toString())).commit();
 		mPreference.edit().putLong(PREF_TRIGER, mTriger.getSelectedItemId()).commit();
-		mPreference.edit().putLong(PREF_DIRECTION, mDirection.getSelectedItemId()).commit();
+		//mPreference.edit().putLong(PREF_DIRECTION, mDirection.getSelectedItemId()).commit();
 		mPreference.edit().putLong(PREF_ENCODER, mEncoder.getSelectedItemId()).commit();
-		mPreference.edit().putInt(PREF_HORIRES, Integer.parseInt(mHRes.getText().toString())).commit();
-		mPreference.edit().putInt(PREF_VERTRES, Integer.parseInt(mVRes.getText().toString())).commit();
-		mPreference.edit().putInt(PREF_PRINTSPEED, Integer.parseInt(mPrSpeed.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_BOLD, Integer.parseInt(mBold.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_FIX_LEN, Integer.parseInt(mFixlen.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_FIX_TIME, Integer.parseInt(mFixtime.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_HEAD_TEMP, Integer.parseInt(mHeadtemp.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESV_TEMP, Integer.parseInt(mResvtemp.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_FONT_WIDTH, Integer.parseInt(mFontwidth.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_DOT_NUMBER, Integer.parseInt(mDots.getText().toString())).commit();
+		
 	}
 	/*
 	@Override

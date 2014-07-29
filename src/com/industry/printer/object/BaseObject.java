@@ -146,7 +146,7 @@ public class BaseObject{
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
 		
 		
-		BinCreater.create(gBmp, f+"/"+getIndex()+".bin", (int)mWidth/mContent.length());
+		BinCreater.create(gBmp, (int)mWidth/mContent.length());
 	}
 	
 	public Canvas getCanvas()

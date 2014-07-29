@@ -91,6 +91,10 @@ public class MainActivity extends TabActivity {
 		TextView v3= (TextView) mTab.getTabWidget().getChildAt(2).findViewById(android.R.id.title);
 		v3.setTextSize(30);
 		v3.setGravity(Gravity.CENTER_VERTICAL);
+		/*adjust Setting tab title*/
+		TextView v4= (TextView) mTab.getTabWidget().getChildAt(3).findViewById(android.R.id.title);
+		v4.setTextSize(30);
+		v4.setGravity(Gravity.CENTER_VERTICAL);
 		
 		//set current tab
 		mTab.setCurrentTab(0);
@@ -100,6 +104,7 @@ public class MainActivity extends TabActivity {
 		filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
 		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
 		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
 		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver();
 		Context mContext = this.getApplicationContext();
 		mContext.registerReceiver(mReceiver, filter);

@@ -93,7 +93,7 @@ public class DotMatrixFont {
 				if(s==null)
 					break;
 				String[] dot = s.split("  ");
-				Debug.d(TAG,"********P1*********");
+				//Debug.d(TAG,"********P1*********");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
 					dot[k]=dot[k].trim();
@@ -109,7 +109,7 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				Debug.d(TAG,"********P2*********");
+				//Debug.d(TAG,"********P2*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
@@ -126,7 +126,7 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				Debug.d(TAG,"********P3*********");
+				//Debug.d(TAG,"********P3*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
@@ -143,7 +143,7 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				Debug.d(TAG,"********P4*********");
+				//Debug.d(TAG,"********P4*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
@@ -181,7 +181,7 @@ public class DotMatrixFont {
 				/*read P1 content*/
 				
 				
-				Debug.d(TAG,"********P1*********");
+				//Debug.d(TAG,"********P1*********");
 				for(int i=0;i<32; i++)
 				{
 					s=mReader.readLine();
@@ -207,7 +207,7 @@ public class DotMatrixFont {
 					s=mReader.readLine();
 					if(s==null)
 						return;
-					Debug.d(TAG,"********P2*********");
+					//Debug.d(TAG,"********P2*********");
 					dot = s.split("  ");
 					for(int k=0;k<8 && k<dot.length; k++)
 					{
@@ -219,7 +219,7 @@ public class DotMatrixFont {
 				/*read space line*/
 				s=mReader.readLine();
 				/*read P3 head*/
-				Debug.d(TAG,"********P3*********");
+				//Debug.d(TAG,"********P3*********");
 				s=mReader.readLine();
 				if(s==null || !s.startsWith("P3"))
 					return;
@@ -247,7 +247,7 @@ public class DotMatrixFont {
 					return;
 				/*read P4 content*/
 				
-				Debug.d(TAG,"********P4*********");
+				//Debug.d(TAG,"********P4*********");
 				for(int i=0;i<32;i++)
 				{
 					s=mReader.readLine();

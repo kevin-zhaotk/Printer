@@ -1111,7 +1111,7 @@ public class EditTabActivity extends Activity {
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		//BinCreater.saveBitmap(bmp, "back.png");
-		BinCreater.create(bmp, f+"/1.bin", 0);
+		BinCreater.create(bmp, 0);
 		return bmp;
 	}
 	

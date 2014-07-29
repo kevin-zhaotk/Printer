@@ -137,6 +137,7 @@ public class ControlTabActivity extends Activity {
 		
 		isPrinting = false;
 		mTlkList = new Vector<Vector<TlkObject>>();
+		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
 		mObjList = new Vector<BaseObject>();
 		mContext = this.getApplicationContext();
 		IntentFilter filter = new IntentFilter();
@@ -302,7 +303,7 @@ public class ControlTabActivity extends Activity {
 		
 		
 		//mPollThread = new PollStateThread();
-		mPrintThread = (PrintingThread) startThread();
+		//mPrintThread = (PrintingThread) startThread();
 		//mPrintThread.start();
 		/*
 		 * Start Printing Thread
@@ -316,7 +317,7 @@ public class ControlTabActivity extends Activity {
 				if(isPrinting)	//printing thread is running, do not create a new print thread again
 					return;
 				isPrinting = true;
-				
+				mPrintThread = (PrintingThread) startThread();
 			}
 			
 		});
@@ -330,7 +331,7 @@ public class ControlTabActivity extends Activity {
 				if(!isPrinting)
 					return;
 				isPrinting = false;
-				
+				stopThread(mPrintThread);
 			}
 			
 		});
@@ -407,10 +408,10 @@ public class ControlTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
 				int pos = mMessageList.getCheckedItemPosition();
-				if(pos<0 || pos>=mMessageList.getCount())
+				if(pos<1 || pos>=mMessageList.getCount())
 					return;
 				Debug.d(TAG, "-------selected pos="+pos);
-				Vector<TlkObject> list = mTlkList.get(pos);
+				Vector<TlkObject> list = mTlkList.get(pos-1);
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show(list);
 				/*
@@ -560,7 +561,7 @@ public class ControlTabActivity extends Activity {
 				Debug.d(TAG, "*******index="+m.get("index"));
 				if(m.get("index").equals(index))
 				{
-					Debug.d(TAG, "index "+o.index+" found");
+					Debug.d(TAG, "index "+o.index+" found"+", text"+o.index+"="+m.get("text"+o.index));
 					o.setContent(m.get("text"+o.index));
 					break;
 				}
@@ -765,11 +766,13 @@ public class ControlTabActivity extends Activity {
 			Debug.d(TAG, "******intent="+intent.getAction());
 			if(ACTION_REOPEN_SERIAL.equals(intent.getAction()))
 			{
+				openSerial();
+				/*
 				if(openSerial())
 				{
 					stopThread(mPrintThread);
 					mPrintThread.start();
-				}
+				}*/
 			}
 			else if(ACTION_CLOSE_SERIAL.equals(intent.getAction()))
 			{
@@ -1019,9 +1022,11 @@ public class ControlTabActivity extends Activity {
 		int length=0;
 		for(int i=0; i<list.size(); i++)
 		{
+			Debug.d(TAG,"calculateBufsize list i="+i);
 			TlkObject o = list.get(i);
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
+				Debug.d(TAG,"content="+o.mContent);
 				length = (16*o.mContent.length()+o.x) > length?(16*o.mContent.length()+o.x):length;
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
@@ -1147,7 +1152,7 @@ public class ControlTabActivity extends Activity {
 					{
 						mTlkList.clear();
 						
-						for(int i=0;i<mMessageList.getCount();i++)
+						for(int i=1;i<mMessageList.getCount();i++)
 						{
 							Vector<TlkObject> tmpList = new Vector<TlkObject>();
 							//String path = new File(mMsgFile.getText().toString()).getParent();
@@ -1156,7 +1161,6 @@ public class ControlTabActivity extends Activity {
 								Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
 								return;
 							}
-						
 							
 							String index = ((Map<String, String>)mMessageList.getItemAtPosition(i)).get("index");
 							Debug.d(TAG, "=========index="+index+", i="+i);
@@ -1168,12 +1172,19 @@ public class ControlTabActivity extends Activity {
 					}
 					//make bin buffer
 					{
+						mBinBuffer.clear();
 						for(Vector<TlkObject> list:mTlkList)
 						{
 							makeBinBuffer(list);
 							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
 							byte buffer[] = new byte[BinCreater.mBmpBits.length];
+							try{
 							stream.read(buffer);
+							}
+							catch(Exception e)
+							{
+								
+							}
 							mBinBuffer.put(list, buffer);
 						}
 					}

@@ -91,15 +91,14 @@
 		    android:text="@string/strPrSpeedname"
 		    android:layout_below="@id/tv_param0" 
 		    android:layout_marginLeft="10dp"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
 		<EditText android:id="@+id/et_frequency"
 		    android:layout_width="100dp"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/tv_frequency"
-		    android:layout_marginLeft="50dp"
+		    android:layout_alignLeft="@id/et_param0"
 		    android:inputType="number"
 		    android:layout_alignBaseline="@id/tv_frequency"
 		    android:hint="@string/strDefault"
@@ -123,15 +122,14 @@
 		    android:text="@string/strDelayname"
 		    android:layout_below="@id/tv_frequency"
 		    android:layout_marginLeft="10dp"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
 		<EditText android:id="@+id/et_delay"
 		    android:layout_width="100dp"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/tv_delay"
-		    android:layout_marginLeft="50dp"
+		    android:layout_alignLeft="@id/et_frequency"
 		    android:inputType="number"
 		    android:layout_alignBaseline="@id/tv_delay"
 		    android:hint="@string/strDefault"
@@ -155,7 +153,7 @@
 		    android:text="@string/strParam3"
 		    android:layout_below="@id/tv_delay"
 		    android:layout_alignLeft="@id/tv_delay"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -176,7 +174,7 @@
 		    android:text="@string/strTriggername" 
 		    android:layout_alignLeft="@id/tv_param3"
 		    android:layout_below="@id/tv_param3"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -204,11 +202,11 @@
 		<TextView android:id="@+id/tv_encoder"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/strEncodername" 
+		    android:text="@string/strSyncname" 
 		    android:layout_alignLeft="@id/tv_trigermode"
 		    android:layout_below="@id/tv_trigermode"
 		    android:textSize="20dp"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textColor="#000000"
 		    />
 		<Spinner android:id="@+id/sp_encoder"
@@ -238,7 +236,7 @@
 		    android:text="@string/strBold" 
 		    android:layout_alignLeft="@id/tv_encoder"
 		    android:layout_below="@id/tv_encoder"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -254,6 +252,7 @@
 		<TextView android:id="@+id/tv_horires_unit"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/et_bold"
 		    android:layout_marginLeft="10dp"
 		    android:layout_alignBaseline="@id/tv_bold"
 		    android:text="@string/strResunit"
@@ -265,10 +264,10 @@
 		<TextView android:id="@+id/tv_fixlen_triger"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/strVertResname" 
+		    android:text="@string/strFixlen" 
 		    android:layout_alignLeft="@id/tv_bold"
 		    android:layout_below="@id/tv_bold"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -285,6 +284,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="10dp"
+		    android:layout_toRightOf="@id/et_fixlen_triger"
 		    android:layout_alignBaseline="@id/tv_fixlen_triger"
 		    android:text="@string/strLenunit"
 		    android:textSize="20dp"
@@ -298,14 +298,14 @@
 		    android:text="@string/strFixtime" 
 		    android:layout_alignLeft="@id/tv_fixlen_triger"
 		    android:layout_below="@id/tv_fixlen_triger"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
 		<EditText android:id="@+id/et_fixtime_triger"
 		    android:layout_width="100dp"
 		    android:layout_height="wrap_content"
-		    android:layout_alignLeft="@id/tv_fixlen_triger"
+		    android:layout_alignLeft="@id/et_fixlen_triger"
 		    android:layout_below="@id/tv_fixlen_triger"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
@@ -315,6 +315,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="10dp"
+		    android:layout_toRightOf="@id/et_fixtime_triger"
 		    android:layout_alignBaseline="@id/tv_fixtime_triger"
 		    android:text="@string/strTimeunit"
 		    android:textSize="20dp"
@@ -328,7 +329,7 @@
 		    android:text="@string/strHeadTemp" 
 		    android:layout_alignLeft="@id/tv_fixtime_triger"
 		    android:layout_below="@id/tv_fixtime_triger"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -341,7 +342,6 @@
 		    android:hint="@string/strDefault"
 		    android:layout_alignBaseline="@id/tv_Headtemp"
 		    android:textSize="20dp"
-		    android:editable="false"
 		    />
 		<TextView android:id="@+id/tv_Headtemp_unit"
 		    android:layout_width="wrap_content"
@@ -349,6 +349,7 @@
 		    android:layout_toRightOf="@id/et_Headtemp"
 		    android:layout_alignBaseline="@id/tv_Headtemp"
 		    android:text="@string/strTempunit"
+		    android:layout_marginLeft="10dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -360,7 +361,7 @@
 		    android:text="@string/strResvTemp" 
 		    android:layout_alignLeft="@id/tv_Headtemp"
 		    android:layout_below="@id/tv_Headtemp"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
 		    />
@@ -377,6 +378,7 @@
 		<TextView android:id="@+id/tv_reseTemp_unit"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/et_reseTemp"
 		    android:layout_alignBaseline="@id/tv_reseTemp"
 		    android:layout_marginLeft="10dp"
 		    android:text="@string/strTempunit"
@@ -394,7 +396,7 @@
 		    android:layout_below="@id/tv_reseTemp"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    />
 		<EditText android:id="@+id/et_Fontwidth"
 		    android:layout_width="100dp"
@@ -410,12 +412,12 @@
 		<TextView android:id="@+id/tv_Dotnumber"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/strfontwidth" 
+		    android:text="@string/strDotname" 
 		    android:layout_alignLeft="@id/tv_Fontwidth"
 		    android:layout_below="@id/tv_Fontwidth"
 		    android:textSize="20dp"
 		    android:textColor="#000000"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    />
 		<EditText android:id="@+id/et_Dotnumber"
 		    android:layout_width="100dp"
@@ -436,7 +438,7 @@
 	    <!-- 12.Reserved -->
 		<TextView android:id="@+id/tv_resv12"
 		    android:layout_marginLeft="10dp"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:text="@string/strResvname12"
@@ -463,7 +465,7 @@
 		    />
 		<!-- 13.Reserved -->
 		<TextView android:id="@+id/tv_resv13"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv12"
@@ -494,7 +496,7 @@
 		
 		<!-- 14.Reserved -->
 		<TextView android:id="@+id/tv_resv14"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv13"
@@ -525,7 +527,7 @@
 		
 		<!-- 15.Reserved -->
 		<TextView android:id="@+id/tv_resv15"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv14"
@@ -556,7 +558,7 @@
 		
 		<!-- 16.Reserved -->
 		<TextView android:id="@+id/tv_resv16"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv15"
@@ -587,7 +589,7 @@
 		
 		<!-- 17.Reserved -->
 		<TextView android:id="@+id/tv_resv17"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv16"
@@ -618,7 +620,7 @@
 		
 		<!-- 18.Reserved -->
 		<TextView android:id="@+id/tv_resv18"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv17"
@@ -649,7 +651,7 @@
 		
 		<!-- 19.Reserved -->
 		<TextView android:id="@+id/tv_resv19"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv18"
@@ -680,7 +682,7 @@
 		
 		<!-- 20.Reserved -->
 		<TextView android:id="@+id/tv_resv20"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv19"
@@ -712,7 +714,7 @@
 		
 		<!-- 21.Reserved -->
 		<TextView android:id="@+id/tv_resv21"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv20"
@@ -744,7 +746,7 @@
 		
 		<!-- 22.Reserved -->
 		<TextView android:id="@+id/tv_resv22"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv21"
@@ -775,7 +777,7 @@
 		
 		<!-- 23.Reserved -->
 		<TextView android:id="@+id/tv_resv23"
-		    android:layout_marginTop="10dp"
+		    android:layout_marginTop="20dp"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_below="@id/tv_resv22"

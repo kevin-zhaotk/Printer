@@ -65,7 +65,6 @@ public class BinCreater {
         
         bmp.getPixels(pixels, 0, width, 0, 0, width, height); 
         //int alpha = 0x00 << 24;  
-        Debug.d(TAG, "=================");
         for(int i = 0; i < height; i++)  { 
             for(int j = 0; j < width; j++) { 
                 int grey = pixels[width * i + j]; 
@@ -87,7 +86,6 @@ public class BinCreater {
                 //grey = alpha | ((grey >128?255:0) << 16) | ((grey >128?255:0) << 8) | (grey >128?255:0); //grey >128?255:0; //
                 //grey = alpha | (grey  << 16) | (grey  << 8) | grey ; 
                 grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
-                System.out.print("pixels["+(width * i + j)+"]="+grey+",");
                 pixels[width * i + j] = grey>128? 0x0:0xffffff;
                 if(grey>128)
                 	mBmpBits[j*colEach+i/8] &= ~(0x01<<(i%8));
@@ -95,7 +93,6 @@ public class BinCreater {
                 	mBmpBits[j*colEach+i/8] |= 0x01<<(i%8); 
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
-            System.out.println("==========================");
         } 
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
         result.setPixels(pixels, 0, width, 0, 0, width, height);
