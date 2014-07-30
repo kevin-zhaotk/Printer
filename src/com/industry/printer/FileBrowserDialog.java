@@ -115,7 +115,7 @@ public class FileBrowserDialog extends Dialog {
 			});
 	        
 	        mName = (EditText) findViewById(R.id.name_input);
-	        
+	        mName.setVisibility(View.INVISIBLE);
 	        mPath = (EditText) findViewById(R.id.file_dialog_path);
 	        mFileList =(ListView) findViewById(R.id.file_list);
 	        fileOpen(new File(mCurPath));

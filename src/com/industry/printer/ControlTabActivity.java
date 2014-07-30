@@ -58,6 +58,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -125,7 +126,7 @@ public class ControlTabActivity extends Activity {
 	 * 
 	 */
 	public boolean isPrinting;
-	
+	public boolean isRunning;
 	public PrintingThread mPrintThread;
 	public PollStateThread mPollThread;
 	
@@ -173,6 +174,11 @@ public class ControlTabActivity extends Activity {
 				//
 				//UsbSerial.setAllParam(mFd, null);
 				//UsbSerial.readAllParam(mFd);
+				Debug.d(TAG, "====isPrinting="+isPrinting);
+				if(isPrinting)	//printing thread is running, do not create a new print thread again
+					return;
+				isPrinting = true;
+				mPrintThread = (PrintingThread) startThread();
 			}
 			
 		});
@@ -314,10 +320,8 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(isPrinting)	//printing thread is running, do not create a new print thread again
-					return;
-				isPrinting = true;
-				mPrintThread = (PrintingThread) startThread();
+				Debug.d(TAG, "mPrint");
+				
 			}
 			
 		});
@@ -531,7 +535,20 @@ public class ControlTabActivity extends Activity {
 		super.onDestroy();
 		UsbSerial.close(mFd);
 	}
+	
+	@Override
+	public boolean  onKeyDown(int keyCode, KeyEvent event)  
+	{
+		Debug.d(TAG, "keycode="+keyCode);
 		
+		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+		{
+			Debug.d(TAG, "back key pressed, ignore it");
+			return true;	
+		}
+		return false;
+	}
+	
 	public String mObjPath=null;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) { 
@@ -789,14 +806,14 @@ public class ControlTabActivity extends Activity {
 	 */
 	public class PollStateThread extends Thread{
 		
-		public boolean isRunning;
+		//public boolean isRunning;
 		PollStateThread(){
-			isRunning = false;
+			//isRunning = false;
 		}
 		
 		public void run()
 		{
-			isRunning = true;
+			//isRunning = true;
 			byte[] info = new byte[16];
 			if(mFd <= 0)
 				return ;
@@ -814,7 +831,7 @@ public class ControlTabActivity extends Activity {
 				}
 			}
 			UsbSerial.printStop(mFd);
-			isRunning = false;
+			//isRunning = false;
 		}
 	}
 	/*
@@ -828,36 +845,39 @@ public class ControlTabActivity extends Activity {
 	 */
 	public class PrintingThread extends Thread{
 		
-		public boolean isRunning;
+		//public boolean isRunning;
 		public int curPos=0;
 		public PrintingThread()
 		{
-			isRunning=false;
+			//isRunning=false;
 		}
-		
+		/*
 		public void start()
 		{
+			Debug.d(TAG, "====start");
 			isRunning=true;
 		}
-		
+		*/
 		public void run()
 		{
 			//isPrinting = true;
 			byte[] sdata = new byte[128];
 			byte[] pdata;// = new byte[128];
 			byte[] info = new byte[16];
-			
+			Debug.d(TAG, "====run");
 			if(UsbSerial.printStart(mFd)==0)
 			{
 				isRunning = false;
 				return;
 			}
+			Debug.d(TAG, "====start ok");
 			if(UsbSerial.sendSetting(mFd)==0)
 			{
 				UsbSerial.printStop(mFd);
 				isRunning = false;
 				return;
-			}	
+			}
+			Debug.d(TAG, "====send setting ok");
 			makeParams(sdata);
 			UsbSerial.sendSettingData(mFd, sdata);
 			while(isRunning == true)
@@ -899,7 +919,7 @@ public class ControlTabActivity extends Activity {
 						}
 						continue;
 					}
-					if(curPos>mTlkList.size())
+					if(curPos>=mTlkList.size())
 						curPos = 0;
 					Vector<TlkObject> list = mTlkList.get(curPos);
 					byte[] buffer = mBinBuffer.get(list);
@@ -919,7 +939,7 @@ public class ControlTabActivity extends Activity {
 	{
 		if(t != null)
 		{
-			((PrintingThread) t).isRunning=false;
+			isRunning=false;
 			Thread tmp = t;
 			t = null;
 			tmp.interrupt();
@@ -929,6 +949,7 @@ public class ControlTabActivity extends Activity {
 	public synchronized Thread startThread()
 	{
 		PrintingThread t = new PrintingThread();
+		isRunning=true;
 		t.start();
 		return t;
 	}
@@ -1106,12 +1127,12 @@ public class ControlTabActivity extends Activity {
 		int delay = preference.getInt(SettingsTabActivity.PREF_DELAY, 0);
 		params[6] = (byte) ((delay>>16)&0xff);
 		params[7] = (byte) ((delay)&0xff);
-		boolean triger = preference.getBoolean(SettingsTabActivity.PREF_TRIGER, true);
+		int triger = (int)preference.getLong(SettingsTabActivity.PREF_TRIGER, 0);
 		params[10] = 0x00;
-		params[11] = (byte) (triger==true?0x00:0x01);
-		boolean encoder = preference.getBoolean(SettingsTabActivity.PREF_ENCODER, true);
+		params[11] = (byte) (triger==0?0x00:0x01);
+		int encoder = (int)preference.getLong(SettingsTabActivity.PREF_ENCODER, 0);
 		params[12] = 0x00;
-		params[13] = (byte) (encoder==true?0x00:0x01);
+		params[13] = (byte) (encoder==0?0x00:0x01);
 		int bold = preference.getInt(SettingsTabActivity.PREF_BOLD, 0);
 		params[14] = (byte) ((bold>>16)&0xff);
 		params[15] = (byte) ((bold)&0xff);

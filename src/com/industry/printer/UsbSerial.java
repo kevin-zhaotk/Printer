@@ -55,7 +55,7 @@ public class UsbSerial {
 		byte[] response = UsbSerial.read(fd, 10);
 		for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		if(response[4] != 0)
 			ret = 0;
@@ -170,7 +170,7 @@ public class UsbSerial {
 		response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		return ret;
 	}
@@ -427,12 +427,16 @@ public class UsbSerial {
 		byte[] response = UsbSerial.read(fd, 23);
 		for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		if(info == null)
 			return 0;
 		ByteArrayInputStream s = new ByteArrayInputStream(response);
-		if(s.read(info, 4, 16)==-1)
+		for(int i=0;i<5;i++)
+			s.read();
+		
+		//Debug.d(TAG, "===avaliable size="+s.available());
+		if(s.read(info, 0, 16)==-1)
 			ret = 0;
 		return ret;
 	}
