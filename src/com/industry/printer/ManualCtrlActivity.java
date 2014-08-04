@@ -26,6 +26,7 @@ import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -172,6 +173,18 @@ public class ManualCtrlActivity extends Activity {
 		initMsglist();
 	}
 	
+	@Override
+	public boolean  onKeyDown(int keyCode, KeyEvent event)  
+	{
+		Debug.d(TAG, "keycode="+keyCode);
+		
+		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+		{
+			Debug.d(TAG, "back key pressed, ignore it");
+			return true;	
+		}
+		return false;
+	}
 	
 	public void initMsglist()
 	{

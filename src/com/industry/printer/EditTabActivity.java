@@ -126,6 +126,7 @@ public class EditTabActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.edit_frame);
+		this.setVisible(false);
 		mContext = this.getApplicationContext();
 		
 		mObjs = new Vector<BaseObject>();

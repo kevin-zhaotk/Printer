@@ -28,6 +28,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -277,6 +278,19 @@ public static final String TAG="SettingsTabActivity";
 			}
 			
 		});
+	}
+	
+	@Override
+	public boolean  onKeyDown(int keyCode, KeyEvent event)  
+	{
+		Debug.d(TAG, "keycode="+keyCode);
+		
+		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+		{
+			Debug.d(TAG, "back key pressed, ignore it");
+			return true;	
+		}
+		return false;
 	}
 	
 	public void setLocale()
