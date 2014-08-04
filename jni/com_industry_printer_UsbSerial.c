@@ -11,11 +11,12 @@
 #include <errno.h>
 #include <string.h>
 #include <jni.h>
-#include <android/log.h>
+#include <utils/Log.h>
 //#include <nativehelper/jni.h>
 //#include <JNIHelp.h>
 //#include <android_runtime/AndroidRuntime.h>
 #define JNI_TAG "serial_jni"
+//#define LOGD(...)  //__android_log_print(ANDROID_LOG_DEBUG,JNI_TAG,__VA_ARGS__)
 
 int speed_arr[]={ B921600,B460800,B230400, B115200, B38400, B19200, B9600, B4800, B2400, B1200, B300,
     B38400, B19200, B9600, B4800, B2400, B1200, B300,};
@@ -33,7 +34,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_open
 	char *dev_utf = (*env)->GetStringUTFChars(env, dev, JNI_FALSE);
 	ret = chmod(dev_utf, 0666);
 	//__android_log_print(ANDROID_LOG_INFO,JNI_TAG, "chmod: error=%s", strerror(errno));
-	ret = open(dev_utf, O_RDWR|O_NOCTTY);
+	ret = open(dev_utf, O_RDWR|O_NOCTTY|O_NONBLOCK);
 
 	if( ret == -1)
 	{
@@ -44,6 +45,8 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_open
 	{
 		printf("Serial open success");
 	}
+	tcflush(ret, TCIFLUSH);
+	printf("********ret=%d\n",ret);
 	(*env)->ReleaseStringUTFChars(env, dev, dev_utf);
 	return ret;
 }
@@ -114,7 +117,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_write
 		__android_log_print(ANDROID_LOG_INFO, "write", "buf_utf[%d]=%x\n", i, buf_utf[i]);
 	}
 */
-	tcflush(fd, TCOFLUSH);
+	tcflush(fd, TCIOFLUSH);
 	ret = write(fd, buf_utf, len);
 
 	(*env)->ReleaseCharArrayElements(env, buf, buf_utf, 0);
@@ -131,10 +134,11 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_UsbSerial_read
 {
 	int i;
 	int nread=0;
+	int repeat=0;
 	char tempBuff[256];
 	//char response[];
 	jbyteArray jResp=NULL;
-	tcflush(fd, TCIFLUSH);
+
 	struct termios Opt;
 	tcgetattr(fd, &Opt);
 	Opt.c_cc[VMIN] = len;
@@ -143,20 +147,36 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_UsbSerial_read
 	bzero(tempBuff, sizeof(tempBuff));
 	if(fd <= 0)
 		return NULL;
-	while((nread = read(fd, tempBuff, len))>0)
+	ALOGD("remove tcflush\n");
+	while((nread = read(fd, tempBuff, len))<=0 && repeat<10)
 	{
-		//printf("nread len = %d\n",nread);
-		//__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read: nread len = %d\n",nread);
+		//__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read:  read len=%d\n", nread);
+		usleep(20000);
+		repeat++;
+	}
+
+	//nread = read(fd, tempBuff, len);
+
+	if(nread<=0)
+	{
+		//ALOGD("********read ret=%d\n",nread);
+		ALOGD("********read ret=%d,error=%d\n",nread, errno);
+		//perror("********read ret=%d\n",nread);
+		return NULL;
+	}
+		/*
+		printf("nread len = %d\n",nread);
+		__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read: nread len = %d\n",nread);
 		for(i=0; i<nread; i++)
 		{
-			//__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read: tempBuff[%d]=0x%x\n",i, tempBuff[i]);
+			__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read: tempBuff[%d]=0x%x\n",i, tempBuff[i]);
 		}
+		*/
 	    tempBuff[nread+1] = '\0';
 	    //__android_log_print(ANDROID_LOG_INFO, "read","nread tempBuff = %s\n",tempBuff);
 	    //jstr = (*env)->NewStringUTF(env, tempBuff);
 	    //response = (char*)malloc(nread*sizeof(char));
-	    break;
-	}
+
 	jResp = (*env)->NewByteArray(env, nread);
 	if (jResp != NULL) {
 		(*env)->SetByteArrayRegion(env, jResp, 0, nread, tempBuff);

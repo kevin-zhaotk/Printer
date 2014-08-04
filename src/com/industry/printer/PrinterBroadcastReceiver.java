@@ -42,8 +42,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		{
 			Debug.d(TAG, "usb connected");
 			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			if(usbAlive)
-				return;
+			
 			for(UsbDevice d : mngr.getDeviceList().values())
 			{
 				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
@@ -66,8 +65,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		{
 			Debug.d(TAG, "usb disconnected");
 			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			if(usbAlive==false)
-				return;
+			
 			for(UsbDevice d : mngr.getDeviceList().values())
 			{
 				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());

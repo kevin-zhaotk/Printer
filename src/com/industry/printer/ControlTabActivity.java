@@ -154,8 +154,8 @@ public class ControlTabActivity extends Activity {
 		//Debug.d(TAG,"open "+dev+"="+mFd);
 		//if(mFd == -1)
 		//	return ;
-		UsbSerial.setBaudrate(mFd, 115200*8);
-		UsbSerial.set_options(mFd, 8, 1, 'n');
+		//UsbSerial.setBaudrate(mFd, 115200);
+		//UsbSerial.set_options(mFd, 8, 1, 'n');
 		//mFileInputStream = new FileInputStream(mFd);
 
 		
@@ -174,11 +174,14 @@ public class ControlTabActivity extends Activity {
 				//
 				//UsbSerial.setAllParam(mFd, null);
 				//UsbSerial.readAllParam(mFd);
-				Debug.d(TAG, "====isPrinting="+isPrinting);
-				if(isPrinting)	//printing thread is running, do not create a new print thread again
-					return;
-				isPrinting = true;
-				mPrintThread = (PrintingThread) startThread();
+				
+				//Debug.d(TAG, "====isPrinting="+isPrinting);
+				//if(isPrinting)	//printing thread is running, do not create a new print thread again
+				//	return;
+				//isPrinting = true;
+				//mPrintThread = (PrintingThread) startThread();
+				
+				UsbSerial.printStart(mFd);
 			}
 			
 		});
@@ -189,8 +192,13 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				/*
+				isPrinting = false;
 				UsbSerial.printStop(mFd);
 				mPreviewRefreshHandler.removeMessages(0);
+				stopThread(mPrintThread);
+				*/
+				UsbSerial.printStop(mFd);
 			}
 			
 		});
@@ -253,9 +261,14 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				byte data[]=new byte[2*1024*1024];
-				UsbSerial.sendDataCtrl(mFd, data.length);				
-				UsbSerial.printData(mFd, data);
+				//Vector<TlkObject> list = mTlkList.get(0);
+				//byte[] buffer = mBinBuffer.get(list);
+				byte data[]={0x01, 0x02, 0x03, 0x04,0x05, 0x06, 0x07, 0x08, 0x09};
+				//UsbSerial.sendDataCtrl(mFd, buffer.length);
+				//UsbSerial.printData(mFd,  buffer);
+				UsbSerial.sendDataCtrl(mFd, data.length);
+				UsbSerial.printData(mFd,  data);
+				
 			}
 			
 		});
@@ -267,8 +280,8 @@ public class ControlTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				byte data[]={0x01, 0x02, 0x03, 0x04,0x05, 0x06, 0x07, 0x08, 0x09};
 				
-				UsbSerial.sendDataCtrl(mFd, data.length);				
-				UsbSerial.printData(mFd, data);
+				//UsbSerial.sendDataCtrl(mFd, data.length);				
+				//UsbSerial.printData(mFd, data);
 				return false;
 			}
 			
@@ -287,6 +300,7 @@ public class ControlTabActivity extends Activity {
 				byte[] data = new byte[128];
 				makeParams(data);
 				UsbSerial.sendSettingData(mFd, data);
+				
 			}
 			
 		});
@@ -320,7 +334,11 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Debug.d(TAG, "mPrint");
+				Debug.d(TAG, "====isPrinting="+isPrinting);
+				if(isPrinting)	//printing thread is running, do not create a new print thread again
+					return;
+				isPrinting = true;
+				mPrintThread = (PrintingThread) startThread();
 				
 			}
 			
@@ -332,9 +350,9 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(!isPrinting)
-					return;
 				isPrinting = false;
+				UsbSerial.printStop(mFd);
+				mPreviewRefreshHandler.removeMessages(0);
 				stopThread(mPrintThread);
 			}
 			
@@ -765,11 +783,15 @@ public class ControlTabActivity extends Activity {
 			Debug.d(TAG, "file = "+f.getName());
 			mFd = UsbSerial.open("/dev/"+f.getName());
 			Debug.d(TAG, "open /dev/"+f.getName()+" return "+mFd);
-			if(mFd > 0)
+			if(mFd < 0)
 			{
-				Debug.d(TAG, "open usbserial /dev/"+f.getName()+" success");
-				return true;
+				Debug.d(TAG, "open usbserial /dev/"+f.getName()+" fail");
+				continue;
 			}
+			Debug.d(TAG, "open usbserial /dev/"+f.getName()+" success");
+			UsbSerial.setBaudrate(mFd, 115200);
+			UsbSerial.set_options(mFd, 8, 1, 'n');
+			break;
 		}
 		return false;
 	}
@@ -868,6 +890,7 @@ public class ControlTabActivity extends Activity {
 			if(UsbSerial.printStart(mFd)==0)
 			{
 				isRunning = false;
+				isPrinting=false;
 				return;
 			}
 			Debug.d(TAG, "====start ok");
@@ -875,6 +898,7 @@ public class ControlTabActivity extends Activity {
 			{
 				UsbSerial.printStop(mFd);
 				isRunning = false;
+				isPrinting=false;
 				return;
 			}
 			Debug.d(TAG, "====send setting ok");
@@ -937,9 +961,10 @@ public class ControlTabActivity extends Activity {
 	
 	public synchronized void stopThread(Thread t)
 	{
+		isPrinting=false;
+		isRunning=false;
 		if(t != null)
 		{
-			isRunning=false;
 			Thread tmp = t;
 			t = null;
 			tmp.interrupt();

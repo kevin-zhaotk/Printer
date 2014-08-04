@@ -220,22 +220,22 @@ public class ManualCtrlActivity extends Activity {
 				}
 				else if(o.index==2)
 				{
-					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text2);
 					Debug.d(TAG, "===content="+t1.getText().toString());
 					o.setContent(t1.getText().toString());
 				}else if(o.index==3)
 				{
-					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text3);
 					Debug.d(TAG, "===content="+t1.getText().toString());
 					o.setContent(t1.getText().toString());
 				}else if(o.index==4)
 				{
-					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text4);
 					Debug.d(TAG, "===content="+t1.getText().toString());
 					o.setContent(t1.getText().toString());
 				}else if(o.index==5)
 				{
-					EditText t1=(EditText)lay.findViewById(R.id.manual_text1);
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text5);
 					Debug.d(TAG, "===content="+t1.getText().toString());
 					o.setContent(t1.getText().toString());
 				}
