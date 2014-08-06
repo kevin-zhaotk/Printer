@@ -85,9 +85,12 @@ public class DotMatrixFont {
 					break;
 				}
 				/*read P1 head*/
-				s=mReader.readLine();
-				if(s==null || !s.startsWith("P1"))
-					break;
+				for(;;)
+				{
+					s=mReader.readLine();
+					if(s!=null && s.startsWith("P1"))
+						break;
+				}
 				/*read P1 content*/
 				s=mReader.readLine();
 				if(s==null)
@@ -97,14 +100,22 @@ public class DotMatrixFont {
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
 					dot[k]=dot[k].trim();
-					buf[i*32+k] = Integer.parseInt(dot[k],16);
+					try{
+						buf[i*32+k] = Integer.parseInt(dot[k],16);
+					}catch(Exception e)
+					{
+						
+					}
 					//Debug.d(TAG, "buf["+(i*32+k)+"]="+buf[i*32+k]);
 				}
 				
 				/*read P2 head*/
-				s=mReader.readLine();
-				if(s==null || !s.startsWith("P2"))
-					break;
+				for(;;)
+				{
+					s=mReader.readLine();
+					if(s!=null && s.startsWith("P2"))
+						break;
+				}
 				/*read P2 content*/
 				s=mReader.readLine();
 				if(s==null)
@@ -114,14 +125,20 @@ public class DotMatrixFont {
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
 					dot[k]=dot[k].trim();
-					buf[i*32+8+k] = Integer.parseInt(dot[k],16);
+					try{
+						buf[i*32+8+k] = Integer.parseInt(dot[k],16);
+					}catch(Exception e)
+					{}
 					//Debug.d(TAG, "buf["+(i*32+8+k)+"]="+buf[i*32+8+k]);
 				}
 				
 				/*read P3 head*/
-				s=mReader.readLine();
-				if(s==null || !s.startsWith("P3"))
-					break;
+				for(;;)
+				{
+					s=mReader.readLine();
+					if(s!=null && s.startsWith("P3"))
+						break;
+				}
 				/*read P3 content*/
 				s=mReader.readLine();
 				if(s==null)
@@ -131,14 +148,20 @@ public class DotMatrixFont {
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
 					dot[k]=dot[k].trim();
-					buf[i*32+16+k] = Integer.parseInt(dot[k], 16);
+					try{
+						buf[i*32+16+k] = Integer.parseInt(dot[k], 16);
+					}catch(Exception e)
+					{}
 					//Debug.d(TAG, "buf["+(i*32+16+k)+"]="+buf[i*32+16+k]);
 				}
 				
 				/*read P4 head*/
-				s=mReader.readLine();
-				if(s==null || !s.startsWith("P4"))
-					break;
+				for(;;)
+				{
+					s=mReader.readLine();
+					if(s!=null && s.startsWith("P4"))
+						break;
+				}
 				/*read P4 content*/
 				s=mReader.readLine();
 				if(s==null)
@@ -148,7 +171,10 @@ public class DotMatrixFont {
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
 					dot[k]=dot[k].trim();
-					buf[i*32+24+k] = Integer.parseInt(dot[k], 16);
+					try{
+						buf[i*32+24+k] = Integer.parseInt(dot[k], 16);
+					}catch(Exception e)
+					{}
 					//Debug.d(TAG, "buf["+(i*32+24+k)+"]="+buf[i*32+24+k]);
 				}
 			}
