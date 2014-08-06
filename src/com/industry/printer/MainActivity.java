@@ -75,26 +75,16 @@ public class MainActivity extends TabActivity {
 		
 		mTab.addTab(mTab.newTabSpec("Control").setIndicator(getResources().getString(R.string.ControlTab)).setContent(new Intent(this, ControlTabActivity.class)));
 		mTab.addTab(mTab.newTabSpec("manualCtrl").setIndicator(getResources().getString(R.string.manualCtrlTab)).setContent(new Intent(this, ManualCtrlActivity.class)));
-		mTab.addTab(mTab.newTabSpec("Edit").setIndicator(getResources().getString(R.string.Edit)).setContent(new Intent(this, EditTabActivity.class)));
+		//mTab.addTab(mTab.newTabSpec("Edit").setIndicator(getResources().getString(R.string.Edit)).setContent(new Intent(this, EditTabActivity.class)));
 		mTab.addTab(mTab.newTabSpec("Settings").setIndicator(getResources().getString(R.string.Settings)).setContent(new Intent(this, SettingsTabActivity.class)));
 		//mTab.addTab(mTab.newTabSpec("Control_man").setIndicator("Control_man").setContent(new Intent(this, ControlManTabActivity.class)));
 		/*adjust control tab title*/
-		TextView v1= (TextView) mTab.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
-		v1.setTextSize(30);
-		v1.setGravity(Gravity.CENTER_VERTICAL);
-		/*adjust edit tab title*/
-		TextView v2= (TextView) mTab.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
-		v2.setTextSize(30);
-		v2.setGravity(Gravity.CENTER_VERTICAL);
-		
-		/*adjust Setting tab title*/
-		TextView v3= (TextView) mTab.getTabWidget().getChildAt(2).findViewById(android.R.id.title);
-		v3.setTextSize(30);
-		v3.setGravity(Gravity.CENTER_VERTICAL);
-		/*adjust Setting tab title*/
-		TextView v4= (TextView) mTab.getTabWidget().getChildAt(3).findViewById(android.R.id.title);
-		v4.setTextSize(30);
-		v4.setGravity(Gravity.CENTER_VERTICAL);
+		for(int i=0;i<3; i++)
+		{
+			TextView v1= (TextView) mTab.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+			v1.setTextSize(30);
+			v1.setGravity(Gravity.CENTER_VERTICAL);
+		}
 		
 		//set current tab
 		mTab.setCurrentTab(0);

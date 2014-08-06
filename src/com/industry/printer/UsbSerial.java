@@ -385,7 +385,7 @@ public class UsbSerial {
 		}
 		for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		Debug.d(TAG,"<====printData");
 		return ret;
@@ -459,7 +459,7 @@ public class UsbSerial {
 		}
 		for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		Debug.d(TAG,"<====sendSettingData");
 		return ret;

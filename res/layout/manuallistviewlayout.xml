@@ -16,7 +16,7 @@
 	<CheckBox
 	    android:id="@+id/manual_index"
 	    android:layout_width="50px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -34,7 +34,7 @@
 	<EditText
 	    android:id="@+id/manual_text1"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -51,7 +51,7 @@
 	<EditText
 	    android:id="@+id/manual_text2"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -67,7 +67,7 @@
 	<EditText
 	    android:id="@+id/manual_text3"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -83,7 +83,7 @@
 	<EditText
 	    android:id="@+id/manual_text4"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -99,7 +99,7 @@
 	<EditText
 	    android:id="@+id/manual_text5"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"
@@ -115,7 +115,7 @@
 	<EditText
 	    android:id="@+id/manual_text6"
 	    android:layout_width="140px"
-	    android:layout_height="50px"
+	    android:layout_height="80px"
 	    android:textSize="20sp"
 	    android:gravity="center"
 	    android:textColor="#000000"

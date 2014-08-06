@@ -25,18 +25,8 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		{
 			int i=0;
 			Intent intnt = new Intent();
-			intnt.setClass(context, MainActivity.class);
-			//context.startActivity(intnt);
-			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			for(UsbDevice d : mngr.getDeviceList().values())
-			{
-				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
-				if(d.getVendorId()==2630 && d.getProductId() == 38433)
-				{
-					Debug.d(TAG, "this is not print header, ignore it");
-					usbAlive = true;
-				}
-			}
+			intnt.setAction(ControlTabActivity.ACTION_BOOT_COMPLETE);
+			context.sendBroadcast(intnt);
 		}
 		else if(intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED))
 		{
