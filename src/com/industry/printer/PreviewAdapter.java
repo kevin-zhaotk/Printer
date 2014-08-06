@@ -52,11 +52,12 @@ public class PreviewAdapter extends SimpleAdapter {
 		//int[] color = {Color.WHITE, Color.rgb(0x1c, 0x86, 0xee)};
 		//view.setBackgroundColor(color[position%2]);
 		//((TextView) view).setTextColor(Color.BLACK);
-		Debug.d(TAG,"mChecked="+mChecked+", mlastChecked="+mlastChecked);
-		Debug.d(TAG, "position="+position);
+		Debug.d(TAG,"mChecked="+mChecked+", position="+position);
+		//Debug.d(TAG, "position="+position);
 		
 		if(mChecked == position)
 		{
+			Debug.d(TAG, "set color to blue for position "+mChecked);
 			view.setBackgroundColor(Color.BLUE);
 		}
 		else
@@ -86,6 +87,11 @@ public class PreviewAdapter extends SimpleAdapter {
 	{
 		mlastChecked = mChecked;
 		mChecked = position;
+	}
+	
+	public int getChecked()
+	{
+		return mChecked;
 	}
 	
 	public void setMode(boolean manual)

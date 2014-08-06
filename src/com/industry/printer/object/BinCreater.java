@@ -94,12 +94,42 @@ public class BinCreater {
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
         } 
+        /*swap the high 8bits with low 8bits*/
+        swap(height);
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
         result.setPixels(pixels, 0, width, 0, 0, width, height);
         /*just for debug*/
         //saveBitmap(result, "bk.png");
         //saveBin("/mnt/usb/1.bin", width);
         return result; 
+    }
+    
+    /*
+     * height - pixes per column
+     */
+    public static void swap(int height)
+    {
+    	byte tmp;
+    	int bytes = height%8==0?height/8:height/8+1;
+    	int width = mBmpBits.length/bytes;
+    	for(int i=0;i<mBmpBits.length/2; i++)
+		{
+			tmp = mBmpBits[2*i+1];
+    		mBmpBits[2*i+1] = mBmpBits[2*i];
+    		mBmpBits[2*i] = tmp;
+		}
+    	/*
+    	for(int i=0; i<width; i++)
+    	{
+    		for(int j=0;j<height/2; j++)
+    		{
+    			tmp = mBmpBits[height*i+2*j+1];
+        		mBmpBits[height*i+2*j+1] = mBmpBits[height*i+2*j];
+        		mBmpBits[height*i+2*j] = tmp;
+    		}
+    		
+    	}
+    	*/
     }
     
     public static void saveBitmap(Bitmap bmp, String picName)

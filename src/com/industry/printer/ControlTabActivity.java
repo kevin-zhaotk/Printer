@@ -485,17 +485,23 @@ public class ControlTabActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				int i = mMessageList.getCheckedItemPosition();
-				if(i>1)
-				{
-					Map<String,String> item = mMessageMap.remove(i);
-					Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
-					mMessageMap.add(i-1, item);
+				int i = mMessageAdapter.getChecked();
+				if(i<=1)
+					return;
+				
+				Map<String,String> item = mMessageMap.remove(i);
+				Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
+				mMessageMap.add(i-1, item);
+				try{
 					Vector<TlkObject> vec= mTlkList.remove(i);
 					mTlkList.add(i-1, vec);
+				}catch(Exception e)
+				{
+					
 				}
-				mMessageList.setAdapter(mMessageAdapter);
-				
+				mMessageAdapter.setChecked(i-1);
+				//mMessageList.setAdapter(mMessageAdapter);
+				mMessageAdapter.notifyDataSetChanged();
 			}
 			
 		});
@@ -506,17 +512,21 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				int i = mMessageList.getCheckedItemPosition();
+				int i = mMessageAdapter.getChecked();
 				if(i<0 || i>=mMessageList.getCount()-1)
 					return;
 				
 				Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
 				Map<String,String> item = mMessageMap.remove(i);
 				mMessageMap.add(i+1, item);
-				Vector<TlkObject> vec= mTlkList.remove(i);
-				mTlkList.add(i, vec);
-				mMessageList.setAdapter(mMessageAdapter);
-				
+				try{
+					Vector<TlkObject> vec= mTlkList.remove(i);
+					mTlkList.add(i, vec);
+				}catch(Exception e)
+				{}
+				mMessageAdapter.setChecked(i+1);
+				//mMessageList.setAdapter(mMessageAdapter);
+				mMessageAdapter.notifyDataSetChanged();
 			}
 			
 		});
