@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
+import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -68,6 +69,18 @@ public static final String TAG="SettingsTabActivity";
 	public static final String PREF_RESV_TEMP="reservoir_temp";	//10
 	public static final String PREF_FONT_WIDTH="fontwidth";		//11
 	public static final String PREF_DOT_NUMBER="dot_number";	//12
+	public static final String PREF_RESERVED_12="reserved12";	//12
+	public static final String PREF_RESERVED_13="reserved13";	//12
+	public static final String PREF_RESERVED_14="reserved14";	//12
+	public static final String PREF_RESERVED_15="reserved15";	//12
+	public static final String PREF_RESERVED_16="reserved16";	//12
+	public static final String PREF_RESERVED_17="reserved17";	//12
+	public static final String PREF_RESERVED_18="reserved18";	//12
+	public static final String PREF_RESERVED_19="reserved19";	//12
+	public static final String PREF_RESERVED_20="reserved20";	//12
+	public static final String PREF_RESERVED_21="reserved21";	//12
+	public static final String PREF_RESERVED_22="reserved22";	//12
+	public static final String PREF_RESERVED_23="reserved23";	//12
 		
 	public static final String PREF_DIRECTION="direction";
 	public static final String PREF_HORIRES="horires";
@@ -96,14 +109,29 @@ public static final String TAG="SettingsTabActivity";
 	public EditText 	mFontwidth;
 	public EditText 	mDots;
 	
+	/*reserved properties*/
+	public EditText 	mReserved12;
+	public EditText 	mReserved13;
+	public EditText 	mReserved14;
+	public EditText 	mReserved15;
+	public EditText 	mReserved16;
+	public EditText 	mReserved17;
+	public EditText 	mReserved18;
+	public EditText 	mReserved19;
+	public EditText 	mReserved20;
+	public EditText 	mReserved21;
+	public EditText 	mReserved22;
+	public EditText 	mReserved23;
+	
+	
 	public Spinner		mDirection;
 	
 	public EditText		mHRes;
 	public EditText		mVRes;
 	
-	public Button			mSave;
-	public Button			mUpgrade;
-	public Button			mSetDate;
+	public Button		mSave;
+	public Button		mUpgrade;
+	public Button		mSetDate;
 
 	Context 			mContext;
 
@@ -209,6 +237,32 @@ public static final String TAG="SettingsTabActivity";
 		
 		//mHRes.setText(String.valueOf( mPreference.getInt(PREF_HORIRES, 0)));
 		//mVRes.setText(String.valueOf( mPreference.getInt(PREF_VERTRES, 0)));
+		
+		/*reserved properties*/
+		mReserved12 = (EditText) findViewById(R.id.et_resv12);
+		mReserved13 = (EditText) findViewById(R.id.et_resv13);
+		mReserved14 = (EditText) findViewById(R.id.et_resv14);
+		mReserved15 = (EditText) findViewById(R.id.et_resv15);
+		mReserved16 = (EditText) findViewById(R.id.et_resv16);
+		mReserved17 = (EditText) findViewById(R.id.et_resv17);
+		mReserved18 = (EditText) findViewById(R.id.et_resv18);
+		mReserved19 = (EditText) findViewById(R.id.et_resv19);
+		mReserved20 = (EditText) findViewById(R.id.et_resv20);
+		mReserved21 = (EditText) findViewById(R.id.et_resv21);
+		mReserved22 = (EditText) findViewById(R.id.et_resv22);
+		mReserved23 = (EditText) findViewById(R.id.et_resv23);
+		mReserved12.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_12, 0)));
+		mReserved13.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_13, 0)));
+		mReserved14.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_14, 0)));
+		mReserved15.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_15, 0)));
+		mReserved16.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_16, 0)));
+		mReserved17.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_17, 0)));
+		mReserved18.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_18, 0)));
+		mReserved19.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_19, 0)));
+		mReserved20.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_20, 0)));
+		mReserved21.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_21, 0)));
+		mReserved22.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_22, 0)));
+		mReserved23.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_23, 0)));
 		
 		mSave = (Button) findViewById(R.id.btn_set_save);
 		mSave.setOnClickListener(new OnClickListener(){
@@ -316,6 +370,19 @@ public static final String TAG="SettingsTabActivity";
 		mPreference.edit().putInt(PREF_RESV_TEMP, Integer.parseInt(mResvtemp.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_FONT_WIDTH, Integer.parseInt(mFontwidth.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_DOT_NUMBER, Integer.parseInt(mDots.getText().toString())).commit();
+
+		mPreference.edit().putInt(PREF_RESERVED_12, Integer.parseInt(mReserved12.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_13, Integer.parseInt(mReserved13.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_14, Integer.parseInt(mReserved14.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_15, Integer.parseInt(mReserved15.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_16, Integer.parseInt(mReserved16.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_17, Integer.parseInt(mReserved17.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_18, Integer.parseInt(mReserved18.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_19, Integer.parseInt(mReserved19.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_20, Integer.parseInt(mReserved20.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_21, Integer.parseInt(mReserved21.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_22, Integer.parseInt(mReserved22.getText().toString())).commit();
+		mPreference.edit().putInt(PREF_RESERVED_23, Integer.parseInt(mReserved23.getText().toString())).commit();
 		
 	}
 	/*
