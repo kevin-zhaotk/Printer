@@ -80,6 +80,7 @@
 		    android:layout_toRightOf="@id/tv_param0"
 		    android:layout_marginLeft="50dp"
 		    android:layout_alignBaseline="@id/tv_param0"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:editable="false"
@@ -101,6 +102,7 @@
 		    android:layout_alignLeft="@id/et_param0"
 		    android:inputType="number"
 		    android:layout_alignBaseline="@id/tv_frequency"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -130,6 +132,7 @@
 		    android:layout_width="100dp"
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_frequency"
+		    android:singleLine="true"
 		    android:inputType="number"
 		    android:layout_alignBaseline="@id/tv_delay"
 		    android:hint="@string/strDefault"
@@ -163,6 +166,7 @@
 		    android:layout_toRightOf="@id/tv_param3"
 		    android:layout_alignLeft="@id/et_delay"
 		    android:layout_alignBaseline="@id/tv_param3"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:enabled="false"
@@ -245,6 +249,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/sp_encoder"
 		    android:layout_below="@id/sp_encoder"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:layout_alignBaseline="@id/tv_bold"
@@ -276,6 +281,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_bold"
 		    android:layout_below="@id/et_bold"
+		    android:singleLine="true"
 		     android:hint="@string/strDefault"
 		     android:textSize="20dp"
 		     android:layout_alignBaseline="@id/tv_fixlen_triger"
@@ -307,6 +313,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_fixlen_triger"
 		    android:layout_below="@id/tv_fixlen_triger"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:layout_alignBaseline="@id/tv_fixtime_triger"
@@ -338,6 +345,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_fixtime_triger"
 		    android:layout_below="@id/et_fixtime_triger"
+		    android:singleLine="true"
 		    android:clickable="false"
 		    android:hint="@string/strDefault"
 		    android:layout_alignBaseline="@id/tv_Headtemp"
@@ -370,6 +378,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_Headtemp"
 		    android:layout_below="@id/et_Headtemp"
+		    android:singleLine="true"
 		    android:clickable="false"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
@@ -403,6 +412,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_reseTemp"
 		    android:layout_below="@id/et_reseTemp"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:layout_alignBaseline="@id/tv_Fontwidth"
@@ -424,6 +434,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_Fontwidth"
 		    android:layout_below="@id/et_Fontwidth"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    android:layout_alignBaseline="@id/tv_Dotnumber"
@@ -451,6 +462,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_toRightOf="@id/tv_resv12"
 		    android:layout_marginLeft="50dp"
+		    android:singleLine="true"
 		     android:hint="@string/strDefault"
 		     android:textSize="20dp"
 		    />
@@ -479,6 +491,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv12"
 		    android:layout_below="@id/et_resv12"
+		    android:singleLine="true"
 		     android:hint="@string/strDefault"
 		     android:textSize="20dp"
 		    />
@@ -509,6 +522,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv13"
 		    android:layout_below="@id/et_resv13"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -539,6 +553,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv14"
 		    android:layout_below="@id/et_resv14"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -569,6 +584,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv15"
 		    android:layout_below="@id/et_resv15"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -599,6 +615,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv16"
 		    android:layout_below="@id/et_resv16"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -629,6 +646,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv17"
 		    android:layout_below="@id/et_resv17"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -659,6 +677,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv18"
 		    android:layout_below="@id/et_resv18"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -689,6 +708,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv19"
 		    android:layout_below="@id/et_resv19"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -720,6 +740,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv20"
 		    android:layout_below="@id/et_resv20"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -751,6 +772,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv21"
 		    android:layout_below="@id/et_resv21"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />
@@ -781,6 +803,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_alignLeft="@id/et_resv22"
 		    android:layout_below="@id/et_resv22"
+		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
 		    />

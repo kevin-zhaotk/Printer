@@ -117,7 +117,7 @@ public class MainActivity extends TabActivity {
 	  // TODO Auto-generated method stub
 	 
 	}
-
+	
 	public void setLocale()
 	{
 		Configuration config = getResources().getConfiguration(); 

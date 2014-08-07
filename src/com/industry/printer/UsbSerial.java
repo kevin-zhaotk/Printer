@@ -495,11 +495,9 @@ public class UsbSerial {
 		if(info == null)
 			return 0;
 		ByteArrayInputStream s = new ByteArrayInputStream(response);
-		for(int i=0;i<5;i++)
-			s.read();
-		
+			
 		//Debug.d(TAG, "===avaliable size="+s.available());
-		if(s.read(info, 0, 16)==-1)
+		if(s.read(info, 0, 23)==-1)
 			ret = 0;
 		Debug.d(TAG,"<====getInfo");
 		return ret;

@@ -36,8 +36,6 @@ import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
 
-
-
 import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
@@ -131,12 +129,14 @@ public class ControlTabActivity extends Activity {
 	public PrintingThread mPrintThread;
 	public PollStateThread mPollThread;
 	
+	public int mIndex;
+	public TextView mPrintStatus;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.control_frame);
-		
+		mIndex=0;
 		isPrinting = false;
 		mTlkList = new Vector<Vector<TlkObject>>();
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
@@ -257,48 +257,43 @@ public class ControlTabActivity extends Activity {
 		/*
 		 * Command 4&5
 		 */
+		
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnSend.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//Vector<TlkObject> list = mTlkList.get(0);
-				//byte[] buffer = mBinBuffer.get(list);
-				byte data[]={0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 
-						0x00, 0x00, 0x40, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 
-						0x00, 0x00, 0x50, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, (byte) 0x80, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x20, 0x00, 0x00, 
-						0x00, 0x00, 0x00, 0x04, 0x00, 0x10, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-						0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 
-						0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00
-						};
-				//UsbSerial.sendDataCtrl(mFd, buffer.length);
-				//UsbSerial.printData(mFd,  buffer);
-				UsbSerial.sendDataCtrl(mFd, data.length);
-				UsbSerial.printData(mFd,  data);
+				byte[] buffer=null;
+				byte[] info = new byte[23];
+				String text="";
+				UsbSerial.getInfo(mFd, info);
+				if(info[9] != 0)
+				{
+					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
+					return;
+				}
+				try{
+					int index = mMessageAdapter.getChecked();
+					Vector<TlkObject> list = mTlkList.get(index-1);
+					Debug.d(TAG,"=======index="+(index-1));
+					showListContent(list);
+					buffer = mBinBuffer.get(list);
+				}catch(Exception e)
+				{
+					return;
+				}
+				if(buffer==null)
+					return;
+				UsbSerial.sendDataCtrl(mFd, buffer.length);
+				UsbSerial.printData(mFd,  buffer);
+				//UsbSerial.sendDataCtrl(mFd, data.length);
+				//UsbSerial.printData(mFd,  data);
 				
 			}
 			
 		});
 		
-		mBtnSend.setOnLongClickListener(new OnLongClickListener(){
-
-			@Override
-			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
-				byte data[]={0x01, 0x02, 0x03, 0x04,0x05, 0x06, 0x07, 0x08, 0x09};
-				
-				//UsbSerial.sendDataCtrl(mFd, data.length);				
-				//UsbSerial.printData(mFd, data);
-				return false;
-			}
-			
-		});
 		/*
 		 * Command 6&7
 		 * set all param
@@ -328,8 +323,12 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				byte[] info = new byte[16];
+				byte[] info = new byte[23];
+				String text="";
 				UsbSerial.getInfo(mFd, info);
+				for(int i=0;i<23;i++)
+					text += String.valueOf(Integer.toHexString(info[i] & 0x0ff))+" ";
+				mPrintStatus.setText("result: "+text);
 			}
 			
 		});
@@ -569,6 +568,9 @@ public class ControlTabActivity extends Activity {
 		});
 		initMsglist();
 		mMessageList.setAdapter(mMessageAdapter);
+		
+		
+		mPrintStatus = (TextView) findViewById(R.id.tv_headinfo);
 	}
 	
 	@Override
@@ -605,6 +607,10 @@ public class ControlTabActivity extends Activity {
 						mObjPath = new File(f).getParent();
 						startPreview(f);
 					}
+					break;
+				case 1:
+					String text = msg.getData().getString("text");
+					mPrintStatus.setText("result: "+text);
 					break;
 			}
 		}
@@ -937,7 +943,7 @@ public class ControlTabActivity extends Activity {
 			//isPrinting = true;
 			byte[] sdata = new byte[128];
 			byte[] pdata;// = new byte[128];
-			byte[] info = new byte[16];
+			byte[] info = new byte[23];
 			Debug.d(TAG, "====run");
 			if(UsbSerial.printStart(mFd)==0)
 			{
@@ -973,9 +979,19 @@ public class ControlTabActivity extends Activity {
 				}
 				else
 				{
+					
 					while(true) //poll state,wait for print finish
 					{
 						UsbSerial.getInfo(mFd, info);
+						String text="";
+						for(int i=0;i<23;i++)
+							text += String.valueOf(Integer.toHexString(info[i] & 0x0ff))+" ";
+						Message msg = new Message();
+						Bundle b = new Bundle();
+						b.putString("text", text);
+						msg.what=1;
+						msg.setData(b);
+						mHandler.sendMessage(msg);
 						if(info[9] == 0)	//print finished
 							break;
 						try {
@@ -995,12 +1011,13 @@ public class ControlTabActivity extends Activity {
 						}
 						continue;
 					}
-					/*
+					
 					if(curPos>=mTlkList.size())
 						curPos = 0;
 					Vector<TlkObject> list = mTlkList.get(curPos);
 					byte[] buffer = mBinBuffer.get(list);
-					*/
+					
+					/*
 					byte data[]={0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 
 							0x00, 0x00, 0x40, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 0x00,
 							0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00,
@@ -1013,8 +1030,9 @@ public class ControlTabActivity extends Activity {
 							0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 
 							0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00
 							};
-					UsbSerial.sendDataCtrl(mFd, data.length);
-					UsbSerial.printData(mFd,  data);
+					*/
+					UsbSerial.sendDataCtrl(mFd, buffer.length);
+					UsbSerial.printData(mFd,  buffer);
 					curPos++;
 				}
 			}
@@ -1240,9 +1258,47 @@ public class ControlTabActivity extends Activity {
 		params[22] = (byte) ((resvtemp>>16)&0xff);
 		params[23] = (byte) ((resvtemp)&0xff);
 		int fontwidth = preference.getInt(SettingsTabActivity.PREF_FONT_WIDTH, 0);
+		params[24] = (byte) ((fontwidth>>16)&0xff);
+		params[25] = (byte) ((fontwidth)&0xff);
 		int dots = preference.getInt(SettingsTabActivity.PREF_DOT_NUMBER, 0);
-		
-		
+		params[26] = (byte) ((dots>>16)&0xff);
+		params[27] = (byte) ((dots)&0xff);
+		int resv12 = preference.getInt(SettingsTabActivity.PREF_RESERVED_12, 0);
+		params[28] = (byte) ((resv12>>16)&0xff);
+		params[29] = (byte) ((resv12)&0xff);
+		int resv13 = preference.getInt(SettingsTabActivity.PREF_RESERVED_13, 0);
+		params[30] = (byte) ((resv13>>16)&0xff);
+		params[31] = (byte) ((resv13)&0xff);
+		int resv14 = preference.getInt(SettingsTabActivity.PREF_RESERVED_14, 0);
+		params[32] = (byte) ((resv14>>16)&0xff);
+		params[33] = (byte) ((resv14)&0xff);
+		int resv15 = preference.getInt(SettingsTabActivity.PREF_RESERVED_15, 0);
+		params[34] = (byte) ((resv15>>16)&0xff);
+		params[35] = (byte) ((resv15)&0xff);
+		int resv16 = preference.getInt(SettingsTabActivity.PREF_RESERVED_16, 0);
+		params[36] = (byte) ((resv16>>16)&0xff);
+		params[37] = (byte) ((resv16)&0xff);
+		int resv17 = preference.getInt(SettingsTabActivity.PREF_RESERVED_17, 0);
+		params[38] = (byte) ((resv17>>16)&0xff);
+		params[39] = (byte) ((resv17)&0xff);
+		int resv18 = preference.getInt(SettingsTabActivity.PREF_RESERVED_18, 0);
+		params[40] = (byte) ((resv18>>16)&0xff);
+		params[41] = (byte) ((resv18)&0xff);
+		int resv19 = preference.getInt(SettingsTabActivity.PREF_RESERVED_19, 0);
+		params[42] = (byte) ((resv19>>16)&0xff);
+		params[43] = (byte) ((resv19)&0xff);
+		int resv20 = preference.getInt(SettingsTabActivity.PREF_RESERVED_20, 0);
+		params[44] = (byte) ((resv20>>16)&0xff);
+		params[45] = (byte) ((resv20)&0xff);
+		int resv21 = preference.getInt(SettingsTabActivity.PREF_RESERVED_21, 0);
+		params[46] = (byte) ((resv21>>16)&0xff);
+		params[47] = (byte) ((resv21)&0xff);
+		int resv22 = preference.getInt(SettingsTabActivity.PREF_RESERVED_22, 0);
+		params[48] = (byte) ((resv22>>16)&0xff);
+		params[49] = (byte) ((resv22)&0xff);
+		int resv23 = preference.getInt(SettingsTabActivity.PREF_RESERVED_23, 0);
+		params[50] = (byte) ((resv23>>16)&0xff);
+		params[51] = (byte) ((resv23)&0xff);
 	}
 	
 	public static final int FILE_CSV_CHANGED=1;
@@ -1335,5 +1391,15 @@ public class ControlTabActivity extends Activity {
 		SharedPreferences preference =getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
 		String f = preference.getString(LAST_CSV_FILE, null);
 		return f;
+	}
+	
+	private void showListContent(Vector<TlkObject> list)
+	{
+		Debug.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		for(TlkObject o:list)
+		{
+			Debug.d(TAG,"******x="+o.x+", y="+o.y+", content="+o.mContent);
+		}
+		Debug.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
 	}
 }
