@@ -83,7 +83,6 @@
 		    android:singleLine="true"
 		    android:hint="@string/strDefault"
 		    android:textSize="20dp"
-		    android:editable="false"
 		    />
 		<!-- 01.frequency -->
 		<TextView android:id="@+id/tv_frequency"

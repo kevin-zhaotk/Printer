@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
+import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -57,6 +58,7 @@ public static final String TAG="SettingsTabActivity";
 	11. Byte 20-21,   setting 09,  Temperature of reservoir.  Unit: C   00-130.
 	12. Others ,     Setting 10-63,  Reserved. 
 */
+	public static final String PREF_PARAM_0="param0";			//00
 	public static final String PREF_PRINTSPEED="printspeed";	//01
 	public static final String PREF_DELAY="delay";				//02
 	public static final String PREF_TRIGER="triger";			//04
@@ -96,6 +98,7 @@ public static final String TAG="SettingsTabActivity";
 	ListPreference 		mHorires=null;
 	ListPreference 		mVertres=null;
 	*/
+	public EditText		mParam0;
 	public EditText		mPrSpeed;
 	public EditText		mDelay;
 	public Spinner		mTriger;
@@ -144,7 +147,7 @@ public static final String TAG="SettingsTabActivity";
 		mContext = getApplicationContext();		
 		setContentView(R.layout.setting_layout);
 		
-		
+				
 		mTime = (TextView) findViewById(R.id.tv_systemTime);
 		mTimeRefreshHandler.sendEmptyMessageDelayed(0, 2000);
 
@@ -238,6 +241,7 @@ public static final String TAG="SettingsTabActivity";
 		//mVRes.setText(String.valueOf( mPreference.getInt(PREF_VERTRES, 0)));
 		
 		/*reserved properties*/
+		mParam0 = (EditText) findViewById(R.id.et_param0);
 		mReserved12 = (EditText) findViewById(R.id.et_resv12);
 		mReserved13 = (EditText) findViewById(R.id.et_resv13);
 		mReserved14 = (EditText) findViewById(R.id.et_resv14);
@@ -250,6 +254,8 @@ public static final String TAG="SettingsTabActivity";
 		mReserved21 = (EditText) findViewById(R.id.et_resv21);
 		mReserved22 = (EditText) findViewById(R.id.et_resv22);
 		mReserved23 = (EditText) findViewById(R.id.et_resv23);
+		
+		mParam0.setText(String.valueOf(mPreference.getInt(PREF_PARAM_0, 0)));
 		mReserved12.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_12, 0)));
 		mReserved13.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_13, 0)));
 		mReserved14.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_14, 0)));
@@ -357,6 +363,7 @@ public static final String TAG="SettingsTabActivity";
 	
 	public void savePreference()
 	{
+		mPreference.edit().putInt(PREF_PARAM_0, Integer.parseInt(mParam0.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_PRINTSPEED, Integer.parseInt(mPrSpeed.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_DELAY, Integer.parseInt(mDelay.getText().toString())).commit();
 		mPreference.edit().putLong(PREF_TRIGER, mTriger.getSelectedItemId()).commit();
