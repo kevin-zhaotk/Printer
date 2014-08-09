@@ -18,8 +18,8 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="@string/btn_start" />
+        android:textSize="25dp"
+        android:text="@string/btn_print" />
 
     <Button
         android:id="@+id/manual_StopPrint"
@@ -28,86 +28,19 @@
         android:layout_alignBottom="@+id/manual_StartPrint"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/manual_StartPrint"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:text="@string/btn_stop" />
 	
     <Button
-        android:id="@+id/manual_btnClean"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/manual_StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/manual_StopPrint"
-        android:textSize="20dp"
-        android:text="@string/btn_clean" />
-	
-    <Button
-        android:id="@+id/manual_btnOpen"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/manual_StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/manual_btnClean"
-        android:textSize="20dp"
-    	android:text="@string/btn_open"
-        />
-	
-    <Button
-        android:id="@+id/manual_btnSend"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/manual_StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/manual_btnOpen"
-        android:textSize="20dp"
-    	android:text="@string/btn_send"
-        />
-	
-    <Button
-        android:id="@+id/manual_btnSetparam"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/manual_StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/manual_btnSend"
-        android:textSize="20dp"
-    	android:text="@string/btn_set"
-        />
-	
-    <Button
-        android:id="@+id/manual_btnGetinfo"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/manual_StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/manual_btnSetparam"
-        android:textSize="15dp"
-    	android:text="@string/btn_get"
-        />
-	<Button
-	    android:id="@+id/manual_btnPrint"
-	    android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/manual_StartPrint"
-        android:layout_marginTop="2dp"
-        android:layout_alignLeft="@id/manual_StartPrint"
-        android:textSize="15dp"
-    	android:text="@string/btn_print"
-	    />
-	
-	<Button
-	    android:id="@+id/manual_btnFinish"
-	    android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignTop="@id/manual_btnPrint"
-        android:layout_toRightOf="@id/manual_btnPrint"
-        android:layout_marginLeft="10dp"
-        android:textSize="15dp"
-    	android:text="@string/btn_finish"
-	    />
-	
-	
-    
+         android:id="@+id/manual_btn_preview"
+         android:layout_width="80dp"
+         android:layout_height="60dp"
+         android:layout_toRightOf="@id/manual_StopPrint"
+         android:layout_alignBottom="@id/manual_StartPrint"
+         android:layout_marginLeft="10dp"
+         android:text="@string/str_preview"
+         android:textSize="25sp"
+         />
 <!-- close it for test
     <HorizontalScrollView 
         android:layout_width="wrap_content"
@@ -132,42 +65,16 @@
  -->
      <Button 
          android:id="@+id/manual_btnTlkfile"
-         android:layout_below="@id/manual_btnFinish"
+         android:layout_below="@id/manual_StartPrint"
          android:layout_width="150dp"
-         android:layout_height="wrap_content"
+         android:layout_height="60dp"
+         android:singleLine="true"
          android:text="@string/str_tlkfile"
          android:textSize="20sp"
          android:textColor="#000000"
          />
+    
      
-     <Button 
-         android:id="@+id/manual_btn_mvbackward"
-         android:layout_alignBottom="@id/manual_btnTlkfile"
-         android:layout_width="60dp"
-         android:layout_height="50dp"
-         android:layout_alignParentRight="true"
-         android:text="@string/str_mvbackward"
-         android:textSize="15sp"
-         />
-     
-     <Button 
-         android:id="@+id/manual_btn_mvforward"
-         android:layout_alignBottom="@id/manual_btnTlkfile"
-         android:layout_width="60dp"
-         android:layout_height="50dp"
-         android:layout_toLeftOf="@id/manual_btn_mvbackward"
-         android:text="@string/str_mvforward"
-         android:textSize="15sp"
-         />
-     <Button
-         android:id="@+id/manual_btn_preview"
-         android:layout_alignBottom="@id/manual_btnTlkfile"
-         android:layout_width="60dp"
-         android:layout_height="50dp"
-         android:layout_toLeftOf="@id/manual_btn_mvforward"
-         android:text="@string/str_preview"
-         android:textSize="15sp"
-         />
 	<View android:id="@+id/manual_split_view"
 	    android:layout_width="fill_parent"
 	    android:layout_height="1.5px" 

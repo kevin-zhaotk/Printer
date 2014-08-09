@@ -93,14 +93,15 @@ public class BinCreater {
                 	mBmpBits[j*colEach+i/8] |= 0x01<<(i%8); 
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
-        } 
+        }
+        //saveBin("/mnt/usb/1.bin", width,height);
         /*swap the high 8bits with low 8bits*/
         swap(height);
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
         result.setPixels(pixels, 0, width, 0, 0, width, height);
         /*just for debug*/
         //saveBitmap(result, "bk.png");
-        //saveBin("/mnt/usb/1.bin", width);
+        
         return result; 
     }
     
@@ -214,26 +215,36 @@ public class BinCreater {
     	return true;
     }
     
-    public static boolean saveBin(String f, int width)
+    public static boolean saveBin(String f, int width,int height)
     {
     	byte head[]=new byte[16];
+    	
+    	/*save column-width*/
     	head[2] = (byte) (width & 0x0ff);
     	head[1] = (byte) ((width>>8) & 0x0ff);
     	head[0] = (byte) ((width>>16) & 0x0ff);
+    	/*save column-high*/
+    	head[5] = (byte) (height & 0x0ff);
+    	head[4] = (byte) ((height>>8) & 0x0ff);
+    	head[3] = (byte) ((height>>16) & 0x0ff);
+    	
+    	Debug.d(TAG, "+++++++++++++saveBin");
     	try{
     		File file = new File(f);
-    		FileOutputStream fs = new FileOutputStream(file);
+    		FileOutputStream fs = new FileOutputStream(f);
     		ByteArrayOutputStream barr = new ByteArrayOutputStream();
     		barr.write(head);
-    		barr.write(mBmpBits,16,mBmpBits.length);
+    		barr.write(mBmpBits,0,mBmpBits.length);
     		barr.writeTo(fs);
     		fs.flush();
     		fs.close();
+    		barr.close();
     	}catch(Exception e)
     	{
     		Debug.d(TAG, "Exception: "+e.getMessage());
     		return false;
     	}
+    	Debug.d(TAG, "+++++++++++++saveBin");
     	return true;
     }
     

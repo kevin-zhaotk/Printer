@@ -13,6 +13,8 @@
 	<string name="btn_stop">停止</string>
 	<string name="btn_clean">清洗</string>
 	<string name="btn_open">打开</string>
+	<string name="btn_prerecord">上翻</string>
+	<string name="btn_nextrecord">下翻</string>
 	<string name="btn_send">发送</string>
 	<string name="btn_set">设置</string>
 	<string name="btn_get">信息</string>
@@ -25,7 +27,7 @@
 	<string name="strBtnNew">新建</string>
 	<string name="btn_new">新建</string>
 	<string name="strDate">日期:</string>
-	
+	<string name="strInklevel">剩余次数: </string>
 	<string name="str_openfile">打开Csv文件</string>
 	<string name="str_tlkfile">打开Tlk文件</string>
 	<string name="str_mvforward">前移</string>

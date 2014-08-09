@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
-import android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

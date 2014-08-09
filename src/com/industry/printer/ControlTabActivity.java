@@ -88,6 +88,8 @@ public class ControlTabActivity extends Activity {
 	public Button mGetInfo;
 	public Button mPrint;
 	public Button mFinish;
+	public Button mBtnNext;
+	public Button mBtnPrev;
 	
 	public Button	mBtnfile;
 	public Button	mBtnTlkfile;
@@ -112,7 +114,7 @@ public class ControlTabActivity extends Activity {
 	public Button mOpen2;
 	public Button mOpen3;
 	public Button mOpen4;
-	public int mFd;
+	public static int mFd;
 	
 	public BinInfo mBg;
 	
@@ -131,6 +133,7 @@ public class ControlTabActivity extends Activity {
 	
 	public int mIndex;
 	public TextView mPrintStatus;
+	public TextView mInkLevel;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,21 +172,32 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//UsbConnector uc = new UsbConnector(ControlTabActivity.this);
-				
-				//mPreviewRefreshHandler.sendEmptyMessage(0);
-				//UsbSerial.printStart(mFd);
-				//
-				//UsbSerial.setAllParam(mFd, null);
-				//UsbSerial.readAllParam(mFd);
-				
-				//Debug.d(TAG, "====isPrinting="+isPrinting);
-				//if(isPrinting)	//printing thread is running, do not create a new print thread again
-				//	return;
-				//isPrinting = true;
-				//mPrintThread = (PrintingThread) startThread();
-				
-				UsbSerial.printStart(mFd);
+				byte[] buffer=null;
+				byte[] info = new byte[23];
+				String text="";
+				UsbSerial.getInfo(mFd, info);
+				updateInkLevel(info);
+				if(info[9] != 0)
+				{
+					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
+					return;
+				}
+				try{
+					int index = mMessageAdapter.getChecked();
+					Vector<TlkObject> list = mTlkList.get(index-1);
+					Debug.d(TAG,"=======index="+(index-1));
+					showListContent(list);
+					buffer = mBinBuffer.get(list);
+				}catch(Exception e)
+				{
+					return;
+				}
+				if(buffer==null)
+					return;
+				UsbSerial.sendDataCtrl(mFd, buffer.length);
+				UsbSerial.printData(mFd,  buffer);
+				//UsbSerial.sendDataCtrl(mFd, data.length);
+				//UsbSerial.printData(mFd,  data);
 			}
 			
 		});
@@ -209,6 +223,7 @@ public class ControlTabActivity extends Activity {
 		 *clean the print head
 		 *this command unsupported now 
 		 */
+		/*
 		mBtnClean = (Button) findViewById(R.id.btnClean);
 		mBtnClean.setOnClickListener(new OnClickListener(){
 
@@ -219,7 +234,8 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
+		/*
 		mBtnOpen = (Button) findViewById(R.id.btnOpen);
 		mBtnOpen.setOnClickListener(new OnClickListener(){
 
@@ -227,7 +243,7 @@ public class ControlTabActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				boolean isroot=false;
-				/*
+				
 				try {
 					isroot = LinuxShell.isRoot(Runtime.getRuntime(), 50);
 				} catch (IOException e) {
@@ -237,7 +253,7 @@ public class ControlTabActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				*/
+				
 				Debug.d(TAG, "is root="+isroot);
 				FileBrowserDialog fdialog = new FileBrowserDialog(ControlTabActivity.this,DotMatrixFont.USB_SYS_PATH);
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
@@ -253,11 +269,11 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		/*
 		 * Command 4&5
 		 */
-		
+		/*
 		mBtnSend = (Button) findViewById(R.id.btnSend);
 		mBtnSend.setOnClickListener(new OnClickListener(){
 
@@ -293,11 +309,12 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		/*
 		 * Command 6&7
 		 * set all param
 		 */
+		/*
 		mSetParam = (Button)findViewById(R.id.btnSetparam);
 		mSetParam.setOnClickListener(new OnClickListener(){
 
@@ -312,11 +329,12 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		/*
 		 * get Info
 		 * Command 8
 		 */
+		/*
 		mGetInfo = (Button) findViewById(R.id.btnGetinfo);
 		mGetInfo.setOnClickListener(new OnClickListener(){
 
@@ -332,7 +350,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		
 		//mPollThread = new PollStateThread();
 		//mPrintThread = (PrintingThread) startThread();
@@ -340,6 +358,7 @@ public class ControlTabActivity extends Activity {
 		/*
 		 * Start Printing Thread
 		 */
+		/*
 		mPrint = (Button) findViewById(R.id.btnPrint);
 		mPrint.setOnClickListener(new OnClickListener(){
 
@@ -369,7 +388,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		mBtnfile = (Button) findViewById(R.id.btnopenfile);
 		mBtnfile.setOnClickListener(new OnClickListener(){
 
@@ -449,6 +468,7 @@ public class ControlTabActivity extends Activity {
 				Vector<TlkObject> list = mTlkList.get(pos-1);
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show(list);
+				
 				/*
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
 				if(m!= null)
@@ -477,6 +497,43 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		
+		mBtnPrev = (Button) findViewById(R.id.btnPreRecord);
+		mBtnPrev.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int i = mMessageAdapter.getChecked();
+				Debug.d(TAG,"curent checked = "+i);
+				if(i<=1 || i>=mMessageList.getCount())
+					return;
+				mMessageAdapter.setChecked(i-1);
+				//mMessageList.setAdapter(mMessageAdapter);
+				mMessageAdapter.notifyDataSetChanged();
+			}
+			
+		});
+		
+		mBtnNext = (Button) findViewById(R.id.btnNextRecord);
+		mBtnNext.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int i = mMessageAdapter.getChecked();
+				Debug.d(TAG,"curent checked = "+i);
+				if(i<1 || i>=mMessageList.getCount()-1)
+					return;
+				
+				//Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
+				
+				mMessageAdapter.setChecked(i+1);
+				//mMessageList.setAdapter(mMessageAdapter);
+				mMessageAdapter.notifyDataSetChanged();
+			}
+			
+		});
+		/*
 		mForward = (Button) findViewById(R.id.btn_mvforward);
 		mForward.setOnClickListener(new OnClickListener(){
 
@@ -529,6 +586,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
+		*/
 		mMessageMap = new LinkedList<Map<String, String>>();
 		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
@@ -570,7 +628,9 @@ public class ControlTabActivity extends Activity {
 		mMessageList.setAdapter(mMessageAdapter);
 		
 		
-		mPrintStatus = (TextView) findViewById(R.id.tv_headinfo);
+		//
+		//mPrintStatus = (TextView) findViewById(R.id.tv_headinfo);
+		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
 	}
 	
 	@Override
@@ -874,13 +934,30 @@ public class ControlTabActivity extends Activity {
 					}
 				}
 				}, 3000);
-			
+				UsbSerial.printStart(mFd);
+				UsbSerial.sendSetting(mFd);
+				byte[] data = new byte[128];
+				makeParams(data);
+				UsbSerial.sendSettingData(mFd, data);
+				byte[] info = new byte[23];
+				UsbSerial.getInfo(mFd, info);
+				updateInkLevel(info);
+				UsbSerial.printStop(mFd);
+				
 			}
 		}
 		
 	}
 	
-	
+	private void updateInkLevel(byte info[])
+	{
+		if(info == null || info.length<13)
+			return;
+		int h = info[11]&0x0ff;
+		int l = info[12]&0x0ff;
+		int level = h<<8 | l;
+		mInkLevel.setText(String.valueOf(level));
+	}
 	/*
 	 * if in no-print state, poll state of print-head in 100ms interval
 	 */

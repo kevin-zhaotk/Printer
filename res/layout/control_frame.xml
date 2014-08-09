@@ -19,7 +19,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textSize="20dp"
-        android:text="@string/btn_start" />
+        android:text="@string/btn_print" />
 
     <Button
         android:id="@+id/StopPrint"
@@ -32,37 +32,37 @@
         android:text="@string/btn_stop" />
 	
     <Button
-        android:id="@+id/btnClean"
+        android:id="@+id/btn_preview"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/StartPrint"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/StopPrint"
         android:textSize="20dp"
-        android:text="@string/btn_clean" />
+        android:text="@string/str_preview" />
 	
     <Button
-        android:id="@+id/btnOpen"
+        android:id="@+id/btnPreRecord"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/StartPrint"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/btnClean"
+        android:layout_toRightOf="@+id/btn_preview"
         android:textSize="20dp"
-    	android:text="@string/btn_open"
+    	android:text="@string/btn_prerecord"
         />
 	
     <Button
-        android:id="@+id/btnSend"
+        android:id="@+id/btnNextRecord"
         android:layout_width="80dp"
         android:layout_height="60dp"
         android:layout_alignBottom="@+id/StartPrint"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/btnOpen"
+        android:layout_toRightOf="@+id/btnPreRecord"
         android:textSize="20dp"
-    	android:text="@string/btn_send"
+    	android:text="@string/btn_nextrecord"
         />
-	
+<!-- 	
     <Button
         android:id="@+id/btnSetparam"
         android:layout_width="80dp"
@@ -106,7 +106,7 @@
     	android:text="@string/btn_finish"
 	    />
 	
-	
+ -->	
     
 <!-- close it for test
     <HorizontalScrollView 
@@ -133,9 +133,10 @@
      
      <Button 
          android:id="@+id/btnopenfile"
-         android:layout_below="@id/btnFinish"
+         android:layout_below="@id/StartPrint"
          android:layout_width="150dp"
-         android:layout_height="wrap_content"
+         android:layout_height="60dp"
+         android:singleLine="true"
          android:text="@string/str_openfile"
          android:textSize="20sp"
          android:textColor="#000000"
@@ -143,15 +144,16 @@
      
      <Button 
          android:id="@+id/btnTlkfile"
-         android:layout_below="@id/btnFinish"
+         android:layout_below="@id/StartPrint"
          android:layout_toRightOf="@id/btnopenfile"
          android:layout_width="150dp"
-         android:layout_height="wrap_content"
+         android:layout_height="60dp"
+         android:singleLine="true"
          android:text="@string/str_tlkfile"
          android:textSize="20sp"
          android:textColor="#000000"
          />
-     
+ <!--     
      <Button 
          android:id="@+id/btn_mvbackward"
          android:layout_alignBottom="@id/btnopenfile"
@@ -180,7 +182,7 @@
          android:text="@string/str_preview"
          android:textSize="15sp"
          />
-
+ -->
      <HorizontalScrollView 
          android:id="@+id/scrollview_prev_id"
          android:layout_width="wrap_content"
@@ -190,19 +192,37 @@
      	<ListView
         	android:id="@+id/lv_messages"
         	android:layout_width="fill_parent"
-        	android:layout_height="200dp"
+        	android:layout_height="250dp"
          	android:listSelector="@drawable/listitem_select"
          	android:background="#ffffff"
          >
          
      </ListView>
      </HorizontalScrollView>
+      
      <TextView
-		    android:id="@+id/tv_splitline"
-		    android:layout_width="fill_parent"
-		    android:layout_height="5dp"
-		    android:layout_below="@id/scrollview_prev_id"
-		    />
+		  android:id="@+id/tv_inkValue"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_below="@id/scrollview_prev_id"
+		  android:layout_alignParentRight="true"
+		  android:layout_marginTop="10dp"
+		  android:hint="@string/strDefault"
+		  android:textColor="#000000"
+		  android:textSize="25dp"
+	 />
+     <TextView
+		  android:id="@+id/tv_tv_inkLevel"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_alignBaseline="@id/tv_inkValue"
+		  android:layout_toLeftOf="@id/tv_inkValue"
+		  android:text="@string/strInklevel"
+		  android:textColor="#000000"
+		  android:textSize="25dp"
+	 />
+     
+     <!--
 		<TextView
 		    android:id="@+id/tv_headinfo"
 		    android:layout_width="fill_parent"
@@ -213,5 +233,6 @@
 		    android:textSize="25dp"
 		    android:hint=""
 		    />
+	 -->	    
 </RelativeLayout>
 </ScrollView>

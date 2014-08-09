@@ -1,5 +1,6 @@
 package com.industry.printer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,11 +48,13 @@ public class ManualCtrlActivity extends Activity {
 	
 	public Button mBtnTlkfile;
 	public Button mBtnview;
+	public Button mPrint;
+	public Button mStop;
 	
 	public LinkedList<Map<String, String>>	mMessageMap;
 	public PreviewAdapter mMessageAdapter;
 	public ListView mMessageList;
-	
+	public byte[] mBinBuffer;
 	public Context mContext;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +63,43 @@ public class ManualCtrlActivity extends Activity {
 		setContentView(R.layout.manualctrl_frame);
 		
 		mContext = this.getApplicationContext();
+		
+		mPrint = (Button) findViewById(R.id.manual_StartPrint);
+		mPrint.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(mBinBuffer==null)
+					return;
+				byte[] buffer=null;
+				byte[] info = new byte[23];
+				String text="";
+				UsbSerial.getInfo(ControlTabActivity.mFd, info);
+				if(info[9] != 0)
+				{
+					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
+					return;
+				}
+				
+				if(buffer==null)
+					return;
+				UsbSerial.sendDataCtrl(ControlTabActivity.mFd, mBinBuffer.length);
+				UsbSerial.printData(ControlTabActivity.mFd,  mBinBuffer);
+			}
+			
+		});
+		
+		mStop = (Button) findViewById(R.id.manual_StopPrint);
+		mStop.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				UsbSerial.printStop(ControlTabActivity.mFd);
+			}
+			
+		});
 		
 		mMessageMap = new LinkedList<Map<String, String>>();
 		mMessageAdapter = new PreviewAdapter(mContext, 
@@ -161,6 +201,13 @@ public class ManualCtrlActivity extends Activity {
 					//set contents of text object
 					//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
 					BinCreater.create(gBmp, 0);
+					ByteArrayInputStream bs = new ByteArrayInputStream(BinCreater.mBmpBits);
+					mBinBuffer = new byte[BinCreater.mBmpBits.length];
+					try{
+						bs.read(mBinBuffer);
+					}catch(Exception e)
+					{		
+					}
 					PreviewDialog prv = new PreviewDialog(ManualCtrlActivity.this);
 					
 					prv.show(list);
