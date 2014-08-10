@@ -111,13 +111,14 @@ public class UsbSerial {
 	 */
 	static public int clean(int fd)
 	{
-		/*
+		
 		short buf[]={0x80, 0x00, 0x02, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
 		if(fd <= 0)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
 			return 0;
 		}
+		/*
 		for(int i=0; i<buf.length; i++)
 		{
 			//Debug.d(TAG, "buf["+i+"]="+(int) buf[i]);
@@ -130,8 +131,7 @@ public class UsbSerial {
 		}
 		//String buf = "FUCK serial write";
 		 */
-		short[] crcCmd = new short[1*1024*1024];
-		int ret = UsbSerial.write(fd, crcCmd, crcCmd.length);
+		int ret = UsbSerial.write(fd, buf, buf.length);
 		return ret;
 	}
 	

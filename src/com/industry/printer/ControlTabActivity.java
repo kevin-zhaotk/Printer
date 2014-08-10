@@ -302,7 +302,7 @@ public class ControlTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				UsbSerial.sendSetting(mFd);
 				byte[] data = new byte[128];
-				makeParams(data);
+				makeParams(mContext, data);
 				UsbSerial.sendSettingData(mFd, data);
 				
 			}
@@ -642,10 +642,10 @@ public class ControlTabActivity extends Activity {
 		UsbSerial.printStart(mFd);
 		UsbSerial.sendSetting(mFd);
 		byte[] data = new byte[128];
-		makeParams(data);
+		makeParams(mContext,data);
 		UsbSerial.sendSettingData(mFd, data);
 		mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", "printing,wait......");
-		try{
+		/*try{
 			int index = mMessageAdapter.getChecked();
 			Vector<TlkObject> list = mTlkList.get(index-1);
 			Debug.d(TAG,"=======index="+(index-1));
@@ -654,6 +654,11 @@ public class ControlTabActivity extends Activity {
 		}catch(Exception e)
 		{
 			return;
+		}*/
+		buffer = new byte[2400];
+		for(int i=0;i<2400;i=i+8)
+		{
+			buffer[i]=(byte)0xff;
 		}
 		if(buffer==null)
 			return;
@@ -1081,7 +1086,7 @@ public class ControlTabActivity extends Activity {
 				return;
 			}
 			Debug.d(TAG, "====send setting ok");
-			makeParams(sdata);
+			makeParams(mContext, sdata);
 			UsbSerial.sendSettingData(mFd, sdata);
 			while(isRunning == true)
 			{
@@ -1307,7 +1312,8 @@ public class ControlTabActivity extends Activity {
 			if(o.isTextObject())
 			{
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				bit = new int[32*o.mContent.length()];
+				bit = new int[font.getColumns()*2*o.mContent.length()];
+				Debug.d(TAG, "=========bit.length="+bit.length);
 				font.getDotbuf(o.mContent, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
 			}
@@ -1343,14 +1349,14 @@ public class ControlTabActivity extends Activity {
 	 * 20. Byte 20-21, param 10,  Ink cartridge Temperature
 	 * 21. others reserved  
 	 */
-	public void makeParams(byte[] params)
+	public static void makeParams(Context context, byte[] params)
 	{
 		if(params==null || params.length<128)
 		{
 			Debug.d(TAG,"params is null or less than 128, realloc it");
 			params = new byte[128];
 		}
-		SharedPreferences preference = getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
+		SharedPreferences preference = context.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
 		int speed = preference.getInt(SettingsTabActivity.PREF_PRINTSPEED, 0);
 		params[2] = (byte) ((speed>>16)&0xff);
 		params[3] = (byte) ((speed)&0xff);

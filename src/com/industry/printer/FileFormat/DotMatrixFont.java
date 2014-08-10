@@ -61,7 +61,6 @@ public class DotMatrixFont {
 	
 	public void getDotbuf(String str, int[] buf)
 	{
-		int columns=0;
 		int ascii;
 		String s;
 		if(str == null)
@@ -69,15 +68,12 @@ public class DotMatrixFont {
 			Debug.d(TAG, "******str="+str);
 			return;
 		}
+		int columns = getColumns();
+		Debug.d(TAG, "#######columns="+columns);
 		try {
 			
 			mReader = new BufferedReader(new FileReader(mfile));
 			mReader.mark((int)mfile.length()+1);
-			s = mReader.readLine();
-			s = s.trim().substring(2).trim();
-			String head[] = s.split("x");
-			columns = Integer.parseInt(head[0]);
-			Debug.d(TAG, "##################columns = "+columns);
 			for(int i=0; i< str.length(); i++)
 			{
 				ascii = (int)str.charAt(i);
@@ -100,17 +96,19 @@ public class DotMatrixFont {
 				if(s==null)
 					break;
 				String[] dot = s.split("  ");
-				//Debug.d(TAG,"********P1*********");
+				Debug.d(TAG,"********P1*********");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
+					if(columns < k+1 )
+						break;
 					dot[k]=dot[k].trim();
 					try{
-						buf[i*32+k] = Integer.parseInt(dot[k],16);
+						buf[i*columns*2+2*k] = Integer.parseInt(dot[k],16);
 					}catch(Exception e)
 					{
 						
 					}
-					//Debug.d(TAG, "buf["+(i*32+k)+"]="+buf[i*32+k]);
+					Debug.d(TAG, "k="+k+" ,buf["+(i*columns*2+2*k)+"]="+buf[i*columns*2+2*k]);
 				}
 				
 				/*read P2 head*/
@@ -124,16 +122,18 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				//Debug.d(TAG,"********P2*********");
+				Debug.d(TAG,"********P2*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
+					if(columns <= 8+k)
+						break;
 					dot[k]=dot[k].trim();
 					try{
-						buf[i*32+8+k] = Integer.parseInt(dot[k],16);
+						buf[i*columns*2+2*(8+k)] = Integer.parseInt(dot[k],16);
 					}catch(Exception e)
 					{}
-					//Debug.d(TAG, "buf["+(i*32+8+k)+"]="+buf[i*32+8+k]);
+					Debug.d(TAG, "k="+k+" ,buf["+(i*columns*2+2*(8+k))+"]="+buf[i*columns*2+2*(8+k)]);
 				}
 				
 				/*read P3 head*/
@@ -147,16 +147,18 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				//Debug.d(TAG,"********P3*********");
+				Debug.d(TAG,"********P3*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
+					if(columns < k+1 )
+						break;
 					dot[k]=dot[k].trim();
 					try{
-						buf[i*32+16+k] = Integer.parseInt(dot[k], 16);
+						buf[i*columns*2+2*k+1] = Integer.parseInt(dot[k], 16);
 					}catch(Exception e)
 					{}
-					//Debug.d(TAG, "buf["+(i*32+16+k)+"]="+buf[i*32+16+k]);
+					Debug.d(TAG, "k="+k+" ,buf["+(i*columns*2+2*k+1)+"]="+buf[i*columns*2+2*k+1]);
 				}
 				
 				/*read P4 head*/
@@ -170,16 +172,18 @@ public class DotMatrixFont {
 				s=mReader.readLine();
 				if(s==null)
 					break;
-				//Debug.d(TAG,"********P4*********");
+				Debug.d(TAG,"********P4*********");
 				dot = s.split("  ");
 				for(int k=0;k<8 && k<dot.length; k++)
 				{
+					if(columns <= 8+k)
+						break;
 					dot[k]=dot[k].trim();
 					try{
-						buf[i*32+24+k] = Integer.parseInt(dot[k], 16);
+						buf[i*columns*2+2*(8+k)+1] = Integer.parseInt(dot[k], 16);
 					}catch(Exception e)
 					{}
-					//Debug.d(TAG, "buf["+(i*32+24+k)+"]="+buf[i*32+24+k]);
+					Debug.d(TAG, "k="+k+" ,buf["+(i*columns*2+2*(8+k)+1)+"]="+buf[i*columns*2+2*(8+k)+1]);
 				}
 			}
 			mReader.close();
@@ -298,5 +302,23 @@ public class DotMatrixFont {
 			Debug.d(TAG, "e="+e.getMessage());
 		}
 		
+	}
+	
+	
+	public int getColumns()
+	{
+		int columns=0;
+		String s;
+		try{
+			mReader = new BufferedReader(new FileReader(mfile));
+			s = mReader.readLine();
+			s = s.trim().substring(2).trim();
+			String head[] = s.split("x");
+			columns = Integer.parseInt(head[0]);
+			Debug.d(TAG, "##################columns = "+columns);
+			mReader.close();
+		}catch(Exception e)
+		{}
+		return columns;
 	}
 }

@@ -1,7 +1,9 @@
 package com.industry.printer;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Vector;
@@ -111,9 +113,11 @@ public class PreviewScrollView extends View {
 			{
 				Debug.d(TAG, "=========text object content="+o.mContent);
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				bit = new int[32*o.mContent.length()];
+				bit = new int[font.getColumns()*2*o.mContent.length()];
+				Debug.d(TAG, "=========bit.length="+bit.length);
 				font.getDotbuf(o.mContent, bit);
 				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
+				if(bit != null && bit.length != 0)
 				BinCreater.saveBitmap(mPreBitmap, "text.png");
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
@@ -144,13 +148,25 @@ public class PreviewScrollView extends View {
 			return null;
 		}
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
-		
+		//columns = columns*2;
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
 		Canvas c = new Canvas(bmp);
 		c.drawColor(Color.WHITE);
-		for(int i=0; i<bit.length; i++)
+		for(int i=0; i<bit.length/2; i++)
 		{
-			if(i%32>=0 && i%32 <8)	//P1
+			for(int j=0; j<8; j++)
+			{
+				if((bit[2*i]>>j&0x01)==1) c.drawPoint(i, j, p);
+				//Debug.d(TAG, "x="+i+", y="+j);
+			}
+			for(int j=0; j<8; j++)
+			{
+				if((bit[2*i+1]>>j&0x01)==1) c.drawPoint(i, 8+j, p);
+				//Debug.d(TAG, "x="+i+", y="+(8+j));
+			}
+			
+			/*
+			if(i%columns>=0 && i%columns <8)	//P1
 			{
 				//Debug.d(TAG, "P1 i="+i);
 				for(int j=0; j<8; j++)
@@ -159,7 +175,7 @@ public class PreviewScrollView extends View {
 					//Debug.d(TAG, "x="+(i-16*(i/32))+", y="+j);
 				}
 			}
-			else if(i%32>=8 && i%32 <16)	//P2
+			else if(i%columns*2>=8 && i%32 <16)	//P2
 			{
 				//Debug.d(TAG, "P2 i="+i);
 				for(int j=0; j<8; j++)
@@ -186,6 +202,7 @@ public class PreviewScrollView extends View {
 					//Debug.d(TAG, "x="+(i-16*(i/32)-16)+", y="+(j+8));
 				}
 			} 
+			*/
 		}
 		return bmp;
 	}

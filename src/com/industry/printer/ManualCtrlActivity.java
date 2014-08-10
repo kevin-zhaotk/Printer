@@ -17,6 +17,7 @@ import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -26,6 +27,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -70,22 +73,7 @@ public class ManualCtrlActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(mBinBuffer==null)
-					return;
-				byte[] buffer=null;
-				byte[] info = new byte[23];
-				String text="";
-				UsbSerial.getInfo(ControlTabActivity.mFd, info);
-				if(info[9] != 0)
-				{
-					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
-					return;
-				}
-				
-				if(buffer==null)
-					return;
-				UsbSerial.sendDataCtrl(ControlTabActivity.mFd, mBinBuffer.length);
-				UsbSerial.printData(ControlTabActivity.mFd,  mBinBuffer);
+				print();
 			}
 			
 		});
@@ -182,7 +170,8 @@ public class ManualCtrlActivity extends Activity {
 						if(o.isTextObject() && o.mContent!=null)
 						{
 							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-							bit = new int[32*o.mContent.length()];
+							bit = new int[font.getColumns()*2*o.mContent.length()];
+							Debug.d(TAG, "=========bit.length="+bit.length);
 							font.getDotbuf(o.mContent, bit);
 							bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
 						}
@@ -319,4 +308,57 @@ public class ManualCtrlActivity extends Activity {
 		getResources().updateConfiguration(config, dm); 
 		
 	}
+	
+	public ProgressDialog mPrintDialog;
+	public void print()
+	{
+		byte[] buffer=null;
+		String text="";
+		UsbSerial.printStart(ControlTabActivity.mFd);
+		UsbSerial.sendSetting(ControlTabActivity.mFd);
+		byte[] data = new byte[128];
+		ControlTabActivity.makeParams(mContext,data);
+		UsbSerial.sendSettingData(ControlTabActivity.mFd, data);
+		mPrintDialog = ProgressDialog.show(ManualCtrlActivity.this, "", "printing,wait......");
+		
+		if(mBinBuffer==null)
+			return;
+		UsbSerial.sendDataCtrl(ControlTabActivity.mFd, mBinBuffer.length);
+		UsbSerial.printData(ControlTabActivity.mFd,  mBinBuffer);
+		new Thread(new Runnable(){
+			@Override
+			public void run()
+			{
+				int timeout=20;
+				byte[] info = new byte[23];
+				do
+				{
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e)
+					{}
+					Debug.d(TAG, "##########timeout = "+timeout);
+					if(timeout-- <=1)
+						break;
+					UsbSerial.getInfo(ControlTabActivity.mFd, info);
+				}while(info[9]!=0);
+				
+				mHandler.sendEmptyMessage(2);
+			}
+		}).start();
+		
+		//UsbSerial.sendDataCtrl(mFd, data.length);
+		//UsbSerial.printData(mFd,  data);
+	}
+	
+	public Handler mHandler = new Handler(){
+		public void handleMessage(Message msg) { 
+			switch(msg.what)
+			{
+				case 2:
+					mPrintDialog.dismiss();
+					break;
+			}
+		}
+	};
 }
