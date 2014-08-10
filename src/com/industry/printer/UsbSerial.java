@@ -132,15 +132,6 @@ public class UsbSerial {
 		 */
 		short[] crcCmd = new short[1*1024*1024];
 		int ret = UsbSerial.write(fd, crcCmd, crcCmd.length);
-		Debug.d(TAG, "write ret="+ret);
-		if(ret != crcCmd.length)
-			return 0;
-		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
-		if(response == null)
-		{
-			Debug.d(TAG, "read return null");
-			return 0;
-		}
 		return ret;
 	}
 	

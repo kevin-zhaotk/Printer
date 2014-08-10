@@ -61,7 +61,7 @@ public class DotMatrixFont {
 	
 	public void getDotbuf(String str, int[] buf)
 	{
-		
+		int columns=0;
 		int ascii;
 		String s;
 		if(str == null)
@@ -73,7 +73,11 @@ public class DotMatrixFont {
 			
 			mReader = new BufferedReader(new FileReader(mfile));
 			mReader.mark((int)mfile.length()+1);
-			
+			s = mReader.readLine();
+			s = s.trim().substring(2).trim();
+			String head[] = s.split("x");
+			columns = Integer.parseInt(head[0]);
+			Debug.d(TAG, "##################columns = "+columns);
 			for(int i=0; i< str.length(); i++)
 			{
 				ascii = (int)str.charAt(i);

@@ -39,6 +39,7 @@ import com.industry.printer.object.RealtimeYear;
 import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -134,6 +135,9 @@ public class ControlTabActivity extends Activity {
 	public int mIndex;
 	public TextView mPrintStatus;
 	public TextView mInkLevel;
+	public TextView mPhotocellState;
+	public TextView mEncoderState;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -172,32 +176,7 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				byte[] buffer=null;
-				byte[] info = new byte[23];
-				String text="";
-				UsbSerial.getInfo(mFd, info);
-				updateInkLevel(info);
-				if(info[9] != 0)
-				{
-					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
-					return;
-				}
-				try{
-					int index = mMessageAdapter.getChecked();
-					Vector<TlkObject> list = mTlkList.get(index-1);
-					Debug.d(TAG,"=======index="+(index-1));
-					showListContent(list);
-					buffer = mBinBuffer.get(list);
-				}catch(Exception e)
-				{
-					return;
-				}
-				if(buffer==null)
-					return;
-				UsbSerial.sendDataCtrl(mFd, buffer.length);
-				UsbSerial.printData(mFd,  buffer);
-				//UsbSerial.sendDataCtrl(mFd, data.length);
-				//UsbSerial.printData(mFd,  data);
+				print();
 			}
 			
 		});
@@ -223,18 +202,18 @@ public class ControlTabActivity extends Activity {
 		 *clean the print head
 		 *this command unsupported now 
 		 */
-		/*
-		mBtnClean = (Button) findViewById(R.id.btnClean);
+		
+		mBtnClean = (Button) findViewById(R.id.btnFlush);
 		mBtnClean.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//UsbSerial.clean(mFd);
+				UsbSerial.clean(mFd);
 			}
 			
 		});
-		*/
+		
 		/*
 		mBtnOpen = (Button) findViewById(R.id.btnOpen);
 		mBtnOpen.setOnClickListener(new OnClickListener(){
@@ -631,6 +610,8 @@ public class ControlTabActivity extends Activity {
 		//
 		//mPrintStatus = (TextView) findViewById(R.id.tv_headinfo);
 		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
+		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
+		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
 	}
 	
 	@Override
@@ -653,6 +634,61 @@ public class ControlTabActivity extends Activity {
 		return false;
 	}
 	
+	public ProgressDialog mPrintDialog;
+	public void print()
+	{
+		byte[] buffer=null;
+		String text="";
+		UsbSerial.printStart(mFd);
+		UsbSerial.sendSetting(mFd);
+		byte[] data = new byte[128];
+		makeParams(data);
+		UsbSerial.sendSettingData(mFd, data);
+		mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", "printing,wait......");
+		try{
+			int index = mMessageAdapter.getChecked();
+			Vector<TlkObject> list = mTlkList.get(index-1);
+			Debug.d(TAG,"=======index="+(index-1));
+			showListContent(list);
+			buffer = mBinBuffer.get(list);
+		}catch(Exception e)
+		{
+			return;
+		}
+		if(buffer==null)
+			return;
+		UsbSerial.sendDataCtrl(mFd, buffer.length);
+		UsbSerial.printData(mFd,  buffer);
+		new Thread(new Runnable(){
+			@Override
+			public void run()
+			{
+				int timeout=20;
+				byte[] info = new byte[23];
+				do
+				{
+					try{
+						Thread.sleep(1000);
+					}catch(Exception e)
+					{}
+					Debug.d(TAG, "##########timeout = "+timeout);
+					if(timeout-- <=1)
+						break;
+					UsbSerial.getInfo(mFd, info);
+				}while(info[9]!=0);
+				Message msg = new Message();
+				msg.what=2;
+				Bundle b= new Bundle();
+				b.putByteArray("info", info);
+				msg.setData(b);
+				mHandler.sendMessage(msg);
+			}
+		}).start();
+		
+		//UsbSerial.sendDataCtrl(mFd, data.length);
+		//UsbSerial.printData(mFd,  data);
+	}
+	
 	public String mObjPath=null;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) { 
@@ -671,6 +707,10 @@ public class ControlTabActivity extends Activity {
 				case 1:
 					String text = msg.getData().getString("text");
 					mPrintStatus.setText("result: "+text);
+					break;
+				case 2:
+					mPrintDialog.dismiss();
+					updateInkLevel(msg.getData().getByteArray("info"));
 					break;
 			}
 		}
@@ -935,10 +975,6 @@ public class ControlTabActivity extends Activity {
 				}
 				}, 3000);
 				UsbSerial.printStart(mFd);
-				UsbSerial.sendSetting(mFd);
-				byte[] data = new byte[128];
-				makeParams(data);
-				UsbSerial.sendSettingData(mFd, data);
 				byte[] info = new byte[23];
 				UsbSerial.getInfo(mFd, info);
 				updateInkLevel(info);
@@ -957,6 +993,14 @@ public class ControlTabActivity extends Activity {
 		int l = info[12]&0x0ff;
 		int level = h<<8 | l;
 		mInkLevel.setText(String.valueOf(level));
+		if((info[8]&0x04)==0x00)
+			mPhotocellState.setText("0");
+		else
+			mPhotocellState.setText("1");
+		if((info[8]&0x08)==0x00)
+			mEncoderState.setText("0");
+		else
+			mEncoderState.setText("1");
 	}
 	/*
 	 * if in no-print state, poll state of print-head in 100ms interval
