@@ -122,7 +122,7 @@ public class UsbSerial {
 		for(int i=0; i<buf.length; i++)
 		{
 			//Debug.d(TAG, "buf["+i+"]="+(int) buf[i]);
-		}
+		}*/
 		short[] crcCmd = CRC16.crc(buf);
 		
 		for(int i=0; i<crcCmd.length; i++)
@@ -130,8 +130,9 @@ public class UsbSerial {
 			//Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
 		}
 		//String buf = "FUCK serial write";
-		 */
-		int ret = UsbSerial.write(fd, buf, buf.length);
+		 
+		int ret = UsbSerial.write(fd, crcCmd, buf.length);
+		Debug.d(TAG, "clean return = "+ret);
 		return ret;
 	}
 	
@@ -307,6 +308,7 @@ public class UsbSerial {
 			Debug.d(TAG, "ttyACM0 device node not opened");
 			return 0;
 		}
+		Debug.d(TAG,"===>sendDataCtrl");
 		cmd[4] = (short) (len >> 24 & 0x0ff);
 		cmd[5] = (short) (len >> 16 & 0x0ff);
 		cmd[6] = (short) (len >> 8 & 0x0ff);
@@ -325,11 +327,11 @@ public class UsbSerial {
 			Debug.d(TAG, "read return null");
 			return 0;
 		}
-		for(int i=0; i<response.length; i++)
+		/*for(int i=0; i<response.length; i++)
 		{
-			//Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
-		}
-		
+			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
+		}*/
+		Debug.d(TAG,"<===sendDataCtrl");
 		return ret;
 	}
 	
@@ -347,13 +349,14 @@ public class UsbSerial {
 			Debug.d(TAG, "ttyACM0 device node not opened");
 			return 0;
 		}
-		Debug.d(TAG,"====>printData");
+		
+		Debug.d(TAG,"====>printData, data len="+data.length);
 		//disable CRC
 		cmd = new short[data.length+4];
-		cmd[0]=0x81;
+		cmd[0]=0x81&0x0ff;
 		for(int i=0; i <data.length; i++)
 		{
-			cmd[i+1] = data[i];
+			cmd[i+1] = (short) (data[i]&0x0ff);
 		}
 		cmd[cmd.length-3] = 0x00;
 		cmd[cmd.length-2] = 0x00;
@@ -367,7 +370,7 @@ public class UsbSerial {
 		 */
 		
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
-		Debug.d(TAG, "write ret="+ret);
+		Debug.d(TAG, "=============printDate write ret="+ret);
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
@@ -430,16 +433,20 @@ public class UsbSerial {
 		cmd[0] = 0x81;
 		for(int i=0; i<data.length && i < 128; i++)
 		{
-			cmd[i+1] = data[i];
+			cmd[i+1] = (short) (data[i]&0x0ff);
 		}
 		cmd[129] = 0;
 		cmd[130] = 0;
 		cmd[131] = 4;
-		short [] crcCmd = CRC16.crc(cmd);
-		for(int i=0; i<crcCmd.length; i++)
+		/*for(int i=0; i<cmd.length; i++)
 		{
-			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
-		}
+			Debug.d(TAG, "cmd["+i+"]="+Integer.toHexString(cmd[i]));
+		}*/
+		short [] crcCmd = CRC16.crc(cmd);
+		/*for(int i=0; i<crcCmd.length; i++)
+		{
+			//Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
+		}*/
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		byte[] response = UsbSerial.read(fd, 10);
@@ -479,10 +486,10 @@ public class UsbSerial {
 			Debug.d(TAG, "read return null");
 			return 0;
 		}
-		for(int i=0; i<response.length; i++)
+		/*for(int i=0; i<response.length; i++)
 		{
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
-		}
+		}*/
 		if(info == null)
 			return 0;
 		ByteArrayInputStream s = new ByteArrayInputStream(response);

@@ -16,7 +16,7 @@ import com.industry.printer.object.TlkObject;
 public class Tlk_Parser {
 
 	public static final String TAG="Tlk_Parser";
-	
+	public static int mColumns=0;
 	public static boolean parse(String f, Vector<TlkObject> list)
 	{
 		try {
@@ -37,6 +37,11 @@ public class Tlk_Parser {
 					Debug.d(TAG,"index="+index+", x="+obj.x+", y="+obj.y+", font="+obj.font);
 					
 					list.add(obj);
+				}
+				else if(index == 31) //head
+				{
+					mColumns = Integer.parseInt(line[2]);
+					Debug.d(TAG, "#############line[2]="+line[2]+", mColumns="+mColumns);
 				}
 			}
 			reader.close();

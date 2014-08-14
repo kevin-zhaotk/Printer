@@ -209,7 +209,10 @@ public class ControlTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				Debug.d(TAG, "***********clean head");
+				//UsbSerial.printStart(mFd);
 				UsbSerial.clean(mFd);
+				//UsbSerial.printStop(mFd);
 			}
 			
 		});
@@ -644,8 +647,8 @@ public class ControlTabActivity extends Activity {
 		byte[] data = new byte[128];
 		makeParams(mContext,data);
 		UsbSerial.sendSettingData(mFd, data);
-		mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", "printing,wait......");
-		/*try{
+		
+		try{
 			int index = mMessageAdapter.getChecked();
 			Vector<TlkObject> list = mTlkList.get(index-1);
 			Debug.d(TAG,"=======index="+(index-1));
@@ -653,48 +656,55 @@ public class ControlTabActivity extends Activity {
 			buffer = mBinBuffer.get(list);
 		}catch(Exception e)
 		{
+			Debug.d(TAG,"######Exception: "+e.getMessage());
 			return;
-		}*/
-		buffer = new byte[2400];
-		for(int i=0;i<2400;i=i+8)
+		}
+		/*
+		buffer = new byte[80];
+		for(int i=0;i<80;i=i+8)
 		{
 			buffer[i]=(byte)0xff;
+			buffer[i+1]=(byte)0xff;
 		}
+		*/
 		if(buffer==null)
 			return;
+		
 		UsbSerial.sendDataCtrl(mFd, buffer.length);
 		UsbSerial.printData(mFd,  buffer);
-		new Thread(new Runnable(){
+		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
+		/*new Thread(new Runnable(){
 			@Override
 			public void run()
-			{
-				int timeout=20;
+			{*/
+				int timeout=10;
 				byte[] info = new byte[23];
-				do
+				//do
 				{
 					try{
 						Thread.sleep(1000);
 					}catch(Exception e)
 					{}
-					Debug.d(TAG, "##########timeout = "+timeout);
-					if(timeout-- <=1)
-						break;
+					//Debug.d(TAG, "##########timeout = "+timeout);
+					//if(timeout-- <=1)
+					//	break;
 					UsbSerial.getInfo(mFd, info);
-				}while(info[9]!=0);
+				}//while(info[9]!=0);
 				Message msg = new Message();
 				msg.what=2;
 				Bundle b= new Bundle();
 				b.putByteArray("info", info);
 				msg.setData(b);
 				mHandler.sendMessage(msg);
-			}
-		}).start();
+			/*}
+		}).start();*/
 		
 		//UsbSerial.sendDataCtrl(mFd, data.length);
 		//UsbSerial.printData(mFd,  data);
 	}
 	
 	public String mObjPath=null;
+	public ProgressDialog mLoadingDialog;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) { 
 			switch(msg.what)
@@ -714,8 +724,11 @@ public class ControlTabActivity extends Activity {
 					mPrintStatus.setText("result: "+text);
 					break;
 				case 2:
-					mPrintDialog.dismiss();
+					//mPrintDialog.dismiss();
 					updateInkLevel(msg.getData().getByteArray("info"));
+					break;
+				case 3:
+					mLoadingDialog.dismiss();
 					break;
 			}
 		}
@@ -979,11 +992,6 @@ public class ControlTabActivity extends Activity {
 					}
 				}
 				}, 3000);
-				UsbSerial.printStart(mFd);
-				byte[] info = new byte[23];
-				UsbSerial.getInfo(mFd, info);
-				updateInkLevel(info);
-				UsbSerial.printStop(mFd);
 				
 			}
 		}
@@ -994,8 +1002,8 @@ public class ControlTabActivity extends Activity {
 	{
 		if(info == null || info.length<13)
 			return;
-		int h = info[11]&0x0ff;
-		int l = info[12]&0x0ff;
+		int h = info[10]&0x0ff;
+		int l = info[11]&0x0ff;
 		int level = h<<8 | l;
 		mInkLevel.setText(String.valueOf(level));
 		if((info[8]&0x04)==0x00)
@@ -1295,7 +1303,7 @@ public class ControlTabActivity extends Activity {
 	
 	public void makeBinBuffer(Vector<TlkObject>list)
 	{
-		int len = calculateBufsize(list);
+		int len = Tlk_Parser.mColumns;//calculateBufsize(list);
 		Debug.d(TAG, "bin length="+len);
 		//int[] buffer = new int[len+16];
 		int bit[];
@@ -1358,10 +1366,10 @@ public class ControlTabActivity extends Activity {
 		}
 		SharedPreferences preference = context.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
 		int speed = preference.getInt(SettingsTabActivity.PREF_PRINTSPEED, 0);
-		params[2] = (byte) ((speed>>16)&0xff);
+		params[2] = (byte) ((speed>>8)&0xff);
 		params[3] = (byte) ((speed)&0xff);
 		int delay = preference.getInt(SettingsTabActivity.PREF_DELAY, 0);
-		params[4] = (byte) ((delay>>16)&0xff);
+		params[4] = (byte) ((delay>>8)&0xff);
 		params[5] = (byte) ((delay)&0xff);
 		int triger = (int)preference.getLong(SettingsTabActivity.PREF_TRIGER, 0);
 		params[8] = 0x00;
@@ -1370,62 +1378,63 @@ public class ControlTabActivity extends Activity {
 		params[10] = 0x00;
 		params[11] = (byte) (encoder==0?0x00:0x01);
 		int bold = preference.getInt(SettingsTabActivity.PREF_BOLD, 0);
-		params[12] = (byte) ((bold>>16)&0xff);
+		params[12] = (byte) ((bold>>8)&0xff);
 		params[13] = (byte) ((bold)&0xff);
 		int fixlen = preference.getInt(SettingsTabActivity.PREF_FIX_LEN, 0);
-		params[14] = (byte) ((fixlen>>16)&0xff);
+		params[14] = (byte) ((fixlen>>8)&0xff);
 		params[15] = (byte) ((fixlen)&0xff);
 		int fixtime= preference.getInt(SettingsTabActivity.PREF_FIX_TIME, 0);
-		params[16] = (byte) ((fixtime>>16)&0xff);
+		params[16] = (byte) ((fixtime>>8)&0xff);
 		params[17] = (byte) ((fixtime)&0xff);
 		int headtemp = preference.getInt(SettingsTabActivity.PREF_HEAD_TEMP, 0);
-		params[18] = (byte) ((headtemp>>16)&0xff);
+		params[18] = (byte) ((headtemp>>8)&0xff);
 		params[19] = (byte) ((headtemp)&0xff);
 		int resvtemp = preference.getInt(SettingsTabActivity.PREF_RESV_TEMP, 0);
-		params[20] = (byte) ((resvtemp>>16)&0xff);
+		params[20] = (byte) ((resvtemp>>8)&0xff);
 		params[21] = (byte) ((resvtemp)&0xff);
 		int fontwidth = preference.getInt(SettingsTabActivity.PREF_FONT_WIDTH, 0);
-		params[22] = (byte) ((fontwidth>>16)&0xff);
+		params[22] = (byte) ((fontwidth>>8)&0xff);
 		params[23] = (byte) ((fontwidth)&0xff);
 		int dots = preference.getInt(SettingsTabActivity.PREF_DOT_NUMBER, 0);
-		params[24] = (byte) ((dots>>16)&0xff);
+		params[24] = (byte) ((dots>>8)&0xff);
 		params[25] = (byte) ((dots)&0xff);
 		int resv12 = preference.getInt(SettingsTabActivity.PREF_RESERVED_12, 0);
-		params[26] = (byte) ((resv12>>16)&0xff);
+		params[26] = (byte) ((resv12>>8)&0xff);
 		params[27] = (byte) ((resv12)&0xff);
 		int resv13 = preference.getInt(SettingsTabActivity.PREF_RESERVED_13, 0);
-		params[28] = (byte) ((resv13>>16)&0xff);
+		params[28] = (byte) ((resv13>>8)&0xff);
 		params[29] = (byte) ((resv13)&0xff);
 		int resv14 = preference.getInt(SettingsTabActivity.PREF_RESERVED_14, 0);
-		params[30] = (byte) ((resv14>>16)&0xff);
+		params[30] = (byte) ((resv14>>8)&0xff);
 		params[31] = (byte) ((resv14)&0xff);
 		int resv15 = preference.getInt(SettingsTabActivity.PREF_RESERVED_15, 0);
-		params[32] = (byte) ((resv15>>16)&0xff);
+		params[32] = (byte) ((resv15>>8)&0xff);
 		params[33] = (byte) ((resv15)&0xff);
 		int resv16 = preference.getInt(SettingsTabActivity.PREF_RESERVED_16, 0);
-		params[34] = (byte) ((resv16>>16)&0xff);
+		params[34] = (byte) ((resv16>>8)&0xff);
 		params[35] = (byte) ((resv16)&0xff);
 		int resv17 = preference.getInt(SettingsTabActivity.PREF_RESERVED_17, 0);
-		params[36] = (byte) ((resv17>>16)&0xff);
+		params[36] = (byte) ((resv17>>8)&0xff);
 		params[37] = (byte) ((resv17)&0xff);
 		int resv18 = preference.getInt(SettingsTabActivity.PREF_RESERVED_18, 0);
-		params[38] = (byte) ((resv18>>16)&0xff);
+		params[38] = (byte) ((resv18>>8)&0xff);
 		params[39] = (byte) ((resv18)&0xff);
 		int resv19 = preference.getInt(SettingsTabActivity.PREF_RESERVED_19, 0);
-		params[40] = (byte) ((resv19>>16)&0xff);
+		params[40] = (byte) ((resv19>>8)&0xff);
 		params[41] = (byte) ((resv19)&0xff);
 		int resv20 = preference.getInt(SettingsTabActivity.PREF_RESERVED_20, 0);
-		params[42] = (byte) ((resv20>>16)&0xff);
+		params[42] = (byte) ((resv20>>8)&0xff);
 		params[43] = (byte) ((resv20)&0xff);
 		int resv21 = preference.getInt(SettingsTabActivity.PREF_RESERVED_21, 0);
-		params[44] = (byte) ((resv21>>16)&0xff);
+		params[44] = (byte) ((resv21>>8)&0xff);
 		params[45] = (byte) ((resv21)&0xff);
 		int resv22 = preference.getInt(SettingsTabActivity.PREF_RESERVED_22, 0);
-		params[46] = (byte) ((resv22>>16)&0xff);
+		params[46] = (byte) ((resv22>>8)&0xff);
 		params[47] = (byte) ((resv22)&0xff);
 		int resv23 = preference.getInt(SettingsTabActivity.PREF_RESERVED_23, 0);
-		params[48] = (byte) ((resv23>>16)&0xff);
+		params[48] = (byte) ((resv23>>8)&0xff);
 		params[49] = (byte) ((resv23)&0xff);
+		
 	}
 	
 	public static final int FILE_CSV_CHANGED=1;
@@ -1444,7 +1453,15 @@ public class ControlTabActivity extends Activity {
 				{
 					//Vector<TlkObject> list = new Vector<TlkObject>();
 					//if(mMsgFile!=null)
-					{
+					/*
+					mLoadingDialog = ProgressDialog.show(ControlTabActivity.this, "", "Loading,please wait......"); 
+					new Thread(new Runnable(){
+						@Override
+						public void run() {
+					*/{
+					
+							// TODO Auto-generated method stub
+							
 						mTlkList.clear();
 						
 						for(int i=1;i<mMessageList.getCount();i++)
@@ -1470,11 +1487,15 @@ public class ControlTabActivity extends Activity {
 						mBinBuffer.clear();
 						for(Vector<TlkObject> list:mTlkList)
 						{
+							Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer");
 							makeBinBuffer(list);
 							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
-							byte buffer[] = new byte[BinCreater.mBmpBits.length];
+							//byte buffer[] = new byte[BinCreater.mBmpBits.length];
+							/*read columns from tlk file*/
+							byte buffer[] = new byte[Tlk_Parser.mColumns*8];
 							try{
-							stream.read(buffer);
+								int b=stream.read(buffer);
+								Debug.d(TAG,"readout: "+b);
 							}
 							catch(Exception e)
 							{
@@ -1482,7 +1503,12 @@ public class ControlTabActivity extends Activity {
 							}
 							mBinBuffer.put(list, buffer);
 						}
+						Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer finish");
+					}/*
+					mHandler.sendEmptyMessage(3);
 					}
+					
+					}).start();*/
 				}
 				break;
 			default:

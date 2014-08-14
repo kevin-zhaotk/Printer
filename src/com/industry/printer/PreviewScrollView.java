@@ -111,10 +111,10 @@ public class PreviewScrollView extends View {
 			//Debug.d(TAG, "bit lenght="+bit.length);
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
-				Debug.d(TAG, "=========text object content="+o.mContent);
+				//Debug.d(TAG, "=========text object content="+o.mContent);
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
 				bit = new int[font.getColumns()*2*o.mContent.length()];
-				Debug.d(TAG, "=========bit.length="+bit.length);
+				//Debug.d(TAG, "=========bit.length="+bit.length);
 				font.getDotbuf(o.mContent, bit);
 				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
 				if(bit != null && bit.length != 0)
@@ -122,7 +122,7 @@ public class PreviewScrollView extends View {
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
-				Debug.d(TAG, "=========pic object");
+				//Debug.d(TAG, "=========pic object");
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
 				bit = new int[128*8];
 				font.getDotbuf(bit);

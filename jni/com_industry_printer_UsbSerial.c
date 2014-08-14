@@ -112,9 +112,9 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_write
 	if(fd <= 0)
 		return 0;
 /*
-	for(i=0;i<len/2+1; i++)
+	for(i=0;i<len; i++)
 	{
-		__android_log_print(ANDROID_LOG_INFO, "write", "buf_utf[%d]=%x\n", i, buf_utf[i]);
+		ALOGD("buf_utf[%d]=%x\n", i, buf_utf[i]);
 	}
 */
 	tcflush(fd, TCIOFLUSH);

@@ -154,7 +154,7 @@ public class ManualCtrlActivity extends Activity {
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
-					int len = calculateBufsize(list);
+					int len = Tlk_Parser.mColumns;//calculateBufsize(list);
 					Debug.d(TAG, "bin length="+len);
 					//int[] buffer = new int[len+16];
 					int bit[];
@@ -162,8 +162,9 @@ public class ManualCtrlActivity extends Activity {
 					Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
 					
 					Canvas can = new Canvas(gBmp);
+					can.drawColor(Color.WHITE);
 					Paint p = new Paint();
-					p.setColor(Color.rgb(128, 128, 128));
+					p.setARGB(255, 0, 0, 0);
 					
 					for(TlkObject o: list)
 						{
@@ -319,33 +320,34 @@ public class ManualCtrlActivity extends Activity {
 		byte[] data = new byte[128];
 		ControlTabActivity.makeParams(mContext,data);
 		UsbSerial.sendSettingData(ControlTabActivity.mFd, data);
-		mPrintDialog = ProgressDialog.show(ManualCtrlActivity.this, "", "printing,wait......");
+		
 		
 		if(mBinBuffer==null)
 			return;
 		UsbSerial.sendDataCtrl(ControlTabActivity.mFd, mBinBuffer.length);
 		UsbSerial.printData(ControlTabActivity.mFd,  mBinBuffer);
+		/*mPrintDialog = ProgressDialog.show(ManualCtrlActivity.this, "", getResources().getString(R.string.strwaitting));
 		new Thread(new Runnable(){
 			@Override
 			public void run()
-			{
-				int timeout=20;
+			{*/
+				int timeout=5;
 				byte[] info = new byte[23];
-				do
+				//do
 				{
 					try{
 						Thread.sleep(1000);
 					}catch(Exception e)
 					{}
 					Debug.d(TAG, "##########timeout = "+timeout);
-					if(timeout-- <=1)
-						break;
+					//if(timeout-- <=1)
+					//	break;
 					UsbSerial.getInfo(ControlTabActivity.mFd, info);
-				}while(info[9]!=0);
-				
+				}//while(info[9]!=0);
+				/*
 				mHandler.sendEmptyMessage(2);
 			}
-		}).start();
+		}).start();*/
 		
 		//UsbSerial.sendDataCtrl(mFd, data.length);
 		//UsbSerial.printData(mFd,  data);
