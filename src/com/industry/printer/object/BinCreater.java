@@ -31,7 +31,7 @@ public class BinCreater {
 	{
 		mBmpBytes = new int[bmp.getByteCount()/2];
 		mBmpBits = new byte[bmp.getWidth()*(bmp.getHeight()%8==0 ? bmp.getHeight()/8 : bmp.getHeight()/8+1)];
-		
+		Debug.d(TAG, "width="+bmp.getWidth()+", height="+bmp.getHeight()+", mBmpBits="+mBmpBits.length);
 		Bitmap img =	convertGreyImg(bmp);
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		//Debug.d(TAG, "byteCount="+img.getByteCount());
@@ -94,7 +94,7 @@ public class BinCreater {
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
         }
-        //saveBin("/mnt/usb/1.bin", width,height);
+        saveBin("/mnt/usb/1.bin", width,height);
         /*swap the high 8bits with low 8bits*/
         swap(height);
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 

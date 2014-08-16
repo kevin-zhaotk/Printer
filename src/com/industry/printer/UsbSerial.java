@@ -309,6 +309,7 @@ public class UsbSerial {
 			return 0;
 		}
 		Debug.d(TAG,"===>sendDataCtrl");
+		
 		cmd[4] = (short) (len >> 24 & 0x0ff);
 		cmd[5] = (short) (len >> 16 & 0x0ff);
 		cmd[6] = (short) (len >> 8 & 0x0ff);
@@ -486,10 +487,10 @@ public class UsbSerial {
 			Debug.d(TAG, "read return null");
 			return 0;
 		}
-		/*for(int i=0; i<response.length; i++)
+		for(int i=0; i<response.length; i++)
 		{
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
-		}*/
+		}
 		if(info == null)
 			return 0;
 		ByteArrayInputStream s = new ByteArrayInputStream(response);

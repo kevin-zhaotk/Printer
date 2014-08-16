@@ -96,7 +96,7 @@ public class PreviewScrollView extends View {
 		int[] bit = null;
 		//int bit[]=new int[3*32];
 		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
-		
+		int edage=0;
 		//TlkObject[] v = (TlkObject[])mList.values().toArray();
 		p.setARGB(255, 0, 0, 0);
 		if(mList==null)
@@ -113,6 +113,8 @@ public class PreviewScrollView extends View {
 			{
 				//Debug.d(TAG, "=========text object content="+o.mContent);
 				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+				int end=o.x+font.getColumns()*o.mContent.length();
+				edage = edage > end? edage : end; 
 				bit = new int[font.getColumns()*2*o.mContent.length()];
 				//Debug.d(TAG, "=========bit.length="+bit.length);
 				font.getDotbuf(o.mContent, bit);
@@ -127,6 +129,9 @@ public class PreviewScrollView extends View {
 				bit = new int[128*8];
 				font.getDotbuf(bit);
 				mPreBitmap=getPicBitmapFrombuffer(bit, mPaint);
+				int end = o.x+128; 
+				edage = edage > end? edage : end;
+				
 			}
 			
 			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
@@ -135,9 +140,9 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG,"#########");
 				canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth(), mPreBitmap.getHeight()*4, false), o.x, o.y*4, p);
 			}
-				
 		}
-		 
+		Debug.d(TAG, "^^^^^^^^^^draw line ("+edage+","+0+")");
+		canvas.drawLine(edage, 0, edage, 256, p); 
 	 }  
 
 	public static Bitmap getTextBitmapFrombuffer(int[] bit, Paint p)

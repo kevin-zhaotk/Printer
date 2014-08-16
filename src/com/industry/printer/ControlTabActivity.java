@@ -137,6 +137,7 @@ public class ControlTabActivity extends Activity {
 	public TextView mInkLevel;
 	public TextView mPhotocellState;
 	public TextView mEncoderState;
+	public TextView mPrintState;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -611,10 +612,11 @@ public class ControlTabActivity extends Activity {
 		
 		
 		//
-		//mPrintStatus = (TextView) findViewById(R.id.tv_headinfo);
+		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
 		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
+		
 	}
 	
 	@Override
@@ -660,11 +662,13 @@ public class ControlTabActivity extends Activity {
 			return;
 		}
 		/*
-		buffer = new byte[80];
-		for(int i=0;i<80;i=i+8)
+		buffer = new byte[6400];
+		for(int i=0;i<6400;i=i+8)
 		{
 			buffer[i]=(byte)0xff;
-			buffer[i+1]=(byte)0xff;
+			buffer[i+2]=(byte)0xff;
+			buffer[i+4]=(byte)0xff;
+			buffer[i+6]=(byte)0xff;
 		}
 		*/
 		if(buffer==null)
@@ -673,31 +677,31 @@ public class ControlTabActivity extends Activity {
 		UsbSerial.sendDataCtrl(mFd, buffer.length);
 		UsbSerial.printData(mFd,  buffer);
 		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
-		/*new Thread(new Runnable(){
+		new Thread(new Runnable(){
 			@Override
 			public void run()
-			{*/
+			{
 				int timeout=10;
 				byte[] info = new byte[23];
-				//do
+				do
 				{
 					try{
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 					}catch(Exception e)
 					{}
-					//Debug.d(TAG, "##########timeout = "+timeout);
-					//if(timeout-- <=1)
-					//	break;
+					
 					UsbSerial.getInfo(mFd, info);
-				}//while(info[9]!=0);
-				Message msg = new Message();
-				msg.what=2;
-				Bundle b= new Bundle();
-				b.putByteArray("info", info);
-				msg.setData(b);
-				mHandler.sendMessage(msg);
-			/*}
-		}).start();*/
+					Message msg = new Message();
+					msg.what=2;
+					Bundle b= new Bundle();
+					b.putByteArray("info", info);
+					msg.setData(b);
+					mHandler.sendMessage(msg);
+					Debug.d(TAG, "##########timeout = "+timeout+",stat="+info[9]);
+				}while(info[9]!=4);
+				
+			}
+		}).start();
 		
 		//UsbSerial.sendDataCtrl(mFd, data.length);
 		//UsbSerial.printData(mFd,  data);
@@ -992,7 +996,11 @@ public class ControlTabActivity extends Activity {
 					}
 				}
 				}, 3000);
-				
+				byte info[] = new byte[23];
+				UsbSerial.printStart(mFd);
+				UsbSerial.getInfo(mFd, info);
+				updateInkLevel(info);
+				UsbSerial.printStop(mFd);
 			}
 		}
 		
@@ -1014,6 +1022,16 @@ public class ControlTabActivity extends Activity {
 			mEncoderState.setText("0");
 		else
 			mEncoderState.setText("1");
+		if(info[9]==4)
+		{
+			mPrintState.setBackgroundColor(Color.GREEN);
+			mPrintState.setText(getResources().getString(R.string.strPrintok));
+		}
+		else
+		{
+			mPrintState.setBackgroundColor(Color.RED);
+			mPrintState.setText(getResources().getString(R.string.strPrinting));
+		}
 	}
 	/*
 	 * if in no-print state, poll state of print-head in 100ms interval
@@ -1291,7 +1309,9 @@ public class ControlTabActivity extends Activity {
 			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
 			{
 				Debug.d(TAG,"content="+o.mContent);
-				length = (16*o.mContent.length()+o.x) > length?(16*o.mContent.length()+o.x):length;
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+				int l = font.getColumns();				
+				length = (l*o.mContent.length()+o.x) > length?(l*o.mContent.length()+o.x):length;
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
@@ -1303,7 +1323,7 @@ public class ControlTabActivity extends Activity {
 	
 	public void makeBinBuffer(Vector<TlkObject>list)
 	{
-		int len = Tlk_Parser.mColumns;//calculateBufsize(list);
+		int len = calculateBufsize(list);
 		Debug.d(TAG, "bin length="+len);
 		//int[] buffer = new int[len+16];
 		int bit[];
@@ -1490,9 +1510,9 @@ public class ControlTabActivity extends Activity {
 							Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer");
 							makeBinBuffer(list);
 							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
-							//byte buffer[] = new byte[BinCreater.mBmpBits.length];
+							byte buffer[] = new byte[BinCreater.mBmpBits.length];
 							/*read columns from tlk file*/
-							byte buffer[] = new byte[Tlk_Parser.mColumns*8];
+							
 							try{
 								int b=stream.read(buffer);
 								Debug.d(TAG,"readout: "+b);

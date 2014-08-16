@@ -30,6 +30,9 @@
 	<string name="strInklevel">剩余次数: </string>
 	<string name="strPhotocellState">光电：</string>
 	<string name="strEncoderState">编码器：</string>
+	<string name="strPrintstate">打印状态：</string>
+	<string name="strPrinting">打印中...</string>
+	<string name="strPrintok">打印结束</string>
 	<string name="strOn">开</string>
 	<string name="strOff">关</string>
 	<string name="strwaitting">正在打印，请稍等。。。。。。</string>

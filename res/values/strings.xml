@@ -33,6 +33,9 @@
 	<string name="strOn">On</string>
 	<string name="strOff">Off</string>
 	<string name="strwaitting">printing,wait......</string>
+	<string name="strPrintstate">打印状态：</string>
+	<string name="strPrinting">Printing</string>
+	<string name="strPrintok">Finished</string>
 	
 	<string name="str_openfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
