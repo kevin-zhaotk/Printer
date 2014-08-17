@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
+import com.industry.printer.ControlTabActivity.SerialEventReceiver;
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
@@ -16,9 +17,13 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.TlkObject;
 
+
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +48,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ManualCtrlActivity extends Activity {
@@ -53,6 +59,10 @@ public class ManualCtrlActivity extends Activity {
 	public Button mBtnview;
 	public Button mPrint;
 	public Button mStop;
+	public TextView mPrintState;
+	public TextView mPhotocell;
+	public TextView mEncoder;
+	public TextView mLevel;
 	
 	public LinkedList<Map<String, String>>	mMessageMap;
 	public PreviewAdapter mMessageAdapter;
@@ -66,6 +76,10 @@ public class ManualCtrlActivity extends Activity {
 		setContentView(R.layout.manualctrl_frame);
 		
 		mContext = this.getApplicationContext();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ControlTabActivity.ACTION_BOOT_COMPLETE);
+		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
+		registerReceiver(mReceiver, filter);
 		
 		mPrint = (Button) findViewById(R.id.manual_StartPrint);
 		mPrint.setOnClickListener(new OnClickListener(){
@@ -73,6 +87,8 @@ public class ManualCtrlActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				mPrintState.setBackgroundColor(Color.RED);
+				mPrintState.setText(getResources().getString(R.string.strPrinting));
 				print();
 			}
 			
@@ -154,7 +170,7 @@ public class ManualCtrlActivity extends Activity {
 						setContent(index, list);
 						Debug.d(TAG, "list size="+list.size());
 					}
-					int len = Tlk_Parser.mColumns;//calculateBufsize(list);
+					int len = calculateBufsize(list);
 					Debug.d(TAG, "bin length="+len);
 					//int[] buffer = new int[len+16];
 					int bit[];
@@ -206,6 +222,10 @@ public class ManualCtrlActivity extends Activity {
 			}
 			
 		});
+		mPrintState = (TextView) findViewById(R.id.tvmanprintState);
+		mPhotocell= (TextView) findViewById(R.id.sw_manphotocell_state);
+		mEncoder = (TextView) findViewById(R.id.sw_manencoder_state);
+		mLevel = (TextView) findViewById(R.id.tv_maninkValue);
 		
 		initMsglist();
 	}
@@ -326,28 +346,35 @@ public class ManualCtrlActivity extends Activity {
 			return;
 		UsbSerial.sendDataCtrl(ControlTabActivity.mFd, mBinBuffer.length);
 		UsbSerial.printData(ControlTabActivity.mFd,  mBinBuffer);
-		/*mPrintDialog = ProgressDialog.show(ManualCtrlActivity.this, "", getResources().getString(R.string.strwaitting));
+		//mPrintDialog = ProgressDialog.show(ManualCtrlActivity.this, "", getResources().getString(R.string.strwaitting));
 		new Thread(new Runnable(){
 			@Override
 			public void run()
-			{*/
+			{
 				int timeout=5;
 				byte[] info = new byte[23];
-				//do
+				do
 				{
 					try{
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 					}catch(Exception e)
 					{}
 					Debug.d(TAG, "##########timeout = "+timeout);
 					//if(timeout-- <=1)
 					//	break;
 					UsbSerial.getInfo(ControlTabActivity.mFd, info);
-				}//while(info[9]!=0);
-				/*
-				mHandler.sendEmptyMessage(2);
+					Message msg = new Message();
+					msg.what=2;
+					Bundle b= new Bundle();
+					b.putByteArray("info", info);
+					msg.setData(b);
+					mHandler.sendMessage(msg);
+					
+				}while(info[9]!=0&&info[9]!=4);
+				
+				//mHandler.sendEmptyMessage(2);
 			}
-		}).start();*/
+		}).start();
 		
 		//UsbSerial.sendDataCtrl(mFd, data.length);
 		//UsbSerial.printData(mFd,  data);
@@ -358,9 +385,59 @@ public class ManualCtrlActivity extends Activity {
 			switch(msg.what)
 			{
 				case 2:
-					mPrintDialog.dismiss();
+					updateInkLevel(msg.getData().getByteArray("info"));
 					break;
 			}
 		}
 	};
+	
+	public class SerialEventReceiver extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Debug.d(TAG, "******intent="+intent.getAction());
+			
+			if(ControlTabActivity.ACTION_BOOT_COMPLETE.equals(intent.getAction()))
+			{
+				/*read out last opened tlk & csv file*/
+				
+				byte info[] = new byte[23];
+				UsbSerial.printStart(ControlTabActivity.mFd);
+				UsbSerial.getInfo(ControlTabActivity.mFd, info);
+				updateInkLevel(info);
+				UsbSerial.printStop(ControlTabActivity.mFd);
+			}
+		}
+		
+	}
+	
+	private void updateInkLevel(byte info[])
+	{
+		if(info == null || info.length<13)
+			return;
+		int h = info[10]&0x0ff;
+		int l = info[11]&0x0ff;
+		int level = h<<8 | l;
+		mLevel.setText(String.valueOf(level));
+		if((info[8]&0x04)==0x00)
+			mPhotocell.setText("0");
+		else
+			mPhotocell.setText("1");
+		if((info[8]&0x08)==0x00)
+			mEncoder.setText("0");
+		else
+			mEncoder.setText("1");
+		if(info[9]==4 ||info[9]==0)
+		{
+			mPrintState.setBackgroundColor(Color.GREEN);
+			mPrintState.setText(getResources().getString(R.string.strPrintok));
+		}
+		else
+		{
+			mPrintState.setBackgroundColor(Color.RED);
+			mPrintState.setText(getResources().getString(R.string.strPrinting));
+		}
+	}
 }

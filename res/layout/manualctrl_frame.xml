@@ -223,6 +223,99 @@
          >
          
      </ListView>
+      <TextView
+         android:id="@+id/tv_manprintState"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@id/manual_lv_messages"
+         android:layout_marginTop="10dp"
+         android:text="@string/strPrintstate"
+		 android:textColor="#000000"
+		 android:textSize="25dp"
+         />
+     <TextView
+         android:id="@+id/tvmanprintState"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@id/tv_manprintState"
+         android:layout_below="@id/manual_lv_messages"
+         android:layout_toRightOf="@id/tv_manprintState"
+         android:layout_marginTop="10dp"
+         android:text="@string/strPrintok"
+         android:background="#00ff00"
+		 android:textColor="#000000"
+		 android:textSize="25dp"
+         />
+     
+     <TextView
+         android:id="@+id/tv_manphotocell_state"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/manual_lv_messages" 
+         android:layout_marginTop="10dp"
+         android:layout_marginLeft="250dp"
+         android:text="@string/strPhotocellState"
+		 android:textColor="#000000"
+		 android:textSize="25dp"
+         />
+     <TextView
+         android:id="@+id/sw_manphotocell_state"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@id/tv_manphotocell_state"
+         android:layout_toRightOf="@id/tv_manphotocell_state"
+         android:layout_marginLeft="10dp"
+         android:text="@string/strDefault"
+         android:textColor="#000000"
+         android:textSize="25dp"
+         />
+     
+     <TextView
+         android:id="@+id/tv_manencoder_state"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="420dp"
+         android:layout_below="@id/manual_lv_messages"
+         android:layout_alignBaseline="@id/tv_manphotocell_state" 
+         android:text="@string/strEncoderState"
+		 android:textColor="#000000"
+		 android:textSize="25dp"
+         />
+     <TextView
+         android:id="@+id/sw_manencoder_state"
+         android:layout_width="wrap_content"
+         android:layout_height="50dp"
+         android:layout_alignBaseline="@id/tv_manencoder_state"
+         android:layout_toRightOf="@id/tv_manencoder_state"
+         android:layout_marginLeft="10dp"
+         android:text="@string/strDefault"
+         android:textColor="#000000"
+         android:textSize="25dp"
+         />
+     
+     
+     <TextView
+		  android:id="@+id/tv_maninkValue"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_below="@id/manual_lv_messages"
+		  android:layout_alignParentRight="true"
+		  android:layout_marginTop="10dp"
+		  android:text="@string/strDefault"
+		  android:textColor="#000000"
+		  android:textSize="25dp"
+	 />
+     <TextView
+		  android:id="@+id/tv_mantv_inkLevel"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_alignBaseline="@id/tv_maninkValue"
+		  android:layout_toLeftOf="@id/tv_maninkValue"
+		  android:text="@string/strInklevel"
+		  android:textColor="#000000"
+		  android:textSize="25dp"
+	 />
      
 </RelativeLayout>
 </ScrollView>
