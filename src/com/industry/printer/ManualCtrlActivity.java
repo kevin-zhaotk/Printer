@@ -171,7 +171,7 @@ public class ManualCtrlActivity extends Activity {
 						Debug.d(TAG, "list size="+list.size());
 					}
 					int len = calculateBufsize(list);
-					Debug.d(TAG, "bin length="+len);
+					Debug.d(TAG, "bmp width="+len);
 					//int[] buffer = new int[len+16];
 					int bit[];
 					Bitmap bmp=null;
@@ -183,7 +183,7 @@ public class ManualCtrlActivity extends Activity {
 					p.setARGB(255, 0, 0, 0);
 					
 					for(TlkObject o: list)
-						{
+					{
 						if(o.isTextObject() && o.mContent!=null)
 						{
 							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
@@ -226,7 +226,11 @@ public class ManualCtrlActivity extends Activity {
 		mPhotocell= (TextView) findViewById(R.id.sw_manphotocell_state);
 		mEncoder = (TextView) findViewById(R.id.sw_manencoder_state);
 		mLevel = (TextView) findViewById(R.id.tv_maninkValue);
-		
+		byte info[] = new byte[23];
+		UsbSerial.printStart(ControlTabActivity.mFd);
+		UsbSerial.getInfo(ControlTabActivity.mFd, info);
+		updateInkLevel(info);
+		UsbSerial.printStop(ControlTabActivity.mFd);
 		initMsglist();
 	}
 	
@@ -311,7 +315,8 @@ public class ManualCtrlActivity extends Activity {
 				break;
 			else if(o.isTextObject() && o.mContent != null)	//each text object take over 16*16/8 * length=32Bytes*length
 			{
-				length = (16*o.mContent.length()+o.x) > length?(16*o.mContent.length()+o.x):length;
+				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
+				length = (font.getColumns()*o.mContent.length()+o.x) > length?(font.getColumns()*o.mContent.length()+o.x):length;
 			}
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{

@@ -1022,7 +1022,7 @@ public class ControlTabActivity extends Activity {
 			mEncoderState.setText("0");
 		else
 			mEncoderState.setText("1");
-		if(info[9]==4)
+		if(info[9]==4 || info[9]==0)
 		{
 			mPrintState.setBackgroundColor(Color.GREEN);
 			mPrintState.setText(getResources().getString(R.string.strPrintok));
