@@ -1,5 +1,7 @@
 package com.industry.printer;
 
+import java.util.Vector;
+
 import com.industry.printer.Utils.Debug;
 
 import android.os.SystemProperties;
@@ -14,7 +16,8 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 	public static final String TAG="PrinterBroadcastReceiver";
 	public static final String BOOT_COMPLETED="android.intent.action.BOOT_COMPLETED";
 	
-	public boolean usbAlive=false;
+	public static boolean mUsbAlive=false;
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
@@ -27,23 +30,32 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 			Intent intnt = new Intent();
 			intnt.setAction(ControlTabActivity.ACTION_BOOT_COMPLETE);
 			context.sendBroadcast(intnt);
+			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
+			for(UsbDevice d : mngr.getDeviceList().values())
+			{
+				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
+				if(d.getVendorId()==0x3eb && d.getProductId() == 0x6119)
+				{
+					mUsbAlive = true;
+				}
+			}
 		}
 		else if(intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED))
 		{
 			Debug.d(TAG, "usb connected");
 			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			
+			if(mUsbAlive==true)
+				return;
 			for(UsbDevice d : mngr.getDeviceList().values())
 			{
 				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
-				if(d.getVendorId()==2630 && d.getProductId() == 38433)
+				if(d.getVendorId()==0x3eb && d.getProductId() == 0x6119)
 				{
-					Debug.d(TAG, "this is not print header, ignore it");
-					isSerial = true;
+					mUsbAlive = true;
 				}
 			}
 			
-			if(isSerial==false)
+			if(mUsbAlive==false)
 				return;
 			//System.setProperty("ctl.start", "mptty");
 			SystemProperties.set("ctl.start", "mptty");
@@ -55,18 +67,18 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		{
 			Debug.d(TAG, "usb disconnected");
 			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			
+			if(mUsbAlive == false)
+				return;
 			for(UsbDevice d : mngr.getDeviceList().values())
 			{
 				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
-				if(d.getVendorId() ==2630 && d.getProductId() == 38433)
+				if(d.getVendorId()==0x3eb && d.getProductId() == 0x6119)
 				{
-					Debug.d(TAG, "this is not print header, ignore it");
-					isSerial = true;
+					mUsbAlive = false;
 				}
 			}
 
-			if(isSerial==false)
+			if(mUsbAlive==true)
 				return;
 			Intent intnt = new Intent();
 			intnt.setAction(ControlTabActivity.ACTION_CLOSE_SERIAL);

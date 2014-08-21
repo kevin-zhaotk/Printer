@@ -746,12 +746,18 @@ public class ControlTabActivity extends Activity {
 			{
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(i);
 				Debug.d(TAG, "*******index="+m.get("index"));
-				if(m.get("index").equals(index))
-				{
-					Debug.d(TAG, "index "+o.index+" found"+", text"+o.index+"="+m.get("text"+o.index));
-					o.setContent(m.get("text"+o.index));
-					break;
-				}
+				 if((o.index>=1 && o.index<=16)&&m.get("index").equals(index))
+                 {
+                     Debug.d(TAG, "index "+o.index+" found"+", text"+o.index+"="+m.get("text"+o.index));
+                     o.setContent(m.get("text"+o.index));
+                     break;
+                 }
+                 else if(o.index>=21 && o.index<=24 && m.get("index").equals(index))
+				 {
+                	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.index-20)+"="+m.get("pic"+(o.index-20)));
+                	 o.setContent(m.get("pic"+(o.index-20)));
+                	 break;
+				 }
 			}
 		}
 		
