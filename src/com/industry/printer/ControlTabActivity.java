@@ -754,8 +754,11 @@ public class ControlTabActivity extends Activity {
                  }
                  else if(o.index>=21 && o.index<=24 && m.get("index").equals(index))
 				 {
-                	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.index-20)+"="+m.get("pic"+(o.index-20)));
-                	 o.setContent(m.get("pic"+(o.index-20)));
+                	 int logo=Integer.parseInt(o.font);
+                	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.font)+"="+m.get("pic"+logo));
+                	 String pic=m.get("pic"+logo);
+                	 o.setContent(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
+                	 o.setFont(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
                 	 break;
 				 }
 			}
