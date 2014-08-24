@@ -9,6 +9,7 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:editable="false"
+	    android:imeOptions="flagNoExtractUi"
 	    />
 	
 	<RelativeLayout 
@@ -24,6 +25,7 @@
 	    	android:layout_height="60dp"
 	    	android:layout_marginLeft="10dp" 
 	    	android:layout_centerVertical="true"
+	    	android:imeOptions="flagNoExtractUi"
 	    />
 	    
 	    <Button

@@ -55,7 +55,7 @@ public class MainActivity extends TabActivity {
 
 	    for (InputMethodInfo inputMethodInfo : inputMethodInfos) {
 	    		Debug.d(TAG, "inputMethod="+inputMethodInfo.getId());
-	            if (inputMethodInfo.getId().equals("com.android.inputmethod.pinyin/.PinyinIME")) {
+	            if (inputMethodInfo.getId().equals("com.android.inputmethod.latin/.LatinIME")) {
 	                    inputManager.setInputMethod(null, inputMethodInfo.getId());
 	            }
 	    }
