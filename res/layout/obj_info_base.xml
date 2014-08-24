@@ -7,6 +7,7 @@
 	            android:layout_marginLeft="150dp"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi"
 	            android:singleLine="true"
 	            android:inputType="number"
 	            android:hint="@string/strDefault"/>
@@ -37,6 +38,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/xCorEdit"
 	            android:layout_alignLeft="@id/xCorEdit"
+	            android:imeOptions="flagNoExtractUi"
 	            android:singleLine="true"
 	            android:inputType="number"
 	            android:hint="@string/strDefault"/>
@@ -66,6 +68,7 @@
 	            android:layout_alignLeft="@id/xCorEdit"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi"
 	            android:singleLine="true"
 	            android:inputType="number"
 	            android:layout_below="@id/yCorEdit"
@@ -96,6 +99,7 @@
 	            android:layout_alignLeft="@id/xCorEdit"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi"
 	            android:singleLine="true"
 	            android:inputType="number"
 	            android:layout_below="@id/widthEdit"
@@ -127,6 +131,7 @@
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/highEdit"
+	            android:imeOptions="flagNoExtractUi"
 	            android:singleLine="true"
 	            android:hint="@string/txtDefault"
 	            />

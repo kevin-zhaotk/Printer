@@ -23,6 +23,7 @@
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/base_info_shape"
+	            android:imeOptions="flagNoExtractUi"
 	            android:inputType="number"
 	            android:hint="@string/strDefault"/>
 	        
