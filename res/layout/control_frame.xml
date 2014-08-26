@@ -164,6 +164,30 @@
          android:textSize="20sp"
          android:textColor="#000000"
          />
+     <TextView
+         android:id="@+id/tv_gotoline"
+         android:layout_width="wrap_content"
+         android:layout_height="60dp"
+         android:layout_below="@id/StartPrint"
+         android:layout_alignParentRight="true"
+         android:text="@string/str_goto"
+         android:singleLine="true"
+         android:textSize="20sp"
+         android:textColor="#000000""
+         />
+     <EditText
+         android:id="@+id/et_gotoline"
+         android:layout_width="60dp"
+         android:layout_height="60dp"
+         android:layout_below="@id/StartPrint"
+         android:layout_alignBaseline="@id/tv_gotoline"
+         android:layout_toLeftOf="@id/tv_gotoline"
+		 android:hint="@string/strDefault"
+         android:singleLine="true"
+         android:textSize="20sp"
+         android:textColor="#000000"
+         />
+     
  <!--     
      <Button 
          android:id="@+id/btn_mvbackward"
