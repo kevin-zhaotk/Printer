@@ -42,7 +42,7 @@ public class DotMatrixFont {
 			mReader = new BufferedReader(new FileReader(mfile));
 			mReader.mark(1);
 			String s = mReader.readLine();
-			String re = "//[0-9]*x[0-9]*";
+			String re = "[0-9]*x[0-9]*";
 			Pattern p = Pattern.compile(re);
 			Matcher m = p.matcher(s);
 			while(m.find())
@@ -57,6 +57,11 @@ public class DotMatrixFont {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void setFont(String path)
+	{
+		mfile = new File(path);
 	}
 	
 	public void getDotbuf(String str, int[] buf)
@@ -200,7 +205,7 @@ public class DotMatrixFont {
 		String s;
 		String[] dot=null;
 		try {
-			
+			Debug.d(TAG,"getDotbuf mfile="+mfile);
 			mReader = new BufferedReader(new FileReader(mfile));
 			mReader.mark((int)mfile.length()+1);
 			/*read out the header*/
@@ -310,15 +315,45 @@ public class DotMatrixFont {
 		int columns=0;
 		String s;
 		try{
-			mReader = new BufferedReader(new FileReader(mfile));
+			Debug.d(TAG, "getColumns file="+mfile.getAbsolutePath());
+			FileReader r = new FileReader(mfile);
+			mReader = new BufferedReader(r);
 			s = mReader.readLine();
 			s = s.trim().substring(2).trim();
 			String head[] = s.split("x");
 			columns = Integer.parseInt(head[0]);
-			//Debug.d(TAG, "##################columns = "+columns);
+			Debug.d(TAG, "##################columns = "+columns);
+			r.close();
 			mReader.close();
 		}catch(Exception e)
-		{}
+		{
+			Debug.d(TAG, "exception ="+e.getMessage());
+		}
+		
 		return columns;
 	}
+	
+	public int getRows()
+	{
+		int rows=0;
+		String s;
+		try{
+			Debug.d(TAG, "getRows file="+mfile.getAbsolutePath());
+			FileReader r = new FileReader(mfile);
+			mReader = new BufferedReader(r);
+			s = mReader.readLine();
+			s = s.trim().substring(2).trim();
+			String info[] = s.split(" ");
+			String head[] = info[0].split("x");
+			rows = Integer.parseInt(head[1]);
+			Debug.d(TAG, "##################rows = "+rows);
+			r.close();
+			mReader.close();
+		}catch(Exception e)
+		{
+			Debug.d(TAG, "exception ="+e.getMessage());
+		}
+		return rows;
+	}
+	
 }

@@ -216,7 +216,7 @@ public class ManualCtrlActivity extends Activity {
 					}
 					PreviewDialog prv = new PreviewDialog(ManualCtrlActivity.this);
 					
-					prv.show(list);
+					prv.show(list.get(1));
 				}
 				
 			}

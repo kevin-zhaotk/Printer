@@ -31,7 +31,7 @@ public class PreviewScrollView extends View {
 	public Paint mPaint;
 	
 	public static Bitmap	mPreBitmap;
-	public Vector<TlkObject> mList;
+	public TlkObject mList;
 	
 	public PreviewScrollView(Context context) {
 		super(context);
@@ -64,10 +64,10 @@ public class PreviewScrollView extends View {
 		
 	}
 	
-	public void setObjectList(Vector<TlkObject> list)
+	public void setObjectList(TlkObject list)
 	{
 		mList = list;
-		Debug.d(TAG, "mList size="+mList.size());
+		//Debug.d(TAG, "mList size="+mList.size());
 	}
 	
 	
@@ -92,8 +92,10 @@ public class PreviewScrollView extends View {
 		Debug.d(TAG, "====>onDraw");
 		 //if(mPreBitmap == null)
 			 //return;
+		int x=0,y=0;
 		Paint p = new Paint();
 		int[] bit = null;
+		Bitmap bmp=null;
 		//int bit[]=new int[3*32];
 		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
 		int edage=0;
@@ -101,48 +103,72 @@ public class PreviewScrollView extends View {
 		p.setARGB(255, 0, 0, 0);
 		if(mList==null)
 			return;
-		for(int i=0; i<mList.size(); i++)
+		//for(int i=0; i<mList.size(); i++)
 		{
-			TlkObject o = mList.get(i);
-			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
-			if(o.isTextObject() && o.mContent == null)
-				continue;
-			//DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-			//Debug.d(TAG, "bit lenght="+bit.length);
-			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
+			Debug.d(TAG, "first logo x="+x+",y="+y);
+			DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+"0011.txt");
+			bit = new int[128*8];
+			font.getDotbuf(bit);
+			bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x, y, p);
+			x = font.getColumns()+4;
+			//second logo
+			if(mList.mLogo != null)
 			{
-				//Debug.d(TAG, "=========text object content="+o.mContent);
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				int end=o.x+font.getColumns()*o.mContent.length();
-				edage = edage > end? edage : end; 
-				bit = new int[font.getColumns()*2*o.mContent.length()];
-				//Debug.d(TAG, "=========bit.length="+bit.length);
-				font.getDotbuf(o.mContent, bit);
-				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
-				if(bit != null && bit.length != 0)
-				BinCreater.saveBitmap(mPreBitmap, "text.png");
-			}
-			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
-			{
-				//Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				font.setFont(DotMatrixFont.LOGO_FILE_PATH+mList.mLogo);
 				bit = new int[128*8];
 				font.getDotbuf(bit);
-				mPreBitmap=getPicBitmapFrombuffer(bit, mPaint);
-				int end = o.x+128; 
-				edage = edage > end? edage : end;
-				
+				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+				Debug.d(TAG, "2nd logo x="+x+",y="+y);
+				canvas.drawBitmap(bmp, x, y, p);
+				x += font.getColumns()+4;
 			}
+			//first line -- number
+			font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+			bit = new int[mList.mNo.length()*2*font.getColumns()];
+			Debug.d(TAG, "list.mNo="+mList.mNo);
+			font.getDotbuf(mList.mNo,bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x, y, p);
+			Debug.d(TAG, "first line x="+x+",y="+y);
+			//y += font.getRows()+4;
+			//2nd line -- steel style
+			//font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+			bit = new int[mList.mSteelStyle.length()*2*font.getColumns()];
+			Debug.d(TAG, "list.mSteelStyle="+mList.mSteelStyle);
+			font.getDotbuf(mList.mSteelStyle, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x, font.getRows()+4, p);
+			Debug.d(TAG, "2nd line x="+x+",y="+(font.getRows()+4));
+			//y += font.getRows()+4;
+			//2nd line -- standard
+			bit = new int[mList.mStandard.length()*2*font.getColumns()];
+			Debug.d(TAG, "list..mStandard="+mList.mStandard);
+			font.getDotbuf(mList.mStandard, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSteelStyle.length(), font.getRows()+4, p);
+			Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSteelStyle.length())+",y="+(font.getRows()+4));
+			//y += font.getRows()+4;
+			//3rd line -- size
+			bit = new int[mList.mSize.length()*2*font.getColumns()];
+			Debug.d(TAG, "mList..mSize="+mList.mSize);
+			font.getDotbuf(mList.mSize, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
+			Debug.d(TAG, "2nd line x="+(x)+",y="+2*(font.getRows()+4));
+			//y += font.getRows()+4;
+			//3rd line -- size
+			bit = new int[mList.mDate.length()*2*font.getColumns()];
+			Debug.d(TAG, "mList..mDate="+mList.mDate);
+			font.getDotbuf(mList.mDate, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSize.length(), 2*(font.getRows()+4), p);
+			Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSize.length())+",y="+2*(font.getRows()+4));
 			
-			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			if(mPreBitmap!= null)
-			{
-				Debug.d(TAG,"#########");
-				canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth(), mPreBitmap.getHeight()*4, false), o.x, o.y*4, p);
-			}
+			
 		}
-		Debug.d(TAG, "^^^^^^^^^^draw line ("+edage+","+0+")");
-		canvas.drawLine(edage, 0, edage, 256, p); 
+		//Debug.d(TAG, "^^^^^^^^^^draw line ("+edage+","+0+")");
+		//canvas.drawLine(edage, 0, edage, 256, p); 
 	 }  
 
 	public static Bitmap getTextBitmapFrombuffer(int[] bit, Paint p)

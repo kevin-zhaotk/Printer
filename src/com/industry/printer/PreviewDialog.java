@@ -27,7 +27,7 @@ public class PreviewDialog extends Dialog {
 		mView = (PreviewScrollView) findViewById(R.id.sv_preview);
 	}
 	
-	public void show(Vector<TlkObject> list)
+	public void show(TlkObject list)
 	{	
 		super.show();
 		mView.setObjectList(list);

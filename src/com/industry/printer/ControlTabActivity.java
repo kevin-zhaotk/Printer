@@ -103,7 +103,7 @@ public class ControlTabActivity extends Activity {
 	public ListView mMessageList;
 	
 	public PreviewScrollView mPreview;
-	public Vector<BaseObject> mObjList;
+	public Vector<TlkObject> mObjList;
 	
 	public ScrollView mThumb1;
 	public ScrollView mThumb2;
@@ -121,7 +121,7 @@ public class ControlTabActivity extends Activity {
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
-	Map<Vector<TlkObject>, byte[]> mBinBuffer;
+	Map<TlkObject, byte[]> mBinBuffer;
 	/*
 	 * whether the print-head is doing print work
 	 * if no, poll state Thread will read print-header state
@@ -147,8 +147,8 @@ public class ControlTabActivity extends Activity {
 		mIndex=0;
 		isPrinting = false;
 		mTlkList = new Vector<Vector<TlkObject>>();
-		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
-		mObjList = new Vector<BaseObject>();
+		mBinBuffer = new HashMap<TlkObject, byte[]>();
+		mObjList = new Vector<TlkObject>();
 		mContext = this.getApplicationContext();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
@@ -405,7 +405,7 @@ public class ControlTabActivity extends Activity {
 		});
 		//mMsgFile = (TextView) findViewById(R.id.tvfile);
 		
-		
+		/*
 		mBtnTlkfile = (Button) findViewById(R.id.btnTlkfile);
 		mBtnTlkfile.setOnClickListener(new OnClickListener(){
 
@@ -435,7 +435,7 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		
-		
+		*/
 		
 		mBtnview = (Button)findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(new OnClickListener(){
@@ -448,7 +448,7 @@ public class ControlTabActivity extends Activity {
 				if(pos<1 || pos>=mMessageList.getCount())
 					return;
 				Debug.d(TAG, "-------selected pos="+pos);
-				Vector<TlkObject> list = mTlkList.get(pos-1);
+				TlkObject list = mObjList.get(pos-1);
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show(list);
 				
@@ -574,15 +574,9 @@ public class ControlTabActivity extends Activity {
 		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
 											R.layout.pmessagelistviewlayout,
-											new String[]{"index","pic1", "pic2", "pic3","pic4",
-													"text1","text2","text3","text4","text5","text6",
-													"text7","text8","text9","text10","text11","text12",
-													"text13","text14","text15","text16"},
-											new int[]{R.id.tv_index, R.id.tv_pic1,R.id.tv_pic2,R.id.tv_pic3,R.id.tv_pic4, 
-													R.id.tv_text1,R.id.tv_text2,R.id.tv_text3,R.id.tv_text4,
-													R.id.tv_text5,R.id.tv_text6,R.id.tv_text7,R.id.tv_text8,
-													R.id.tv_text9,R.id.tv_text10,R.id.tv_text11,R.id.tv_text12,
-													R.id.tv_text13,R.id.tv_text14,R.id.tv_text15,R.id.tv_text16});
+											new String[]{"index","text1","text2","text3","text4","text5","text6",},
+											new int[]{R.id.tv_index,R.id.tv_text1,R.id.tv_text2,R.id.tv_text3,R.id.tv_text4,
+													R.id.tv_text5,R.id.tv_text6,});
 		
 		mMessageList = (ListView) findViewById(R.id.lv_messages);
 		mMessageList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -652,9 +646,9 @@ public class ControlTabActivity extends Activity {
 		
 		try{
 			int index = mMessageAdapter.getChecked();
-			Vector<TlkObject> list = mTlkList.get(index-1);
+			TlkObject list = mObjList.get(index-1);
 			Debug.d(TAG,"=======index="+(index-1));
-			showListContent(list);
+			//showListContent(list);
 			buffer = mBinBuffer.get(list);
 		}catch(Exception e)
 		{
@@ -720,7 +714,7 @@ public class ControlTabActivity extends Activity {
 					{
 						Debug.d(TAG, "open object file "+f);
 						mObjPath = new File(f).getParent();
-						startPreview(f);
+						//startPreview(f);
 					}
 					break;
 				case 1:
@@ -765,7 +759,7 @@ public class ControlTabActivity extends Activity {
 		}
 		
 	}
-	
+	/*
 	public Handler mPreviewRefreshHandler = new Handler(){
 		public void handleMessage(Message msg) { 
 			switch(msg.what)
@@ -785,148 +779,7 @@ public class ControlTabActivity extends Activity {
 			mPreviewRefreshHandler.sendEmptyMessageDelayed(0, 2000);
 		}
 	};
-	
-	public byte[] mPreBitmap;
-	public int[]	mPreBytes;
-	public void startPreview(String f)
-	{
-		String path=null;
-		File fp = new File(f);
-		if(fp.isFile())
-			path = new File(f).getParent();
-		else
-			path = f;
-		Fileparser.parse(mContext, f, mObjList);
-		try{
-			/*
-			 * parse 1.bin firstly
-			 */
-			/*
-			 File file = new File(path, "1.bin");
-			 FileInputStream fs = new FileInputStream(file);
-			 mPreBitmap=new byte[fs.available()];
-			 fs.read(mPreBitmap);
-			 //Bitmap bmp = BinCreater.Bin2Bitmap(mPreBitmap);
-			 //mPreview.createBitmap(bmp.getWidth(), bmp.getHeight());
-			 //mPreview.drawBitmap(0, 0, bmp);
-			  */
-			mBg = new BinInfo();
-			mBg.getBgBuffer(path+"/1.bin");
-			 refreshVariables();
-			 mPreBytes = new int[mBg.mBits.length*8];
-			 Debug.d(TAG, "startPreview  mBg.mBits.len = "+mBg.mBits.length+", mPreBytes.len= "+mPreBytes.length);
-			 //mPreBitmap = new byte[mBg.mBits.length];
-			 BinCreater.bin2byte(mPreBitmap, mPreBytes);
-			 mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
-			 mPreview.invalidate();
-			 //mPreviewRefreshHandler.sendEmptyMessage(0);
-			}catch(Exception e)
-			{
-				Debug.d(TAG, "startPreview e: "+e.getMessage());
-			}
-	}
-	
-	public void refreshVariables()
-	{
-		Bitmap bm=null;
-		String substr=null;
-		ByteArrayBuffer bytes=new ByteArrayBuffer(0);
-		if(mObjList==null || mObjList.isEmpty())
-			return;
-		mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
-		for(BaseObject o:mObjList)
-		{
-			bytes.clear();
-			bytes.setLength(0);
-			if(o instanceof CounterObject)
-			{
-				//int value = ((CounterObject) o).getValue();
-				String str = ((CounterObject) o).getNext();
-				/*
-				for(int i=0; i<str.length(); i++)
-				{
-					byte[] b = BinCreater.getBinBuffer(Integer.parseInt(str.substring(i, i+1)), mObjPath+"/" + o.getIndex() +".bin");
-					//Debug.d(TAG, "mPreviewRefreshHandler b.len="+b.length);
-					bytes.append(b, 0, b.length);
-				}
-				//bm = BinCreater.bin2byte(bytes.buffer());
-				//BinCreater.saveBitmap(bm, o.getIndex()+".png");
-				BinCreater.overlap(mPreBitmap, bytes.buffer(), (int)o.getX(), 0, 110);
-				Debug.d(TAG, "obj Y="+o.getY()+", bm.hight="+bm.getHeight());
-				//mPreview.drawBitmap((int)o.getX(), 0, bm);
-				 */
-				BinInfo varbin = new BinInfo();
-				try {
-					varbin.getVarBuffer(str, mObjPath+"/" + o.getIndex() +".bin");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				BinCreater.overlap(mPreBitmap, varbin.mBits, (int)o.getX(), 0, 880);
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				
-				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
-				for(BaseObject rtSub : rt)
-				{
-					bytes.clear();
-					bytes.setLength(0);
-					if(rtSub instanceof RealtimeYear)
-					{
-						substr = ((RealtimeYear)rtSub).getContent();
-					}
-					else if(rtSub instanceof RealtimeMonth)
-					{
-						substr = ((RealtimeMonth)rtSub).getContent();
-						//continue;
-					}
-					else if(rtSub instanceof RealtimeDate)
-					{
-						substr = ((RealtimeDate)rtSub).getContent();
-						//continue;
-					} 
-					else if(rtSub instanceof RealtimeHour)
-					{
-						substr = ((RealtimeHour)rtSub).getContent();
-					} 
-					else if(rtSub instanceof RealtimeMinute)
-					{
-						substr = ((RealtimeMinute)rtSub).getContent();
-					}
-					else
-						continue;
-					/*
-					Debug.d(TAG, "x="+rtSub.getX()+", y="+rtSub.getY()+", width="+rtSub.getWidth()+", xEnd="+rtSub.getXEnd());
-					Debug.d(TAG, "bin file :"+mObjPath+"/" + rtSub.getIndex() +".bin"+", substr="+substr);
-					for(int i=0; i<substr.length(); i++)
-					{						
-						byte[] b = BinCreater.getBinBuffer(Integer.parseInt(substr.substring(i, i+1)), mObjPath+"/" + rtSub.getIndex() +".bin");
-						Debug.d(TAG, "mPreviewRefreshHandler b.len="+b.length);
-						bytes.append(b, 0, b.length);
-					}
-					
-					//bm = BinCreater.bin2byte(bytes.toByteArray());
-					//Debug.d(TAG, "bm width="+bm.getWidth()+", bytes len="+bytes.length());
-					//mPreview.drawBitmap((int)rtSub.getX(), (int)rtSub.getY(), bm);
-					BinCreater.overlap(mPreBitmap, bytes.buffer(), (int)rtSub.getX(), 0, 110);
-					*/
-					BinInfo varbin = new BinInfo();
-					try {
-						varbin.getVarBuffer(substr, mObjPath+"/" + rtSub.getIndex() +".bin");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					BinCreater.overlap(mPreBitmap, varbin.mBits, (int)rtSub.getX(), 0, 880);
-				}				
-			}
-			else
-			{
-				Debug.d(TAG, "not Variable object");
-			}
-		}
-	}
+	*/
 	
 	public boolean openSerial()
 	{
@@ -1175,7 +1028,7 @@ public class ControlTabActivity extends Activity {
 					
 					if(curPos>=mTlkList.size())
 						curPos = 0;
-					Vector<TlkObject> list = mTlkList.get(curPos);
+					TlkObject list = mObjList.get(curPos);
 					byte[] buffer = mBinBuffer.get(list);
 					
 					/*
@@ -1228,16 +1081,17 @@ public class ControlTabActivity extends Activity {
 	{
 		Map<String, String> m = new HashMap<String,String>();
 		m.put("index", getResources().getString(R.string.str_column_index));
-		m.put("pic1", getResources().getString(R.string.str_column_pic1));
-		m.put("pic2", getResources().getString(R.string.str_column_pic2));
-		m.put("pic3", getResources().getString(R.string.str_column_pic3));
-		m.put("pic4", getResources().getString(R.string.str_column_pic4));
+		//m.put("pic1", getResources().getString(R.string.str_column_pic1));
+		//m.put("pic2", getResources().getString(R.string.str_column_pic2));
+		//m.put("pic3", getResources().getString(R.string.str_column_pic3));
+		//m.put("pic4", getResources().getString(R.string.str_column_pic4));
 		m.put("text1", getResources().getString(R.string.str_column_text1));
 		m.put("text2", getResources().getString(R.string.str_column_text2));
 		m.put("text3", getResources().getString(R.string.str_column_text3));
 		m.put("text4", getResources().getString(R.string.str_column_text4));
 		m.put("text5", getResources().getString(R.string.str_column_text5));
 		m.put("text6", getResources().getString(R.string.str_column_text6));
+		/*
 		m.put("text7", getResources().getString(R.string.str_column_text7));
 		m.put("text8", getResources().getString(R.string.str_column_text8));
 		m.put("text9", getResources().getString(R.string.str_column_text9));
@@ -1248,7 +1102,7 @@ public class ControlTabActivity extends Activity {
 		m.put("text14", getResources().getString(R.string.str_column_text14));
 		m.put("text15", getResources().getString(R.string.str_column_text15));
 		m.put("text16", getResources().getString(R.string.str_column_text16));
-		
+		*/
 		
 		mMessageMap.add(m);
 	}
@@ -1265,31 +1119,27 @@ public class ControlTabActivity extends Activity {
 			reader.readRecord();	/*read the first row*/
 			/*TO-DO parse head information*/
 			reader.readRecord();	/*read the second row*/
+			Debug.d(TAG, "columns="+reader.getColumnCount());
 			while(reader.readRecord())
 			{
+				if(reader.getColumnCount()<7)
+					continue;
+				TlkObject obj = new TlkObject();
 				m = new HashMap<String, String>();
-				for(int i=0; i< reader.getColumnCount(); i++)
-				{
-					if(i == 0)	//index
-					{
-						m.put("index", reader.get(i));
-						Debug.d(TAG, "index="+reader.get(i));
-					}
-					else if(i> 0 && i< 5)	//pic
-					{
-						m.put("pic"+i, reader.get(i));
-						//list.
-						Debug.d(TAG, "pic"+i+" = "+reader.get(i));
-					}
-					else if(i>=5 &&i<21)	//text
-					{
-						m.put("text"+(i-4), reader.get(i));
-						Debug.d(TAG, "text"+(i-4)+" = "+reader.get(i));
-					}
-					else
-						break;
-				}
-				
+				Debug.d(TAG, "reader.get(0)="+reader.get(0));
+				//obj.index = Integer.parseInt(reader.get(0));
+				obj.mNo = reader.get(1);
+				obj.setStyle(reader.get(2));
+				obj.mStandard = reader.get(3);
+				obj.setSize(reader.get(4), reader.get(5), reader.get(6));
+				mObjList.add(obj);
+				m.put("index", reader.get(0));
+				m.put("text1", reader.get(1));
+				m.put("text2", reader.get(2));
+				m.put("text3", reader.get(3));
+				m.put("text4", reader.get(4));
+				m.put("text5", reader.get(5));
+				m.put("text6", reader.get(6));
 				mMessageMap.add(m);
 			}
 			reader.close();
@@ -1330,39 +1180,78 @@ public class ControlTabActivity extends Activity {
 		return length;
 	}
 	
-	public void makeBinBuffer(Vector<TlkObject>list)
+	public void makeBinBuffer(TlkObject list)
 	{
-		int len = calculateBufsize(list);
+		int len = list.getColumns();//calculateBufsize(list);
+		int height=list.getRows();
 		Debug.d(TAG, "bin length="+len);
 		//int[] buffer = new int[len+16];
 		int bit[];
+		int x=0,y=0;
 		Bitmap bmp=null;
-		Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(len, height, Config.ARGB_8888);
 		
 		Canvas can = new Canvas(gBmp);
 		can.drawColor(Color.WHITE);
 		Paint p = new Paint();
 		p.setARGB(255, 0, 0, 0);
 		
-		for(TlkObject o: list)
+		//for(TlkObject o: list)
 		{
-			if(o.isTextObject())
+			//head logo
+			DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+"0011.txt");
+			bit = new int[128*8];
+			font.getDotbuf(bit);
+			bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x, y, p);
+			x = font.getColumns()+4;
+			//second logo
+			if(list.mLogo != null)
 			{
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				bit = new int[font.getColumns()*2*o.mContent.length()];
-				Debug.d(TAG, "=========bit.length="+bit.length);
-				font.getDotbuf(o.mContent, bit);
-				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			}
-			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
-			{
-				Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				font.setFont(DotMatrixFont.LOGO_FILE_PATH+list.mLogo);
 				bit = new int[128*8];
 				font.getDotbuf(bit);
 				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x, y, p);
+				x += font.getColumns()+4;
 			}
-			can.drawBitmap(bmp, o.x, o.y, p);
+			//first line -- number
+			font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+			bit = new int[list.mNo.length()*2*font.getColumns()];
+			Debug.d(TAG, "list.mNo="+list.mNo);
+			font.getDotbuf(list.mNo,bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x, y, p);
+			//y += font.getRows()+4;
+			//2nd line -- steel style
+			//font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+			bit = new int[list.mSteelStyle.length()*2*font.getColumns()];
+			Debug.d(TAG, "list.mSteelStyle="+list.mSteelStyle);
+			font.getDotbuf(list.mSteelStyle, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x, font.getRows()+4, p);
+			//y += font.getRows()+4;
+			//2nd line -- standard
+			bit = new int[list.mStandard.length()*2*font.getColumns()];
+			Debug.d(TAG, "list..mStandard="+list.mStandard);
+			font.getDotbuf(list.mStandard, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length(), font.getRows()+4, p);
+			//y += font.getRows()+4;
+			//3rd line -- size
+			bit = new int[list.mSize.length()*2*font.getColumns()];
+			Debug.d(TAG, "list..mSize="+list.mSize);
+			font.getDotbuf(list.mSize, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
+			//y += font.getRows()+4;
+			//3rd line -- size
+			bit = new int[list.mDate.length()*2*font.getColumns()];
+			Debug.d(TAG, "list..mDate="+list.mDate);
+			font.getDotbuf(list.mDate, bit);
+			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+			can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length(), 2*(font.getRows()+4), p);
+			
 		}
 		BinCreater.saveBitmap(gBmp, "pre.bmp");
 		//set contents of text object
@@ -1477,67 +1366,23 @@ public class ControlTabActivity extends Activity {
 			case FILE_CSV_CHANGED:
 			case FILE_TLK_CHANGED:
 				//
-				if(mBtnTlkfile.getText().toString()!=null && mBtnTlkfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.TLK_SUFFIX)
-					&& mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
+				if(mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
 				{
-					//Vector<TlkObject> list = new Vector<TlkObject>();
-					//if(mMsgFile!=null)
-					/*
-					mLoadingDialog = ProgressDialog.show(ControlTabActivity.this, "", "Loading,please wait......"); 
-					new Thread(new Runnable(){
-						@Override
-						public void run() {
-					*/{
-					
-							// TODO Auto-generated method stub
-							
-						mTlkList.clear();
-						
-						for(int i=1;i<mMessageList.getCount();i++)
-						{
-							Vector<TlkObject> tmpList = new Vector<TlkObject>();
-							//String path = new File(mMsgFile.getText().toString()).getParent();
-							if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), tmpList))
-							{
-								Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
-								return;
-							}
-							
-							String index = ((Map<String, String>)mMessageList.getItemAtPosition(i)).get("index");
-							Debug.d(TAG, "=========index="+index+", i="+i);
-							setContent(index, tmpList);
-							mTlkList.add(tmpList);
-						}
-						
-						Debug.d(TAG, "list size="+mTlkList.size());
-					}
-					//make bin buffer
+					for(TlkObject o : mObjList)
 					{
-						mBinBuffer.clear();
-						for(Vector<TlkObject> list:mTlkList)
-						{
-							Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer");
-							makeBinBuffer(list);
-							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
-							byte buffer[] = new byte[BinCreater.mBmpBits.length];
-							/*read columns from tlk file*/
-							
-							try{
-								int b=stream.read(buffer);
-								Debug.d(TAG,"readout: "+b);
-							}
-							catch(Exception e)
-							{
-								
-							}
-							mBinBuffer.put(list, buffer);
+						makeBinBuffer(o);
+						//TO-List save buffer
+						byte[] buf = new byte[BinCreater.mBmpBits.length];
+						ByteArrayInputStream bs = new ByteArrayInputStream(BinCreater.mBmpBits);
+						try {
+							bs.read(buf);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer finish");
-					}/*
-					mHandler.sendEmptyMessage(3);
+						mBinBuffer.put(o, buf);
 					}
 					
-					}).start();*/
 				}
 				break;
 			default:

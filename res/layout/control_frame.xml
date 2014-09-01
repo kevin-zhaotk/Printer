@@ -152,7 +152,7 @@
          android:textSize="20sp"
          android:textColor="#000000"
          />
-     
+<!--      
      <Button 
          android:id="@+id/btnTlkfile"
          android:layout_below="@id/StartPrint"
@@ -164,16 +164,18 @@
          android:textSize="20sp"
          android:textColor="#000000"
          />
-     <TextView
+-->         
+     <Button
          android:id="@+id/tv_gotoline"
-         android:layout_width="wrap_content"
+         android:layout_width="80dp"
          android:layout_height="60dp"
          android:layout_below="@id/StartPrint"
          android:layout_alignParentRight="true"
+         android:layout_marginRight="10dp"
          android:text="@string/str_goto"
          android:singleLine="true"
          android:textSize="20sp"
-         android:textColor="#000000""
+         android:textColor="#000000"
          />
      <EditText
          android:id="@+id/et_gotoline"
