@@ -166,7 +166,7 @@
          />
 -->         
      <Button
-         android:id="@+id/tv_gotoline"
+         android:id="@+id/btn_gotoline"
          android:layout_width="80dp"
          android:layout_height="60dp"
          android:layout_below="@id/StartPrint"
@@ -182,8 +182,9 @@
          android:layout_width="60dp"
          android:layout_height="60dp"
          android:layout_below="@id/StartPrint"
-         android:layout_alignBaseline="@id/tv_gotoline"
-         android:layout_toLeftOf="@id/tv_gotoline"
+         android:layout_alignBaseline="@id/btn_gotoline"
+         android:layout_toLeftOf="@id/btn_gotoline"
+         android:imeOptions="flagNoExtractUi"
 		 android:hint="@string/strDefault"
          android:singleLine="true"
          android:textSize="20sp"

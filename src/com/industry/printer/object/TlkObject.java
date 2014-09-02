@@ -31,8 +31,8 @@ public class TlkObject {
 		y = 0;
 		font = null;
 		Date d= new Date();
-		mDate = String.valueOf(d.getYear()+1900)+
-				String.valueOf(BaseObject.intToFormatString(d.getMonth()+1,2))+
+		mDate = String.valueOf(d.getYear()+1900)+"-"+
+				String.valueOf(BaseObject.intToFormatString(d.getMonth()+1,2))+"-"+
 				String.valueOf(BaseObject.intToFormatString(d.getDate(), 2));
 	}
 	
