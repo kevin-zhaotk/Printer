@@ -319,7 +319,7 @@ public class DotMatrixFont {
 			FileReader r = new FileReader(mfile);
 			mReader = new BufferedReader(r);
 			s = mReader.readLine();
-			s = s.trim().substring(2).trim();
+			s = s.trim().substring(2).trim().toLowerCase();
 			String head[] = s.split("x");
 			columns = Integer.parseInt(head[0]);
 			Debug.d(TAG, "##################columns = "+columns);

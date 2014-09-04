@@ -125,6 +125,7 @@ public class ControlTabActivity extends Activity {
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
 	Map<TlkObject, byte[]> mBinBuffer;
+	byte[] mPrintBuffer;
 	/*
 	 * whether the print-head is doing print work
 	 * if no, poll state Thread will read print-header state
@@ -398,7 +399,7 @@ public class ControlTabActivity extends Activity {
 						setCsvToPreference(f);
 						readCsv(f);
 						mMessageList.setAdapter(mMessageAdapter);
-						fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
+						//fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
 					}
 					
 				});
@@ -455,6 +456,16 @@ public class ControlTabActivity extends Activity {
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show(list);
 				
+				makeBinBuffer(list);
+				mPrintBuffer = new byte[BinCreater.mBmpBits.length];
+				ByteArrayInputStream bs = new ByteArrayInputStream(BinCreater.mBmpBits);
+				try {
+					bs.read(mPrintBuffer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				/*
 				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
 				if(m!= null)
@@ -494,6 +505,7 @@ public class ControlTabActivity extends Activity {
 				if(i<=1 || i>=mMessageList.getCount())
 					return;
 				mMessageAdapter.setChecked(i-1);
+				mMessageList.setItemChecked(i-1, true);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
@@ -514,6 +526,7 @@ public class ControlTabActivity extends Activity {
 				//Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
 				
 				mMessageAdapter.setChecked(i+1);
+				mMessageList.setItemChecked(i+1, true);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
@@ -591,6 +604,8 @@ public class ControlTabActivity extends Activity {
 				if(dst >=1 && dst<mMessageList.getCount())
 				{
 					mMessageAdapter.setChecked(dst);
+					mMessageList.setItemChecked(dst, true);
+					
 					//mMessageList.setAdapter(mMessageAdapter);
 					mMessageAdapter.notifyDataSetChanged();
 				}
@@ -878,14 +893,9 @@ public class ControlTabActivity extends Activity {
 						mBtnfile.setText(new File(csv).getName());
 						readCsv(csv);
 						mMessageList.setAdapter(mMessageAdapter);
-						fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
+						//fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
 					}
-					String tlk = getTlkFromPreference();
-					if(tlk !=null && new File(tlk).exists())
-					{
-						mBtnTlkfile.setText(new File(tlk).getName());
-						fileChangedHandler.sendEmptyMessage(FILE_TLK_CHANGED);
-					}
+					
 				}
 				}, 3000);
 				byte info[] = new byte[23];
@@ -1142,6 +1152,7 @@ public class ControlTabActivity extends Activity {
 	{
 		CsvReader reader;
 		mMessageMap.clear();
+		mObjList.clear();
 		Map<String, String> m;
 		initMsglist();
 		try {
@@ -1213,13 +1224,13 @@ public class ControlTabActivity extends Activity {
 	public void makeBinBuffer(TlkObject list)
 	{
 		int len = list.getColumns();//calculateBufsize(list);
-		int height=list.getRows();
+		//int height=list.getRows();
 		Debug.d(TAG, "bin length="+len);
 		//int[] buffer = new int[len+16];
 		int bit[];
 		int x=0,y=0;
 		Bitmap bmp=null;
-		Bitmap gBmp = Bitmap.createBitmap(len, height, Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
 		
 		Canvas can = new Canvas(gBmp);
 		can.drawColor(Color.WHITE);
@@ -1287,6 +1298,7 @@ public class ControlTabActivity extends Activity {
 		//set contents of text object
 		//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
 		BinCreater.create(gBmp, 0);
+		gBmp.recycle();
 	}
 	
 	

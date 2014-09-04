@@ -100,7 +100,7 @@ public class BinCreater {
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
         result.setPixels(pixels, 0, width, 0, 0, width, height);
         /*just for debug*/
-        //saveBitmap(result, "bk.png");
+        saveBitmap(result, "bk.png");
         
         return result; 
     }

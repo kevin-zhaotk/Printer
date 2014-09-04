@@ -82,7 +82,7 @@ public class TlkObject {
 		mThick = thick;
 		mWidth = width;
 		mHeight = height;
-		mSize = mThick+"x"+mWidth+"x"+mHeight;
+		mSize = mThick+"X"+mWidth+"X"+mHeight;
 	}
 	
 	public void setStyle(String style)

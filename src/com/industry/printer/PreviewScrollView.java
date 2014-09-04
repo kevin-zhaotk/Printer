@@ -92,7 +92,7 @@ public class PreviewScrollView extends View {
 		Debug.d(TAG, "====>onDraw");
 		 //if(mPreBitmap == null)
 			 //return;
-		int x=0,y=0;
+		int x=5,y=0;
 		Paint p = new Paint();
 		int[] bit = null;
 		Bitmap bmp=null;
@@ -116,11 +116,12 @@ public class PreviewScrollView extends View {
 			//second logo
 			if(mList.mLogo != null)
 			{
+				Debug.d(TAG, "2nd logo x="+x+",y="+y+", logo="+mList.mLogo);
 				font.setFont(DotMatrixFont.LOGO_FILE_PATH+mList.mLogo);
 				bit = new int[128*8];
 				font.getDotbuf(bit);
+				Debug.d(TAG, "====columns="+font.getColumns());
 				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-				Debug.d(TAG, "2nd logo x="+x+",y="+y);
 				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
 				canvas.drawBitmap(bmp, x, y, p);
 				x += font.getColumns()+4;
