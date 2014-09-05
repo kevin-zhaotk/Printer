@@ -82,7 +82,7 @@ public class TlkObject {
 		mThick = thick;
 		mWidth = width;
 		mHeight = height;
-		mSize = mThick+"X"+mWidth+"X"+mHeight;
+		mSize = mThick+"x"+mWidth+"x"+mHeight;
 	}
 	
 	public void setStyle(String style)
@@ -114,7 +114,7 @@ public class TlkObject {
 		{
 			second = dot.getColumns()*mSteelStyle.length();
 		}
-		second += 4;	//split
+		second += 7;	//split
 		if(mStandard != null)
 		{
 			second += dot.getColumns()*mStandard.length();

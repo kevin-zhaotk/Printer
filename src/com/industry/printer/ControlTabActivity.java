@@ -694,7 +694,8 @@ public class ControlTabActivity extends Activity {
 			TlkObject list = mObjList.get(index-1);
 			Debug.d(TAG,"=======index="+(index-1));
 			//showListContent(list);
-			buffer = mBinBuffer.get(list);
+			//buffer = mBinBuffer.get(list);
+			buffer = mPrintBuffer;
 		}catch(Exception e)
 		{
 			Debug.d(TAG,"######Exception: "+e.getMessage());
@@ -1277,7 +1278,7 @@ public class ControlTabActivity extends Activity {
 			Debug.d(TAG, "list..mStandard="+list.mStandard);
 			font.getDotbuf(list.mStandard, bit);
 			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length(), font.getRows()+4, p);
+			can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
 			//y += font.getRows()+4;
 			//3rd line -- size
 			bit = new int[list.mSize.length()*2*font.getColumns()];
@@ -1291,7 +1292,7 @@ public class ControlTabActivity extends Activity {
 			Debug.d(TAG, "list..mDate="+list.mDate);
 			font.getDotbuf(list.mDate, bit);
 			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length(), 2*(font.getRows()+4), p);
+			can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
 			
 		}
 		BinCreater.saveBitmap(gBmp, "pre.bmp");
