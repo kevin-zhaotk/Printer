@@ -1258,42 +1258,55 @@ public class ControlTabActivity extends Activity {
 				x += font.getColumns()+4;
 			}
 			//first line -- number
-			font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
-			bit = new int[list.mNo.length()*2*font.getColumns()];
-			Debug.d(TAG, "list.mNo="+list.mNo);
-			font.getDotbuf(list.mNo,bit);
-			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x, y, p);
+			if(list.mNo !=null)
+			{
+				font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+				bit = new int[list.mNo.length()*2*font.getColumns()];
+				Debug.d(TAG, "list.mNo="+list.mNo);
+				font.getDotbuf(list.mNo,bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x, y, p);
+			}
 			//y += font.getRows()+4;
 			//2nd line -- steel style
-			//font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
-			bit = new int[list.mSteelStyle.length()*2*font.getColumns()];
-			Debug.d(TAG, "list.mSteelStyle="+list.mSteelStyle);
-			font.getDotbuf(list.mSteelStyle, bit);
-			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x, font.getRows()+4, p);
-			//y += font.getRows()+4;
+			if(list.mSteelStyle !=null)
+			{
+				//font.setFont(DotMatrixFont.FONT_FILE_PATH+"0001.txt");
+				bit = new int[list.mSteelStyle.length()*2*font.getColumns()];
+				Debug.d(TAG, "list.mSteelStyle="+list.mSteelStyle);
+				font.getDotbuf(list.mSteelStyle, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x, font.getRows()+4, p);
+			}//y += font.getRows()+4;
 			//2nd line -- standard
-			bit = new int[list.mStandard.length()*2*font.getColumns()];
-			Debug.d(TAG, "list..mStandard="+list.mStandard);
-			font.getDotbuf(list.mStandard, bit);
-			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
+			if(list.mStandard !=null)
+			{
+				bit = new int[list.mStandard.length()*2*font.getColumns()];
+				Debug.d(TAG, "list..mStandard="+list.mStandard);
+				font.getDotbuf(list.mStandard, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
+			}
 			//y += font.getRows()+4;
 			//3rd line -- size
-			bit = new int[list.mSize.length()*2*font.getColumns()];
-			Debug.d(TAG, "list..mSize="+list.mSize);
-			font.getDotbuf(list.mSize, bit);
-			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
+			if(list.mSize !=null)
+			{
+				bit = new int[list.mSize.length()*2*font.getColumns()];
+				Debug.d(TAG, "list..mSize="+list.mSize);
+				font.getDotbuf(list.mSize, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
+			}
 			//y += font.getRows()+4;
 			//3rd line -- size
-			bit = new int[list.mDate.length()*2*font.getColumns()];
-			Debug.d(TAG, "list..mDate="+list.mDate);
-			font.getDotbuf(list.mDate, bit);
-			bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
-			
+			if(list.mDate !=null)
+			{
+				bit = new int[list.mDate.length()*2*font.getColumns()];
+				Debug.d(TAG, "list..mDate="+list.mDate);
+				font.getDotbuf(list.mDate, bit);
+				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
+				can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
+			}
 		}
 		BinCreater.saveBitmap(gBmp, "pre.bmp");
 		//set contents of text object
