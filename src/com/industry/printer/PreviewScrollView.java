@@ -110,8 +110,11 @@ public class PreviewScrollView extends View {
 			bit = new int[128*8];
 			font.getDotbuf(bit);
 			bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-			bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-			canvas.drawBitmap(bmp, x, y, p);
+			if(bmp!=null)
+			{
+				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+				canvas.drawBitmap(bmp, x, y, p);
+			}
 			x = font.getColumns()+4;
 			//second logo
 			if(mList.mLogo != null)
@@ -122,9 +125,13 @@ public class PreviewScrollView extends View {
 				font.getDotbuf(bit);
 				Debug.d(TAG, "====columns="+font.getColumns());
 				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x, y, p);
-				x += font.getColumns()+4;
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x, y, p);
+					x += font.getColumns()+4;
+				}
+				
 			}
 			//first line -- number
 			if(mList.mNo != null)
@@ -134,8 +141,11 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG, "list.mNo="+mList.mNo);
 				font.getDotbuf(mList.mNo,bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x, y, p);
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x, y, p);
+				}
 				Debug.d(TAG, "first line x="+x+",y="+y);
 			}//y += font.getRows()+4;
 			//2nd line -- steel style
@@ -146,8 +156,11 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG, "list.mSteelStyle="+mList.mSteelStyle);
 				font.getDotbuf(mList.mSteelStyle, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x, 4*(font.getRows()+4), p);
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x, 4*(font.getRows()+4), p);
+				}
 				Debug.d(TAG, "2nd line x="+x+",y="+4*(font.getRows()+4));
 			}
 			//y += font.getRows()+4;
@@ -155,11 +168,15 @@ public class PreviewScrollView extends View {
 			if(mList.mStandard!=null)
 			{
 				bit = new int[mList.mStandard.length()*2*font.getColumns()];
-				Debug.d(TAG, "list..mStandard="+mList.mStandard);
+				Debug.d(TAG, "list..mStandard="+mList.mStandard+"length="+mList.mStandard.length());
 				font.getDotbuf(mList.mStandard, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSteelStyle.length()+7, 4*(font.getRows()+4), p);
+				
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSteelStyle.length()+7, 4*(font.getRows()+4), p);
+				}
 				Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSteelStyle.length())+",y="+4*(font.getRows()+4));
 			}
 			//y += font.getRows()+4;
@@ -170,8 +187,11 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG, "mList..mSize="+mList.mSize);
 				font.getDotbuf(mList.mSize, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x, 4*2*(font.getRows()+4), p);
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x, 4*2*(font.getRows()+4), p);
+				}
 				Debug.d(TAG, "2nd line x="+(x)+",y="+4*2*(font.getRows()+4));
 			}
 			//y += font.getRows()+4;
@@ -182,8 +202,11 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG, "mList..mDate="+mList.mDate);
 				font.getDotbuf(mList.mDate, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-				canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSize.length()+7, 4*2*(font.getRows()+4), p);
+				if(bmp!=null)
+				{
+					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
+					canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSize.length()+7, 4*2*(font.getRows()+4), p);
+				}
 				Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSize.length())+",y="+4*2*(font.getRows()+4));
 			}
 		}

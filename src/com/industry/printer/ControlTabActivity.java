@@ -506,6 +506,7 @@ public class ControlTabActivity extends Activity {
 					return;
 				mMessageAdapter.setChecked(i-1);
 				mMessageList.setItemChecked(i-1, true);
+				mMessageList.smoothScrollToPosition(i-1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
@@ -527,6 +528,7 @@ public class ControlTabActivity extends Activity {
 				
 				mMessageAdapter.setChecked(i+1);
 				mMessageList.setItemChecked(i+1, true);
+				mMessageList.smoothScrollToPosition(i+1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
@@ -605,7 +607,7 @@ public class ControlTabActivity extends Activity {
 				{
 					mMessageAdapter.setChecked(dst);
 					mMessageList.setItemChecked(dst, true);
-					
+					mMessageList.smoothScrollToPosition(dst);
 					//mMessageList.setAdapter(mMessageAdapter);
 					mMessageAdapter.notifyDataSetChanged();
 				}
@@ -1245,8 +1247,12 @@ public class ControlTabActivity extends Activity {
 			bit = new int[128*8];
 			font.getDotbuf(bit);
 			bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-			can.drawBitmap(bmp, x, y, p);
-			x = font.getColumns()+4;
+			if(bmp !=null)
+			{
+				can.drawBitmap(bmp, x, y, p);
+				x = font.getColumns()+4;
+			}
+			
 			//second logo
 			if(list.mLogo != null)
 			{
@@ -1254,8 +1260,11 @@ public class ControlTabActivity extends Activity {
 				bit = new int[128*8];
 				font.getDotbuf(bit);
 				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x, y, p);
-				x += font.getColumns()+4;
+				if(bmp !=null)
+				{
+					can.drawBitmap(bmp, x, y, p);
+					x += font.getColumns()+4;
+				}
 			}
 			//first line -- number
 			if(list.mNo !=null)
@@ -1265,7 +1274,8 @@ public class ControlTabActivity extends Activity {
 				Debug.d(TAG, "list.mNo="+list.mNo);
 				font.getDotbuf(list.mNo,bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x, y, p);
+				if(bmp !=null)
+					can.drawBitmap(bmp, x, y, p);
 			}
 			//y += font.getRows()+4;
 			//2nd line -- steel style
@@ -1276,16 +1286,18 @@ public class ControlTabActivity extends Activity {
 				Debug.d(TAG, "list.mSteelStyle="+list.mSteelStyle);
 				font.getDotbuf(list.mSteelStyle, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x, font.getRows()+4, p);
+				if(bmp !=null)
+					can.drawBitmap(bmp, x, font.getRows()+4, p);
 			}//y += font.getRows()+4;
 			//2nd line -- standard
 			if(list.mStandard !=null)
 			{
 				bit = new int[list.mStandard.length()*2*font.getColumns()];
-				Debug.d(TAG, "list..mStandard="+list.mStandard);
+				Debug.d(TAG, "list..mStandard="+list.mStandard+", length="+list.mStandard.length());
 				font.getDotbuf(list.mStandard, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
+				if(bmp !=null)
+					can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
 			}
 			//y += font.getRows()+4;
 			//3rd line -- size
@@ -1295,7 +1307,8 @@ public class ControlTabActivity extends Activity {
 				Debug.d(TAG, "list..mSize="+list.mSize);
 				font.getDotbuf(list.mSize, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
+				if(bmp != null)
+					can.drawBitmap(bmp, x, 2*(font.getRows()+4), p);
 			}
 			//y += font.getRows()+4;
 			//3rd line -- size
@@ -1305,10 +1318,11 @@ public class ControlTabActivity extends Activity {
 				Debug.d(TAG, "list..mDate="+list.mDate);
 				font.getDotbuf(list.mDate, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-				can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
+				if(bmp != null)
+					can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
 			}
 		}
-		BinCreater.saveBitmap(gBmp, "pre.bmp");
+		//BinCreater.saveBitmap(gBmp, "pre.bmp");
 		//set contents of text object
 		//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
 		BinCreater.create(gBmp, 0);

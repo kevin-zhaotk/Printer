@@ -6,11 +6,23 @@
     >
     
     <TextView
+        android:id="@+id/tv_year"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/str_year"
+        android:layout_marginLeft="00dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        />
+    <TextView
         android:id="@+id/tv_month"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="@string/str_month"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="0dp"
+        android:gravity="center"
+        android:layout_toRightOf="@id/tv_year"
+        android:layout_alignTop="@id/tv_year"
          android:textSize="20dp"
         />
     <TextView
@@ -19,18 +31,9 @@
         android:layout_height="wrap_content"
         android:text="@string/str_date"
         android:layout_marginLeft="0dp"
+        android:gravity="center"
         android:layout_toRightOf="@id/tv_month"
-        android:layout_alignTop="@id/tv_month"
-         android:textSize="20dp"
-        />
-    <TextView
-        android:id="@+id/tv_year"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:text="@string/str_year"
-        android:layout_marginLeft="0dp"
-        android:layout_toRightOf="@id/tv_date"
-        android:layout_alignTop="@id/tv_month"
+        android:layout_alignTop="@id/tv_year"
          android:textSize="20dp"
         />
     
@@ -40,7 +43,8 @@
         android:layout_height="wrap_content"
         android:text="@string/str_hour"
         android:layout_marginLeft="0dp"
-        android:layout_toRightOf="@id/tv_year"
+        android:gravity="center"
+        android:layout_toRightOf="@id/tv_date"
         android:layout_alignTop="@id/tv_month"
          android:textSize="20dp"
         />
@@ -51,6 +55,7 @@
         android:layout_height="wrap_content"
         android:text="@string/str_minute"
         android:layout_marginLeft="0dp"
+        android:gravity="center"
         android:layout_toRightOf="@id/tv_hour"
         android:layout_alignTop="@id/tv_month"
          android:textSize="20dp"

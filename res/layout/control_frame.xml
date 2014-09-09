@@ -221,29 +221,23 @@
          android:textSize="15sp"
          />
  -->
-     <HorizontalScrollView 
-         android:id="@+id/scrollview_prev_id"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         	android:layout_below="@id/btnopenfile"
-         >
-     	<ListView
+     <ListView
         	android:id="@+id/lv_messages"
         	android:layout_width="fill_parent"
         	android:layout_height="250dp"
+        	android:layout_below="@id/btnopenfile"
          	android:listSelector="@drawable/listitem_select"
          	android:background="#ffffff"
          >
          
      </ListView>
-     </HorizontalScrollView>
      
      <TextView
          android:id="@+id/tv_printState"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
-         android:layout_below="@id/scrollview_prev_id"
+         android:layout_below="@id/lv_messages"
          android:layout_marginTop="10dp"
          android:text="@string/strPrintstate"
 		 android:textColor="#000000"
@@ -254,7 +248,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignBaseline="@id/tv_printState"
-         android:layout_below="@id/scrollview_prev_id"
+         android:layout_below="@id/lv_messages"
          android:layout_toRightOf="@id/tv_printState"
          android:layout_marginTop="10dp"
          android:text="@string/strPrintok"
@@ -267,7 +261,7 @@
          android:id="@+id/tv_photocell_state"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_below="@id/scrollview_prev_id" 
+         android:layout_below="@id/lv_messages" 
          android:layout_marginTop="10dp"
          android:layout_marginLeft="250dp"
          android:text="@string/strPhotocellState"
@@ -291,7 +285,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_marginLeft="420dp"
-         android:layout_below="@id/scrollview_prev_id"
+         android:layout_below="@id/lv_messages"
          android:layout_alignBaseline="@id/tv_photocell_state" 
          android:text="@string/strEncoderState"
 		 android:textColor="#000000"
@@ -314,7 +308,7 @@
 		  android:id="@+id/tv_inkValue"
 		  android:layout_width="wrap_content"
 		  android:layout_height="wrap_content"
-		  android:layout_below="@id/scrollview_prev_id"
+		  android:layout_below="@id/lv_messages"
 		  android:layout_alignParentRight="true"
 		  android:layout_marginTop="10dp"
 		  android:text="@string/strDefault"
