@@ -47,7 +47,8 @@ public class CalendarDialog extends Dialog {
 		mTPicker.setIs24HourView(true);
 		Calendar c = Calendar.getInstance();
 		mDPicker.init(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), null);
-		
+		mTPicker.setCurrentHour(c.get(Calendar.HOUR_OF_DAY));
+		mTPicker.setCurrentMinute(c.get(Calendar.MINUTE));
 		mPositive = (Button) findViewById(R.id.btn_setTimeOk);
 		mPositive.setOnClickListener(new View.OnClickListener() {
 			

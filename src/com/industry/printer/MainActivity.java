@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 
+import com.android.internal.app.LocalePicker;
+
 import android.os.Bundle;
 //import android.app.Activity;
 import android.app.TabActivity;
@@ -124,6 +126,6 @@ public class MainActivity extends TabActivity {
 		DisplayMetrics dm = getResources().getDisplayMetrics(); 
 		config.locale = Locale.SIMPLIFIED_CHINESE; 
 		getResources().updateConfiguration(config, dm); 
-		
+		LocalePicker.updateLocale(Locale.CHINA);
 	}
 }
