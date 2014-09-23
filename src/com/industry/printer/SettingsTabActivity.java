@@ -287,7 +287,7 @@ public static final String TAG="SettingsTabActivity";
 				File f= new File("/mnt/usb/Printer.apk");
 				if(f.exists())
 				{
-					new AlertDialog.Builder(SettingsTabActivity.this).setMessage("sure to upgrade?")
+					new AlertDialog.Builder(SettingsTabActivity.this).setMessage(R.string.strUpgradeConfirm)
 					.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
 
 						@Override
@@ -309,7 +309,7 @@ public static final String TAG="SettingsTabActivity";
 				else
 				{
 					new AlertDialog.Builder(SettingsTabActivity.this)
-					.setMessage("No Upgrade Image found!!!")
+					.setMessage(R.string.strUpgradeNoApk)
 					.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 						
 						@Override
