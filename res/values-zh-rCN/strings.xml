@@ -50,6 +50,8 @@
 	<string name="str_btn_setDate">日期设置</string>
 	<string name="str_btn_setTime">时间设置</string>
 	<string name="str_btn_image">图形</string>
+	
+	<string name="str_goto">跳转</string>
 	<!-- object info table -->
 	<string name="strWidth">宽</string>
 	<string name="strHigh">高</string>

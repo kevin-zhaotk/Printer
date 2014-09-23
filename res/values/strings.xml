@@ -51,6 +51,8 @@
 	<string name="str_btn_setDate">Set Date</string>
 	<string name="str_btn_setTime">Set Time</string>
 	<string name="str_btn_image">Image</string>
+	
+	<string name="str_goto">goto</string>
 	<!-- object info table -->
 	<string name="strWidth">Width</string>
 	<string name="strHigh">Height</string>

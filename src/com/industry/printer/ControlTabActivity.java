@@ -64,6 +64,7 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
@@ -91,6 +92,8 @@ public class ControlTabActivity extends Activity {
 	public Button mFinish;
 	public Button mBtnNext;
 	public Button mBtnPrev;
+	public Button mGoto;
+	public EditText mDstline;
 	
 	public Button	mBtnfile;
 	public Button	mBtnTlkfile;
@@ -491,6 +494,7 @@ public class ControlTabActivity extends Activity {
 				if(i<=1 || i>=mMessageList.getCount())
 					return;
 				mMessageAdapter.setChecked(i-1);
+				mMessageList.setItemChecked(i-1, true);
 				mMessageList.smoothScrollToPosition(i-1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
@@ -512,6 +516,7 @@ public class ControlTabActivity extends Activity {
 				//Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
 				
 				mMessageAdapter.setChecked(i+1);
+				mMessageList.setItemChecked(i+1, true);
 				mMessageList.smoothScrollToPosition(i+1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
@@ -573,6 +578,35 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		*/
+		mGoto = (Button) findViewById(R.id.btn_gotoline);
+		mGoto.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String line=mDstline.getText().toString();
+				int dst=0;
+				try{
+					dst = Integer.parseInt(line);
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				if(dst >=1 && dst<mMessageList.getCount())
+				{
+					mMessageAdapter.setChecked(dst);
+					mMessageList.setItemChecked(dst, true);
+					mMessageList.smoothScrollToPosition(dst);
+					//mMessageList.setAdapter(mMessageAdapter);
+					mMessageAdapter.notifyDataSetChanged();
+				}
+			}
+			
+		});
+		mDstline = (EditText) findViewById(R.id.et_gotoline);
+		
+		
 		mMessageMap = new LinkedList<Map<String, String>>();
 		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
