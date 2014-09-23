@@ -491,6 +491,7 @@ public class ControlTabActivity extends Activity {
 				if(i<=1 || i>=mMessageList.getCount())
 					return;
 				mMessageAdapter.setChecked(i-1);
+				mMessageList.smoothScrollToPosition(i-1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
@@ -511,11 +512,13 @@ public class ControlTabActivity extends Activity {
 				//Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
 				
 				mMessageAdapter.setChecked(i+1);
+				mMessageList.smoothScrollToPosition(i+1);
 				//mMessageList.setAdapter(mMessageAdapter);
 				mMessageAdapter.notifyDataSetChanged();
 			}
 			
 		});
+		
 		/*
 		mForward = (Button) findViewById(R.id.btn_mvforward);
 		mForward.setOnClickListener(new OnClickListener(){
