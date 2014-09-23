@@ -175,7 +175,7 @@ public class PreviewScrollView extends View {
 				if(bmp!=null)
 				{
 					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-					canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSteelStyle.length()+7, 4*(font.getRows()+4), p);
+					canvas.drawBitmap(bmp, x+font.getColumns()*(mList.mSteelStyle.length()+2), 4*(font.getRows()+4), p);
 				}
 				Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSteelStyle.length())+",y="+4*(font.getRows()+4));
 			}
@@ -205,7 +205,7 @@ public class PreviewScrollView extends View {
 				if(bmp!=null)
 				{
 					bmp = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight()*4, false);
-					canvas.drawBitmap(bmp, x+font.getColumns()*mList.mSize.length()+7, 4*2*(font.getRows()+4), p);
+					canvas.drawBitmap(bmp, x+font.getColumns()*(mList.mSize.length()+2), 4*2*(font.getRows()+4), p);
 				}
 				Debug.d(TAG, "2nd line x="+(x+font.getColumns()*mList.mSize.length())+",y="+4*2*(font.getRows()+4));
 			}

@@ -1297,7 +1297,7 @@ public class ControlTabActivity extends Activity {
 				font.getDotbuf(list.mStandard, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
 				if(bmp !=null)
-					can.drawBitmap(bmp, x+font.getColumns()*list.mSteelStyle.length()+7, font.getRows()+4, p);
+					can.drawBitmap(bmp, x+font.getColumns()*(list.mSteelStyle.length()+2), font.getRows()+4, p);
 			}
 			//y += font.getRows()+4;
 			//3rd line -- size
@@ -1319,7 +1319,7 @@ public class ControlTabActivity extends Activity {
 				font.getDotbuf(list.mDate, bit);
 				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
 				if(bmp != null)
-					can.drawBitmap(bmp, x+font.getColumns()*list.mSize.length()+4, 2*(font.getRows()+4), p);
+					can.drawBitmap(bmp, x+font.getColumns()*(list.mSize.length()+2), 2*(font.getRows()+4), p);
 			}
 		}
 		//BinCreater.saveBitmap(gBmp, "pre.bmp");

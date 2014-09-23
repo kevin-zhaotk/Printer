@@ -186,6 +186,7 @@
          android:layout_toLeftOf="@id/btn_gotoline"
          android:imeOptions="flagNoExtractUi"
 		 android:hint="@string/strDefault"
+		 android:numeric="integer"
          android:singleLine="true"
          android:textSize="20sp"
          android:textColor="#000000"

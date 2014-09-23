@@ -114,7 +114,7 @@ public class TlkObject {
 		{
 			second = dot.getColumns()*mSteelStyle.length();
 		}
-		second += 7;	//split
+		second += dot.getColumns()*2;	//split
 		if(mStandard != null)
 		{
 			second += dot.getColumns()*mStandard.length();
@@ -125,7 +125,7 @@ public class TlkObject {
 		{
 			third = dot.getColumns()*mSize.length();
 		}
-		third += 4;
+		third += dot.getColumns()*2;
 		if(mSize != null)
 		{
 			third += dot.getColumns()*mDate.length();
