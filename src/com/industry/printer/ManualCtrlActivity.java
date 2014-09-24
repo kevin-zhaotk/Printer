@@ -17,13 +17,13 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.TlkObject;
 
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -54,7 +54,7 @@ import android.widget.Toast;
 public class ManualCtrlActivity extends Activity {
 
 	public final String TAG="ManualCtrlActivity";
-	
+	public final static String MANUAL_CONTROL_PREFERENCE = "ManualControlPreference";
 	public Button mBtnTlkfile;
 	public Button mBtnview;
 	public Button mPrint;
@@ -69,6 +69,9 @@ public class ManualCtrlActivity extends Activity {
 	public ListView mMessageList;
 	public byte[] mBinBuffer;
 	public Context mContext;
+	
+	SharedPreferences mPreference=null;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -80,6 +83,8 @@ public class ManualCtrlActivity extends Activity {
 		filter.addAction(ControlTabActivity.ACTION_BOOT_COMPLETE);
 		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
 		registerReceiver(mReceiver, filter);
+		
+		mPreference = getSharedPreferences(MANUAL_CONTROL_PREFERENCE, 0);
 		
 		mPrint = (Button) findViewById(R.id.manual_StartPrint);
 		mPrint.setOnClickListener(new OnClickListener(){
@@ -217,6 +222,7 @@ public class ManualCtrlActivity extends Activity {
 					PreviewDialog prv = new PreviewDialog(ManualCtrlActivity.this);
 					
 					prv.show(list);
+					savePreference();
 				}
 				
 			}
@@ -232,6 +238,9 @@ public class ManualCtrlActivity extends Activity {
 		updateInkLevel(info);
 		UsbSerial.printStop(ControlTabActivity.mFd);
 		initMsglist();
+		
+		/*fill content from shared preference*/
+		
 	}
 	
 	@Override
@@ -246,7 +255,7 @@ public class ManualCtrlActivity extends Activity {
 		}
 		return false;
 	}
-	
+/*	
 	public void initMsglist()
 	{
 		for(int i=1;i<=1;i++)
@@ -261,6 +270,49 @@ public class ManualCtrlActivity extends Activity {
 			mMessageMap.add(map);
 		}
 		mMessageList.setAdapter(mMessageAdapter);
+	}
+*/	
+	public void initMsglist()
+	{
+		Map<String,String> map = new HashMap<String, String>();
+		mMessageMap.clear();
+		Debug.d(TAG, "=====text1="+mPreference.getString("text1", ""));
+		Debug.d(TAG, "=====text2="+mPreference.getString("text2", ""));
+		Debug.d(TAG, "=====text3="+mPreference.getString("text3", ""));
+		Debug.d(TAG, "=====text4="+mPreference.getString("text4", ""));
+		Debug.d(TAG, "=====text5="+mPreference.getString("text5", ""));
+		map.put("index", mPreference.getString("index", ""));
+		map.put("text1", mPreference.getString("text1", ""));
+		map.put("text2", mPreference.getString("text2", ""));
+		map.put("text3", mPreference.getString("text3", ""));
+		map.put("text4", mPreference.getString("text4", ""));
+		map.put("text5", mPreference.getString("text5", ""));
+		mMessageMap.add(map);
+		mMessageList.setAdapter(mMessageAdapter);
+	}
+	
+	public void savePreference()
+	{
+		LinearLayout lay = (LinearLayout)mMessageList.getChildAt(0);
+		if(lay!=null)
+		{
+			EditText text1 = (EditText)lay.findViewById(R.id.manual_text1);
+			EditText text2 = (EditText)lay.findViewById(R.id.manual_text2);
+			EditText text3 = (EditText)lay.findViewById(R.id.manual_text3);
+			EditText text4 = (EditText)lay.findViewById(R.id.manual_text4);
+			EditText text5 = (EditText)lay.findViewById(R.id.manual_text5);
+			Debug.d(TAG, "=====text1="+text1.getText().toString());
+			Debug.d(TAG, "=====text2="+text2.getText().toString());
+			Debug.d(TAG, "=====text3="+text3.getText().toString());
+			Debug.d(TAG, "=====text4="+text4.getText().toString());
+			Debug.d(TAG, "=====text5="+text5.getText().toString());
+			mPreference.edit().putString("text1", text1.getText().toString()).commit();
+			mPreference.edit().putString("text2", text2.getText().toString()).commit();
+			mPreference.edit().putString("text3", text3.getText().toString()).commit();
+			mPreference.edit().putString("text4", text4.getText().toString()).commit();
+			mPreference.edit().putString("text5", text5.getText().toString()).commit();
+			
+		}
 	}
 	
 	public void setContent(String index,Vector<TlkObject> list)
