@@ -12,6 +12,7 @@ import com.industry.printer.Utils.Debug;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -29,8 +30,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -349,6 +352,18 @@ public static final String TAG="SettingsTabActivity";
 			return true;	
 		}
 		return false;
+	}
+	
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		Debug.d(TAG, "event:"+event.toString());
+		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+		Debug.d(TAG, "ime is active? "+manager.isActive());
+		if(manager.isActive())
+			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+		return true;
 	}
 	
 	public void setLocale()

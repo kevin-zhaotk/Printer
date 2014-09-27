@@ -19,6 +19,7 @@ import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -241,6 +243,17 @@ public class ManualCtrlActivity extends Activity {
 		
 		/*fill content from shared preference*/
 		
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		Debug.d(TAG, "event:"+event.toString());
+		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+		Debug.d(TAG, "ime is active? "+manager.isActive());
+		if(manager.isActive())
+			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+		return true;
 	}
 	
 	@Override
