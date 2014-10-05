@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.MainActivity;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.graphics.Bitmap;
@@ -30,7 +31,7 @@ public class BinCreater {
 	
 	public static void create(Bitmap bmp, int colEach)
 	{
-		Bitmap scaledImg = scaleHeight(bmp, MainActivity.mDots);
+		Bitmap scaledImg = scaleHeight(bmp, Configs.gDots);
 		mBmpBytes = new int[scaledImg.getByteCount()/2];
 		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);

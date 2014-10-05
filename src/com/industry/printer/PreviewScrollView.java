@@ -85,6 +85,7 @@ public class PreviewScrollView extends View {
 		 mPaint.setAlpha(128);
 		 Canvas can = new Canvas(mPreBitmap);
 		 can.drawBitmap(bm, x, y, mPaint);
+		 BinCreater.recyleBitmap(bmp);
 	}
 
 	
@@ -141,6 +142,7 @@ public class PreviewScrollView extends View {
 				Debug.d(TAG,"#########");
 				canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth(), mPreBitmap.getHeight()*4, false), o.x, o.y*4, p);
 			}
+			BinCreater.recyleBitmap(mPreBitmap);
 		}
 		Debug.d(TAG, "^^^^^^^^^^draw line ("+edage+","+0+")");
 		canvas.drawLine(edage, 0, edage, 256, p); 

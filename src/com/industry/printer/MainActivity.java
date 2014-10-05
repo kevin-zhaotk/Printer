@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import com.android.internal.app.LocalePicker;
 
+import android.R;
 import android.os.Bundle;
 //import android.app.Activity;
 import android.app.TabActivity;
@@ -31,7 +33,6 @@ public class MainActivity extends TabActivity {
 
 	public static final String TAG="MainActivity";
 	TabHost mTab;
-	public static int mDots;
 	
 	static {
 		System.loadLibrary("UsbSerial_jni");
@@ -46,9 +47,10 @@ public class MainActivity extends TabActivity {
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		Context context = getApplicationContext();
-		mDots = context.getResources().getInteger(R.integer.dots_per_column);
+		Configs.initConfigs(context);
 		/*get write permission of ttyACM0*/
 		//System.setProperty("ctl.start", "mptty");
+		
 		SystemProperties.set("ctl.start","mptty");
 		//InputMethodService inputService =
 		String pinyinId = "";

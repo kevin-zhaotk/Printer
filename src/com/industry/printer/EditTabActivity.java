@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.ObjectInfoDialog.OnPositiveBtnListener;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
@@ -1120,7 +1121,7 @@ public class EditTabActivity extends Activity {
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		//BinCreater.saveBitmap(bmp, "back.png");
-		BinCreater.saveBin(f+"/1.bin", width, MainActivity.mDots);
+		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
 		BinCreater.create(bmp, 0);
 		
 		return ;

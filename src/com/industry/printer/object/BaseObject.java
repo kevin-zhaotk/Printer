@@ -1,6 +1,7 @@
 package com.industry.printer.object;
 
 import com.industry.printer.MainActivity;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.R;
@@ -98,17 +99,14 @@ public class BaseObject{
 	public void initPaint()
 	{
 		mPaint = new Paint();
-		mPaint.setTextSize(MainActivity.mDots);
+		mPaint.setTextSize(Configs.gFixedRows);
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
 		System.out.println("getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
 		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
-		if(!bmp.isRecycled()){
-			bmp.recycle();
-			System.gc();
-		}
+		BinCreater.recyleBitmap(bmp);
 		return scaledBmp;
 	}
 	
@@ -133,16 +131,16 @@ public class BaseObject{
 	public void drawVarBitmap(String f)
 	{
 		//mPaint.setTextSize(mHeight);
-		mPaint.setTextSize(mHeight);
+		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, 150, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
-		int singleW = (int)mWidth/mContent.length();
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, 150, Bitmap.Config.ARGB_8888);
+		singleW = (int)mWidth/mContent.length();
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, height, Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -157,10 +155,10 @@ public class BaseObject{
 		BinCreater.recyleBitmap(bmp);
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
-		mPaint.setTextSize(MainActivity.mDots);
+		
 		BinCreater.saveBitmap(gBmp, mVarObjBinIndex+".png");
 		BinCreater.create(gBmp, singleW);		
-		BinCreater.saveBin(f+"/"+mVarObjBinIndex+".bin", gBmp.getWidth(), MainActivity.mDots,singleW);
+		BinCreater.saveBin(f+"/"+mVarObjBinIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
 		increaseIndex();
 		BinCreater.recyleBitmap(gBmp);
 	}

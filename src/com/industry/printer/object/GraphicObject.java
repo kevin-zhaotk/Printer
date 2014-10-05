@@ -35,8 +35,9 @@ public class GraphicObject  extends BaseObject{
 		}
 		Debug.d(TAG, "setImage file: "+file);
 		mContent = file;
-		mBitmap = BitmapFactory.decodeFile(mContent);
-		mBitmap = ImageConverter.convertGreyImg(mBitmap);
+		Bitmap b = BitmapFactory.decodeFile(mContent);
+		mBitmap = ImageConverter.convertGreyImg(b);
+		BinCreater.recyleBitmap(b);
 	}
 	
 	public Bitmap getScaledBitmap(Context context)

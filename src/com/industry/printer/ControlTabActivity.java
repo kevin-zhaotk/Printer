@@ -888,6 +888,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			//BinCreater.saveBitmap(bmp, "bin2bmp.png");
 			mPreview.createBitmap(bmp);
 			mPreview.invalidate();
+			BinCreater.recyleBitmap(bmp);
 		}catch(Exception e)
 		{
 			Debug.d(TAG, "-----e="+e.toString());

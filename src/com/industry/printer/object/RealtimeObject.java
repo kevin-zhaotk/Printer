@@ -137,7 +137,9 @@ public class RealtimeObject extends BaseObject {
 		for(BaseObject o : mSubObjs)
 		{
 			//System.out.println(""+o.getContent()+",id="+o.mId);
-			mCan.drawBitmap(o.getScaledBitmap(context), o.getX()-getX(), 0, mPaint);
+			Bitmap b = o.getScaledBitmap(context);
+			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+			BinCreater.recyleBitmap(b);
 		}
 		return bmp;
 	}
@@ -155,7 +157,9 @@ public class RealtimeObject extends BaseObject {
 			//constant 
 			if(o instanceof TextObject)
 			{
-				mCan.drawBitmap(o.getScaledBitmap(context), o.getX()-getX(), 0, mPaint);
+				Bitmap b = o.getScaledBitmap(context);
+				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+				BinCreater.recyleBitmap(b);
 			}
 			else	//variable
 			{

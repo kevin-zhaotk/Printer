@@ -105,7 +105,7 @@ public class BarcodeObject extends BaseObject {
 				mPaint.setTextSize(10);
 				can.drawBitmap(bitmap, 0, 0, mPaint);
 				can.drawText(mContent, 0, height+10, mPaint);
-				bitmap.recycle();
+				BinCreater.recyleBitmap(bmp);
 				bitmap = bmp;
 			}
 			return bitmap;
