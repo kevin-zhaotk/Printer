@@ -99,7 +99,7 @@
 	    <item>递增</item>
 	    <item>递减</item>
 	</string-array>
-	<string name="strCode">Code Type</string>
+	<string name="strCode">编码类型</string>
 	<string-array name="strCodeArray">
 	    <item>ENA128</item>
 	    <item>QR</item>
@@ -135,19 +135,20 @@
 	</string-array>
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
-	<string name="objectInfoName">Show Info</string>
-	<string name="object_Msg">Message</string>
-	<string name="object_text">Text Object</string>
-	<string name="object_realtime">Real-Time Object</string>
-	<string name="object_counter">Counter Object</string>
-	<string name="object_bar">Barcode Object</string>
-	<string name="object_pic">Graphic Object</string>
-	<string name="object_julian">Julian-Date Object</string>
-	<string name="object_line">Line Object</string>
-	<string name="object_rect">Rect Object</string>
-	<string name="object_ellipse">Ellipse Object</string>
-	<string name="object_shift">Shift Object</string>
-	<string name="object_second">Second Obejct</string>
+	<string name="objectInfoName">显示对象信息</string>
+	<string name="object_Msg">信息</string>
+	<string name="object_text">文本对象</string>
+	<string name="object_realtime">实时时间对象</string>
+	<string name="object_counter">计数器对象</string>
+	<string name="object_bar">条形码对象</string>
+	<string name="object_pic">图形对象</string>
+	<string name="object_julian">儒略日对象</string>
+	<string name="object_line">直线对象</string>
+	<string name="object_rect">矩形对象</string>
+	<string name="object_ellipse">椭圆对象</string>
+	<string name="object_shift">班次对象</string>
+	<string name="object_second">实时时间秒</string>
+	<string name="object_msg_name">信息名称</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.保留</string>
 	<string name="strPrSpeedname">01.打印频率</string>

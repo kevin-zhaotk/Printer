@@ -76,8 +76,8 @@ public class MainActivity extends TabActivity {
 		
 		
 		mTab.addTab(mTab.newTabSpec("Control").setIndicator(getResources().getString(R.string.ControlTab)).setContent(new Intent(this, ControlTabActivity.class)));
-		mTab.addTab(mTab.newTabSpec("manualCtrl").setIndicator(getResources().getString(R.string.manualCtrlTab)).setContent(new Intent(this, ManualCtrlActivity.class)));
-		//mTab.addTab(mTab.newTabSpec("Edit").setIndicator(getResources().getString(R.string.Edit)).setContent(new Intent(this, EditTabActivity.class)));
+		//mTab.addTab(mTab.newTabSpec("manualCtrl").setIndicator(getResources().getString(R.string.manualCtrlTab)).setContent(new Intent(this, ManualCtrlActivity.class)));
+		mTab.addTab(mTab.newTabSpec("Edit").setIndicator(getResources().getString(R.string.Edit)).setContent(new Intent(this, EditTabActivity.class)));
 		mTab.addTab(mTab.newTabSpec("Settings").setIndicator(getResources().getString(R.string.Settings)).setContent(new Intent(this, SettingsTabActivity.class)));
 		//mTab.addTab(mTab.newTabSpec("Control_man").setIndicator("Control_man").setContent(new Intent(this, ControlManTabActivity.class)));
 		/*adjust control tab title*/

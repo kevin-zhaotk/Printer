@@ -199,7 +199,7 @@ public class DataTransformDialog extends Dialog {
 		 File dir = new File("/storage/sd_internal/MSG");
 		File[] files = dir.listFiles(new MyFileFilter());
 		mContent.clear();
-		if(files.length<=0)
+		if(files==null || files.length<=0)
 			return;
 		for(File f : files)
 		{

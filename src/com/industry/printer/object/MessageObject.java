@@ -10,7 +10,8 @@ public class MessageObject extends BaseObject {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
 		//mIndex = index;
 		mPrinter=0;
-		mContent = "MsgName";
+		String name = (String)context.getResources().getString(R.string.object_msg_name);
+		mContent = name;
 	}
 	
 	public void setPrinter(int i)
