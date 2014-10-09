@@ -149,7 +149,6 @@
 	<string name="object_ellipse">Ellipse Object</string>
 	<string name="object_shift">Shift Object</string>
 	<string name="object_second">Second Obejct</string>
-	<string name="object_msg_name">Message name</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Reserved</string>
 	<string name="strPrSpeedname">01.Speed</string>
