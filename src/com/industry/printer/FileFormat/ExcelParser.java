@@ -32,6 +32,17 @@ public class ExcelParser {
 			return "0009.txt";
 		else if(kind!=null && kind.startsWith("IRS-"))
 			return "0010.txt";
+		else if(kind != null && (kind.startsWith("S355") || kind.startsWith("S235") || kind.startsWith("S275")))
+		{
+			return "0012.txt";
+		}
+		else if("13MnNi6-3".equals(kind) || "12MnNiVR".equals(kind) || "Q345R".equals(kind)	||
+				"Q245R".equals(kind)	|| "Q245RZ15".equals(kind)	|| "Q245RZ25".equals(kind) ||
+				"Q245RZ35".equals(kind)	|| "Q345RZ15".endsWith(kind)|| "Q345RZ35".equals(kind) ||
+				"Q370R".equals(kind)	|| "12MnNiVRSR".equals(kind))
+		{
+			return "0013.txt";
+		}
 		else 
 		{
 			Debug.d(TAG, "Unkonwn steel type "+kind);
