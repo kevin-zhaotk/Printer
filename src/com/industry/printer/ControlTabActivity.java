@@ -40,6 +40,7 @@ import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,7 +73,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Activity {
+public class ControlTabActivity extends Activity implements OnClickListener{
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -92,11 +94,12 @@ public class ControlTabActivity extends Activity {
 	public Button mFinish;
 	public Button mBtnNext;
 	public Button mBtnPrev;
-	public Button mGoto;
-	public EditText mDstline;
+	//public Button mGoto;
+	//public EditText mDstline;
 	
 	public Button	mBtnfile;
 	public Button	mBtnTlkfile;
+	public Button	mBtnBinfile;
 	public TextView mMsgFile;
 	public Button 	mBtnview;
 	public Button	mForward;
@@ -375,6 +378,7 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		*/
+		/*
 		mBtnfile = (Button) findViewById(R.id.btnopenfile);
 		mBtnfile.setOnClickListener(new OnClickListener(){
 
@@ -406,11 +410,12 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
+		*/
 		//mMsgFile = (TextView) findViewById(R.id.tvfile);
 		
 		
-		mBtnTlkfile = (Button) findViewById(R.id.btnTlkfile);
-		mBtnTlkfile.setOnClickListener(new OnClickListener(){
+		mBtnBinfile = (Button) findViewById(R.id.btnBinfile);
+		mBtnBinfile.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -427,9 +432,7 @@ public class ControlTabActivity extends Activity {
 							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
 							return;
 						}
-						setTlkToPreference(f);
-						mBtnTlkfile.setText(new File(f).getName());
-						fileChangedHandler.sendEmptyMessage(FILE_TLK_CHANGED);
+						// TODO show bin 
 					}
 					
 				});
@@ -482,7 +485,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		/*
 		mBtnPrev = (Button) findViewById(R.id.btnPreRecord);
 		mBtnPrev.setOnClickListener(new OnClickListener(){
 
@@ -523,7 +526,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		/*
 		mForward = (Button) findViewById(R.id.btn_mvforward);
 		mForward.setOnClickListener(new OnClickListener(){
@@ -577,7 +580,7 @@ public class ControlTabActivity extends Activity {
 			}
 			
 		});
-		*/
+		
 		mGoto = (Button) findViewById(R.id.btn_gotoline);
 		mGoto.setOnClickListener(new OnClickListener(){
 
@@ -605,8 +608,8 @@ public class ControlTabActivity extends Activity {
 			
 		});
 		mDstline = (EditText) findViewById(R.id.et_gotoline);
-		
-		
+		*/
+		/*
 		mMessageMap = new LinkedList<Map<String, String>>();
 		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
@@ -647,7 +650,7 @@ public class ControlTabActivity extends Activity {
 		initMsglist();
 		mMessageList.setAdapter(mMessageAdapter);
 		
-		
+		*/
 		//
 		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
@@ -1025,6 +1028,7 @@ public class ControlTabActivity extends Activity {
 					@Override
 					public void run() {
 					// TODO Auto-generated method stub
+					/*
 					String csv = getCsvFromPreference();
 					Debug.d(TAG, "preference csv="+csv);
 					if(csv!=null && new File(csv).exists())
@@ -1040,6 +1044,7 @@ public class ControlTabActivity extends Activity {
 						mBtnTlkfile.setText(new File(tlk).getName());
 						fileChangedHandler.sendEmptyMessage(FILE_TLK_CHANGED);
 					}
+					*/
 				}
 				}, 3000);
 				byte info[] = new byte[23];
@@ -1620,5 +1625,16 @@ public class ControlTabActivity extends Activity {
 			Debug.d(TAG,"******x="+o.x+", y="+o.y+", content="+o.mContent);
 		}
 		Debug.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		Debug.d(TAG, "------onClick, v.id="+v.getId()+", id="+R.id.ControlView);
+		if(v.getId()==R.id.ControlView)
+		{
+			InputMethodManager imm = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		}
 	}
 }

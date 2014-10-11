@@ -39,6 +39,7 @@
 	
 	<string name="str_openfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
+	<string name="str_binfile">Open</string>
 	<string name="str_mvforward">Forward</string>
 	<string name="str_mvbackward">Backward</string>
 	<string name="str_preview">Preview</string>

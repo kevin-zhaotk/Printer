@@ -51,7 +51,8 @@
         android:layout_toRightOf="@+id/btnFlush"
         android:textSize="20dp"
         android:text="@string/str_preview" />
-	
+
+<!--	
     <Button
         android:id="@+id/btnPreRecord"
         android:layout_width="80dp"
@@ -73,7 +74,7 @@
         android:textSize="20dp"
     	android:text="@string/btn_nextrecord"
         />
-<!-- 	
+ 	
     <Button
         android:id="@+id/btnSetparam"
         android:layout_width="80dp"
@@ -119,7 +120,7 @@
 	
  -->	
     
-<!-- close it for test
+<!-- close it for test 
     <HorizontalScrollView 
         android:layout_width="wrap_content"
         android:layout_height="150dp"
@@ -140,8 +141,9 @@
             </com.industry.printer.PreviewScrollView>
         </LinearLayout>
     </HorizontalScrollView>
- -->
-     
+--> 
+
+<!--      
      <Button 
          android:id="@+id/btnopenfile"
          android:layout_below="@id/StartPrint"
@@ -152,19 +154,19 @@
          android:textSize="20sp"
          android:textColor="#000000"
          />
-     
+ -->     
      <Button 
-         android:id="@+id/btnTlkfile"
-         android:layout_below="@id/StartPrint"
-         android:layout_toRightOf="@id/btnopenfile"
+         android:id="@+id/btnBinfile"
+         android:layout_alignParentRight="true"
+         android:layout_alignBaseline="@id/StartPrint"
          android:layout_width="150dp"
          android:layout_height="60dp"
          android:singleLine="true"
-         android:text="@string/str_tlkfile"
+         android:text="@string/str_binfile"
          android:textSize="20sp"
          android:textColor="#000000"
          />
-
+<!-- 
 	<Button
          android:id="@+id/btn_gotoline"
          android:layout_width="80dp"
@@ -184,14 +186,15 @@
          android:layout_below="@id/StartPrint"
          android:layout_alignBaseline="@id/btn_gotoline"
          android:layout_toLeftOf="@id/btn_gotoline"
-         android:imeOptions="flagNoExtractUi"
+         android:imeOptions="flagNoExtractUi|actionDone"
+         
 		 android:hint="@string/strDefault"
 		 android:numeric="integer"
          android:singleLine="true"
          android:textSize="20sp"
          android:textColor="#000000"
          />
-     
+ -->     
  <!--     
      <Button 
          android:id="@+id/btn_mvbackward"
@@ -223,20 +226,24 @@
          />
  -->
      <HorizontalScrollView 
-         android:id="@+id/scrollview_prev_id"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         	android:layout_below="@id/btnopenfile"
+        android:id="@+id/scrollview_prev_id"
+        android:layout_marginTop="20dp"
+        android:layout_width="790dp"
+    	android:layout_height="300dp"
+    	android:background="#ffffff"
+         android:layout_below="@id/btnBinfile"
          >
-     	<ListView
-        	android:id="@+id/lv_messages"
-        	android:layout_width="fill_parent"
-        	android:layout_height="250dp"
-         	android:listSelector="@drawable/listitem_select"
-         	android:background="#ffffff"
-         >
-         
-     </ListView>
+	     <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="300dp"
+	        >
+	        <com.industry.printer.PreviewScrollView 
+	            android:id="@+id/sv_preview"
+	            android:layout_width="3000dp"
+	            android:layout_height="match_parent"
+	            android:background="#ffffff"
+	        />
+    	</LinearLayout>
      </HorizontalScrollView>
      
      <TextView

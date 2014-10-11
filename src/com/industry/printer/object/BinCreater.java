@@ -94,9 +94,9 @@ public class BinCreater {
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
         }
-        saveBin("/mnt/usb/1.bin", width,height);
+        //saveBin("/mnt/usb/1.bin", width,height);
         /*swap the high 8bits with low 8bits*/
-        swap(height);
+        //swap(height);
         Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
         result.setPixels(pixels, 0, width, 0, 0, width, height);
         /*just for debug*/

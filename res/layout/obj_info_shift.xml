@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
     
 	<ScrollView android:id="@+id/viewInfo"
 	            android:layout_weight="5"
@@ -23,7 +26,7 @@
 	           android:layout_width="100dp"
 	           android:layout_height="wrap_content"
 	           android:layout_below="@id/base_info_shift"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:hint="@string/strDefault"
 	            />
 	        
@@ -34,7 +37,7 @@
 	           android:layout_below="@id/base_info_shift"
 	           android:layout_toRightOf="@id/edit_shift1"
 	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:hint="@string/strDefault"
 	           />
 	        
@@ -55,7 +58,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/edit_shift1"
 	            android:layout_alignLeft="@id/edit_shift1"
-	            android:imeOptions="flagNoExtractUi"
+	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:clickable="false"
 	           android:hint="@string/strDefault"
 	            />
@@ -67,7 +70,7 @@
 	           android:layout_below="@id/edit_shift1"
 	           android:layout_toRightOf="@id/edit_shift2"
 	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:clickable="false"
 	           android:hint="@string/strDefault"
 	           />
@@ -89,7 +92,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/edit_shift2"
 	            android:layout_alignLeft="@id/edit_shift1"
-	            android:imeOptions="flagNoExtractUi"
+	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:clickable="false"
 	           android:hint="@string/strDefault"
 	            />
@@ -101,7 +104,7 @@
 	           android:layout_below="@id/edit_shift2"
 	           android:layout_toRightOf="@id/edit_shift3"
 	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:clickable="false"
 	           android:hint="@string/strDefault"
 	           />
@@ -123,7 +126,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/edit_shift3"
 	            android:layout_alignLeft="@id/edit_shift1"
-	            android:imeOptions="flagNoExtractUi"
+	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:clickable="false"
 	           android:hint="@string/strDefault"
 	            />
@@ -135,7 +138,7 @@
 	           android:layout_below="@id/edit_shift3"
 	           android:layout_toRightOf="@id/edit_shift4"
 	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:clickable="false"
 	           android:hint="@string/strDefault"
 	           />
@@ -157,7 +160,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/edit_shift4"
 	            android:layout_alignLeft="@id/edit_shift1"
-	            android:imeOptions="flagNoExtractUi"
+	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:clickable="false"
 	           android:hint="@string/strDefault"
 	            />
@@ -169,7 +172,7 @@
 	           android:layout_below="@id/edit_shift4"
 	           android:layout_toRightOf="@id/edit_shift5"
 	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi"
+	           android:imeOptions="flagNoExtractUi|actionDone"
 	           android:clickable="false"
 	           android:hint="@string/strDefault"
 	           />

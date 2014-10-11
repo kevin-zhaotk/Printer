@@ -145,7 +145,6 @@ public class BaseObject{
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
 		
-		
 		BinCreater.create(gBmp, (int)mWidth/mContent.length());
 	}
 	
