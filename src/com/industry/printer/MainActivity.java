@@ -31,7 +31,7 @@ public class MainActivity extends TabActivity {
 
 	public static final String TAG="MainActivity";
 	TabHost mTab;
-	
+	public static int mDots;
 	
 	static {
 		System.loadLibrary("UsbSerial_jni");
@@ -45,6 +45,8 @@ public class MainActivity extends TabActivity {
 		setLocale();
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
+		Context context = getApplicationContext();
+		mDots = context.getResources().getInteger(R.integer.dots_per_column);
 		/*get write permission of ttyACM0*/
 		//System.setProperty("ctl.start", "mptty");
 		SystemProperties.set("ctl.start","mptty");

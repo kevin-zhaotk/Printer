@@ -7,6 +7,7 @@ public class FilenameSuffixFilter implements FilenameFilter {
 
 	public static final String TLK_SUFFIX=".tlk";
 	public static final String CSV_SUFFIX=".csv";
+	public static final String BIN_SUFFIX=".bin";
 	
 	public String mSuffix;
 	

@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Debug;
 
 import android.R;
@@ -95,7 +96,7 @@ public class BaseObject{
 	public void initPaint()
 	{
 		mPaint = new Paint();
-		mPaint.setTextSize(150);
+		mPaint.setTextSize(MainActivity.mDots);
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
@@ -141,6 +142,7 @@ public class BaseObject{
 			can.drawText(String.valueOf(i), 0, height-30, mPaint);
 			Bitmap b = bmp.createScaledBitmap(bmp, (int)mWidth/mContent.length(), (int)mHeight, true);
 			gCan.drawBitmap(b, i*b.getWidth(), (int)getY(), mPaint);
+			b.recycle();
 		}
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
@@ -234,7 +236,7 @@ public class BaseObject{
 		mContent = content;
 		mPaint.setTextSize(mHeight);
 		mWidth = mPaint.measureText(mContent);
-		mPaint.setTextSize(150);
+		mPaint.setTextSize(MainActivity.mDots);
 		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);
 		mXcor_end = mXcor + mWidth;
 		System.out.println("content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);

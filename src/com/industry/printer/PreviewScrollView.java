@@ -64,6 +64,7 @@ public class PreviewScrollView extends View {
 		
 	}
 	
+	
 	public void setObjectList(Vector<TlkObject> list)
 	{
 		mList = list;

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Debug;
 
 import android.graphics.Bitmap;
@@ -29,10 +30,14 @@ public class BinCreater {
 	
 	public static void create(Bitmap bmp, int colEach)
 	{
-		mBmpBytes = new int[bmp.getByteCount()/2];
-		mBmpBits = new byte[bmp.getWidth()*(bmp.getHeight()%8==0 ? bmp.getHeight()/8 : bmp.getHeight()/8+1)];
-		Debug.d(TAG, "width="+bmp.getWidth()+", height="+bmp.getHeight()+", mBmpBits="+mBmpBits.length);
-		Bitmap img =	convertGreyImg(bmp);
+		Bitmap scaledImg = scaleHeight(bmp, MainActivity.mDots);
+		mBmpBytes = new int[scaledImg.getByteCount()/2];
+		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
+		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
+		Bitmap img = convertGreyImg(scaledImg);
+		saveBitmap(img, "img.png");
+		
+		saveBitmap(scaledImg, "scaledImg.png");
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		//Debug.d(TAG, "byteCount="+img.getByteCount());
 		
@@ -253,12 +258,13 @@ public class BinCreater {
     	int k=0;
     	Bitmap bmp;
     	
-		
+		Debug.d(TAG, "map[0]="+map[0]+",map[1]="+map[1]+", map[2]="+map[2]);
+		Debug.d(TAG, "map[3]="+map[3]+",map[4]="+map[4]+", map[5]="+map[5]);
     	int grey =0;
     	int columns =  (map[0]&0xff) << 16 | (map[1] & 0xff)<<8 | (map[2]&0xff);
     	int row = (map[3]&0xff) << 16 | (map[4] & 0xff)<<8 | (map[5]&0xff);
     	int pixels[] = new int[columns*row];
-    	Debug.d(TAG, "columns = "+Integer.toHexString(columns));
+    	Debug.d(TAG, "columns = "+columns+", row="+row);
     	/*110 bytes per Row*/
     	for(int i=0; i< columns; i++)
     	{
@@ -271,8 +277,11 @@ public class BinCreater {
     			pixels[j*columns+i] = 0xff<<24 | grey <<16 | grey<<8 | grey;
     		}
     	}
+    	Debug.d(TAG, "===============");
     	bmp = Bitmap.createBitmap(pixels, columns, row, Config.ARGB_8888);
-    	bmp.setPixels(pixels, 0, columns, 0, 0, columns, 880);
+    	Debug.d(TAG, "===============000000");
+    	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
+    	Debug.d(TAG, "===============111111");
     	return bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     

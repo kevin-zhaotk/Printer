@@ -2,14 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="500dp"
     android:layout_height="fill_parent"
+    android:focusable="true"
+	android:focusableInTouchMode="true"
     >
     
-	<EditText
+	<TextView
 	    android:id="@+id/file_dialog_path"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="50dp"
+	    android:background="#A9A9A9"
 	    android:editable="false"
 	    android:imeOptions="flagNoExtractUi"
+	    android:textSize="30dp"
+	    android:textColor="#ffffff"
 	    />
 	
 	<RelativeLayout 
@@ -23,9 +28,10 @@
 	    	android:id="@+id/name_input"
 	    	android:layout_width="300dp"
 	    	android:layout_height="60dp"
+	    	android:singleLine="true"
 	    	android:layout_marginLeft="10dp" 
 	    	android:layout_centerVertical="true"
-	    	android:imeOptions="flagNoExtractUi"
+	    	android:imeOptions="flagNoExtractUi|actionDone"
 	    />
 	    
 	    <Button

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -108,7 +109,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public PreviewAdapter mMessageAdapter;
 	public ListView mMessageList;
 	
-	public PreviewScrollView mPreview;
+	public BinPreviewScrollView mPreview;
 	public Vector<BaseObject> mObjList;
 	
 	public ScrollView mThumb1;
@@ -175,7 +176,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		//mFileInputStream = new FileInputStream(mFd);
 
 		
-		//mPreview = (PreviewScrollView ) findViewById(R.id.ctl_preview);
+		mPreview = (BinPreviewScrollView ) findViewById(R.id.sv_preview);
 		
 		mBtnStart = (Button) findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(new OnClickListener(){
@@ -420,19 +421,37 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.TLK_FILE_PATH, FilenameSuffixFilter.TLK_SUFFIX);
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH, FilenameSuffixFilter.BIN_SUFFIX);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
 					public void onClick() {
 						// TODO Auto-generated method stub
 						String f = FileBrowserDialog.file();
-						if(f==null || !f.toLowerCase().endsWith(".tlk"))
+						if(f==null || !f.toLowerCase().endsWith(".bin"))
 						{
 							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
 							return;
 						}
-						// TODO show bin 
+						// TODO show bin
+						startPreview(f);
+						/*
+						try{
+						File file = new File(f);
+						FileInputStream fs = new FileInputStream(file);
+						//InputStreamReader reader = new InputStreamReader(fs);
+						Debug.d(TAG, "-----------");
+						byte[] binBuf = new byte[(int)file.length()];
+						fs.read(binBuf);
+						Debug.d(TAG, "-----------fs length="+file.length());
+						Bitmap bmp = BinCreater.Bin2Bitmap(binBuf);
+						BinCreater.saveBitmap(bmp, "bin2bmp.png");
+						Debug.d(TAG, "-----------save bmp");
+						}catch(Exception e)
+						{
+							Debug.d(TAG, "-----e="+e.toString());
+						}
+						*/
 					}
 					
 				});
@@ -817,8 +836,8 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					refreshVariables();
 					//BinCreater.saveBitmap(bm, "123.png");
 					BinCreater.bin2byte(mPreBitmap, mPreBytes);
-					mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
-					mPreview.invalidate();
+					//mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
+					//mPreview.invalidate();
 					
 					break;
 			}
@@ -830,6 +849,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public int[]	mPreBytes;
 	public void startPreview(String f)
 	{
+		/*
 		String path=null;
 		File fp = new File(f);
 		if(fp.isFile())
@@ -837,19 +857,10 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		else
 			path = f;
 		Fileparser.parse(mContext, f, mObjList);
+		*/
+		/*
 		try{
-			/*
-			 * parse 1.bin firstly
-			 */
-			/*
-			 File file = new File(path, "1.bin");
-			 FileInputStream fs = new FileInputStream(file);
-			 mPreBitmap=new byte[fs.available()];
-			 fs.read(mPreBitmap);
-			 //Bitmap bmp = BinCreater.Bin2Bitmap(mPreBitmap);
-			 //mPreview.createBitmap(bmp.getWidth(), bmp.getHeight());
-			 //mPreview.drawBitmap(0, 0, bmp);
-			  */
+			
 			mBg = new BinInfo();
 			mBg.getBgBuffer(path+"/1.bin");
 			 refreshVariables();
@@ -864,6 +875,23 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			{
 				Debug.d(TAG, "startPreview e: "+e.getMessage());
 			}
+			*/
+		try{
+			File file = new File(f);
+			FileInputStream fs = new FileInputStream(file);
+			//InputStreamReader reader = new InputStreamReader(fs);
+			Debug.d(TAG, "-----------");
+			byte[] binBuf = new byte[(int)file.length()];
+			fs.read(binBuf);
+			Debug.d(TAG, "-----------fs length="+file.length());
+			Bitmap bmp = BinCreater.Bin2Bitmap(binBuf);
+			//BinCreater.saveBitmap(bmp, "bin2bmp.png");
+			mPreview.createBitmap(bmp);
+			mPreview.invalidate();
+		}catch(Exception e)
+		{
+			Debug.d(TAG, "-----e="+e.toString());
+		}
 	}
 	
 	public void refreshVariables()

@@ -971,7 +971,8 @@ public class EditTabActivity extends Activity {
             		{
             			saveObjFile(mObjName);
             		}
-            		drawAllBmp(mObjName);
+            		Bitmap bmp = drawAllBmp(mObjName);
+            		bmp.recycle();
             		break;
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		File file = new File(FileBrowserDialog.file());
@@ -1082,7 +1083,8 @@ public class EditTabActivity extends Activity {
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		Bitmap bmp = Bitmap.createBitmap(width , 880, Bitmap.Config.ARGB_8888);
+		
+		Bitmap bmp = Bitmap.createBitmap(width , 150, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
@@ -1113,6 +1115,7 @@ public class EditTabActivity extends Activity {
 		}
 		//BinCreater.saveBitmap(bmp, "back.png");
 		BinCreater.create(bmp, 0);
+		BinCreater.saveBin(f+"/1.bin", width, MainActivity.mDots);
 		return bmp;
 	}
 	
