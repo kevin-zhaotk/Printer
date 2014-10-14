@@ -1083,7 +1083,7 @@ public class EditTabActivity extends Activity {
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		
+		BaseObject.resetIndex();
 		Bitmap bmp = Bitmap.createBitmap(width , 150, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
 		Canvas can = new Canvas(bmp);

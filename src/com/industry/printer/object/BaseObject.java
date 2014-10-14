@@ -40,6 +40,8 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_RT				="032";
 	public static final String OBJECT_TYPE_RT_SECOND="033";
 	
+	public static int mVarObjBinIndex=0; 
+	
 	public Context mContext;
 	
 	public String mId;
@@ -125,6 +127,7 @@ public class BaseObject{
 	public void drawVarBitmap(String f)
 	{
 		//mPaint.setTextSize(mHeight);
+		mPaint.setTextSize(mHeight);
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		/*draw Bitmap of single digit*/
@@ -132,7 +135,8 @@ public class BaseObject{
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
-		Bitmap gBmp = Bitmap.createBitmap((int)mWidth/mContent.length()*10, 150, Bitmap.Config.ARGB_8888);
+		int singleW = (int)mWidth/mContent.length();
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, 150, Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -140,14 +144,17 @@ public class BaseObject{
 			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
 			can.drawText(String.valueOf(i), 0, height-30, mPaint);
-			Bitmap b = bmp.createScaledBitmap(bmp, (int)mWidth/mContent.length(), (int)mHeight, true);
+			Bitmap b = bmp.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			gCan.drawBitmap(b, i*b.getWidth(), (int)getY(), mPaint);
 			b.recycle();
 		}
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
-		
-		BinCreater.create(gBmp, (int)mWidth/mContent.length());
+		mPaint.setTextSize(MainActivity.mDots);
+		BinCreater.create(gBmp, singleW);
+		BinCreater.saveBitmap(gBmp, mVarObjBinIndex+".png");
+		BinCreater.saveBin(f+"/"+mVarObjBinIndex+".bin", gBmp.getWidth(), MainActivity.mDots,singleW);
+		increaseIndex();
 	}
 	
 	public Canvas getCanvas()
@@ -336,4 +343,14 @@ public class BaseObject{
 		return mIndex;
 	}
 	
+	
+	public static void resetIndex()
+	{
+		mVarObjBinIndex=2;
+	}
+	
+	public static void increaseIndex()
+	{
+		mVarObjBinIndex++;
+	}
 }

@@ -35,9 +35,6 @@ public class BinCreater {
 		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
 		Bitmap img = convertGreyImg(scaledImg);
-		saveBitmap(img, "img.png");
-		
-		saveBitmap(scaledImg, "scaledImg.png");
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		//Debug.d(TAG, "byteCount="+img.getByteCount());
 		
@@ -253,6 +250,44 @@ public class BinCreater {
     	return true;
     }
     
+    public static boolean saveBin(String f, int width,int height, int single)
+    {
+    	byte head[]=new byte[16];
+    	
+    	/*save column-width*/
+    	head[2] = (byte) (width & 0x0ff);
+    	head[1] = (byte) ((width>>8) & 0x0ff);
+    	head[0] = (byte) ((width>>16) & 0x0ff);
+    	/*save column-high*/
+    	head[5] = (byte) (height & 0x0ff);
+    	head[4] = (byte) ((height>>8) & 0x0ff);
+    	head[3] = (byte) ((height>>16) & 0x0ff);
+    	
+    	/*save width of single element*/
+    	head[8] = (byte) (single & 0x0ff);
+    	head[7] = (byte) ((single>>8) & 0x0ff);
+    	head[6] = (byte) ((single>>16) & 0x0ff);
+    	
+    	Debug.d(TAG, "+++++++++++++saveBin");
+    	try{
+    		File file = new File(f);
+    		FileOutputStream fs = new FileOutputStream(f);
+    		ByteArrayOutputStream barr = new ByteArrayOutputStream();
+    		barr.write(head);
+    		barr.write(mBmpBits,0,mBmpBits.length);
+    		barr.writeTo(fs);
+    		fs.flush();
+    		fs.close();
+    		barr.close();
+    	}catch(Exception e)
+    	{
+    		Debug.d(TAG, "Exception: "+e.getMessage());
+    		return false;
+    	}
+    	Debug.d(TAG, "+++++++++++++saveBin");
+    	return true;
+    }
+    
     public static Bitmap Bin2Bitmap(byte []map)
     {
     	int k=0;
@@ -302,9 +337,21 @@ public class BinCreater {
     		FileInputStream fs = new FileInputStream(file);
     		fs.read(buffer);
     		int len = buffer[6] << 16| buffer[7] <<8 | buffer[8];
-    		Debug.d(TAG, "len ="+len);
-    		ByteArrayBuffer ba = new ByteArrayBuffer(len*110);
-    		ba.append(buffer, n*len*110+16, len*110);
+    		ByteArrayBuffer ba = new ByteArrayBuffer(len*110*Integer.bitCount(n));
+    		Debug.d(TAG, "---------len ="+len+", n="+n);
+    		n = Integer.reverse(n);
+    		Debug.d(TAG, "-------reversed n="+n);
+    		for(;;)
+    		{
+    			int i = Integer.lowestOneBit(n);
+    			Debug.d(TAG, "-------i="+i);
+    			ba.append(buffer, i*len*110+16, len*110);
+    			if(Integer.bitCount(n)<=1)
+    				break;
+    			else {
+					n = n/10;
+				}
+    		}
     		return ba.buffer();
     	}
     	catch(Exception e)

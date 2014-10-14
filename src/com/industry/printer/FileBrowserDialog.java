@@ -158,7 +158,10 @@ public class FileBrowserDialog extends Dialog {
 		 Debug.d(TAG, ""+file.getPath()+", exists = "+file.exists());
 		 File [] files;
 		 if(mSuffix == null)
+		 {
+			 Debug.d(TAG, "suffix is null");
 			 files = file.listFiles();
+		 }
 		 else
 			 files = file.listFiles(new FilenameSuffixFilter(mSuffix));
 		 if(files == null)
@@ -167,7 +170,7 @@ public class FileBrowserDialog extends Dialog {
 			 Toast.makeText(getContext(), "Please plugin a USB device ", Toast.LENGTH_LONG);
 			return;
 		 }
-		 Debug.d(TAG, "files ="+files);
+		 //Debug.d(TAG, "files ="+files);
 		 Map<String, Object> m = new HashMap<String, Object>();
 		 //m.put("icon", R.drawable.icon_directory);
 		 //m.put("name", "..");
