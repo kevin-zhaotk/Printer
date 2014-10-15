@@ -34,7 +34,8 @@ public class BinCreater {
 		mBmpBytes = new int[scaledImg.getByteCount()/2];
 		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
-		Bitmap img = convertGreyImg(scaledImg);
+		convertGreyImg(scaledImg);
+		BinCreater.recyleBitmap(scaledImg);
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		//Debug.d(TAG, "byteCount="+img.getByteCount());
 		
@@ -49,11 +50,13 @@ public class BinCreater {
 		int height = bmp.getHeight();        
         //Matrix matrix = new Matrix();
         //matrix.postScale(1, ((float)h)/height);
-        return Bitmap.createScaledBitmap(bmp, width, h, true);
+        Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, width, h, true);
+        recyleBitmap(bmp);
+        return scaledBmp;
     	//return Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
 	}
 	  
-    public static Bitmap convertGreyImg(Bitmap bmp) { 
+    public static void convertGreyImg(Bitmap bmp) { 
     	int width = bmp.getWidth();         
         int height = bmp.getHeight(); 
         
@@ -99,12 +102,12 @@ public class BinCreater {
         //saveBin("/mnt/usb/1.bin", width,height);
         /*swap the high 8bits with low 8bits*/
         //swap(height);
-        Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
-        result.setPixels(pixels, 0, width, 0, 0, width, height);
+        //Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
+        //result.setPixels(pixels, 0, width, 0, 0, width, height);
         /*just for debug*/
         //saveBitmap(result, "bk.png");
         
-        return result; 
+        return ; 
     }
     
     /*
@@ -404,5 +407,14 @@ public class BinCreater {
     	{
     		dst[x*high/8+i] |= src[i];
     	}
+    }
+    
+    public static void recyleBitmap(Bitmap bmp)
+    {
+    	if(!bmp.isRecycled())
+		{
+			bmp.recycle();
+			System.gc();
+		}
     }
 }

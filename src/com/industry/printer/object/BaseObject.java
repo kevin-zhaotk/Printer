@@ -103,7 +103,13 @@ public class BaseObject{
 	public Bitmap getScaledBitmap(Context context)
 	{
 		System.out.println("getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
-		return Bitmap.createScaledBitmap(getBitmap(context), (int)mWidth, (int)mHeight, true);
+		Bitmap bmp = getBitmap(context);
+		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
+		if(!bmp.isRecycled()){
+			bmp.recycle();
+			System.gc();
+		}
+		return scaledBmp;
 	}
 	
 	protected Bitmap getBitmap(Context context)
@@ -146,15 +152,17 @@ public class BaseObject{
 			can.drawText(String.valueOf(i), 0, height-30, mPaint);
 			Bitmap b = bmp.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			gCan.drawBitmap(b, i*b.getWidth(), (int)getY(), mPaint);
-			b.recycle();
+			BinCreater.recyleBitmap(b);
 		}
+		BinCreater.recyleBitmap(bmp);
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
 		mPaint.setTextSize(MainActivity.mDots);
-		BinCreater.create(gBmp, singleW);
 		BinCreater.saveBitmap(gBmp, mVarObjBinIndex+".png");
+		BinCreater.create(gBmp, singleW);		
 		BinCreater.saveBin(f+"/"+mVarObjBinIndex+".bin", gBmp.getWidth(), MainActivity.mDots,singleW);
 		increaseIndex();
+		BinCreater.recyleBitmap(gBmp);
 	}
 	
 	public Canvas getCanvas()

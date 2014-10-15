@@ -971,8 +971,8 @@ public class EditTabActivity extends Activity {
             		{
             			saveObjFile(mObjName);
             		}
-            		Bitmap bmp = drawAllBmp(mObjName);
-            		bmp.recycle();
+            		drawAllBmp(mObjName);
+            		
             		break;
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		File file = new File(FileBrowserDialog.file());
@@ -1073,12 +1073,12 @@ public class EditTabActivity extends Activity {
 		return -1;
 	}
 	
-	public Bitmap drawAllBmp(String f)
+	public void drawAllBmp(String f)
 	{
 		int width=0;
 		Paint p=new Paint();
 		if(mObjs==null || mObjs.size() <= 0)
-			return null;
+			return ;
 		for(BaseObject o:mObjs)
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
@@ -1099,7 +1099,9 @@ public class EditTabActivity extends Activity {
 			}
 			else if(o instanceof RealtimeObject)
 			{
-				can.drawBitmap(((RealtimeObject)o).getBgBitmap(mContext,f), o.getX(), o.getY(), p);
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext,f);
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				BinCreater.recyleBitmap(t);
 			}
 			else if(o instanceof JulianDayObject)
 			{
@@ -1110,13 +1112,18 @@ public class EditTabActivity extends Activity {
 				o.drawVarBitmap(f);
 			}
 			else
-				can.drawBitmap(o.getScaledBitmap(mContext), o.getX(), o.getY(), p);
+			{
+				Bitmap t = o.getScaledBitmap(mContext);
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				BinCreater.recyleBitmap(t);
+			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		//BinCreater.saveBitmap(bmp, "back.png");
-		BinCreater.create(bmp, 0);
 		BinCreater.saveBin(f+"/1.bin", width, MainActivity.mDots);
-		return bmp;
+		BinCreater.create(bmp, 0);
+		
+		return ;
 	}
 	
 	private void leftKeyPressed()
