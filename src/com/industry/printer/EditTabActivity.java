@@ -1084,8 +1084,8 @@ public class EditTabActivity extends Activity {
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		BaseObject.resetIndex();
-		Bitmap bmp = Bitmap.createBitmap(width , 150, Bitmap.Config.ARGB_8888);
+		
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
@@ -1120,10 +1120,10 @@ public class EditTabActivity extends Activity {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		//BinCreater.saveBitmap(bmp, "back.png");
-		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
+		BinCreater.saveBitmap(bmp, "back.png");
+		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
 		BinCreater.create(bmp, 0);
-		
+		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
 		return ;
 	}
 	

@@ -58,7 +58,7 @@ public class BinInfo {
     	int n;
     	int byteOneCol;
     	byte[] buffer=null;
-  
+    	Debug.d(TAG, "getVarBuffer file="+f);
    		File file = new File(f);
    		if(!file.exists() || !file.isFile())
    		{

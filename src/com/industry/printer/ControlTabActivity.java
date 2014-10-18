@@ -25,6 +25,7 @@ import com.industry.printer.FileFormat.FilenameSuffixFilter;
 import com.industry.printer.FileFormat.Tlk_Parser;
 import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
@@ -109,7 +110,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public PreviewAdapter mMessageAdapter;
 	public ListView mMessageList;
 	
-	public BinPreviewScrollView mPreview;
+	public PreviewScrollView mPreview;
 	public Vector<BaseObject> mObjList;
 	
 	public ScrollView mThumb1;
@@ -176,7 +177,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		//mFileInputStream = new FileInputStream(mFd);
 
 		
-		mPreview = (BinPreviewScrollView ) findViewById(R.id.sv_preview);
+		mPreview = (PreviewScrollView ) findViewById(R.id.sv_preview);
 		
 		mBtnStart = (Button) findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(new OnClickListener(){
@@ -428,13 +429,14 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					public void onClick() {
 						// TODO Auto-generated method stub
 						String f = FileBrowserDialog.file();
-						if(f==null || !f.toLowerCase().endsWith(".bin"))
+						Debug.d(TAG, "-------f="+f);
+						if(f==null || !f.toLowerCase().endsWith(".tlk"))
 						{
 							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
 							return;
 						}
 						// TODO show bin
-						startPreview(f);
+						mHandler.sendEmptyMessage(0);
 						/*
 						try{
 						File file = new File(f);
@@ -849,7 +851,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public int[]	mPreBytes;
 	public void startPreview(String f)
 	{
-		/*
+		
 		String path=null;
 		File fp = new File(f);
 		if(fp.isFile())
@@ -857,8 +859,8 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		else
 			path = f;
 		Fileparser.parse(mContext, f, mObjList);
-		*/
-		/*
+		
+		
 		try{
 			
 			mBg = new BinInfo();
@@ -875,7 +877,8 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			{
 				Debug.d(TAG, "startPreview e: "+e.getMessage());
 			}
-			*/
+			
+		/*
 		try{
 			File file = new File(f);
 			FileInputStream fs = new FileInputStream(file);
@@ -888,11 +891,12 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			//BinCreater.saveBitmap(bmp, "bin2bmp.png");
 			mPreview.createBitmap(bmp);
 			mPreview.invalidate();
-			BinCreater.recyleBitmap(bmp);
+			
 		}catch(Exception e)
 		{
 			Debug.d(TAG, "-----e="+e.toString());
 		}
+		*/
 	}
 	
 	public void refreshVariables()
@@ -907,6 +911,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		{
 			bytes.clear();
 			bytes.setLength(0);
+			Debug.d(TAG, "refreshVariables object = "+o.mId);
 			if(o instanceof CounterObject)
 			{
 				//int value = ((CounterObject) o).getValue();
@@ -931,7 +936,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				BinCreater.overlap(mPreBitmap, varbin.mBits, (int)o.getX(), 0, 880);
+				BinCreater.overlap(mPreBitmap, varbin.mBits, (int)o.getX(), 0, Configs.gDots);
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -987,7 +992,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					BinCreater.overlap(mPreBitmap, varbin.mBits, (int)rtSub.getX(), 0, 880);
+					BinCreater.overlap(mPreBitmap, varbin.mBits, (int)rtSub.getX(), 0, Configs.gDots);
 				}				
 			}
 			else

@@ -39,8 +39,6 @@ public class BinPreviewScrollView extends View {
 	}
 	public void createBitmap(Bitmap bmp)
 	{
-		if(mPreBitmap != null)
-			mPreBitmap.recycle();
 		mPreBitmap = bmp;
 	}
 	

@@ -4,7 +4,6 @@ import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,7 +40,6 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_RT				="032";
 	public static final String OBJECT_TYPE_RT_SECOND="033";
 	
-	public static int mVarObjBinIndex=0; 
 	
 	public Context mContext;
 	
@@ -103,7 +101,7 @@ public class BaseObject{
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
-		System.out.println("getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
+		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
 		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
 		BinCreater.recyleBitmap(bmp);
@@ -113,13 +111,13 @@ public class BaseObject{
 	protected Bitmap getBitmap(Context context)
 	{
 		//mPaint.setColor(Color.RED);
-		//System.out.println("getBitmap mContent="+mContent);
+		//Debug.d(TAG,"getBitmap mContent="+mContent);
 		mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
 		Bitmap bmp = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
-		System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
+		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawText(mContent, 0, height-30, mPaint);
 		//can.drawText("text", 0, 4, p);
@@ -156,10 +154,10 @@ public class BaseObject{
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
 		
-		BinCreater.saveBitmap(gBmp, mVarObjBinIndex+".png");
+		BinCreater.saveBitmap(gBmp, mIndex+".png");
 		BinCreater.create(gBmp, singleW);		
-		BinCreater.saveBin(f+"/"+mVarObjBinIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
-		increaseIndex();
+		BinCreater.saveBin(f+"/"+mIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
+		
 		BinCreater.recyleBitmap(gBmp);
 	}
 	
@@ -249,10 +247,10 @@ public class BaseObject{
 		mContent = content;
 		mPaint.setTextSize(mHeight);
 		mWidth = mPaint.measureText(mContent);
-		mPaint.setTextSize(MainActivity.mDots);
+		mPaint.setTextSize(Configs.gFixedRows);
 		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);
 		mXcor_end = mXcor + mWidth;
-		System.out.println("content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
+		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
 		mYcor_end = mYcor + mHeight;
 	}
 	
@@ -305,7 +303,7 @@ public class BaseObject{
 			str=str+"0";
 		}
 		str += ff.intValue();
-		System.out.println("floatToFormatString str ="+str);
+		Debug.d(TAG,"floatToFormatString str ="+str);
 		return str;
 	}
 	
@@ -320,7 +318,7 @@ public class BaseObject{
 			str=str+"0";
 		}
 		str += f;
-		System.out.println("intToFormatString str ="+str);
+		Debug.d(TAG,"intToFormatString str ="+str);
 		return str;
 	}
 	
@@ -335,7 +333,7 @@ public class BaseObject{
 			str += 1;
 		else
 			str += 0;
-		System.out.println("boolToFormatString str ="+str);
+		Debug.d(TAG,"boolToFormatString str ="+str);
 		return str;
 	}
 	
@@ -349,14 +347,4 @@ public class BaseObject{
 		return mIndex;
 	}
 	
-	
-	public static void resetIndex()
-	{
-		mVarObjBinIndex=2;
-	}
-	
-	public static void increaseIndex()
-	{
-		mVarObjBinIndex++;
-	}
 }

@@ -51,6 +51,7 @@ public class BinCreater {
 		int height = bmp.getHeight();        
         //Matrix matrix = new Matrix();
         //matrix.postScale(1, ((float)h)/height);
+		Debug.d(TAG, "scaleHeight width="+width+", height="+height);
         Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, width, h, true);
         recyleBitmap(bmp);
         return scaledBmp;

@@ -9,7 +9,6 @@ import com.industry.printer.Utils.Debug;
 
 import com.android.internal.app.LocalePicker;
 
-import android.R;
 import android.os.Bundle;
 //import android.app.Activity;
 import android.app.TabActivity;
