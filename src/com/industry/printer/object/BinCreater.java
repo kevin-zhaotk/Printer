@@ -225,17 +225,13 @@ public class BinCreater {
     public static boolean saveBin(String f, int width,int height)
     {
     	byte head[]=new byte[16];
-    	
+    	Debug.d(TAG, "+++++++++++++saveBin");
+    	Debug.d(TAG, "saveBin f="+f+", width="+width+" , height="+height);
     	/*save column-width*/
     	head[2] = (byte) (width & 0x0ff);
     	head[1] = (byte) ((width>>8) & 0x0ff);
     	head[0] = (byte) ((width>>16) & 0x0ff);
-    	/*save column-high*/
-    	head[5] = (byte) (height & 0x0ff);
-    	head[4] = (byte) ((height>>8) & 0x0ff);
-    	head[3] = (byte) ((height>>16) & 0x0ff);
     	
-    	Debug.d(TAG, "+++++++++++++saveBin");
     	try{
     		File file = new File(f);
     		FileOutputStream fs = new FileOutputStream(f);
@@ -263,17 +259,14 @@ public class BinCreater {
     	head[2] = (byte) (width & 0x0ff);
     	head[1] = (byte) ((width>>8) & 0x0ff);
     	head[0] = (byte) ((width>>16) & 0x0ff);
-    	/*save column-high*/
-    	head[5] = (byte) (height & 0x0ff);
-    	head[4] = (byte) ((height>>8) & 0x0ff);
-    	head[3] = (byte) ((height>>16) & 0x0ff);
-    	
+    	    	
     	/*save width of single element*/
-    	head[8] = (byte) (single & 0x0ff);
-    	head[7] = (byte) ((single>>8) & 0x0ff);
-    	head[6] = (byte) ((single>>16) & 0x0ff);
+    	head[5] = (byte) (single & 0x0ff);
+    	head[4] = (byte) ((single>>8) & 0x0ff);
+    	head[3] = (byte) ((single>>16) & 0x0ff);
     	
-    	Debug.d(TAG, "+++++++++++++saveBin");
+    	Debug.d(TAG, "+++++++++++++saveBin Var");
+    	Debug.d(TAG, "saveBin f="+f+", width="+width+" , height="+height+" , single="+single);
     	try{
     		File file = new File(f);
     		FileOutputStream fs = new FileOutputStream(f);
@@ -289,7 +282,7 @@ public class BinCreater {
     		Debug.d(TAG, "Exception: "+e.getMessage());
     		return false;
     	}
-    	Debug.d(TAG, "+++++++++++++saveBin");
+    	Debug.d(TAG, "+++++++++++++saveBin var");
     	return true;
     }
     
@@ -372,15 +365,16 @@ public class BinCreater {
     	Bitmap bmp=null;
     	if(srcBits == null)
     		return;
-    	int columns = srcBits.length/110;
+    	int bpc = Configs.gDots%8==0?Configs.gDots/8:(Configs.gDots/8+1);
+    	int columns = srcBits.length/bpc;
     	if(dstBytes==null || dstBytes.length<srcBits.length*8)
     		return;
     	//int [] pixels = new int[srcBits.length*8];
     	for(int i=0; i< columns; i++)
     	{
-    		for(int j=0; j<880; j++)
+    		for(int j=0; j<bpc*8; j++)
     		{
-    			if( (srcBits[i*110 + j/8]&(0x01 <<(7-j%8))) != 0)
+    			if( (srcBits[i*bpc + j/8]&(0x01 <<(j%8))) != 0)
     				grey = 0x0;
     			else 
     				grey = 0xff;

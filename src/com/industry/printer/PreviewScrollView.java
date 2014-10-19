@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.industry.printer.FileFormat.DotMatrixFont;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
@@ -59,7 +60,9 @@ public class PreviewScrollView extends View {
 	
 	public void createBitmap(int[]src, int w, int h)
 	{
-		mPreBitmap = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
+		mPreBitmap = bmp.createScaledBitmap(bmp, w, Configs.gFixedRows, true);
+		BinCreater.recyleBitmap(bmp);
 		//mPreBitmap = Bitmap.createScaledBitmap(mPreBitmap, w, 150, true);
 		
 	}
@@ -92,60 +95,9 @@ public class PreviewScrollView extends View {
 	@Override  
 	 protected void onDraw(Canvas canvas) {
 		Debug.d(TAG, "====>onDraw");
-		 //if(mPreBitmap == null)
-			 //return;
-		Paint p = new Paint();
-		int[] bit = null;
-		//int bit[]=new int[3*32];
-		//DotMatrixFont font = new DotMatrixFont("/mnt/usb/"++".txt");
-		int edage=0;
-		//TlkObject[] v = (TlkObject[])mList.values().toArray();
-		p.setARGB(255, 0, 0, 0);
-		if(mList==null)
+		if(mPreBitmap == null)
 			return;
-		for(int i=0; i<mList.size(); i++)
-		{
-			TlkObject o = mList.get(i);
-			Debug.d(TAG, "&&&&&&&&index="+o.index+", x="+o.x+", y="+o.y+", font="+o.font+",content="+o.mContent);
-			if(o.isTextObject() && o.mContent == null)
-				continue;
-			//DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-			//Debug.d(TAG, "bit lenght="+bit.length);
-			if(o.isTextObject())	//each text object take over 16*16/8 * length=32Bytes*length
-			{
-				//Debug.d(TAG, "=========text object content="+o.mContent);
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				int end=o.x+font.getColumns()*o.mContent.length();
-				edage = edage > end? edage : end; 
-				bit = new int[font.getColumns()*2*o.mContent.length()];
-				//Debug.d(TAG, "=========bit.length="+bit.length);
-				font.getDotbuf(o.mContent, bit);
-				mPreBitmap=getTextBitmapFrombuffer(bit, mPaint);
-				if(bit != null && bit.length != 0)
-				BinCreater.saveBitmap(mPreBitmap, "text.png");
-			}
-			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
-			{
-				//Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
-				bit = new int[128*8];
-				font.getDotbuf(bit);
-				mPreBitmap=getPicBitmapFrombuffer(bit, mPaint);
-				int end = o.x+128; 
-				edage = edage > end? edage : end;
-				
-			}
-			
-			//canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth()*3, 50, false), o.x, o.y, p);
-			if(mPreBitmap!= null)
-			{
-				Debug.d(TAG,"#########");
-				canvas.drawBitmap(Bitmap.createScaledBitmap(mPreBitmap, mPreBitmap.getWidth(), mPreBitmap.getHeight()*4, false), o.x, o.y*4, p);
-			}
-			BinCreater.recyleBitmap(mPreBitmap);
-		}
-		Debug.d(TAG, "^^^^^^^^^^draw line ("+edage+","+0+")");
-		canvas.drawLine(edage, 0, edage, 256, p); 
+		canvas.drawBitmap(mPreBitmap, 0, 0, mPaint); 
 	 }  
 
 	public static Bitmap getTextBitmapFrombuffer(int[] bit, Paint p)

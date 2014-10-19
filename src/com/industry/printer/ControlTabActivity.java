@@ -463,7 +463,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		});
 		
 		
-		
+		/*
 		mBtnview = (Button)findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(new OnClickListener(){
 
@@ -479,33 +479,10 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
 				prv.show(list);
 				
-				/*
-				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(pos);
-				if(m!= null)
-				{
-					String index = m.get("index");
-					Vector<TlkObject> list = new Vector<TlkObject>();
-					//if(mMsgFile!=null)
-					{
-						//String path = new File(mMsgFile.getText().toString()).getParent();
-						if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), list))
-						{
-							Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
-							return;
-						}
-						setContent(index, list);
-						Debug.d(TAG, "list size="+list.size());
-					}
-					makeBinBuffer(list);
-					PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
-					
-					prv.show(list);
-					
-				}
-				*/
 			}
 			
 		});
+		*/
 		/*
 		mBtnPrev = (Button) findViewById(R.id.btnPreRecord);
 		mBtnPrev.setOnClickListener(new OnClickListener(){
@@ -931,7 +908,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 				 */
 				BinInfo varbin = new BinInfo();
 				try {
-					varbin.getVarBuffer(str, mObjPath+"/" + o.getIndex() +".bin");
+					varbin.getVarBuffer(str, mObjPath+"/" + "v" + o.getIndex() +".bin");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -987,7 +964,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					*/
 					BinInfo varbin = new BinInfo();
 					try {
-						varbin.getVarBuffer(substr, mObjPath+"/" + rtSub.getIndex() +".bin");
+						varbin.getVarBuffer(substr, mObjPath+"/" + "v"+rtSub.getIndex() +".bin");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -1120,7 +1120,7 @@ public class EditTabActivity extends Activity {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		BinCreater.saveBitmap(bmp, "back.png");
+		//BinCreater.saveBitmap(bmp, "back.png");
 		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
 		BinCreater.create(bmp, 0);
 		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);

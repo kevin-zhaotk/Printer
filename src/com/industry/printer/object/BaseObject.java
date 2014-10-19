@@ -154,9 +154,9 @@ public class BaseObject{
 		Debug.d(TAG, "save var png");
 		//BinCreater.saveBitmap(gBmp, "var"+getIndex()+".png");
 		
-		BinCreater.saveBitmap(gBmp, mIndex+".png");
+		//BinCreater.saveBitmap(gBmp, mIndex+".png");
 		BinCreater.create(gBmp, singleW);		
-		BinCreater.saveBin(f+"/"+mIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
+		BinCreater.saveBin(f+"/v"+mIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
 		
 		BinCreater.recyleBitmap(gBmp);
 	}

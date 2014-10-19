@@ -6,7 +6,7 @@ import android.text.format.Time;
 public class RealtimeDate extends BaseObject {
 
 	public RealtimeDate(Context context, float x) {
-		super(context, BaseObject.OBJECT_TYPE_RT_DATE, x);
+		super(context, BaseObject.OBJECT_TYPE_DL_DATE, x);
 		Time t = new Time();
 		t.set(System.currentTimeMillis());
 		setContent(BaseObject.intToFormatString(t.monthDay, 2));

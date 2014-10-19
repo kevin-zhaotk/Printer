@@ -10,7 +10,7 @@ public class RealtimeYear extends BaseObject {
 	public String mFormat;
 	
 	public RealtimeYear(Context context, float x, boolean f) {
-		super(context, BaseObject.OBJECT_TYPE_RT_YEAR, x);
+		super(context, BaseObject.OBJECT_TYPE_DL_YEAR, x);
 		// TODO Auto-generated constructor stub
 		Time t = new Time();
 		t.set(System.currentTimeMillis());

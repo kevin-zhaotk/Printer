@@ -79,7 +79,7 @@ public class Fileparser {
 		Log.d(TAG,"index="+str.indexOf("^"));
 		for(int i=0; i< attr.length; i++)
 		{
-			Log.d(TAG, "attr["+i+"]="+attr[i]);
+			//Log.d(TAG, "attr["+i+"]="+attr[i]);
 		}
 		Log.d(TAG, "attr[1]="+attr[1]);
 		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
@@ -89,9 +89,9 @@ public class Fileparser {
 			((BarcodeObject) obj).setShow(Boolean.parseBoolean(attr[11])); 
 			((BarcodeObject) obj).setContent(attr[12]);
 			Log.d(TAG, "Barcode object: ");
-			Log.d(TAG, ""+((BarcodeObject) obj).getCode());
-			Log.d(TAG, ""+((BarcodeObject) obj).getShow());
-			Log.d(TAG, ""+((BarcodeObject) obj).getContent());
+			//Log.d(TAG, ""+((BarcodeObject) obj).getCode());
+			//Log.d(TAG, ""+((BarcodeObject) obj).getShow());
+			//Log.d(TAG, ""+((BarcodeObject) obj).getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
 		{
@@ -101,10 +101,10 @@ public class Fileparser {
 			((CounterObject) obj).setMin(Integer.parseInt(attr[14]));
 			//((CounterObject) obj).setContent(attr[8]);
 			Log.d(TAG, "Counter object");
-			Log.d(TAG, ""+((CounterObject) obj).getBits());
-			Log.d(TAG, ""+((CounterObject) obj).getMax());
-			Log.d(TAG, ""+((CounterObject) obj).getMin());
-			Log.d(TAG, ""+((CounterObject) obj).getContent());
+			//Log.d(TAG, ""+((CounterObject) obj).getBits());
+			//Log.d(TAG, ""+((CounterObject) obj).getMax());
+			//Log.d(TAG, ""+((CounterObject) obj).getMin());
+			//Log.d(TAG, ""+((CounterObject) obj).getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))	//ellipse
 		{
@@ -112,8 +112,8 @@ public class Fileparser {
 			((EllipseObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((EllipseObject) obj).setLineType(Integer.parseInt(attr[9]));
 			Log.d(TAG, "Ellipse object");
-			Log.d(TAG, "line type="+((EllipseObject) obj).getLineType());
-			Log.d(TAG, "line width="+((EllipseObject) obj).getLineWidth());
+			//Log.d(TAG, "line type="+((EllipseObject) obj).getLineType());
+			//Log.d(TAG, "line width="+((EllipseObject) obj).getLineWidth());
 		}
 		else if(BaseObject.OBJECT_TYPE_GRAPHIC.equals(attr[1]))	//graphic
 		{
@@ -130,8 +130,8 @@ public class Fileparser {
 			((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
 			Log.d(TAG, "line object");
-			Log.d(TAG, "line type="+((LineObject) obj).getLineType());
-			Log.d(TAG, "line width="+((LineObject) obj).getLineWidth());
+			//Log.d(TAG, "line type="+((LineObject) obj).getLineType());
+			//Log.d(TAG, "line width="+((LineObject) obj).getLineWidth());
 		}
 		else if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
 		{
@@ -163,6 +163,10 @@ public class Fileparser {
 			Log.d(TAG, "Txt object");
 			Log.d(TAG, "content="+obj.getContent());
 		}
+		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
+		{
+			
+		}
 		else
 		{
 			Log.d(TAG, "Unknown object type: "+attr[1]);
@@ -188,6 +192,7 @@ public class Fileparser {
 			obj.setHeight((Integer.parseInt(attr[5]) - Integer.parseInt(attr[3])));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 		}
+		Log.d(TAG, "index = "+obj.getIndex());
 		Log.d(TAG, "x = "+obj.getX());
 		Log.d(TAG, "y = "+obj.getY());
 		Log.d(TAG, "x end = "+obj.getXEnd());

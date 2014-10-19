@@ -8,7 +8,7 @@ public class RealtimeMonth extends BaseObject {
 
 	public static final String TAG="RealtimeMonth";
 	public RealtimeMonth(Context context, float x) {
-		super(context, BaseObject.OBJECT_TYPE_RT_MON, x);
+		super(context, BaseObject.OBJECT_TYPE_DL_MON, x);
 		Time t = new Time();
 		t.set(System.currentTimeMillis());
 		setContent(BaseObject.intToFormatString(t.month+1, 2));

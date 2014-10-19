@@ -41,7 +41,7 @@
         android:layout_toRightOf="@+id/StopPrint"
         android:textSize="20dp"
         android:text="@string/btn_clean" />
-	
+<!--	
     <Button
         android:id="@+id/btn_preview"
         android:layout_width="80dp"
@@ -51,7 +51,7 @@
         android:layout_toRightOf="@+id/btnFlush"
         android:textSize="20dp"
         android:text="@string/str_preview" />
-
+-->
 <!--	
     <Button
         android:id="@+id/btnPreRecord"
@@ -230,6 +230,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="790dp"
     	android:layout_height="300dp"
+    	android:layout_marginLeft="5dp"
     	android:background="#ffffff"
          android:layout_below="@id/btnBinfile"
          >

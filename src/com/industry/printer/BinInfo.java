@@ -45,7 +45,7 @@ public class BinInfo {
 		if(mBits == null)
 			return;
     	mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
-    	mBitsperColumn = (head[3]&0xff) << 16 | (head[4] & 0xff)<<8 | (head[5]&0xff);
+    	mBitsperColumn = (mBits.length/mColumn)*8;
     	//mPixels = new int[columns*row];
     	Debug.d(TAG, "columns = "+mColumn+", mBitsperColumn="+mBitsperColumn+", mBits.len="+mBits.length);
     	fs.read(mBits, 0, mBits.length);
@@ -72,8 +72,12 @@ public class BinInfo {
    		FileInputStream fs = new FileInputStream(file);
    		fs.read(buffer);
    		mColumn = buffer[0] << 16| buffer[1] <<8 | buffer[2];
-   		mBitsperColumn=buffer[3] << 16| buffer[4] <<8 | buffer[5];
+   		mBitsperColumn=(buffer.length/mColumn)*8;
    		mColOne = buffer[6] << 16| buffer[7] <<8 | buffer[8];
+   		if(mColOne == 0)
+   		{
+   			mColOne = mColumn/10;
+   		}
    		Debug.d(TAG, "*******f="+f+", mBitsperColumn="+mBitsperColumn);
    		Debug.d(TAG, "*******mColumn="+mColumn+", mColOne ="+mColOne);
    		byteOneCol = mBitsperColumn%8==0? mBitsperColumn/8 : mBitsperColumn/8 +1;
