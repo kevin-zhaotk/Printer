@@ -101,7 +101,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	
 	public Button	mBtnfile;
 	public Button	mBtnTlkfile;
-	public Button	mBtnBinfile;
+	public Button	mBtnOpenfile;
 	public TextView mMsgFile;
 	public Button 	mBtnview;
 	public Button	mForward;
@@ -196,12 +196,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*
-				isPrinting = false;
-				UsbSerial.printStop(mFd);
-				mPreviewRefreshHandler.removeMessages(0);
-				stopThread(mPrintThread);
-				*/
+				
 				UsbSerial.printStop(mFd);
 			}
 			
@@ -226,198 +221,9 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			
 		});
 		
-		/*
-		mBtnOpen = (Button) findViewById(R.id.btnOpen);
-		mBtnOpen.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				boolean isroot=false;
 				
-				try {
-					isroot = LinuxShell.isRoot(Runtime.getRuntime(), 50);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				Debug.d(TAG, "is root="+isroot);
-				FileBrowserDialog fdialog = new FileBrowserDialog(ControlTabActivity.this,DotMatrixFont.USB_SYS_PATH);
-				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
-
-					@Override
-					public void onClick() {
-						// TODO Auto-generated method stub
-						mHandler.sendEmptyMessage(0);
-					}
-					
-				});
-				fdialog.show();
-			}
-			
-		});
-		*/
-		/*
-		 * Command 4&5
-		 */
-		/*
-		mBtnSend = (Button) findViewById(R.id.btnSend);
-		mBtnSend.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				byte[] buffer=null;
-				byte[] info = new byte[23];
-				String text="";
-				UsbSerial.getInfo(mFd, info);
-				if(info[9] != 0)
-				{
-					Debug.d(TAG, "printer is printing now, please send buffer later!!!");
-					return;
-				}
-				try{
-					int index = mMessageAdapter.getChecked();
-					Vector<TlkObject> list = mTlkList.get(index-1);
-					Debug.d(TAG,"=======index="+(index-1));
-					showListContent(list);
-					buffer = mBinBuffer.get(list);
-				}catch(Exception e)
-				{
-					return;
-				}
-				if(buffer==null)
-					return;
-				UsbSerial.sendDataCtrl(mFd, buffer.length);
-				UsbSerial.printData(mFd,  buffer);
-				//UsbSerial.sendDataCtrl(mFd, data.length);
-				//UsbSerial.printData(mFd,  data);
-				
-			}
-			
-		});
-		*/
-		/*
-		 * Command 6&7
-		 * set all param
-		 */
-		/*
-		mSetParam = (Button)findViewById(R.id.btnSetparam);
-		mSetParam.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				UsbSerial.sendSetting(mFd);
-				byte[] data = new byte[128];
-				makeParams(mContext, data);
-				UsbSerial.sendSettingData(mFd, data);
-				
-			}
-			
-		});
-		*/
-		/*
-		 * get Info
-		 * Command 8
-		 */
-		/*
-		mGetInfo = (Button) findViewById(R.id.btnGetinfo);
-		mGetInfo.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				byte[] info = new byte[23];
-				String text="";
-				UsbSerial.getInfo(mFd, info);
-				for(int i=0;i<23;i++)
-					text += String.valueOf(Integer.toHexString(info[i] & 0x0ff))+" ";
-				mPrintStatus.setText("result: "+text);
-			}
-			
-		});
-		*/
-		
-		//mPollThread = new PollStateThread();
-		//mPrintThread = (PrintingThread) startThread();
-		//mPrintThread.start();
-		/*
-		 * Start Printing Thread
-		 */
-		/*
-		mPrint = (Button) findViewById(R.id.btnPrint);
-		mPrint.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "====isPrinting="+isPrinting);
-				if(isPrinting)	//printing thread is running, do not create a new print thread again
-					return;
-				isPrinting = true;
-				mPrintThread = (PrintingThread) startThread();
-				
-			}
-			
-		});
-		
-		mFinish = (Button) findViewById(R.id.btnFinish);
-		mFinish.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				isPrinting = false;
-				UsbSerial.printStop(mFd);
-				mPreviewRefreshHandler.removeMessages(0);
-				stopThread(mPrintThread);
-			}
-			
-		});
-		*/
-		/*
-		mBtnfile = (Button) findViewById(R.id.btnopenfile);
-		mBtnfile.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH, FilenameSuffixFilter.CSV_SUFFIX);
-				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
-
-					@Override
-					public void onClick() {
-						// TODO Auto-generated method stub
-						String f = FileBrowserDialog.file();
-						if(f==null || !f.toLowerCase().endsWith(".csv"))
-						{
-							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
-							return;
-						}
-							
-						mBtnfile.setText(new File(f).getName());
-						setCsvToPreference(f);
-						readCsv(f);
-						mMessageList.setAdapter(mMessageAdapter);
-						fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
-					}
-					
-				});
-				dialog.show();
-			}
-			
-		});
-		*/
-		//mMsgFile = (TextView) findViewById(R.id.tvfile);
-		
-		
-		mBtnBinfile = (Button) findViewById(R.id.btnBinfile);
-		mBtnBinfile.setOnClickListener(new OnClickListener(){
+		mBtnOpenfile = (Button) findViewById(R.id.btnBinfile);
+		mBtnOpenfile.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -437,23 +243,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						}
 						// TODO show bin
 						mHandler.sendEmptyMessage(0);
-						/*
-						try{
-						File file = new File(f);
-						FileInputStream fs = new FileInputStream(file);
-						//InputStreamReader reader = new InputStreamReader(fs);
-						Debug.d(TAG, "-----------");
-						byte[] binBuf = new byte[(int)file.length()];
-						fs.read(binBuf);
-						Debug.d(TAG, "-----------fs length="+file.length());
-						Bitmap bmp = BinCreater.Bin2Bitmap(binBuf);
-						BinCreater.saveBitmap(bmp, "bin2bmp.png");
-						Debug.d(TAG, "-----------save bmp");
-						}catch(Exception e)
-						{
-							Debug.d(TAG, "-----e="+e.toString());
-						}
-						*/
+						
 					}
 					
 				});
@@ -463,7 +253,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		});
 		
 		
-		/*
+		
 		mBtnview = (Button)findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(new OnClickListener(){
 
@@ -471,184 +261,12 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				int pos = mMessageList.getCheckedItemPosition();
-				if(pos<1 || pos>=mMessageList.getCount())
-					return;
-				Debug.d(TAG, "-------selected pos="+pos);
-				Vector<TlkObject> list = mTlkList.get(pos-1);
-				PreviewDialog prv = new PreviewDialog(ControlTabActivity.this);
-				prv.show(list);
-				
-			}
-			
-		});
-		*/
-		/*
-		mBtnPrev = (Button) findViewById(R.id.btnPreRecord);
-		mBtnPrev.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int i = mMessageAdapter.getChecked();
-				Debug.d(TAG,"curent checked = "+i);
-				if(i<=1 || i>=mMessageList.getCount())
-					return;
-				mMessageAdapter.setChecked(i-1);
-				mMessageList.setItemChecked(i-1, true);
-				mMessageList.smoothScrollToPosition(i-1);
-				//mMessageList.setAdapter(mMessageAdapter);
-				mMessageAdapter.notifyDataSetChanged();
+				preparePrintBuffer();
+				startPreview();
 			}
 			
 		});
 		
-		mBtnNext = (Button) findViewById(R.id.btnNextRecord);
-		mBtnNext.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int i = mMessageAdapter.getChecked();
-				Debug.d(TAG,"curent checked = "+i);
-				if(i<1 || i>=mMessageList.getCount()-1)
-					return;
-				
-				//Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
-				
-				mMessageAdapter.setChecked(i+1);
-				mMessageList.setItemChecked(i+1, true);
-				mMessageList.smoothScrollToPosition(i+1);
-				//mMessageList.setAdapter(mMessageAdapter);
-				mMessageAdapter.notifyDataSetChanged();
-			}
-			
-		});
-		*/
-		/*
-		mForward = (Button) findViewById(R.id.btn_mvforward);
-		mForward.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				int i = mMessageAdapter.getChecked();
-				if(i<=1)
-					return;
-				
-				Map<String,String> item = mMessageMap.remove(i);
-				Log.d(TAG, ""+item.get("index")+" , "+item.get("pic1"));
-				mMessageMap.add(i-1, item);
-				try{
-					Vector<TlkObject> vec= mTlkList.remove(i);
-					mTlkList.add(i-1, vec);
-				}catch(Exception e)
-				{
-					
-				}
-				mMessageAdapter.setChecked(i-1);
-				//mMessageList.setAdapter(mMessageAdapter);
-				mMessageAdapter.notifyDataSetChanged();
-			}
-			
-		});
-		
-		mBackward = (Button) findViewById(R.id.btn_mvbackward);
-		mBackward.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int i = mMessageAdapter.getChecked();
-				if(i<0 || i>=mMessageList.getCount()-1)
-					return;
-				
-				Log.d(TAG, "********list size="+mMessageList.getCount()+", move down "+i);
-				Map<String,String> item = mMessageMap.remove(i);
-				mMessageMap.add(i+1, item);
-				try{
-					Vector<TlkObject> vec= mTlkList.remove(i);
-					mTlkList.add(i, vec);
-				}catch(Exception e)
-				{}
-				mMessageAdapter.setChecked(i+1);
-				//mMessageList.setAdapter(mMessageAdapter);
-				mMessageAdapter.notifyDataSetChanged();
-			}
-			
-		});
-		
-		mGoto = (Button) findViewById(R.id.btn_gotoline);
-		mGoto.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				String line=mDstline.getText().toString();
-				int dst=0;
-				try{
-					dst = Integer.parseInt(line);
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-					return;
-				}
-				if(dst >=1 && dst<mMessageList.getCount())
-				{
-					mMessageAdapter.setChecked(dst);
-					mMessageList.setItemChecked(dst, true);
-					mMessageList.smoothScrollToPosition(dst);
-					//mMessageList.setAdapter(mMessageAdapter);
-					mMessageAdapter.notifyDataSetChanged();
-				}
-			}
-			
-		});
-		mDstline = (EditText) findViewById(R.id.et_gotoline);
-		*/
-		/*
-		mMessageMap = new LinkedList<Map<String, String>>();
-		mMessageAdapter = new PreviewAdapter(mContext, 
-											mMessageMap,
-											R.layout.pmessagelistviewlayout,
-											new String[]{"index","pic1", "pic2", "pic3","pic4",
-													"text1","text2","text3","text4","text5","text6",
-													"text7","text8","text9","text10","text11","text12",
-													"text13","text14","text15","text16"},
-											new int[]{R.id.tv_index, R.id.tv_pic1,R.id.tv_pic2,R.id.tv_pic3,R.id.tv_pic4, 
-													R.id.tv_text1,R.id.tv_text2,R.id.tv_text3,R.id.tv_text4,
-													R.id.tv_text5,R.id.tv_text6,R.id.tv_text7,R.id.tv_text8,
-													R.id.tv_text9,R.id.tv_text10,R.id.tv_text11,R.id.tv_text12,
-													R.id.tv_text13,R.id.tv_text14,R.id.tv_text15,R.id.tv_text16});
-		
-		mMessageList = (ListView) findViewById(R.id.lv_messages);
-		mMessageList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		
-		mMessageList.setOnItemClickListener(new ListView.OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "******message list clicked: "+position);
-				if(position==0)
-				{
-					mMessageList.setItemChecked(position, false);
-					mMessageAdapter.setChecked(-1);
-				}
-				else
-				{
-					mMessageAdapter.setChecked(position);
-				}
-				mMessageAdapter.notifyDataSetChanged();
-			}
-			
-		});
-		initMsglist();
-		mMessageList.setAdapter(mMessageAdapter);
-		
-		*/
 		//
 		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
@@ -758,7 +376,8 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					{
 						Debug.d(TAG, "open object file "+f);
 						mObjPath = new File(f).getParent();
-						startPreview(f);
+						//startPreview();
+						prepareBackgroudBuffer(f);
 					}
 					break;
 				case 1:
@@ -804,49 +423,15 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	public Handler mPreviewRefreshHandler = new Handler(){
-		public void handleMessage(Message msg) { 
-			switch(msg.what)
-			{
-				case 0:		//
-					if(mBg == null)
-						return;
-					Debug.d(TAG, "mPreviewRefreshHandler  invalidate");
-					refreshVariables();
-					//BinCreater.saveBitmap(bm, "123.png");
-					BinCreater.bin2byte(mPreBitmap, mPreBytes);
-					//mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
-					//mPreview.invalidate();
-					
-					break;
-			}
-			mPreviewRefreshHandler.sendEmptyMessageDelayed(0, 2000);
-		}
-	};
-	
 	public byte[] mPreBitmap;
 	public int[]	mPreBytes;
-	public void startPreview(String f)
+	public void startPreview()
 	{
-		
-		String path=null;
-		File fp = new File(f);
-		if(fp.isFile())
-			path = new File(f).getParent();
-		else
-			path = f;
-		Fileparser.parse(mContext, f, mObjList);
-		
-		
+		if(mObjList==null || mObjList.isEmpty() || mPrintBuffer==null)
+			return;
 		try{
-			
-			mBg = new BinInfo();
-			mBg.getBgBuffer(path+"/1.bin");
-			 refreshVariables();
-			 mPreBytes = new int[mBg.mBits.length*8];
-			 Debug.d(TAG, "startPreview  mBg.mBits.len = "+mBg.mBits.length+", mPreBytes.len= "+mPreBytes.length);
-			 //mPreBitmap = new byte[mBg.mBits.length];
-			 BinCreater.bin2byte(mPreBitmap, mPreBytes);
+			 mPreBytes = new int[mPrintBuffer.length*8];
+			 BinCreater.bin2byte(mPrintBuffer, mPreBytes);
 			 mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
 			 mPreview.invalidate();
 			 //mPreviewRefreshHandler.sendEmptyMessage(0);
@@ -854,36 +439,46 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			{
 				Debug.d(TAG, "startPreview e: "+e.getMessage());
 			}
-			
-		/*
+		
+	}
+	public byte[] mBgBuffer;
+	public byte[] mPrintBuffer;
+	public void prepareBackgroudBuffer(String f)
+	{
+		String path=null;
+		File fp = new File(f);
+		if(fp.isFile())
+			path = new File(f).getParent();
+		else
+			path = f;
+		Fileparser.parse(mContext, f, mObjList);
 		try{
-			File file = new File(f);
-			FileInputStream fs = new FileInputStream(file);
-			//InputStreamReader reader = new InputStreamReader(fs);
-			Debug.d(TAG, "-----------");
-			byte[] binBuf = new byte[(int)file.length()];
-			fs.read(binBuf);
-			Debug.d(TAG, "-----------fs length="+file.length());
-			Bitmap bmp = BinCreater.Bin2Bitmap(binBuf);
-			//BinCreater.saveBitmap(bmp, "bin2bmp.png");
-			mPreview.createBitmap(bmp);
-			mPreview.invalidate();
-			
+			mBg = new BinInfo();
+			mBg.getBgBuffer(path+"/1.bin");
+			//read the background bin bytes to global mBgBuffer
+			mBgBuffer = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		}catch(Exception e)
 		{
-			Debug.d(TAG, "-----e="+e.toString());
+			e.printStackTrace();
 		}
-		*/
 	}
 	
-	public void refreshVariables()
+	public void preparePrintBuffer()
+	{
+		if(mObjList==null || mObjList.isEmpty())
+			return;
+		mPrintBuffer= Arrays.copyOf(mBgBuffer, mBgBuffer.length);
+		refreshVariables(mPrintBuffer);
+	}
+	
+	public void refreshVariables(byte[] buffer)
 	{
 		Bitmap bm=null;
 		String substr=null;
 		ByteArrayBuffer bytes=new ByteArrayBuffer(0);
 		if(mObjList==null || mObjList.isEmpty())
 			return;
-		mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
+		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)
 		{
 			bytes.clear();
@@ -891,21 +486,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			Debug.d(TAG, "refreshVariables object = "+o.mId);
 			if(o instanceof CounterObject)
 			{
-				//int value = ((CounterObject) o).getValue();
 				String str = ((CounterObject) o).getNext();
-				/*
-				for(int i=0; i<str.length(); i++)
-				{
-					byte[] b = BinCreater.getBinBuffer(Integer.parseInt(str.substring(i, i+1)), mObjPath+"/" + o.getIndex() +".bin");
-					//Debug.d(TAG, "mPreviewRefreshHandler b.len="+b.length);
-					bytes.append(b, 0, b.length);
-				}
-				//bm = BinCreater.bin2byte(bytes.buffer());
-				//BinCreater.saveBitmap(bm, o.getIndex()+".png");
-				BinCreater.overlap(mPreBitmap, bytes.buffer(), (int)o.getX(), 0, 110);
-				Debug.d(TAG, "obj Y="+o.getY()+", bm.hight="+bm.getHeight());
-				//mPreview.drawBitmap((int)o.getX(), 0, bm);
-				 */
 				BinInfo varbin = new BinInfo();
 				try {
 					varbin.getVarBuffer(str, mObjPath+"/" + "v" + o.getIndex() +".bin");
@@ -913,7 +494,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				BinCreater.overlap(mPreBitmap, varbin.mBits, (int)o.getX(), 0, Configs.gDots);
+				BinCreater.overlap(buffer, varbin.mBits, (int)o.getX(), 0, varbin.mBitsperColumn);
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -947,21 +528,6 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					}
 					else
 						continue;
-					/*
-					Debug.d(TAG, "x="+rtSub.getX()+", y="+rtSub.getY()+", width="+rtSub.getWidth()+", xEnd="+rtSub.getXEnd());
-					Debug.d(TAG, "bin file :"+mObjPath+"/" + rtSub.getIndex() +".bin"+", substr="+substr);
-					for(int i=0; i<substr.length(); i++)
-					{						
-						byte[] b = BinCreater.getBinBuffer(Integer.parseInt(substr.substring(i, i+1)), mObjPath+"/" + rtSub.getIndex() +".bin");
-						Debug.d(TAG, "mPreviewRefreshHandler b.len="+b.length);
-						bytes.append(b, 0, b.length);
-					}
-					
-					//bm = BinCreater.bin2byte(bytes.toByteArray());
-					//Debug.d(TAG, "bm width="+bm.getWidth()+", bytes len="+bytes.length());
-					//mPreview.drawBitmap((int)rtSub.getX(), (int)rtSub.getY(), bm);
-					BinCreater.overlap(mPreBitmap, bytes.buffer(), (int)rtSub.getX(), 0, 110);
-					*/
 					BinInfo varbin = new BinInfo();
 					try {
 						varbin.getVarBuffer(substr, mObjPath+"/" + "v"+rtSub.getIndex() +".bin");
@@ -969,7 +535,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					BinCreater.overlap(mPreBitmap, varbin.mBits, (int)rtSub.getX(), 0, Configs.gDots);
+					BinCreater.overlap(buffer, varbin.mBits, (int)rtSub.getX(), 0, varbin.mBitsperColumn);
 				}				
 			}
 			else

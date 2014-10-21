@@ -36,9 +36,10 @@
 	<string name="strOn">开</string>
 	<string name="strOff">关</string>
 	<string name="strwaitting">正在打印，请稍等。。。。。。</string>
-	<string name="str_openfile">打开Csv文件</string>
+	<string name="str_csvfile">打开Csv文件</string>
 	<string name="str_tlkfile">打开Tlk文件</string>
 	<string name="str_binfile">打开Bin文件</string>
+	<string name="str_openfile">选择打印文件</string>
 	<string name="str_mvforward">前移</string>
 	<string name="str_mvbackward">后移</string>
 	<string name="str_preview">预览</string>

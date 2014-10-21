@@ -15,10 +15,19 @@ import android.util.Log;
 
 public class BinInfo {
 	public static final String TAG="BinInfo";
-	
-	public int mColumn;				
+	/**
+	 * bin文件的总列数
+	 */
+	public int mColumn;
+	/**
+	 * 每一列的点数
+	 */
 	public int mBitsperColumn;	
-	public int mColOne;			
+	/**
+	 * 变量的bin文件中每个元素的点数
+	 */
+	public int mColOne;
+	
 	public byte[] mBits;
 	//public int[]	mPixels;
 	
