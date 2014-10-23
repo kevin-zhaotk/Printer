@@ -228,7 +228,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH);
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk");
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override

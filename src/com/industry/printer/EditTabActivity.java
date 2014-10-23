@@ -28,6 +28,7 @@ import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -140,7 +141,7 @@ public class EditTabActivity extends Activity {
 				mObjName = null;
 				mObjs.clear();
 				mObjs.add(new MessageObject(mContext, 0));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}		
 		});
 		
@@ -148,8 +149,13 @@ public class EditTabActivity extends Activity {
 		mBtnSave.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				if(!isPropertyChanged())
+					return;
 				if(mObjName != null)
+				{
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+					return;
+				}
 				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this);
 				//fdialog.setDismissMessage(Message.obtain(mHandler, 1));
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
@@ -192,7 +198,7 @@ public class EditTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				//File file = new File("/mnt/usb/1.tlk");
 				//Debug.d(TAG, ""+file.getPath()+"is "+file.exists());
-				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this);
+				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,BinCreater.FILE_PATH, ".tlk");
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 					@Override
 					public void onClick() {
@@ -219,7 +225,7 @@ public class EditTabActivity extends Activity {
 					clearCurObj();
 					setCurObj(ret);
 					mObjList.setSelection(ret);
-					mObjRefreshHandler.sendEmptyMessage(0);
+					mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
 				}
 				return false;
 			}
@@ -242,7 +248,7 @@ public class EditTabActivity extends Activity {
 				System.out.println("objlist item " + position +" clicked");
 				clearCurObj();
 				setCurObj(position);
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
 				for(int i=0; i < parent.getChildCount(); i++)
 				{
 					View v = parent.getChildAt(i);
@@ -272,7 +278,7 @@ public class EditTabActivity extends Activity {
 					@Override
 					public void onClick() {
 						// TODO Auto-generated method stub
-						mObjRefreshHandler.sendEmptyMessage(0);
+						mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 					}
 					
 				});
@@ -368,7 +374,7 @@ public class EditTabActivity extends Activity {
 				}
 				else if(event.getAction() == MotionEvent.ACTION_UP)
 				{
-					Debug.d(TAG, "======Down button released!!");
+					Debug.d(TAG, "======up button released!!");
 					mKeyRepeatHandler.removeMessages(UP_KEY);
 				}
 				return false;
@@ -542,7 +548,7 @@ public class EditTabActivity extends Activity {
 					return;
 				mObjs.remove(obj);
 				setCurObj(0);
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -568,7 +574,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new TextObject(mContext,  getNextXcor()));
 				System.out.println("objs = "+mObjs.size());
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 		});
 		
@@ -579,7 +585,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new CounterObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -591,7 +597,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new BarcodeObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -623,7 +629,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new JulianDayObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -635,7 +641,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new RealtimeObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -648,7 +654,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new LineObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -660,7 +666,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new RectObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -672,7 +678,7 @@ public class EditTabActivity extends Activity {
 			public void onClick(View v) {
 				clearCurObj();
 				mObjs.add(new EllipseObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -685,7 +691,7 @@ public class EditTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				clearCurObj();
 				mObjs.add(new ShiftObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}
 			
 		});
@@ -697,67 +703,14 @@ public class EditTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				clearCurObj();
 				mObjs.add(new RTSecondObject(mContext, getNextXcor()));
-				mObjRefreshHandler.sendEmptyMessage(0);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 			}			
 		});
-/*
-		mBtnOk = (Button) findViewById(R.id.btn_confirm);
-		mBtnOk.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try{
-					BaseObject obj = getCurObj();
-					obj.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
-					obj.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
-					obj.setX(Float.parseFloat(mXcorEdit.getText().toString()));
-					obj.setY(Float.parseFloat(mYcorEdit.getText().toString()));
-					obj.setContent(mContent.getText().toString());
-					obj.setDragable(mDragBox.isChecked());
-					if(obj instanceof RealtimeObject)
-						((RealtimeObject) obj).setFormat((String)mRtFormat.getSelectedItem());
-					if(obj instanceof CounterObject)
-					{
-						((CounterObject) obj).setBits(Integer.parseInt(mDigits.getText().toString()));
-						((CounterObject) obj).setDirection("increase".equals(mDir.getSelectedItem().toString())?true:false);
-					}
-					if(obj instanceof BarcodeObject)
-					{
-						((BarcodeObject) obj).setCode(mCode.getSelectedItem().toString());
-						((BarcodeObject) obj).setShow(mShow.isChecked());
-					}
-					if(obj instanceof RectObject)
-					{
-						obj.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-						((RectObject) obj).setLineType(mLineType.getSelectedItemPosition());
-					}
-					if(obj instanceof LineObject)
-					{
-						obj.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-						((LineObject) obj).setLineType(mLineType.getSelectedItemPosition());
-					}
-					if(obj instanceof EllipseObject)
-					{
-						obj.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-						((EllipseObject) obj).setLineType(mLineType.getSelectedItemPosition());
-					}
-					mObjRefreshHandler.sendEmptyMessage(0);
-				}catch(NumberFormatException e)
-				{
-					System.out.println("NumberFormatException 292");
-				}
-			}
-			
-		});
-		
-		
-		
-		mViewInfo = (ScrollView) findViewById(R.id.viewInfo);
-		mObjRefreshHandler.sendEmptyMessage(0);
-		*/
 	}
 	
+	public static final int REFRESH_OBJECT_CHANGED=0;
+	public static final int REFRESH_OBJECT_JUST=1;
 	
 	public Handler mObjRefreshHandler = new Handler(){
 		@Override
@@ -769,71 +722,51 @@ public class EditTabActivity extends Activity {
 			if(obj != null){
 				makeObjToCenter((int)obj.getX());
 			}
+			switch (msg.what) {
 			
-/*			
-			if(obj instanceof MessageObject)
-			{	
-				mWidthEdit.setText("0");
-				mHighEdit.setText("0");
-				mXcorEdit.setText("0");
-				mYcorEdit.setText("0");
-			}
-			else
-			{
-				mWidthEdit.setText(String.valueOf(obj.getWidth()) );
-				mHighEdit.setText(String.valueOf(obj.getHeight()));
-				mXcorEdit.setText(String.valueOf(obj.getX()));
-				mYcorEdit.setText(String.valueOf(obj.getY()));
-				mContent.setText(String.valueOf(obj.getContent()));
-				mDragBox.setChecked(obj.getSelected());
-				if(obj instanceof RealtimeObject)
+			case REFRESH_OBJECT_CHANGED:	
+			
+				mNameAdapter.clear();
+				for(BaseObject o:mObjs)
 				{
-					String [] fm = getResources().getStringArray(R.array.strTimeFormat);
-					for( i = 0; i<fm.length; i++)
-					{
-						if(fm[i].equals(((RealtimeObject) obj).getFormat()))
-						{
-							mRtFormat.setSelection(i);
-							break;
-						}
-					}
-					if(i==fm.length)
-						mRtFormat.setSelection(0);
+					if(o instanceof MessageObject)
+						mNameAdapter.add(o.getContent());
+					else if(o instanceof TextObject)
+						mNameAdapter.add(mContext.getString(R.string.object_text));
+					else if(o instanceof CounterObject)
+						mNameAdapter.add(mContext.getString(R.string.object_counter));
+					else if(o instanceof BarcodeObject)
+						mNameAdapter.add(mContext.getString(R.string.object_bar));
+					else if(o instanceof GraphicObject)
+						mNameAdapter.add(mContext.getString(R.string.object_pic));
+					else if(o instanceof JulianDayObject)
+						mNameAdapter.add(mContext.getString(R.string.object_julian));
+					else if(o instanceof RealtimeObject)
+						mNameAdapter.add(mContext.getString(R.string.object_realtime));
+					else if(o instanceof LineObject)
+						mNameAdapter.add(mContext.getString(R.string.object_line));
+					else if(o instanceof RectObject)
+						mNameAdapter.add(mContext.getString(R.string.object_rect));
+					else if(o instanceof EllipseObject)
+						mNameAdapter.add(mContext.getString(R.string.object_ellipse));
+					else if(o instanceof ShiftObject)
+						mNameAdapter.add(mContext.getString(R.string.object_shift));
+					else if(o instanceof RTSecondObject)
+						mNameAdapter.add(mContext.getString(R.string.object_second));
+					else
+						System.out.println("Unknown Object type");
 				}
+				mNameAdapter.notifyDataSetChanged();
+				//selfInfoEnable(obj);
+				OnPropertyChanged(true);
+				break;
+			case REFRESH_OBJECT_JUST:
+				mNameAdapter.notifyDataSetChanged();
+				break;
+			default:
+				break;
 			}
-*/			
-			mNameAdapter.clear();
-			for(BaseObject o:mObjs)
-			{
-				if(o instanceof MessageObject)
-					mNameAdapter.add(o.getContent());
-				else if(o instanceof TextObject)
-					mNameAdapter.add(mContext.getString(R.string.object_text));
-				else if(o instanceof CounterObject)
-					mNameAdapter.add(mContext.getString(R.string.object_counter));
-				else if(o instanceof BarcodeObject)
-					mNameAdapter.add(mContext.getString(R.string.object_bar));
-				else if(o instanceof GraphicObject)
-					mNameAdapter.add(mContext.getString(R.string.object_pic));
-				else if(o instanceof JulianDayObject)
-					mNameAdapter.add(mContext.getString(R.string.object_julian));
-				else if(o instanceof RealtimeObject)
-					mNameAdapter.add(mContext.getString(R.string.object_realtime));
-				else if(o instanceof LineObject)
-					mNameAdapter.add(mContext.getString(R.string.object_line));
-				else if(o instanceof RectObject)
-					mNameAdapter.add(mContext.getString(R.string.object_rect));
-				else if(o instanceof EllipseObject)
-					mNameAdapter.add(mContext.getString(R.string.object_ellipse));
-				else if(o instanceof ShiftObject)
-					mNameAdapter.add(mContext.getString(R.string.object_shift));
-				else if(o instanceof RTSecondObject)
-					mNameAdapter.add(mContext.getString(R.string.object_second));
-				else
-					System.out.println("Unknown Object type");
-			}
-			mNameAdapter.notifyDataSetChanged();
-			//selfInfoEnable(obj);
+			
 		}
 	};
 	
@@ -950,6 +883,7 @@ public class EditTabActivity extends Activity {
 	public static final int HANDLER_MESSAGE_SAVE=1;
 	public static final int HANDLER_MESSAGE_SAVEAS=2;
 	public static final int HANDLER_MESSAGE_IMAGESELECT=3;
+	public static final int HANDLER_MESSAGE_DISMISSDIALOG=4;
 	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
@@ -961,19 +895,21 @@ public class EditTabActivity extends Activity {
             		if(mObjName != null && new File(mObjName).isFile())
             		{
 	    				Fileparser.parse(mContext, FileBrowserDialog.file(), mObjs);
-	    				mObjRefreshHandler.sendEmptyMessage(0);
+	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
             		break;
             	case HANDLER_MESSAGE_SAVE:		//saveas
             		Debug.d(TAG, "save as file="+FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName());
             		mObjName = FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName();
             	case HANDLER_MESSAGE_SAVEAS:    //save
+            		progressDialog();
             		if(mObjName != null)
             		{
             			saveObjFile(mObjName);
             		}
             		drawAllBmp(mObjName);
-            		
+            		dismissProgressDialog();
+            		OnPropertyChanged(false);
             		break;
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		File file = new File(FileBrowserDialog.file());
@@ -986,23 +922,16 @@ public class EditTabActivity extends Activity {
             		GraphicObject o = new GraphicObject(mContext, getNextXcor());
             		o.setImage(FileBrowserDialog.file());
     				mObjs.add(o);    	
-    				mObjRefreshHandler.sendEmptyMessage(0);
+    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
+            		break;
+            	case HANDLER_MESSAGE_DISMISSDIALOG:
+            		mProgressDialog.dismiss();
             		break;
             }   
             super.handleMessage(msg);   
        } 
 	};
 	
-	Handler mCnlHandler = new Handler(){
-		public void handleMessage(Message msg) {   
-            switch (msg.what) {   
-            	case 0:
-            		Debug.d(TAG, "cancel clicked");
-            		break;
-            }   
-            super.handleMessage(msg);   
-       }
-	};
 	
 	public final int LEFT_KEY=1;
 	public final int RIGHT_KEY=2;
@@ -1127,6 +1056,41 @@ public class EditTabActivity extends Activity {
 		return ;
 	}
 	
+	public ProgressDialog mProgressDialog;
+	public Thread mProgressThread;
+	public boolean mProgressShowing;
+	public void progressDialog()
+	{
+		mProgressDialog = ProgressDialog.show(EditTabActivity.this, "", getResources().getString(R.string.strSaving), true,false);
+		mProgressShowing = true;
+		mProgressThread = new Thread(){
+			
+			@Override
+			public void run(){
+				
+				try{
+					for(;mProgressShowing==true;)
+					{
+						Thread.sleep(2000);
+					}
+					mHandler.sendEmptyMessage(HANDLER_MESSAGE_DISMISSDIALOG);
+				}catch(Exception e)
+				{
+					
+				}
+			}
+		};
+		mProgressThread.start();
+	}
+	
+	public void dismissProgressDialog()
+	{
+		mProgressShowing=false;
+		//Thread thread = mProgressThread;
+		//thread.interrupt();
+		
+	}
+	
 	private void leftKeyPressed()
 	{
 		BaseObject obj = getCurObj();
@@ -1138,7 +1102,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setX(obj.getX() - 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void rightKeyPressed()
@@ -1152,7 +1116,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setX(obj.getX() + 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void upKeyPressed()
@@ -1166,7 +1130,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setY(obj.getY() - 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void downKeyPressed()
@@ -1180,7 +1144,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setY(obj.getY() + 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void zoomOutXKeyPressed()
@@ -1194,7 +1158,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setWidth(obj.getWidth() + 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void zoomInXKeyPressed()
@@ -1208,7 +1172,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setWidth(obj.getWidth() - 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void zoomOutYKeyPressed()
@@ -1222,7 +1186,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setHeight(obj.getHeight() + 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	private void zoomInYKeyPressed()
@@ -1236,6 +1200,17 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setHeight(obj.getHeight() - 4);
-		mObjRefreshHandler.sendEmptyMessage(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+	}
+	
+	public boolean mPropertyChanged=false;
+	private void OnPropertyChanged(boolean state)
+	{
+		mPropertyChanged=state;
+	}
+	
+	public boolean isPropertyChanged()
+	{
+		return mPropertyChanged;
 	}
 }
