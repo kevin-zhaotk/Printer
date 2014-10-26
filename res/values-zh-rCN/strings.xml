@@ -78,6 +78,7 @@
 	<string name="strUpgradeConfirm">确认要更新？</string>
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>
+	<string name="strLoading">正在加载请耐心等待...</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP head</item>
 	    <item>12.7 mm HP standard</item>

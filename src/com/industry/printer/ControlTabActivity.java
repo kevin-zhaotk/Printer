@@ -75,7 +75,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Activity implements OnClickListener{
+public class ControlTabActivity extends Activity{
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -138,7 +138,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public boolean isPrinting;
 	public boolean isRunning;
 	public PrintingThread mPrintThread;
-	public PollStateThread mPollThread;
+	
 	
 	public int mIndex;
 	public TextView mPrintStatus;
@@ -146,6 +146,54 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 	public TextView mPhotocellState;
 	public TextView mEncoderState;
 	public TextView mPrintState;
+	
+	/**
+	 * current tlk path opened
+	 */
+	public String mObjPath=null;
+	
+	/**
+	 * MESSAGE_OPEN_TLKFILE
+	 *   message tobe sent when open tlk file
+	 */
+	public final int MESSAGE_OPEN_TLKFILE=0;
+	/**
+	 * MESSAGE_UPDATE_PRINTSTATE
+	 *   message tobe sent when update print state
+	 */
+	public final int MESSAGE_UPDATE_PRINTSTATE=1;
+	/**
+	 * MESSAGE_UPDATE_INKLEVEL
+	 *   message tobe sent when update ink level
+	 */
+	public final int MESSAGE_UPDATE_INKLEVEL=2;
+	/**
+	 * MESSAGE_DISMISS_DIALOG
+	 *   message tobe sent when dismiss loading dialog 
+	 */
+	public final int MESSAGE_DISMISS_DIALOG=3;
+	
+	
+	/**
+	 * the bitmap for preview
+	 */
+	public byte[] mPreBitmap;
+	/**
+	 * 
+	 */
+	public int[]	mPreBytes;
+	
+	/**
+	 * background buffer
+	 *   used for save the background bin buffer
+	 *   fill the variable buffer into this background buffer so we get printing buffer
+	 */
+	public byte[] mBgBuffer;
+	/**
+	 *printing buffer
+	 *	you should use this buffer for preview
+	 */
+	public byte[] mPrintBuffer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -185,6 +233,9 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				if(mPrintBuffer==null || mObjList==null || mObjList.isEmpty())
+					return;
+				preparePrintBuffer();
 				print();
 			}
 			
@@ -242,7 +293,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 							return;
 						}
 						// TODO show bin
-						mHandler.sendEmptyMessage(0);
+						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
 						
 					}
 					
@@ -261,7 +312,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				preparePrintBuffer();
+				//preparePrintBuffer();
 				startPreview();
 			}
 			
@@ -295,7 +346,10 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		return false;
 	}
 	
-	public ProgressDialog mPrintDialog;
+	/**
+	 * print
+	 * 打印接口，下发打印数据，并定时查询打印状态，自动更新墨水值，打印返回成功后结束Thread
+	 */
 	public void print()
 	{
 		byte[] buffer=null;
@@ -306,32 +360,11 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		makeParams(mContext,data);
 		UsbSerial.sendSettingData(mFd, data);
 		
-		try{
-			int index = mMessageAdapter.getChecked();
-			Vector<TlkObject> list = mTlkList.get(index-1);
-			Debug.d(TAG,"=======index="+(index-1));
-			showListContent(list);
-			buffer = mBinBuffer.get(list);
-		}catch(Exception e)
-		{
-			Debug.d(TAG,"######Exception: "+e.getMessage());
-			return;
-		}
-		/*
-		buffer = new byte[6400];
-		for(int i=0;i<6400;i=i+8)
-		{
-			buffer[i]=(byte)0xff;
-			buffer[i+2]=(byte)0xff;
-			buffer[i+4]=(byte)0xff;
-			buffer[i+6]=(byte)0xff;
-		}
-		*/
-		if(buffer==null)
+		if(mPrintBuffer==null)
 			return;
 		
-		UsbSerial.sendDataCtrl(mFd, buffer.length);
-		UsbSerial.printData(mFd,  buffer);
+		UsbSerial.sendDataCtrl(mFd, mPrintBuffer.length);
+		UsbSerial.printData(mFd,  mPrintBuffer);
 		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
 		new Thread(new Runnable(){
 			@Override
@@ -348,7 +381,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 					
 					UsbSerial.getInfo(mFd, info);
 					Message msg = new Message();
-					msg.what=2;
+					msg.what=MESSAGE_UPDATE_INKLEVEL;
 					Bundle b= new Bundle();
 					b.putByteArray("info", info);
 					msg.setData(b);
@@ -359,18 +392,14 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			}
 		}).start();
 		
-		//UsbSerial.sendDataCtrl(mFd, data.length);
-		//UsbSerial.printData(mFd,  data);
 	}
 	
-	public String mObjPath=null;
-	public ProgressDialog mLoadingDialog;
 	public Handler mHandler = new Handler(){
-		public void handleMessage(Message msg) { 
+		public void handleMessage(Message msg) {
 			switch(msg.what)
 			{
-				case 0:		//
-					
+				case MESSAGE_OPEN_TLKFILE:		//
+					progressDialog();
 					String f = FileBrowserDialog.file();
 					if(f !=null && !new File(f).isDirectory())
 					{
@@ -379,16 +408,17 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						//startPreview();
 						prepareBackgroudBuffer(f);
 					}
+					dismissProgressDialog();
 					break;
-				case 1:
+				case MESSAGE_UPDATE_PRINTSTATE:
 					String text = msg.getData().getString("text");
 					mPrintStatus.setText("result: "+text);
 					break;
-				case 2:
+				case MESSAGE_UPDATE_INKLEVEL:
 					//mPrintDialog.dismiss();
 					updateInkLevel(msg.getData().getByteArray("info"));
 					break;
-				case 3:
+				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
 					break;
 			}
@@ -422,9 +452,6 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		}
 		
 	}
-	
-	public byte[] mPreBitmap;
-	public int[]	mPreBytes;
 	public void startPreview()
 	{
 		if(mObjList==null || mObjList.isEmpty() || mPrintBuffer==null)
@@ -441,8 +468,12 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			}
 		
 	}
-	public byte[] mBgBuffer;
-	public byte[] mPrintBuffer;
+	
+	/**
+	 * prepareBackgroudBuffer
+	 * @param f	the tlk object directory path
+	 * parse the 1.bin, and then read the file content into mBgBuffer, one bit extends to one byte
+	 */
 	public void prepareBackgroudBuffer(String f)
 	{
 		String path=null;
@@ -463,6 +494,10 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		}
 	}
 	
+	/**
+	 * preparePrintBuffer
+	 *   fill the variable buffer into background buffer
+	 */
 	public void preparePrintBuffer()
 	{
 		if(mObjList==null || mObjList.isEmpty())
@@ -661,39 +696,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 			mPrintState.setText(getResources().getString(R.string.strPrinting));
 		}
 	}
-	/*
-	 * if in no-print state, poll state of print-head in 100ms interval
-	 */
-	public class PollStateThread extends Thread{
-		
-		//public boolean isRunning;
-		PollStateThread(){
-			//isRunning = false;
-		}
-		
-		public void run()
-		{
-			//isRunning = true;
-			byte[] info = new byte[16];
-			if(mFd <= 0)
-				return ;
-			UsbSerial.printStart(mFd);
-			while(!isPrinting)
-			{
-				int ret = UsbSerial.getInfo(mFd, info);
-				if(ret != 0)
-					Debug.d(TAG, "get Print-header info error");
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			UsbSerial.printStop(mFd);
-			//isRunning = false;
-		}
-	}
+	
 	/*
 	 * printing Thread
 	 * 1) send print command(0001)
@@ -769,7 +772,7 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						Message msg = new Message();
 						Bundle b = new Bundle();
 						b.putString("text", text);
-						msg.what=1;
+						msg.what=MESSAGE_UPDATE_PRINTSTATE;
 						msg.setData(b);
 						mHandler.sendMessage(msg);
 						if(info[9] == 0)	//print finished
@@ -796,21 +799,6 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 						curPos = 0;
 					Vector<TlkObject> list = mTlkList.get(curPos);
 					byte[] buffer = mBinBuffer.get(list);
-					
-					/*
-					byte data[]={0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 
-							0x00, 0x00, 0x40, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 
-							0x00, 0x00, 0x50, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, (byte) 0x80, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x20, 0x00, 0x00, 
-							0x00, 0x00, 0x00, 0x04, 0x00, 0x10, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-							0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, (byte) 0x80, 0x00, 0x00, 0x00, 
-							0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00
-							};
-					*/
 					UsbSerial.sendDataCtrl(mFd, buffer.length);
 					UsbSerial.printData(mFd,  buffer);
 					curPos++;
@@ -843,89 +831,6 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		return t;
 	}
 	
-	public void initMsglist()
-	{
-		Map<String, String> m = new HashMap<String,String>();
-		m.put("index", getResources().getString(R.string.str_column_index));
-		m.put("pic1", getResources().getString(R.string.str_column_pic1));
-		m.put("pic2", getResources().getString(R.string.str_column_pic2));
-		m.put("pic3", getResources().getString(R.string.str_column_pic3));
-		m.put("pic4", getResources().getString(R.string.str_column_pic4));
-		m.put("text1", getResources().getString(R.string.str_column_text1));
-		m.put("text2", getResources().getString(R.string.str_column_text2));
-		m.put("text3", getResources().getString(R.string.str_column_text3));
-		m.put("text4", getResources().getString(R.string.str_column_text4));
-		m.put("text5", getResources().getString(R.string.str_column_text5));
-		m.put("text6", getResources().getString(R.string.str_column_text6));
-		m.put("text7", getResources().getString(R.string.str_column_text7));
-		m.put("text8", getResources().getString(R.string.str_column_text8));
-		m.put("text9", getResources().getString(R.string.str_column_text9));
-		m.put("text10",getResources().getString(R.string.str_column_text10));
-		m.put("text11", getResources().getString(R.string.str_column_text11));
-		m.put("text12", getResources().getString(R.string.str_column_text12));
-		m.put("text13", getResources().getString(R.string.str_column_text13));
-		m.put("text14", getResources().getString(R.string.str_column_text14));
-		m.put("text15", getResources().getString(R.string.str_column_text15));
-		m.put("text16", getResources().getString(R.string.str_column_text16));
-		
-		
-		mMessageMap.add(m);
-	}
-	
-	
-	public void readCsv(String csvfile)//, Vector<TlkObject> list)
-	{
-		CsvReader reader;
-		mMessageMap.clear();
-		Map<String, String> m;
-		initMsglist();
-		try {
-			reader = new CsvReader(csvfile);
-			reader.readRecord();	/*read the first row*/
-			/*TO-DO parse head information*/
-			reader.readRecord();	/*read the second row*/
-			while(reader.readRecord())
-			{
-				m = new HashMap<String, String>();
-				for(int i=0; i< reader.getColumnCount(); i++)
-				{
-					if(i == 0)	//index
-					{
-						m.put("index", reader.get(i));
-						Debug.d(TAG, "index="+reader.get(i));
-					}
-					else if(i> 0 && i< 5)	//pic
-					{
-						m.put("pic"+i, reader.get(i));
-						//list.
-						Debug.d(TAG, "pic"+i+" = "+reader.get(i));
-					}
-					else if(i>=5 &&i<21)	//text
-					{
-						m.put("text"+(i-4), reader.get(i));
-						Debug.d(TAG, "text"+(i-4)+" = "+reader.get(i));
-					}
-					else
-						break;
-				}
-				
-				mMessageMap.add(m);
-			}
-			reader.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			
-		}
-		
-		
-	}
-	
-	
 	
 	public int calculateBufsize(Vector<TlkObject> list)
 	{
@@ -948,47 +853,6 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		}
 		return length;
 	}
-	
-	public void makeBinBuffer(Vector<TlkObject>list)
-	{
-		int len = calculateBufsize(list);
-		Debug.d(TAG, "bin length="+len);
-		//int[] buffer = new int[len+16];
-		int bit[];
-		Bitmap bmp=null;
-		Bitmap gBmp = Bitmap.createBitmap(len, 64, Config.ARGB_8888);
-		
-		Canvas can = new Canvas(gBmp);
-		can.drawColor(Color.WHITE);
-		Paint p = new Paint();
-		p.setARGB(255, 0, 0, 0);
-		
-		for(TlkObject o: list)
-		{
-			if(o.isTextObject())
-			{
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.FONT_FILE_PATH+o.font+".txt");
-				bit = new int[font.getColumns()*2*o.mContent.length()];
-				Debug.d(TAG, "=========bit.length="+bit.length);
-				font.getDotbuf(o.mContent, bit);
-				bmp=PreviewScrollView.getTextBitmapFrombuffer(bit, p);
-			}
-			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
-			{
-				Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
-				bit = new int[128*8];
-				font.getDotbuf(bit);
-				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
-			}
-			can.drawBitmap(bmp, o.x, o.y, p);
-		}
-		BinCreater.saveBitmap(gBmp, "pre.bmp");
-		//set contents of text object
-		//BinCreater.create(BitmapFactory.decodeFile("/mnt/usb/11.jpg"), "/mnt/usb/1.bin", 0);
-		BinCreater.create(gBmp, 0);
-	}
-	
 	
 	/*
 	 * make set param buffer
@@ -1085,133 +949,38 @@ public class ControlTabActivity extends Activity implements OnClickListener{
 		
 	}
 	
-	public static final int FILE_CSV_CHANGED=1;
-	public static final int FILE_TLK_CHANGED=2;
-	public Handler fileChangedHandler = new Handler(){
-		@Override
-		public void  handleMessage(Message msg)
-		{
-			switch(msg.what)
-			{
-			case FILE_CSV_CHANGED:
-			case FILE_TLK_CHANGED:
-				//
-				if(mBtnTlkfile.getText().toString()!=null && mBtnTlkfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.TLK_SUFFIX)
-					&& mBtnfile.getText().toString()!=null && mBtnfile.getText().toString().toLowerCase().endsWith(FilenameSuffixFilter.CSV_SUFFIX))
-				{
-					//Vector<TlkObject> list = new Vector<TlkObject>();
-					//if(mMsgFile!=null)
-					/*
-					mLoadingDialog = ProgressDialog.show(ControlTabActivity.this, "", "Loading,please wait......"); 
-					new Thread(new Runnable(){
-						@Override
-						public void run() {
-					*/{
-					
-							// TODO Auto-generated method stub
-							
-						mTlkList.clear();
-						
-						for(int i=1;i<mMessageList.getCount();i++)
-						{
-							Vector<TlkObject> tmpList = new Vector<TlkObject>();
-							//String path = new File(mMsgFile.getText().toString()).getParent();
-							if(!Tlk_Parser.parse(DotMatrixFont.TLK_FILE_PATH+mBtnTlkfile.getText().toString(), tmpList))
-							{
-								Toast.makeText(mContext, getResources().getString(R.string.str_notlkfile), Toast.LENGTH_LONG);
-								return;
-							}
-							
-							String index = ((Map<String, String>)mMessageList.getItemAtPosition(i)).get("index");
-							Debug.d(TAG, "=========index="+index+", i="+i);
-							setContent(index, tmpList);
-							mTlkList.add(tmpList);
-						}
-						
-						Debug.d(TAG, "list size="+mTlkList.size());
-					}
-					//make bin buffer
+	/**
+	 * the loading dialog
+	 */
+	public ProgressDialog mLoadingDialog;
+	public Thread mProgressThread;
+	public boolean mProgressShowing;
+	public void progressDialog()
+	{
+		mLoadingDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strLoading), true,false);
+		mProgressShowing = true;
+		mProgressThread = new Thread(){
+			
+			@Override
+			public void run(){
+				
+				try{
+					for(;mProgressShowing==true;)
 					{
-						mBinBuffer.clear();
-						for(Vector<TlkObject> list:mTlkList)
-						{
-							Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer");
-							makeBinBuffer(list);
-							ByteArrayInputStream stream = new ByteArrayInputStream(BinCreater.mBmpBits);
-							byte buffer[] = new byte[BinCreater.mBmpBits.length];
-							/*read columns from tlk file*/
-							
-							try{
-								int b=stream.read(buffer);
-								Debug.d(TAG,"readout: "+b);
-							}
-							catch(Exception e)
-							{
-								
-							}
-							mBinBuffer.put(list, buffer);
-						}
-						Debug.d(TAG,"%%%%%%%%%%%%%%%%%%%%%%%%makeBinbuffer finish");
-					}/*
-					mHandler.sendEmptyMessage(3);
+						Thread.sleep(2000);
 					}
+					mHandler.sendEmptyMessage(MESSAGE_DISMISS_DIALOG);
+				}catch(Exception e)
+				{
 					
-					}).start();*/
 				}
-				break;
-			default:
-				Debug.d(TAG, "unsupported message "+msg.what);
 			}
-		}
-	}; 
-	
-	public static final String LAST_TLK_FILE="LAST_TLK_FILE";
-	public static final String LAST_CSV_FILE="LAST_CSV_FILE";
-	
-	private void setTlkToPreference(String f)
-	{
-		SharedPreferences preference =getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
-		preference.edit().putString(LAST_TLK_FILE, f).commit();
+		};
+		mProgressThread.start();
 	}
 	
-	private String getTlkFromPreference()
+	public void dismissProgressDialog()
 	{
-		SharedPreferences preference =getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
-		String f = preference.getString(LAST_TLK_FILE, null);
-		return f;
-	}
-	
-	private void setCsvToPreference(String f)
-	{
-		SharedPreferences preference =getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
-		preference.edit().putString(LAST_CSV_FILE, f).commit();
-	}
-	
-	private String getCsvFromPreference()
-	{
-		SharedPreferences preference =getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, 0);
-		String f = preference.getString(LAST_CSV_FILE, null);
-		return f;
-	}
-	
-	private void showListContent(Vector<TlkObject> list)
-	{
-		Debug.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		for(TlkObject o:list)
-		{
-			Debug.d(TAG,"******x="+o.x+", y="+o.y+", content="+o.mContent);
-		}
-		Debug.d(TAG, "$$$$$$$$$$$$$$$$$$$$$$$$$$");
-	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		Debug.d(TAG, "------onClick, v.id="+v.getId()+", id="+R.id.ControlView);
-		if(v.getId()==R.id.ControlView)
-		{
-			InputMethodManager imm = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-		}
+		mProgressShowing=false;
 	}
 }

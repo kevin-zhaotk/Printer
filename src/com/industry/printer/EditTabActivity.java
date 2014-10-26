@@ -233,10 +233,8 @@ public class EditTabActivity extends Activity {
 		});
 
 		mObjList = (Spinner) findViewById(R.id.object_list);
-		//mNameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1);
-		//mNameAdapter.add("11111");
-		//mNameAdapter.add("22222");
-		mNameAdapter = new ArrayAdapter<String>(this, R.layout.object_list_item);
+		mNameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
+		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mObjList.setAdapter(mNameAdapter);
 		
 		mObjList.setOnItemSelectedListener(new OnItemSelectedListener(){
@@ -249,12 +247,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				setCurObj(position);
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
-				for(int i=0; i < parent.getChildCount(); i++)
-				{
-					View v = parent.getChildAt(i);
-					v.setBackgroundColor(Color.WHITE);
-				}
-				view.setBackgroundColor(Color.BLUE);
+				
 			}
 
 			@Override
@@ -575,6 +568,8 @@ public class EditTabActivity extends Activity {
 				mObjs.add(new TextObject(mContext,  getNextXcor()));
 				System.out.println("objs = "+mObjs.size());
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				
+				mObjList.setSelection(mObjs.size()-1);
 			}
 		});
 		
@@ -586,6 +581,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new CounterObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -598,6 +594,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new BarcodeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -615,6 +612,7 @@ public class EditTabActivity extends Activity {
 						// TODO Auto-generated method stub
 						Debug.d(TAG, "image selected");
 						mHandler.sendEmptyMessage(HANDLER_MESSAGE_IMAGESELECT);
+						//mObjList.setSelection(mObjs.size()-1);
 					}
 				});
 				fdialog.show();
@@ -630,6 +628,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new JulianDayObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -642,6 +641,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RealtimeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -655,6 +655,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new LineObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -667,6 +668,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RectObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -679,6 +681,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new EllipseObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -692,6 +695,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new ShiftObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}
 			
 		});
@@ -704,12 +708,23 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RTSecondObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjs.size()-1);
 			}			
 		});
 
+		/*initialize the object list spinner*/
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
+	/**
+	 * REFRESH_OBJECT_CHANGED
+	 *   some object changes, need to resave the tlk&bin files
+	 */
 	public static final int REFRESH_OBJECT_CHANGED=0;
+	/**
+	 * REFRESH_OBJECT_JUST
+	 *   just refresh the object list, no need to resave tlk or bin files
+	 */
 	public static final int REFRESH_OBJECT_JUST=1;
 	
 	public Handler mObjRefreshHandler = new Handler(){
@@ -757,6 +772,7 @@ public class EditTabActivity extends Activity {
 						System.out.println("Unknown Object type");
 				}
 				mNameAdapter.notifyDataSetChanged();
+				
 				//selfInfoEnable(obj);
 				OnPropertyChanged(true);
 				break;
@@ -879,10 +895,30 @@ public class EditTabActivity extends Activity {
 		
 	}
 	
+	/**
+	 * HANDLER_MESSAGE_OPEN
+	 *  Handler message for open tlk file
+	 */
 	public static final int HANDLER_MESSAGE_OPEN=0;
+	/**
+	 * HANDLER_MESSAGE_SAVE
+	 *   Handler message for save event happens
+	 */
 	public static final int HANDLER_MESSAGE_SAVE=1;
+	/**
+	 * HANDLER_MESSAGE_SAVEAS
+	 *   Handler message for saveas event happens
+	 */
 	public static final int HANDLER_MESSAGE_SAVEAS=2;
+	/**
+	 * HANDLER_MESSAGE_IMAGESELECT
+	 *   Handler message for image object selected
+	 */
 	public static final int HANDLER_MESSAGE_IMAGESELECT=3;
+	/**
+	 * HANDLER_MESSAGE_DISMISSDIALOG
+	 *   Handler message for dismiss loading dialog
+	 */
 	public static final int HANDLER_MESSAGE_DISMISSDIALOG=4;
 	
 	Handler mHandler = new Handler(){

@@ -79,6 +79,7 @@
 	<string name="strUpgradeConfirm">sure to upgrade?</string>
 	<string name="strUpgradeNoApk">No Upgrade Image found!!!</string>
 	<string name="strSaving">saving, please wait...</string>
+	<string name="strLoading">loading, please wait...</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP head</item>
 	    <item>12.7 mm HP standard</item>

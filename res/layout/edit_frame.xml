@@ -25,9 +25,10 @@
 
 		<Spinner android:id="@+id/object_list"
 		    android:layout_width="fill_parent"
-		    android:layout_height="40dp"
-		    android:background="#ffffff"
+		    android:layout_height="50dp"
+		    
 		    android:layout_weight="3"
+		    android:spinnerMode="dropdown"
 		 	/>
 		
 	</LinearLayout>
