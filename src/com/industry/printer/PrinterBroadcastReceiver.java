@@ -42,21 +42,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		}
 		else if(intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED))
 		{
-			Debug.d(TAG, "usb connected");
-			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
-			if(mUsbAlive==true)
-				return;
-			for(UsbDevice d : mngr.getDeviceList().values())
-			{
-				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
-				if(d.getVendorId()==0x3eb && d.getProductId() == 0x6119)
-				{
-					mUsbAlive = true;
-				}
-			}
-			
-			if(mUsbAlive==false)
-				return;
+			Debug.d(TAG, "new usb device attached");
 			//System.setProperty("ctl.start", "mptty");
 			SystemProperties.set("ctl.start", "mptty");
 			Intent intnt = new Intent();
@@ -69,12 +55,13 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 			UsbManager mngr =(UsbManager) context.getSystemService(Context.USB_SERVICE);
 			if(mUsbAlive == false)
 				return;
+			mUsbAlive = false;
 			for(UsbDevice d : mngr.getDeviceList().values())
 			{
 				Debug.d(TAG, "vendor="+d.getVendorId()+",  product="+d.getProductId()+",name="+d.getDeviceName());
 				if(d.getVendorId()==0x3eb && d.getProductId() == 0x6119)
 				{
-					mUsbAlive = false;
+					mUsbAlive = true;
 				}
 			}
 

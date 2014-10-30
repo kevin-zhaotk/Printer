@@ -568,8 +568,8 @@ public class EditTabActivity extends Activity {
 				mObjs.add(new TextObject(mContext,  getNextXcor()));
 				System.out.println("objs = "+mObjs.size());
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mObjList.setSelection(mObjList.getCount()-1);
 				
-				mObjList.setSelection(mObjs.size()-1);
 			}
 		});
 		
@@ -581,7 +581,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new CounterObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -594,7 +594,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new BarcodeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -612,7 +612,7 @@ public class EditTabActivity extends Activity {
 						// TODO Auto-generated method stub
 						Debug.d(TAG, "image selected");
 						mHandler.sendEmptyMessage(HANDLER_MESSAGE_IMAGESELECT);
-						//mObjList.setSelection(mObjs.size()-1);
+						//mObjList.setSelection(mObjList.getCount()-1);
 					}
 				});
 				fdialog.show();
@@ -628,7 +628,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new JulianDayObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -641,7 +641,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RealtimeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -655,7 +655,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new LineObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -668,7 +668,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RectObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -681,7 +681,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new EllipseObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -695,7 +695,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new ShiftObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}
 			
 		});
@@ -708,7 +708,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RTSecondObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjs.size()-1);
+				mObjList.setSelection(mObjList.getCount()-1);
 			}			
 		});
 
@@ -731,12 +731,7 @@ public class EditTabActivity extends Activity {
 		@Override
 		public void  handleMessage (Message msg)
 		{
-			int i=0;
-			BaseObject obj = getCurObj();
-			mObjView.invalidate();
-			if(obj != null){
-				makeObjToCenter((int)obj.getX());
-			}
+			
 			switch (msg.what) {
 			
 			case REFRESH_OBJECT_CHANGED:	
@@ -772,6 +767,7 @@ public class EditTabActivity extends Activity {
 						System.out.println("Unknown Object type");
 				}
 				mNameAdapter.notifyDataSetChanged();
+				//mObjList.setAdapter(mNameAdapter);
 				
 				//selfInfoEnable(obj);
 				OnPropertyChanged(true);
@@ -782,7 +778,11 @@ public class EditTabActivity extends Activity {
 			default:
 				break;
 			}
-			
+			BaseObject obj = getCurObj();
+			mObjView.invalidate();
+			if(obj != null){
+				makeObjToCenter((int)obj.getX());
+			}
 		}
 	};
 	

@@ -40,6 +40,7 @@ import com.industry.printer.object.RealtimeYear;
 
 import com.industry.printer.object.TlkObject;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -148,6 +149,10 @@ public class ControlTabActivity extends Activity{
 	public TextView mPrintState;
 	
 	/**
+	 * UsbSerial device name
+	 */
+	public String mSerialdev;
+	/**
 	 * current tlk path opened
 	 */
 	public String mObjPath=null;
@@ -213,18 +218,7 @@ public class ControlTabActivity extends Activity{
 		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
 		registerReceiver(mReceiver, filter);
 		
-		String dev = "/dev/ttyACM0";
-		//String dev = "/dev/ttySAC0";
-		//mFd = UsbSerial.open(dev);
-		openSerial();
-		//Debug.d(TAG,"open "+dev+"="+mFd);
-		//if(mFd == -1)
-		//	return ;
-		//UsbSerial.setBaudrate(mFd, 115200);
-		//UsbSerial.set_options(mFd, 8, 1, 'n');
-		//mFileInputStream = new FileInputStream(mFd);
-
-		
+				
 		mPreview = (PreviewScrollView ) findViewById(R.id.sv_preview);
 		
 		mBtnStart = (Button) findViewById(R.id.StartPrint);
@@ -233,6 +227,7 @@ public class ControlTabActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
 				if(mPrintBuffer==null || mObjList==null || mObjList.isEmpty())
 					return;
 				preparePrintBuffer();
@@ -248,7 +243,7 @@ public class ControlTabActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				UsbSerial.printStop(mFd);
+				UsbSerial.printStop(mSerialdev);
 			}
 			
 		});
@@ -265,9 +260,10 @@ public class ControlTabActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Debug.d(TAG, "***********clean head");
-				//UsbSerial.printStart(mFd);
-				UsbSerial.clean(mFd);
-				//UsbSerial.printStop(mFd);
+				//UsbSerial.printStart(mSerialdev);
+				UsbSerial.clean(mSerialdev);
+				Debug.d(TAG, "***********clean head over");
+				//UsbSerial.printStop(mSerialdev);
 			}
 			
 		});
@@ -330,7 +326,7 @@ public class ControlTabActivity extends Activity{
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		UsbSerial.close(mFd);
+		//UsbSerial.close(mFd);
 	}
 	
 	@Override
@@ -354,17 +350,17 @@ public class ControlTabActivity extends Activity{
 	{
 		byte[] buffer=null;
 		String text="";
-		UsbSerial.printStart(mFd);
-		UsbSerial.sendSetting(mFd);
-		byte[] data = new byte[128];
-		makeParams(mContext,data);
-		UsbSerial.sendSettingData(mFd, data);
-		
 		if(mPrintBuffer==null)
 			return;
 		
-		UsbSerial.sendDataCtrl(mFd, mPrintBuffer.length);
-		UsbSerial.printData(mFd,  mPrintBuffer);
+		UsbSerial.printStart(mSerialdev);
+		UsbSerial.sendSetting(mSerialdev);
+		byte[] data = new byte[128];
+		makeParams(mContext,data);
+		UsbSerial.sendSettingData(mSerialdev, data);
+		
+		UsbSerial.sendDataCtrl(mSerialdev, mPrintBuffer.length);
+		UsbSerial.printData(mSerialdev,  mPrintBuffer);
 		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
 		new Thread(new Runnable(){
 			@Override
@@ -379,7 +375,7 @@ public class ControlTabActivity extends Activity{
 					}catch(Exception e)
 					{}
 					
-					UsbSerial.getInfo(mFd, info);
+					UsbSerial.getInfo(mSerialdev, info);
 					Message msg = new Message();
 					msg.what=MESSAGE_UPDATE_INKLEVEL;
 					Bundle b= new Bundle();
@@ -580,33 +576,34 @@ public class ControlTabActivity extends Activity{
 		}
 	}
 	
-	public boolean openSerial()
+	
+	public void onCheckUsbSerial()
 	{
+		mSerialdev = null;
 		File file = new File("/dev");
 		if(file.listFiles() == null)
-			return false;
+		{
+			return ;
+		}
 		File[] files = file.listFiles(new PrinterFileFilter("ttyACM"));
 		for(File f : files)
 		{
 			if(f == null)
 			{
-				mFd = 0;
-				return false;
+				break;
 			}
 			Debug.d(TAG, "file = "+f.getName());
-			mFd = UsbSerial.open("/dev/"+f.getName());
-			Debug.d(TAG, "open /dev/"+f.getName()+" return "+mFd);
-			if(mFd < 0)
+			int fd = UsbSerial.open("/dev/"+f.getName());
+			Debug.d(TAG, "open /dev/"+f.getName()+" return "+fd);
+			if(fd < 0)
 			{
 				Debug.d(TAG, "open usbserial /dev/"+f.getName()+" fail");
 				continue;
 			}
-			Debug.d(TAG, "open usbserial /dev/"+f.getName()+" success");
-			UsbSerial.setBaudrate(mFd, 115200);
-			UsbSerial.set_options(mFd, 8, 1, 'n');
+			UsbSerial.close(fd);
+			mSerialdev = "/dev/"+f.getName();
 			break;
 		}
-		return false;
 	}
 
 	public class SerialEventReceiver extends BroadcastReceiver
@@ -618,52 +615,20 @@ public class ControlTabActivity extends Activity{
 			Debug.d(TAG, "******intent="+intent.getAction());
 			if(ACTION_REOPEN_SERIAL.equals(intent.getAction()))
 			{
-				openSerial();
-				/*
-				if(openSerial())
-				{
-					stopThread(mPrintThread);
-					mPrintThread.start();
-				}*/
+				onCheckUsbSerial();
 			}
 			else if(ACTION_CLOSE_SERIAL.equals(intent.getAction()))
 			{
-				stopThread(mPrintThread);
-				mFd = 0;
+				
 			}
 			else if(ACTION_BOOT_COMPLETE.equals(intent.getAction()))
 			{
-				/*read out last opened tlk & csv file*/
-				Handler mpreHandler = new Handler();
-				mpreHandler.postDelayed(new Runnable(){
-				
-					@Override
-					public void run() {
-					// TODO Auto-generated method stub
-					/*
-					String csv = getCsvFromPreference();
-					Debug.d(TAG, "preference csv="+csv);
-					if(csv!=null && new File(csv).exists())
-					{
-						mBtnfile.setText(new File(csv).getName());
-						readCsv(csv);
-						mMessageList.setAdapter(mMessageAdapter);
-						fileChangedHandler.sendEmptyMessage(FILE_CSV_CHANGED);
-					}
-					String tlk = getTlkFromPreference();
-					if(tlk !=null && new File(tlk).exists())
-					{
-						mBtnTlkfile.setText(new File(tlk).getName());
-						fileChangedHandler.sendEmptyMessage(FILE_TLK_CHANGED);
-					}
-					*/
-				}
-				}, 3000);
+				onCheckUsbSerial();
 				byte info[] = new byte[23];
-				UsbSerial.printStart(mFd);
-				UsbSerial.getInfo(mFd, info);
+				UsbSerial.printStart(mSerialdev);
+				UsbSerial.getInfo(mSerialdev, info);
 				updateInkLevel(info);
-				UsbSerial.printStop(mFd);
+				UsbSerial.printStop(mSerialdev);
 			}
 		}
 		
@@ -728,29 +693,29 @@ public class ControlTabActivity extends Activity{
 			byte[] pdata;// = new byte[128];
 			byte[] info = new byte[23];
 			Debug.d(TAG, "====run");
-			if(UsbSerial.printStart(mFd)==0)
+			if(UsbSerial.printStart(mSerialdev)==0)
 			{
 				isRunning = false;
 				isPrinting=false;
 				return;
 			}
 			Debug.d(TAG, "====start ok");
-			if(UsbSerial.sendSetting(mFd)==0)
+			if(UsbSerial.sendSetting(mSerialdev)==0)
 			{
-				UsbSerial.printStop(mFd);
+				UsbSerial.printStop(mSerialdev);
 				isRunning = false;
 				isPrinting=false;
 				return;
 			}
 			Debug.d(TAG, "====send setting ok");
 			makeParams(mContext, sdata);
-			UsbSerial.sendSettingData(mFd, sdata);
+			UsbSerial.sendSettingData(mSerialdev, sdata);
 			while(isRunning == true)
 			{
 				//pdata = new byte[128];	//
 				if(!isPrinting)
 				{
-					int ret = UsbSerial.getInfo(mFd, info);
+					int ret = UsbSerial.getInfo(mSerialdev, info);
 					if(ret != 0)
 						Debug.d(TAG, "get Print-header info error");
 					try {
@@ -765,7 +730,7 @@ public class ControlTabActivity extends Activity{
 					
 					while(true) //poll state,wait for print finish
 					{
-						UsbSerial.getInfo(mFd, info);
+						UsbSerial.getInfo(mSerialdev, info);
 						String text="";
 						for(int i=0;i<23;i++)
 							text += String.valueOf(Integer.toHexString(info[i] & 0x0ff))+" ";
@@ -799,14 +764,14 @@ public class ControlTabActivity extends Activity{
 						curPos = 0;
 					Vector<TlkObject> list = mTlkList.get(curPos);
 					byte[] buffer = mBinBuffer.get(list);
-					UsbSerial.sendDataCtrl(mFd, buffer.length);
-					UsbSerial.printData(mFd,  buffer);
+					UsbSerial.sendDataCtrl(mSerialdev, buffer.length);
+					UsbSerial.printData(mSerialdev,  buffer);
 					curPos++;
 				}
 			}
 			
 				
-			Log.d(TAG, "PrintingThread exit, mfd="+mFd);
+			Log.d(TAG, "PrintingThread exit, mSerialdev="+mSerialdev);
 			//isPrinting = false;
 		}
 	}
