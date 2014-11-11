@@ -275,7 +275,7 @@ public class ControlTabActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk");
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override

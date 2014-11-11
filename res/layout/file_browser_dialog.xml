@@ -6,17 +6,46 @@
 	android:focusableInTouchMode="true"
     >
     
-	<TextView
+	<RadioGroup
 	    android:id="@+id/file_dialog_path"
 	    android:layout_width="fill_parent"
-	    android:layout_height="50dp"
-	    android:background="#A9A9A9"
-	    android:editable="false"
-	    android:imeOptions="flagNoExtractUi"
-	    android:textSize="30dp"
-	    android:textColor="#ffffff"
-	    />
-	
+	    android:layout_height="80dp"
+	    android:gravity="center"
+	    android:orientation="horizontal"
+	    android:background="#C7C7C7"
+	    >
+	    <RadioButton android:id="@+id/radio_local"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:checked="true"
+	        android:background="@drawable/file_browser_item"
+	        android:text="@string/str_radioLocal"
+	        android:textColor="@color/black"
+	        android:textSize="30dp"
+	        />
+	    <RadioButton android:id="@+id/radio_usb"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:checked="false"
+	        android:background="@drawable/file_browser_item"
+	        android:text="@string/str_radioUsb"
+	        android:textColor="@color/black"
+	        android:textSize="30dp"
+	        />
+	    <RadioButton android:id="@+id/radio_sdcard"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:checked="false"
+	        android:background="@drawable/file_browser_item"
+	        android:text="@string/str_radioSdcard"
+	        android:textColor="@color/black"
+	        android:textSize="30dp"
+	        />
+	    
+	</RadioGroup>
 	<RelativeLayout 
 	    android:id="@+id/input_area"
 	    android:layout_width="fill_parent"

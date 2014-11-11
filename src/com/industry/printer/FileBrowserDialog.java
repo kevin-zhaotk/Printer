@@ -2,12 +2,14 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 
@@ -22,8 +24,11 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,24 +36,92 @@ import android.widget.Toast;
 public class FileBrowserDialog extends Dialog {
 	public static final String TAG="FileBrowserDialog";
 	
+	/**
+	 * FLAG_OPEN_FILE
+	 * 		the flag means open file from this dialog
+	 */
+	public static final int FLAG_OPEN_FILE = 1;
+	/**
+	 * FLAG_SAVE_FILE
+	 * 		the flag means save file from this dialog
+	 */
+	public static final int FLAG_SAVE_FILE = 2;
+	
+	
 	public SimpleAdapter mFileAdapter;
 	public LinkedList<Map<String, Object>> mContent;
 	
 	public ListView mFileList;
-	public TextView mPath;
+	//public TextView mPath;
+	/**
+	 * mLocal  radio button of local path
+	 */
+	public RadioButton mLocal;
+	/**
+	 * mUsbStorage radio button of usb storage
+	 */
+	public RadioButton mUsbStorage;
+	
+	/**
+	 * mSDCard radio button of SD-CARD storage
+	 */
+	public RadioButton mSDCard;
+	
+	/**
+	 * mCurpath  current opened path
+	 */
 	public static String mCurPath;
+	
+	/**
+	 * objDir
+	 */
 	public static String objDir;
+	
+	/**
+	 * mSuffix  the file suffix for filter
+	 */
 	public String mSuffix;
+	
+	/**
+	 * mSave save button
+	 */
 	public Button mSave;
+
+	/**
+	 * mCancel cancel button
+	 */
 	public Button mCancel;
+	
+	/**
+	 * mName the tlk file name tobe save as
+	 */
 	public EditText mName;
 	
 	public View mVSelected=null;
 	
+	/**
+	 * 
+	 */
+	public int mFlag;
+	/**
+	 * pListener - the positive button listener
+	 * 		you must set this listener for later doing
+	 * @see setOnPositiveClickedListener
+	 */
 	OnPositiveListener pListener;
+
+	/**
+	 * nListener - the nagitive button listener
+	 * 		you must set this listener for later doing
+	 * @see setOnNagitiveClickedListener
+	 */
 	OnNagitiveListener nListener;
 	
-	public FileBrowserDialog(Context context) {
+	/**
+	 * FileBrowserDialog - construct function
+	 * @param context
+	 */
+	public FileBrowserDialog(Context context,int flag) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		
@@ -59,19 +132,31 @@ public class FileBrowserDialog extends Dialog {
 				new String[]{"icon", "name"}, 
 				new int []{R.id.file_icon, R.id.file_name});
 		//mCurPath="/storage/external_storage/sda1";
-		mCurPath =BinCreater.FILE_PATH;
+		mCurPath =Configs.LOCAL_ROOT_PATH;
 		mSuffix = null;
+		mFlag = flag;
 	}
-
-	public FileBrowserDialog(Context context, String path)
+	
+	/**
+	 * FileBrowserDialog - construct function
+	 * @param context
+	 * @param path	path to be open
+	 */
+	public FileBrowserDialog(Context context, String path, int flag)
 	{
-		this(context);
+		this(context,flag);
 		mCurPath = path;
 	}
 	
-	public FileBrowserDialog(Context context, String path, String suffix)
+	/**
+	 * FileBrowserDialog - construct function with path & suffix
+	 * @param context
+	 * @param path - path to be open
+	 * @param suffix - file suffix filter with
+	 */
+	public FileBrowserDialog(Context context, String path, String suffix, int flag)
 	{
-		this(context);
+		this(context,flag);
 		mCurPath = path;
 		mSuffix = suffix;
 	}
@@ -116,9 +201,9 @@ public class FileBrowserDialog extends Dialog {
 	        
 	        mName = (EditText) findViewById(R.id.name_input);
 	        //mName.setVisibility(View.INVISIBLE);
-	        mPath = (TextView) findViewById(R.id.file_dialog_path);
+	        if(mFlag == FLAG_OPEN_FILE)
+	        	mName.setVisibility(View.GONE);
 	        mFileList =(ListView) findViewById(R.id.file_list);
-	        fileOpen(new File(mCurPath));
 	        
 	        mFileList.setOnItemClickListener(new OnItemClickListener(){
 
@@ -149,11 +234,104 @@ public class FileBrowserDialog extends Dialog {
 				}
 	        	
 	        });
+	        
+	        mLocal = (RadioButton) findViewById(R.id.radio_local);
+	        mLocal.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					Debug.d(TAG, "===>local path selected? "+isChecked);
+					if(isChecked==true)
+					{
+						mCurPath = Configs.LOCAL_ROOT_PATH;
+						fileOpen(new File(mCurPath));
+					}
+					
+				}
+			});
+	        
+	        
+	        mUsbStorage = (RadioButton) findViewById(R.id.radio_usb);
+	        mUsbStorage.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					Debug.d(TAG, "===>usb path selected? "+isChecked);
+					if(isChecked==true)
+					{
+						mCurPath = Configs.USB_ROOT_PATH;
+						fileOpen(new File(mCurPath));
+					}
+				}
+			});
+	        /*  check whether USB storage inserted*/
+	        try{
+	        	File f = new File(Configs.USB_ROOT_PATH);
+	        	File tmp = File.createTempFile("testTlk", "", f);
+	        	if(tmp==null)
+	        	{
+	        		mUsbStorage.setEnabled(false);
+	        		mUsbStorage.setTextColor(Color.GRAY);
+	        	}
+	        	else{
+	        		tmp.delete();
+	        	}
+	        }catch(IOException e)
+	        {
+	        	mUsbStorage.setEnabled(false);
+	        	mUsbStorage.setTextColor(Color.GRAY);
+	        	Debug.d(TAG, "create file ["+Configs.USB_ROOT_PATH+"testTlk"+"] exception: "+e.getMessage());
+	        }
+	        
+	        
+	        mSDCard = (RadioButton) findViewById(R.id.radio_sdcard);
+	        mSDCard.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					Debug.d(TAG, "===>sdcard path selected? "+isChecked);
+					if(isChecked==true)
+					{
+						mCurPath = Configs.SDCARD_ROOT_PATH;
+						fileOpen(new File(mCurPath));
+					}
+				}
+			});
+	        /*  check whether SDCard storage inserted*/
+	        try{
+	        	File fl = new File(Configs.SDCARD_ROOT_PATH);
+	        	
+	        	//if(!fl.createNewFile())
+	        	File tmp = File.createTempFile("testTlk","",fl);
+	        	if(tmp == null )
+	        	{
+	        		Debug.d(TAG, "can not create file on SDCard");
+	        		mSDCard.setEnabled(false);
+	        		mSDCard.setTextColor(Color.GRAY);
+	        	}
+	        	else{
+	        		tmp.delete();
+	        	}
+	        }catch(IOException e)
+	        {
+	        	mSDCard.setEnabled(false);
+	        	mSDCard.setTextColor(Color.GRAY);
+	        	Debug.d(TAG, "create file ["+Configs.SDCARD_ROOT_PATH+"testTlk"+"] exception: "+e.getMessage());
+		    }
+	        fileOpen(new File(mCurPath));
+	        
 	 }
 	 
+	 /**
+	  * fileOpen - open the given file path
+	  * @param file
+	  */
 	 public void fileOpen(File file)
 	 {
-		 mPath.setText(mCurPath);
+		 //mPath.setText(mCurPath);
 		 mContent.clear();
 		 Debug.d(TAG, ""+file.getPath()+", exists = "+file.exists());
 		 File [] files;
@@ -168,14 +346,19 @@ public class FileBrowserDialog extends Dialog {
 		 {
 			 Debug.d(TAG, "Please plugin a USB device ");
 			 Toast.makeText(getContext(), "Please plugin a USB device ", Toast.LENGTH_LONG);
+			 mFileList.setAdapter(mFileAdapter);
 			return;
 		 }
 		 //Debug.d(TAG, "files ="+files);
-		 Map<String, Object> m = new HashMap<String, Object>();
-		 //m.put("icon", R.drawable.icon_directory);
-		 //m.put("name", "..");
-		 //m.put("path", file.getParent());
-		 //mContent.add(m);
+		 
+		 if(!Configs.isRootpath(file.getPath()))
+		 {
+			 Map<String, Object> m = new HashMap<String, Object>();
+			 m.put("icon", R.drawable.icon_directory);
+			 m.put("name", "..");
+			 m.put("path", file.getParent());
+			 mContent.add(m);
+		 }
 		 for(int i=0; files != null && i< files.length; i++)
 		 {
 			 Debug.d(TAG,"file name="+files[i].toString());
@@ -195,28 +378,46 @@ public class FileBrowserDialog extends Dialog {
 		 mFileList.setAdapter(mFileAdapter);
 	 }
 	 
+	 /**
+	  * file - 
+	  * @return current opened path
+	  */
 	 static public String file()
 	 {
 		 Debug.d(TAG, "file ="+mCurPath);
 		 return mCurPath;
 	 }
 	 
+	 /**
+	  * getObjName - get the selected tlk
+	  * @return tlk file 
+	  */
 	 static public String getObjName()
 	 {
 		 Debug.d(TAG, "file ="+objDir);
 		 return objDir;
 	 }
 	 
-	 
+	 /**
+	  * setOnPositiveClickedListener - set the positive button listener for further deal with
+	  * @param listener the listener callback
+	  * @see OnPositiveListener
+	  */
 	 public void setOnPositiveClickedListener(OnPositiveListener listener)
 	 {
 		 pListener = listener;
 	 }
 	 
+	 /**
+	  * setOnNagitiveClickedListener - set the Nagitive button listener for further deal with
+	  * @param listener  the listener callback
+	  * @see OnNagitiveListener
+	  */
 	 public void setOnNagitiveClickedListener(OnNagitiveListener listener)
 	 {
 		 nListener = listener;
 	 }
+	 
 	 /**
 	  *Interface definition when positive button clicked 
 	  **/

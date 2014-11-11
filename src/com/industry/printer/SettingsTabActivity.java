@@ -244,7 +244,7 @@ public static final String TAG="SettingsTabActivity";
 		
 		/*reserved properties*/
 		mParam0 = (EditText) findViewById(R.id.et_param0);
-		mReserved12 = (EditText) findViewById(R.id.et_resv12);
+		//mReserved12 = (EditText) findViewById(R.id.et_resv12);
 		mReserved13 = (EditText) findViewById(R.id.et_resv13);
 		mReserved14 = (EditText) findViewById(R.id.et_resv14);
 		mReserved15 = (EditText) findViewById(R.id.et_resv15);
@@ -258,7 +258,7 @@ public static final String TAG="SettingsTabActivity";
 		mReserved23 = (EditText) findViewById(R.id.et_resv23);
 		
 		mParam0.setText(String.valueOf(mPreference.getInt(PREF_PARAM_0, 0)));
-		mReserved12.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_12, 0)));
+		//mReserved12.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_12, 0)));
 		mReserved13.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_13, 0)));
 		mReserved14.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_14, 0)));
 		mReserved15.setText(String.valueOf(mPreference.getInt(PREF_RESERVED_15, 0)));
@@ -391,7 +391,7 @@ public static final String TAG="SettingsTabActivity";
 		mPreference.edit().putInt(PREF_FONT_WIDTH, Integer.parseInt(mFontwidth.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_DOT_NUMBER, Integer.parseInt(mDots.getText().toString())).commit();
 
-		mPreference.edit().putInt(PREF_RESERVED_12, Integer.parseInt(mReserved12.getText().toString())).commit();
+		//mPreference.edit().putInt(PREF_RESERVED_12, Integer.parseInt(mReserved12.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_RESERVED_13, Integer.parseInt(mReserved13.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_RESERVED_14, Integer.parseInt(mReserved14.getText().toString())).commit();
 		mPreference.edit().putInt(PREF_RESERVED_15, Integer.parseInt(mReserved15.getText().toString())).commit();

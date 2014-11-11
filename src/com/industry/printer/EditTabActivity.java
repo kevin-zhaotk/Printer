@@ -156,7 +156,7 @@ public class EditTabActivity extends Activity {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
 					return;
 				}
-				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this);
+				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,FileBrowserDialog.FLAG_SAVE_FILE);
 				//fdialog.setDismissMessage(Message.obtain(mHandler, 1));
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 					@Override
@@ -175,7 +175,7 @@ public class EditTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this);
+				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this, FileBrowserDialog.FLAG_SAVE_FILE);
 				//fdialog.setDismissMessage(Message.obtain(mHandler, 1));
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 					@Override
@@ -198,7 +198,7 @@ public class EditTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				//File file = new File("/mnt/usb/1.tlk");
 				//Debug.d(TAG, ""+file.getPath()+"is "+file.exists());
-				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,BinCreater.FILE_PATH, ".tlk");
+				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,Configs.LOCAL_ROOT_PATH, ".tlk",FileBrowserDialog.FLAG_OPEN_FILE);
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 					@Override
 					public void onClick() {
@@ -243,7 +243,7 @@ public class EditTabActivity extends Activity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				System.out.println("objlist item " + position +" clicked");
+				Debug.d(TAG,"==========objlist item " + position +" clicked"+" of "+mObjList.getCount());
 				clearCurObj();
 				setCurObj(position);
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
@@ -253,7 +253,7 @@ public class EditTabActivity extends Activity {
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
-				
+				Debug.d(TAG, "======onNothing selected");
 			}
 			
 		});
@@ -271,7 +271,7 @@ public class EditTabActivity extends Activity {
 					@Override
 					public void onClick() {
 						// TODO Auto-generated method stub
-						mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+						mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 					}
 					
 				});
@@ -566,9 +566,11 @@ public class EditTabActivity extends Activity {
 				// TODO Auto-generated method stub
 				clearCurObj();
 				mObjs.add(new TextObject(mContext,  getNextXcor()));
-				System.out.println("objs = "+mObjs.size());
+				Debug.d(TAG, "=======objs = "+mObjs.size());
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				mObjList.invalidate();
+				Debug.d(TAG, "=======setSelection "+mObjList.getCount());
+				//mObjList.setSelection(mObjList.getCount()-1);
 				
 			}
 		});
@@ -581,7 +583,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new CounterObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -594,7 +596,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new BarcodeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -605,7 +607,7 @@ public class EditTabActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this);
+				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this, FileBrowserDialog.FLAG_OPEN_FILE);
 				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
 					@Override
 					public void onClick() {
@@ -628,7 +630,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new JulianDayObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -641,7 +643,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RealtimeObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -655,7 +657,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new LineObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -668,7 +670,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RectObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -681,7 +683,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new EllipseObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -695,7 +697,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new ShiftObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}
 			
 		});
@@ -708,7 +710,7 @@ public class EditTabActivity extends Activity {
 				clearCurObj();
 				mObjs.add(new RTSecondObject(mContext, getNextXcor()));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-				mObjList.setSelection(mObjList.getCount()-1);
+				
 			}			
 		});
 
@@ -722,10 +724,15 @@ public class EditTabActivity extends Activity {
 	 */
 	public static final int REFRESH_OBJECT_CHANGED=0;
 	/**
+	 * REFRESH_OBJECT_PROPERTIES
+	 *   the object properties changed
+	 */
+	public static final int REFRESH_OBJECT_PROPERTIES=1;
+	/**
 	 * REFRESH_OBJECT_JUST
 	 *   just refresh the object list, no need to resave tlk or bin files
 	 */
-	public static final int REFRESH_OBJECT_JUST=1;
+	public static final int REFRESH_OBJECT_JUST=2;
 	
 	public Handler mObjRefreshHandler = new Handler(){
 		@Override
@@ -766,23 +773,28 @@ public class EditTabActivity extends Activity {
 					else
 						System.out.println("Unknown Object type");
 				}
-				mNameAdapter.notifyDataSetChanged();
+				//mNameAdapter.notifyDataSetChanged();
 				//mObjList.setAdapter(mNameAdapter);
-				
+				mObjList.invalidate();
 				//selfInfoEnable(obj);
 				OnPropertyChanged(true);
 				break;
+			case REFRESH_OBJECT_PROPERTIES:
+				OnPropertyChanged(true);
 			case REFRESH_OBJECT_JUST:
 				mNameAdapter.notifyDataSetChanged();
 				break;
 			default:
 				break;
 			}
+			
 			BaseObject obj = getCurObj();
+			Debug.d(TAG, "=====obj:"+obj.mId);
 			mObjView.invalidate();
 			if(obj != null){
 				makeObjToCenter((int)obj.getX());
 			}
+			Debug.d(TAG, "=========");
 		}
 	};
 	
@@ -931,6 +943,7 @@ public class EditTabActivity extends Activity {
             		if(mObjName != null && new File(mObjName).isFile())
             		{
 	    				Fileparser.parse(mContext, FileBrowserDialog.file(), mObjs);
+	    				clearCurObj();
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
             		break;
@@ -1099,6 +1112,7 @@ public class EditTabActivity extends Activity {
 	{
 		mProgressDialog = ProgressDialog.show(EditTabActivity.this, "", getResources().getString(R.string.strSaving), true,false);
 		mProgressShowing = true;
+		
 		mProgressThread = new Thread(){
 			
 			@Override
@@ -1138,7 +1152,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setX(obj.getX() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void rightKeyPressed()
@@ -1152,7 +1166,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setX(obj.getX() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void upKeyPressed()
@@ -1166,7 +1180,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setY(obj.getY() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void downKeyPressed()
@@ -1180,7 +1194,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setY(obj.getY() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void zoomOutXKeyPressed()
@@ -1194,7 +1208,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setWidth(obj.getWidth() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void zoomInXKeyPressed()
@@ -1222,7 +1236,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setHeight(obj.getHeight() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	private void zoomInYKeyPressed()
@@ -1236,7 +1250,7 @@ public class EditTabActivity extends Activity {
 		}
 		else
 			obj.setHeight(obj.getHeight() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	public boolean mPropertyChanged=false;

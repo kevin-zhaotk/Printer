@@ -23,7 +23,7 @@ public class BinCreater {
 	public static final String TAG="BinCreater";
 	
 	//public static final String FILE_PATH="/storage/external_storage/sda1";
-	public static final String FILE_PATH="/mnt/usb/";
+	
 	
 	public static final int RESERVED_FOR_HEADER=16;
 	public static int mBmpBytes[];
@@ -142,7 +142,7 @@ public class BinCreater {
     
     public static void saveBitmap(Bitmap bmp, String picName)
     {
-    	File f = new File(BinCreater.FILE_PATH, picName);
+    	File f = new File(Configs.USB_ROOT_PATH, picName);
     	//File f = new File("/storage/external_storage/sda1", picName);
     	if(f.exists())
     	{
@@ -164,7 +164,7 @@ public class BinCreater {
     {
     	try{
     		//File file = new File("/storage/external_storage/sda1", "2.bin");
-        	File file = new File(FILE_PATH, fileName);
+        	File file = new File(Configs.USB_ROOT_PATH, fileName);
     		FileOutputStream fs = new FileOutputStream(file);
     		//ByteArrayOutputStream barr = new ByteArrayOutputStream();
     		for(int i=0; i< map.length; i++)

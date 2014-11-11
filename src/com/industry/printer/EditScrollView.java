@@ -2,9 +2,11 @@ package com.industry.printer;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.MessageObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -58,8 +60,11 @@ public class EditScrollView extends View {
 				 continue;
 			 if(mContext == null)
 					Debug.d(TAG, "$$$$$$$$$$context=null");
-			 canvas.drawBitmap(obj.getScaledBitmap(mContext), obj.getX(), obj.getY(), p);
-		 }	
+			 Bitmap bitmap = obj.getScaledBitmap(mContext);
+			 canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
+			 BinCreater.recyleBitmap(bitmap);
+		 }
+		 Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	 }  
 

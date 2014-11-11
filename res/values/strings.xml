@@ -210,8 +210,42 @@
 	<string name="strResvname27">27.Reserved</string>
 	<string name="strResvname28">28.Reserved</string>
 	<string name="strResvname29">29.Reserved</string>
+	<string name="strResvname30">30.Reserved</string>
+	<string name="strResvname31">31.Reserved</string>
+	<string name="strResvname32">32.Reserved</string>
+	<string name="strResvname33">33.Reserved</string>
+	<string name="strResvname34">34.Reserved</string>
+	<string name="strResvname35">35.Reserved</string>
+	<string name="strResvname36">36.Reserved</string>
+	<string name="strResvname37">37.Reserved</string>
+	<string name="strResvname38">38.Reserved</string>
+	<string name="strResvname39">39.Reserved</string>
+	<string name="strResvname40">40.Reserved</string>
+	<string name="strResvname41">41.Reserved</string>
+	<string name="strResvname42">42.Reserved</string>
+	<string name="strResvname43">43.Reserved</string>
+	<string name="strResvname44">44.Reserved</string>
+	<string name="strResvname45">45.Reserved</string>
+	<string name="strResvname46">46.Reserved</string>
+	<string name="strResvname47">47.Reserved</string>
+	<string name="strResvname48">48.Reserved</string>
+	<string name="strResvname49">49.Reserved</string>
+	<string name="strResvname50">50.Reserved</string>
+	<string name="strResvname51">51.Reserved</string>
+	<string name="strResvname52">52.Reserved</string>
+	<string name="strResvname53">53.Reserved</string>
+	<string name="strResvname54">54.Reserved</string>
+	<string name="strResvname55">55.Reserved</string>
+	<string name="strResvname56">56.Reserved</string>
+	<string name="strResvname57">57.Reserved</string>
+	<string name="strResvname58">58.Reserved</string>
+	<string name="strResvname59">59.Reserved</string>
+	<string name="strResvname60">60.Reserved</string>
+	<string name="strResvname61">61.Reserved</string>
+	<string name="strResvname62">62.Reserved</string>
+	<string name="strResvname63">63.Reserved</string>
+
 	<string name="strBtnSave">Ok</string>
-	
 	<string-array name="trigger_mode_name">
 	    <item>On</item>
 	    <item>Off</item>
@@ -309,4 +343,8 @@
 	
 	
 	<string name="str_notlkfile">Please select a TLK file</string>
+	
+	<string name="str_radioLocal">Local</string>
+	<string name="str_radioUsb">USB</string>
+	<string name="str_radioSdcard">SDCard</string>
 </resources>
