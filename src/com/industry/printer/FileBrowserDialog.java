@@ -19,7 +19,9 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.View;
+import android.view.View.OnDragListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -234,6 +236,7 @@ public class FileBrowserDialog extends Dialog {
 				}
 	        	
 	        });
+	        
 	        
 	        mLocal = (RadioButton) findViewById(R.id.radio_local);
 	        mLocal.setOnCheckedChangeListener(new OnCheckedChangeListener() {

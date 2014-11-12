@@ -3,18 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="#DEDEDE" >
 
 	    <Button 
 	        android:id="@+id/btn_confirm"
 	        android:layout_width="80dp"
 	        android:layout_height="60dp"
-	        android:layout_gravity="center_horizontal"
+	        android:layout_gravity="center"
+	        android:layout_weight="1"
 	        android:text="@string/str_ok"/>
 	    <Button
 	        android:id="@+id/btn_objinfo_cnl"
 	        android:layout_width="80dp"
 	        android:layout_height="60dp"
+	        android:layout_weight="1"
+	        android:layout_gravity="center"
 	        android:text="@string/strNativeBtn"
 	        />
 </LinearLayout>

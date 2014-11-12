@@ -19,7 +19,6 @@ import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.ShiftObject;
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -114,7 +113,8 @@ public class ObjectInfoDialog extends Dialog {
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
 		 super.onCreate(savedInstanceState);
-	     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	     //this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		 this.setTitle(R.string.str_title_infodialog);
 	     if(mObj==null)
 	     {
 	    	 this.setContentView(R.layout.obj_info_msg); 

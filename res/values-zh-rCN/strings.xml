@@ -345,4 +345,5 @@
 	<string name="str_radioLocal">本地</string>
 	<string name="str_radioUsb">USB</string>
 	<string name="str_radioSdcard">SDCard</string>
+	<string name="str_title_infodialog">对象信息编辑</string>
 </resources>

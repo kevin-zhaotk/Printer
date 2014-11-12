@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="#DEDEDE"
      >
     
 	<ScrollView android:id="@+id/viewInfo"

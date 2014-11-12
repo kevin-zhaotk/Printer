@@ -347,4 +347,6 @@
 	<string name="str_radioLocal">Local</string>
 	<string name="str_radioUsb">USB</string>
 	<string name="str_radioSdcard">SDCard</string>
+	
+	<string name="str_title_infodialog">Object Info</string>
 </resources>
