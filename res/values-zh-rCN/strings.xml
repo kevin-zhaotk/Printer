@@ -346,4 +346,7 @@
 	<string name="str_radioUsb">USB</string>
 	<string name="str_radioSdcard">SDCard</string>
 	<string name="str_title_infodialog">对象信息编辑</string>
+	
+	<string name="str_fileopt_del">删除</string>
+	<string name="str_fileopt_cancel">取消</string>
 </resources>

@@ -50,7 +50,8 @@ public class FileBrowserDialog extends Dialog {
 	public static final int FLAG_SAVE_FILE = 2;
 	
 	
-	public SimpleAdapter mFileAdapter;
+	//public SimpleAdapter mFileAdapter;
+	public ListViewButtonAdapter mFileAdapter;
 	public LinkedList<Map<String, Object>> mContent;
 	
 	public ListView mFileList;
@@ -128,11 +129,18 @@ public class FileBrowserDialog extends Dialog {
 		// TODO Auto-generated constructor stub
 		
 		mContent = new LinkedList<Map<String, Object>>();
+		/*
 		mFileAdapter = new SimpleAdapter(context, 
 				mContent, 
 				R.layout.file_browser, 
 				new String[]{"icon", "name"}, 
 				new int []{R.id.file_icon, R.id.file_name});
+		*/
+		mFileAdapter = new ListViewButtonAdapter(context, 
+				mContent, 
+				R.layout.file_browser, 
+				new String[]{"icon", "name", "operation"}, 
+				new int[]{R.id.file_icon, R.id.file_name, R.id.file_operation});
 		//mCurPath="/storage/external_storage/sda1";
 		mCurPath =Configs.LOCAL_ROOT_PATH;
 		mSuffix = null;
@@ -360,6 +368,7 @@ public class FileBrowserDialog extends Dialog {
 			 m.put("icon", R.drawable.icon_directory);
 			 m.put("name", "..");
 			 m.put("path", file.getParent());
+			 m.put("operation",R.drawable.file_delete);
 			 mContent.add(m);
 		 }
 		 for(int i=0; files != null && i< files.length; i++)
@@ -376,6 +385,7 @@ public class FileBrowserDialog extends Dialog {
 			 }
 			 map.put("name", files[i].getName());
 			 map.put("path", files[i].getPath());
+			 map.put("operation", R.drawable.file_delete);
 			 mContent.add(map);
 		 }
 		 mFileList.setAdapter(mFileAdapter);

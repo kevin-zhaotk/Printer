@@ -1,12 +1,13 @@
 package com.industry.printer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import com.industry.printer.Utils.Debug;
 
-
-import android.R;
 import android.R.integer;
 import android.app.Dialog;
 import android.content.Context;
@@ -47,7 +48,7 @@ public class ListViewButtonAdapter extends BaseAdapter {
 	/**
 	 * The Content list
 	 */
-	private ArrayList<HashMap<String, Object>> mCntList;
+	private LinkedList<Map<String, Object>> mCntList;
 	
 	/**
 	 * An inflater for inflate the view
@@ -77,12 +78,13 @@ public class ListViewButtonAdapter extends BaseAdapter {
 	/**
 	 * Construct
 	 */
-	public ListViewButtonAdapter(Context c, ArrayList<HashMap<String, Object>> list, int resource,
+	public ListViewButtonAdapter(Context c, LinkedList<Map<String, Object>> list, int resource,
 			String from[], int to[])
 	{
 		mCntList = list;
 		mContext = c;
 		mKeys = new String[from.length];
+		Debug.d(TAG, "====key size="+mKeys.length);
 		mViewIDs = new int[to.length];
 		System.arraycopy(from, 0, mKeys, 0, from.length);
 		System.arraycopy(to, 0, mViewIDs, 0, to.length);
@@ -124,7 +126,7 @@ public class ListViewButtonAdapter extends BaseAdapter {
 			convertView.setTag(mHolder);
 		}
 		
-		HashMap<String, Object> item = mCntList.get(position);
+		HashMap<String, Object> item = (HashMap<String, Object>) mCntList.get(position);
 		if(item!=null)
 		{
 			String name = (String) item.get(mKeys[1]);
@@ -161,7 +163,8 @@ public class ListViewButtonAdapter extends BaseAdapter {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Debug.d(TAG,"button "+mPosition+" clicked, "+"view id="+v.getId());
+			FileDeleteDialog dialog = new FileDeleteDialog(mContext, mPosition);
+			dialog.show();
 		}
 		
 	}
@@ -183,8 +186,10 @@ public class ListViewButtonAdapter extends BaseAdapter {
 		 */
 		private Button mCancel;
 		
-		public FileDeleteDialog(Context context) {
+		private int mPosition;
+		public FileDeleteDialog(Context context,int position) {
 			super(context);
+			mPosition = position;
 			// TODO Auto-generated constructor stub
 		}
 		
@@ -202,19 +207,42 @@ public class ListViewButtonAdapter extends BaseAdapter {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Debug.d(TAG, "onclick delete");
+					File f = new File((String)mCntList.get(mPosition).get("path"));
+					delete(f);
+					mCntList.remove(mPosition);
+					dismiss();
 				}
 
 			});
 	        
+	        mCancel = (Button) findViewById(R.id.btn_fileopt_cancel);
 	        mCancel.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Debug.d(TAG, "onclick calcel");
+					dismiss();
 				}
 			});
 		}
 		
+	}
+	
+	public static void delete(File file)
+	{
+		if(file.isFile())
+			file.delete();
+		if(file.isDirectory())
+		{
+			File[] childs = file.listFiles();
+			if(childs==null || childs.length==0)
+				file.delete();
+			for(int i=0;i<childs.length;i++)
+			{
+				delete(childs[i]);
+			}
+			file.delete();
+		}
 	}
 }

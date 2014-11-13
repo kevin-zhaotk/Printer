@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#DEDEDE" 
+    >
     
 	<Button
 	    android:id="@+id/btn_fileopt_del"
@@ -11,7 +13,7 @@
 	    android:gravity="center"
 	    android:layout_weight="1"
 	    android:text="@string/str_fileopt_del"
-	    android:textSize="40dp""
+	    android:textSize="25dp"
 	    />
 	<Button
 	    android:id="@+id/btn_fileopt_cancel"
@@ -20,6 +22,6 @@
 	    android:gravity="center"
 	    android:layout_weight="1"
 	    android:text="@string/str_fileopt_cancel"
-	    android:textSize="40dp"
+	    android:textSize="25dp"
 	    />
 </LinearLayout>
