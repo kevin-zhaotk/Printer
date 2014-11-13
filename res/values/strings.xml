@@ -349,4 +349,7 @@
 	<string name="str_radioSdcard">SDCard</string>
 	
 	<string name="str_title_infodialog">Object Info</string>
+	
+	<string name="str_fileopt_del">Delete</string>
+	<string name="str_fileopt_cancel">Cancel</string>
 </resources>
