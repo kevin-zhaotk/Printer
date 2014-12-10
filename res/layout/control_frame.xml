@@ -229,7 +229,7 @@
         android:id="@+id/scrollview_prev_id"
         android:layout_marginTop="20dp"
         android:layout_width="790dp"
-    	android:layout_height="300dp"
+    	android:layout_height="300sp"
     	android:layout_marginLeft="5dp"
     	android:background="#ffffff"
          android:layout_below="@id/btnBinfile"

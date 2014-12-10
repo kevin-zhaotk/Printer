@@ -789,7 +789,7 @@ public class EditTabActivity extends Activity {
 			}
 			
 			BaseObject obj = getCurObj();
-			Debug.d(TAG, "=====obj:"+obj.mId);
+			//Debug.d(TAG, "=====obj:"+obj.mId);
 			mObjView.invalidate();
 			if(obj != null){
 				makeObjToCenter((int)obj.getX());
@@ -809,10 +809,17 @@ public class EditTabActivity extends Activity {
 	
 	public static BaseObject getCurObj()
 	{
+	
 		for(BaseObject obj : mObjs)
 		{
 			if(obj.getSelected())
 				return obj;
+		}
+		if(mObjs!=null&& mObjs.size()>0)
+		{
+			BaseObject object=mObjs.get(0);
+			object.setSelected(true);
+			return object;
 		}
 		return null;
 	}

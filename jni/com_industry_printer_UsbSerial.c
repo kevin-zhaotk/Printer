@@ -39,14 +39,14 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_open
 	if( ret == -1)
 	{
 		//__android_log_print(ANDROID_LOG_INFO,JNI_TAG, "open: can not open Serial port %s, error=%s",dev_utf, strerror(errno));
-		//perror("can not open Serial port");
+		//ALOGD("can not open Serial port");
 	}
 	else
 	{
-		printf("Serial open success");
+		ALOGD("Serial open success");
 	}
 	tcflush(ret, TCIFLUSH);
-	printf("********ret=%d\n",ret);
+	ALOGD("********ret=%d\n",ret);
 	(*env)->ReleaseStringUTFChars(env, dev, dev_utf);
 	return ret;
 }
@@ -75,7 +75,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_setBaudrate
 	        //cfsetospeed(&Opt, B230400);
 	        status = tcsetattr(fd, TCSANOW, &Opt);
 	        if(status != 0)
-	            perror("tcsetattr fd1\n");
+	            ALOGD("tcsetattr fd1\n");
 	        tcgetattr(fd, &Opt);
 	        //__android_log_print(ANDROID_LOG_INFO,JNI_TAG,"setBaudrate: bauterate=%d\n",cfgetospeed(&Opt));
 
@@ -94,7 +94,9 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_setBaudrate
 JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_close
   (JNIEnv *env, jclass arg, jint fd)
 {
+	ALOGD("*******fd=%d",fd);
 	int ret = close(fd);
+	ALOGD("*******ret=%d",ret);
 	return ret;
 }
 
@@ -161,11 +163,11 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_UsbSerial_read
 	{
 		//ALOGD("********read ret=%d\n",nread);
 		ALOGD("********read ret=%d,error=%d\n",nread, errno);
-		//perror("********read ret=%d\n",nread);
+		//ALOGD("********read ret=%d\n",nread);
 		return NULL;
 	}
 		/*
-		printf("nread len = %d\n",nread);
+		ALOGD("nread len = %d\n",nread);
 		__android_log_print(ANDROID_LOG_INFO, JNI_TAG, "read: nread len = %d\n",nread);
 		for(i=0; i<nread; i++)
 		{
@@ -193,7 +195,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_set_options
     	return 0;
     if(tcgetattr(fd, &opt) != 0)
     {
-        perror("SetupSerial 1\n");
+        ALOGD("SetupSerial 1\n");
         return -1;
     }
     opt.c_cflag &= ~CSIZE;
@@ -247,7 +249,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_set_options
     tcflush(fd, TCIFLUSH);
     if (tcsetattr(fd,TCSANOW,&opt) != 0)
     {
-        perror("SetupSerial 3\n");
+        ALOGD("SetupSerial 3\n");
         return -1;
     }
      return 0;

@@ -92,6 +92,11 @@ public class ListViewButtonAdapter extends BaseAdapter {
 		
 	}
 	
+	public ListViewButtonAdapter getInstance()
+	{
+		return this;
+	}
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -210,6 +215,7 @@ public class ListViewButtonAdapter extends BaseAdapter {
 					File f = new File((String)mCntList.get(mPosition).get("path"));
 					delete(f);
 					mCntList.remove(mPosition);
+					getInstance().notifyDataSetChanged();
 					dismiss();
 				}
 

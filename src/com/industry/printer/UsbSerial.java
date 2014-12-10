@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
+import android.R.string;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -15,6 +16,23 @@ public class UsbSerial {
 	
 	public static final String TAG="UsbSerial"; 
 	public static final int PACKAGE_MAX_LEN=132;
+	
+	/**
+	 * return value for ttyACM device operation result
+	 * ERR_NO_ERROR - operation success
+	 * ERR_DEV_MOVED - ttyACM device not be inserted
+	 * ERR_WRITE_FAILED - writing operation return failed
+	 * ERR_READ_FAILED - reading operation return failed
+	 * ERR_OPEN_FAILED - open ttyACM dev return failed
+	 * ERR_PARAMETER_ILEGAL - input paramater ilegal
+	 */
+	public static final int ERR_NO_ERROR=0;
+	public static final int ERR_WRITE_FAILED=-1;
+	public static final int ERR_READ_FAILED	=-2;
+	public static final int ERR_DEV_MOVED	=-3;
+	public static final int ERR_OPEN_FAILED	=-4;
+	public static final int ERR_RESPONSE_ERROR=-5;
+	public static final int ERR_PARAMETER_ILEGAL=-6;
 	/*
 	 * jni native methods
 	 */
@@ -37,23 +55,26 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>printStart");
 		short [] crcCmd = CRC16.crc(buf);
-		for(int i=0; i<crcCmd.length; i++)
-		{
-			//Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
-		}
-		//String buf = "FUCK serial write";
+//		for(int i=0; i<crcCmd.length; i++)
+//		{
+//			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
+//		}
+
 		int fd = open(dev);
 		if(fd<=0)
-			return 0;
+		{
+			return ERR_OPEN_FAILED;
+		}
+			
 		int ret = UsbSerial.write(fd, crcCmd, buf.length);
 		if(ret != buf.length)
 		{
 			close(fd);
-			return 0;
+			return ERR_WRITE_FAILED;
 		}
 		Debug.d(TAG, "write ret="+ret);
 		byte[] response = UsbSerial.read(fd, 10);
@@ -61,16 +82,16 @@ public class UsbSerial {
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		if(response[4] != 0)
-			ret = 0;
+			ret = ERR_RESPONSE_ERROR;
 		else 
-			ret = 1;
+			ret = ERR_NO_ERROR;
 		close(fd);
 		Debug.d(TAG,"<====printStart");
 		return ret;
@@ -80,29 +101,37 @@ public class UsbSerial {
 	static public int printStop(String dev)
 	{
 		short buf[]={0x80, 0x00, 0x01, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
-		if(dev == null)
+		if(dev==null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>printStop");
 		short[] crcCmd = CRC16.crc(buf);
-		for(int i=0; i<crcCmd.length; i++)
-		{
-			//Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
-		}
+//		for(int i=0; i<crcCmd.length; i++)
+//		{
+//			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
+//		}
 		//String buf = "FUCK serial write";
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
+		setBaudrate(fd, 115200);
+		set_options(fd, 8, 1, 'n');
 		int ret = UsbSerial.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			Debug.d(TAG, "close fd");
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
@@ -110,13 +139,14 @@ public class UsbSerial {
 		}
 		if(response[4] != 0)
 		{
-			ret = 0;
+			ret = ERR_RESPONSE_ERROR;
 			Debug.d(TAG, "this is response error");
 		}
 		else
-			ret = 1;
-		Debug.d(TAG,"<====printStop");
+			ret = ERR_NO_ERROR;
+		Debug.d(TAG,"<====close");
 		close(fd);
+		Debug.d(TAG,"<====printStop");
 		return ret;
 	}
 	
@@ -130,7 +160,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		/*
 		for(int i=0; i<buf.length; i++)
@@ -139,18 +169,18 @@ public class UsbSerial {
 		}*/
 		short[] crcCmd = CRC16.crc(buf);
 		
-		for(int i=0; i<crcCmd.length; i++)
-		{
-			//Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
-		}
+//		for(int i=0; i<crcCmd.length; i++)
+//		{
+//			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
+//		}
 		//String buf = "FUCK serial write";
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "clean return = "+ret);
 		close(fd);
-		return ret;
+		return ret>0?ERR_NO_ERROR:ERR_WRITE_FAILED;
 	}
 	
 	
@@ -163,22 +193,27 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>setAllParam");
 		short [] crcCmd = CRC16.crc(cmd);
 		int fd = open(dev);
 		if(fd <= 0 )
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 
 		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*
 		for(int i=0; i<response.length; i++)
@@ -199,12 +234,18 @@ public class UsbSerial {
 		*/
 		ret = UsbSerial.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "write param ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
+
 		response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
@@ -212,7 +253,7 @@ public class UsbSerial {
 		}
 		Debug.d(TAG,"<====setAllParam");
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	/**
@@ -228,7 +269,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		short [] crcCmd = CRC16.crc(cmd);
 		/*
@@ -239,15 +280,21 @@ public class UsbSerial {
 		*/
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
+
 		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*
 		for(int i=0; i<response.length; i++)
@@ -256,7 +303,7 @@ public class UsbSerial {
 		}
 		*/
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	/**
@@ -272,7 +319,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		cmd[2] = (short)pIndex;
 		short [] crcCmd = CRC16.crc(cmd);
@@ -284,15 +331,21 @@ public class UsbSerial {
 		*/
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
+
 		Debug.d(TAG, "write ret="+ret);
 		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*
 		for(int i=0; i<response.length; i++)
@@ -301,7 +354,7 @@ public class UsbSerial {
 		}
 		*/
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	/**
@@ -317,7 +370,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		cmd[2] += pIndex;
 		short [] crcCmd = CRC16.crc(cmd);
@@ -329,15 +382,21 @@ public class UsbSerial {
 		*/
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
+
 		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*
 		for(int i=0; i<response.length; i++)
@@ -346,7 +405,7 @@ public class UsbSerial {
 		}
 		*/
 		close(fd);		
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	
@@ -356,7 +415,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"===>sendDataCtrl");
 		
@@ -366,21 +425,26 @@ public class UsbSerial {
 		cmd[7] = (short) (len & 0x0ff);
 		
 		short [] crcCmd = CRC16.crc(cmd);
-		for(int i=0; i<crcCmd.length; i++)
-		{
-			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
-		}
+//		for(int i=0; i<crcCmd.length; i++)
+//		{
+//			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
+//		}
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*for(int i=0; i<response.length; i++)
 		{
@@ -388,7 +452,7 @@ public class UsbSerial {
 		}*/
 		Debug.d(TAG,"<===sendDataCtrl");
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	/*
@@ -403,7 +467,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		
 		Debug.d(TAG,"====>printData, data len="+data.length);
@@ -426,15 +490,20 @@ public class UsbSerial {
 		 */
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "=============printDate write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
@@ -442,7 +511,7 @@ public class UsbSerial {
 		}
 		Debug.d(TAG,"<====printData");
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	/*
@@ -456,7 +525,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>sendSetting");
 		short [] crcCmd = CRC16.crc(cmd);
@@ -468,15 +537,20 @@ public class UsbSerial {
 		*/
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		/*
 		for(int i=0; i<response.length; i++)
@@ -485,7 +559,7 @@ public class UsbSerial {
 		}*/
 		Debug.d(TAG,"<====sendSetting");
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	
@@ -495,7 +569,7 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>sendSettingData");
 		cmd[0] = 0x81;
@@ -517,15 +591,20 @@ public class UsbSerial {
 		}*/
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
@@ -533,7 +612,7 @@ public class UsbSerial {
 		}
 		Debug.d(TAG,"<====sendSettingData");
 		close(fd);
-		return ret;
+		return ERR_NO_ERROR;
 	}
 	
 	
@@ -543,25 +622,30 @@ public class UsbSerial {
 		if(dev == null)
 		{
 			Debug.d(TAG, "ttyACM0 device node not opened");
-			return 0;
+			return ERR_DEV_MOVED;
 		}
 		Debug.d(TAG,"====>getInfo");
 		short [] crcCmd = CRC16.crc(cmd);
-		for(int i=0; i<crcCmd.length; i++)
-		{
-			//Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
-		}
+//		for(int i=0; i<crcCmd.length; i++)
+//		{
+//			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
+//		}
 		int fd = open(dev);
 		if(fd <= 0)
-			return 0;
+			return ERR_DEV_MOVED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
+		if(ret<=0)
+		{
+			close(fd);
+			return ERR_WRITE_FAILED;
+		}
 		byte[] response = UsbSerial.read(fd, 23);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
 			close(fd);
-			return 0;
+			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
 		{
@@ -570,14 +654,14 @@ public class UsbSerial {
 		if(info == null)
 		{
 			close(fd);
-			return 0;
+			return ERR_PARAMETER_ILEGAL;
 		}
 			
 		ByteArrayInputStream s = new ByteArrayInputStream(response);
 			
 		//Debug.d(TAG, "===avaliable size="+s.available());
 		if(s.read(info, 0, 23)==-1)
-			ret = 0;
+			ret = ERR_NO_ERROR;
 		Debug.d(TAG,"<====getInfo");
 		close(fd);
 		return ret;

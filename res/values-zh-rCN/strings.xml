@@ -32,7 +32,7 @@
 	<string name="strEncoderState">编码器：</string>
 	<string name="strPrintstate">打印状态：</string>
 	<string name="strPrinting">打印中...</string>
-	<string name="strPrintok">打印结束</string>
+	<string name="strPrintok">准备就绪</string>
 	<string name="strOn">开</string>
 	<string name="strOff">关</string>
 	<string name="strwaitting">正在打印，请稍等。。。。。。</string>
@@ -79,6 +79,9 @@
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>
 	<string name="strLoading">正在加载请耐心等待...</string>
+	
+	<string name="strInsertSerial">请插入打印设备</string>
+	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP head</item>
 	    <item>12.7 mm HP standard</item>

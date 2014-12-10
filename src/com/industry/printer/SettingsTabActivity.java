@@ -12,6 +12,7 @@ import com.industry.printer.Utils.Debug;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -138,18 +139,17 @@ public static final String TAG="SettingsTabActivity";
 	public Button		mSetDate;
 
 	Context 			mContext;
-
+	ProgressDialog 	pDialog;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setLocale();
-		
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//this.addPreferencesFromResource(R.xml.settings_layout);
-		mContext = getApplicationContext();		
+		mContext = getApplicationContext();
+		
 		setContentView(R.layout.setting_layout);
 		
-				
 		mTime = (TextView) findViewById(R.id.tv_systemTime);
 		mTimeRefreshHandler.sendEmptyMessageDelayed(0, 2000);
 

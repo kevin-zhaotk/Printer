@@ -31,6 +31,7 @@ import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.Fileparser;
+import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
 import com.industry.printer.object.RealtimeMinute;
@@ -231,7 +232,11 @@ public class ControlTabActivity extends Activity{
 				if(mPrintBuffer==null || mObjList==null || mObjList.isEmpty())
 					return;
 				preparePrintBuffer();
-				print();
+				//print();
+				if(mPrintThread==null)
+					mPrintThread = (PrintingThread) startThread();
+				else
+					mPrintThread.start();
 			}
 			
 		});
@@ -242,8 +247,17 @@ public class ControlTabActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				stopThread(mPrintThread);
+				Debug.d(TAG, "====>stop clicked");
 				
-				UsbSerial.printStop(mSerialdev);
+				int ret = UsbSerial.printStop(mSerialdev);
+				if(ret==UsbSerial.ERR_DEV_MOVED)
+					Toast.makeText(mContext, R.string.strInsertSerial, Toast.LENGTH_LONG).show();
+				else if(ret==UsbSerial.ERR_WRITE_FAILED||ret==UsbSerial.ERR_READ_FAILED) {
+					Toast.makeText(mContext, R.string.strReinsertSerial, Toast.LENGTH_LONG).show();
+				}
+				
+				Debug.d(TAG, "====>stop ok");
 			}
 			
 		});
@@ -285,7 +299,7 @@ public class ControlTabActivity extends Activity{
 						Debug.d(TAG, "-------f="+f);
 						if(f==null || !f.toLowerCase().endsWith(".tlk"))
 						{
-							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG);
+							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG).show();
 							return;
 						}
 						// TODO show bin
@@ -308,7 +322,10 @@ public class ControlTabActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				//preparePrintBuffer();
+				long before=System.currentTimeMillis();
+				preparePrintBuffer();
+				long after=System.currentTimeMillis();
+				Debug.d(TAG, "--------consume="+(after-before));
 				startPreview();
 			}
 			
@@ -362,31 +379,25 @@ public class ControlTabActivity extends Activity{
 		UsbSerial.sendDataCtrl(mSerialdev, mPrintBuffer.length);
 		UsbSerial.printData(mSerialdev,  mPrintBuffer);
 		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
-		new Thread(new Runnable(){
-			@Override
-			public void run()
-			{
-				int timeout=10;
-				byte[] info = new byte[23];
-				do
-				{
-					try{
-						Thread.sleep(2000);
-					}catch(Exception e)
-					{}
-					
-					UsbSerial.getInfo(mSerialdev, info);
-					Message msg = new Message();
-					msg.what=MESSAGE_UPDATE_INKLEVEL;
-					Bundle b= new Bundle();
-					b.putByteArray("info", info);
-					msg.setData(b);
-					mHandler.sendMessage(msg);
-					Debug.d(TAG, "##########timeout = "+timeout+",stat="+info[9]);
-				}while(info[9]!=4);
-				
-			}
-		}).start();
+		
+		//int timeout=10;
+		byte[] info = new byte[23];
+		do
+		{
+			try{
+				Thread.sleep(2000);
+			}catch(Exception e)
+			{}
+			
+			UsbSerial.getInfo(mSerialdev, info);
+			Message msg = new Message();
+			msg.what=MESSAGE_UPDATE_INKLEVEL;
+			Bundle b= new Bundle();
+			b.putByteArray("info", info);
+			msg.setData(b);
+			mHandler.sendMessage(msg);
+			//Debug.d(TAG, "##########timeout = "+timeout+",stat="+info[9]);
+		}while(info[9]!=4);
 		
 	}
 	
@@ -494,7 +505,7 @@ public class ControlTabActivity extends Activity{
 	 * preparePrintBuffer
 	 *   fill the variable buffer into background buffer
 	 */
-	public void preparePrintBuffer()
+	public synchronized void preparePrintBuffer()
 	{
 		if(mObjList==null || mObjList.isEmpty())
 			return;
@@ -509,9 +520,11 @@ public class ControlTabActivity extends Activity{
 		ByteArrayBuffer bytes=new ByteArrayBuffer(0);
 		if(mObjList==null || mObjList.isEmpty())
 			return;
+		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)
 		{
+			Debug.d(TAG, "-------------1");
 			bytes.clear();
 			bytes.setLength(0);
 			Debug.d(TAG, "refreshVariables object = "+o.mId);
@@ -569,6 +582,17 @@ public class ControlTabActivity extends Activity{
 					BinCreater.overlap(buffer, varbin.mBits, (int)rtSub.getX(), 0, varbin.mBitsperColumn);
 				}				
 			}
+			else if(o instanceof JulianDayObject)
+			{
+				String vString = ((JulianDayObject)o).getContent();
+				BinInfo varbin= new BinInfo();
+				try{
+					varbin.getVarBuffer(vString, mObjPath+"/v"+o.getIndex()+".bin");
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+				BinCreater.overlap(buffer, varbin.mBits, (int)o.getX(), 0, varbin.mBitsperColumn);
+			}
 			else
 			{
 				Debug.d(TAG, "not Variable object");
@@ -619,7 +643,8 @@ public class ControlTabActivity extends Activity{
 			}
 			else if(ACTION_CLOSE_SERIAL.equals(intent.getAction()))
 			{
-				
+				Debug.d(TAG, "******close");
+				mSerialdev = null;
 			}
 			else if(ACTION_BOOT_COMPLETE.equals(intent.getAction()))
 			{
@@ -673,115 +698,26 @@ public class ControlTabActivity extends Activity{
 	 */
 	public class PrintingThread extends Thread{
 		
-		//public boolean isRunning;
-		public int curPos=0;
+		public boolean isRunning;
+		//public int curPos=0;
 		public PrintingThread()
 		{
-			//isRunning=false;
+			isRunning=false;
 		}
-		/*
-		public void start()
+		
+		public synchronized void run()
 		{
-			Debug.d(TAG, "====start");
-			isRunning=true;
-		}
-		*/
-		public void run()
-		{
-			//isPrinting = true;
-			byte[] sdata = new byte[128];
-			byte[] pdata;// = new byte[128];
-			byte[] info = new byte[23];
-			Debug.d(TAG, "====run");
-			if(UsbSerial.printStart(mSerialdev)==0)
-			{
-				isRunning = false;
-				isPrinting=false;
-				return;
-			}
-			Debug.d(TAG, "====start ok");
-			if(UsbSerial.sendSetting(mSerialdev)==0)
-			{
-				UsbSerial.printStop(mSerialdev);
-				isRunning = false;
-				isPrinting=false;
-				return;
-			}
-			Debug.d(TAG, "====send setting ok");
-			makeParams(mContext, sdata);
-			UsbSerial.sendSettingData(mSerialdev, sdata);
-			while(isRunning == true)
-			{
-				//pdata = new byte[128];	//
-				if(!isPrinting)
-				{
-					int ret = UsbSerial.getInfo(mSerialdev, info);
-					if(ret != 0)
-						Debug.d(TAG, "get Print-header info error");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				else
-				{
-					
-					while(true) //poll state,wait for print finish
-					{
-						UsbSerial.getInfo(mSerialdev, info);
-						String text="";
-						for(int i=0;i<23;i++)
-							text += String.valueOf(Integer.toHexString(info[i] & 0x0ff))+" ";
-						Message msg = new Message();
-						Bundle b = new Bundle();
-						b.putString("text", text);
-						msg.what=MESSAGE_UPDATE_PRINTSTATE;
-						msg.setData(b);
-						mHandler.sendMessage(msg);
-						if(info[9] == 0)	//print finished
-							break;
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					if(mTlkList==null || mTlkList.isEmpty())
-					{
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						continue;
-					}
-					
-					if(curPos>=mTlkList.size())
-						curPos = 0;
-					Vector<TlkObject> list = mTlkList.get(curPos);
-					byte[] buffer = mBinBuffer.get(list);
-					UsbSerial.sendDataCtrl(mSerialdev, buffer.length);
-					UsbSerial.printData(mSerialdev,  buffer);
-					curPos++;
-				}
-			}
-			
-				
-			Log.d(TAG, "PrintingThread exit, mSerialdev="+mSerialdev);
-			//isPrinting = false;
+			isRunning = true;
+			print();
+			isRunning = false;
 		}
 	}
 	
-	public synchronized void stopThread(Thread t)
+	public synchronized void stopThread(PrintingThread t)
 	{
-		isPrinting=false;
-		isRunning=false;
 		if(t != null)
 		{
+			t.isRunning=false;
 			Thread tmp = t;
 			t = null;
 			tmp.interrupt();
@@ -791,7 +727,7 @@ public class ControlTabActivity extends Activity{
 	public synchronized Thread startThread()
 	{
 		PrintingThread t = new PrintingThread();
-		isRunning=true;
+		t.isRunning=true;
 		t.start();
 		return t;
 	}

@@ -35,7 +35,7 @@
 	<string name="strwaitting">printing,wait......</string>
 	<string name="strPrintstate">State：</string>
 	<string name="strPrinting">Printing</string>
-	<string name="strPrintok">Finished</string>
+	<string name="strPrintok">Ready</string>
 	
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
@@ -80,6 +80,8 @@
 	<string name="strUpgradeNoApk">No Upgrade Image found!!!</string>
 	<string name="strSaving">saving, please wait...</string>
 	<string name="strLoading">loading, please wait...</string>
+	<string name="strInsertSerial">请插入打印设备</string>
+	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP head</item>
 	    <item>12.7 mm HP standard</item>

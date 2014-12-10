@@ -189,7 +189,7 @@ public class Fileparser {
 			
 			obj.setY(Integer.parseInt(attr[3]));
 			
-			obj.setHeight((Integer.parseInt(attr[5]) - Integer.parseInt(attr[3])));
+			obj.setHeight(Integer.parseInt(attr[5])-Integer.parseInt(attr[3]));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 		}
 		Log.d(TAG, "index = "+obj.getIndex());

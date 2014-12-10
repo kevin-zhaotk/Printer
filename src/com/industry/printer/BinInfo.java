@@ -80,7 +80,8 @@ public class BinInfo {
    		buffer = new byte[(int) file.length()];
    		FileInputStream fs = new FileInputStream(file);
    		fs.read(buffer);
-   		mColumn = buffer[0] << 16| buffer[1] <<8 | buffer[2];
+   		mColumn = (int)(buffer[0]&0x0ff << 16)| (int)(buffer[1]&0x0ff) <<8 | (int)(buffer[2]&0x0ff);
+   		Debug.d(TAG, "-----buffer[0]="+(int)(buffer[0]&0x0ff)+", buffer[1]="+(int)(buffer[1]&0x0ff)+", buffer[2]="+(int)(buffer[2]&0x0ff));
    		mBitsperColumn=(buffer.length/mColumn)*8;
    		mColOne = buffer[6] << 16| buffer[7] <<8 | buffer[8];
    		if(mColOne == 0)

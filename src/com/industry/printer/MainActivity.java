@@ -10,6 +10,7 @@ import com.industry.printer.Utils.Debug;
 import com.android.internal.app.LocalePicker;
 
 import android.os.Bundle;
+import android.app.PendingIntent;
 //import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
@@ -31,6 +32,8 @@ import android.view.inputmethod.InputMethodInfo;
 public class MainActivity extends TabActivity {
 
 	public static final String TAG="MainActivity";
+	public static final String ACTION_USB_PERMISSION="com.industry.printer.USB_PERMISSION";
+	
 	TabHost mTab;
 	
 	static {
@@ -96,10 +99,13 @@ public class MainActivity extends TabActivity {
 		
 		IntentFilter filter = new IntentFilter();
 		//filter.addDataScheme("file");
-		filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
+		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
+		filter.addAction(ACTION_USB_PERMISSION);
 		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
 		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
 		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
+		
+		
 		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver();
 		Context mContext = this.getApplicationContext();
 		mContext.registerReceiver(mReceiver, filter);
