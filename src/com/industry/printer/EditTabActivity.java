@@ -142,6 +142,7 @@ public class EditTabActivity extends Activity {
 				mObjs.clear();
 				mObjs.add(new MessageObject(mContext, 0));
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+				mHScroll.scrollTo(0, 0);
 			}		
 		});
 		

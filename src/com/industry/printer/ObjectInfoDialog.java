@@ -374,6 +374,18 @@ public class ObjectInfoDialog extends Dialog {
 					mShift5.setText(String.valueOf(((ShiftObject)mObject).getShift(4)));
 					mShiftVal5.setText(((ShiftObject)mObject).getValue(4));
 				}
+				else if(mObject instanceof RectObject){
+					mLineWidth.setText(String.valueOf(((RectObject)mObject).getLineWidth()));
+					mLineType.setSelection(((RectObject)mObject).getLineType());
+				}
+				else if(mObject instanceof LineObject){
+					mLineWidth.setText(String.valueOf(((LineObject)mObject).getLineWidth()));
+					mLineType.setSelection(((LineObject)mObject).getLineType());
+				}
+				else if(mObject instanceof EllipseObject){
+					mLineWidth.setText(String.valueOf(((EllipseObject)mObject).getLineWidth()));
+					mLineType.setSelection(((EllipseObject)mObject).getLineType());
+				}
 			}
 	 }
 	 

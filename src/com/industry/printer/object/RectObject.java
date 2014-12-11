@@ -1,5 +1,7 @@
 package com.industry.printer.object;
 
+import com.industry.printer.Utils.Debug;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -55,7 +57,7 @@ public class RectObject extends BaseObject {
 		str += BaseObject.floatToFormatString(getLineWidth(), 3)+"^";
 		str += BaseObject.intToFormatString(getLineType(), 3)+"^";
 		str += "000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
-		System.out.println("file string ["+str+"]");
+		Debug.d(TAG,"file string ["+str+"]");
 		return str;
 	}
 }
