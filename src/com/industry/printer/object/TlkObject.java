@@ -21,6 +21,11 @@ public class TlkObject {
 		index = i;
 	}
 	
+	public int getIndex()
+	{
+		return index;
+	}
+	
 	public void setX(int x)
 	{
 		this.x = x;

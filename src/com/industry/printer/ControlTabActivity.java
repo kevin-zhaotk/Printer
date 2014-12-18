@@ -791,11 +791,15 @@ public class ControlTabActivity extends Activity {
                  }
                  else if(o.index>=21 && o.index<=24 && m.get("index").equals(index))
 				 {
-                	 int logo=Integer.parseInt(o.font);
-                	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.font)+"="+m.get("pic"+logo));
-                	 String pic=m.get("pic"+logo);
-                	 o.setContent(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
-                	 o.setFont(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
+                	 try{
+                		 int logo=Integer.parseInt(o.font);
+                    	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.font)+"="+m.get("pic"+logo));
+                    	 String pic=m.get("pic"+logo);
+                    	 o.setContent(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
+                    	 o.setFont(BaseObject.intToFormatString(Integer.parseInt(pic), 4)); 
+                	 }catch(NumberFormatException e){
+                		 Debug.d(TAG, "++++++++"+e.getMessage());
+                	 }
                 	 break;
 				 }
 			}
@@ -1399,7 +1403,8 @@ public class ControlTabActivity extends Activity {
 				font.getDotbuf(bit);
 				bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
 			}
-			can.drawBitmap(bmp, o.x, o.y, p);
+			if(bmp!=null)
+				can.drawBitmap(bmp, o.x, o.y, p);
 		}
 		BinCreater.saveBitmap(gBmp, "pre.bmp");
 		//set contents of text object

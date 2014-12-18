@@ -22,6 +22,8 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -61,6 +63,7 @@ public class ManualCtrlActivity extends Activity {
 	public Button mBtnview;
 	public Button mPrint;
 	public Button mStop;
+	public Button mLogoSelect;
 	public TextView mPrintState;
 	public TextView mPhotocell;
 	public TextView mEncoder;
@@ -73,6 +76,7 @@ public class ManualCtrlActivity extends Activity {
 	public Context mContext;
 	
 	SharedPreferences mPreference=null;
+	public String mLogo;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,12 +116,32 @@ public class ManualCtrlActivity extends Activity {
 			
 		});
 		
+		mLogoSelect = (Button)findViewById(R.id.manual_btn_SelectLogo);
+		mLogoSelect.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				LogoSelectDialog dialog=new LogoSelectDialog(ManualCtrlActivity.this);
+				dialog.show();
+				dialog.setOnDismissListener(new OnDismissListener() {
+					
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+						mLogo = LogoSelectDialog.mSelection;
+						Debug.d(TAG, "=======mLogo: "+mLogo);
+					}
+				});
+			}
+		});
+		
+		
 		mMessageMap = new LinkedList<Map<String, String>>();
 		mMessageAdapter = new PreviewAdapter(mContext, 
 											mMessageMap,
 											R.layout.manuallistviewlayout,
-											new String[]{"index","text1","text2","text3","text4","text5","text6"},
-											new int[]{R.id.manual_index,R.id.manual_text1,R.id.manual_text2,R.id.manual_text3,R.id.manual_text4,
+											new String[]{"text1","text2","text3","text4","text5","text6"},
+											new int[]{R.id.manual_text1,R.id.manual_text2,R.id.manual_text3,R.id.manual_text4,
 													R.id.manual_text5,R.id.manual_text6});
 		mMessageAdapter.setMode(true);
 		mMessageList = (ListView) findViewById(R.id.manual_lv_messages);
@@ -201,8 +225,17 @@ public class ManualCtrlActivity extends Activity {
 						}
 						else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 						{
-							Debug.d(TAG, "=========pic object");
-							DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+							DotMatrixFont font;
+							Debug.d(TAG, "=========pic object: "+mLogo);
+							if("000X".equalsIgnoreCase(o.font)){
+								Debug.d(TAG, "=========pic object: "+mLogo);
+								 font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+mLogo);
+							}
+							else {
+								Debug.d(TAG, "=========pic object: "+o.font);
+								font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+							}
+							
 							bit = new int[128*8];
 							font.getDotbuf(bit);
 							bmp=PreviewScrollView.getPicBitmapFrombuffer(bit, p);
@@ -294,12 +327,14 @@ public class ManualCtrlActivity extends Activity {
 		Debug.d(TAG, "=====text3="+mPreference.getString("text3", ""));
 		Debug.d(TAG, "=====text4="+mPreference.getString("text4", ""));
 		Debug.d(TAG, "=====text5="+mPreference.getString("text5", ""));
+		Debug.d(TAG, "=====text6="+mPreference.getString("text6", ""));
 		map.put("index", mPreference.getString("index", ""));
 		map.put("text1", mPreference.getString("text1", ""));
 		map.put("text2", mPreference.getString("text2", ""));
 		map.put("text3", mPreference.getString("text3", ""));
 		map.put("text4", mPreference.getString("text4", ""));
 		map.put("text5", mPreference.getString("text5", ""));
+		map.put("text6", mPreference.getString("text6", ""));
 		mMessageMap.add(map);
 		mMessageList.setAdapter(mMessageAdapter);
 	}
@@ -314,17 +349,19 @@ public class ManualCtrlActivity extends Activity {
 			EditText text3 = (EditText)lay.findViewById(R.id.manual_text3);
 			EditText text4 = (EditText)lay.findViewById(R.id.manual_text4);
 			EditText text5 = (EditText)lay.findViewById(R.id.manual_text5);
+			EditText text6 = (EditText)lay.findViewById(R.id.manual_text6);
 			Debug.d(TAG, "=====text1="+text1.getText().toString());
 			Debug.d(TAG, "=====text2="+text2.getText().toString());
 			Debug.d(TAG, "=====text3="+text3.getText().toString());
 			Debug.d(TAG, "=====text4="+text4.getText().toString());
 			Debug.d(TAG, "=====text5="+text5.getText().toString());
+			Debug.d(TAG, "=====text6="+text6.getText().toString());
 			mPreference.edit().putString("text1", text1.getText().toString()).commit();
 			mPreference.edit().putString("text2", text2.getText().toString()).commit();
 			mPreference.edit().putString("text3", text3.getText().toString()).commit();
 			mPreference.edit().putString("text4", text4.getText().toString()).commit();
 			mPreference.edit().putString("text5", text5.getText().toString()).commit();
-			
+			mPreference.edit().putString("text6", text6.getText().toString()).commit();
 		}
 	}
 	
@@ -336,7 +373,7 @@ public class ManualCtrlActivity extends Activity {
 			{
 				LinearLayout lay = (LinearLayout)mMessageList.getChildAt(0);
 				
-				if(o.index<=0 || o.index > 5)
+				if(o.index<=0 || o.index > 6)
 					break;
 				if(o.index==1)
 				{
@@ -365,6 +402,16 @@ public class ManualCtrlActivity extends Activity {
 					Debug.d(TAG, "===content="+t1.getText().toString());
 					o.setContent(t1.getText().toString());
 				}
+				else if(o.index==6)
+				{
+					EditText t1=(EditText)lay.findViewById(R.id.manual_text6);
+					Debug.d(TAG, "===content="+t1.getText().toString());
+					o.setContent(t1.getText().toString());
+				}
+				else{
+					Debug.d(TAG, "==========unsupported object index "+ o.index);
+				}
+				
 			}
 		}
 		

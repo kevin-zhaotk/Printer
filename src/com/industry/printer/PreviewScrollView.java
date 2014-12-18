@@ -125,7 +125,14 @@ public class PreviewScrollView extends View {
 			else if(o.isPicObject()) //each picture object take over 32*32/8=128bytes
 			{
 				//Debug.d(TAG, "=========pic object");
-				DotMatrixFont font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				DotMatrixFont font;
+				if("000X".equalsIgnoreCase(o.font)){
+					font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+LogoSelectDialog.mSelection);
+				}
+				else{
+					font = new DotMatrixFont(DotMatrixFont.LOGO_FILE_PATH+o.font+".txt");
+				}
+				
 				bit = new int[128*8];
 				font.getDotbuf(bit);
 				mPreBitmap=getPicBitmapFrombuffer(bit, mPaint);

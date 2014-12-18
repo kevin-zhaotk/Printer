@@ -38,6 +38,7 @@
 	<string name="strwaitting">正在打印，请稍等。。。。。。</string>
 	<string name="str_openfile">打开Csv文件</string>
 	<string name="str_tlkfile">打开Tlk文件</string>
+	<string name="str_logo">选择LOGO</string>
 	<string name="str_mvforward">前移</string>
 	<string name="str_mvbackward">后移</string>
 	<string name="str_preview">预览</string>
@@ -303,4 +304,6 @@
 	<string name="str_column_text16">文本16</string>
 	
 	<string name="str_notlkfile">请先选择一个正确的TLK文件</string>
+	
+	<string name="logo_dialog_title">选择LOGO</string>
 </resources>
