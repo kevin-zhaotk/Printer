@@ -27,17 +27,25 @@ import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
+import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.Fileparser;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LineObject;
+import com.industry.printer.object.MessageObject;
+import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
 import com.industry.printer.object.RealtimeMinute;
 import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
+import com.industry.printer.object.RectObject;
+import com.industry.printer.object.ShiftObject;
+import com.industry.printer.object.TextObject;
 
 import com.industry.printer.object.TlkObject;
 
@@ -323,10 +331,10 @@ public class ControlTabActivity extends Activity{
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
 				long before=System.currentTimeMillis();
-				preparePrintBuffer();
+				//preparePrintBuffer();
+				startPreview();
 				long after=System.currentTimeMillis();
 				Debug.d(TAG, "--------consume="+(after-before));
-				startPreview();
 			}
 			
 		});
@@ -461,20 +469,103 @@ public class ControlTabActivity extends Activity{
 	}
 	public void startPreview()
 	{
-		if(mObjList==null || mObjList.isEmpty() || mPrintBuffer==null)
+		if(mObjList==null || mObjList.isEmpty())
 			return;
 		try{
-			 mPreBytes = new int[mPrintBuffer.length*8];
-			 BinCreater.bin2byte(mPrintBuffer, mPreBytes);
-			 mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
-			 mPreview.invalidate();
-			 //mPreviewRefreshHandler.sendEmptyMessage(0);
-			}catch(Exception e)
+			long before=System.currentTimeMillis();
+			drawPrintBitmap();
+			long after=System.currentTimeMillis();
+			Debug.d(TAG, "--------consume="+(after-before));
+			
+			if(mPreBytes==null || (BinCreater.mBmpBits!=null && mPreBytes.length!=BinCreater.mBmpBits.length))
 			{
-				Debug.d(TAG, "startPreview e: "+e.getMessage());
+				mPreBytes = new int[BinCreater.mBmpBits.length*8];
 			}
+			BinCreater.bin2byte(BinCreater.mBmpBits, mPreBytes);
+			
+			//mPreview.createBitmap(BinCreater.mBmpBytes, mBg.mColumn, mBg.mBitsperColumn);
+			mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
+			mPreview.invalidate();
+			//mPreviewRefreshHandler.sendEmptyMessage(0);
+		}catch(Exception e)
+		{
+			Debug.d(TAG, "startPreview e: "+e.getMessage());
+		}
 		
 	}
+	
+	private void drawPrintBitmap()
+	{
+		int width=0;
+		Bitmap t = null;
+		Paint p=new Paint();
+		if(mObjList==null || mObjList.size() <= 0)
+			return ;
+		for(BaseObject o:mObjList)
+		{
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+		
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjList)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			if(o instanceof TextObject)
+			{
+				t = o.getScaledBitmap(mContext);
+			}
+			else if(o instanceof CounterObject)
+			{
+				t = ((CounterObject)o).getScaledBitmap(mContext);
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				t = ((RealtimeObject)o).getScaledBitmap(mContext);
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				t = ((JulianDayObject)o).getScaledBitmap(mContext);
+			}
+			else if(o instanceof ShiftObject)
+			{
+				t = ((ShiftObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof BarcodeObject) {
+				t = ((BarcodeObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RTSecondObject) {
+				t = ((RTSecondObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof LineObject) {
+				t = ((LineObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RectObject) {
+				t = ((RectObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof EllipseObject) {
+				t = ((EllipseObject)o).getScaledBitmap(mContext);
+			}
+			else {
+				Debug.d(TAG, "&&&&&&&&&&error: unknown object");
+			}
+			if(t==null)
+				continue;
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			BinCreater.recyleBitmap(t);
+			
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		//BinCreater.saveBitmap(bmp, "back.png");
+		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
+		BinCreater.create(bmp, 0);
+		//BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
+		return ;
+	}
+	
 	
 	/**
 	 * prepareBackgroudBuffer
