@@ -33,7 +33,7 @@ public class Fileparser {
 			 InputStream instream = new FileInputStream(file); 
 			 if(instream != null)
 			 {
-				 InputStreamReader inputreader = new InputStreamReader(instream);
+				 InputStreamReader inputreader = new InputStreamReader(instream,"gb2312");
                  BufferedReader buffreader = new BufferedReader(inputreader);
                  String line;
                  
