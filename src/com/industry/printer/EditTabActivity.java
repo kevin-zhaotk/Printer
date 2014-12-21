@@ -947,10 +947,12 @@ public class EditTabActivity extends Activity {
             switch (msg.what) {   
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+FileBrowserDialog.file());
-            		mObjName = FileBrowserDialog.file();
-            		if(mObjName != null && new File(mObjName).isFile())
+            		String tlkfile=FileBrowserDialog.file();
+            		File tlk=new File(tlkfile);
+            		mObjName = tlk.getParent();
+            		if(tlkfile != null && tlk.isFile())
             		{
-	    				Fileparser.parse(mContext, FileBrowserDialog.file(), mObjs);
+	    				Fileparser.parse(mContext, tlkfile, mObjs);
 	    				clearCurObj();
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
@@ -1112,6 +1114,7 @@ public class EditTabActivity extends Activity {
 		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
 		return ;
 	}
+	
 	
 	public ProgressDialog mProgressDialog;
 	public Thread mProgressThread;
