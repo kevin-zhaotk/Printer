@@ -74,7 +74,7 @@ public class EditTabActivity extends Activity {
 	
 	public Context mContext;
 	public EditScrollView mObjView;
-	public HorizontalScrollView mHScroll;
+	public ScrollView mHScroll;
 	
 	public String mObjName;
 	/*************************
@@ -211,7 +211,7 @@ public class EditTabActivity extends Activity {
 			}
 			
 		});
-		mHScroll = (HorizontalScrollView) findViewById(R.id.scrollView1);
+		mHScroll = (ScrollView) findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView)findViewById(R.id.editView);
 		
 		mObjView.setOnTouchListener(new OnTouchListener(){
