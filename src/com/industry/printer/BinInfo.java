@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 
 import android.graphics.Bitmap;
@@ -103,4 +104,5 @@ public class BinInfo {
    		Debug.d(TAG, "*******mBits.len="+mBits.length );
     	return ;
     }
+    
 }

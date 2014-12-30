@@ -421,7 +421,7 @@ public class ControlTabActivity extends Activity{
 						Debug.d(TAG, "open object file "+f);
 						mObjPath = new File(f).getParent();
 						//startPreview();
-						prepareBackgroudBuffer(f);
+						initBuffer();
 					}
 					dismissProgressDialog();
 					break;
@@ -493,7 +493,12 @@ public class ControlTabActivity extends Activity{
 		}
 		
 	}
-	
+	/**
+	 * drawPrintBitmap - 用于动态生成打印buffer
+	 * 这个方案下，打印buffer直接从tlk文件生成；
+	 * 每次buffer都是重新画贴图，然后从贴图按像素解析得到buffer
+	 * 这种方案效率低，buffer生成耗时太长，880项目不考虑使用
+	 */
 	private void drawPrintBitmap()
 	{
 		int width=0;
@@ -564,6 +569,148 @@ public class ControlTabActivity extends Activity{
 		BinCreater.create(bmp, 0);
 		//BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
 		return ;
+	}
+	
+	private void initBuffer()
+	{
+		int width=0;
+		Bitmap t = null;
+		Paint p=new Paint();
+		if(mObjList==null || mObjList.size() <= 0)
+			return ;
+		for(BaseObject o:mObjList)
+		{
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+		
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjList)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			if(o instanceof TextObject)
+			{
+				t = o.getScaledBitmap(mContext);
+			}
+			else if(o instanceof CounterObject)
+			{
+				o.generateVarBuffer();
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				t = ((RealtimeObject)o).getScaledBitmap(mContext);
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				o.generateVarBuffer();
+			}
+			else if(o instanceof ShiftObject)
+			{
+				o.generateVarBuffer();
+			}
+			else if (o instanceof BarcodeObject) {
+				t = ((BarcodeObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RTSecondObject) {
+				o.generateVarBuffer();
+			}
+			else if (o instanceof LineObject) {
+				t = ((LineObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RectObject) {
+				t = ((RectObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof EllipseObject) {
+				t = ((EllipseObject)o).getScaledBitmap(mContext);
+			}
+			else {
+				Debug.d(TAG, "&&&&&&&&&&error: unknown object");
+			}
+			if(t==null)
+				continue;
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			BinCreater.recyleBitmap(t);
+			
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		//BinCreater.saveBitmap(bmp, "back.png");
+		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
+		BinCreater.create(bmp, 0);
+		//BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
+		return ;
+	}
+	
+	public void fillBufferWithVariables()
+	{
+		Bitmap bm=null;
+		String substr=null;
+		ByteArrayBuffer bytes=new ByteArrayBuffer(0);
+		if(mObjList==null || mObjList.isEmpty())
+			return;
+		Debug.d(TAG, "-----objlist size="+mObjList.size());
+		mPrintBuffer = Arrays.copyOf(mBgBuffer, mBgBuffer.length);
+		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
+		for(BaseObject o:mObjList)
+		{
+			Debug.d(TAG, "-------------1");
+			bytes.clear();
+			bytes.setLength(0);
+			Debug.d(TAG, "refreshVariables object = "+o.mId);
+			if(o instanceof CounterObject)
+			{
+				String str = ((CounterObject) o).getNext();
+				byte[] buffer=o.getBufferFromContent();
+				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				
+				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
+				for(BaseObject rtSub : rt)
+				{
+					bytes.clear();
+					bytes.setLength(0);
+					if(rtSub instanceof RealtimeYear)
+					{
+						substr = ((RealtimeYear)rtSub).getContent();
+					}
+					else if(rtSub instanceof RealtimeMonth)
+					{
+						substr = ((RealtimeMonth)rtSub).getContent();
+						//continue;
+					}
+					else if(rtSub instanceof RealtimeDate)
+					{
+						substr = ((RealtimeDate)rtSub).getContent();
+						//continue;
+					} 
+					else if(rtSub instanceof RealtimeHour)
+					{
+						substr = ((RealtimeHour)rtSub).getContent();
+					} 
+					else if(rtSub instanceof RealtimeMinute)
+					{
+						substr = ((RealtimeMinute)rtSub).getContent();
+					}
+					else
+						continue;
+					byte[] buffer = o.getBufferFromContent();
+					BinCreater.overlap(mPrintBuffer, buffer, (int)rtSub.getX(), 0, Configs.gDots);
+				}				
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				byte[] buffer = o.getBufferFromContent();
+				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
+			}
+			else
+			{
+				Debug.d(TAG, "not Variable object");
+			}
+		}
 	}
 	
 	

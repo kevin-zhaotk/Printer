@@ -163,8 +163,8 @@ public class RealtimeObject extends BaseObject {
 			}
 			else	//variable
 			{
-				
-				o.drawVarBitmap(f);
+//				o.drawVarBitmap(f);
+				o.generateVarBuffer();
 			}
 		}
 		return bmp;
