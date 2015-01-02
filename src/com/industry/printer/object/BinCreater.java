@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -13,7 +11,6 @@ import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
-import android.R.array;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
@@ -35,24 +32,8 @@ public class BinCreater {
 	public static void create(Bitmap bmp, int colEach)
 	{
 		Bitmap scaledImg = scaleHeight(bmp, Configs.gDots);
-		if(mBmpBytes==null || mBmpBytes.length != scaledImg.getByteCount()/2){
-			Debug.d(TAG, "=====new a bitmap Bytes");
-			mBmpBytes = new int[scaledImg.getByteCount()/2];
-		}
-		else{
-			Debug.d(TAG, "=====use exist bitmap Bytes");
-			Arrays.fill(mBmpBytes, 0);
-		}
-		int bits=scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1);
-		if(mBmpBits==null || mBmpBits.length!=bits){
-			Debug.d(TAG, "=====new a bitmap Bits");
-			mBmpBits = new byte[bits];
-		}
-		else{
-			Debug.d(TAG, "=====use exist bitmap Bits");
-			Arrays.fill(mBmpBits, (byte) 0);
-		}
-		
+		mBmpBytes = new int[scaledImg.getByteCount()/2];
+		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
 		convertGreyImg(scaledImg);
 		BinCreater.recyleBitmap(scaledImg);
