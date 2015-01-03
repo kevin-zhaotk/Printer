@@ -145,6 +145,31 @@ public class RealtimeObject extends BaseObject {
 	}
 	
 	
+	public Bitmap getBgBitmap(Context context)
+	{
+		System.out.println("getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
+		mCan = new Canvas(bmp);
+		mCan.drawColor(Color.WHITE);
+		for(BaseObject o : mSubObjs)
+		{
+			//constant 
+			if(o instanceof TextObject)
+			{
+				Bitmap b = o.getScaledBitmap(context);
+				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+				BinCreater.recyleBitmap(b);
+			}
+			else	//variable
+			{
+//				o.drawVarBitmap(f);
+				o.generateVarBuffer();
+			}
+		}
+		return bmp;
+	}
+	
 	public Bitmap getBgBitmap(Context context, String f)
 	{
 		System.out.println("getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
@@ -163,12 +188,12 @@ public class RealtimeObject extends BaseObject {
 			}
 			else	//variable
 			{
-				
 				o.drawVarBitmap(f);
 			}
 		}
 		return bmp;
 	}
+	
 	
 	@Override
 	public void setHeight(float size)

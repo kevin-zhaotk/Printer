@@ -27,18 +27,25 @@ import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
+import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.Fileparser;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LineObject;
+import com.industry.printer.object.MessageObject;
+import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
 import com.industry.printer.object.RealtimeMinute;
 import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
-
+import com.industry.printer.object.RectObject;
+import com.industry.printer.object.ShiftObject;
+import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
 
 import android.R.integer;
@@ -361,7 +368,7 @@ public class ControlTabActivity extends Activity{
 	
 	/**
 	 * print
-	 * ´òÓ¡½Ó¿Ú£¬ÏÂ·¢´òÓ¡Êý¾Ý£¬²¢¶¨Ê±²éÑ¯´òÓ¡×´Ì¬£¬×Ô¶¯¸üÐÂÄ«Ë®Öµ£¬´òÓ¡·µ»Ø³É¹¦ºó½áÊøThread
+	 * ï¿½ï¿½Ó¡ï¿½Ó¿Ú£ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ñ¯ï¿½ï¿½Ó¡×´Ì¬ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ä«Ë®Öµï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½Ø³É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Thread
 	 */
 	public void print()
 	{
@@ -413,7 +420,9 @@ public class ControlTabActivity extends Activity{
 						Debug.d(TAG, "open object file "+f);
 						mObjPath = new File(f).getParent();
 						//startPreview();
-						prepareBackgroudBuffer(f);
+						//prepareBackgroudBuffer(f);
+						parseTlk(f);
+						initBgBuffer();
 					}
 					dismissProgressDialog();
 					break;
@@ -464,17 +473,187 @@ public class ControlTabActivity extends Activity{
 		if(mObjList==null || mObjList.isEmpty() || mPrintBuffer==null)
 			return;
 		try{
-			 mPreBytes = new int[mPrintBuffer.length*8];
-			 BinCreater.bin2byte(mPrintBuffer, mPreBytes);
-			 mPreview.createBitmap(mPreBytes, mBg.mColumn, mBg.mBitsperColumn);
-			 mPreview.invalidate();
-			 //mPreviewRefreshHandler.sendEmptyMessage(0);
-			}catch(Exception e)
+			fillBufferWithVariables();
+			mPreBytes = new int[mPrintBuffer.length*8];
+			BinCreater.bin2byte(mPrintBuffer, mPreBytes);
+			mPreview.createBitmap(mPreBytes, mBgBuffer.length/110, Configs.gDots);
+			mPreview.invalidate();
+			//mPreviewRefreshHandler.sendEmptyMessage(0);
+		}catch(Exception e)
 			{
 				Debug.d(TAG, "startPreview e: "+e.getMessage());
 			}
 		
 	}
+	
+	/**
+	 * ï¿½ï¿½ï¿½ï¿½TLKï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½æµ½mObjListï¿½ï¿½
+	 * @param f the selected TLK file
+	 */
+	private void parseTlk(String f){
+		String path=null;
+		File fp = new File(f);
+		if(fp.isFile())
+			path = new File(f).getParent();
+		else
+			path = f;
+		Fileparser.parse(mContext, f, mObjList);
+	}
+	
+	
+	public void initBgBuffer()
+	{
+		Bitmap t;
+		int width=0;
+		Paint p=new Paint();
+		if(mObjList==null || mObjList.size() <= 0)
+			return ;
+		for(BaseObject o:mObjList)
+		{
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+		
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjList)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			
+			if(o instanceof TextObject)
+			{
+				t = o.getScaledBitmap(mContext);
+			}
+			else if(o instanceof CounterObject)
+			{
+				o.generateVarBuffer();
+				continue;
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				t = ((RealtimeObject)o).getBgBitmap(mContext);
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				o.generateVarBuffer();
+				continue;
+			}
+			else if(o instanceof ShiftObject)
+			{
+				o.generateVarBuffer();
+				continue;
+			}
+			else if (o instanceof BarcodeObject) {
+				t = ((BarcodeObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RTSecondObject) {
+				o.generateVarBuffer();
+				continue;
+			}
+			else if (o instanceof LineObject) {
+				t = ((LineObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof RectObject) {
+				t = ((RectObject)o).getScaledBitmap(mContext);
+			}
+			else if (o instanceof EllipseObject) {
+				t = ((EllipseObject)o).getScaledBitmap(mContext);
+			}
+			else {
+				Debug.d(TAG, "&&&&&&&&&&error: unknown object");
+				continue;
+			}
+			if(t==null)
+				continue;
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			BinCreater.recyleBitmap(t);
+			
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		//BinCreater.saveBitmap(bmp, "back.png");
+		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
+		BinCreater.create(bmp, 0);
+		mBgBuffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
+		return ;
+	}
+	
+	public void fillBufferWithVariables()
+	{
+		Bitmap bm=null;
+		String substr=null;
+		byte[] buffer;
+		if(mObjList==null || mObjList.isEmpty())
+			return;
+		Debug.d(TAG, "-----objlist size="+mObjList.size());
+		mPrintBuffer = Arrays.copyOf(mBgBuffer, mBgBuffer.length);
+		Debug.d(TAG, "===>mPrintBuffer len="+mPrintBuffer.length);
+		for(BaseObject o:mObjList)
+		{
+			Debug.d(TAG, "-------------1");
+			Debug.d(TAG, "refreshVariables object = "+o.mId);
+			if(o instanceof CounterObject)
+			{
+				String str = ((CounterObject) o).getNext();
+				buffer=o.getBufferFromContent();
+				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				
+				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
+				for(BaseObject rtSub : rt)
+				{
+					if(rtSub instanceof RealtimeYear)
+					{
+						substr = ((RealtimeYear)rtSub).getContent();
+						buffer = ((RealtimeYear)rtSub).getBufferFromContent();
+					}
+					else if(rtSub instanceof RealtimeMonth)
+					{
+						substr = ((RealtimeMonth)rtSub).getContent();
+						buffer = ((RealtimeMonth)rtSub).getBufferFromContent();
+						//continue;
+					}
+					else if(rtSub instanceof RealtimeDate)
+					{
+						substr = ((RealtimeDate)rtSub).getContent();
+						buffer = ((RealtimeDate)rtSub).getBufferFromContent();
+					} 
+					else if(rtSub instanceof RealtimeHour)
+					{
+						substr = ((RealtimeHour)rtSub).getContent();
+						buffer = ((RealtimeHour)rtSub).getBufferFromContent();
+					} 
+					else if(rtSub instanceof RealtimeMinute)
+					{
+						substr = ((RealtimeMinute)rtSub).getContent();
+						buffer = ((RealtimeMinute)rtSub).getBufferFromContent();
+					}
+					else
+						continue;
+					
+					BinCreater.overlap(mPrintBuffer, buffer, (int)rtSub.getX(), 0, Configs.gDots);
+				}				
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				buffer = o.getBufferFromContent();
+				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
+			}
+			else if(o instanceof RTSecondObject){
+				((RTSecondObject)o).getContent();
+				buffer = o.getBufferFromContent();
+				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
+			}
+			else
+			{
+				Debug.d(TAG, "not Variable object");
+			}
+		}
+	}
+	
 	
 	/**
 	 * prepareBackgroudBuffer

@@ -1,11 +1,18 @@
 package com.industry.printer.object;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.apache.http.util.ByteArrayBuffer;
+
 import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
+import android.R.color;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -60,6 +67,7 @@ public class BaseObject{
 	public int mLineWidth;
 	public boolean mIsSelected;
 	public String mContent;
+	public HashMap<String, byte[]> mVBuffer;
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -85,6 +93,7 @@ public class BaseObject{
 		setLineWidth(5);
 		setContent("text");
 		
+		mVBuffer = new HashMap<String, byte[]>();
 		//drawCanvas();
 		//mPaint.setColor(Color.BLACK);
 	}
@@ -159,6 +168,44 @@ public class BaseObject{
 		BinCreater.saveBin(f+"/v"+mIndex+".bin", gBmp.getWidth(), Configs.gDots,singleW);
 		
 		BinCreater.recyleBitmap(gBmp);
+	}
+	/**
+	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap
+	 */
+	public void generateVarBuffer()
+	{
+		//mPaint.setTextSize(mHeight);
+		int singleW; //the width value of each char
+		int height = (int)mPaint.getTextSize();
+		int width = (int)mPaint.measureText("8");
+		/*draw Bitmap of single digit*/
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas can = new Canvas(bmp);
+		
+		/*draw 0-9 totally 10 digits Bitmap*/
+		singleW = (int)mWidth/mContent.length();
+
+		/*A full-size empty bitmap, width:singleW; height: Configs.gDots*/
+		Bitmap bg = Bitmap.createBitmap(singleW, 300, Config.ARGB_8888); 
+		mCan = new Canvas(bg);
+		
+		for(int i =0; i<=9; i++)
+		{
+			/*draw background to white firstly*/
+			can.drawColor(Color.WHITE);
+			mCan.drawColor(Color.WHITE);
+			can.drawText(String.valueOf(i), 0, height-30, mPaint);
+			Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
+			mCan.drawBitmap(b, 0, getY(), mPaint);
+			Bitmap scaledBg = Bitmap.createScaledBitmap(bg, singleW, Configs.gDots, true);
+			BinCreater.create(scaledBg, 0);
+//			byte[] buffer = new byte[BinCreater.mBmpBits.length];
+			byte[] buffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
+			BinCreater.recyleBitmap(b);
+			mVBuffer.put(String.valueOf(i), buffer);
+		}
+		BinCreater.recyleBitmap(bmp);
+		BinCreater.recyleBitmap(bg);
 	}
 	
 	public Canvas getCanvas()
@@ -345,6 +392,19 @@ public class BaseObject{
 	public int getIndex()
 	{
 		return mIndex;
+	}
+	
+	public byte[] getBufferFromContent()
+	{
+		int n=0;
+		Debug.d(TAG, "===>getBufferFromContent id="+mId+", content="+mContent);
+		ByteArrayBuffer buffer = new ByteArrayBuffer(mContent.length());
+		for(int i=0;i<mContent.length(); i++){
+			n = Integer.parseInt(mContent.substring(i, i+1));
+			byte[] b=mVBuffer.get(String.valueOf(n));
+			buffer.append(b, 0, b.length);
+		}
+		return buffer.buffer();
 	}
 	
 }
