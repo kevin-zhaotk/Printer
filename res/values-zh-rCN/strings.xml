@@ -344,6 +344,8 @@
 	<string name="str_column_text16">文本16</string>
 	
 	<string name="str_notlkfile">请先选择一个正确的TLK文件</string>
+	<string name="str_tlk_already_exist">该条信息已经存在，请输入一个未用的信息名</string>
+	<string name="str_createfile_failure">创建信息失败</string>
 	
 	<string name="str_radioLocal">本地</string>
 	<string name="str_radioUsb">USB</string>

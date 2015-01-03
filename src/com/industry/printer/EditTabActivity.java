@@ -851,30 +851,37 @@ public class EditTabActivity extends Activity {
 		}
 		return x;
 	}
-	/*
-	
-	
-	*/
-	public void saveObjFile(String path)
+
+
+	/**
+	 * 响应save/saveas操作，保存tlk对象
+	 * @param path 文件路径（每条信息的目录）
+	 * @param create 是否需要创建一个信息目录
+	 */
+	public void saveObjFile(String path, boolean create)
 	{
 		int i=1;
 		FileWriter fw=null;
 		BufferedWriter bw=null;
 		File file = new File(path);
-		if(file.exists())
+		Debug.d(TAG, "=====>saveObjFile path="+path);
+		if(create==true)
 		{
-			Toast.makeText(mContext, "file already exist", Toast.LENGTH_LONG);
-			return;
+			if(file.exists()){
+				Toast.makeText(mContext, R.string.str_tlk_already_exist, Toast.LENGTH_LONG);
+				return;
+			}
+			if(!file.mkdirs())
+			{
+				Debug.d(TAG, "create dir error "+file.getPath());
+				Toast.makeText(mContext, R.string.str_createfile_failure, Toast.LENGTH_LONG);
+				return;
+			}
 		}
-		if(!file.mkdirs())
-		{
-			Debug.d(TAG, "create dir error "+file.getPath());
-			return;
-		}
+		
 		File tlk = new File(path+"/1.TLK");
 		try {
-			if(!tlk.createNewFile())
-			{
+			if(!tlk.exists() && !tlk.createNewFile()){
 				Debug.d(TAG, "create error "+tlk.getPath());
 				return;
 			}
@@ -944,6 +951,7 @@ public class EditTabActivity extends Activity {
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
+			boolean createfile=false;
             switch (msg.what) {   
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+FileBrowserDialog.file());
@@ -960,13 +968,14 @@ public class EditTabActivity extends Activity {
             	case HANDLER_MESSAGE_SAVE:		//saveas
             		Debug.d(TAG, "save as file="+FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName());
             		mObjName = FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName();
+            		createfile=true;
             	case HANDLER_MESSAGE_SAVEAS:    //save
             		progressDialog();
             		if(mObjName != null)
             		{
-            			saveObjFile(mObjName);
+            			saveObjFile(mObjName, createfile);
             		}
-            		drawAllBmp(mObjName);
+            		//drawAllBmp(mObjName);
             		dismissProgressDialog();
             		OnPropertyChanged(false);
             		break;

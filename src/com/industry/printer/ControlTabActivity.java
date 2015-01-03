@@ -67,6 +67,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -329,10 +330,6 @@ public class ControlTabActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				long before=System.currentTimeMillis();
-				preparePrintBuffer();
-				long after=System.currentTimeMillis();
-				Debug.d(TAG, "--------consume="+(after-before));
 				startPreview();
 			}
 			
@@ -470,14 +467,18 @@ public class ControlTabActivity extends Activity{
 	}
 	public void startPreview()
 	{
-		if(mObjList==null || mObjList.isEmpty() || mPrintBuffer==null)
-			return;
+		Debug.d(TAG, "===>startPreview");
+		
 		try{
+			long before=System.currentTimeMillis();
 			fillBufferWithVariables();
+			long after=System.currentTimeMillis();
+			Debug.d(TAG, "====>startPreview consume: "+(after-before));
 			mPreBytes = new int[mPrintBuffer.length*8];
 			BinCreater.bin2byte(mPrintBuffer, mPreBytes);
 			mPreview.createBitmap(mPreBytes, mBgBuffer.length/110, Configs.gDots);
 			mPreview.invalidate();
+			BinInfo.Matrix880(mPrintBuffer);
 			//mPreviewRefreshHandler.sendEmptyMessage(0);
 		}catch(Exception e)
 			{
@@ -512,9 +513,8 @@ public class ControlTabActivity extends Activity{
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		
+		Debug.d(TAG, "===>initBgBuffer  width="+width);
 		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
 		for(BaseObject o:mObjList)
@@ -573,7 +573,6 @@ public class ControlTabActivity extends Activity{
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		//BinCreater.saveBitmap(bmp, "back.png");
-		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
 		BinCreater.create(bmp, 0);
 		mBgBuffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
 		return ;
@@ -586,13 +585,9 @@ public class ControlTabActivity extends Activity{
 		byte[] buffer;
 		if(mObjList==null || mObjList.isEmpty())
 			return;
-		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		mPrintBuffer = Arrays.copyOf(mBgBuffer, mBgBuffer.length);
-		Debug.d(TAG, "===>mPrintBuffer len="+mPrintBuffer.length);
 		for(BaseObject o:mObjList)
 		{
-			Debug.d(TAG, "-------------1");
-			Debug.d(TAG, "refreshVariables object = "+o.mId);
 			if(o instanceof CounterObject)
 			{
 				String str = ((CounterObject) o).getNext();

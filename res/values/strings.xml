@@ -354,4 +354,6 @@
 	
 	<string name="str_fileopt_del">Delete</string>
 	<string name="str_fileopt_cancel">Cancel</string>
+	<string name="str_tlk_already_exist">The message you wanna save is already exist,please rename</string>
+	<string name="str_createfile_failure">New a message failure</string>
 </resources>

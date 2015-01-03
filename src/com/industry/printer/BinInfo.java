@@ -1,12 +1,16 @@
 package com.industry.printer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 
@@ -16,15 +20,15 @@ import android.util.Log;
 public class BinInfo {
 	public static final String TAG="BinInfo";
 	/**
-	 * bin�ļ���������
+	 * bin文件的总列数
 	 */
 	public int mColumn;
 	/**
-	 * ÿһ�еĵ���
+	 * 每一列的点数
 	 */
 	public int mBitsperColumn;	
 	/**
-	 * ������bin�ļ���ÿ��Ԫ�صĵ���
+	 * 变量的bin文件中每个元素的点数
 	 */
 	public int mColOne;
 	
@@ -102,5 +106,24 @@ public class BinInfo {
    		mBits=ba.buffer();
    		Debug.d(TAG, "*******mBits.len="+mBits.length );
     	return ;
+    }
+    
+    /**
+     * 该函数用于将预览得到的buffer进行字节变换，生成880设备的打印buffer
+     * 顺序是byte0+ Byte55, byte1+byte56
+     * @param buffer 待转换的buffer
+     */
+    public static void Matrix880(byte[] buffer){
+    	byte[] tmp= new byte[110];
+    	Debug.d(TAG, "===>Matrix880 : buffer len:"+buffer.length);
+    	for(int i=0; i< buffer.length/(Configs.gDots/8); i++){
+    		for(int j=0; j<Configs.gDots/(2*8); j++){
+    			tmp[2*j] = buffer[i*(Configs.gDots/8)+j];
+    			tmp[2*j+1] = buffer[i*(Configs.gDots/8)+j+55]; 
+    		}
+    		for(int j=0; j<Configs.gDots/8; j++){
+    			buffer[i*(Configs.gDots/8)+j] = tmp[j];
+    		}
+    	}
     }
 }
