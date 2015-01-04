@@ -60,6 +60,10 @@ public class PreviewScrollView extends View {
 	
 	public void createBitmap(int[]src, int w, int h)
 	{
+		if(src==null || src.length==0) {
+			Debug.d(TAG, "==createBitmap src==null");
+			return;
+		}
 		Bitmap bmp = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
 		mPreBitmap = bmp.createScaledBitmap(bmp, w, Configs.gFixedRows, true);
 		BinCreater.recyleBitmap(bmp);

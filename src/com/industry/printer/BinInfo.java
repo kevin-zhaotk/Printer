@@ -126,4 +126,18 @@ public class BinInfo {
     		}
     	}
     }
+    
+    public static void Matrix880Revert(byte[] buffer) {
+    	byte[] tmp= new byte[110];
+    	Debug.d(TAG, "===>Matrix880Revert : buffer len:"+buffer.length);
+    	for(int i=0; i< buffer.length/(Configs.gDots/8); i++){
+    		for(int j=0; j<Configs.gDots/(2*8); j++){
+    			tmp[j] = buffer[i*(Configs.gDots/8)+2*j];
+    			tmp[j+55] = buffer[i*(Configs.gDots/8)+2*j+1]; 
+    		}
+    		for(int j=0; j<Configs.gDots/8; j++){
+    			buffer[i*(Configs.gDots/8)+j] = tmp[j];
+    		}
+    	}
+    }
 }

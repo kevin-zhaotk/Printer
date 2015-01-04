@@ -48,7 +48,6 @@ import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -205,9 +204,15 @@ public class ControlTabActivity extends Activity{
 	public byte[] mBgBuffer;
 	/**
 	 *printing buffer
-	 *	you should use this buffer for preview
+	 *	you should use this buffer for print
 	 */
 	public byte[] mPrintBuffer;
+	
+	/**
+	 * preview buffer
+	 * 	you should use this buffer for preview
+	 */
+	public byte[] mPreviewBuffer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -237,10 +242,12 @@ public class ControlTabActivity extends Activity{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				if(mPrintBuffer==null || mObjList==null || mObjList.isEmpty())
+				if(mObjList==null || mObjList.isEmpty()) {
+					Toast.makeText(mContext, R.string.str_no_print_target, Toast.LENGTH_LONG).show();
 					return;
-				preparePrintBuffer();
-				//print();
+				}
+				fillBufferWithVariables();
+				BinInfo.Matrix880(mPrintBuffer);
 				if(mPrintThread==null)
 					mPrintThread = (PrintingThread) startThread();
 				else
@@ -400,6 +407,7 @@ public class ControlTabActivity extends Activity{
 			b.putByteArray("info", info);
 			msg.setData(b);
 			mHandler.sendMessage(msg);
+			break;
 			//Debug.d(TAG, "##########timeout = "+timeout+",stat="+info[9]);
 		}while(info[9]!=4);
 		
@@ -470,20 +478,18 @@ public class ControlTabActivity extends Activity{
 		Debug.d(TAG, "===>startPreview");
 		
 		try{
-			long before=System.currentTimeMillis();
-			fillBufferWithVariables();
-			long after=System.currentTimeMillis();
-			Debug.d(TAG, "====>startPreview consume: "+(after-before));
-			mPreBytes = new int[mPrintBuffer.length*8];
-			BinCreater.bin2byte(mPrintBuffer, mPreBytes);
+			mPreviewBuffer = Arrays.copyOf(mPrintBuffer, mPrintBuffer.length);
+			BinInfo.Matrix880Revert(mPreviewBuffer);
+			mPreBytes = new int[mPreviewBuffer.length*8];
+			BinCreater.bin2byte(mPreviewBuffer, mPreBytes);
 			mPreview.createBitmap(mPreBytes, mBgBuffer.length/110, Configs.gDots);
 			mPreview.invalidate();
-			BinInfo.Matrix880(mPrintBuffer);
+			
 			//mPreviewRefreshHandler.sendEmptyMessage(0);
 		}catch(Exception e)
-			{
-				Debug.d(TAG, "startPreview e: "+e.getMessage());
-			}
+		{
+			e.printStackTrace();
+		}
 		
 	}
 	

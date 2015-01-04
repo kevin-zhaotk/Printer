@@ -363,13 +363,18 @@ public class BinCreater {
     {
     	int grey=0;
     	Bitmap bmp=null;
-    	if(srcBits == null)
+    	if(srcBits == null || srcBits.length==0)
+    	{
+    		Debug.d(TAG, "==>bin2byte  srcBits len="+srcBits.length);
     		return;
+    	}
     	int bpc = Configs.gDots%8==0?Configs.gDots/8:(Configs.gDots/8+1);
     	int columns = srcBits.length/bpc;
-    	if(dstBytes==null || dstBytes.length<srcBits.length*8)
-    		return;
-    	//int [] pixels = new int[srcBits.length*8];
+    	
+    	if(dstBytes==null || dstBytes.length<srcBits.length*8) {
+    		dstBytes = new int[srcBits.length*8];
+    	}
+    		
     	for(int i=0; i< columns; i++)
     	{
     		for(int j=0; j<bpc*8; j++)
