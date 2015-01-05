@@ -492,7 +492,7 @@ public class UsbSerial {
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
 		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
-		Debug.d(TAG, "=============printDate write ret="+ret);
+		Debug.d(TAG, "=============printData write ret="+ret);
 		if(ret<=0)
 		{
 			close(fd);

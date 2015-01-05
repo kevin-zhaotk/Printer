@@ -165,7 +165,7 @@ public class Fileparser {
 		}
 		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
 		{
-			
+			obj = new RTSecondObject(mContext, 0);
 		}
 		else
 		{

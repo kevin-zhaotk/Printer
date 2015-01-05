@@ -248,10 +248,7 @@ public class ControlTabActivity extends Activity{
 				}
 				fillBufferWithVariables();
 				BinInfo.Matrix880(mPrintBuffer);
-				if(mPrintThread==null)
-					mPrintThread = (PrintingThread) startThread();
-				else
-					mPrintThread.start();
+				startThread();
 			}
 			
 		});
@@ -262,7 +259,7 @@ public class ControlTabActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				stopThread(mPrintThread);
+				//stopThread(mPrintThread);
 				Debug.d(TAG, "====>stop clicked");
 				
 				int ret = UsbSerial.printStop(mSerialdev);
@@ -513,11 +510,17 @@ public class ControlTabActivity extends Activity{
 		Bitmap t;
 		int width=0;
 		Paint p=new Paint();
+		/*release the mBgBuffer */
+		mBgBuffer = null;
 		if(mObjList==null || mObjList.size() <= 0)
 			return ;
 		for(BaseObject o:mObjList)
 		{
+			if(o instanceof MessageObject)
+				continue;
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+			Debug.d(TAG, "--->initBgBuffer object:"+o.getId()+", end="+o.getXEnd());
+			Debug.d(TAG, "--->initBgBuffer width: "+width);
 		}
 		Debug.d(TAG, "===>initBgBuffer  width="+width);
 		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
@@ -581,6 +584,7 @@ public class ControlTabActivity extends Activity{
 		//BinCreater.saveBitmap(bmp, "back.png");
 		BinCreater.create(bmp, 0);
 		mBgBuffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
+		Debug.d(TAG, "------->mBgBuffer len="+mBgBuffer.length);
 		return ;
 	}
 	
@@ -893,6 +897,16 @@ public class ControlTabActivity extends Activity{
 		}
 	}
 	
+	public class PrintRunnable implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			print();
+		}
+		
+	}
+	
 	public synchronized void stopThread(PrintingThread t)
 	{
 		if(t != null)
@@ -904,12 +918,9 @@ public class ControlTabActivity extends Activity{
 		}
 	}
 	
-	public synchronized Thread startThread()
+	public synchronized void startThread()
 	{
-		PrintingThread t = new PrintingThread();
-		t.isRunning=true;
-		t.start();
-		return t;
+		new Thread(new PrintRunnable()).start();
 	}
 	
 	

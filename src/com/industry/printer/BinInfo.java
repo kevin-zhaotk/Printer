@@ -109,7 +109,7 @@ public class BinInfo {
     }
     
     /**
-     * 该函数用于将预览得到的buffer进行字节变换，生成880设备的打印buffer
+     * 该函数用于对打印buffer进行字节变换，生成880设备的打印buffer
      * 顺序是byte0+ Byte55, byte1+byte56
      * @param buffer 待转换的buffer
      */
@@ -127,6 +127,10 @@ public class BinInfo {
     	}
     }
     
+    /**
+     * 该函数用于将列变换得到的打印buffer进行逆变换，从而得到预览buffer
+     * @param buffer 打印buffer
+     */
     public static void Matrix880Revert(byte[] buffer) {
     	byte[] tmp= new byte[110];
     	Debug.d(TAG, "===>Matrix880Revert : buffer len:"+buffer.length);

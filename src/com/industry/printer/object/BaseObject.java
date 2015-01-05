@@ -2,6 +2,7 @@ package com.industry.printer.object;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -398,12 +399,15 @@ public class BaseObject{
 	{
 		int n=0;
 		Debug.d(TAG, "===>getBufferFromContent id="+mId+", content="+mContent);
-		ByteArrayBuffer buffer = new ByteArrayBuffer(mContent.length());
+		int lenth=mVBuffer.get("0").length;
+		ByteArrayBuffer buffer = new ByteArrayBuffer(mContent.length()*lenth);
+		Debug.d(TAG, "--->Arraybuffer len="+buffer.length());
 		for(int i=0;i<mContent.length(); i++){
 			n = Integer.parseInt(mContent.substring(i, i+1));
 			byte[] b=mVBuffer.get(String.valueOf(n));
 			buffer.append(b, 0, b.length);
 		}
+		Debug.d(TAG, "--->Arraybuffer len="+buffer.length());
 		return buffer.buffer();
 	}
 	
