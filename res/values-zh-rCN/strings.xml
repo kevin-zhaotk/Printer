@@ -355,4 +355,20 @@
 	
 	<string name="str_fileopt_del">删除</string>
 	<string name="str_fileopt_cancel">取消</string>
+	
+	
+<!-- 树莓派3 设置界面相关 -->
+	<string name="str_settings_item_1">打印头相关设置测试</string>
+	<string-array name="item_1_entries">
+	    <item>开</item>
+	    <item>关</item>
+	</string-array>
+	
+<!-- 树莓派3 编辑界面相关 -->
+	<string name="str_edit_btn_insert">插入</string>
+	<string name="str_edit_btn_temp1">测试1</string>
+	<string name="str_edit_btn_temp2">测试2</string>
+	<string name="str_edit_btn_temp3">测试3</string>
+	<string name="str_edit_btn_temp4">测试4</string>
+	<string name="str_edit_btn_temp5">测试5</string>
 </resources>

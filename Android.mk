@@ -9,7 +9,8 @@ LOCAL_SRC_FILES := $(call all-java-files-under, src)
 LOCAL_PACKAGE_NAME := Printer
 LOCAL_CERTIFICATE := platform
 
-LOCAL_REQUIRED_MODULES := libUsbSerial_jni
+#LOCAL_REQUIRED_MODULES := libUsbSerial_jni
+LOCAL_JNI_SHARED_LIBRARIES := libUsbSerial_jni
 
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 

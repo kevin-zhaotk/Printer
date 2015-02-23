@@ -90,7 +90,7 @@ public class MainActivity extends TabActivity {
 		for(int i=0;i<3; i++)
 		{
 			TextView v1= (TextView) mTab.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-			v1.setTextSize(30);
+			v1.setTextSize(60);
 			v1.setGravity(Gravity.CENTER_VERTICAL);
 		}
 		
