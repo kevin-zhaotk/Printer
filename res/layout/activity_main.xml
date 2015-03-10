@@ -14,9 +14,9 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
-            
+            android:layout_height="80px"
             android:layout_weight="0"
+            android:background="#BEBEBE"
             />
         <FrameLayout
             android:id="@android:id/tabcontent"

@@ -179,8 +179,8 @@ public static final String TAG="SettingsTabActivity";
 		Debug.d(TAG, "event:"+event.toString());
 		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
 		Debug.d(TAG, "ime is active? "+manager.isActive());
-		if(manager.isActive())
-			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+		manager.hideSoftInputFromWindow(SettingsTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
 		return true;
 	}
 	

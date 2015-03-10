@@ -1,4 +1,4 @@
-package com.industry.printer;
+package com.industry.printer.hardware;
 
 import java.io.ByteArrayInputStream;
 
@@ -33,22 +33,14 @@ public class UsbSerial {
 	public static final int ERR_OPEN_FAILED	=-4;
 	public static final int ERR_RESPONSE_ERROR=-5;
 	public static final int ERR_PARAMETER_ILEGAL=-6;
-	/*
-	 * jni native methods
-	 */
-	static public native int open(String dev);
 	
-	static public native int setBaudrate(int fd, int speed);
+	static public int open(String dev) {
+		return HardwareJni.open(dev);
+	}
 	
-	static public native int close(int fd);
-	
-	static public native int write(int fd, short[] buf, int len);
-	
-	static public native byte[] read(int fd, int len);
-	static public native int set_options(int fd, int databits, int stopbits, int parity);
-	
-	static public native String get_BuildDate();
-	
+	static public int close(int fd) {
+		return HardwareJni.close(fd);
+	}
 	static public int printStart(String dev)
 	{
 		short buf[] = { 0x80, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
@@ -64,24 +56,24 @@ public class UsbSerial {
 //			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
 //		}
 
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd<=0)
 		{
 			return ERR_OPEN_FAILED;
 		}
 			
-		int ret = UsbSerial.write(fd, crcCmd, buf.length);
+		int ret = HardwareJni.write(fd, crcCmd, buf.length);
 		if(ret != buf.length)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 		Debug.d(TAG, "write ret="+ret);
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
@@ -92,7 +84,7 @@ public class UsbSerial {
 			ret = ERR_RESPONSE_ERROR;
 		else 
 			ret = ERR_NO_ERROR;
-		close(fd);
+		HardwareJni.close(fd);
 		Debug.d(TAG,"<====printStart");
 		return ret;
 	}
@@ -113,23 +105,23 @@ public class UsbSerial {
 //			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
 //		}
 		//String buf = "FUCK serial write";
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		setBaudrate(fd, 115200);
-		set_options(fd, 8, 1, 'n');
-		int ret = UsbSerial.write(fd, crcCmd, buf.length);
+		HardwareJni.setBaudrate(fd, 115200);
+		HardwareJni.set_options(fd, 8, 1, 'n');
+		int ret = HardwareJni.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			Debug.d(TAG, "close fd");
 			return ERR_READ_FAILED;
 		}
@@ -145,7 +137,7 @@ public class UsbSerial {
 		else
 			ret = ERR_NO_ERROR;
 		Debug.d(TAG,"<====close");
-		close(fd);
+		HardwareJni.close(fd);
 		Debug.d(TAG,"<====printStop");
 		return ret;
 	}
@@ -162,24 +154,14 @@ public class UsbSerial {
 			Debug.d(TAG, "ttyACM0 device node not opened");
 			return ERR_DEV_MOVED;
 		}
-		/*
-		for(int i=0; i<buf.length; i++)
-		{
-			//Debug.d(TAG, "buf["+i+"]="+(int) buf[i]);
-		}*/
 		short[] crcCmd = CRC16.crc(buf);
 		
-//		for(int i=0; i<crcCmd.length; i++)
-//		{
-//			Debug.d(TAG, "crcCmd["+i+"]="+(int) crcCmd[i]);
-//		}
-		//String buf = "FUCK serial write";
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, buf.length);
+		int ret = HardwareJni.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "clean return = "+ret);
-		close(fd);
+		HardwareJni.close(fd);
 		return ret>0?ERR_NO_ERROR:ERR_WRITE_FAILED;
 	}
 	
@@ -197,22 +179,22 @@ public class UsbSerial {
 		}
 		Debug.d(TAG,"====>setAllParam");
 		short [] crcCmd = CRC16.crc(cmd);
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0 )
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 
-		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
+		byte[] response = HardwareJni.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*
@@ -232,19 +214,19 @@ public class UsbSerial {
 			Debug.d(TAG, "buf["+i+"]="+(int)(buf[i] & 0x0FF));
 		}
 		*/
-		ret = UsbSerial.write(fd, crcCmd, buf.length);
+		ret = HardwareJni.write(fd, crcCmd, buf.length);
 		Debug.d(TAG, "write param ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 
-		response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
+		response = HardwareJni.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
@@ -252,7 +234,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		Debug.d(TAG,"<====setAllParam");
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -278,22 +260,22 @@ public class UsbSerial {
 			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 		}
 		*/
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 
-		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
+		byte[] response = HardwareJni.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*
@@ -302,7 +284,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		*/
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -329,22 +311,22 @@ public class UsbSerial {
 			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 		}
 		*/
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 
 		Debug.d(TAG, "write ret="+ret);
-		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
+		byte[] response = HardwareJni.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*
@@ -353,7 +335,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		*/
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -380,22 +362,22 @@ public class UsbSerial {
 			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 		}
 		*/
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
 
-		byte[] response = UsbSerial.read(fd, PACKAGE_MAX_LEN);
+		byte[] response = HardwareJni.read(fd, PACKAGE_MAX_LEN);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*
@@ -404,7 +386,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		*/
-		close(fd);		
+		HardwareJni.close(fd);		
 		return ERR_NO_ERROR;
 	}
 	
@@ -429,21 +411,21 @@ public class UsbSerial {
 //		{
 //			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 //		}
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*for(int i=0; i<response.length; i++)
@@ -451,7 +433,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}*/
 		Debug.d(TAG,"<===sendDataCtrl");
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -488,21 +470,21 @@ public class UsbSerial {
 		 * so we need split the data and send several times 
 		 * when the data length > 2Mbytes
 		 */
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "=============printData write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
@@ -510,7 +492,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		Debug.d(TAG,"<====printData");
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -535,21 +517,21 @@ public class UsbSerial {
 			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 		}
 		*/
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		/*
@@ -558,7 +540,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}*/
 		Debug.d(TAG,"<====sendSetting");
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -589,21 +571,21 @@ public class UsbSerial {
 		{
 			//Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 		}*/
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_OPEN_FAILED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 10);
+		byte[] response = HardwareJni.read(fd, 10);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
@@ -611,7 +593,7 @@ public class UsbSerial {
 			Debug.d(TAG, "response["+i+"]="+Integer.toHexString(response[i] & 0x0FF));
 		}
 		Debug.d(TAG,"<====sendSettingData");
-		close(fd);
+		HardwareJni.close(fd);
 		return ERR_NO_ERROR;
 	}
 	
@@ -630,21 +612,21 @@ public class UsbSerial {
 //		{
 //			Debug.d(TAG, "crcCmd["+i+"]="+Integer.toHexString(crcCmd[i]));
 //		}
-		int fd = open(dev);
+		int fd = HardwareJni.open(dev);
 		if(fd <= 0)
 			return ERR_DEV_MOVED;
-		int ret = UsbSerial.write(fd, crcCmd, cmd.length);
+		int ret = HardwareJni.write(fd, crcCmd, cmd.length);
 		Debug.d(TAG, "write ret="+ret);
 		if(ret<=0)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_WRITE_FAILED;
 		}
-		byte[] response = UsbSerial.read(fd, 23);
+		byte[] response = HardwareJni.read(fd, 23);
 		if(response == null)
 		{
 			Debug.d(TAG, "read return null");
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_READ_FAILED;
 		}
 		for(int i=0; i<response.length; i++)
@@ -653,7 +635,7 @@ public class UsbSerial {
 		}
 		if(info == null)
 		{
-			close(fd);
+			HardwareJni.close(fd);
 			return ERR_PARAMETER_ILEGAL;
 		}
 			
@@ -663,7 +645,7 @@ public class UsbSerial {
 		if(s.read(info, 0, 23)==-1)
 			ret = ERR_NO_ERROR;
 		Debug.d(TAG,"<====getInfo");
-		close(fd);
+		HardwareJni.close(fd);
 		return ret;
 	}
 	

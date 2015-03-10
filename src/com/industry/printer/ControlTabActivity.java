@@ -27,6 +27,7 @@ import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
@@ -70,6 +71,7 @@ import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -367,6 +369,16 @@ public class ControlTabActivity extends Activity{
 		return false;
 	}
 	
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		Debug.d(TAG, "event:"+event.toString());
+		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+		Debug.d(TAG, "ime is active? "+manager.isActive());
+		manager.hideSoftInputFromWindow(ControlTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+		return true;
+	}
 	/**
 	 * print
 	 * ��ӡ�ӿڣ��·���ӡ���ݣ�����ʱ��ѯ��ӡ״̬���Զ�����īˮֵ����ӡ���سɹ������Thread

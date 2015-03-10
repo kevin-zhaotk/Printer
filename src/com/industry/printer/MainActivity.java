@@ -37,7 +37,7 @@ public class MainActivity extends TabActivity {
 	TabHost mTab;
 	
 	static {
-		System.loadLibrary("UsbSerial_jni");
+		System.loadLibrary("Hardware_jni");
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -90,8 +90,8 @@ public class MainActivity extends TabActivity {
 		for(int i=0;i<3; i++)
 		{
 			TextView v1= (TextView) mTab.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-			v1.setTextSize(60);
-			v1.setGravity(Gravity.CENTER_VERTICAL);
+			v1.setTextSize(40);
+			v1.setGravity(Gravity.CENTER);
 		}
 		
 		//set current tab

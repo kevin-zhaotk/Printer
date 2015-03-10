@@ -1,6 +1,8 @@
 package com.industry.printer;
 
 import java.io.BufferedWriter;
+import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.ObjectInfoDialog.OnPositiveBtnListener;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.hardware.HardwareJni;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
@@ -29,6 +33,7 @@ import com.industry.printer.object.TextObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -51,6 +56,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,7 +75,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class EditTabActivity extends Activity {
+public class EditTabActivity extends Activity implements OnClickListener {
 	public static final String TAG="EditTabActivity";
 	
 	public Context mContext;
@@ -98,6 +104,14 @@ public class EditTabActivity extends Activity {
 	public ImageButton mBtnZoominY;	//zoom in
 	public ImageButton mDel;
 	public ImageButton mTrans;
+	
+	/************************
+	 * 树莓派3-编辑界面相关按钮
+	 ***********************/
+	public Button	mInsert;
+	public Button	mTemp1;
+	public Button	mTemp2;
+	public Button	mTemp3;
 	/************************
 	 * create Object buttons
 	 * **********************/
@@ -234,7 +248,7 @@ public class EditTabActivity extends Activity {
 		});
 
 		mObjList = (Spinner) findViewById(R.id.object_list);
-		mNameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
+		mNameAdapter = new ArrayAdapter<String>(this, R.layout.edit_spinner_item);//R.layout.object_list_item);
 		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mObjList.setAdapter(mNameAdapter);
 		
@@ -714,9 +728,32 @@ public class EditTabActivity extends Activity {
 //				
 //			}			
 //		});
-
+		
+		mTemp1 = (Button) findViewById(R.id.btn_temp_1);
+		mTemp1.setOnClickListener(this);
+		
+		mTemp2 = (Button) findViewById(R.id.btn_temp_2);
+		mTemp2.setOnClickListener(this);
+		
+		mTemp3 = (Button) findViewById(R.id.btn_temp_3);
+		mTemp3.setOnClickListener(this);
+		
 		/*initialize the object list spinner*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		
+		
+	}
+	
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		Debug.d(TAG, "event:"+event.toString());
+		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+		Debug.d(TAG, "ime is active? "+manager.isActive());
+		manager.hideSoftInputFromWindow(EditTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+		return true;
 	}
 	
 	/**
@@ -1284,5 +1321,33 @@ public class EditTabActivity extends Activity {
 	public boolean isPropertyChanged()
 	{
 		return mPropertyChanged;
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		switch (arg0.getId()) {
+			case R.id.btn_temp_1:	//test fpga-gpio write
+				new Thread(){
+					@Override
+					public void run() {
+						char[] buffer = new char[1024*1024];
+						for(int i=0; i<buffer.length; i++) {
+							buffer[i] = 0x55;
+						}
+						FpgaGpioOperation.write(buffer);
+					}
+				}.start();
+				
+				break;
+			case R.id.btn_temp_2:
+				HardwareJni.open("/dev/rtc0");
+				break;
+			case R.id.btn_temp_3:
+				FpgaGpioOperation.open("/dev/fpga-gpio");
+				break;
+			default:
+				break;
+		}
 	}
 }

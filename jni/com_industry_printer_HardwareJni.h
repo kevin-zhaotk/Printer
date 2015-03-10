@@ -55,6 +55,49 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_UsbSerial_read
 JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_set_options
   (JNIEnv *, jobject , jint , jint , jint , jint );
 
+
+
+/*********************************************
+ * GPIO操作接口定义
+ *********************************************/
+
+/**
+ * Class:     com_industry_printer_GPIO
+ * Method:    open
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_open
+	(JNIEnv *env, jclass arg, jstring dev);
+
+/**
+ * Class:     com_industry_printer_GPIO
+ * Method:    write
+ * Signature: (I[CI)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
+	(JNIEnv *env, jclass arg, jint fd, jcharArray buff, jint count);
+
+
+/**
+ * Class:     com_industry_printer_GPIO
+ * Method:    close
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_close
+	(JNIEnv *env, jclass arg, jint fd);
+
+/*********************************************
+ * RFID操作接口定义
+ *********************************************/
+
+/**
+ * Class:     com_industry_printer_RFID
+ * Method:    open
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
+  (JNIEnv *env, jclass arg, jstring dev);
+
 #ifdef __cplusplus
 }
 #endif
