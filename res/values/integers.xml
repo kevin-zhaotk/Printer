@@ -2,4 +2,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <integer name="dots_per_column">880</integer>
     <integer name="fixed_rows">300</integer>
+    
+    <integer name="total_params">24</integer>
 </resources>

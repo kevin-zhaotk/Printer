@@ -100,9 +100,9 @@ public static final String TAG="SettingsTabActivity";
 	public Button		mSetDate;
 
 	Context 			mContext;
-	ProgressDialog 	pDialog;
+	ProgressDialog 		pDialog;
 	
-	PHSettingFragment mPHSettings;
+	PHSettingFragment 	mPHSettings;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -153,10 +153,10 @@ public static final String TAG="SettingsTabActivity";
         mVertres.setSummary(mVertres.getEntry());
         */
 		
-		mPHSettings = new PHSettingFragment();
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.phsetting_fragment, mPHSettings);
-		transaction.commit();
+//		mPHSettings = new PHSettingFragment();
+//		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//		transaction.replace(R.id.phsetting_fragment, mPHSettings);
+//		transaction.commit();
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package com.industry.printer.Utils;
 
+import com.industry.printer.hardware.FpgaGpioOperation;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -84,6 +86,42 @@ public class FPGADeviceSettings {
 		int delay_pulse = preferences.getInt(FPGA_SETTINGS_ENCODER_DELAY_PULSE, 0);
 		int highLen = preferences.getInt(FPGA_SETTINGS_HIGH_LENGTH, 0);
 		
+		int fd = FpgaGpioOperation.open(FpgaGpioOperation.FPGA_DRIVER_FILE);
 		
+		char data[] = new char[Configs.gParams];
+		
+		
+		data[0] = (char) pho;
+		data[1] = (char) mode;
+		data[2] = (char) pho_delay_h;
+		data[3] = (char) pho_delay_l;
+		data[4] = (char) peroid;
+		data[5] = (char) time_peroid;
+		data[7] = (char) triger_pulse;
+		data[8] = (char) fixed_pulse;
+		data[9] = (char) delay_pulse;
+		data[10] = (char) highLen;
+		
+		FpgaGpioOperation.ioctl(fd, FpgaGpioOperation.FPGA_CMD_SETTING, FpgaGpioOperation.FPGA_STATE_SETTING);
+		
+		FpgaGpioOperation.write(fd, data, data.length);
+		
+		FpgaGpioOperation.close(fd);
+	}
+	
+	public static int writeData(char data[], int len) {
+		
+		int fd = FpgaGpioOperation.open(FpgaGpioOperation.FPGA_DRIVER_FILE);
+		if(fd<0) {
+			return -1;
+		}
+		FpgaGpioOperation.ioctl(fd, FpgaGpioOperation.FPGA_CMD_SENDDATA, FpgaGpioOperation.FPGA_STATE_OUTPUT);
+		
+		int wlen = FpgaGpioOperation.write(fd, data, len);
+		if(wlen != len) {
+			FpgaGpioOperation.close(fd);
+			return -1;
+		}
+		return wlen;
 	}
 }

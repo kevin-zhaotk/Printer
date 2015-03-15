@@ -47,6 +47,18 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
 }
 
 
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_ioctl
+	(JNIEnv *env, jclass arg, jint fd, jint cmd, jlong arg1)
+{
+	int i,ret;
+
+	if(fd <= 0)
+		return 0;
+	ret = ioctl(fd, cmd, arg1);
+	return ret;
+}
+
+
 JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_close
 	(JNIEnv *env, jclass arg, jint fd)
 {

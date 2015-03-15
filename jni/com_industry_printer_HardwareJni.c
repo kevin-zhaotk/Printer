@@ -36,6 +36,7 @@ static JNINativeMethod gMethods[] = {
 static JNINativeMethod gGPIOMethods[] = {
 		{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_GPIO_open},
 		{"write",		"(I[CI)I",					(void *)Java_com_industry_printer_GPIO_write},
+		{"ioctl",		"(IIJ)I",					(void *)Java_com_industry_printer_GPIO_ioctl},
 		{"close",		"(I)I",						(void *)Java_com_industry_printer_GPIO_close},
 };
 

@@ -4,6 +4,7 @@ package com.industry.printer.Utils;
 import java.io.File;
 
 import android.content.Context;
+import android.os.Environment;
 import android.provider.ContactsContract.Directory;
 
 import com.industry.printer.R;
@@ -12,11 +13,12 @@ public class Configs {
 	public static int gDots;
 	public static int gFixedRows;
 	
+	public static int gParams;
 	/**
 	 * USB_ROOT_PATH
 	 * 	usb mount root path on this platform
 	 */
-	public static final String USB_ROOT_PATH="/mnt/usb";
+	public static final String USB_ROOT_PATH="/mnt/usbhost0";
 	
 	/**
 	 * LOCAL_ROOT_PATH
@@ -38,6 +40,8 @@ public class Configs {
 	{
 		gDots = context.getResources().getInteger(R.integer.dots_per_column);
 		gFixedRows = context.getResources().getInteger(R.integer.fixed_rows);
+		gParams = context.getResources().getInteger(R.integer.total_params);
+		
 		File dir = new File(LOCAL_ROOT_PATH);
 				
 		if(!dir.exists())
@@ -57,5 +61,14 @@ public class Configs {
 			return true;
 		else
 			return false;
+	}
+	
+	
+	/**
+	 * 获取u盘挂载路径
+	 * @return usb root path
+	 */
+	public static String getUsbPath() {
+		return USB_ROOT_PATH;
 	}
 }

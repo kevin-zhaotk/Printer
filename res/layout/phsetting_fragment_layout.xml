@@ -11,33 +11,33 @@
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    >
         <TextView
-            android:id="@+id/ph_set_1"
+            android:id="@+id/ph_set_encoder"
             android:layout_width="@dimen/settingsItemLength"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
-            android:text="@string/str_settings_item_1"
+            android:text="@string/str_textview_param1"
             android:textColor="@color/black"
             />
         <Spinner 
-            android:id="@+id/ph_set_value_1"
+            android:id="@+id/ph_set_encoder_value"
             style="@style/edit_spinner_style"
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="@dimen/settingsSPinnerSize"
-            android:layout_toRightOf="@id/ph_set_1"
-            android:layout_alignBottom="@id/ph_set_1"
+            android:layout_toRightOf="@id/ph_set_encoder"
+            android:layout_alignBottom="@id/ph_set_encoder"
             android:spinnerMode="dropdown"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:dropDownWidth="@dimen/settingsValueLength"
-            android:entries="@array/item_1_entries"
+            android:entries="@array/encoder_item_entries"
             />
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ph_set_value_1"
-            android:layout_alignBaseline="@id/ph_set_1"
+            android:layout_toRightOf="@id/ph_set_encoder_value"
+            android:layout_alignBaseline="@id/ph_set_encoder"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsTextsize" 
             />
@@ -50,22 +50,22 @@
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    >
         <TextView
-            android:id="@+id/ph_set_2"
+            android:id="@+id/ph_set_trigerMode"
             android:layout_width="@dimen/settingsItemLength"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
-            android:text="@string/str_settings_item_1"
+            android:text="@string/str_textview_param2"
             android:textColor="@color/black"
             />
         <EditText
-            android:id="@+id/ph_set_value_2"
+            android:id="@+id/ph_set_trigerMode_value"
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsTextsize"
-            android:layout_toRightOf="@id/ph_set_2"
-            android:layout_alignBottom="@id/ph_set_2"
+            android:layout_toRightOf="@id/ph_set_trigerMode"
+            android:layout_alignBottom="@id/ph_set_trigerMode"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -74,8 +74,8 @@
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ph_set_value_2"
-            android:layout_alignBaseline="@id/ph_set_2"
+            android:layout_toRightOf="@id/ph_set_trigerMode_value"
+            android:layout_alignBaseline="@id/ph_set_trigerMode"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsTextsize" 
             />
@@ -88,22 +88,22 @@
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    >
         <TextView
-            android:id="@+id/ph_set_3"
+            android:id="@+id/ph_set_PHODelayHigh"
             android:layout_width="@dimen/settingsItemLength"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
-            android:text="@string/str_settings_item_1"
+            android:text="@string/str_textview_param3"
             android:textColor="@color/black"
             />
         <EditText
-            android:id="@+id/ph_set_value_3"
+            android:id="@+id/ph_set_PHODelayHigh_value"
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsTextsize"
-            android:layout_toRightOf="@id/ph_set_3"
-            android:layout_alignBottom="@id/ph_set_3"
+            android:layout_toRightOf="@id/ph_set_PHODelayHigh"
+            android:layout_alignBottom="@id/ph_set_PHODelayHigh"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -112,8 +112,8 @@
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ph_set_value_3"
-            android:layout_alignBaseline="@id/ph_set_3"
+            android:layout_toRightOf="@id/ph_set_PHODelayHigh_value"
+            android:layout_alignBaseline="@id/ph_set_PHODelayHigh"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsTextsize" 
             />
@@ -127,22 +127,22 @@
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    >
         <TextView
-            android:id="@+id/ph_set_4"
+            android:id="@+id/ph_set_PHODelayLow"
             android:layout_width="@dimen/settingsItemLength"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
-            android:text="@string/str_settings_item_1"
+            android:text="@string/str_textview_param4"
             android:textColor="@color/black"
             />
         <EditText
-            android:id="@+id/ph_set_value_4"
+            android:id="@+id/ph_set_PHODelayLow_value"
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsTextsize"
-            android:layout_toRightOf="@id/ph_set_4"
-            android:layout_alignBottom="@id/ph_set_4"
+            android:layout_toRightOf="@id/ph_set_PHODelayLow"
+            android:layout_alignBottom="@id/ph_set_PHODelayLow"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -151,10 +151,239 @@
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ph_set_value_4"
-            android:layout_alignBaseline="@id/ph_set_4"
+            android:layout_toRightOf="@id/ph_set_PHODelayLow_value"
+            android:layout_alignBaseline="@id/ph_set_PHODelayLow"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsTextsize" 
             />
 	</RelativeLayout>
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_PHOOutput_period"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param5"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_PHOOutput_period_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_PHOOutput_period"
+            android:layout_alignBottom="@id/ph_set_PHOOutput_period"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_PHOOutput_period_value"
+            android:layout_alignBaseline="@id/ph_set_PHOOutput_period"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_TimeFixed_period"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param6"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_TimeFixed_period_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_TimeFixed_period"
+            android:layout_alignBottom="@id/ph_set_TimeFixed_period"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_TimeFixed_period_value"
+            android:layout_alignBaseline="@id/ph_set_TimeFixed_period"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_EncoderTriger_pulse"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param7"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_EncoderTriger_pulse_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_EncoderTriger_pulse"
+            android:layout_alignBottom="@id/ph_set_EncoderTriger_pulse"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_EncoderTriger_pulse_value"
+            android:layout_alignBaseline="@id/ph_set_EncoderTriger_pulse"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_EncoderLenFixed_pulse"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param8"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_EncoderLenFixed_pulse_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_EncoderLenFixed_pulse"
+            android:layout_alignBottom="@id/ph_set_EncoderLenFixed_pulse"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_EncoderLenFixed_pulse_value"
+            android:layout_alignBaseline="@id/ph_set_EncoderLenFixed_pulse"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_EncoderDelay_pulse"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param9"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_EncoderDelay_pulse_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_EncoderDelay_pulse"
+            android:layout_alignBottom="@id/ph_set_EncoderDelay_pulse"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_EncoderDelay_pulse_value"
+            android:layout_alignBaseline="@id/ph_set_EncoderDelay_pulse"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    >
+        <TextView
+            android:id="@+id/ph_set_OutputHight_length"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param10"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_OutputHight_length_value"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsTextsize"
+            android:layout_toRightOf="@id/ph_set_OutputHight_length"
+            android:layout_alignBottom="@id/ph_set_OutputHight_length"
+            android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ph_set_OutputHight_length_value"
+            android:layout_alignBaseline="@id/ph_set_OutputHight_length"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            />
+	</RelativeLayout>
+	
 </LinearLayout>
