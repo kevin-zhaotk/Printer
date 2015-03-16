@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 
 import android.app.Activity;
@@ -153,10 +154,10 @@ public static final String TAG="SettingsTabActivity";
         mVertres.setSummary(mVertres.getEntry());
         */
 		
-//		mPHSettings = new PHSettingFragment();
-//		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//		transaction.replace(R.id.phsetting_fragment, mPHSettings);
-//		transaction.commit();
+		mPHSettings = new PHSettingFragment();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		transaction.replace(R.id.phsetting_fragment, mPHSettings);
+		transaction.commit();
 	}
 	
 	@Override
