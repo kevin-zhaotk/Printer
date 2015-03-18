@@ -20,4 +20,8 @@
     <style name="edit_spinner_style">
         <item name="android:textSize">@dimen/settingsTextsize</item>
     </style>
+    
+    <style name="msg_dialog_spinner_style">
+        <item name="android:textSize">@dimen/settingsTextsize</item>
+    </style>
 </resources>

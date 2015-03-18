@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FPGADeviceSettings;
@@ -110,6 +111,9 @@ public class MainActivity extends TabActivity {
 		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver();
 		Context mContext = this.getApplicationContext();
 		mContext.registerReceiver(mReceiver, filter);
+		
+		//系统启动是先读取系统配置文件
+		SystemConfigFile.parseSystemCofig();
 		
 		FPGADeviceSettings.updateSettings(this.getApplicationContext());
 		

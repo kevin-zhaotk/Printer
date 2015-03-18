@@ -5,11 +5,14 @@ import java.util.Collection;
 import com.industry.printer.FileFormat.SystemConfigFile;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -29,6 +32,12 @@ public class PHSettingFragment extends Fragment {
 	public EditText mDelayPulse;
 	public EditText mHighLen;
 	
+	InputMethodManager mImm;
+	public Context mContext;
+	
+	public PHSettingFragment(Context context) {
+		mContext = context;
+	}
 	@Override  
     public void onCreate(Bundle savedInstanceState)  
     {  
@@ -75,6 +84,8 @@ public class PHSettingFragment extends Fragment {
 
 		mHighLen = (EditText) getView().findViewById(R.id.ph_set_OutputHight_length_value);
 		mHighLen.setText(String.valueOf(SystemConfigFile.mHighLen));
-
+		
+		mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE); 
 	}
+	
 }

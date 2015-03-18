@@ -59,34 +59,82 @@ public class SystemConfigFile{
 				String[] args = line.split(" ");
 				if (PH_SETTING_ENCODER.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_ENCODER);
-					mEncoder = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mEncoder = 0;
+					} else {
+						mEncoder = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_TRIGER_MODE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TRIGER_MODE);
-					mTrigerMode = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mTrigerMode = 0;
+					} else {
+						mTrigerMode = Integer.parseInt(args[1]);
+					}
 				} else if (PH_SETTING_HIGH_DELAY.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_HIGH_DELAY);
-					mPHOHighDelay = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mPHOHighDelay = 0;
+					} else {
+						mPHOHighDelay = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_LOW_DELAY.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_LOW_DELAY);
-					mPHOLowDelay = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mPHOLowDelay = 0;
+					} else {
+						mPHOLowDelay = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_PHOOUTPUT_PERIOD.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_PHOOUTPUT_PERIOD);
-					mPHOOutputPeriod = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mPHOOutputPeriod = 0;
+					} else {
+						mPHOOutputPeriod = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_TIMED_PERIOD.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TIMED_PERIOD);
-					mTimedPeriod = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mTimedPeriod = 0;
+					} else {
+						mTimedPeriod = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_TRIGER_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TRIGER_PULSE);
-					mTrigerPulse = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mTrigerPulse = 0;
+					} else {
+						mTrigerPulse = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_LENFIXED_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_LENFIXED_PULSE);
-					mLenFixedPulse = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mLenFixedPulse = 0;
+					} else {
+						mLenFixedPulse = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_DELAY_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_DELAY_PULSE);
-					mDelayPulse = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mDelayPulse = 0;
+					} else {
+						mDelayPulse = Integer.parseInt(args[1]);
+					}
+					
 				} else if (PH_SETTING_HIGH_LEN.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_HIGH_LEN);
-					mHighLen = Integer.parseInt(args[1]);
+					if (args.length < 2) {
+						mHighLen = 0;
+					} else {
+						mHighLen = Integer.parseInt(args[1]);
+					}
 				} else {
 					Debug.d(TAG, "===>unknow param: "+args[0]);
 				}

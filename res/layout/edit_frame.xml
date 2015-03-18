@@ -19,34 +19,34 @@
 	    >
 	    
 	    <Button 
-	        android:id="@+id/btn_insert"
+	        android:id="@+id/btn_new"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_insert"
+	        android:text="@string/str_btn_new"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
 	    <Button 
-	        android:id="@+id/btn_temp_1"
+	        android:id="@+id/btn_open"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_temp1"
+	        android:text="@string/str_btn_open"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
 	    <Button 
-	        android:id="@+id/btn_temp_2"
+	        android:id="@+id/btn_save"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_temp2"
+	        android:text="@string/str_btn_save"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
 	    <Button 
-	        android:id="@+id/btn_temp_3"
+	        android:id="@+id/btn_saveas"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_temp3"
+	        android:text="@string/str_btn_saveas"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
@@ -65,8 +65,48 @@
 	        android:text="@string/str_edit_btn_temp5"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
-	</LinearLayout> 
-	   
+	</LinearLayout>
+	
+	<EditText
+	     android:id="@+id/edit_line1"
+	     android:layout_width="fill_parent"
+	     android:layout_height="80dp"
+	     android:layout_marginTop="5dp"
+	     android:layout_marginLeft="5dp"
+	     android:layout_marginRight="5dp"
+	     android:textSize="60sp"
+	    />
+	
+	<EditText
+	     android:id="@+id/edit_line2"
+	     android:layout_width="fill_parent"
+	     android:layout_height="80dp"
+	     android:layout_marginTop="5dp"
+	     android:layout_marginLeft="5dp"
+	     android:layout_marginRight="5dp"
+	     android:textSize="60sp"
+	    />
+	
+	<EditText
+	     android:id="@+id/edit_line3"
+	     android:layout_width="fill_parent"
+	     android:layout_height="80dp"
+	     android:layout_marginTop="5dp"
+	     android:layout_marginLeft="5dp"
+	     android:layout_marginRight="5dp"
+	     android:textSize="60sp"
+	    />
+	
+	<EditText
+	     android:id="@+id/edit_line4"
+	     android:layout_width="fill_parent"
+	     android:layout_height="80dp"
+	     android:layout_marginTop="5dp"
+	     android:layout_marginLeft="5dp"
+	     android:layout_marginRight="5dp"
+	     android:textSize="60sp"
+	    />
+<!-- 	   
 	<LinearLayout
 	    android:id="@+id/object_options"
 	    android:layout_width="match_parent"
@@ -100,4 +140,5 @@
 	    android:layout_marginTop="10dp"
 	    android:layout_marginLeft="5dp"
 	    android:layout_marginRight="5dp"/>
-</RelativeLayout>
+ -->
+ </RelativeLayout>

@@ -9,23 +9,24 @@
 	<string name="manualCtrlTab">编辑控制</string>
 	<string name="Edit">编辑</string>
 	<string name="Settings">设置</string>
-	<string name="btn_start">开始</string>
-	<string name="btn_stop">停止</string>
-	<string name="btn_clean">清洗</string>
-	<string name="btn_open">打开</string>
-	<string name="btn_prerecord">上翻</string>
-	<string name="btn_nextrecord">下翻</string>
-	<string name="btn_send">发送</string>
-	<string name="btn_set">设置</string>
-	<string name="btn_get">信息</string>
-	<string name="btn_print">打印</string>
-	<string name="btn_finish">结束</string>
-	<string name="btn_header1">打印头1</string>
-	<string name="btn_header2">打印头2</string>
-	<string name="btn_header3">打印头3</string>
-	<string name="btn_header4">打印头4</string>
-	<string name="strBtnNew">新建</string>
-	<string name="btn_new">新建</string>
+	<string name="str_btn_start">开始</string>
+	<string name="str_btn_stop">停止</string>
+	<string name="str_btn_clean">清洗</string>
+	<string name="str_btn_open">打开</string>
+	<string name="str_btn_new">新建</string>
+	<string name="str_btn_save">保存</string>
+	<string name="str_btn_saveas">另存为</string>
+	<string name="str_btn_prerecord">上翻</string>
+	<string name="str_btn_nextrecord">下翻</string>
+	<string name="str_btn_send">发送</string>
+	<string name="str_btn_set">设置</string>
+	<string name="str_btn_get">信息</string>
+	<string name="str_btn_print">打印</string>
+	<string name="str_btn_finish">结束</string>
+	<string name="str_btn_header1">打印头1</string>
+	<string name="str_btn_header2">打印头2</string>
+	<string name="str_btn_header3">打印头3</string>
+	<string name="str_btn_header4">打印头4</string>
 	<string name="strDate">日期:</string>
 	<string name="strInklevel">剩余次数: </string>
 	<string name="strPhotocellState">光电：</string>
@@ -378,7 +379,17 @@
 	<string name="str_edit_btn_temp1">测试1</string>
 	<string name="str_edit_btn_temp2">测试2</string>
 	<string name="str_edit_btn_temp3">测试3</string>
-	<string name="str_edit_btn_temp4">测试4</string>
+	<string name="str_edit_btn_temp4">测试</string>
 	<string name="str_edit_btn_temp5">测试5</string>
-	
+
+<!-- 树莓派3  -->
+	<string name="str_dialog_msgnote">请选择信息行数：</string>
+	<string-array name="msglines_item_entries">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	</string-array>
 </resources>

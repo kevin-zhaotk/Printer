@@ -86,10 +86,10 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	/*************************
 	 * file operation buttons
 	 * ***********************/
-	public ImageButton mBtnNew;
-	public ImageButton mBtnSave;
-	public ImageButton mBtnSaveas;
-	public ImageButton mBtnOpen;
+	public Button mBtnNew;
+	public Button mBtnSave;
+	public Button mBtnSaveas;
+	public Button mBtnOpen;
 	
 	/*************************
 	 * object operation buttons
@@ -106,12 +106,10 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	public ImageButton mTrans;
 	
 	/************************
-	 * 树莓派3-编辑界面相关按钮
+	 * 鏍戣帗娲�3-缂栬緫鐣岄潰鐩稿叧鎸夐挳
 	 ***********************/
 	public Button	mInsert;
-	public Button	mTemp1;
-	public Button	mTemp2;
-	public Button	mTemp3;
+	public Button	mTest;
 	/************************
 	 * create Object buttons
 	 * **********************/
@@ -147,601 +145,43 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		
 		mObjs = new Vector<BaseObject>();
 		mObjs.add(new MessageObject(mContext, 0));
-		
-//		mBtnNew = (ImageButton) findViewById(R.id.btn_new);
-//		mBtnNew.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				mObjName = null;
-//				mObjs.clear();
-//				mObjs.add(new MessageObject(mContext, 0));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				mHScroll.scrollTo(0, 0);
-//			}		
-//		});
-		
-//		mBtnSave = (ImageButton) findViewById(R.id.btn_save);
-//		mBtnSave.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				if(!isPropertyChanged())
-//					return;
-//				if(mObjName != null)
-//				{
-//					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
-//					return;
-//				}
-//				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,FileBrowserDialog.FLAG_SAVE_FILE);
-//				//fdialog.setDismissMessage(Message.obtain(mHandler, 1));
-//				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
-//					@Override
-//					public void onClick() {
-//						// TODO Auto-generated method stub
-//						mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
-//					}
-//				});
-//				fdialog.show();
-//			}
-//		});
-//		
-//		mBtnSaveas = (ImageButton) findViewById(R.id.btn_saveas);
-//		mBtnSaveas.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this, FileBrowserDialog.FLAG_SAVE_FILE);
-//				//fdialog.setDismissMessage(Message.obtain(mHandler, 1));
-//				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
-//					@Override
-//					public void onClick() {
-//						// TODO Auto-generated method stub
-//						mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
-//					}
-//				});
-//				fdialog.show();
-//			}
-//			
-//		});
-//		
-//		mBtnOpen = (ImageButton) findViewById(R.id.btn_open);
-//		
-//		mBtnOpen.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				//File file = new File("/mnt/usb/1.tlk");
-//				//Debug.d(TAG, ""+file.getPath()+"is "+file.exists());
-//				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this,Configs.LOCAL_ROOT_PATH, ".tlk",FileBrowserDialog.FLAG_OPEN_FILE);
-//				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
-//					@Override
-//					public void onClick() {
-//						// TODO Auto-generated method stub
-//						mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN);
-//					}
-//				});
-//				fdialog.show();
-//			}
-//			
-//		});
 		mHScroll = (HorizontalScrollView) findViewById(R.id.scrollView1);
-		mObjView = (EditScrollView)findViewById(R.id.editView);
 		
-		mObjView.setOnTouchListener(new OnTouchListener(){
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "onTouch x="+event.getX()+", y="+event.getY());
-				int ret = getTouchedObj(event.getX(), event.getY());
-				if(ret != -1)
-				{
-					clearCurObj();
-					setCurObj(ret);
-					mObjList.setSelection(ret);
-					mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
-				}
-				return false;
-			}
-			
-		});
-
-		mObjList = (Spinner) findViewById(R.id.object_list);
-		mNameAdapter = new ArrayAdapter<String>(this, R.layout.edit_spinner_item);//R.layout.object_list_item);
-		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mObjList.setAdapter(mNameAdapter);
-		
-		mObjList.setOnItemSelectedListener(new OnItemSelectedListener(){
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG,"==========objlist item " + position +" clicked"+" of "+mObjList.getCount());
-				clearCurObj();
-				setCurObj(position);
+//		mObjList = (Spinner) findViewById(R.id.object_list);
+//		mNameAdapter = new ArrayAdapter<String>(this, R.layout.edit_spinner_item);//R.layout.object_list_item);
+//		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		mObjList.setAdapter(mNameAdapter);
+//		
+//		mObjList.setOnItemSelectedListener(new OnItemSelectedListener(){
+//
+//			@Override
+//			public void onItemSelected(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//				Debug.d(TAG,"==========objlist item " + position +" clicked"+" of "+mObjList.getCount());
+//				clearCurObj();
+//				setCurObj(position);
 //				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
+//				
+//			}
+//
+//			@Override
+//			public void onNothingSelected(AdapterView<?> parent) {
+//				// TODO Auto-generated method stub
+//				Debug.d(TAG, "======onNothing selected");
+//			}
+//			
+//		});
+		
+		mBtnNew = (Button) findViewById(R.id.btn_new);
+		mBtnNew.setOnClickListener(this);
 				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "======onNothing selected");
-			}
-			
-		});
-		
-		mShowInfo = (Button)findViewById(R.id.btn_objinfo);
-		mShowInfo.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				ObjectInfoDialog objDialog = new ObjectInfoDialog(EditTabActivity.this, getCurObj());
-				objDialog.setObject(getCurObj());
-				objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
-
-					@Override
-					public void onClick() {
-						// TODO Auto-generated method stub
-						mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-					}
-					
-				});
-				objDialog.show();
-			}
-			
-		});
-		
-//		mBtnLeft = (ImageButton) findViewById(R.id.btn_left);
-//		mBtnLeft.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				leftKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnLeft.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======Down button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(LEFT_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======Down button released!!");
-//					mKeyRepeatHandler.removeMessages(LEFT_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		
-//		
-//		mBtnRight = (ImageButton) findViewById(R.id.btn_right);
-//		mBtnRight.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				rightKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnRight.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======Down button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(RIGHT_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======Down button released!!");
-//					mKeyRepeatHandler.removeMessages(RIGHT_KEY);
-//				}
-//				return false;         
-//			}
-//			
-//		});
-//		
-//		mBtnUp = (ImageButton) findViewById(R.id.btn_up);
-//		mBtnUp.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				upKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnUp.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======Down button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(UP_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======up button released!!");
-//					mKeyRepeatHandler.removeMessages(UP_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//
-//		mBtnDown = (ImageButton) findViewById(R.id.btn_down);
-//		mBtnDown.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				downKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnDown.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======Down button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(DOWN_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======Down button released!!");
-//					mKeyRepeatHandler.removeMessages(DOWN_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		mBtnZoomoutX = (ImageButton) findViewById(R.id.btn_zoomoutx);
-//		mBtnZoomoutX.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				zoomOutXKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnZoomoutX.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======zoomout X button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOMX_OUT_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======zoomout X button released!!");
-//					mKeyRepeatHandler.removeMessages(ZOOMX_OUT_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		mBtnZoominX = (ImageButton) findViewById(R.id.btn_zoominx);
-//		mBtnZoominX.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				zoomInXKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnZoominX.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======zoomin X button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOMX_IN_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======zoomin X button released!!");
-//					mKeyRepeatHandler.removeMessages(ZOOMX_IN_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		mBtnZoomoutY = (ImageButton) findViewById(R.id.btn_zoomouty);
-//		mBtnZoomoutY.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				zoomOutYKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnZoomoutY.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======zoomout Y button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOMY_OUT_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======zoomout Y button released!!");
-//					mKeyRepeatHandler.removeMessages(ZOOMY_OUT_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		mBtnZoominY = (ImageButton) findViewById(R.id.btn_zoominy);
-//		mBtnZoominY.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				zoomInYKeyPressed();
-//			}
-//			
-//		});
-//		
-//		mBtnZoominY.setOnTouchListener(new OnTouchListener(){
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				if(event.getAction() == MotionEvent.ACTION_DOWN)
-//				{
-//					Debug.d(TAG, "======zoomin Y button pressed!!");
-//					mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOMY_IN_KEY, 800);
-//				}
-//				else if(event.getAction() == MotionEvent.ACTION_UP)
-//				{
-//					Debug.d(TAG, "======zoomin Y button released!!");
-//					mKeyRepeatHandler.removeMessages(ZOOMY_IN_KEY);
-//				}
-//				return false;
-//			}
-//			
-//		});
-//		
-//		mDel = (ImageButton) findViewById(R.id.btn_delete);
-//		mDel.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				BaseObject obj = getCurObj();
-//				if(obj == null || obj instanceof MessageObject)
-//					return;
-//				mObjs.remove(obj);
-//				setCurObj(0);
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//			}
-//			
-//		});
-		
-//		mTrans = (ImageButton) findViewById(R.id.btn_trans);
-//		mTrans.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				DataTransformDialog d = new DataTransformDialog(EditTabActivity.this);
-//				d.show();
-//			}
-//			
-//		});
-		
-//		mBtnText = (ImageButton) findViewById(R.id.btn_ABC);
-//		mBtnText.setOnClickListener(new OnClickListener()
-//		{
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				clearCurObj();
-//				mObjs.add(new TextObject(mContext,  getNextXcor()));
-//				Debug.d(TAG, "=======objs = "+mObjs.size());
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				mObjList.invalidate();
-//				Debug.d(TAG, "=======setSelection "+mObjList.getCount());
-//				//mObjList.setSelection(mObjList.getCount()-1);
-//				
-//			}
-//		});
-//		
-//		mBtnCnt = (ImageButton)findViewById(R.id.btn_cnt);
-//		mBtnCnt.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new CounterObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//
-//		mBtnBar = (ImageButton)findViewById(R.id.btn_barcode);
-//		mBtnBar.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new BarcodeObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//		
-//		mImage = (ImageButton) findViewById(R.id.btn_image);
-//		mImage.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				FileBrowserDialog fdialog = new FileBrowserDialog(EditTabActivity.this, FileBrowserDialog.FLAG_OPEN_FILE);
-//				fdialog.setOnPositiveClickedListener(new OnPositiveListener(){
-//					@Override
-//					public void onClick() {
-//						// TODO Auto-generated method stub
-//						Debug.d(TAG, "image selected");
-//						mHandler.sendEmptyMessage(HANDLER_MESSAGE_IMAGESELECT);
-//						//mObjList.setSelection(mObjList.getCount()-1);
-//					}
-//				});
-//				fdialog.show();
-//			}
-//			
-//		});
-//		
-//		mBtnDay = (ImageButton)findViewById(R.id.btn_julian);
-//		mBtnDay.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new JulianDayObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//		
-//		mBtnTime = (ImageButton)findViewById(R.id.btn_time);
-//		mBtnTime.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new RealtimeObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//		
-//
-//		mBtnLine = (ImageButton)findViewById(R.id.btn_line);
-//		mBtnLine.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new LineObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//
-//		mBtnRect = (ImageButton)findViewById(R.id.btn_rect);
-//		mBtnRect.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new RectObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//
-//		mBtnEllipse = (ImageButton)findViewById(R.id.btn_ellipse);
-//		mBtnEllipse.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				clearCurObj();
-//				mObjs.add(new EllipseObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//		
-//		mShift = (ImageButton) findViewById(R.id.btn_shift);
-//		mShift.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				clearCurObj();
-//				mObjs.add(new ShiftObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}
-//			
-//		});
-//		
-//		mScnd = (ImageButton) findViewById(R.id.btn_second);
-//		mScnd.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				clearCurObj();
-//				mObjs.add(new RTSecondObject(mContext, getNextXcor()));
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-//				
-//			}			
-//		});
-		
-		mTemp1 = (Button) findViewById(R.id.btn_temp_1);
-		mTemp1.setOnClickListener(this);
-		
-		mTemp2 = (Button) findViewById(R.id.btn_temp_2);
-		mTemp2.setOnClickListener(this);
-		
-		mTemp3 = (Button) findViewById(R.id.btn_temp_3);
-		mTemp3.setOnClickListener(this);
+		mTest = (Button) findViewById(R.id.btn_temp_4);
+		mTest.setOnClickListener(this);
 		
 		/*initialize the object list spinner*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		
-		
 	}
 	
 	
@@ -813,7 +253,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
 				}
 				//mNameAdapter.notifyDataSetChanged();
 				//mObjList.setAdapter(mNameAdapter);
-				mObjList.invalidate();
+				//mObjList.invalidate();
 				//selfInfoEnable(obj);
 				OnPropertyChanged(true);
 				break;
@@ -828,9 +268,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 			
 			BaseObject obj = getCurObj();
 			//Debug.d(TAG, "=====obj:"+obj.mId);
-			if(mObjView !=null) {
-				mObjView.invalidate();
-			}
 			if(obj != null) {
 				makeObjToCenter((int)obj.getX());
 			}
@@ -893,9 +330,9 @@ public class EditTabActivity extends Activity implements OnClickListener {
 
 
 	/**
-	 * 响应save/saveas操作，保存tlk对象
-	 * @param path 文件路径（每条信息的目录）
-	 * @param create 是否需要创建一个信息目录
+	 * 鍝嶅簲save/saveas鎿嶄綔锛屼繚瀛榯lk瀵硅薄
+	 * @param path 鏂囦欢璺緞锛堟瘡鏉′俊鎭殑鐩綍锛�
+	 * @param create 鏄惁闇�瑕佸垱寤轰竴涓俊鎭洰褰�
 	 */
 	public void saveObjFile(String path, boolean create)
 	{
@@ -1327,7 +764,20 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
-			case R.id.btn_temp_1:	//test fpga-gpio write
+			case R.id.btn_new:
+				
+				break;
+			case R.id.btn_open:	//test fpga-gpio write
+				
+				
+				break;
+			case R.id.btn_save:
+				HardwareJni.open("/dev/rtc0");
+				break;
+			case R.id.btn_saveas:
+				FpgaGpioOperation.open("/dev/fpga-gpio");
+				break;
+			case R.id.btn_temp_4:
 				new Thread(){
 					@Override
 					public void run() {
@@ -1338,13 +788,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 						FpgaGpioOperation.write(buffer);
 					}
 				}.start();
-				
-				break;
-			case R.id.btn_temp_2:
-				HardwareJni.open("/dev/rtc0");
-				break;
-			case R.id.btn_temp_3:
-				FpgaGpioOperation.open("/dev/fpga-gpio");
 				break;
 			default:
 				break;
