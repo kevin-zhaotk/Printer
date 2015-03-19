@@ -245,11 +245,7 @@ public class ControlTabActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				char data[] = new char[200];
-				for (int i=0; i < data.length; i++) {
-					data[i]= 0x0505;
-				}
-				FPGADeviceSettings.writeData(data, data.length);
+				mPaomaThread.start();
 			}
 			
 		});
@@ -1085,5 +1081,24 @@ public class ControlTabActivity extends Activity{
 	public void dismissProgressDialog()
 	{
 		mProgressShowing=false;
+	}
+	
+	Thread mPaomaThread = new Thread() {
+		@Override
+		public synchronized void run() {
+			for (char n = 0; n < 0x0f; n++) {
+				char data[] = getPaomadeng(n);
+				FPGADeviceSettings.writeData(data, data.length);
+			}
+			char data[] = getPaomadeng((char)0x0f);
+			FPGADeviceSettings.writeData(data, data.length);
+		}
+	};
+	private char[] getPaomadeng(char i) {
+		char pao[]=new char[1000];
+		for(char c : pao) {
+			c = i;
+		}
+		return pao;
 	}
 }
