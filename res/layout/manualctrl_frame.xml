@@ -19,7 +19,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textSize="25dp"
-        android:text="@string/btn_print" />
+        android:text="@string/str_btn_print" />
 
     <Button
         android:id="@+id/manual_StopPrint"
@@ -29,7 +29,7 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/manual_StartPrint"
         android:textSize="25dp"
-        android:text="@string/btn_stop" />
+        android:text="@string/str_btn_stop" />
 	
     <Button
          android:id="@+id/manual_btn_preview"

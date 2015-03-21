@@ -3,40 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
-	<ImageButton android:id="@+id/btn_new"
+	<Button android:id="@+id/btn_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:contentDescription="@string/btn_new"
-        android:background="@drawable/style_new"/>
+        android:text="@string/str_btn_new"/>
 	
-	<ImageButton android:id="@+id/btn_save"
+	<Button android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/btn_new"
-        android:contentDescription="@string/btn_new"
-        android:background="@drawable/style_save"
+        android:text="@string/str_btn_new"
         />
-	<ImageButton android:id="@+id/btn_saveas"
+	<Button android:id="@+id/btn_saveas"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_save"
-	    android:contentDescription="@string/btn_new"
-	    android:background="@drawable/style_saveas"
+	    android:text="@string/str_btn_new"
 	    />
 	
-	<ImageButton android:id="@+id/btn_open"
+	<Button android:id="@+id/btn_open"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_saveas"
-	    android:contentDescription="@string/btn_new"
-	    android:background="@drawable/style_open"
+	    android:text="@string/str_btn_new"
 	    />
 	<ImageButton android:id="@+id/btn_left"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_open"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_left"
 	    />
 	
@@ -44,7 +40,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_left"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_right"
 	    />
 	
@@ -52,7 +48,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_right"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_up"
 	    />
 	
@@ -60,7 +56,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_up"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_down"
 	    />
 	
@@ -68,7 +64,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_down"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_zoominx"
 	    />
 	
@@ -76,7 +72,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_zoominx"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_zoominy"
 	    />
 	
@@ -84,7 +80,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_zoominy"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_zoomoutx"
 	    />
 
@@ -92,7 +88,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/btn_zoomoutx"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_zoomouty"
 	    />
 
@@ -106,7 +102,7 @@
 	    android:layout_marginTop="5dp"
 	    android:layout_alignParentLeft="true"
 	    android:background="@drawable/style_del"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    />
 	
 	<ImageButton android:id="@+id/btn_trans"
@@ -124,7 +120,7 @@
 	    android:layout_below="@id/btn_delete"
 	    android:layout_marginTop="5dp"
 	    android:layout_alignParentLeft="true"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_abc"
 	    />
 	
@@ -134,7 +130,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_ABC"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_cnt"
 	    />
 	
@@ -144,7 +140,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_cnt"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_barcode"
 	    />
 	
@@ -154,7 +150,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_barcode"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_image"
 	    />
 	
@@ -164,7 +160,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_image"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_julian"
 	    />
 	
@@ -174,7 +170,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_julian"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_clock"
 	    />
 	
@@ -184,7 +180,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_time"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_line"
 	    />
 	
@@ -194,7 +190,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_line"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_rect"
 	    />
 	
@@ -204,7 +200,7 @@
 	    android:layout_alignTop="@id/btn_ABC"
 	    android:layout_toRightOf="@id/btn_rect"
 	    android:layout_alignBaseline="@id/btn_ABC"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    android:background="@drawable/style_ellipse"
 	    />
 	
@@ -216,7 +212,7 @@
 	    android:layout_toRightOf="@id/btn_ellipse"
 	    android:layout_alignBaseline="@id/btn_ABC"
 	    android:background="@drawable/style_shift"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    />
 	
 	<ImageButton
@@ -227,6 +223,6 @@
 	    android:layout_toRightOf="@id/btn_shift"
 	    android:layout_alignBaseline="@id/btn_ABC"
 	    android:background="@drawable/style_second"
-	    android:contentDescription="@string/btn_new"
+	    android:contentDescription="@string/str_btn_new"
 	    />
 </RelativeLayout>

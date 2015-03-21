@@ -53,7 +53,7 @@ public class PHSettingFragment extends Fragment {
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		
+		super.onActivityCreated(savedInstanceState);
 		SystemConfigFile.parseSystemCofig();
 		mEncoder = (Spinner) getView().findViewById(R.id.ph_set_encoder_value);
 		mEncoder.setSelection(SystemConfigFile.mEncoder);

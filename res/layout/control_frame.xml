@@ -10,47 +10,59 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content">
     
-	
-    <Button
-        android:id="@+id/StartPrint"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="@string/btn_print" />
-	
+	<LinearLayout 
+	    android:id="@+id/ctrl_btn_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="5dp"
+	    android:orientation="horizontal"
+	    >
+	    <Button
+	        android:id="@+id/StartPrint"
+	        android:layout_width="0dp"
+	        android:layout_height="80dp"
+	        android:layout_weight="1"
+	        android:textSize="@dimen/ctrlButtonsTextsize"
+	        android:text="@string/str_btn_print" />
+		
+	    
+	    <Button
+	        android:id="@+id/StopPrint"
+	        android:layout_width="0dp"
+	        android:layout_height="80dp"
+	        android:layout_weight="1"
+	        android:textSize="@dimen/ctrlButtonsTextsize"
+	        android:text="@string/str_btn_stop" />
+		
+	    <Button
+	        android:id="@+id/btnFlush"
+	        android:layout_width="0dp"
+	        android:layout_height="80dp"
+	        android:layout_weight="1"
+	        android:textSize="@dimen/ctrlButtonsTextsize"
+	        android:text="@string/str_btn_clean" />
+		
+	    <Button
+	        android:id="@+id/btn_preview"
+	        android:layout_width="0dp"
+	        android:layout_height="80dp"
+	        android:layout_weight="1"
+	        android:textSize="@dimen/ctrlButtonsTextsize"
+	        android:text="@string/str_preview" />
+	 	
+	        
+	     <Button 
+	         android:id="@+id/btnBinfile"
+	         android:layout_width="wrap_content"
+	         android:layout_height="80dp"
+	         android:layout_weight="1"
+	         android:singleLine="true"
+	         android:text="@string/str_openfile"
+	         android:textSize="@dimen/ctrlButtonsTextsize"
+	         android:textColor="#000000"
+	         />
+	</LinearLayout>
     
-    <Button
-        android:id="@+id/StopPrint"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/StartPrint"
-        android:textSize="20dp"
-        android:text="@string/btn_stop" />
-	
-    <Button
-        android:id="@+id/btnFlush"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/StopPrint"
-        android:textSize="20dp"
-        android:text="@string/btn_clean" />
-	
-    <Button
-        android:id="@+id/btn_preview"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_alignBottom="@+id/StartPrint"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/btnFlush"
-        android:textSize="20dp"
-        android:text="@string/str_preview" />
 
 <!--	
     <Button
@@ -154,18 +166,7 @@
          android:textSize="20sp"
          android:textColor="#000000"
          />
- -->     
-     <Button 
-         android:id="@+id/btnBinfile"
-         android:layout_alignParentRight="true"
-         android:layout_alignBaseline="@id/StartPrint"
-         android:layout_width="150dp"
-         android:layout_height="60dp"
-         android:singleLine="true"
-         android:text="@string/str_openfile"
-         android:textSize="20sp"
-         android:textColor="#000000"
-         />
+ --> 
 <!-- 
 	<Button
          android:id="@+id/btn_gotoline"
@@ -227,12 +228,12 @@
  -->
      <HorizontalScrollView 
         android:id="@+id/scrollview_prev_id"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_width="790dp"
     	android:layout_height="300sp"
     	android:layout_marginLeft="5dp"
     	android:background="#ffffff"
-         android:layout_below="@id/btnBinfile"
+         android:layout_below="@id/ctrl_btn_layout"
          >
 	     <LinearLayout
 	        android:layout_width="wrap_content"

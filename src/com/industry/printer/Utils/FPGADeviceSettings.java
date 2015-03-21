@@ -99,19 +99,4 @@ public class FPGADeviceSettings {
 		FpgaGpioOperation.close(fd);
 	}
 	
-	public static int writeData(char data[], int len) {
-		
-		int fd = FpgaGpioOperation.open(FpgaGpioOperation.FPGA_DRIVER_FILE);
-		if(fd<0) {
-			return -1;
-		}
-		FpgaGpioOperation.ioctl(fd, FpgaGpioOperation.FPGA_CMD_SENDDATA, FpgaGpioOperation.FPGA_STATE_OUTPUT);
-		
-		int wlen = FpgaGpioOperation.write(fd, data, len);
-		if(wlen != len) {
-			FpgaGpioOperation.close(fd);
-			return -1;
-		}
-		return wlen;
-	}
 }

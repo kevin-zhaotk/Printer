@@ -3,5 +3,6 @@
 	<color name="white">#ffffff</color>
 	<color name="blue">#0000ff</color>
 	<color name="black">#000000</color>
-	<color name="green">#00ff00</color>  
+	<color name="green">#00ff00</color>
+	<color name="UnitText">#3d3d3d</color>
 </resources>

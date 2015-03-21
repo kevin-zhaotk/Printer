@@ -180,8 +180,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		mTest = (Button) findViewById(R.id.btn_temp_4);
 		mTest.setOnClickListener(this);
 		
-		/*initialize the object list spinner*/
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 	
 	
@@ -477,59 +475,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	};
 	
 	
-	public final int LEFT_KEY=1;
-	public final int RIGHT_KEY=2;
-	public final int UP_KEY=3;
-	public final int DOWN_KEY=4;
-	public final int ZOOMX_IN_KEY=5;
-	public final int ZOOMX_OUT_KEY=6;
-	public final int ZOOMY_IN_KEY=7;
-	public final int ZOOMY_OUT_KEY=8;
-	
-	Handler mKeyRepeatHandler = new Handler(){
-		public void handleMessage(Message msg)
-		{
-			switch(msg.what)
-			{
-				case LEFT_KEY:
-					Debug.d(TAG, "left key pressed");
-					leftKeyPressed();
-					break;
-				case RIGHT_KEY:
-					Debug.d(TAG, "right key pressed");
-					rightKeyPressed();
-					break;
-				case UP_KEY:
-					Debug.d(TAG, "up key pressed");
-					upKeyPressed();
-					break;
-				case	DOWN_KEY:
-					Debug.d(TAG, "down key pressed");
-					downKeyPressed();
-					break;
-				case ZOOMX_IN_KEY:
-					Debug.d(TAG, "zoom x  in key pressed");
-					zoomInXKeyPressed();
-					break;
-				case ZOOMX_OUT_KEY:
-					Debug.d(TAG, "zoom x out key pressed");
-					zoomOutXKeyPressed();
-					break;
-				case ZOOMY_IN_KEY:
-					Debug.d(TAG, "zoom y in key pressed");
-					zoomInYKeyPressed();
-					break;
-				case ZOOMY_OUT_KEY:
-					Debug.d(TAG, "zoom y out key pressed");
-					zoomOutYKeyPressed();
-					break;
-				default:
-					Debug.d(TAG, "unknow key repeat ");
-					break;
-			}
-			mKeyRepeatHandler.sendEmptyMessageDelayed(msg.what, 200);
-		}
-	};
 	int getTouchedObj(float x, float y)
 	{
 		int i=1;
@@ -637,118 +582,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		
 	}
 	
-	private void leftKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setX(obj.getX() - 4);
-		}
-		else
-			obj.setX(obj.getX() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void rightKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setX(obj.getX() + 4);
-		}
-		else
-			obj.setX(obj.getX() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void upKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setY(obj.getY() - 4);
-		}
-		else
-			obj.setY(obj.getY() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void downKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setY(obj.getY() + 4);
-		}
-		else
-			obj.setY(obj.getY() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void zoomOutXKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setWidth(obj.getWidth() + 4);
-		}
-		else
-			obj.setWidth(obj.getWidth() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void zoomInXKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setWidth(obj.getWidth() - 4);
-		}
-		else
-			obj.setWidth(obj.getWidth() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-	}
-	
-	private void zoomOutYKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setHeight(obj.getHeight() + 4);
-		}
-		else
-			obj.setHeight(obj.getHeight() + 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
-	private void zoomInYKeyPressed()
-	{
-		BaseObject obj = getCurObj();
-		if(obj == null)
-			return;
-		if(obj instanceof RealtimeObject)
-		{
-			((RealtimeObject)obj).setHeight(obj.getHeight() - 4);
-		}
-		else
-			obj.setHeight(obj.getHeight() - 4);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
-	}
-	
 	public boolean mPropertyChanged=false;
 	private void OnPropertyChanged(boolean state)
 	{
@@ -778,16 +611,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 				FpgaGpioOperation.open("/dev/fpga-gpio");
 				break;
 			case R.id.btn_temp_4:
-				new Thread(){
-					@Override
-					public void run() {
-						char[] buffer = new char[1024*1024];
-						for(int i=0; i<buffer.length; i++) {
-							buffer[i] = 0x55;
-						}
-						FpgaGpioOperation.write(buffer);
-					}
-				}.start();
 				break;
 			default:
 				break;

@@ -18,10 +18,10 @@
     </style>
 
     <style name="edit_spinner_style">
-        <item name="android:textSize">@dimen/settingsTextsize</item>
+        <item name="android:textSize">40sp</item>
     </style>
     
     <style name="msg_dialog_spinner_style">
-        <item name="android:textSize">@dimen/settingsTextsize</item>
+        <item name="android:textSize">30sp</item>
     </style>
 </resources>

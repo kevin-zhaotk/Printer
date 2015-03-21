@@ -67,15 +67,21 @@ public class FpgaGpioOperation {
 	public final static String TAG = FpgaGpioOperation.class.getSimpleName();
 	
 	
-	
-	public static int write(char[] buffer) {
-		int fd;
-//		fd = HardwareJni.OpenGPIO("/dev/fpga-gpio");
-//		int len = HardwareJni.WriteGPIO(fd, buffer, buffer.length);
-		fd = open("/dev/fpga-gpio");
-		int len = write(fd, buffer, buffer.length);
-		Debug.d(TAG, "----gpio write len="+len);
+
+	public static int writeData(char data[], int len) {
 		
-		return 1;
+		int fd = open(FPGA_DRIVER_FILE);
+		if(fd<0) {
+			return -1;
+		}
+		ioctl(fd, FPGA_CMD_SENDDATA, FPGA_STATE_OUTPUT);
+		
+		int wlen = write(fd, data, len);
+		if(wlen != len) {
+			close(fd);
+			return -1;
+		}
+		close(fd);
+		return wlen;
 	}
 }

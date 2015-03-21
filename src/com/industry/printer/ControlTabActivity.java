@@ -88,7 +88,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Activity{
+public class ControlTabActivity extends Activity implements OnClickListener {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -190,6 +190,13 @@ public class ControlTabActivity extends Activity{
 	 */
 	public final int MESSAGE_DISMISS_DIALOG=3;
 	
+	/**
+	 * MESSAGE_PAOMADENG_TEST
+	 *   message tobe sent when dismiss loading dialog 
+	 */
+	public final int MESSAGE_PAOMADENG_TEST=4;
+	
+	
 	
 	/**
 	 * the bitmap for preview
@@ -240,36 +247,10 @@ public class ControlTabActivity extends Activity{
 		mPreview = (PreviewScrollView ) findViewById(R.id.sv_preview);
 		
 		mBtnStart = (Button) findViewById(R.id.StartPrint);
-		mBtnStart.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				mPaomaThread.start();
-			}
-			
-		});
+		mBtnStart.setOnClickListener(this);
 		
 		mBtnStop = (Button) findViewById(R.id.StopPrint);
-		mBtnStop.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//stopThread(mPrintThread);
-				Debug.d(TAG, "====>stop clicked");
-				
-				int ret = UsbSerial.printStop(mSerialdev);
-				if(ret==UsbSerial.ERR_DEV_MOVED)
-					Toast.makeText(mContext, R.string.strInsertSerial, Toast.LENGTH_LONG).show();
-				else if(ret==UsbSerial.ERR_WRITE_FAILED||ret==UsbSerial.ERR_READ_FAILED) {
-					Toast.makeText(mContext, R.string.strReinsertSerial, Toast.LENGTH_LONG).show();
-				}
-				
-				Debug.d(TAG, "====>stop ok");
-			}
-			
-		});
+		mBtnStop.setOnClickListener(this);
 		
 		/*
 		 *clean the print head
@@ -277,64 +258,16 @@ public class ControlTabActivity extends Activity{
 		 */
 		
 		mBtnClean = (Button) findViewById(R.id.btnFlush);
-		mBtnClean.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Debug.d(TAG, "***********clean head");
-				//UsbSerial.printStart(mSerialdev);
-				UsbSerial.clean(mSerialdev);
-				Debug.d(TAG, "***********clean head over");
-				//UsbSerial.printStop(mSerialdev);
-			}
-			
-		});
+		mBtnClean.setOnClickListener(this);
 		
 				
 		mBtnOpenfile = (Button) findViewById(R.id.btnBinfile);
-		mBtnOpenfile.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
-				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
-
-					@Override
-					public void onClick() {
-						// TODO Auto-generated method stub
-						String f = FileBrowserDialog.file();
-						Debug.d(TAG, "-------f="+f);
-						if(f==null || !f.toLowerCase().endsWith(".tlk"))
-						{
-							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG).show();
-							return;
-						}
-						// TODO show bin
-						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
-						
-					}
-					
-				});
-				dialog.show();
-			}
-			
-		});
+		mBtnOpenfile.setOnClickListener(this);
 		
 		
 		
 		mBtnview = (Button)findViewById(R.id.btn_preview);
-		mBtnview.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//DotMatrixFont dot = new DotMatrixFont("/mnt/usb/font.txt");
-				startPreview();
-			}
-			
-		});
+		mBtnview.setOnClickListener(this);
 		
 		//
 		mPrintState = (TextView) findViewById(R.id.tvprintState);
@@ -446,6 +379,9 @@ public class ControlTabActivity extends Activity{
 				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
 					break;
+				case MESSAGE_PAOMADENG_TEST:
+					char[] data = msg.getData().getCharArray("data_array");
+					FpgaGpioOperation.writeData(data, data.length);
 			}
 		}
 	};
@@ -1082,23 +1018,57 @@ public class ControlTabActivity extends Activity{
 	{
 		mProgressShowing=false;
 	}
-	
-	Thread mPaomaThread = new Thread() {
-		@Override
-		public synchronized void run() {
-			for (char n = 0; n < 0x0f; n++) {
-				char data[] = getPaomadeng(n);
-				FPGADeviceSettings.writeData(data, data.length);
-			}
-			char data[] = getPaomadeng((char)0x0f);
-			FPGADeviceSettings.writeData(data, data.length);
+	int mdata=0;
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.StartPrint:
+				Message msg = new Message();
+				msg.what = MESSAGE_PAOMADENG_TEST;
+				char[] data = new char[1];
+				if (mdata > 0x0f || mdata < 0) {
+					mdata = 0;
+				}
+				if (mdata < 0x0f) {
+					data[0] = (char)(0x01 << mdata);
+				} else {
+					data[0] = 0x0ff;
+				}
+				msg.getData().putCharArray("data_array", data);
+				mHandler.sendMessageDelayed(msg, 1000);
+				break;
+			case R.id.StopPrint:
+				mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
+				break;
+			case R.id.btnFlush:
+				break;
+			case R.id.btnBinfile:
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
+				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
+
+					@Override
+					public void onClick() {
+						// TODO Auto-generated method stub
+						String f = FileBrowserDialog.file();
+						Debug.d(TAG, "-------f="+f);
+						if(f==null || !f.toLowerCase().endsWith(".tlk"))
+						{
+							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG).show();
+							return;
+						}
+						// TODO show bin
+						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
+						
+					}
+					
+				});
+				dialog.show();
+
+				break;
+			case R.id.btn_preview:
+				break;
 		}
-	};
-	private char[] getPaomadeng(char i) {
-		char pao[]=new char[1000];
-		for(char c : pao) {
-			c = i;
-		}
-		return pao;
+		
 	}
+	
 }

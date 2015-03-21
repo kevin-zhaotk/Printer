@@ -58,6 +58,9 @@
             android:name="com.industry.printer.ManualCtrlActivity"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity
+            android:name="com.android.settings.Settings">
+        </activity>
         
     </application>
 

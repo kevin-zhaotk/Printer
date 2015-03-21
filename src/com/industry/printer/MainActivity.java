@@ -112,7 +112,7 @@ public class MainActivity extends TabActivity {
 		Context mContext = this.getApplicationContext();
 		mContext.registerReceiver(mReceiver, filter);
 		
-		//系统启动是先读取系统配置文件
+		//
 		SystemConfigFile.parseSystemCofig();
 		
 		FPGADeviceSettings.updateSettings(this.getApplicationContext());

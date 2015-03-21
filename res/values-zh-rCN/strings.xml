@@ -374,6 +374,8 @@
 	    <item>PHO2</item>
 	</string-array>
 	
+	<string name="str_time_unit">0.1ms</string>
+	<string name="str_system_setting">系统设置</string>
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">插入</string>
 	<string name="str_edit_btn_temp1">测试1</string>
@@ -382,6 +384,10 @@
 	<string name="str_edit_btn_temp4">测试</string>
 	<string name="str_edit_btn_temp5">测试5</string>
 
+	<string name="str_edit_line1">第一行:</string>
+	<string name="str_edit_line2">第二行:</string>
+	<string name="str_edit_line3">第三行:</string>
+	<string name="str_edit_line4">第四行:</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

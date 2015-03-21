@@ -18,6 +18,7 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
@@ -44,7 +45,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class SettingsTabActivity extends Activity {
+public class SettingsTabActivity extends Activity implements OnClickListener {
 public static final String TAG="SettingsTabActivity";
 	
 	SharedPreferences mPreference=null;
@@ -99,6 +100,8 @@ public static final String TAG="SettingsTabActivity";
 	public Button		mSave;
 	public Button		mUpgrade;
 	public Button		mSetDate;
+	
+	public Button	mSettings;
 
 	Context 			mContext;
 	ProgressDialog 		pDialog;
@@ -153,11 +156,14 @@ public static final String TAG="SettingsTabActivity";
         mHorires.setSummary(mHorires.getEntry());
         mVertres.setSummary(mVertres.getEntry());
         */
-		
-		mPHSettings = new PHSettingFragment();
+		mSettings = (Button) findViewById(R.id.btn_system_setting);
+		mSettings.setOnClickListener(this);
+		mPHSettings = new PHSettingFragment(this);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
 		transaction.commit();
+		
+		
 	}
 	
 	@Override
@@ -213,4 +219,17 @@ public static final String TAG="SettingsTabActivity";
 			mTimeRefreshHandler.sendEmptyMessageDelayed(0, 500);
 		}
 	};
+	@Override
+	public void onClick(View arg0) {
+		if (arg0 == null) {
+			return;
+		}
+		switch (arg0.getId()) {
+			case R.id.btn_system_setting:	//进入系统设置
+				Intent intent = new Intent();
+				intent.setClassName("com.android.settings","com.android.settings.Settings");
+				startActivity(intent);
+				break;
+		}
+	}
 }
