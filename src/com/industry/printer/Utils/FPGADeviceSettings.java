@@ -77,7 +77,9 @@ public class FPGADeviceSettings {
 		
 		
 		int fd = FpgaGpioOperation.open(FpgaGpioOperation.FPGA_DRIVER_FILE);
-		
+		if(fd <= 0) {
+			return;
+		}
 		char data[] = new char[Configs.gParams];
 		
 		

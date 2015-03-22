@@ -47,13 +47,15 @@ public class SystemConfigFile{
 
 	
 	public static void parseSystemCofig() {
-		File file = new File(Configs.getUsbPath()+"/system/systemconfig.txt");
+		FileReader reader=null;
+		BufferedReader br = null;
+		File file = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_FILE);
 		if (!file.exists()) {
 			return ;
 		}
 		try {
-			FileReader reader = new FileReader(file);
-			BufferedReader br = new BufferedReader(reader);
+			reader = new FileReader(file);
+			br = new BufferedReader(reader);
 			String line = br.readLine();
 			while (line != null) {
 				String[] args = line.split(" ");
@@ -147,13 +149,14 @@ public class SystemConfigFile{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
 		}
 		
 	}
 	
 	
 	public static void saveConfig() {
-		File file = new File(Configs.getUsbPath()+"/system/systemconfig.txt");
+		File file = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_FILE);
 		
 		try {
 			if(!file.exists()) {

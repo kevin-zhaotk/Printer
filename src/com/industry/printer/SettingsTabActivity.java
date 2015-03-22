@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FPGADeviceSettings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -98,6 +99,7 @@ public static final String TAG="SettingsTabActivity";
 	public TextView mVersion;
 
 	public Button		mSave;
+	
 	public Button		mUpgrade;
 	public Button		mSetDate;
 	
@@ -156,6 +158,9 @@ public static final String TAG="SettingsTabActivity";
         mHorires.setSummary(mHorires.getEntry());
         mVertres.setSummary(mVertres.getEntry());
         */
+		mSave = (Button) findViewById(R.id.btn_setting_ok);
+		mSave.setOnClickListener(this);
+		
 		mSettings = (Button) findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		mPHSettings = new PHSettingFragment(this);
@@ -225,10 +230,17 @@ public static final String TAG="SettingsTabActivity";
 			return;
 		}
 		switch (arg0.getId()) {
+			case R.id.btn_setting_ok:
+				SystemConfigFile.saveConfig();
+				FPGADeviceSettings.updateSettings(mContext);
+				break;
 			case R.id.btn_system_setting:	//进入系统设置
 				Intent intent = new Intent();
 				intent.setClassName("com.android.settings","com.android.settings.Settings");
 				startActivity(intent);
+				break;
+			default :
+				Debug.d(TAG, "===>unknown view clicked");
 				break;
 		}
 	}

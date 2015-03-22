@@ -33,6 +33,11 @@ public class Configs {
 	public static final String SDCARD_ROOT_PATH="/storage/sd_external";
 	
 	/**
+	 * SYSTEM_CONFIG_FILE
+	 */
+	public static final String SYSTEM_CONFIG_FILE="/system/system_config.txt";
+	
+	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 
 	 * @param context
 	 */
@@ -65,7 +70,7 @@ public class Configs {
 	
 	
 	/**
-	 * 获取u盘挂载路径
+	 * 鑾峰彇u鐩樻寕杞借矾寰�
 	 * @return usb root path
 	 */
 	public static String getUsbPath() {
