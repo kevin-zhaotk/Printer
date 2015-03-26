@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Vector;
 
 import com.industry.printer.FileBrowserDialog.OnPositiveListener;
@@ -25,6 +26,7 @@ import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
+import com.industry.printer.object.ObjectsFromString;
 import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
@@ -131,6 +133,14 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	public Spinner mObjList;
 	Button mShowInfo;
 	
+	/***********************
+	 * object edit lines for smfy-super3
+	 **********************/
+	public EditText mObjLine1;
+	public EditText mObjLine2;
+	public EditText mObjLine3;
+	public EditText mObjLine4;
+	
 	public static Vector<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
 	
@@ -176,10 +186,21 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		
 		mBtnNew = (Button) findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
-				
+		
+		mBtnSaveas = (Button) findViewById(R.id.btn_saveas);
+		mBtnSaveas.setOnClickListener(this);
+		
+		mBtnSave = (Button) findViewById(R.id.btn_save);
+		mBtnSave.setOnClickListener(this);
+		
 		mTest = (Button) findViewById(R.id.btn_temp_4);
 		mTest.setOnClickListener(this);
 		
+		
+		mObjLine1 = (EditText) findViewById(R.id.edit_line1);
+		mObjLine2 = (EditText) findViewById(R.id.edit_line2);
+		mObjLine3 = (EditText) findViewById(R.id.edit_line3);
+		mObjLine4 = (EditText) findViewById(R.id.edit_line4);
 	}
 	
 	
@@ -397,36 +418,50 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	}
 	
 	/**
+	 * HANDLER_MESSAGE_NEW
+	 *  Handler message for new a tlk file
+	 */
+	public static final int HANDLER_MESSAGE_NEW=0;
+	
+	/**
 	 * HANDLER_MESSAGE_OPEN
 	 *  Handler message for open tlk file
 	 */
-	public static final int HANDLER_MESSAGE_OPEN=0;
+	public static final int HANDLER_MESSAGE_OPEN=1;
+	
 	/**
 	 * HANDLER_MESSAGE_SAVE
 	 *   Handler message for save event happens
 	 */
-	public static final int HANDLER_MESSAGE_SAVE=1;
+	public static final int HANDLER_MESSAGE_SAVE=2;
+	
 	/**
 	 * HANDLER_MESSAGE_SAVEAS
 	 *   Handler message for saveas event happens
 	 */
-	public static final int HANDLER_MESSAGE_SAVEAS=2;
+	public static final int HANDLER_MESSAGE_SAVEAS=3;
+	
 	/**
 	 * HANDLER_MESSAGE_IMAGESELECT
 	 *   Handler message for image object selected
 	 */
-	public static final int HANDLER_MESSAGE_IMAGESELECT=3;
+	public static final int HANDLER_MESSAGE_IMAGESELECT=4;
+
 	/**
 	 * HANDLER_MESSAGE_DISMISSDIALOG
 	 *   Handler message for dismiss loading dialog
 	 */
-	public static final int HANDLER_MESSAGE_DISMISSDIALOG=4;
+	public static final int HANDLER_MESSAGE_DISMISSDIALOG=5;
 	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
 			boolean createfile=false;
-            switch (msg.what) {   
+            switch (msg.what) {
+
+        		case HANDLER_MESSAGE_NEW:
+        			mObjName = null;
+        			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+FileBrowserDialog.file());
             		String tlkfile=FileBrowserDialog.file();
@@ -439,20 +474,23 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
             		break;
-            	case HANDLER_MESSAGE_SAVE:		//saveas
+            		
+            	case HANDLER_MESSAGE_SAVEAS:		//saveas
             		Debug.d(TAG, "save as file="+FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName());
             		mObjName = FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName();
             		createfile=true;
-            	case HANDLER_MESSAGE_SAVEAS:    //save
+            		
+            	case HANDLER_MESSAGE_SAVE:    //save
             		progressDialog();
             		if(mObjName != null)
             		{
             			saveObjFile(mObjName, createfile);
             		}
-            		//drawAllBmp(mObjName);
+            		drawAllBmp(mObjName);
             		dismissProgressDialog();
-            		OnPropertyChanged(false);
+            		// OnPropertyChanged(false);
             		break;
+            		
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		File file = new File(FileBrowserDialog.file());
             		if(!file.exists() || !GraphicObject.isPic(FileBrowserDialog.file()))
@@ -466,6 +504,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
     				mObjs.add(o);    	
     				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
             		break;
+            		
             	case HANDLER_MESSAGE_DISMISSDIALOG:
             		mProgressDialog.dismiss();
             		break;
@@ -596,19 +635,27 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
+		FileBrowserDialog dialog = null;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
-				
+				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
 				break;
 			case R.id.btn_open:	//test fpga-gpio write
-				
-				
+				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
+				dialog.show();
+				mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN);
 				break;
 			case R.id.btn_save:
-				HardwareJni.open("/dev/rtc0");
-				break;
+				List<BaseObject> objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
+				mObjs.addAll(objs);
+				if (mObjName != null) {
+					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
+					break;
+				}
 			case R.id.btn_saveas:
-				FpgaGpioOperation.open("/dev/fpga-gpio");
+				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
+				dialog.show();
+				mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
 				break;
 			case R.id.btn_temp_4:
 				break;
