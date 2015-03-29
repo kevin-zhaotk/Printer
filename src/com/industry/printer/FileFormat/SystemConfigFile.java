@@ -157,9 +157,16 @@ public class SystemConfigFile{
 	
 	public static void saveConfig() {
 		File file = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_FILE);
-		
+		Debug.d(TAG, "===>file:"+file.getAbsolutePath());
 		try {
 			if(!file.exists()) {
+//				File path = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_DIR);
+//				if (!path.exists()) {
+//					path.mkdir();
+//				}
+//				else {
+//					Debug.d(TAG, "===>system is exsit");
+//				}
 				file.createNewFile();
 			}
 			FileWriter writer = new FileWriter(file);

@@ -38,7 +38,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
 {
 	int i,ret;
 	jchar *buf_utf = (*env)->GetCharArrayElements(env, buff, NULL);
-
+	ALOGD("=====>gpio write %d\n",sizeof(jchar));
 	if(fd <= 0)
 		return 0;
 	ret = write(fd, buf_utf, count);

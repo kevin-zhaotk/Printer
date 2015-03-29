@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class PHSettingFragment extends Fragment implements OnItemSelectedListener, TextWatcher {
+public class PHSettingFragment extends Fragment implements OnItemSelectedListener {
 	
 	private static final String TAG= PHSettingFragment.class.getSimpleName();
 

@@ -35,6 +35,7 @@ public class Configs {
 	/**
 	 * SYSTEM_CONFIG_FILE
 	 */
+	public static final String SYSTEM_CONFIG_DIR="/system/";
 	public static final String SYSTEM_CONFIG_FILE="/system/system_config.txt";
 	
 	/**

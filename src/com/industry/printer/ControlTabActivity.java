@@ -380,8 +380,16 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 					mLoadingDialog.dismiss();
 					break;
 				case MESSAGE_PAOMADENG_TEST:
-					char[] data = msg.getData().getCharArray("data_array");
-					FpgaGpioOperation.writeData(data, data.length);
+					
+					char[] data = new char[32];
+					for (char i = 0; i < 15; i++) {
+						data[2*i] = (char)(0x01<<i);
+						data[2*i+1] = 0xff;
+					}
+					data[30] = 0xff;
+					data[31] = 0xff;
+					FpgaGpioOperation.writeData(data, data.length*2);
+					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 			}
 		}
 	};
@@ -1023,19 +1031,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				Message msg = new Message();
-				msg.what = MESSAGE_PAOMADENG_TEST;
-				char[] data = new char[1];
-				if (mdata > 0x0f || mdata < 0) {
-					mdata = 0;
-				}
-				if (mdata < 0x0f) {
-					data[0] = (char)(0x01 << mdata);
-				} else {
-					data[0] = 0x0ff;
-				}
-				msg.getData().putCharArray("data_array", data);
-				mHandler.sendMessageDelayed(msg, 1000);
+				mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 				break;
 			case R.id.StopPrint:
 				mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
