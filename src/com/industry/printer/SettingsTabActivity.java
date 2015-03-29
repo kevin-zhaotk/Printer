@@ -3,11 +3,13 @@ package com.industry.printer;
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FPGADeviceSettings;
 
@@ -102,8 +104,8 @@ public static final String TAG="SettingsTabActivity";
 	
 	public Button		mUpgrade;
 	public Button		mSetDate;
+	public Button		mSettings;
 	
-	public Button	mSettings;
 
 	Context 			mContext;
 	ProgressDialog 		pDialog;
@@ -161,8 +163,12 @@ public static final String TAG="SettingsTabActivity";
 		mSave = (Button) findViewById(R.id.btn_setting_ok);
 		mSave.setOnClickListener(this);
 		
+		mUpgrade = (Button) findViewById(R.id.btn_setting_upgrade);
+		mUpgrade.setOnClickListener(this);
+		
 		mSettings = (Button) findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
+		
 		mPHSettings = new PHSettingFragment(this);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
@@ -231,6 +237,7 @@ public static final String TAG="SettingsTabActivity";
 		}
 		switch (arg0.getId()) {
 			case R.id.btn_setting_ok:
+				Debug.d(TAG, "===>onclick");
 				SystemConfigFile.saveConfig();
 				FPGADeviceSettings.updateSettings(mContext);
 				break;
@@ -238,6 +245,27 @@ public static final String TAG="SettingsTabActivity";
 				Intent intent = new Intent();
 				intent.setClassName("com.android.settings","com.android.settings.Settings");
 				startActivity(intent);
+				break;
+			case R.id.btn_setting_upgrade:
+				ArrayList<String> paths = ConfigPath.getMountedUsb();
+				for (String str : paths) {
+					File file = new File(str+"/Printer.apk");
+					if (!file.exists()) {
+						continue;
+					}
+					String cmd = "cp "+file.getAbsolutePath()+" /system/app/Printer.apk;reboot";
+					Debug.d(TAG, "===>upgrade cmd:"+cmd);
+					try {
+						Process process = Runtime.getRuntime().exec(cmd);
+						Debug.d(TAG, "===>process:"+process.toString());
+						if (process.waitFor() != 0) {
+			                Debug.d(TAG,"===>exit value = " + process.exitValue());
+			            }
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				}
 				break;
 			default :
 				Debug.d(TAG, "===>unknown view clicked");

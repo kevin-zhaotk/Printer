@@ -312,6 +312,7 @@
 	<string name="str_fileicon_des">file icon</string>
 	<string name="str_file_save"> Ok </string>
 	<string name="str_file_cancel">Cancel</string>
+	<string name="str_setting_upgrade">Upgrade</string>
 	
 	<string name="str_month">Month</string>
 	<string name="str_year">Year</string>
@@ -349,6 +350,8 @@
 	
 	<string name="str_radioLocal">Local</string>
 	<string name="str_radioUsb">USB</string>
+	<string name="str_radioUsb1">USB1</string>
+	<string name="str_radioUsb2">USB2</string>
 	<string name="str_radioSdcard">SDCard</string>
 	
 	<string name="str_title_infodialog">Object Info</string>

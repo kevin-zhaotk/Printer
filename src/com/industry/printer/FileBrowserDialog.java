@@ -3,12 +3,14 @@ package com.industry.printer;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
@@ -16,6 +18,7 @@ import com.industry.printer.object.BinCreater;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +66,9 @@ public class FileBrowserDialog extends Dialog {
 	/**
 	 * mUsbStorage radio button of usb storage
 	 */
+	
 	public RadioButton mUsbStorage;
+	public RadioButton mUsbStorage2;
 	
 	/**
 	 * mSDCard radio button of SD-CARD storage
@@ -176,7 +181,7 @@ public class FileBrowserDialog extends Dialog {
 	        super.onCreate(savedInstanceState);
 	        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        this.setContentView(R.layout.file_browser_dialog);
-	        
+	        Debug.d(TAG, "===>onCreate");
 	        mSave = (Button) findViewById(R.id.dialog_save);
 	        mSave.setOnClickListener(new View.OnClickListener(){
 
@@ -245,9 +250,9 @@ public class FileBrowserDialog extends Dialog {
 	        	
 	        });
 	        
-	        
-	        mLocal = (RadioButton) findViewById(R.id.radio_local);
-	        mLocal.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	        ArrayList<String> paths = ConfigPath.getMountedUsb();
+	        mUsbStorage = (RadioButton) findViewById(R.id.radio_usb1);
+	        mUsbStorage.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -255,7 +260,7 @@ public class FileBrowserDialog extends Dialog {
 					Debug.d(TAG, "===>local path selected? "+isChecked);
 					if(isChecked==true)
 					{
-						mCurPath = Configs.LOCAL_ROOT_PATH;
+						mCurPath = Configs.USB_ROOT_PATH;
 						fileOpen(new File(mCurPath));
 					}
 					
@@ -263,8 +268,8 @@ public class FileBrowserDialog extends Dialog {
 			});
 	        
 	        
-	        mUsbStorage = (RadioButton) findViewById(R.id.radio_usb);
-	        mUsbStorage.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	        mUsbStorage2 = (RadioButton) findViewById(R.id.radio_usb2);
+	        mUsbStorage2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -272,68 +277,37 @@ public class FileBrowserDialog extends Dialog {
 					Debug.d(TAG, "===>usb path selected? "+isChecked);
 					if(isChecked==true)
 					{
-						mCurPath = Configs.USB_ROOT_PATH;
+						mCurPath = Configs.USB_ROOT_PATH2;
 						fileOpen(new File(mCurPath));
 					}
 				}
 			});
-	        /*  check whether USB storage inserted*/
-	        try{
-	        	File f = new File(Configs.USB_ROOT_PATH);
-	        	File tmp = File.createTempFile("testTlk", "", f);
-	        	if(tmp==null)
-	        	{
-	        		mUsbStorage.setEnabled(false);
-	        		mUsbStorage.setTextColor(Color.GRAY);
+	        for (String p : paths) {
+	        	if (p.contains(Configs.USB_ROOT_PATH)) {
+	        		mUsbStorage.setEnabled(true);
+	        		mUsbStorage.setTextColor(Color.BLACK);
+	        	} else if (p.contains(Configs.USB_ROOT_PATH2)) {
+	        		mUsbStorage2.setEnabled(true);
+	        		mUsbStorage2.setTextColor(Color.BLACK);
 	        	}
-	        	else{
-	        		tmp.delete();
-	        	}
-	        }catch(IOException e)
-	        {
-	        	mUsbStorage.setEnabled(false);
-	        	mUsbStorage.setTextColor(Color.GRAY);
-	        	Debug.d(TAG, "create file ["+Configs.USB_ROOT_PATH+"testTlk"+"] exception: "+e.getMessage());
 	        }
-	        
-	        
-	        mSDCard = (RadioButton) findViewById(R.id.radio_sdcard);
-	        mSDCard.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					// TODO Auto-generated method stub
-					Debug.d(TAG, "===>sdcard path selected? "+isChecked);
-					if(isChecked==true)
-					{
-						mCurPath = Configs.SDCARD_ROOT_PATH;
-						fileOpen(new File(mCurPath));
-					}
-				}
-			});
-	        /*  check whether SDCard storage inserted*/
-	        try{
-	        	File fl = new File(Configs.SDCARD_ROOT_PATH);
-	        	
-	        	//if(!fl.createNewFile())
-	        	File tmp = File.createTempFile("testTlk","",fl);
-	        	if(tmp == null )
-	        	{
-	        		Debug.d(TAG, "can not create file on SDCard");
-	        		mSDCard.setEnabled(false);
-	        		mSDCard.setTextColor(Color.GRAY);
-	        	}
-	        	else{
-	        		tmp.delete();
-	        	}
-	        }catch(IOException e)
-	        {
-	        	mSDCard.setEnabled(false);
-	        	mSDCard.setTextColor(Color.GRAY);
-	        	Debug.d(TAG, "create file ["+Configs.SDCARD_ROOT_PATH+"testTlk"+"] exception: "+e.getMessage());
-		    }
+	        Debug.d(TAG, "===>onCreate 1");
 	        fileOpen(new File(mCurPath));
-	        
+//	        mSDCard = (RadioButton) findViewById(R.id.radio_sdcard);
+//	        mSDCard.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//				
+//				@Override
+//				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//					// TODO Auto-generated method stub
+//					Debug.d(TAG, "===>sdcard path selected? "+isChecked);
+//					if(isChecked==true)
+//					{
+//						mCurPath = Configs.SDCARD_ROOT_PATH;
+//						fileOpen(new File(mCurPath));
+//					}
+//				}
+//			});
+//	        
 	 }
 	 
 	 /**

@@ -71,6 +71,14 @@
             android:textSize="@dimen/settingsBtnsize"
             />
         <Button 
+            android:id="@+id/btn_setting_upgrade"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="@string/str_setting_upgrade"
+            android:textSize="@dimen/settingsBtnsize"
+            />
+        <Button 
             android:id="@+id/btn_system_setting"
             android:layout_width="0dp"
             android:layout_height="80dp"

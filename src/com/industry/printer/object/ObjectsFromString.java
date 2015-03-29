@@ -33,6 +33,7 @@ public class ObjectsFromString {
 		if (str==null || str.isEmpty()) {
 			return objList;
 		}
+		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {
 			if (s.startsWith("'N")) { //计数器对象

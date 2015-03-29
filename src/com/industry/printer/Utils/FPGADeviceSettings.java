@@ -96,7 +96,7 @@ public class FPGADeviceSettings {
 		
 		FpgaGpioOperation.ioctl(fd, FpgaGpioOperation.FPGA_CMD_SETTING, FpgaGpioOperation.FPGA_STATE_SETTING);
 		
-		FpgaGpioOperation.write(fd, data, data.length);
+		FpgaGpioOperation.write(fd, data, data.length*2);
 		
 		FpgaGpioOperation.close(fd);
 	}

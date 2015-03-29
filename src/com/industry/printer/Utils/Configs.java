@@ -14,6 +14,12 @@ public class Configs {
 	public static int gFixedRows;
 	
 	public static int gParams;
+	
+	/**
+	 * PROC_MOUNT_FILE
+	 * proc/mounts sys file
+	 */
+	public static final String PROC_MOUNT_FILE = "/proc/mounts";
 	/**
 	 * USB_ROOT_PATH
 	 * 	usb mount root path on this platform
@@ -25,6 +31,12 @@ public class Configs {
 	 * 	the path local objects store at
 	 */
 	public static final String LOCAL_ROOT_PATH="/data/TLK";
+	
+	/**
+	 * LOCAL_ROOT_PATH
+	 * 	the path local objects store at
+	 */
+	public static final String USB_ROOT_PATH2="/mnt/usbhost1";
 	
 	/**
 	 * SDCARD_ROOT_PATH

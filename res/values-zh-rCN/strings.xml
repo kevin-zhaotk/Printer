@@ -312,6 +312,7 @@
 	<string name="str_fileicon_des">文件图标</string>
 	<string name="str_file_save"> 确认 </string>
 	<string name="str_file_cancel">取消</string>
+	<string name="str_setting_upgrade">升级</string>
 	
 	<string name="str_month">月</string>
 	<string name="str_year">年</string>

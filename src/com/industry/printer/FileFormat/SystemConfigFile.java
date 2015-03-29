@@ -12,12 +12,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.BreakIterator;
+import java.util.ArrayList;
 
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.text.StaticLayout;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SystemConfigFile{
 	private static final String TAG = SystemConfigFile.class.getSimpleName();
@@ -49,7 +52,14 @@ public class SystemConfigFile{
 	public static void parseSystemCofig() {
 		FileReader reader=null;
 		BufferedReader br = null;
-		File file = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_FILE);
+		ArrayList<String> paths = ConfigPath.getMountedUsb();
+		if (paths == null || paths.isEmpty()) {
+			return;
+		}
+		/*
+		 * use this first usb as default 
+		 */
+		File file = new File(paths.get(0)+Configs.SYSTEM_CONFIG_FILE);
 		if (!file.exists()) {
 			return ;
 		}
@@ -156,19 +166,29 @@ public class SystemConfigFile{
 	
 	
 	public static void saveConfig() {
-		File file = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_FILE);
-		Debug.d(TAG, "===>file:"+file.getAbsolutePath());
+		
+		ArrayList<String> paths = ConfigPath.getMountedUsb();
+		if (paths == null || paths.isEmpty()) {
+			Debug.d(TAG, "===>saveConfig error");
+			return ;
+		}
+		
+		/*
+		 * use the first usb as the default device
+		 */
+		String dev = paths.get(0);
+		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+		if (!dir.exists()) {
+			if(dir.mkdirs() == false)
+				return;
+		}
+		Debug.d(TAG, "===>dir:"+dir.getAbsolutePath());
 		try {
+			File file = new File(dev+Configs.SYSTEM_CONFIG_FILE);
 			if(!file.exists()) {
-//				File path = new File(Configs.getUsbPath()+Configs.SYSTEM_CONFIG_DIR);
-//				if (!path.exists()) {
-//					path.mkdir();
-//				}
-//				else {
-//					Debug.d(TAG, "===>system is exsit");
-//				}
 				file.createNewFile();
 			}
+			Debug.d(TAG, "===>file:"+file.getAbsolutePath());
 			FileWriter writer = new FileWriter(file);
 			writer.write(PH_SETTING_ENCODER+" "+mEncoder);
 			writer.append("\n");

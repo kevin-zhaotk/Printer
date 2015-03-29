@@ -187,6 +187,9 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		mBtnNew = (Button) findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		
+		mBtnOpen = (Button) findViewById(R.id.btn_open);
+		mBtnOpen.setOnClickListener(this);
+		
 		mBtnSaveas = (Button) findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
 		
@@ -239,58 +242,29 @@ public class EditTabActivity extends Activity implements OnClickListener {
 			switch (msg.what) {
 			
 			case REFRESH_OBJECT_CHANGED:	
-			
-				mNameAdapter.clear();
-				for(BaseObject o:mObjs)
-				{
-					if(o instanceof MessageObject)
-						mNameAdapter.add(o.getContent());
-					else if(o instanceof TextObject)
-						mNameAdapter.add(mContext.getString(R.string.object_text));
-					else if(o instanceof CounterObject)
-						mNameAdapter.add(mContext.getString(R.string.object_counter));
-					else if(o instanceof BarcodeObject)
-						mNameAdapter.add(mContext.getString(R.string.object_bar));
-					else if(o instanceof GraphicObject)
-						mNameAdapter.add(mContext.getString(R.string.object_pic));
-					else if(o instanceof JulianDayObject)
-						mNameAdapter.add(mContext.getString(R.string.object_julian));
-					else if(o instanceof RealtimeObject)
-						mNameAdapter.add(mContext.getString(R.string.object_realtime));
-					else if(o instanceof LineObject)
-						mNameAdapter.add(mContext.getString(R.string.object_line));
-					else if(o instanceof RectObject)
-						mNameAdapter.add(mContext.getString(R.string.object_rect));
-					else if(o instanceof EllipseObject)
-						mNameAdapter.add(mContext.getString(R.string.object_ellipse));
-					else if(o instanceof ShiftObject)
-						mNameAdapter.add(mContext.getString(R.string.object_shift));
-					else if(o instanceof RTSecondObject)
-						mNameAdapter.add(mContext.getString(R.string.object_second));
-					else
-						System.out.println("Unknown Object type");
+				String content = "";
+				for (BaseObject object : mObjs) {
+					if(object instanceof MessageObject)
+						continue;
+					content += object.getContent();
 				}
-				//mNameAdapter.notifyDataSetChanged();
-				//mObjList.setAdapter(mNameAdapter);
-				//mObjList.invalidate();
-				//selfInfoEnable(obj);
-				OnPropertyChanged(true);
+				mObjLine1.setText(content);
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
 				OnPropertyChanged(true);
 			case REFRESH_OBJECT_JUST:
-				mNameAdapter.notifyDataSetChanged();
+				//mNameAdapter.notifyDataSetChanged();
 				break;
 			default:
 				break;
 			}
 			
-			BaseObject obj = getCurObj();
-			//Debug.d(TAG, "=====obj:"+obj.mId);
-			if(obj != null) {
-				makeObjToCenter((int)obj.getX());
-			}
-			Debug.d(TAG, "=========");
+//			BaseObject obj = getCurObj();
+//			//Debug.d(TAG, "=====obj:"+obj.mId);
+//			if(obj != null) {
+//				makeObjToCenter((int)obj.getX());
+//			}
+//			Debug.d(TAG, "=========");
 		}
 	};
 	
@@ -636,26 +610,45 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
 		FileBrowserDialog dialog = null;
+		List<BaseObject> objs = null;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
 				break;
 			case R.id.btn_open:	//test fpga-gpio write
-				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
+				dialog = new FileBrowserDialog(this, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
+				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+					
+					@Override
+					public void onClick() {
+						mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN);
+					}
+				});
 				dialog.show();
-				mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN);
+				
 				break;
 			case R.id.btn_save:
-				List<BaseObject> objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
+				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
+				mObjs.clear();
 				mObjs.addAll(objs);
 				if (mObjName != null) {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
 					break;
 				}
 			case R.id.btn_saveas:
-				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
+				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
+				mObjs.clear();
+				mObjs.addAll(objs);
+				dialog = new FileBrowserDialog(this, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
+				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+					
+					@Override
+					public void onClick() {
+						mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+					}
+				});
 				dialog.show();
-				mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+				
 				break;
 			case R.id.btn_temp_4:
 				break;
