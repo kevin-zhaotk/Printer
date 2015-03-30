@@ -362,9 +362,11 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 						Debug.d(TAG, "open object file "+f);
 						mObjPath = new File(f).getParent();
 						//startPreview();
-						//prepareBackgroudBuffer(f);
-						parseTlk(f);
-						initBgBuffer();
+						//方案1：从bin文件生成buffer
+						prepareBackgroudBuffer(f);
+						//方案2：从tlk文件重新绘制图片，然后解析生成buffer
+						//parseTlk(f);
+						//initBgBuffer();
 					}
 					dismissProgressDialog();
 					break;
@@ -1039,7 +1041,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 			case R.id.btnFlush:
 				break;
 			case R.id.btnBinfile:
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, DotMatrixFont.USB_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
+				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, Configs.USB_ROOT_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override

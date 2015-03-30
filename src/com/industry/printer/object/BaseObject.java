@@ -90,7 +90,7 @@ public class BaseObject{
 		mFont = "Arial";
 		initPaint();
 		setSelected(true);		
-		setHeight(50);		
+		setHeight(Configs.gDots);		
 		setLineWidth(5);
 		setContent("text");
 		
@@ -129,7 +129,7 @@ public class BaseObject{
 		Bitmap bmp = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
-		mCan.drawText(mContent, 0, height-30, mPaint);
+		mCan.drawText(mContent, 0, height-15, mPaint);
 		//can.drawText("text", 0, 4, p);
 		//mCan.save();
 		return bmp;

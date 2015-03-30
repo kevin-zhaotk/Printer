@@ -1,7 +1,13 @@
 package com.industry.printer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -247,13 +253,14 @@ public static final String TAG="SettingsTabActivity";
 				startActivity(intent);
 				break;
 			case R.id.btn_setting_upgrade:
+				/*
 				ArrayList<String> paths = ConfigPath.getMountedUsb();
 				for (String str : paths) {
 					File file = new File(str+"/Printer.apk");
 					if (!file.exists()) {
 						continue;
 					}
-					String cmd = "busybox cp "+file.getAbsolutePath()+" /system/app/Printer.apk;reboot";
+					String cmd = "/sytem/bin/upgrade.sh";
 					Debug.d(TAG, "===>upgrade cmd:"+cmd);
 					try {
 						Process process = Runtime.getRuntime().exec(cmd);
@@ -273,7 +280,7 @@ public static final String TAG="SettingsTabActivity";
 						e.printStackTrace();
 					}
 					break;
-				}
+				}*/
 				break;
 			default :
 				Debug.d(TAG, "===>unknown view clicked");
