@@ -253,10 +253,18 @@ public static final String TAG="SettingsTabActivity";
 					if (!file.exists()) {
 						continue;
 					}
-					String cmd = "cp "+file.getAbsolutePath()+" /system/app/Printer.apk;reboot";
+					String cmd = "busybox cp "+file.getAbsolutePath()+" /system/app/Printer.apk;reboot";
 					Debug.d(TAG, "===>upgrade cmd:"+cmd);
 					try {
 						Process process = Runtime.getRuntime().exec(cmd);
+						InputStream errStream = process.getErrorStream();
+						BufferedReader reader = new BufferedReader(new InputStreamReader(errStream));
+						StringBuilder buf = new StringBuilder();
+						String line = null;
+						while ((line = reader.readLine()) != null) {
+							buf.append(line);
+						}
+						Debug.d(TAG, "===>result:"+buf);
 						Debug.d(TAG, "===>process:"+process.toString());
 						if (process.waitFor() != 0) {
 			                Debug.d(TAG,"===>exit value = " + process.exitValue());
