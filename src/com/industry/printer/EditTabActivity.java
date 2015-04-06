@@ -516,7 +516,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);

@@ -8,9 +8,11 @@ import android.os.Environment;
 import android.provider.ContactsContract.Directory;
 
 import com.industry.printer.R;
+import com.industry.printer.FileFormat.SystemConfigFile;
 
 public class Configs {
 	public static int gDots;
+	public static int gDotsTotal;
 	public static int gFixedRows;
 	
 	public static int gParams;
@@ -57,6 +59,7 @@ public class Configs {
 	public static void initConfigs(Context context)
 	{
 		gDots = context.getResources().getInteger(R.integer.dots_per_column);
+		gDotsTotal = context.getResources().getInteger(R.integer.dots_per_column_total);
 		gFixedRows = context.getResources().getInteger(R.integer.fixed_rows);
 		gParams = context.getResources().getInteger(R.integer.total_params);
 		
@@ -66,6 +69,9 @@ public class Configs {
 		{
 			dir.mkdir();
 		}
+		
+		/*从U盘中读取系统设置，解析*/
+		SystemConfigFile.parseSystemCofig();
 	}
 	
 	/**
@@ -89,4 +95,5 @@ public class Configs {
 	public static String getUsbPath() {
 		return USB_ROOT_PATH;
 	}
+	
 }

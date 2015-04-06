@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <integer name="dots_per_column">16</integer>
+    <integer name="dots_per_column_total">32</integer>
     <integer name="fixed_rows">64</integer>
     
     <integer name="total_params">24</integer>

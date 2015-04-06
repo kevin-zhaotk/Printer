@@ -107,15 +107,15 @@ public class BaseObject{
 	public void initPaint()
 	{
 		mPaint = new Paint();
-		mPaint.setTextSize(Configs.gFixedRows);
+		mPaint.setTextSize(Configs.gDots);
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
-		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
+		// Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
 		BinCreater.recyleBitmap(bmp);
-		return scaledBmp;
+		return bmp;
 	}
 	
 	protected Bitmap getBitmap(Context context)
@@ -129,7 +129,7 @@ public class BaseObject{
 		Bitmap bmp = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
-		mCan.drawText(mContent, 0, height-15, mPaint);
+		mCan.drawText(mContent, 0, height-5, mPaint);
 		//can.drawText("text", 0, 4, p);
 		//mCan.save();
 		return bmp;
@@ -295,7 +295,7 @@ public class BaseObject{
 		mContent = content;
 		mPaint.setTextSize(mHeight);
 		mWidth = mPaint.measureText(mContent);
-		mPaint.setTextSize(Configs.gFixedRows);
+		mPaint.setTextSize(Configs.gDots);
 		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);

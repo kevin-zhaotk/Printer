@@ -7,7 +7,7 @@ import java.util.Locale;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.FPGADeviceSettings;
+import com.industry.printer.hardware.FpgaGpioOperation;
 
 import com.android.internal.app.LocalePicker;
 
@@ -51,12 +51,12 @@ public class MainActivity extends TabActivity {
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		Context context = getApplicationContext();
+		/*初始化系统配置*/
 		Configs.initConfigs(context);
-		/*get write permission of ttyACM0*/
-		//System.setProperty("ctl.start", "mptty");
 		
-		SystemProperties.set("ctl.start","mptty");
-		//InputMethodService inputService =
+		/*get write permission of ttyACM0*/
+		//SystemProperties.set("ctl.start","mptty");
+
 		String pinyinId = "";
 		InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
 		List<InputMethodInfo> inputMethodInfos = inputManager.getInputMethodList();
@@ -112,11 +112,7 @@ public class MainActivity extends TabActivity {
 		Context mContext = this.getApplicationContext();
 		mContext.registerReceiver(mReceiver, filter);
 		
-		//
-		SystemConfigFile.parseSystemCofig();
-		
-		FPGADeviceSettings.updateSettings(this.getApplicationContext());
-		
+		FpgaGpioOperation.updateSettings(this.getApplicationContext());
 	}
 
 	@Override

@@ -27,7 +27,6 @@ import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.FPGADeviceSettings;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BarcodeObject;
@@ -349,7 +348,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 		}while(info[9]!=4);
 		
 	}
-	
+	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
 			switch(msg.what)
@@ -386,12 +385,13 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 					char[] data = new char[32];
 					for (char i = 0; i < 15; i++) {
 						data[2*i] = (char)(0x01<<i);
-						data[2*i+1] = 0xff;
+						data[2*i+1] = 0xffff;
 					}
 					data[30] = 0xff;
 					data[31] = 0xff;
+					
 					FpgaGpioOperation.writeData(data, data.length*2);
-					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
+					//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 			}
 		}
 	};
@@ -476,7 +476,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 			Debug.d(TAG, "--->initBgBuffer width: "+width);
 		}
 		Debug.d(TAG, "===>initBgBuffer  width="+width);
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gFixedRows, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
 		for(BaseObject o:mObjList)
@@ -1029,14 +1029,35 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 		mProgressShowing=false;
 	}
 	int mdata=0;
+	boolean mIsDemo=false;
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
+				if(mIsDemo)
+					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
+				else {
+					/**
+					 * 启动打印后要完成的几个工作：
+					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据
+					 * 2、调用ioctl启动内核线程，开始轮训FPGA状态
+					 */
+					DataTransferThread.launch();
+					FpgaGpioOperation.init();
+				}
 				break;
 			case R.id.StopPrint:
-				mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
+				if (mIsDemo) {
+					mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
+				} else {
+					/**
+					 * 停止打印后要完成的几个工作：
+					 * 1、调用ioctl停止内核线程，停止轮训FPGA状态
+					 * 2、停止DataTransfer线程
+					 */
+					FpgaGpioOperation.uninit();
+					DataTransferThread.finish();
+				}
 				break;
 			case R.id.btnFlush:
 				break;

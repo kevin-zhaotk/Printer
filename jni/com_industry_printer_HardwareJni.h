@@ -87,6 +87,15 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_ioctl
 
 /**
  * Class:     com_industry_printer_GPIO
+ * Method:    poll
+ * Signature: (IIJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_poll
+	(JNIEnv *env, jclass arg, jint fd);
+
+
+/**
+ * Class:     com_industry_printer_GPIO
  * Method:    close
  * Signature: (I)I
  */

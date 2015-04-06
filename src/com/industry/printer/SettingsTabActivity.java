@@ -17,7 +17,7 @@ import java.util.Locale;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.FPGADeviceSettings;
+import com.industry.printer.hardware.FpgaGpioOperation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -245,7 +245,7 @@ public static final String TAG="SettingsTabActivity";
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
 				SystemConfigFile.saveConfig();
-				FPGADeviceSettings.updateSettings(mContext);
+				FpgaGpioOperation.updateSettings(mContext);
 				break;
 			case R.id.btn_system_setting:	//进入系统设置
 				Intent intent = new Intent();
