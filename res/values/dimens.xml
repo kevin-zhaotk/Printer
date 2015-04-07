@@ -23,4 +23,5 @@
 <!-- 控制界面相关尺寸定义 -->
 	<dimen name="ctrlButtonHeight">80dp</dimen>
 	<dimen name="ctrlButtonsTextsize">30sp</dimen>
+	<dimen name="ctrlPreviewTextsize">60sp</dimen>
 </resources>

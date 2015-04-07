@@ -361,8 +361,12 @@
 	<string name="str_tlk_already_exist">The message you wanna save is already exist,please rename</string>
 	<string name="str_createfile_failure">New a message failure</string>
 	<string name="str_no_print_target">Please chose a Print target</string>
-	
-	
+
+<!-- 树莓派3 打印界面相关 -->	
+	<string name="str_msg_name">MSG:</string>
+	<string name="str_state_inklevel">INK:  100%</string>
+	<string name="str_state_battery">battery:  100%</string>
+	<string name="str_hint_preview">message preview</string>
 <!-- 树莓派3 设置界面相关 -->
 	
 	<string name="str_textview_param1">Encoder selection</string>

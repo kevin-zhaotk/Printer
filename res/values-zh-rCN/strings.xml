@@ -358,7 +358,11 @@
 	<string name="str_fileopt_del">删除</string>
 	<string name="str_fileopt_cancel">取消</string>
 	
-	
+<!-- 树莓派3 打印界面相关 -->	
+	<string name="str_msg_name">信息名称：</string>
+	<string name="str_state_inklevel">墨水量:  100%</string>
+	<string name="str_state_battery">电量:  100%</string>
+	<string name="str_hint_preview">信息预览</string>
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">光电选择</string>
 	<string name="str_textview_param2">触发模式选择</string>

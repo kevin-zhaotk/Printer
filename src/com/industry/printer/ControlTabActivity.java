@@ -269,10 +269,10 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 		mBtnview.setOnClickListener(this);
 		
 		//
-		mPrintState = (TextView) findViewById(R.id.tvprintState);
-		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
-		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
-		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
+//		mPrintState = (TextView) findViewById(R.id.tvprintState);
+//		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
+//		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
+//		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
 		
 	}
 	
@@ -375,7 +375,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 					break;
 				case MESSAGE_UPDATE_INKLEVEL:
 					//mPrintDialog.dismiss();
-					updateInkLevel(msg.getData().getByteArray("info"));
+					//updateInkLevel(msg.getData().getByteArray("info"));
 					break;
 				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
@@ -789,13 +789,13 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 				byte info[] = new byte[23];
 				UsbSerial.printStart(mSerialdev);
 				UsbSerial.getInfo(mSerialdev, info);
-				updateInkLevel(info);
+				//updateInkLevel(info);
 				UsbSerial.printStop(mSerialdev);
 			}
 		}
 		
 	}
-	
+	/*
 	private void updateInkLevel(byte info[])
 	{
 		if(info == null || info.length<13)
@@ -823,7 +823,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 			mPrintState.setText(getResources().getString(R.string.strPrinting));
 		}
 	}
-	
+	*/
 	/*
 	 * printing Thread
 	 * 1) send print command(0001)

@@ -137,9 +137,9 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	 * object edit lines for smfy-super3
 	 **********************/
 	public EditText mObjLine1;
-	public EditText mObjLine2;
-	public EditText mObjLine3;
-	public EditText mObjLine4;
+	// public EditText mObjLine2;
+	// public EditText mObjLine3;
+	// public EditText mObjLine4;
 	
 	public static Vector<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
@@ -201,9 +201,6 @@ public class EditTabActivity extends Activity implements OnClickListener {
 		
 		
 		mObjLine1 = (EditText) findViewById(R.id.edit_line1);
-		mObjLine2 = (EditText) findViewById(R.id.edit_line2);
-		mObjLine3 = (EditText) findViewById(R.id.edit_line3);
-		mObjLine4 = (EditText) findViewById(R.id.edit_line4);
 	}
 	
 	
