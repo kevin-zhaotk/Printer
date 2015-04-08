@@ -34,6 +34,7 @@ import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
@@ -53,8 +54,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
@@ -77,7 +80,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class EditTabActivity extends Activity implements OnClickListener {
+public class EditTabActivity extends Fragment implements OnClickListener {
 	public static final String TAG="EditTabActivity";
 	
 	public Context mContext;
@@ -148,14 +151,25 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.edit_frame);
-		this.setVisible(false);
-		mContext = this.getApplicationContext();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.edit_frame, container, false);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		
+		super.onActivityCreated(savedInstanceState);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//setContentView(R.layout.edit_frame);
+		//this.setVisible(false);
+		mContext = getActivity().getApplicationContext();
 		
 		mObjs = new Vector<BaseObject>();
 		mObjs.add(new MessageObject(mContext, 0));
-		mHScroll = (HorizontalScrollView) findViewById(R.id.scrollView1);
+		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		
 
 //		mObjList = (Spinner) findViewById(R.id.object_list);
@@ -184,36 +198,36 @@ public class EditTabActivity extends Activity implements OnClickListener {
 //			
 //		});
 		
-		mBtnNew = (Button) findViewById(R.id.btn_new);
+		mBtnNew = (Button) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		
-		mBtnOpen = (Button) findViewById(R.id.btn_open);
+		mBtnOpen = (Button) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
 		
-		mBtnSaveas = (Button) findViewById(R.id.btn_saveas);
+		mBtnSaveas = (Button) getView().findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
 		
-		mBtnSave = (Button) findViewById(R.id.btn_save);
+		mBtnSave = (Button) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
 		
-		mTest = (Button) findViewById(R.id.btn_temp_4);
+		mTest = (Button) getView().findViewById(R.id.btn_temp_4);
 		mTest.setOnClickListener(this);
 		
 		
-		mObjLine1 = (EditText) findViewById(R.id.edit_line1);
+		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 	}
 	
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		Debug.d(TAG, "event:"+event.toString());
-		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
-		Debug.d(TAG, "ime is active? "+manager.isActive());
-		manager.hideSoftInputFromWindow(EditTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-		return true;
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event)
+//	{
+//		Debug.d(TAG, "event:"+event.toString());
+//		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+//		Debug.d(TAG, "ime is active? "+manager.isActive());
+//		manager.hideSoftInputFromWindow(EditTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+////			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+//		return true;
+//	}
 	
 	/**
 	 * REFRESH_OBJECT_CHANGED
@@ -561,7 +575,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mProgressDialog = ProgressDialog.show(EditTabActivity.this, "", getResources().getString(R.string.strSaving), true,false);
+		mProgressDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strSaving), true,false);
 		mProgressShowing = true;
 		
 		mProgressThread = new Thread(){
@@ -613,7 +627,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
 				break;
 			case R.id.btn_open:	//test fpga-gpio write
-				dialog = new FileBrowserDialog(this, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
+				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override
@@ -636,7 +650,7 @@ public class EditTabActivity extends Activity implements OnClickListener {
 				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
 				mObjs.clear();
 				mObjs.addAll(objs);
-				dialog = new FileBrowserDialog(this, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
+				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override

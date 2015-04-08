@@ -22,6 +22,7 @@ import com.industry.printer.hardware.FpgaGpioOperation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -43,8 +44,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
@@ -54,7 +57,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class SettingsTabActivity extends Activity implements OnClickListener {
+public class SettingsTabActivity extends Fragment implements OnClickListener {
 public static final String TAG="SettingsTabActivity";
 	
 	SharedPreferences mPreference=null;
@@ -120,12 +123,20 @@ public static final String TAG="SettingsTabActivity";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setLocale();
+	}
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.setting_layout, container, false);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		
+		super.onActivityCreated(savedInstanceState);
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//this.addPreferencesFromResource(R.xml.settings_layout);
-		mContext = getApplicationContext();
+		mContext = getActivity().getApplicationContext();
 		
-		setContentView(R.layout.setting_layout);
 		
 //		mTime = (TextView) findViewById(R.id.tv_systemTime);
 //		mTimeRefreshHandler.sendEmptyMessageDelayed(0, 2000);
@@ -134,7 +145,7 @@ public static final String TAG="SettingsTabActivity";
 		InputStream version=null;
 		byte[] buffer=null;
 		try{
-			version = getAssets().open("Version");
+			version = mContext.getAssets().open("Version");
 			buffer =new byte[version.available()];
 			version.read(buffer);
 			version.close();
@@ -166,16 +177,16 @@ public static final String TAG="SettingsTabActivity";
         mHorires.setSummary(mHorires.getEntry());
         mVertres.setSummary(mVertres.getEntry());
         */
-		mSave = (Button) findViewById(R.id.btn_setting_ok);
+		mSave = (Button) getView().findViewById(R.id.btn_setting_ok);
 		mSave.setOnClickListener(this);
 		
-		mUpgrade = (Button) findViewById(R.id.btn_setting_upgrade);
+		mUpgrade = (Button) getView().findViewById(R.id.btn_setting_upgrade);
 		mUpgrade.setOnClickListener(this);
 		
-		mSettings = (Button) findViewById(R.id.btn_system_setting);
+		mSettings = (Button) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		
-		mPHSettings = new PHSettingFragment(this);
+		mPHSettings = new PHSettingFragment(mContext);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
 		transaction.commit();
@@ -183,30 +194,30 @@ public static final String TAG="SettingsTabActivity";
 		
 	}
 	
-	@Override
-	public boolean  onKeyDown(int keyCode, KeyEvent event)  
-	{
-		Debug.d(TAG, "keycode="+keyCode);
-		
-		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
-		{
-			Debug.d(TAG, "back key pressed, ignore it");
-			return true;	
-		}
-		return false;
-	}
-	
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		Debug.d(TAG, "event:"+event.toString());
-		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
-		Debug.d(TAG, "ime is active? "+manager.isActive());
-		manager.hideSoftInputFromWindow(SettingsTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-		return true;
-	}
+//	@Override
+//	public boolean  onKeyDown(int keyCode, KeyEvent event)  
+//	{
+//		Debug.d(TAG, "keycode="+keyCode);
+//		
+//		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+//		{
+//			Debug.d(TAG, "back key pressed, ignore it");
+//			return true;	
+//		}
+//		return false;
+//	}
+//	
+//
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event)
+//	{
+//		Debug.d(TAG, "event:"+event.toString());
+//		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
+//		Debug.d(TAG, "ime is active? "+manager.isActive());
+//		manager.hideSoftInputFromWindow(SettingsTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+////			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+//		return true;
+//	}
 	
 	public void setLocale()
 	{
