@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.Inflater;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -51,6 +52,7 @@ import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -72,8 +74,10 @@ import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
@@ -87,7 +91,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Activity implements OnClickListener {
+public class ControlTabActivity extends Fragment implements OnClickListener {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -227,28 +231,36 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.control_frame);
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		return inflater.inflate(R.layout.control_frame, container, false);
+	}
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {	
+		super.onActivityCreated(savedInstanceState);
 		mIndex=0;
 		isPrinting = false;
 		mTlkList = new Vector<Vector<TlkObject>>();
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
 		mObjList = new Vector<BaseObject>();
-		mContext = this.getApplicationContext();
+		mContext = this.getActivity().getApplicationContext();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
 		filter.addAction(ACTION_BOOT_COMPLETE);
 		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
-		registerReceiver(mReceiver, filter);
+		mContext.registerReceiver(mReceiver, filter);
 		
 				
-		mPreview = (PreviewScrollView ) findViewById(R.id.sv_preview);
+		mPreview = (PreviewScrollView ) getView().findViewById(R.id.sv_preview);
 		
-		mBtnStart = (Button) findViewById(R.id.StartPrint);
+		mBtnStart = (Button) getView().findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(this);
 		
-		mBtnStop = (Button) findViewById(R.id.StopPrint);
+		mBtnStop = (Button) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
 		
 		/*
@@ -256,16 +268,16 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 		 *this command unsupported now 
 		 */
 		
-		mBtnClean = (Button) findViewById(R.id.btnFlush);
+		mBtnClean = (Button) getView().findViewById(R.id.btnFlush);
 		mBtnClean.setOnClickListener(this);
 		
 				
-		mBtnOpenfile = (Button) findViewById(R.id.btnBinfile);
+		mBtnOpenfile = (Button) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
 		
 		
 		
-		mBtnview = (Button)findViewById(R.id.btn_preview);
+		mBtnview = (Button) getView().findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(this);
 		
 		//
@@ -277,35 +289,35 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 	}
 	
 	@Override
-	protected void onDestroy()
+	public void onDestroy()
 	{
 		super.onDestroy();
 		//UsbSerial.close(mFd);
 	}
 	
-	@Override
-	public boolean  onKeyDown(int keyCode, KeyEvent event)  
-	{
-		Debug.d(TAG, "keycode="+keyCode);
-		
-		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
-		{
-			Debug.d(TAG, "back key pressed, ignore it");
-			return true;	
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
-		Debug.d(TAG, "event:"+event.toString());
-		InputMethodManager manager = (InputMethodManager)getSystemService(Service.INPUT_METHOD_SERVICE);
-		Debug.d(TAG, "ime is active? "+manager.isActive());
-		manager.hideSoftInputFromWindow(ControlTabActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-		return true;
-	}
+//	@Override
+//	public boolean  onKeyDown(int keyCode, KeyEvent event)  
+//	{
+//		Debug.d(TAG, "keycode="+keyCode);
+//		
+//		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
+//		{
+//			Debug.d(TAG, "back key pressed, ignore it");
+//			return true;	
+//		}
+//		return false;
+//	}
+//	
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event)
+//	{
+//		Debug.d(TAG, "event:"+event.toString());
+//		InputMethodManager manager = (InputMethodManager) mContext.getSystemService(Service.INPUT_METHOD_SERVICE);
+//		Debug.d(TAG, "ime is active? "+manager.isActive());
+//		manager.hideSoftInputFromWindow(mContext.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+////			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+//		return true;
+//	}
 	/**
 	 * print
 	 * ��ӡ�ӿڣ��·���ӡ���ݣ�����ʱ��ѯ��ӡ״̬���Զ�����īˮֵ����ӡ���سɹ������Thread
@@ -1002,7 +1014,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mLoadingDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strLoading), true,false);
+		mLoadingDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strLoading), true,false);
 		mProgressShowing = true;
 		mProgressThread = new Thread(){
 			
@@ -1062,7 +1074,7 @@ public class ControlTabActivity extends Activity implements OnClickListener {
 			case R.id.btnFlush:
 				break;
 			case R.id.btnBinfile:
-				FileBrowserDialog dialog = new FileBrowserDialog(ControlTabActivity.this, Configs.USB_ROOT_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
+				FileBrowserDialog dialog = new FileBrowserDialog(mContext, Configs.USB_ROOT_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
 
 					@Override
