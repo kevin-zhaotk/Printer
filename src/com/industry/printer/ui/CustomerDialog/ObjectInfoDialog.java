@@ -1,8 +1,13 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
 
 import java.util.zip.Inflater;
 
 import com.google.zxing.BarcodeFormat;
+import com.industry.printer.R;
+import com.industry.printer.R.array;
+import com.industry.printer.R.id;
+import com.industry.printer.R.layout;
+import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;

@@ -1,4 +1,7 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
+
+import com.industry.printer.R;
+import com.industry.printer.R.layout;
 
 import android.app.Dialog;
 import android.content.Context;

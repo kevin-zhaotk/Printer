@@ -19,13 +19,13 @@ import java.util.zip.Inflater;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import com.industry.printer.FileBrowserDialog.OnPositiveListener;
 import com.industry.printer.FileFormat.CsvReader;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
-import com.industry.printer.FileFormat.Tlk_Parser;
+import com.industry.printer.FileFormat.TlkFileParser;
 import com.industry.printer.Usb.CRC16;
 import com.industry.printer.Usb.UsbConnector;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -35,7 +35,7 @@ import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
-import com.industry.printer.object.Fileparser;
+import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
@@ -50,8 +50,13 @@ import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
+import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -84,6 +89,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -119,6 +125,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public Button	mBtnTlkfile;
 	public Button	mBtnOpenfile;
 	public TextView mMsgFile;
+	public EditText mMsgPreview;
 	public Button 	mBtnview;
 	public Button	mForward;
 	public Button 	mBackward;
@@ -246,7 +253,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mTlkList = new Vector<Vector<TlkObject>>();
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
 		mObjList = new Vector<BaseObject>();
-		mContext = this.getActivity().getApplicationContext();
+		mContext = this.getActivity();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
@@ -280,6 +287,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mBtnview = (Button) getView().findViewById(R.id.btn_preview);
 		mBtnview.setOnClickListener(this);
 		
+		mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
 //		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
@@ -367,18 +375,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
-					String f = FileBrowserDialog.file();
-					if(f !=null && !new File(f).isDirectory())
-					{
-						Debug.d(TAG, "open object file "+f);
-						mObjPath = new File(f).getParent();
-						//startPreview();
-						//方案1：从bin文件生成buffer
-						prepareBackgroudBuffer(f);
-						//方案2：从tlk文件重新绘制图片，然后解析生成buffer
-						//parseTlk(f);
-						//initBgBuffer();
-					}
+					String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
+					//startPreview();
+					//方案1：从bin文件生成buffer
+					prepareBackgroudBuffer(f);
+					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
+					//parseTlk(f);
+					//initBgBuffer();
+					TLKFileParser parser = new TLKFileParser(f);
+					String preview = parser.getContentAbatract();
+					mMsgPreview.setText(preview);
 					dismissProgressDialog();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
@@ -394,15 +400,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					break;
 				case MESSAGE_PAOMADENG_TEST:
 					
-					char[] data = new char[32];
-					for (char i = 0; i < 15; i++) {
-						data[2*i] = (char)(0x01<<i);
-						data[2*i+1] = 0xffff;
-					}
-					data[30] = 0xff;
-					data[31] = 0xff;
-					
+//					char[] data = new char[32];
+//					for (char i = 0; i < 15; i++) {
+//						data[2*i] = (char)(0x01<<i);
+//						data[2*i+1] = 0xffff;
+//					}
+//					data[30] = 0xff;
+//					data[31] = 0xff;
+					char[] data = new char[2];
+					if (testdata < 0 || testdata > 15)
+						testdata = 0;
+					data[0] = (char) (0x0001 << testdata);
+					data[1] = (char) (0x0001 << testdata);
 					FpgaGpioOperation.writeData(data, data.length*2);
+					testdata++;
 					//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 			}
 		}
@@ -466,7 +477,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			path = new File(f).getParent();
 		else
 			path = f;
-		Fileparser.parse(mContext, f, mObjList);
+		TLKFileParser.parse(mContext, f, mObjList);
 	}
 	
 	
@@ -638,7 +649,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			path = new File(f).getParent();
 		else
 			path = f;
-		Fileparser.parse(mContext, f, mObjList);
+		TLKFileParser.parse(mContext, f, mObjList);
 		try{
 			mBg = new BinInfo();
 			mBg.getBgBuffer(path+"/1.bin");
@@ -1041,7 +1052,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mProgressShowing=false;
 	}
 	int mdata=0;
-	boolean mIsDemo=false;
+	boolean mIsDemo=true;
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -1074,27 +1085,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			case R.id.btnFlush:
 				break;
 			case R.id.btnBinfile:
-				FileBrowserDialog dialog = new FileBrowserDialog(mContext, Configs.USB_ROOT_PATH,".tlk", FileBrowserDialog.FLAG_OPEN_FILE);
-				dialog.setOnPositiveClickedListener(new OnPositiveListener(){
-
+				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext);
+				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+					
 					@Override
 					public void onClick() {
-						// TODO Auto-generated method stub
-						String f = FileBrowserDialog.file();
-						Debug.d(TAG, "-------f="+f);
-						if(f==null || !f.toLowerCase().endsWith(".tlk"))
-						{
-							Toast.makeText(mContext, "please select a csv file", Toast.LENGTH_LONG).show();
-							return;
-						}
-						// TODO show bin
 						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
-						
 					}
-					
 				});
 				dialog.show();
-
 				break;
 			case R.id.btn_preview:
 				break;

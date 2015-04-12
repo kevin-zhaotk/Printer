@@ -1,8 +1,10 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
 
 
 import java.util.Calendar;
 
+import com.industry.printer.R;
+import com.industry.printer.R.id;
 import com.industry.printer.Utils.Debug;
 
 import android.app.Dialog;

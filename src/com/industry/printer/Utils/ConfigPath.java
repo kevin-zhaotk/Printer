@@ -44,4 +44,41 @@ public class ConfigPath {
 		}
 		return mPaths;
 	}
+	
+	/**
+	 * 在插入的USB设备上创建系统所需的目录
+	 * 根目录： system
+	 */
+	public static ArrayList<String> makeSysDirsIfNeed() {
+		ArrayList<String> paths = getMountedUsb();
+		for (String path : paths) {
+			File rootDir = new File(path+Configs.SYSTEM_CONFIG_DIR);
+			if (rootDir.exists() && rootDir.isDirectory()) {
+				File tlkDir = new File(path+Configs.TLK_FILE_SUB_PATH);
+				if (tlkDir.exists() && tlkDir.isDirectory()) {
+					
+				} else {
+					tlkDir.mkdirs();
+				}
+			} else {
+				File tlkDir = new File(path+Configs.TLK_FILE_SUB_PATH);
+				tlkDir.mkdirs();
+			}
+		}
+		return paths;
+	}
+	
+	/**
+	 * 获取当前TLK文件目录
+	 * 如果有多个u盘挂载，则只使用第一个u盘
+	 */
+	
+	public static String getTlkPath() {
+		
+		ArrayList<String> paths = makeSysDirsIfNeed();
+		if (paths == null || paths.size() <= 0) {
+			return null;
+		}
+		return paths.get(0)+Configs.TLK_FILE_SUB_PATH;
+	}
 }

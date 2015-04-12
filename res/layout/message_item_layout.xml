@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/style_filelist"
+    android:descendantFocusability= "blocksDescendants"
+    >
+    <TextView 
+        android:id="@+id/tv_message_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="@color/black"
+		android:textSize="40sp"
+        />
+    <TextView
+        android:id="@+id/tv_message_abstract"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_message_title"
+        android:singleLine="true"
+        android:textSize="30sp"
+        android:textColor="@color/message_abstract_color"
+        />
+</RelativeLayout>    

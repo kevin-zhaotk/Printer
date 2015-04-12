@@ -3,18 +3,32 @@ package com.industry.printer.object;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.Buffer;
 import java.util.Vector;
 
 import com.industry.printer.EditTabActivity;
+import com.industry.printer.Utils.ConfigPath;
+import com.industry.printer.Utils.Configs;
 
 import android.content.Context;
 import android.util.Log;
 
-public class Fileparser {
+public class TLKFileParser {
 	public static final String TAG="Fileparser";
 	public static Context mContext;
+	
+	public String mPath;
+	
+	public TLKFileParser(String file) {
+		setTlk(file);
+	}
+	
+	
 	public static void parse(Context context, String name, Vector<BaseObject> objlist)
 	{
 		int i;
@@ -40,6 +54,9 @@ public class Fileparser {
                  while (( line = buffreader.readLine()) != null) {
                      Log.d(TAG, "line="+line);
                      pObj = parseLine(line);
+                     if (pObj == null) {
+                    	 continue;
+                     }
                      objlist.add(pObj);
                      if(pObj instanceof RealtimeObject)
                      {
@@ -135,11 +152,11 @@ public class Fileparser {
 		}
 		else if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
 		{
-			obj = new MessageObject(mContext, 0);
-			obj.setSelected(true);
-			obj.setContent(attr[21]);
-			Log.d(TAG, "Message object");
-			Log.d(TAG, "Message name="+obj.getContent());
+//			obj = new MessageObject(mContext, 0);
+//			obj.setSelected(true);
+//			obj.setContent(attr[21]);
+//			Log.d(TAG, "Message object");
+//			Log.d(TAG, "Message name="+obj.getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))			//rect
 		{
@@ -192,13 +209,64 @@ public class Fileparser {
 			obj.setHeight(Integer.parseInt(attr[5])-Integer.parseInt(attr[3]));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 		}
-		Log.d(TAG, "index = "+obj.getIndex());
-		Log.d(TAG, "x = "+obj.getX());
-		Log.d(TAG, "y = "+obj.getY());
-		Log.d(TAG, "x end = "+obj.getXEnd());
-		Log.d(TAG, "y end = "+obj.getYEnd());
-		Log.d(TAG, "dragable = "+obj.getDragable());
-		Log.d(TAG, "*************************");
+//		Log.d(TAG, "index = "+obj.getIndex());
+//		Log.d(TAG, "x = "+obj.getX());
+//		Log.d(TAG, "y = "+obj.getY());
+//		Log.d(TAG, "x end = "+obj.getXEnd());
+//		Log.d(TAG, "y end = "+obj.getYEnd());
+//		Log.d(TAG, "dragable = "+obj.getDragable());
+//		Log.d(TAG, "*************************");
 		return obj;
+	}
+	
+	
+
+	/**
+	 * 设置需要解析的tlk文件名，可以是绝对路径或相对路径
+	 */
+	public void setTlk(String file) {
+		if (file == null || file.isEmpty())
+			return;
+		if (file.startsWith(Configs.USB_ROOT_PATH) || file.startsWith(Configs.USB_ROOT_PATH2)) {
+			mPath = file;
+		} else {
+			mPath = ConfigPath.getTlkPath() + file;
+		}
+	}
+	/**
+	 * 获取打印对象的内容缩略信息
+	 * 暂时只支持文本对象，后续会添加对变量的支持
+	 */
+	public String getContentAbatract() {
+		String content = null;
+		BaseObject pObj;
+		if (mPath == null || mPath.isEmpty()) {
+			return null;
+		}
+		
+		File file = new File(mPath+"/1.TLK");
+		InputStream instream;
+		try {
+			instream = new FileInputStream(file);
+			if(instream != null)
+			 {
+				InputStreamReader inputreader = new InputStreamReader(instream,"gb2312");
+	            BufferedReader buffreader = new BufferedReader(inputreader);
+	            String line;
+	            while ( (line = buffreader.readLine()) != null) {
+	            	pObj = parseLine(line);
+	            	if (pObj instanceof TextObject) {
+	            		content += pObj.getContent();
+	            	}
+	            }
+			 }
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		return content;
 	}
 }

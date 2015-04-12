@@ -1,4 +1,4 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -9,11 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.industry.printer.R;
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
+import com.industry.printer.R.drawable;
+import com.industry.printer.R.id;
+import com.industry.printer.R.layout;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
+import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -38,7 +43,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FileBrowserDialog extends Dialog {
+public class FileBrowserDialog extends CustomerDialogBase {
 	public static final String TAG="FileBrowserDialog";
 	
 	/**
@@ -111,19 +116,6 @@ public class FileBrowserDialog extends Dialog {
 	 * 
 	 */
 	public int mFlag;
-	/**
-	 * pListener - the positive button listener
-	 * 		you must set this listener for later doing
-	 * @see setOnPositiveClickedListener
-	 */
-	OnPositiveListener pListener;
-
-	/**
-	 * nListener - the nagitive button listener
-	 * 		you must set this listener for later doing
-	 * @see setOnNagitiveClickedListener
-	 */
-	OnNagitiveListener nListener;
 	
 	/**
 	 * FileBrowserDialog - construct function
@@ -385,37 +377,4 @@ public class FileBrowserDialog extends Dialog {
 		 return objDir;
 	 }
 	 
-	 /**
-	  * setOnPositiveClickedListener - set the positive button listener for further deal with
-	  * @param listener the listener callback
-	  * @see OnPositiveListener
-	  */
-	 public void setOnPositiveClickedListener(OnPositiveListener listener)
-	 {
-		 pListener = listener;
-	 }
-	 
-	 /**
-	  * setOnNagitiveClickedListener - set the Nagitive button listener for further deal with
-	  * @param listener  the listener callback
-	  * @see OnNagitiveListener
-	  */
-	 public void setOnNagitiveClickedListener(OnNagitiveListener listener)
-	 {
-		 nListener = listener;
-	 }
-	 
-	 /**
-	  *Interface definition when positive button clicked 
-	  **/
-	 public interface OnPositiveListener{
-		 void onClick();
-	 }
-
-	 /**
-	  *Interface definition when nagitive button clicked 
-	  **/
-	 public interface OnNagitiveListener{
-		 void onClick();
-	 }
 }

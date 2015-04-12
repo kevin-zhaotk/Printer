@@ -1,8 +1,10 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerAdapter;
 
 import java.util.List;
 import java.util.Map;
 
+import com.industry.printer.R;
+import com.industry.printer.R.id;
 import com.industry.printer.Utils.Debug;
 
 

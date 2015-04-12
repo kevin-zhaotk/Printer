@@ -114,7 +114,7 @@ public class BaseObject{
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
 		// Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
-		BinCreater.recyleBitmap(bmp);
+		
 		return bmp;
 	}
 	

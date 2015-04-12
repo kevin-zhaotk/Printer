@@ -28,11 +28,11 @@ public class ObjectsFromString {
 	public static final String SPLITOR = ";";
 	
 	public static List<BaseObject> makeObjs(Context context, String str) {
-		List<BaseObject> objList=new ArrayList<BaseObject>();
 		
 		if (str==null || str.isEmpty()) {
-			return objList;
+			return null;
 		}
+		List<BaseObject> objList=new ArrayList<BaseObject>();
 		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {

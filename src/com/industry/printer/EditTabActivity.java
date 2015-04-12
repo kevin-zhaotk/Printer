@@ -10,8 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
-import com.industry.printer.FileBrowserDialog.OnPositiveListener;
-import com.industry.printer.ObjectInfoDialog.OnPositiveBtnListener;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -21,7 +20,7 @@ import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
-import com.industry.printer.object.Fileparser;
+import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LineObject;
@@ -32,6 +31,12 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -165,7 +170,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setContentView(R.layout.edit_frame);
 		//this.setVisible(false);
-		mContext = getActivity().getApplicationContext();
+		mContext = getActivity();
 		
 		mObjs = new Vector<BaseObject>();
 		mObjs.add(new MessageObject(mContext, 0));
@@ -215,6 +220,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		
 		
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
+		mObjLine1.setText("");
 	}
 	
 	
@@ -446,32 +452,33 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
+        			mObjLine1.setText("");
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
-            		Debug.d(TAG, "open file="+FileBrowserDialog.file());
-            		String tlkfile=FileBrowserDialog.file();
-            		File tlk=new File(tlkfile);
-            		mObjName = tlk.getParent();
-            		if(tlkfile != null && tlk.isFile())
+            		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
+            		//String tlkfile=MessageBrowserDialog.getSelected();
+            		mObjName = MessageBrowserDialog.getSelected();
+            		File tlk=new File(ConfigPath.getTlkPath()+"/" + mObjName +"/1.TLK");
+            		if(tlk.isFile() && tlk.exists())
             		{
-	    				Fileparser.parse(mContext, tlkfile, mObjs);
+	    				TLKFileParser.parse(mContext, tlk.getAbsolutePath(), mObjs);
 	    				clearCurObj();
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
             		break;
             		
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
-            		Debug.d(TAG, "save as file="+FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName());
-            		mObjName = FileBrowserDialog.file()+"/"+FileBrowserDialog.getObjName();
+            		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());
+            		mObjName = MessageSaveDialog.getTitle();
             		createfile=true;
             		
             	case HANDLER_MESSAGE_SAVE:    //save
             		progressDialog();
             		if(mObjName != null)
             		{
-            			saveObjFile(mObjName, createfile);
+            			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
             		}
-            		drawAllBmp(mObjName);
+            		drawAllBmp(ConfigPath.getTlkPath()+"/"+mObjName);
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
             		break;
@@ -620,14 +627,15 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
-		FileBrowserDialog dialog = null;
+		CustomerDialogBase dialog;
 		List<BaseObject> objs = null;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
 				break;
 			case R.id.btn_open:	//test fpga-gpio write
-				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_OPEN_FILE);
+				
+				dialog = new MessageBrowserDialog(mContext);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override
@@ -641,6 +649,10 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			case R.id.btn_save:
 				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
 				mObjs.clear();
+				if(objs == null) {
+					Toast.makeText(mContext, R.string.str_notice_no_objects, Toast.LENGTH_LONG);
+					break ;
+				}
 				mObjs.addAll(objs);
 				if (mObjName != null) {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
@@ -650,7 +662,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
 				mObjs.clear();
 				mObjs.addAll(objs);
-				dialog = new FileBrowserDialog(mContext, Configs.getUsbPath(), FileBrowserDialog.FLAG_SAVE_FILE);
+				dialog = new MessageSaveDialog(mContext);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override

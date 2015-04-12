@@ -399,6 +399,9 @@
 	<string name="str_edit_line2">2nd Line:</string>
 	<string name="str_edit_line3">3rd Line:</string>
 	<string name="str_edit_line4">4th Line:</string>
+	
+	<string name="str_notice_save">please input message name:</string>
+	<string name="str_notice_no_objects">No Object for save!</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

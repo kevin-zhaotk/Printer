@@ -1,8 +1,12 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
 
 import java.util.Map;
 import java.util.Vector;
 
+import com.industry.printer.PreviewScrollView;
+import com.industry.printer.R;
+import com.industry.printer.R.id;
+import com.industry.printer.R.layout;
 import com.industry.printer.object.TlkObject;
 
 import android.app.Dialog;

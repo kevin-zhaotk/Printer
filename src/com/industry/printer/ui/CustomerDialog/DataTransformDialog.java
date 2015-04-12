@@ -1,4 +1,4 @@
-package com.industry.printer;
+package com.industry.printer.ui.CustomerDialog;
 
 
 import java.io.File;
@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.industry.printer.R;
+import com.industry.printer.R.drawable;
+import com.industry.printer.R.id;
+import com.industry.printer.R.layout;
 import com.industry.printer.Utils.Debug;
 
 import android.app.Dialog;

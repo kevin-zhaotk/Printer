@@ -10,13 +10,18 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 
+import android.graphics.Bitmap.Config;
+
+import com.industry.printer.Utils.ConfigPath;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.TlkObject;
 
-public class Tlk_Parser {
+public class TlkFileParser {
 
 	public static final String TAG="Tlk_Parser";
 	public static int mColumns=0;
+	
 	public static boolean parse(String f, Vector<TlkObject> list)
 	{
 		try {
@@ -67,4 +72,5 @@ public class Tlk_Parser {
 	{
 		
 	}
+	
 }

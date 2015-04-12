@@ -109,6 +109,7 @@
         android:layout_below="@id/ctrl_msgname"
         android:orientation="vertical">
         <EditText
+            android:id="@+id/message_preview"
             android:layout_width="fill_parent"
             android:layout_height="116dp"
             android:textSize="@dimen/ctrlPreviewTextsize"
