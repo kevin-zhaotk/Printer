@@ -8,6 +8,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 
 import com.android.internal.app.LocalePicker;
@@ -49,10 +50,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	public RadioButton	mRadioCtl;
 	public RadioButton	mRadioSet;
 	public RadioButton	mRadioEdit;
+	public TextView		mExtStatus;
 	
 	public ControlTabActivity 	mControlTab;
 	public EditTabActivity		mEditTab;
 	public SettingsTabActivity	mSettingsTab;
+	
+	public ExtendMessageTitleFragment mCtrlTitle;
+	public ExtendMessageTitleFragment mEditTitle;
+	public ExtendMessageTitleFragment mSettingTitle;
+	
 	
 	static {
 		System.loadLibrary("Hardware_jni");
@@ -93,6 +100,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	    mRadioSet = (RadioButton) findViewById(R.id.btn_setting);
 	    mRadioSet.setOnCheckedChangeListener(this);
 	    
+	    //mExtStatus = (TextView) findViewById(R.id.tv_counter_msg);
 	    
 		/*
 		try {
@@ -170,15 +178,24 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	}
 	
 	private void initView() {
-		mControlTab = new ControlTabActivity();
-		mEditTab = new EditTabActivity();
-		mSettingsTab = new SettingsTabActivity();
+		mCtrlTitle = new ExtendMessageTitleFragment();
+		mEditTitle = new ExtendMessageTitleFragment();
+		mSettingTitle = new ExtendMessageTitleFragment();
+		
+		mControlTab = new ControlTabActivity(mCtrlTitle);
+		mEditTab = new EditTabActivity(mEditTitle);
+		mSettingsTab = new SettingsTabActivity(mSettingTitle);
+		
+		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //		transaction.replace(R.id.tab_content, mControlTab);
 //		transaction.commit();
 		transaction.add(R.id.tab_content, mControlTab);
 		transaction.add(R.id.tab_content, mEditTab);
 		transaction.add(R.id.tab_content, mSettingsTab);
+		transaction.add(R.id.tv_counter_msg, mCtrlTitle);
+		transaction.add(R.id.tv_counter_msg, mEditTitle);
+		transaction.add(R.id.tv_counter_msg, mSettingTitle);
 		transaction.commit();
 		transaction.hide(mEditTab);
 		transaction.hide(mSettingsTab);
@@ -192,8 +209,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 			case R.id.btn_control:
 				if(arg1 == true) {
 					fts.show(mControlTab);
+					fts.show(mCtrlTitle);
 				} else {
 					fts.hide(mControlTab);
+					fts.hide(mCtrlTitle);
 				}
 				
 				Debug.d(TAG, "====>control checked?"+arg1);
@@ -202,8 +221,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 				Debug.d(TAG, "====>edit checked?"+arg1);
 				if( arg1 == true) {
 					fts.show(mEditTab);
+					fts.show(mEditTitle);
 				} else {
 					fts.hide(mEditTab);
+					fts.hide(mEditTitle);
 				}
 				break;
 			case R.id.btn_setting:
@@ -211,8 +232,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 				
 				if (arg1 == true) {
 					fts.show(mSettingsTab);
+					fts.show(mSettingTitle);
 				} else {
 					fts.hide(mSettingsTab);
+					fts.hide(mSettingTitle);
 				}
 				break;
 		}

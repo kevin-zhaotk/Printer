@@ -50,6 +50,7 @@ import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
+import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
@@ -105,24 +106,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public static final String ACTION_BOOT_COMPLETE="com.industry.printer.ACTION_BOOT_COMPLETED";
 	
 	public Context mContext;
-	
-	
+	public ExtendMessageTitleFragment mMsgTitle;
+	public long mCounter;
 	public Button mBtnStart;
 	public Button mBtnStop;
 	public Button mBtnClean;
 	public Button mBtnOpen;
-	public Button mBtnSend;
-	public Button mSetParam;
-	public Button mGetInfo;
-	public Button mPrint;
-	public Button mFinish;
-	public Button mBtnNext;
-	public Button mBtnPrev;
 	//public Button mGoto;
 	//public EditText mDstline;
 	
-	public Button	mBtnfile;
-	public Button	mBtnTlkfile;
 	public Button	mBtnOpenfile;
 	public TextView mMsgFile;
 	public EditText mMsgPreview;
@@ -136,16 +128,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public PreviewScrollView mPreview;
 	public Vector<BaseObject> mObjList;
 	
-	public ScrollView mThumb1;
-	public ScrollView mThumb2;
-	public ScrollView mThumb3;
-	public ScrollView mThumb4;
-	
-	public Button mHead1;
-	public Button mOpen1;
-	public Button mOpen2;
-	public Button mOpen3;
-	public Button mOpen4;
 	public static int mFd;
 	
 	public BinInfo mBg;
@@ -235,6 +217,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 */
 	public byte[] mPreviewBuffer;
 	
+	public ControlTabActivity(Fragment fragment) {
+		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+		mCounter = 0;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -281,11 +268,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 				
 		mBtnOpenfile = (Button) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
-		
-		
-		
-		mBtnview = (Button) getView().findViewById(R.id.btn_preview);
-		mBtnview.setOnClickListener(this);
 		
 		mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
 		//
@@ -385,6 +367,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					TLKFileParser parser = new TLKFileParser(f);
 					String preview = parser.getContentAbatract();
 					mMsgPreview.setText(preview);
+					MainActivity parent = (MainActivity)getActivity();
+					parent.mExtStatus.setText(MessageBrowserDialog.getSelected());
 					dismissProgressDialog();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
@@ -1068,6 +1052,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					DataTransferThread.launch();
 					FpgaGpioOperation.init();
 				}
+				mMsgTitle.setTitle(String.valueOf(mCounter));
 				break;
 			case R.id.StopPrint:
 				if (mIsDemo) {
@@ -1095,7 +1080,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 				});
 				dialog.show();
 				break;
-			case R.id.btn_preview:
+			default:
 				break;
 		}
 		

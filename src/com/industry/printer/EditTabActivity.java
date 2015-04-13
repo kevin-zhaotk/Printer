@@ -31,6 +31,7 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
@@ -93,6 +94,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	public HorizontalScrollView mHScroll;
 	
 	public String mObjName;
+	
+	public ExtendMessageTitleFragment mMsgTitle;
 	/*************************
 	 * file operation buttons
 	 * ***********************/
@@ -152,7 +155,9 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	public static Vector<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
 	
-	
+	public EditTabActivity(Fragment fragment) {
+		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -453,6 +458,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
         			mObjLine1.setText("");
+        			mMsgTitle.setTitle("");
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
@@ -465,6 +471,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	    				clearCurObj();
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
+            		mMsgTitle.setTitle(mObjName);
             		break;
             		
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
@@ -481,6 +488,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		drawAllBmp(ConfigPath.getTlkPath()+"/"+mObjName);
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
+            		mMsgTitle.setTitle(mObjName);
             		break;
             		
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image

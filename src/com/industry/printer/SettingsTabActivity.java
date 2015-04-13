@@ -18,6 +18,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.ui.ExtendMessageTitleFragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -120,6 +121,13 @@ public static final String TAG="SettingsTabActivity";
 	ProgressDialog 		pDialog;
 	
 	PHSettingFragment 	mPHSettings;
+	
+	public ExtendMessageTitleFragment mMsgTitle;
+	
+	public SettingsTabActivity(Fragment fragment) {
+		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
