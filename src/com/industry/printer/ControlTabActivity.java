@@ -372,7 +372,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					String preview = parser.getContentAbatract();
 					mMsgPreview.setText(preview);
 					MainActivity parent = (MainActivity)getActivity();
-					parent.mExtStatus.setText(MessageBrowserDialog.getSelected());
+					parent.mCtrlTitle.setTitle(MessageBrowserDialog.getSelected());
 					dismissProgressDialog();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
