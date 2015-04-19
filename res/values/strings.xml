@@ -387,6 +387,7 @@
 	
 	<string name="str_time_unit">0.1ms</string>
 	<string name="str_system_setting">Settings</string>
+	<string name="str_upgrade_progress">system upgrading....</string>
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">Insert</string>
 	<string name="str_edit_btn_temp1">Temp1</string>

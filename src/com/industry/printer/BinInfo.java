@@ -43,7 +43,7 @@ public class BinInfo {
 		mBits=null;
 	}
 	
-    public void getBgBuffer(String f) throws IOException
+    public void getBgBuffer(String f)
     {
     	byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
     	//mBmpBits
@@ -51,18 +51,29 @@ public class BinInfo {
     	 
     	 */
     	File file = new File(f);
-		FileInputStream fs = new FileInputStream(file);
-		fs.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
-		Debug.d(TAG, "fs.available()="+fs.available()+", head.length="+head.length);
-		mBits=new byte[fs.available()];
-		if(mBits == null)
-			return;
-    	mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
-    	mBitsperColumn = (mBits.length/mColumn)*8;
-    	//mPixels = new int[columns*row];
-    	Debug.d(TAG, "columns = "+mColumn+", mBitsperColumn="+mBitsperColumn+", mBits.len="+mBits.length);
-    	fs.read(mBits, 0, mBits.length);
-    	fs.close();
+		FileInputStream fs;
+		try {
+			fs = new FileInputStream(file);
+			fs.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
+			Debug.d(TAG, "fs.available()="+fs.available()+", head.length="+head.length);
+			mBits=new byte[fs.available()];
+			if(mBits == null)
+				return;
+	    	mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
+	    	mBitsperColumn = (mBits.length/mColumn)*8;
+	    	//mPixels = new int[columns*row];
+	    	Debug.d(TAG, "columns = "+mColumn+", mBitsperColumn="+mBitsperColumn+", mBits.len="+mBits.length);
+	    	fs.read(mBits, 0, mBits.length);
+	    	fs.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			
+		}
     	return;//bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     

@@ -272,34 +272,20 @@ public static final String TAG="SettingsTabActivity";
 				startActivity(intent);
 				break;
 			case R.id.btn_setting_upgrade:
-				/*
+				
 				ArrayList<String> paths = ConfigPath.getMountedUsb();
 				for (String str : paths) {
 					File file = new File(str+"/Printer.apk");
 					if (!file.exists()) {
 						continue;
 					}
-					String cmd = "/sytem/bin/upgrade.sh";
-					Debug.d(TAG, "===>upgrade cmd:"+cmd);
-					try {
-						Process process = Runtime.getRuntime().exec(cmd);
-						InputStream errStream = process.getErrorStream();
-						BufferedReader reader = new BufferedReader(new InputStreamReader(errStream));
-						StringBuilder buf = new StringBuilder();
-						String line = null;
-						while ((line = reader.readLine()) != null) {
-							buf.append(line);
-						}
-						Debug.d(TAG, "===>result:"+buf);
-						Debug.d(TAG, "===>process:"+process.toString());
-						if (process.waitFor() != 0) {
-			                Debug.d(TAG,"===>exit value = " + process.exitValue());
-			            }
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					ProgressDialog pDialog = new ProgressDialog(mContext);
+					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+					pDialog.setMessage(getResources().getString(R.id.str_upgrade_progress));
+					pDialog.show();
+					System.setProperty("ctrl.start", "upgrade");
 					break;
-				}*/
+				}
 				break;
 			default :
 				Debug.d(TAG, "===>unknown view clicked");
