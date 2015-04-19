@@ -141,7 +141,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		}
 		
 		public static String getSelected() {
-			return mTitle;
+			if (mTitle == null) {
+				return "";
+			} else {
+				return mTitle;
+			}
 		}
 		
 }
