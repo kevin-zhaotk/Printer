@@ -384,20 +384,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					break;
 				case MESSAGE_PAOMADENG_TEST:
 					
-//					char[] data = new char[32];
-//					for (char i = 0; i < 15; i++) {
-//						data[2*i] = (char)(0x01<<i);
-//						data[2*i+1] = 0xffff;
-//					}
-//					data[30] = 0xff;
-//					data[31] = 0xff;
-					char[] data = new char[2];
-					if (testdata < 0 || testdata > 15)
-						testdata = 0;
-					data[0] = (char) (0x0001 << testdata);
-					data[1] = (char) (0x0001 << testdata);
-					FpgaGpioOperation.writeData(data, data.length*2);
-					testdata++;
+					char[] data = new char[32];
+					for (char i = 0; i < 15; i++) {
+						data[2*i] = (char)(0x01<<i);
+						data[2*i+1] = 0xffff;
+					}
+					data[30] = 0xff;
+					data[31] = 0xff;
+//					char[] data = new char[2];
+//					if (testdata < 0 || testdata > 15)
+//						testdata = 0;
+//					data[0] = (char) (0x0001 << testdata);
+//					data[1] = (char) (0x0001 << testdata);
+//					FpgaGpioOperation.writeData(data, data.length*2);
+//					testdata++;
 					//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 			}
 		}
