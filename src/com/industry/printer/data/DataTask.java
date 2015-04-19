@@ -54,7 +54,9 @@ public class DataTask {
 			mBinInfo = new BinInfo();
 			mBinInfo.getBgBuffer(path+"/1.bin");
 			//read the background bin bytes to global mBgBuffer
-			mBgBuffer = Arrays.copyOf(mBinInfo.mBits, mBinInfo.mBits.length);
+			if (mBinInfo.mBits != null) {
+				mBgBuffer = Arrays.copyOf(mBinInfo.mBits, mBinInfo.mBits.length);
+			}
 		}catch(Exception e)
 		{
 			e.printStackTrace();
