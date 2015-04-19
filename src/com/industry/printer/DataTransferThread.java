@@ -1,10 +1,15 @@
 package com.industry.printer;
 
+import java.util.Vector;
+
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.object.BaseObject;
 
 /**
  * class DataTransferThread
@@ -25,6 +30,9 @@ public class DataTransferThread extends Thread {
 	public static DataTransferThread mInstance;
 	
 	public boolean mNeedUpdate=false;
+	
+	/**打印数据buffer**/
+	public DataTask mDataTask;
 	
 	public static DataTransferThread getInstance() {
 		if(mInstance == null) {
@@ -57,6 +65,7 @@ public class DataTransferThread extends Thread {
 				mNeedUpdate = false;
 				//在此处发生打印数据，同时
 				//Debug.d(TAG, "===>kernel buffer empty, fill it");
+				
 				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 			}
 			
@@ -70,17 +79,17 @@ public class DataTransferThread extends Thread {
 		
 	}
 	
-	public static boolean isRunning() {
+	public boolean isRunning() {
 		return mRunning;
 	}
 	
-	public static void launch() {
+	public void launch() {
 		mRunning = true;
 		DataTransferThread thread = getInstance();
 		thread.start();
 	}
 	
-	public static void finish() {
+	public void finish() {
 		mRunning = false;
 		
 		DataTransferThread t = mInstance;
@@ -103,4 +112,10 @@ public class DataTransferThread extends Thread {
 			}
 		}
 	};
+	
+	public void initDataBuffer(Context context, String obj) {
+		mDataTask = new DataTask(context);
+		mDataTask.prepareBackgroudBuffer(obj);
+	}
+	
 }

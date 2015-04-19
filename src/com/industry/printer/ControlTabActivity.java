@@ -142,8 +142,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 */
 	public boolean isPrinting;
 	public boolean isRunning;
-	public PrintingThread mPrintThread;
-	
+	// public PrintingThread mPrintThread;
+	public DataTransferThread mDTransThread;
 	
 	public int mIndex;
 	public TextView mPrintStatus;
@@ -358,9 +358,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
 					String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
+					mObjPath = f;
 					//startPreview();
 					//方案1：从bin文件生成buffer
-					prepareBackgroudBuffer(f);
+					if (mDTransThread == null) {
+						mDTransThread = DataTransferThread.getInstance(); 
+					}
+					mDTransThread.initDataBuffer(mContext, mObjPath);
 					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
 					//parseTlk(f);
 					//initBgBuffer();
@@ -619,31 +623,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		}
 	}
 	
-	
-	/**
-	 * prepareBackgroudBuffer
-	 * @param f	the tlk object directory path
-	 * parse the 1.bin, and then read the file content into mBgBuffer, one bit extends to one byte
-	 */
-	public void prepareBackgroudBuffer(String f)
-	{
-		String path=null;
-		File fp = new File(f);
-		if(fp.isFile())
-			path = new File(f).getParent();
-		else
-			path = f;
-		TLKFileParser.parse(mContext, f, mObjList);
-		try{
-			mBg = new BinInfo();
-			mBg.getBgBuffer(path+"/1.bin");
-			//read the background bin bytes to global mBgBuffer
-			mBgBuffer = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * preparePrintBuffer
@@ -1049,7 +1028,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据
 					 * 2、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
-					DataTransferThread.launch();
+					if (mDTransThread == null) {
+						mDTransThread = DataTransferThread.getInstance(); 
+					}
+					mDTransThread.launch();
 					FpgaGpioOperation.init();
 				}
 				mMsgTitle.setTitle(String.valueOf(mCounter));
@@ -1064,7 +1046,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					 * 2、停止DataTransfer线程
 					 */
 					FpgaGpioOperation.uninit();
-					DataTransferThread.finish();
+					if (mDTransThread == null) {
+						mDTransThread = DataTransferThread.getInstance(); 
+					}
+					mDTransThread.finish();
 				}
 				break;
 			case R.id.btnFlush:
