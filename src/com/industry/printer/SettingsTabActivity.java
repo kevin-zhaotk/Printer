@@ -281,7 +281,7 @@ public static final String TAG="SettingsTabActivity";
 					}
 					ProgressDialog pDialog = new ProgressDialog(mContext);
 					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					pDialog.setMessage(getResources().getString(R.id.str_upgrade_progress));
+					pDialog.setMessage(getResources().getString(R.string.str_upgrade_progress));
 					pDialog.show();
 					System.setProperty("ctrl.start", "upgrade");
 					break;
