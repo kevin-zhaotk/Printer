@@ -14,6 +14,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BinCreater;
 
+import android.R.integer;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -33,6 +34,8 @@ public class BinInfo {
 	public int mColOne;
 	
 	public byte[] mBits;
+	
+	public char[] mChar;
 	//public int[]	mPixels;
 	
 	public void BinInfo()
@@ -57,7 +60,8 @@ public class BinInfo {
 			fs.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
 			Debug.d(TAG, "fs.available()="+fs.available()+", head.length="+head.length);
 			mBits=new byte[fs.available()];
-			if(mBits == null)
+			mChar = new char[fs.available()/2];
+			if(mBits == null || mChar == null)
 				return;
 	    	mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
 	    	mBitsperColumn = (mBits.length/mColumn)*8;
@@ -65,6 +69,10 @@ public class BinInfo {
 	    	Debug.d(TAG, "columns = "+mColumn+", mBitsperColumn="+mBitsperColumn+", mBits.len="+mBits.length);
 	    	fs.read(mBits, 0, mBits.length);
 	    	fs.close();
+	    	//把byte[]存为char[]
+	    	for(int i = 0; i < mChar.length; i++) {
+	    		mChar[i] = (char) ((char)(mBits[2*i] << 8) | (mBits[2*i+1])); 
+	    	}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

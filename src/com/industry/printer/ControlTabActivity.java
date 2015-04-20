@@ -187,6 +187,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 *   message tobe sent when dismiss loading dialog 
 	 */
 	public final int MESSAGE_PAOMADENG_TEST=4;
+
+	/**
+	 * MESSAGE_PRINT_START
+	 *   message tobe sent when dismiss loading dialog 
+	 */
+	public final int MESSAGE_PRINT_START = 5;
 	
 	
 	
@@ -403,6 +409,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 //					FpgaGpioOperation.writeData(data, data.length*2);
 //					testdata++;
 					//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
+					break;
+				case MESSAGE_PRINT_START:
+					
+					break;
 			}
 		}
 	};
@@ -1023,6 +1033,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 				if(mIsDemo)
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 				else {
+					if (mObjPath == null || mObjPath.isEmpty() || mObjList.size() == 0) {
+						Toast.makeText(mContext, "没有可打印的内容", Toast.LENGTH_LONG);
+						return;
+					}
 					/**
 					 * 启动打印后要完成的几个工作：
 					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据

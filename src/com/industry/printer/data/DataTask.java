@@ -29,7 +29,7 @@ public class DataTask {
 	 *   used for save the background bin buffer
 	 *   fill the variable buffer into this background buffer so we get printing buffer
 	 */
-	public byte[] mBgBuffer;
+	public char[] mBgBuffer;
 	
 	public DataTask(Context context) {
 		mContext = context;
@@ -55,7 +55,7 @@ public class DataTask {
 			mBinInfo.getBgBuffer(path+"/1.bin");
 			//read the background bin bytes to global mBgBuffer
 			if (mBinInfo.mBits != null) {
-				mBgBuffer = Arrays.copyOf(mBinInfo.mBits, mBinInfo.mBits.length);
+				mBgBuffer = Arrays.copyOf(mBinInfo.mChar, mBinInfo.mChar.length);
 			}
 		}catch(Exception e)
 		{

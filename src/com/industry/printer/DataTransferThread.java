@@ -65,13 +65,13 @@ public class DataTransferThread extends Thread {
 				mNeedUpdate = false;
 				//在此处发生打印数据，同时
 				//Debug.d(TAG, "===>kernel buffer empty, fill it");
-				
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
+				FpgaGpioOperation.writeData(mDataTask.mBgBuffer, mDataTask.mBgBuffer.length*2);
+				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 			}
 			
 			if(mNeedUpdate == true) {
 				//在此处发生打印数据，同时
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
+				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 			}
 			//Debug.d(TAG, "===>kernel buffer empty, fill it");
 			//TO-DO list 下面需要把打印数据下发
