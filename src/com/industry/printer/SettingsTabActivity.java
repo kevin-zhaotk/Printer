@@ -279,10 +279,10 @@ public static final String TAG="SettingsTabActivity";
 					if (!file.exists()) {
 						continue;
 					}
-					ProgressDialog pDialog = new ProgressDialog(mContext);
-					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-					pDialog.setMessage(getResources().getString(R.string.str_upgrade_progress));
-					pDialog.show();
+//					ProgressDialog pDialog = new ProgressDialog(mContext);
+//					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//					pDialog.setMessage(getResources().getString(R.string.str_upgrade_progress));
+//					pDialog.show();
 					System.setProperty("ctrl.start", "upgrade");
 					break;
 				}
