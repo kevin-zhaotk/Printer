@@ -8,6 +8,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 
 import android.content.Context;
 import android.graphics.Bitmap;

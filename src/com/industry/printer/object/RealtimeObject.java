@@ -3,6 +3,7 @@ package com.industry.printer.object;
 import java.util.Vector;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 
 import android.R;
 import android.content.Context;

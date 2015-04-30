@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import com.industry.printer.Utils.Debug;
 
-import android.os.SystemProperties;
+//import android.os.SystemProperties;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +44,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		{
 			Debug.d(TAG, "new usb device attached");
 			//System.setProperty("ctl.start", "mptty");
-			SystemProperties.set("ctl.start", "mptty");
+//			SystemProperties.set("ctl.start", "mptty");
 			Intent intnt = new Intent();
 			intnt.setAction(ControlTabActivity.ACTION_REOPEN_SERIAL);
 			context.sendBroadcast(intnt);

@@ -1,17 +1,9 @@
 package com.industry.printer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
@@ -20,42 +12,22 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemProperties;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 public class SettingsTabActivity extends Fragment implements OnClickListener {

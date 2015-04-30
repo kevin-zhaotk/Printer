@@ -1,89 +1,52 @@
 package com.industry.printer;
 
 import java.io.BufferedWriter;
-import java.io.CharArrayReader;
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.hardware.FpgaGpioOperation;
-import com.industry.printer.hardware.HardwareJni;
-import com.industry.printer.object.BarcodeObject;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.object.BaseObject;
-import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.CounterObject;
-import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
-import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.ObjectsFromString;
-import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.RealtimeObject;
-import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
-import com.industry.printer.object.TextObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
-import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
-
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.DialogInterface.OnKeyListener;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class EditTabActivity extends Fragment implements OnClickListener {
@@ -181,33 +144,6 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mObjs.add(new MessageObject(mContext, 0));
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		
-
-//		mObjList = (Spinner) findViewById(R.id.object_list);
-//		mNameAdapter = new ArrayAdapter<String>(this, R.layout.edit_spinner_item);//R.layout.object_list_item);
-//		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		mObjList.setAdapter(mNameAdapter);
-//		
-//		mObjList.setOnItemSelectedListener(new OnItemSelectedListener(){
-//
-//			@Override
-//			public void onItemSelected(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				// TODO Auto-generated method stub
-//				Debug.d(TAG,"==========objlist item " + position +" clicked"+" of "+mObjList.getCount());
-//				clearCurObj();
-//				setCurObj(position);
-//				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
-//				
-//			}
-//
-//			@Override
-//			public void onNothingSelected(AdapterView<?> parent) {
-//				// TODO Auto-generated method stub
-//				Debug.d(TAG, "======onNothing selected");
-//			}
-//			
-//		});
-		
 		mBtnNew = (Button) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		
@@ -280,24 +216,9 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			default:
 				break;
 			}
-			
-//			BaseObject obj = getCurObj();
-//			//Debug.d(TAG, "=====obj:"+obj.mId);
-//			if(obj != null) {
-//				makeObjToCenter((int)obj.getX());
-//			}
-//			Debug.d(TAG, "=========");
 		}
 	};
 	
-	private void makeObjToCenter(int x)
-	{
-		Debug.d(TAG, "current scrollX="+mHScroll.getScrollX());
-		if(x - mHScroll.getScrollX() > 500)
-		{
-			mHScroll.scrollTo(x-300, 0);
-		}
-	}
 	
 	public static BaseObject getCurObj()
 	{
@@ -316,13 +237,6 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		return null;
 	}
 	
-	public static void clearCurObj()
-	{
-		for(BaseObject obj : mObjs)
-		{
-			obj.setSelected(false);
-		}
-	}
 	public static void setCurObj(int i)
 	{
 		if(i >= mObjs.size())
@@ -407,7 +321,6 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			bw.close();
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -462,13 +375,12 @@ public class EditTabActivity extends Fragment implements OnClickListener {
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
-            		//String tlkfile=MessageBrowserDialog.getSelected();
             		mObjName = MessageBrowserDialog.getSelected();
             		File tlk=new File(ConfigPath.getTlkPath()+"/" + mObjName +"/1.TLK");
             		if(tlk.isFile() && tlk.exists())
             		{
 	    				TLKFileParser.parse(mContext, tlk.getAbsolutePath(), mObjs);
-	    				clearCurObj();
+	    				setCurObj(0);
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
             		mMsgTitle.setTitle(mObjName);
@@ -485,7 +397,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		{
             			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
             		}
-            		drawAllBmp(ConfigPath.getTlkPath()+"/"+mObjName);
+            		saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
             		mMsgTitle.setTitle(mObjName);
@@ -498,7 +410,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             			Debug.d(TAG, "Image file error");
             			return;
             		}
-            		clearCurObj();
+            		setCurObj(0);
             		GraphicObject o = new GraphicObject(mContext, getNextXcor());
             		o.setImage(FileBrowserDialog.file());
     				mObjs.add(o);    	
@@ -531,7 +443,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		return -1;
 	}
 	
-	public void drawAllBmp(String f)
+	public void saveObjectBin(String f)
 	{
 		int width=0;
 		Paint p=new Paint();
@@ -542,8 +454,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG, "drawAllBmp width="+width+", height="+880);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDotsTotal);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
 		for(BaseObject o:mObjs)
@@ -634,7 +546,6 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		CustomerDialogBase dialog;
 		List<BaseObject> objs = null;
 		switch (arg0.getId()) {
@@ -655,21 +566,13 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_save:
-				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
-				mObjs.clear();
-				if(objs == null) {
-					Toast.makeText(mContext, R.string.str_notice_no_objects, Toast.LENGTH_LONG);
-					break ;
-				}
-				mObjs.addAll(objs);
+				getObjectList();
 				if (mObjName != null) {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
 					break;
 				}
 			case R.id.btn_saveas:
-				objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
-				mObjs.clear();
-				mObjs.addAll(objs);
+				getObjectList();
 				dialog = new MessageSaveDialog(mContext);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
@@ -686,5 +589,17 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			default:
 				break;
 		}
+	}
+	
+	private void getObjectList() {
+		List<BaseObject> objs=null;
+		objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
+		mObjs.clear();
+		if(objs == null) {
+			Toast.makeText(mContext, R.string.str_notice_no_objects, Toast.LENGTH_LONG);
+			return ;
+		}
+		mObjs.addAll(objs);
+		return ;
 	}
 }

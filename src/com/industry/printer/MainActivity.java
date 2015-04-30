@@ -1,42 +1,30 @@
 package com.industry.printer;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
-import com.industry.printer.FileFormat.SystemConfigFile;
-import com.industry.printer.Utils.Configs;
-import com.industry.printer.Utils.Debug;
-import com.industry.printer.hardware.FpgaGpioOperation;
-import com.industry.printer.ui.ExtendMessageTitleFragment;
-import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
-
-import com.android.internal.app.LocalePicker;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.PendingIntent;
-//import android.app.TabActivity;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
-import android.app.FragmentTransaction;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Gravity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.Window;
+import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.os.SystemProperties;
-import android.view.inputmethod.InputMethodManager;
-import android.view.inputmethod.InputMethodInfo;
+
+import com.industry.printer.Utils.Configs;
+import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.ui.ExtendMessageTitleFragment;
+//import com.android.internal.app.LocalePicker;
+//import android.app.TabActivity;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener {
 
@@ -70,7 +58,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setLocale();
+		//setLocale();
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		mContext = getApplicationContext();
@@ -168,14 +156,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	 
 	}
 	
-	public void setLocale()
-	{
-		Configuration config = getResources().getConfiguration(); 
-		DisplayMetrics dm = getResources().getDisplayMetrics(); 
-		config.locale = Locale.SIMPLIFIED_CHINESE; 
-		getResources().updateConfiguration(config, dm); 
-		LocalePicker.updateLocale(Locale.CHINA);
-	}
+//	public void setLocale()
+//	{
+//		Configuration config = getResources().getConfiguration(); 
+//		DisplayMetrics dm = getResources().getDisplayMetrics(); 
+//		config.locale = Locale.SIMPLIFIED_CHINESE; 
+//		getResources().updateConfiguration(config, dm); 
+//		LocalePicker.updateLocale(Locale.CHINA);
+//	}
 	
 	private void initView() {
 		mCtrlTitle = new ExtendMessageTitleFragment();

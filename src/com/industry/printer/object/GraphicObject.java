@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 
 import com.industry.printer.ImageConverter;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 
 public class GraphicObject  extends BaseObject{
 

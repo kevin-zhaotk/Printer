@@ -28,26 +28,37 @@ public class ObjectsFromString {
 	public static final String SPLITOR = ";";
 	
 	public static List<BaseObject> makeObjs(Context context, String str) {
-		
+		int xcor=0;
+		int index=1;
 		if (str==null || str.isEmpty()) {
 			return null;
 		}
 		List<BaseObject> objList=new ArrayList<BaseObject>();
+		
+		/**第一个对象为Messageobject，与其他项目保持一致**/
+		MessageObject msgObject = new MessageObject(context, 0);
+		msgObject.setIndex(index++);
+		
+		objList.add(msgObject);
 		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {
 			if (s.startsWith("'N")) { //计数器对象
 				if(s.length() != 4 || !s.substring(3, 4).equals("'")) {
 					Debug.d(TAG, "makeObjs format not counter, parse as text object");
-					TextObject obj = new TextObject(context, 0);
+					TextObject obj = new TextObject(context, xcor);
 					obj.setContent(s);
+					obj.setIndex(index++);
 					objList.add(obj);
+					xcor += obj.getXEnd()+5;
 				} else {
 					Log.d(TAG, "===>counter: "+s);
 					int count = Integer.parseInt(s.substring(2, 3));
-					CounterObject obj = new CounterObject(context, 0);
+					CounterObject obj = new CounterObject(context, xcor);
 					obj.setBits(count);
+					obj.setIndex(index++);
 					objList.add(obj);
+					xcor += obj.getXEnd() + 5;
 				}
 			} else if (s.startsWith("'P")) {	//图形对象
 				Debug.d(TAG, "makeObjs image object");
@@ -56,9 +67,11 @@ public class ObjectsFromString {
 					continue;
 				}
 				Log.d(TAG, "===>text: "+s);
-				TextObject obj = new TextObject(context, 0);
+				TextObject obj = new TextObject(context, xcor);
 				obj.setContent(s);
+				obj.setIndex(index++);
 				objList.add(obj);
+				xcor += obj.getXEnd() + 5;
 			}
 		}
 		return objList;

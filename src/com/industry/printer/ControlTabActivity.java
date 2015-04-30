@@ -1,100 +1,44 @@
 package com.industry.printer;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.zip.Inflater;
-
-import org.apache.http.util.ByteArrayBuffer;
-
-import com.industry.printer.FileFormat.CsvReader;
 import com.industry.printer.FileFormat.DotMatrixFont;
-import com.industry.printer.FileFormat.FilenameSuffixFilter;
-import com.industry.printer.FileFormat.TlkFileParser;
-import com.industry.printer.Usb.CRC16;
-import com.industry.printer.Usb.UsbConnector;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.UsbSerial;
-import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
-import com.industry.printer.object.BinCreater;
-import com.industry.printer.object.CounterObject;
-import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.TLKFileParser;
-import com.industry.printer.object.JulianDayObject;
-import com.industry.printer.object.LineObject;
-import com.industry.printer.object.MessageObject;
-import com.industry.printer.object.RTSecondObject;
-import com.industry.printer.object.RealtimeDate;
-import com.industry.printer.object.RealtimeHour;
-import com.industry.printer.object.RealtimeMinute;
-import com.industry.printer.object.RealtimeMonth;
-import com.industry.printer.object.RealtimeObject;
-import com.industry.printer.object.RealtimeYear;
-import com.industry.printer.object.RectObject;
-import com.industry.printer.object.ShiftObject;
-import com.industry.printer.object.TextObject;
 import com.industry.printer.object.TlkObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
-import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -194,7 +138,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 */
 	public final int MESSAGE_PRINT_START = 5;
 	
-	
+	/**
+	 * MESSAGE_PRINT_STOP
+	 *   message tobe sent when dismiss loading dialog 
+	 */
+	public final int MESSAGE_PRINT_STOP = 6;
+		
 	
 	/**
 	 * the bitmap for preview
@@ -291,71 +240,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		//UsbSerial.close(mFd);
 	}
 	
-//	@Override
-//	public boolean  onKeyDown(int keyCode, KeyEvent event)  
-//	{
-//		Debug.d(TAG, "keycode="+keyCode);
-//		
-//		if(keyCode==KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)
-//		{
-//			Debug.d(TAG, "back key pressed, ignore it");
-//			return true;	
-//		}
-//		return false;
-//	}
-//	
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event)
-//	{
-//		Debug.d(TAG, "event:"+event.toString());
-//		InputMethodManager manager = (InputMethodManager) mContext.getSystemService(Service.INPUT_METHOD_SERVICE);
-//		Debug.d(TAG, "ime is active? "+manager.isActive());
-//		manager.hideSoftInputFromWindow(mContext.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-////			manager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-//		return true;
-//	}
-	/**
-	 * print
-	 * ��ӡ�ӿڣ��·���ӡ���ݣ�����ʱ��ѯ��ӡ״̬���Զ�����īˮֵ����ӡ���سɹ������Thread
-	 */
-	public void print()
-	{
-		byte[] buffer=null;
-		String text="";
-		if(mPrintBuffer==null)
-			return;
-		
-		UsbSerial.printStart(mSerialdev);
-		UsbSerial.sendSetting(mSerialdev);
-		byte[] data = new byte[128];
-		makeParams(mContext,data);
-		UsbSerial.sendSettingData(mSerialdev, data);
-		
-		UsbSerial.sendDataCtrl(mSerialdev, mPrintBuffer.length);
-		UsbSerial.printData(mSerialdev,  mPrintBuffer);
-		//mPrintDialog = ProgressDialog.show(ControlTabActivity.this, "", getResources().getString(R.string.strwaitting));
-		
-		//int timeout=10;
-		byte[] info = new byte[23];
-		do
-		{
-			try{
-				Thread.sleep(2000);
-			}catch(Exception e)
-			{}
-			
-			UsbSerial.getInfo(mSerialdev, info);
-			Message msg = new Message();
-			msg.what=MESSAGE_UPDATE_INKLEVEL;
-			Bundle b= new Bundle();
-			b.putByteArray("info", info);
-			msg.setData(b);
-			mHandler.sendMessage(msg);
-			break;
-			//Debug.d(TAG, "##########timeout = "+timeout+",stat="+info[9]);
-		}while(info[9]!=4);
-		
-	}
 	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
@@ -370,10 +254,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					if (mDTransThread == null) {
 						mDTransThread = DataTransferThread.getInstance(); 
 					}
+					/**打开一个打印对象，先处理打印数据，从1.bin文件中取出常量的内容**/
 					mDTransThread.initDataBuffer(mContext, mObjPath);
 					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
 					//parseTlk(f);
 					//initBgBuffer();
+					/**获取打印缩略图，用于预览展现**/
 					TLKFileParser parser = new TLKFileParser(f);
 					String preview = parser.getContentAbatract();
 					mMsgPreview.setText(preview);
@@ -411,39 +297,41 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_START:
+				
+					if (mObjPath == null || mObjPath.isEmpty() || mObjList.size() == 0) {
+						Toast.makeText(mContext, "没有可打印的内容", Toast.LENGTH_LONG);
+						return;
+					}
+					/**
+					 * 启动打印后要完成的几个工作：
+					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据
+					 * 2、调用ioctl启动内核线程，开始轮训FPGA状态
+					 */
+					if (mDTransThread == null) {
+						mDTransThread = DataTransferThread.getInstance(); 
+					}
+					mDTransThread.launch();
+					FpgaGpioOperation.init();
+				
+					mMsgTitle.setTitle(String.valueOf(mCounter));
+					break;
+				case MESSAGE_PRINT_STOP:
+					/**
+					 * 停止打印后要完成的几个工作：
+					 * 1、调用ioctl停止内核线程，停止轮训FPGA状态
+					 * 2、停止DataTransfer线程
+					 */
+					FpgaGpioOperation.uninit();
+					if (mDTransThread != null) {
+						mDTransThread.finish();
+					}
 					
 					break;
 			}
 		}
 	};
 	
-	public void setContent(String index,Vector<TlkObject> list)
-	{
-		for(TlkObject o:list)
-		{
-			for(int i=1;i<mMessageList.getCount(); i++)
-			{
-				Map<String, String> m = (Map<String, String>)mMessageList.getItemAtPosition(i);
-				Debug.d(TAG, "*******index="+m.get("index"));
-				 if((o.index>=1 && o.index<=16)&&m.get("index").equals(index))
-                 {
-                     Debug.d(TAG, "index "+o.index+" found"+", text"+o.index+"="+m.get("text"+o.index));
-                     o.setContent(m.get("text"+o.index));
-                     break;
-                 }
-                 else if(o.index>=21 && o.index<=24 && m.get("index").equals(index))
-				 {
-                	 int logo=Integer.parseInt(o.font);
-                	 Debug.d(TAG, "index "+o.index+" found"+", pic"+(o.font)+"="+m.get("pic"+logo));
-                	 String pic=m.get("pic"+logo);
-                	 o.setContent(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
-                	 o.setFont(BaseObject.intToFormatString(Integer.parseInt(pic), 4));
-                	 break;
-				 }
-			}
-		}
-		
-	}
+	
 	public void startPreview()
 	{
 		Debug.d(TAG, "===>startPreview");
@@ -463,277 +351,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		}
 		
 	}
-	
-	/**
-	 * ����TLK�ļ��������б��浽mObjList��
-	 * @param f the selected TLK file
-	 */
-	private void parseTlk(String f){
-		String path=null;
-		File fp = new File(f);
-		if(fp.isFile())
-			path = new File(f).getParent();
-		else
-			path = f;
-		TLKFileParser.parse(mContext, f, mObjList);
-	}
-	
-	
-	public void initBgBuffer()
-	{
-		Bitmap t;
-		int width=0;
-		Paint p=new Paint();
-		/*release the mBgBuffer */
-		mBgBuffer = null;
-		if(mObjList==null || mObjList.size() <= 0)
-			return ;
-		for(BaseObject o:mObjList)
-		{
-			if(o instanceof MessageObject)
-				continue;
-			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
-			Debug.d(TAG, "--->initBgBuffer object:"+o.getId()+", end="+o.getXEnd());
-			Debug.d(TAG, "--->initBgBuffer width: "+width);
-		}
-		Debug.d(TAG, "===>initBgBuffer  width="+width);
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
-		Canvas can = new Canvas(bmp);
-		can.drawColor(Color.WHITE);
-		for(BaseObject o:mObjList)
-		{
-			if((o instanceof MessageObject)	)
-				continue;
-			
-			if(o instanceof TextObject)
-			{
-				t = o.getScaledBitmap(mContext);
-			}
-			else if(o instanceof CounterObject)
-			{
-				o.generateVarBuffer();
-				continue;
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				t = ((RealtimeObject)o).getBgBitmap(mContext);
-			}
-			else if(o instanceof JulianDayObject)
-			{
-				o.generateVarBuffer();
-				continue;
-			}
-			else if(o instanceof ShiftObject)
-			{
-				o.generateVarBuffer();
-				continue;
-			}
-			else if (o instanceof BarcodeObject) {
-				t = ((BarcodeObject)o).getScaledBitmap(mContext);
-			}
-			else if (o instanceof RTSecondObject) {
-				o.generateVarBuffer();
-				continue;
-			}
-			else if (o instanceof LineObject) {
-				t = ((LineObject)o).getScaledBitmap(mContext);
-			}
-			else if (o instanceof RectObject) {
-				t = ((RectObject)o).getScaledBitmap(mContext);
-			}
-			else if (o instanceof EllipseObject) {
-				t = ((EllipseObject)o).getScaledBitmap(mContext);
-			}
-			else {
-				Debug.d(TAG, "&&&&&&&&&&error: unknown object");
-				continue;
-			}
-			if(t==null)
-				continue;
-			can.drawBitmap(t, o.getX(), o.getY(), p);
-			BinCreater.recyleBitmap(t);
-			
-		//can.drawText(mContent, 0, height-30, mPaint);
-		}
-		//BinCreater.saveBitmap(bmp, "back.png");
-		BinCreater.create(bmp, 0);
-		mBgBuffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
-		Debug.d(TAG, "------->mBgBuffer len="+mBgBuffer.length);
-		return ;
-	}
-	
-	public void fillBufferWithVariables()
-	{
-		Bitmap bm=null;
-		String substr=null;
-		byte[] buffer;
-		if(mObjList==null || mObjList.isEmpty())
-			return;
-		mPrintBuffer = Arrays.copyOf(mBgBuffer, mBgBuffer.length);
-		for(BaseObject o:mObjList)
-		{
-			if(o instanceof CounterObject)
-			{
-				String str = ((CounterObject) o).getNext();
-				buffer=o.getBufferFromContent();
-				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				
-				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
-				for(BaseObject rtSub : rt)
-				{
-					if(rtSub instanceof RealtimeYear)
-					{
-						substr = ((RealtimeYear)rtSub).getContent();
-						buffer = ((RealtimeYear)rtSub).getBufferFromContent();
-					}
-					else if(rtSub instanceof RealtimeMonth)
-					{
-						substr = ((RealtimeMonth)rtSub).getContent();
-						buffer = ((RealtimeMonth)rtSub).getBufferFromContent();
-						//continue;
-					}
-					else if(rtSub instanceof RealtimeDate)
-					{
-						substr = ((RealtimeDate)rtSub).getContent();
-						buffer = ((RealtimeDate)rtSub).getBufferFromContent();
-					} 
-					else if(rtSub instanceof RealtimeHour)
-					{
-						substr = ((RealtimeHour)rtSub).getContent();
-						buffer = ((RealtimeHour)rtSub).getBufferFromContent();
-					} 
-					else if(rtSub instanceof RealtimeMinute)
-					{
-						substr = ((RealtimeMinute)rtSub).getContent();
-						buffer = ((RealtimeMinute)rtSub).getBufferFromContent();
-					}
-					else
-						continue;
-					
-					BinCreater.overlap(mPrintBuffer, buffer, (int)rtSub.getX(), 0, Configs.gDots);
-				}				
-			}
-			else if(o instanceof JulianDayObject)
-			{
-				buffer = o.getBufferFromContent();
-				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
-			}
-			else if(o instanceof RTSecondObject){
-				((RTSecondObject)o).getContent();
-				buffer = o.getBufferFromContent();
-				BinCreater.overlap(mPrintBuffer, buffer, (int)o.getX(), 0, Configs.gDots);
-			}
-			else
-			{
-				Debug.d(TAG, "not Variable object");
-			}
-		}
-	}
-	
-	
-	/**
-	 * preparePrintBuffer
-	 *   fill the variable buffer into background buffer
-	 */
-	public synchronized void preparePrintBuffer()
-	{
-		if(mObjList==null || mObjList.isEmpty())
-			return;
-		mPrintBuffer= Arrays.copyOf(mBgBuffer, mBgBuffer.length);
-		refreshVariables(mPrintBuffer);
-	}
-	
-	public void refreshVariables(byte[] buffer)
-	{
-		Bitmap bm=null;
-		String substr=null;
-		ByteArrayBuffer bytes=new ByteArrayBuffer(0);
-		if(mObjList==null || mObjList.isEmpty())
-			return;
-		Debug.d(TAG, "-----objlist size="+mObjList.size());
-		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
-		for(BaseObject o:mObjList)
-		{
-			Debug.d(TAG, "-------------1");
-			bytes.clear();
-			bytes.setLength(0);
-			Debug.d(TAG, "refreshVariables object = "+o.mId);
-			if(o instanceof CounterObject)
-			{
-				String str = ((CounterObject) o).getNext();
-				BinInfo varbin = new BinInfo();
-				try {
-					varbin.getVarBuffer(str, mObjPath+"/" + "v" + o.getIndex() +".bin");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				BinCreater.overlap(buffer, varbin.mBits, (int)o.getX(), 0, varbin.mBitsperColumn);
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				
-				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
-				for(BaseObject rtSub : rt)
-				{
-					bytes.clear();
-					bytes.setLength(0);
-					if(rtSub instanceof RealtimeYear)
-					{
-						substr = ((RealtimeYear)rtSub).getContent();
-					}
-					else if(rtSub instanceof RealtimeMonth)
-					{
-						substr = ((RealtimeMonth)rtSub).getContent();
-						//continue;
-					}
-					else if(rtSub instanceof RealtimeDate)
-					{
-						substr = ((RealtimeDate)rtSub).getContent();
-						//continue;
-					} 
-					else if(rtSub instanceof RealtimeHour)
-					{
-						substr = ((RealtimeHour)rtSub).getContent();
-					} 
-					else if(rtSub instanceof RealtimeMinute)
-					{
-						substr = ((RealtimeMinute)rtSub).getContent();
-					}
-					else
-						continue;
-					BinInfo varbin = new BinInfo();
-					try {
-						varbin.getVarBuffer(substr, mObjPath+"/" + "v"+rtSub.getIndex() +".bin");
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					BinCreater.overlap(buffer, varbin.mBits, (int)rtSub.getX(), 0, varbin.mBitsperColumn);
-				}				
-			}
-			else if(o instanceof JulianDayObject)
-			{
-				String vString = ((JulianDayObject)o).getContent();
-				BinInfo varbin= new BinInfo();
-				try{
-					varbin.getVarBuffer(vString, mObjPath+"/v"+o.getIndex()+".bin");
-				}catch(IOException e){
-					e.printStackTrace();
-				}
-				BinCreater.overlap(buffer, varbin.mBits, (int)o.getX(), 0, varbin.mBitsperColumn);
-			}
-			else
-			{
-				Debug.d(TAG, "not Variable object");
-			}
-		}
-	}
-	
-	
+
 	public void onCheckUsbSerial()
 	{
 		mSerialdev = null;
@@ -790,86 +408,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			}
 		}
 		
-	}
-	/*
-	private void updateInkLevel(byte info[])
-	{
-		if(info == null || info.length<13)
-			return;
-		int h = info[10]&0x0ff;
-		int l = info[11]&0x0ff;
-		int level = h<<8 | l;
-		mInkLevel.setText(String.valueOf(level));
-		if((info[8]&0x04)==0x00)
-			mPhotocellState.setText("0");
-		else
-			mPhotocellState.setText("1");
-		if((info[8]&0x08)==0x00)
-			mEncoderState.setText("0");
-		else
-			mEncoderState.setText("1");
-		if(info[9]==4 || info[9]==0)
-		{
-			mPrintState.setBackgroundColor(Color.GREEN);
-			mPrintState.setText(getResources().getString(R.string.strPrintok));
-		}
-		else
-		{
-			mPrintState.setBackgroundColor(Color.RED);
-			mPrintState.setText(getResources().getString(R.string.strPrinting));
-		}
-	}
-	*/
-	/*
-	 * printing Thread
-	 * 1) send print command(0001)
-	 * 2) set all parameter(0006)
-	 * 3) send parameter data(0007)
-	 * 4) send data control command (0004 )
-	 * 5) send data (0005 )
-	 * 6) send poll command in 20ms interval, goto 4) if print ok
-	 */
-	public class PrintingThread extends Thread{
-		
-		public boolean isRunning;
-		//public int curPos=0;
-		public PrintingThread()
-		{
-			isRunning=false;
-		}
-		
-		public synchronized void run()
-		{
-			isRunning = true;
-			print();
-			isRunning = false;
-		}
-	}
-	
-	public class PrintRunnable implements Runnable{
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			print();
-		}
-		
-	}
-	
-	public synchronized void stopThread(PrintingThread t)
-	{
-		if(t != null)
-		{
-			t.isRunning=false;
-			Thread tmp = t;
-			t = null;
-			tmp.interrupt();
-		}
-	}
-	
-	public synchronized void startThread()
-	{
-		new Thread(new PrintRunnable()).start();
 	}
 	
 	
@@ -1030,40 +568,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				if(mIsDemo)
+				if(mIsDemo) {
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
-				else {
-					if (mObjPath == null || mObjPath.isEmpty() || mObjList.size() == 0) {
-						Toast.makeText(mContext, "没有可打印的内容", Toast.LENGTH_LONG);
-						return;
-					}
-					/**
-					 * 启动打印后要完成的几个工作：
-					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据
-					 * 2、调用ioctl启动内核线程，开始轮训FPGA状态
-					 */
-					if (mDTransThread == null) {
-						mDTransThread = DataTransferThread.getInstance(); 
-					}
-					mDTransThread.launch();
-					FpgaGpioOperation.init();
+				} else {
+					mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
 				}
-				mMsgTitle.setTitle(String.valueOf(mCounter));
 				break;
 			case R.id.StopPrint:
 				if (mIsDemo) {
 					mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
 				} else {
-					/**
-					 * 停止打印后要完成的几个工作：
-					 * 1、调用ioctl停止内核线程，停止轮训FPGA状态
-					 * 2、停止DataTransfer线程
-					 */
-					FpgaGpioOperation.uninit();
-					if (mDTransThread == null) {
-						mDTransThread = DataTransferThread.getInstance(); 
-					}
-					mDTransThread.finish();
+					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 				}
 				break;
 			case R.id.btnFlush:

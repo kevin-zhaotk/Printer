@@ -11,8 +11,14 @@ import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 
 public class Configs {
+	
+	/** 每列的有效点阵数 **/
 	public static int gDots;
+	/** 每列的总字节数 **/
 	public static int gDotsTotal;
+	
+	public static int gBytesPerColumn;
+	public static int gCharsPerColumn;
 	public static int gFixedRows;
 	
 	public static int gParams;
@@ -64,6 +70,8 @@ public class Configs {
 	{
 		gDots = context.getResources().getInteger(R.integer.dots_per_column);
 		gDotsTotal = context.getResources().getInteger(R.integer.dots_per_column_total);
+		gBytesPerColumn = context.getResources().getInteger(R.integer.bytes_per_column);
+		gCharsPerColumn = context.getResources().getInteger(R.integer.chars_per_column);
 		gFixedRows = context.getResources().getInteger(R.integer.fixed_rows);
 		gParams = context.getResources().getInteger(R.integer.total_params);
 		

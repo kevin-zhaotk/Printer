@@ -34,18 +34,21 @@ static JNINativeMethod gMethods[] = {
  * 读写FPGA的GPIO的jni接口
  */
 static JNINativeMethod gGPIOMethods[] = {
-		{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_GPIO_open},
-		{"write",		"(I[CI)I",					(void *)Java_com_industry_printer_GPIO_write},
-		{"ioctl",		"(IIJ)I",					(void *)Java_com_industry_printer_GPIO_ioctl},
-		{"poll",		"(I)I",					(void *)Java_com_industry_printer_GPIO_poll},
-		{"close",		"(I)I",						(void *)Java_com_industry_printer_GPIO_close},
+	{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_GPIO_open},
+	{"write",		"(I[CI)I",					(void *)Java_com_industry_printer_GPIO_write},
+	{"ioctl",		"(IIJ)I",					(void *)Java_com_industry_printer_GPIO_ioctl},
+	{"poll",		"(I)I",						(void *)Java_com_industry_printer_GPIO_poll},
+	{"close",		"(I)I",						(void *)Java_com_industry_printer_GPIO_close},
 };
 
 /**
  * 读写RFID的jni接口
  */
 static JNINativeMethod gRFIDMethods[] = {
-		{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_RFID_open},
+	{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_RFID_open},
+	{"write",		"(I[SI)I",					(void *)Java_com_industry_printer_RFID_write},
+	{"read",		"(II)[B",					(void *)Java_com_industry_printer_RFID_read},
+
 };
 
 /**

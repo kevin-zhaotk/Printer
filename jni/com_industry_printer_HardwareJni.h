@@ -114,6 +114,22 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_close
 JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
   (JNIEnv *env, jclass arg, jstring dev);
 
+/*
+ * Class:     com_industry_printer_RFID
+ * Method:    read
+ * Signature: ()I
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_RFID_read
+  (JNIEnv *env, jclass arg, jint fd, jint len);
+
+/*
+ * Class:     com_industry_printer_RFID
+ * Method:    write
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
+  (JNIEnv *env, jclass arg, jint fd, jshortArray buf, jint len);
+
 #ifdef __cplusplus
 }
 #endif

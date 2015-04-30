@@ -1,8 +1,8 @@
 package com.industry.printer;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.object.BaseObject;
-import com.industry.printer.object.BinCreater;
 import com.industry.printer.object.MessageObject;
 
 import android.content.Context;
