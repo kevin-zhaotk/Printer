@@ -13,7 +13,10 @@
 
 #define JNI_TAG "RFID_jni"
 
-
+int speed_arr[]={ B921600,B460800,B230400, B115200, B38400, B19200, B9600, B4800, B2400, B1200, B300,
+    B38400, B19200, B9600, B4800, B2400, B1200, B300,};
+int name_arr[]={921600,460800,230400,115200, 38400, 19200, 9600, 4800, 2400, 1200, 300, 38400,
+    19200, 9600, 4800, 2400, 1200, 300,};
 
 int set_options(int fd, int databits, int stopbits, int parity)
 {
@@ -82,6 +85,39 @@ int set_options(int fd, int databits, int stopbits, int parity)
      return 0;
 }
 
+/*
+ * Class:     com_industry_printer_UsbSerial
+ * Method:    setBaudrate
+ * Signature: ()I
+ */
+int setBaudrate(int fd, int speed)
+{
+	int i;
+	int status;
+	struct termios Opt;
+	tcgetattr(fd, &Opt);
+	//__android_log_print(ANDROID_LOG_INFO,JNI_TAG, "setBaudrate: ===>setBaudrate\n");
+	for(i=0; i<sizeof(speed_arr)/sizeof(int); i++)
+	{
+	    if(speed == name_arr[i])
+	    {
+	        tcflush(fd, TCIOFLUSH);
+	        cfsetispeed(&Opt, speed_arr[i]);
+	        cfsetospeed(&Opt, speed_arr[i]);
+	        status = tcsetattr(fd, TCSANOW, &Opt);
+	        if(status != 0)
+	            ALOGD("tcsetattr fd1\n");
+	        tcgetattr(fd, &Opt);
+
+	        return 0;
+	    }
+	    tcflush(fd, TCIOFLUSH);
+	}
+	return 0;
+}
+
+
+
 JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
   (JNIEnv *env, jclass arg, jstring dev)
 {
@@ -101,6 +137,10 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
 	 *RFID串口设置： 数据长度：8bits；起始位：1bit；奇偶校验：无； 停止位：1bit
 	*/
 	set_options(ret, 8, 1, 'n');
+	/*
+	 * RFID串口波特率 19200
+	 */
+	setBaudrate(ret, 19200);
 	(*env)->ReleaseStringUTFChars(env, dev, dev_utf);
 	return ret;
 }
