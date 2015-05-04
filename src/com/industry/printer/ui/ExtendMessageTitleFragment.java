@@ -1,6 +1,7 @@
 package com.industry.printer.ui;
 
 import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -26,7 +27,7 @@ public class ExtendMessageTitleFragment extends Fragment {
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		
+		Debug.d("", "===>onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setContentView(R.layout.edit_frame);
@@ -36,6 +37,7 @@ public class ExtendMessageTitleFragment extends Fragment {
 	}
 	
 	public void setTitle(String title) {
+		Debug.d("", "===>setTitle:"+title);
 		mTitle.setText(title);
 	}
 }

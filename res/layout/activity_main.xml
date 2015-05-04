@@ -54,6 +54,7 @@
 	        android:textSize="40sp"
             />
     </RadioGroup>
+    <!--
     <RelativeLayout 
         android:id="@+id/tv_counter_msg"
         android:layout_width="320dp"
@@ -62,11 +63,46 @@
         android:layout_alignParentTop="true"
         
         />
+     -->
+     <TextView
+         android:id="@+id/ctrl_counter_view"
+         android:layout_width="320dp"
+         android:layout_height="80dp"
+         android:layout_toRightOf="@id/tab_group"
+         android:layout_alignParentTop="true"
+         android:textColor="#000000"
+         android:textSize="30sp"
+         android:gravity="center"
+        />
+     
+     <TextView
+         android:id="@+id/edit_message_view"
+         android:layout_width="320dp"
+         android:layout_height="80dp"
+         android:layout_toRightOf="@id/tab_group"
+         android:layout_alignParentTop="true"
+         android:textColor="#000000"
+         android:textSize="30sp"
+         android:gravity="center"
+         android:visibility="gone"
+        />
+     
+     <TextView
+         android:id="@+id/setting_ext_view"
+         android:layout_width="320dp"
+         android:layout_height="80dp"
+         android:layout_toRightOf="@id/tab_group"
+         android:layout_alignParentTop="true"
+         android:textColor="#000000"
+         android:textSize="30sp"
+         android:visibility="gone"
+         android:gravity="center"
+        />
     <RelativeLayout
-            android:id="@+id/tab_content"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/tab_group"
-            >
+         android:id="@+id/tab_content"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:layout_below="@id/tab_group"
+         >
     </RelativeLayout>
 </RelativeLayout>

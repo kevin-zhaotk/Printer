@@ -96,8 +96,8 @@ public static final String TAG="SettingsTabActivity";
 	
 	public ExtendMessageTitleFragment mMsgTitle;
 	
-	public SettingsTabActivity(Fragment fragment) {
-		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+	public SettingsTabActivity() {
+//		mMsgTitle = (ExtendMessageTitleFragment)fragment;
 	}
 	
 	@Override

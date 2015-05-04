@@ -172,8 +172,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 */
 	public byte[] mPreviewBuffer;
 	
-	public ControlTabActivity(Fragment fragment) {
-		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+	public ControlTabActivity() {
+		//mMsgTitle = (ExtendMessageTitleFragment)fragment;
 		mCounter = 0;
 	}
 	
@@ -203,7 +203,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
 		mContext.registerReceiver(mReceiver, filter);
 		
-				
+		mMsgFile = (TextView) getView().findViewById(R.id.opened_msg_name);
+		
 		mPreview = (PreviewScrollView ) getView().findViewById(R.id.sv_preview);
 		
 		mBtnStart = (Button) getView().findViewById(R.id.StartPrint);
@@ -263,8 +264,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					TLKFileParser parser = new TLKFileParser(f);
 					String preview = parser.getContentAbatract();
 					mMsgPreview.setText(preview);
-					MainActivity parent = (MainActivity)getActivity();
-					parent.mCtrlTitle.setTitle(MessageBrowserDialog.getSelected());
+					mMsgFile.setText(MessageBrowserDialog.getSelected());
 					dismissProgressDialog();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
@@ -312,8 +312,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					}
 					mDTransThread.launch();
 					FpgaGpioOperation.init();
-				
-					mMsgTitle.setTitle(String.valueOf(mCounter));
+					((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**

@@ -11,6 +11,9 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.RFIDData;
+import com.industry.printer.hardware.HardwareJni;
+import com.industry.printer.hardware.RFIDOperation;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TLKFileParser;
@@ -86,6 +89,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	 ***********************/
 	public Button	mInsert;
 	public Button	mTest;
+	public Button 	mTest5;
 	/************************
 	 * create Object buttons
 	 * **********************/
@@ -118,8 +122,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	public static Vector<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
 	
-	public EditTabActivity(Fragment fragment) {
-		mMsgTitle = (ExtendMessageTitleFragment)fragment;
+	public EditTabActivity() {
+//		mMsgTitle = (ExtendMessageTitleFragment)fragment;
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -159,7 +163,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mTest = (Button) getView().findViewById(R.id.btn_temp_4);
 		mTest.setOnClickListener(this);
 		
-		
+		mTest5 = (Button) getView().findViewById(R.id.btn_temp_5);
+		mTest5.setOnClickListener(this);
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 		mObjLine1.setText("");
 	}
@@ -371,7 +376,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
         			mObjLine1.setText("");
-        			mMsgTitle.setTitle("");
+        			// ((MainActivity) getActivity()).mEditTitle.setTitle("");
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
@@ -383,7 +388,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	    				setCurObj(0);
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
-            		mMsgTitle.setTitle(mObjName);
+            		((MainActivity) getActivity()).mEditTitle.setText(mObjName);
+            		//mMsgTitle.setTitle(mObjName);
             		break;
             		
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
@@ -400,7 +406,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
-            		mMsgTitle.setTitle(mObjName);
+            		((MainActivity) getActivity()).mEditTitle.setText(mObjName);
+            		// mMsgTitle.setTitle(mObjName);
             		break;
             		
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
@@ -585,6 +592,20 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_temp_4:
+				byte[] d = new byte[1];
+				d[0] = (byte) 0x41;
+				RFIDData data = new RFIDData((byte) 0x3A, d);
+				Debug.d(TAG, "===>RFIDData: "+data);
+				int fd = RFIDOperation.open("/dev/ttyS3");
+				int ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
+				Debug.d(TAG, "===>RFIDData ret: "+ret);
+				byte[] result = RFIDOperation.read(fd, 64);
+				if (result == null)
+					break;
+				for (int i= 0; i<result.length; i++) {
+					Debug.d(TAG, "===>result:"+String.format("%1$02x", result[i]));
+				}
+				HardwareJni.close(fd);
 				break;
 			default:
 				break;

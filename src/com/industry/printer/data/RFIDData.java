@@ -16,7 +16,10 @@ public class RFIDData {
 	/*过滤掉数据辨识符（0x10）的真实数据*/
 	public byte[] mRealData;
 	
-	private short mAddress;
+	private int mDatalen;
+	
+	/*数据包内容*/
+	private byte mAddress[];
 	private byte mLength;
 	private byte mCommand;
 	private byte[] mData;
@@ -29,7 +32,9 @@ public class RFIDData {
 	 * @param data 数据域
 	 */
 	public RFIDData(byte cmd, byte[] data) {
-		mAddress = 0x0000;
+		mAddress = new byte[2];
+		mAddress[0] = 0x00;
+		mAddress[1] = 0x00;
 		mLength = 0x00;
 		mCheckCode = 0x00;
 		mCommand = cmd;
@@ -44,7 +49,8 @@ public class RFIDData {
 		}
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		buffer.append(mHeader);
-		buffer.append(mAddress);
+		buffer.append(mAddress[0]);
+		buffer.append(mAddress[1]);
 		buffer.append(mLength);
 		buffer.append(mCommand);
 		buffer.append(mData, 0, mData.length);
@@ -137,6 +143,24 @@ public class RFIDData {
 		buffer.append(mTransData[mTransData.length-1]);
 		
 		mRealData = buffer.toByteArray();
+	}
+	
+	public short[] transferData() {
+		short[] data = new short[mTransData.length/2+1];
+		for (int i = 0; i < mTransData.length; i++) {
+			if (i%2 == 0) {
+				data[i/2] = 0;
+				data[i/2] = mTransData[i];
+			} else {
+				data[i/2] |= mTransData[i]<<8;
+			}
+		}
+		mDatalen = mTransData.length;
+		return data;
+	}
+	
+	public int getLength() {
+		return mDatalen;
 	}
 	
 	@Override

@@ -47,7 +47,7 @@ public class TLKFileParser {
 			 InputStream instream = new FileInputStream(file); 
 			 if(instream != null)
 			 {
-				 InputStreamReader inputreader = new InputStreamReader(instream,"gb2312");
+				 InputStreamReader inputreader = new InputStreamReader(instream,"UTF-8");
                  BufferedReader buffreader = new BufferedReader(inputreader);
                  String line;
                  
@@ -176,7 +176,11 @@ public class TLKFileParser {
 		else if(BaseObject.OBJECT_TYPE_TEXT.equals(attr[1]))			//text
 		{
 			obj = new TextObject(mContext, 0);
-			obj.setContent(attr[21]);
+			try {
+				obj.setContent(new String(attr[21].getBytes(), "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			Log.d(TAG, "Txt object");
 			Log.d(TAG, "content="+obj.getContent());
 		}
@@ -238,7 +242,7 @@ public class TLKFileParser {
 	 * 暂时只支持文本对象，后续会添加对变量的支持
 	 */
 	public String getContentAbatract() {
-		String content = null;
+		String content = "";
 		BaseObject pObj;
 		if (mPath == null || mPath.isEmpty()) {
 			return null;
@@ -250,7 +254,7 @@ public class TLKFileParser {
 			instream = new FileInputStream(file);
 			if(instream != null)
 			 {
-				InputStreamReader inputreader = new InputStreamReader(instream,"gb2312");
+				InputStreamReader inputreader = new InputStreamReader(instream,"UTF-8");
 	            BufferedReader buffreader = new BufferedReader(inputreader);
 	            String line;
 	            while ( (line = buffreader.readLine()) != null) {

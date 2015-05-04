@@ -11,6 +11,7 @@
         android:layout_height="fill_parent"
      	android:gravity="center"
         android:textSize="30sp"
-        android:textColor="@color/black"
+        android:text="@string/str_tlkfile"
+        android:textColor="#000000"
         />
 </RelativeLayout>    
