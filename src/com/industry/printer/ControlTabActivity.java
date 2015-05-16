@@ -65,6 +65,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public Button 	mBtnview;
 	public Button	mForward;
 	public Button 	mBackward;
+	
+	public TextView mRecords;
+	
 	public LinkedList<Map<String, String>>	mMessageMap;
 	public PreviewAdapter mMessageAdapter;
 	public ListView mMessageList;
@@ -213,6 +216,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mBtnStop = (Button) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
 		
+		mRecords = (TextView) getView().findViewById(R.id.tv_records);
 		/*
 		 *clean the print head
 		 *this command unsupported now 
