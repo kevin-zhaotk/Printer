@@ -8,6 +8,23 @@ import android.R.string;
 
 public class RFIDData {
 	
+	/*设置模块工作在 ISO14443 TYPE A 模式*/
+	public static final byte RFID_CMD_SETTYPE = 0x3A;
+	public static final byte RFID_DATA_TYPEA = 0x41;
+	/*Mifare one/Ultralight 卡寻卡：*/
+	public static final byte RFID_CMD_SEARCH = 0x46;
+	public static final byte RFID_DATA_CARDWAKEUP = 0x26;
+	public static final byte RFID_DATA_CARDALL = 0x52;
+	/*Ultralight 卡选卡*/
+	public static final byte RFID_CMD_SELECTCARD = 0x33;
+	/*Ultralight 卡读卡*/
+	public static final byte RFID_CMD_READCARD = 0x4b;
+	/*Ultralight 卡写卡*/
+	public static final byte RFID_CMD_WRITECARD = 0x35;
+	/*Mifare one 卡防冲突*/
+	public static final byte RFID_CMD_AVOIDCONFLICT = 0x47;
+	public static final byte RFID_DATA_AVOIDCONFLICT = 0x04;
+	
 	private static final byte mIdentificator = 0x10;
 	private static final byte mHeader = 0x02;
 	private static final byte mTailer = 0x03;
@@ -40,13 +57,7 @@ public class RFIDData {
 		mCommand = cmd;
 		mData = data;
 		Debug.d("", "===>cmd:"+cmd +", mCommand:"+mCommand);
-		for (int i=0; i<data.length; i++) {
-			Debug.d("", "===>data:"+data[i]);
-		}
-		for (int i=0; i<mData.length; i++) {
-			Debug.d("", "===>mData:"+mData[i]);
-			
-		}
+		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		buffer.append(mHeader);
 		buffer.append(mAddress[0]);
@@ -57,10 +68,10 @@ public class RFIDData {
 		buffer.append(mCheckCode);
 		buffer.append(mTailer);
 		mRealData = buffer.toByteArray();
-		for (int i=0; i<mRealData.length; i++) {
-			Debug.d("", "===>mRealData:"+mRealData[i]);
-			
-		}
+//		for (int i=0; i<mRealData.length; i++) {
+//			Debug.d("", "===>mRealData:"+mRealData[i]);
+//			
+//		}
 		//计算长度字
 		mLength = (byte) (mRealData.length-4);
 		mRealData[3] = mLength;

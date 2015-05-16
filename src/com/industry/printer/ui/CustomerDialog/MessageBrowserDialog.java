@@ -19,14 +19,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener {
+public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
@@ -71,6 +73,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
 			 
+			 mMessageList.setOnTouchListener(this);
 			 loadMessages();
 			 mFileAdapter.notifyDataSetChanged();
 		 }
@@ -146,6 +149,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			} else {
 				return mTitle;
 			}
+		}
+
+		@Override
+		public boolean onTouch(View arg0, MotionEvent arg1) {
+			// TODO Auto-generated method stub
+			return false;
 		}
 		
 }

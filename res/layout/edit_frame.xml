@@ -78,7 +78,7 @@
 		     android:gravity="top"
 		     android:singleLine="false"
 		     android:inputType="textMultiLine"
-		     android:textSize="40sp"
+		     android:textSize="80sp"
 		    />
 <!-- 	   
 	<LinearLayout
