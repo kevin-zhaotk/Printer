@@ -58,24 +58,39 @@
         android:layout_height="58dp"
         android:layout_below="@id/ctrl_btn_layout"
         android:orientation="horizontal">
-        
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="@string/str_state_inklevel"
-            android:textSize="@dimen/ctrlButtonsTextsize"
-            android:textColor="#000000"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="@string/str_state_battery"
-            android:textSize="@dimen/ctrlButtonsTextsize"
-            android:textColor="#000000"
-            />
-        
+            android:layout_weight="1" 
+            >
+	        <TextView
+	            android:layout_width="0dp"
+	            android:layout_height="fill_parent"
+	            android:layout_weight="1"
+	            android:text="@string/str_state_inklevel"
+	            android:textSize="@dimen/ctrlButtonsTextsize"
+	            android:textColor="#000000"
+	            />
+        </LinearLayout>
+        <LinearLayout >
+	        <TextView
+	            android:layout_width="0dp"
+	            android:layout_height="fill_parent"
+	            android:layout_weight="1"
+	            android:text="@string/str_print_count"
+	            android:textSize="@dimen/ctrlButtonsTextsize"
+	            android:textColor="#000000"
+	            />
+	        <TextView 
+	            android:id="@+id/tv_records"
+	            android:layout_width="0dp"
+	            android:layout_height="fill_parent"
+	            android:layout_weight="1"
+	            android:text="@string/str_print_count_default"
+	            android:textSize="@dimen/ctrlButtonsTextsize"
+	            android:textColor="#000000"
+	            />
+        </LinearLayout>
     </LinearLayout>
 	
     <LinearLayout 
