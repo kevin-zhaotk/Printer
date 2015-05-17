@@ -3,6 +3,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="scrollbar_size">20dp</dimen>
 <!-- 设置界面相关尺寸定义 -->	
 	<dimen name="settingsTextsize">40sp</dimen>
 	<dimen name="settingsEditTextsize">40sp</dimen>

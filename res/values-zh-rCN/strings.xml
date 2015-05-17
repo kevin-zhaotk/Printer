@@ -376,6 +376,7 @@
 	<string name="str_textview_param8">08. 编码器定长脉数</string>
 	<string name="str_textview_param9">09. 编码器延时条件脉冲数</string>
 	<string name="str_textview_param10">10. 每次输出高时间</string> 
+	<string name="str_btn_settings_sync">下发配置</string>
 	<string-array name="encoder_item_entries">
 	    <item>PHO1</item>
 	    <item>PHO2</item>

@@ -77,7 +77,8 @@
 		     android:layout_marginRight="5dp"
 		     android:gravity="top"
 		     android:singleLine="false"
-		     android:inputType="textMultiLine"
+		     android:imeOptions="flagNoExtractUi|actionDone"
+		     android:scrollHorizontally="false"
 		     android:textSize="80sp"
 		    />
 <!-- 	   

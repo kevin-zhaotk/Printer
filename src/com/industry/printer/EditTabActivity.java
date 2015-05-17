@@ -39,10 +39,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +52,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class EditTabActivity extends Fragment implements OnClickListener {
@@ -167,6 +171,19 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mTest5.setOnClickListener(this);
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 		mObjLine1.setText("");
+		mObjLine1.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				if (arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);  
+					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 	}
 	
 	
@@ -377,7 +394,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
         			mObjLine1.setText("");
-        			// ((MainActivity) getActivity()).mEditTitle.setTitle("");
+        			((MainActivity) getActivity()).mEditTitle.setText("");
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
