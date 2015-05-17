@@ -13,9 +13,9 @@
         <TextView
             android:id="@+id/ph_set_encoder"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param1"
@@ -27,7 +27,6 @@
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="@dimen/settingsSPinnerSize"
             android:layout_toRightOf="@id/ph_set_encoder"
-            android:layout_alignBottom="@id/ph_set_encoder"
             android:spinnerMode="dropdown"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:dropDownWidth="@dimen/settingsValueLength"
@@ -38,7 +37,6 @@
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/ph_set_encoder_value"
-            android:layout_alignBaseline="@id/ph_set_encoder"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsTextsize" 
             android:textColor="@color/UnitText"
@@ -51,13 +49,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_trigerMode"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param2"
@@ -69,7 +68,6 @@
             android:layout_height="@dimen/settingsTextViewHeight"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_trigerMode"
-            android:layout_alignBottom="@id/ph_set_trigerMode"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -77,13 +75,12 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_trigerMode_value"
-            android:layout_alignBaseline="@id/ph_set_trigerMode"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize"
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -92,13 +89,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_PHODelayHigh"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param3"
@@ -110,7 +108,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_PHODelayHigh"
-            android:layout_alignBottom="@id/ph_set_PHODelayHigh"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -118,14 +115,13 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_PHODelayHigh_value"
-            android:layout_alignBaseline="@id/ph_set_PHODelayHigh"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:text="@string/str_time_unit"
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -135,13 +131,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_PHODelayLow"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param4"
@@ -153,7 +150,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_PHODelayLow"
-            android:layout_alignBottom="@id/ph_set_PHODelayLow"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -161,14 +157,13 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_PHODelayLow_value"
-            android:layout_alignBaseline="@id/ph_set_PHODelayLow"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:text="@string/str_time_unit"
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	<RelativeLayout
@@ -176,13 +171,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_PHOOutput_period"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param5"
@@ -194,7 +190,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_PHOOutput_period"
-            android:layout_alignBottom="@id/ph_set_PHOOutput_period"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -202,14 +197,13 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_PHOOutput_period_value"
-            android:layout_alignBaseline="@id/ph_set_PHOOutput_period"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:text="@string/str_time_unit"
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -218,13 +212,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_TimeFixed_period"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param6"
@@ -236,7 +231,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_TimeFixed_period"
-            android:layout_alignBottom="@id/ph_set_TimeFixed_period"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -244,13 +238,12 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_TimeFixed_period_value"
-            android:layout_alignBaseline="@id/ph_set_TimeFixed_period"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -260,13 +253,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderTriger_pulse"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param7"
@@ -278,7 +272,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_EncoderTriger_pulse"
-            android:layout_alignBottom="@id/ph_set_EncoderTriger_pulse"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -286,13 +279,12 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_EncoderTriger_pulse_value"
-            android:layout_alignBaseline="@id/ph_set_EncoderTriger_pulse"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -301,13 +293,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderLenFixed_pulse"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param8"
@@ -319,7 +312,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_EncoderLenFixed_pulse"
-            android:layout_alignBottom="@id/ph_set_EncoderLenFixed_pulse"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -327,13 +319,12 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_EncoderLenFixed_pulse_value"
-            android:layout_alignBaseline="@id/ph_set_EncoderLenFixed_pulse"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
@@ -342,13 +333,14 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
 	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:gravity="center_vertical"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderDelay_pulse"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param9"
@@ -360,7 +352,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_EncoderDelay_pulse"
-            android:layout_alignBottom="@id/ph_set_EncoderDelay_pulse"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -368,13 +359,13 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_EncoderDelay_pulse_value"
-            android:layout_alignBaseline="@id/ph_set_EncoderDelay_pulse"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"/>
+            />
 	</RelativeLayout>
 	
 	<RelativeLayout
@@ -386,9 +377,9 @@
         <TextView
             android:id="@+id/ph_set_OutputHight_length"
             android:layout_width="@dimen/settingsItemLength"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
             android:text="@string/str_textview_param10"
@@ -400,7 +391,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/settingsEditTextsize"
             android:layout_toRightOf="@id/ph_set_OutputHight_length"
-            android:layout_alignBottom="@id/ph_set_OutputHight_length"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
@@ -408,13 +398,13 @@
           
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_OutputHight_length_value"
             android:layout_alignBaseline="@id/ph_set_OutputHight_length"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
-            android:gravity="center_vertical"
             />
 	</RelativeLayout>
 	
