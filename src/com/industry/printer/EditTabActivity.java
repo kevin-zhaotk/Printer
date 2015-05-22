@@ -39,10 +39,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +52,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class EditTabActivity extends Fragment implements OnClickListener {
@@ -167,6 +171,19 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mTest5.setOnClickListener(this);
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 		mObjLine1.setText("");
+		mObjLine1.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				if (arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);  
+					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 	}
 	
 	
@@ -370,13 +387,14 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
+			String title = getResources().getString(R.string.str_file_title);;
 			boolean createfile=false;
             switch (msg.what) {
 
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
         			mObjLine1.setText("");
-        			// ((MainActivity) getActivity()).mEditTitle.setTitle("");
+        			((MainActivity) getActivity()).mEditTitle.setText("");
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
@@ -388,7 +406,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	    				setCurObj(0);
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}
-            		((MainActivity) getActivity()).mEditTitle.setText(mObjName);
+            		
+            		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
             		//mMsgTitle.setTitle(mObjName);
             		break;
             		
@@ -406,7 +425,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
-            		((MainActivity) getActivity()).mEditTitle.setText(mObjName);
+            		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
             		// mMsgTitle.setTitle(mObjName);
             		break;
             		
@@ -555,6 +574,9 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	public void onClick(View arg0) {
 		CustomerDialogBase dialog;
 		List<BaseObject> objs = null;
+		byte[] d;
+		int fd;
+		int ret;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
@@ -592,12 +614,12 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_temp_4:
-				byte[] d = new byte[1];
-				d[0] = (byte) 0x41;
-				RFIDData data = new RFIDData((byte) 0x3A, d);
+				d = new byte[1];
+				d[0] = (byte) 0x03;
+				RFIDData data = new RFIDData((byte) 0x15, d);
 				Debug.d(TAG, "===>RFIDData: "+data);
-				int fd = RFIDOperation.open("/dev/ttyS3");
-				int ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
+				fd = RFIDOperation.open("/dev/ttyS3");
+				ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
 				Debug.d(TAG, "===>RFIDData ret: "+ret);
 				byte[] result = RFIDOperation.read(fd, 64);
 				if (result == null)
@@ -605,8 +627,26 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				for (int i= 0; i<result.length; i++) {
 					Debug.d(TAG, "===>result:"+String.format("%1$02x", result[i]));
 				}
+				
 				HardwareJni.close(fd);
 				break;
+			case R.id.btn_temp_5:
+				/******************/
+				d = new byte[1];
+				d[0] = 0x41;
+				data = new RFIDData((byte) 0x3A, d);
+				Debug.d(TAG, "===>RFIDData: "+data);
+				fd = RFIDOperation.open("/dev/ttyS3");
+				ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
+				Debug.d(TAG, "===>RFIDData ret: "+ret);
+				result = RFIDOperation.read(fd, 64);
+				if (result == null)
+					break;
+				for (int i= 0; i<result.length; i++) {
+					Debug.d(TAG, "===>result:"+String.format("%1$02x", result[i]));
+				}
+
+				HardwareJni.close(fd);
 			default:
 				break;
 		}

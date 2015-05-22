@@ -238,6 +238,9 @@ public static final String TAG="SettingsTabActivity";
 				SystemConfigFile.saveConfig();
 				FpgaGpioOperation.updateSettings(mContext);
 				break;
+			case R.id.btn_setting_cancel:
+				mPHSettings.reloadSettings();
+				break;
 			case R.id.btn_system_setting:	//进入系统设置
 				Intent intent = new Intent();
 				intent.setClassName("com.android.settings","com.android.settings.Settings");

@@ -59,9 +59,10 @@
             android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="@string/str_file_save"
+            android:text="@string/str_btn_settings_sync"
             android:textSize="@dimen/settingsBtnsize"
             />
+         
         <Button 
             android:id="@+id/btn_setting_cancel"
             android:layout_width="0dp"
@@ -70,7 +71,8 @@
             android:text="@string/str_file_cancel"
             android:textSize="@dimen/settingsBtnsize"
             />
-        <Button 
+
+         <Button 
             android:id="@+id/btn_setting_upgrade"
             android:layout_width="0dp"
             android:layout_height="80dp"
@@ -94,7 +96,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/settingBtns"
-        android:layout_marginTop="10px">
+        android:layout_marginTop="10px"
+        android:scrollbarSize="@dimen/scrollbar_size"
+        >
         <RelativeLayout
 	        android:id="@+id/phsetting_fragment"
 	        android:layout_width="wrap_content"

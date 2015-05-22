@@ -371,17 +371,17 @@
 	<string name="str_print_count_default">0</string>
 <!-- 树莓派3 设置界面相关 -->
 	
-	<string name="str_textview_param1">Encoder selection</string>
-	<string name="str_textview_param2">Triger mode</string>
-	<string name="str_textview_param3">PHO delayed high</string> 
-	<string name="str_textview_param4">PHO delayed low</string>
-	<string name="str_textview_param5">PHO output period</string>
-	<string name="str_textview_param6">Time-fixed output period</string>
-	<string name="str_textview_param7">Encoder triger pulse number</string>
-	<string name="str_textview_param8">Encoder length-fixed pulse number</string>
-	<string name="str_textview_param9">Encoder delayed condition pulse number</string>
-	<string name="str_textview_param10">High length</string>
-
+	<string name="str_textview_param1">01. Encoder selection</string>
+	<string name="str_textview_param2">02. Triger mode</string>
+	<string name="str_textview_param3">03. PHO delayed high</string> 
+	<string name="str_textview_param4">04. PHO delayed low</string>
+	<string name="str_textview_param5">05. PHO output period</string>
+	<string name="str_textview_param6">06. Time-fixed output period</string>
+	<string name="str_textview_param7">07. Encoder triger pulse number</string>
+	<string name="str_textview_param8">08. Encoder length-fixed pulse number</string>
+	<string name="str_textview_param9">09. Encoder delayed condition pulse number</string>
+	<string name="str_textview_param10">10. High length</string>
+	<string name="str_btn_settings_sync">Sync Settings</string>
 	<string-array name="encoder_item_entries">
 	    <item>PHO1</item>
 	    <item>PHO2</item>
@@ -405,6 +405,7 @@
 	
 	<string name="str_notice_save">please input message name:</string>
 	<string name="str_notice_no_objects">No Object for save!</string>
+	<string name="str_file_title">Message：</string>
 	<string name="str_file_hint">file name</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>

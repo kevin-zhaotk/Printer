@@ -8,6 +8,8 @@ import com.industry.printer.Utils.Debug;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -277,7 +279,37 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		} catch (Exception e) {
 			
 		}
-		
+		mHandler.removeMessages(PRINTER_SETTINGS_CHANGED);
+		mHandler.sendEmptyMessageDelayed(PRINTER_SETTINGS_CHANGED, 10000);
 		return iv;
 	}
+	
+	public void reloadSettings() {
+		SystemConfigFile.parseSystemCofig();
+		mEncoder.setSelection(SystemConfigFile.mEncoder);
+		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
+		mPHO_H.setText(String.valueOf(SystemConfigFile.mPHOHighDelay));
+		mPHO_L.setText(String.valueOf(SystemConfigFile.mPHOLowDelay));
+		mOutPeriod.setText(String.valueOf(SystemConfigFile.mPHOOutputPeriod));
+		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mTimedPeriod));
+		mTimedPulse.setText(String.valueOf(SystemConfigFile.mTrigerPulse));
+		mLenPulse.setText(String.valueOf(SystemConfigFile.mLenFixedPulse));
+		mDelayPulse.setText(String.valueOf(SystemConfigFile.mDelayPulse));
+		mHighLen.setText(String.valueOf(SystemConfigFile.mHighLen));
+	}
+	
+	private static final int PRINTER_SETTINGS_CHANGED = 1;
+	private Handler mHandler = new Handler() {
+		
+		public void handleMessage(Message msg) { 
+			switch (msg.what) {
+			case PRINTER_SETTINGS_CHANGED:
+				SystemConfigFile.saveConfig();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
 }
