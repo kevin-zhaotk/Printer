@@ -131,6 +131,7 @@ public class BaseObject{
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawText(mContent, 0, height-5, mPaint);
+		BinCreater.saveBitmap(bmp, "bg.png");
 		return bmp;
 	}
 	

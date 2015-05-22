@@ -518,7 +518,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		//BinCreater.saveBitmap(bmp, "back.png");
 		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
 		BinCreater.create(bmp, 0);
-		BinCreater.saveBin(f+"/1.bin", width, Configs.gDots);
+		BinCreater.saveBin(f+"/1.bin", width, bmp.getHeight());
 		return ;
 	}
 	

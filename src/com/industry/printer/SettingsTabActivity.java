@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -251,6 +252,7 @@ public static final String TAG="SettingsTabActivity";
 				ArrayList<String> paths = ConfigPath.getMountedUsb();
 				for (String str : paths) {
 					File file = new File(str+"/Printer.apk");
+					Debug.d(TAG, "===>file:"+file.getPath());
 					if (!file.exists()) {
 						continue;
 					}
@@ -258,7 +260,9 @@ public static final String TAG="SettingsTabActivity";
 //					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 //					pDialog.setMessage(getResources().getString(R.string.str_upgrade_progress));
 //					pDialog.show();
-					System.setProperty("ctrl.start", "upgrade");
+					Debug.d(TAG, "===>start upgrade service");
+					System.setProperty("ctl.start", "upgrade");
+					SystemProperties.set("ctl.start","upgrade");
 					break;
 				}
 				break;

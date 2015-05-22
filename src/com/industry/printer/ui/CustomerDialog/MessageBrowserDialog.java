@@ -127,6 +127,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			
 			File rootpath = new File(tlkPath);
 			File[] Tlks = rootpath.listFiles();
+			if (Tlks == null) {
+				return ;
+			}
 			for (File t:Tlks) {
 				
 				if (!t.isDirectory()) {

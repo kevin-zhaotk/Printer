@@ -27,7 +27,7 @@ public class BinCreater {
 	
 	public static void create(Bitmap bmp, int colEach)
 	{
-		Bitmap scaledImg = scaleHeight(bmp, Configs.gDots);
+		Bitmap scaledImg = scaleHeight(bmp, bmp.getHeight()																																					);
 		mBmpBytes = new int[scaledImg.getByteCount()/2];
 		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
