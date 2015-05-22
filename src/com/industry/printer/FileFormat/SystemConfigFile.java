@@ -219,4 +219,18 @@ public class SystemConfigFile{
 			e.printStackTrace();
 		}
 	}
+	
+	public void saveSettings() {
+		ArrayList<XmlTag> tags = new ArrayList<XmlTag>();
+		tags.add(new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder)));
+		tags.add(new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode)));
+		tags.add(new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay)));
+		tags.add(new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay)));
+		tags.add(new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod)));
+		tags.add(new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod)));
+		tags.add(new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse)));
+		tags.add(new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse)));
+		tags.add(new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse)));
+		tags.add(new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen)));
+	}
 }

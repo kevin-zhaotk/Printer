@@ -211,3 +211,17 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_RFID_read
 	}
 	return jResp;
 }
+
+/*
+ * Class:     com_industry_printer_RFID
+ * Method:    close
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_close
+  (JNIEnv *env, jclass arg, jint fd)
+{
+	ALOGD("*******fd=%d",fd);
+	int ret = close(fd);
+	ALOGD("*******ret=%d",ret);
+	return ret;
+}

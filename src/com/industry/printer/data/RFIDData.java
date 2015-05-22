@@ -1,5 +1,7 @@
 package com.industry.printer.data;
 
+import java.nio.ByteBuffer;
+
 import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.Utils.Debug;
@@ -162,6 +164,28 @@ public class RFIDData {
 	public int getLength() {
 		return mDatalen;
 	}
+	
+	public byte getCommand() {
+		if (mRealData != null && mRealData.length > 4) {
+			return mRealData[4];
+		}
+		return 0x00;
+	}
+	
+	public byte[] getData() {
+		
+		if (mRealData == null || mRealData.length < 4) {
+			return null;
+		}
+		mLength = mRealData[3];
+		if (mLength == 0 || (mLength + 4) != mRealData.length) {
+			return null;
+		}
+		ByteBuffer buffer = ByteBuffer.wrap(mRealData);
+		buffer.get(mData, 5, mRealData.length - 7);
+		return mData;
+	}
+	
 	
 	@Override
 	public String toString() {
