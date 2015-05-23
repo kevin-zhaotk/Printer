@@ -29,6 +29,7 @@ public class XmlInputStream {
 	
 	public XmlInputStream(String file) {
 		try {
+			Debug.d(TAG, "===>file:"+file);
 			mInputStream = new FileInputStream(new File(file));
 		} catch (FileNotFoundException e) {
 			Debug.e(TAG, "file not found:"+file);
@@ -46,29 +47,34 @@ public class XmlInputStream {
 		try {
 			XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
 			parser.setInput(mInputStream, "utf-8");
+			parser.next();
 			int event = parser.getEventType();
-			
+			mPairs = new ArrayList<XmlTag>();
 			while (event != XmlPullParser.END_DOCUMENT) {
 				switch (event) {
 				case XmlPullParser.START_DOCUMENT:
-					mPairs = new ArrayList<XmlTag>();
+					
 					break;
 				case XmlPullParser.START_TAG:
+					Debug.d(TAG, "===>tag:"+parser.getName());
 					String key = parser.getName();
 					String value = parser.nextText();
+					Debug.d(TAG, "===>tag key: "+key+", value: "+value);
 					XmlTag tag = new XmlTag(key, value);
+					mPairs.add(tag);
 					break;
 				case XmlPullParser.END_TAG:
 				case XmlPullParser.END_DOCUMENT:
 				default:
 					break;
 				}
+				event = parser.next();
 			}
 		} catch (XmlPullParserException e) {
-			e.printStackTrace();
+			Debug.d(TAG, "read error:"+e.getMessage());
 			return null;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Debug.d(TAG, "read error:"+e.getMessage());
 			return null;
 		}
 		return mPairs;

@@ -57,6 +57,7 @@ public class Configs {
 	 */
 	public static final String SYSTEM_CONFIG_DIR = "/system";
 	public static final String SYSTEM_CONFIG_FILE = SYSTEM_CONFIG_DIR+"/system_config.txt";
+	public static final String SYSTEM_CONFIG_XML = SYSTEM_CONFIG_DIR+"/system_config.xml";
 	
 	/**
 	 * TLK文件存放路径

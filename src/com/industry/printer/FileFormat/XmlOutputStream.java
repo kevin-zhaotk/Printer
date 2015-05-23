@@ -50,10 +50,12 @@ public class XmlOutputStream {
 			mSerializer.setOutput(writer);
 			/*开始标签*/
 			mSerializer.startDocument("utf-8", true);
+			mSerializer.text("\n");
 			for (XmlTag pair : pairs) {
 				mSerializer.startTag(null, pair.getKey());
 				mSerializer.text(pair.getValue());
 				mSerializer.endTag(null, pair.getKey());
+				mSerializer.text("\n");
 			}
 			mSerializer.endDocument();
 			

@@ -632,21 +632,13 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				break;
 			case R.id.btn_temp_5:
 				/******************/
-				d = new byte[1];
-				d[0] = 0x41;
-				data = new RFIDData((byte) 0x3A, d);
-				Debug.d(TAG, "===>RFIDData: "+data);
-				fd = RFIDOperation.open("/dev/ttyS3");
-				ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
-				Debug.d(TAG, "===>RFIDData ret: "+ret);
-				result = RFIDOperation.read(fd, 64);
-				if (result == null)
-					break;
-				for (int i= 0; i<result.length; i++) {
-					Debug.d(TAG, "===>result:"+String.format("%1$02x", result[i]));
-				}
-
-				HardwareJni.close(fd);
+				RFIDOperation writer = RFIDOperation.getInstance();
+				writer.connect();
+				writer.setType();
+				writer.lookForCards();
+				writer.avoidConflict();
+				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
+				writer.writeBlock((byte)0, content);
 			default:
 				break;
 		}

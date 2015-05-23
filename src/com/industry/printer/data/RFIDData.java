@@ -148,9 +148,9 @@ public class RFIDData {
 		for (int i = 1; i < mTransData.length-1; i++) {
 			if (mTransData[i] == mIdentificator) {
 				i++;
-				buffer.append(mRealData[i]);
+				buffer.append(mTransData[i]);
 			} else {
-				buffer.append(mRealData[i]);
+				buffer.append(mTransData[i]);
 			}
 		}
 		buffer.append(mTransData[mTransData.length-1]);
@@ -192,8 +192,12 @@ public class RFIDData {
 		if (mLength == 0 || (mLength + 4) != mRealData.length) {
 			return null;
 		}
+		for (int i = 0; i < mRealData.length; i++) {
+			Debug.d("", "===>mRealData["+i+"]="+Integer.toHexString(mRealData[i]));
+		}
 		ByteBuffer buffer = ByteBuffer.wrap(mRealData);
-		buffer.get(mData, 5, mRealData.length - 7);
+		mData = new byte[mRealData.length - 7];
+		buffer.get(mData, 0, mRealData.length - 7);
 		return mData;
 	}
 	

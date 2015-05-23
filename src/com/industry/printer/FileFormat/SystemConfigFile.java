@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.BreakIterator;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -52,6 +53,7 @@ public class SystemConfigFile{
 	public static void parseSystemCofig() {
 		FileReader reader=null;
 		BufferedReader br = null;
+		String tag;
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.isEmpty()) {
 			return;
@@ -63,6 +65,40 @@ public class SystemConfigFile{
 		if (!file.exists()) {
 			return ;
 		}
+		Debug.d(TAG, "===>1111111111");
+		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.SYSTEM_CONFIG_XML);
+		List<XmlTag> list = inStream.read();
+		Debug.d(TAG, "===>2222222222222");
+		if (list == null) {
+			return;
+		}
+		Debug.d(TAG, "===>3333333");
+		for (XmlTag t : list) {
+			tag = t.getKey();
+			if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
+				mEncoder = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
+				mTrigerMode = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_DELAY)) {
+				mPHOHighDelay = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_LOW_DELAY)) {
+				mPHOLowDelay = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_PHOOUTPUT_PERIOD)) {
+				mPHOOutputPeriod = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_TIMED_PERIOD)) {
+				mTimedPeriod = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_PULSE)) {
+				mTrigerPulse = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_LENFIXED_PULSE)) {
+				mLenFixedPulse = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_DELAY_PULSE)) {
+				mDelayPulse = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
+				mHighLen = Integer.parseInt(t.getValue());
+			}
+			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
+		}
+		/*
 		try {
 			reader = new FileReader(file);
 			br = new BufferedReader(reader);
@@ -161,7 +197,7 @@ public class SystemConfigFile{
 			e.printStackTrace();
 		} finally {
 		}
-		
+		*/
 	}
 	
 	
@@ -211,6 +247,30 @@ public class SystemConfigFile{
 			writer.append(PH_SETTING_HIGH_LEN + " " +mHighLen);
 			writer.flush();
 			writer.close();
+			
+			ArrayList<XmlTag> list = new ArrayList<XmlTag>();
+			XmlTag tag1 = new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse));
+			list.add(tag1);
+			tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen));
+			list.add(tag1);
+			XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
+			stream.write(list);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,6 +1,9 @@
 package com.industry.printer.hardware;
 
 import java.io.Closeable;
+import java.nio.ByteBuffer;
+
+import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.RFIDData;
@@ -138,6 +141,42 @@ public class RFIDOperation {
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
 	}
+	
+	/**
+	 * Mifare one 卡写块
+	 * @param block 1字节绝对块号
+	 * @param content 16字节内容
+	 * @return true 成功， false 失败
+	 */
+	public boolean writeBlock(byte block, byte[] content) {
+		if (block <0 || block > 0x3f || content == null || content.length != 16) {
+			Debug.d(TAG, "block no large than 0x3f");
+		}
+		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
+		buffer.append(block);
+		buffer.append(content, 0, content.length);
+		RFIDData data = new RFIDData(RFID_CMD_MIFARE_WRITE_BLOCK, buffer.toByteArray());
+		byte[] readin = writeCmd(data);
+		return isCorrect(readin);
+		
+	}
+	
+	/**
+	 * Mifare one 卡读块
+	 * @param block 1字节绝对块号
+	 * @return 16字节内容
+	 */
+	public byte[] readBlock(byte block) {
+		byte[] b = {block};
+		RFIDData data = new RFIDData(RFID_CMD_MIFARE_READ_BLOCK, b);
+		byte[] readin = writeCmd(data);
+		if (!isCorrect(readin)) {
+			return null;
+		}
+		RFIDData rfidData = new RFIDData(readin, true);
+		byte[] blockData = rfidData.getData();
+		return blockData;
+	}
 	/*
 	 * write command to RFID model
 	 */
@@ -146,6 +185,12 @@ public class RFIDOperation {
 		if (fp <= 0) {
 			return null;
 		}
+		Debug.d(TAG, "************write begin******************");
+		for (int i = 0; i < data.mTransData.length; i++) {
+			System.out.print("0x"+Integer.toHexString(data.mTransData[i])+" ");
+			Debug.d(TAG, "0x"+Integer.toHexString(data.mTransData[i]));
+		}
+		Debug.d(TAG, "************write end******************");
 		int writed = write(fp, data.transferData(), data.getLength());
 		if (writed <= 0) {
 			close(fp);
@@ -156,6 +201,12 @@ public class RFIDOperation {
 			close(fp);
 			return null;
 		}
+		Debug.d(TAG, "************read begin******************");
+		for (int i = 0; i < readin.length; i++) {
+			System.out.print("0x"+Integer.toHexString(readin[i])+" ");
+			Debug.d(TAG,"0x"+Integer.toHexString(readin[i]));
+		}
+		Debug.d(TAG, "************read end******************");
 		close(fp);
 		return readin;
 	}
