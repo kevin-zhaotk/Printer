@@ -33,6 +33,7 @@ public class FpgaGpioOperation {
 	public static final int FPGA_STATE_SETTING	= 0x01;
 	public static final int FPGA_STATE_RESERVED	= 0x02;
 	public static final int FPGA_STATE_CLEAN	= 0x03;
+
 	
 	public static final String FPGA_DRIVER_FILE = "/dev/fpga-gpio";
 	public static int mFd=0;
@@ -83,6 +84,19 @@ public class FpgaGpioOperation {
 	public final static String TAG = FpgaGpioOperation.class.getSimpleName();
 	
 	
+	public static FpgaGpioOperation mInstance;
+	
+	public static FpgaGpioOperation getInstance() {
+		if (mInstance == null) {
+			mInstance = new FpgaGpioOperation();
+		}
+		return mInstance;
+	}
+	
+	public FpgaGpioOperation() {
+		
+	}
+	
 	public static int open() {
 		if(mFd <= 0) {
 			mFd = open(FPGA_DRIVER_FILE);
@@ -98,17 +112,22 @@ public class FpgaGpioOperation {
 	/**
 	 * writeData 下发打印数据接口
 	 * 每次在启动打印的时候设置为输出，在打印过程中不允许修改PG0 PG1状态
+	 * @param type 数据类型，设置or打印数据
 	 * @param data
 	 * @param len
 	 * @return
 	 */
-	public static int writeData(char data[], int len) {
+	public static synchronized int writeData(int type, char data[], int len) {
 		
 		int fd = open();
 		if(fd <= 0) {
 			return -1;
 		}
-		//ioctl(fd, FPGA_CMD_SENDDATA, FPGA_STATE_OUTPUT);
+		if (type < FPGA_STATE_OUTPUT || type > FPGA_STATE_CLEAN) {
+			Debug.d(TAG, "===>wrong data type");
+			return -1;
+		}
+		ioctl(fd, FPGA_CMD_SETTING, type);
 		
 		int wlen = write(fd, data, len);
 		if(wlen != len) {
@@ -168,21 +187,21 @@ public class FpgaGpioOperation {
 		}
 		char data[] = new char[Configs.gParams];
 		
-		
+		for (int i = 0; i < data.length; i++) {
+			data[i] = 0;
+ 		}
 		data[0] = (char) SystemConfigFile.mEncoder;
 		data[1] = (char) SystemConfigFile.mTrigerMode;
 		data[2] = (char) SystemConfigFile.mPHOHighDelay;
 		data[3] = (char) SystemConfigFile.mPHOLowDelay;
 		data[4] = (char) SystemConfigFile.mPHOOutputPeriod;
 		data[5] = (char) SystemConfigFile.mTimedPeriod;
-		data[7] = (char) SystemConfigFile.mTrigerPulse;
-		data[8] = (char) SystemConfigFile.mLenFixedPulse;
-		data[9] = (char) SystemConfigFile.mDelayPulse;
-		data[10] = (char) SystemConfigFile.mHighLen;
+		data[6] = (char) SystemConfigFile.mTrigerPulse;
+		data[7] = (char) SystemConfigFile.mLenFixedPulse;
+		data[8] = (char) SystemConfigFile.mDelayPulse;
+		data[9] = (char) SystemConfigFile.mHighLen;
 		
-		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_SETTING);
-		
-		write(fd, data, data.length*2);	
+		writeData(FPGA_STATE_SETTING, data, data.length*2);	
 	}
 	
 	/**

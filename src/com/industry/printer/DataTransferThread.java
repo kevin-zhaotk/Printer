@@ -63,7 +63,7 @@ public class DataTransferThread extends Thread {
 				//在此处发生打印数据，同时
 				//Debug.d(TAG, "===>kernel buffer empty, fill it");
 				char[] buffer = mDataTask.getPrintBuffer();
-				FpgaGpioOperation.writeData(buffer, buffer.length*2);
+				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 			}
 			
