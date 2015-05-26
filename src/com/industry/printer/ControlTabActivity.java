@@ -297,7 +297,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 //					data[0] = (char) (0x0001 << testdata);
 //					data[1] = (char) (0x0001 << testdata);
 //					testdata++;
-					FpgaGpioOperation.writeData(data, data.length*2);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT,data, data.length*2);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_START:
