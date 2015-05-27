@@ -1,5 +1,8 @@
 package com.industry.printer.data;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.CharBuffer;
+
 import com.industry.printer.Utils.Debug;
 
 public class InternalCodeCalculater {
@@ -13,13 +16,44 @@ public class InternalCodeCalculater {
 		return mInstance;
 	}
 	
-	public void getCharCode(String value) {
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			int j = c;
-			Integer ii = new Integer(j);
-			Debug.d("", "--->"+c+" internal code is: 0x"+Integer.toHexString(j));
+	public char[] getGBKCode(String value) {
+		byte[] utf8 = null;
+		try {
+			utf8 = value.getBytes("GB2312");
+			Debug.d("", "--->utf8<---");
+			for (int i = 0; i < utf8.length; i++) {
+				Debug.d("", ""+Integer.toHexString(utf8[i]&0x0ff));
+			}
+			Debug.d("", "--->utf8<---");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		
+		return toGBCode(utf8);
+	}
+	
+	/**
+	 * 把编码转换成国标码
+	 * 注：此处已经把内码转换成了国标码（区位码）
+	 * 国标码 = 内码 - 0xA0
+	 * @param code
+	 * @return
+	 */
+	private char[] toGBCode(byte[] code) {
+		if (code == null) {
+			return null;
+		}
+		CharBuffer buffer = CharBuffer.allocate(0);
+		for (int i = 0; i < code.length; i++) {
+			if (code[i] > 0xA0 && (i+1 < code.length)) {
+				char c =(char) ((code[i]<<8 - 0xA0) | (code[i+1] - 0xA0));
+				buffer.append(c);
+				i++;
+			} else if (code[i] < 0xA0) {
+				Debug.d("", "--->not chinese");
+				buffer.append((char) code[i]);
+			}
+		}
+		return buffer.array();
 	}
 }
