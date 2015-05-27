@@ -43,13 +43,17 @@ public class InternalCodeCalculater {
 		if (code == null) {
 			return null;
 		}
-		CharBuffer buffer = CharBuffer.allocate(0);
+		CharBuffer buffer = CharBuffer.allocate(code.length);
 		for (int i = 0; i < code.length; i++) {
-			if (code[i] > 0xA0 && (i+1 < code.length)) {
-				char c =(char) ((code[i]<<8 - 0xA0) | (code[i+1] - 0xA0));
+			if ((code[i]&0x0ff) > 0xA0 && (i+1) < code.length) {
+				Debug.d("", "--->code:"+Integer.toHexString(code[i]<<8));
+				char qu = (char) (((code[i]&0x00ff) - 0xA0)<<8 );
+				char wei = (char) ((code[i+1] & 0x00ff) - 0xA0);
+				char c = (char) (qu + wei);
+				Debug.d("", "--->gbCode:"+Integer.toHexString(c));
 				buffer.append(c);
 				i++;
-			} else if (code[i] < 0xA0) {
+			} else if ((code[i]&0x0ff) < 0xA0) {
 				Debug.d("", "--->not chinese");
 				buffer.append((char) code[i]);
 			}

@@ -11,6 +11,8 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.DotMatrixReader;
+import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.HardwareJni;
 import com.industry.printer.hardware.RFIDOperation;
@@ -614,21 +616,10 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_temp_4:
-				d = new byte[1];
-				d[0] = (byte) 0x03;
-				RFIDData data = new RFIDData((byte) 0x15, d);
-				Debug.d(TAG, "===>RFIDData: "+data);
-				fd = RFIDOperation.open("/dev/ttyS3");
-				ret = RFIDOperation.write(fd, data.transferData(), data.getLength());
-				Debug.d(TAG, "===>RFIDData ret: "+ret);
-				byte[] result = RFIDOperation.read(fd, 64);
-				if (result == null)
-					break;
-				for (int i= 0; i<result.length; i++) {
-					Debug.d(TAG, "===>result:"+String.format("%1$02x", result[i]));
-				}
-				
-				HardwareJni.close(fd);
+				InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
+				char[] code = cal.getGBKCode("制1");
+				DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
+				reader.getDotMatrix(code);
 				break;
 			case R.id.btn_temp_5:
 				/******************/
@@ -637,8 +628,10 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				writer.setType();
 				writer.lookForCards();
 				writer.avoidConflict();
+				writer.keyVerfication((byte)2);	
 				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
 				writer.writeBlock((byte)0, content);
+				writer.readBlock((byte)2);
 			default:
 				break;
 		}

@@ -31,14 +31,8 @@ public class DotMatrixReader {
 
 	public DotMatrixReader(Context context) {
 		
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.size() == 0) {
-			Debug.e(TAG, "--->no USB storage found");
-			return;
-		}
-		
 		try {
-			InputStream mReader = context.getAssets().open("dotmatrix/HZK16");
+			mReader = context.getAssets().open("dotmatrix/HZK16");
 			mReader.mark(0);
 			mReader.reset();
 		} catch (FileNotFoundException e) {
@@ -50,7 +44,6 @@ public class DotMatrixReader {
 	
 	public byte[] getDotMatrix(char[] inCodes) {
 		
-		Debug.e(TAG, "--->Todo: read dot matrix file");
 		int offset = 0;
 		byte[] buffer = new byte[32];
 		for (int i = 0; i < inCodes.length; i++) {
@@ -92,9 +85,11 @@ public class DotMatrixReader {
 	 * @return 偏移量
 	 */
 	private int getOffsetByGBCode(char gbk) {
+		Debug.d(TAG, "--->gbk:"+Integer.toHexString(gbk));
 		int quCode=0, weiCode=0; 
 		quCode = (gbk>>8)&0x00ff;
 		weiCode = gbk & 0x00ff;
+		Debug.d(TAG, "--->gbk qu:"+Integer.toHexString(quCode)+" , wei:"+Integer.toHexString(weiCode));
 		return (94*(quCode-1)+(weiCode-1))*32;
 	}
 	

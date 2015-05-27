@@ -136,7 +136,7 @@ public class RFIDOperation {
 	 * @return
 	 */
 	public boolean keyVerfication(byte block) {
-		byte[] keyA = {0x60,block, (byte) 0xff,0x00,0x00,0x00,0x00,0x00};
+		byte[] keyA = {0x60,block, (byte) 0xff,(byte) 0xff,(byte) 0xff,(byte) 0xff,(byte) 0xff,(byte) 0xff};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
@@ -194,11 +194,13 @@ public class RFIDOperation {
 		int writed = write(fp, data.transferData(), data.getLength());
 		if (writed <= 0) {
 			close(fp);
+			Debug.d(TAG, "===>write err, return");
 			return null;
 		}
 		byte[] readin = read(fp, 64);
 		if (readin == null || readin.length == 0) {
 			close(fp);
+			Debug.d(TAG, "===>read err");
 			return null;
 		}
 		Debug.d(TAG, "************read begin******************");
