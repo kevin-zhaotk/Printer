@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import android.content.Context;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -17,29 +20,25 @@ public class DotMatrixReader {
 	public static DotMatrixReader mInstance;
 	
 	private File mDotFile;
-	private FileInputStream mReader;
+	private InputStream mReader;
 	
-	public static DotMatrixReader getInstance() {
+	public static DotMatrixReader getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new DotMatrixReader();
+			mInstance = new DotMatrixReader(context);
 		}
 		return mInstance;
 	}
 
-	public DotMatrixReader() {
+	public DotMatrixReader(Context context) {
 		
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.size() == 0) {
 			Debug.e(TAG, "--->no USB storage found");
 			return;
 		}
-		//use the first usb storage as default
-		String path = paths.get(0);
 		
-		String dotFile = path + Configs.SYSTEM_CONFIG_DIR + "/HZK16";
-		mDotFile = new File(dotFile);
 		try {
-			mReader = new FileInputStream(mDotFile);
+			InputStream mReader = context.getAssets().open("dotmatrix/HZK16");
 			mReader.mark(0);
 			mReader.reset();
 		} catch (FileNotFoundException e) {
