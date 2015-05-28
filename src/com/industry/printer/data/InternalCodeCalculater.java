@@ -3,6 +3,8 @@ package com.industry.printer.data;
 import java.io.UnsupportedEncodingException;
 import java.nio.CharBuffer;
 
+import android.database.CharArrayBuffer;
+
 import com.industry.printer.Utils.Debug;
 
 public class InternalCodeCalculater {
@@ -43,6 +45,7 @@ public class InternalCodeCalculater {
 		if (code == null) {
 			return null;
 		}
+
 		CharBuffer buffer = CharBuffer.allocate(code.length);
 		for (int i = 0; i < code.length; i++) {
 			if ((code[i]&0x0ff) > 0xA0 && (i+1) < code.length) {
@@ -58,6 +61,11 @@ public class InternalCodeCalculater {
 				buffer.append((char) code[i]);
 			}
 		}
-		return buffer.array();
+		int position = buffer.position();
+		Debug.d("", "--->position: "+position);
+		buffer.position(0);
+		char[] dst = new char[position];
+		buffer.get(dst, 0, position);
+		return dst;
 	}
 }
