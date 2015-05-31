@@ -107,7 +107,8 @@ public class DotMatrixReader {
 			}
 		}
 		Debug.print(trans);
-		matrix = trans;
+		ByteBuffer b = ByteBuffer.wrap(trans);
+		b.get(matrix);
 	}
 	
 	private byte[] expendTo32Bit(byte[] sixteen) {
