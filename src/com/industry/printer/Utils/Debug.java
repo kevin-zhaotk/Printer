@@ -55,4 +55,13 @@ public class Debug {
 		return 0;
 	}
 	
+	public static void print(byte[] value) {
+		if (value == null) {
+			return;
+		}
+		for (int i = 0; i < value.length; i++) {
+			Debug.d(TAG, "--->"+Integer.toHexString(value[i]&0x0ff));
+		}
+	}
+	
 }

@@ -86,6 +86,9 @@ public class RFIDOperation {
 	public boolean lookForCards() {
 		RFIDData data = new RFIDData(RFID_CMD_SEARCHCARD, RFID_DATA_SEARCHCARD_WAKE);
 		byte[] readin = writeCmd(data);
+		if (readin == null) {
+			return false;
+		}
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
 		if (rfid == null || rfid[0] != 0 || rfid.length < 3) {
@@ -109,17 +112,22 @@ public class RFIDOperation {
 	/*
 	 * 防冲突
 	 */
-	public void avoidConflict() {
+	public byte[] avoidConflict() {
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
 		byte[] readin = writeCmd(data);
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
+		Debug.print(rfid);
 		if (rfid == null || rfid[0] != 0 || rfid.length != 5) {
 			Debug.d(TAG, "===>rfid data error");
-			return ;
+			return null;
 		}
-		Debug.d(TAG, "===>rfid SN: 0x"+Integer.toHexString(rfid[1]) +", 0x"+Integer.toHexString(rfid[2])
-				+ ", 0x"+Integer.toHexString(rfid[3]) +", 0x"+Integer.toHexString(rfid[4]));
+		ByteBuffer buffer = ByteBuffer.wrap(rfid);
+		buffer.position(1);
+		byte[] serialNo = new byte[4]; 
+		buffer.get(serialNo, 0, serialNo.length);
+		Debug.print(serialNo);
+		return serialNo;
 	}
 	/*
 	 * 选卡
