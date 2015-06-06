@@ -71,8 +71,8 @@ public class DotMatrixReader {
 				mReader.skip(offset);
 				mReader.read(buffer);
 				Debug.d(TAG, "----------------------");
-				Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
-				Debug.print(buffer);
+				//Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
+				//Debug.print(buffer);
 				Debug.d(TAG, "----------------------");
 				columnTransfer(buffer);
 //				Debug.print(buffer);
@@ -100,7 +100,7 @@ public class DotMatrixReader {
 			for (int j = 0; j < 8; j++) {
 				byte data = (byte)((matrix[j*2 + i/16 + (i%2)*16]) & 0x0ff);
 				data = (byte) (data  & (0x01 <<(7-(i/2)%8))); 
-				Debug.d(TAG, "i="+i+", j="+j+"-->"+data);
+				// Debug.d(TAG, "i="+i+", j="+j+"-->"+data);
 				if ( data != 0) {
 					trans[i] |= (0x01 << (7-j));
 				}

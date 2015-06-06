@@ -308,8 +308,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					}
 					/**
 					 * 启动打印后要完成的几个工作：
-					 * 1、启动DataTransfer线程，生成打印buffer，并下发数据
-					 * 2、调用ioctl启动内核线程，开始轮训FPGA状态
+					 * 1、每次打印，  先清空 （见文件）， 然后 发设置
+					 * 2、启动DataTransfer线程，生成打印buffer，并下发数据
+					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
 					if (mDTransThread == null) {
 						mDTransThread = DataTransferThread.getInstance(); 

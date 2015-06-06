@@ -133,6 +133,10 @@ public class RFIDOperation {
 	 * 选卡
 	 */ 
 	public boolean selectCard(byte[] cardNo) {
+		if (cardNo == null || cardNo.length != 4) {
+			Debug.e(TAG, "===>select card No is null");
+			return false;
+		}
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);

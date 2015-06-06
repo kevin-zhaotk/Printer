@@ -2,6 +2,8 @@ package com.industry.printer;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -424,7 +426,12 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		{
             			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
             		}
-            		saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
+            		if (Configs.gMakeBinFromBitmap == true) {
+            			saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
+					} else {
+						saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
+					}
+            		
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
             		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
@@ -471,6 +478,10 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		return -1;
 	}
 	
+	/**
+	 * 使用系统字库，生成bitmap，然后通过灰度化和二值化之后提取点阵生成buffer
+	 * @param f
+	 */
 	public void saveObjectBin(String f)
 	{
 		int width=0;
@@ -524,6 +535,48 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		return ;
 	}
 	
+	/**
+	 * 从16*16的点阵字库中提取点阵，生成打印buffer
+	 * @param f
+	 */
+	public void saveBinDotMatrix(String f) {
+		if(mObjs==null || mObjs.size() <= 0)
+			return ;
+		
+		String content="";
+		for(BaseObject o:mObjs)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			
+			if(o instanceof CounterObject)
+			{
+				content += o.getContent();
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				content += o.getContent();
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				content += o.getContent();
+			}
+			else if(o instanceof ShiftObject)
+			{
+				content += o.getContent();
+			}
+			else
+			{
+				content += o.getContent();
+			}
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
+		char[] code = cal.getGBKCode(content);
+		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
+		byte[] dots = reader.getDotMatrix(code);
+		BinCreater.saveBin(f, dots, 32);
+	}
 	
 	public ProgressDialog mProgressDialog;
 	public Thread mProgressThread;
@@ -617,21 +670,28 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				break;
 			case R.id.btn_temp_4:
 				InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
-				char[] code = cal.getGBKCode("制1");
+				char[] code = cal.getGBKCode("1");
 				DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
-				reader.getDotMatrix(code);
+				byte[] dots = reader.getDotMatrix(code);
+				Debug.d(TAG, "++++++++++++++++++++++");
+				Debug.print(dots);
+				Debug.d(TAG, "++++++++++++++++++++++");
 				break;
 			case R.id.btn_temp_5:
 				/******************/
 				RFIDOperation writer = RFIDOperation.getInstance();
-				writer.connect();
-				writer.setType();
+				//writer.connect();
+				//writer.setType();
 				writer.lookForCards();
-				writer.avoidConflict();
-				writer.keyVerfication((byte)2);	
+				byte[] sn = writer.avoidConflict();
+				Debug.d(TAG, "+++++++++++ SN +++++++++++");
+				Debug.print(sn);
+				Debug.d(TAG, "+++++++++++ SN +++++++++++");
+				writer.selectCard(sn);
+				writer.keyVerfication((byte)5);	
 				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
-				writer.writeBlock((byte)0, content);
-				writer.readBlock((byte)2);
+				//writer.writeBlock((byte)2, content);
+				writer.readBlock((byte)5);
 			default:
 				break;
 		}
