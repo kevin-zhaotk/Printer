@@ -12,6 +12,7 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BaseObject;
@@ -78,6 +79,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public static int mFd;
 	
 	public BinInfo mBg;
+	BroadcastReceiver mReceiver;
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
@@ -203,7 +205,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
 		filter.addAction(ACTION_BOOT_COMPLETE);
-		BroadcastReceiver mReceiver = new SerialEventReceiver(); 
+		mReceiver = new SerialEventReceiver(); 
 		mContext.registerReceiver(mReceiver, filter);
 		
 		mMsgFile = (TextView) getView().findViewById(R.id.opened_msg_name);
@@ -241,6 +243,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	@Override
 	public void onDestroy()
 	{
+		mContext.unregisterReceiver(mReceiver);
 		super.onDestroy();
 		//UsbSerial.close(mFd);
 	}
@@ -301,10 +304,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_START:
-				
-					if (mObjPath == null || mObjPath.isEmpty() || mObjList.size() == 0) {
-						Toast.makeText(mContext, "没有可打印的内容", Toast.LENGTH_LONG);
-						return;
+					if (isPrinting == true) {
+						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
+						break;
+					}
+					if (mObjPath == null || mObjPath.isEmpty()) {
+						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
+						break;
+					}
+					DataTask dt = mDTransThread.getData();
+					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
+						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
+						break;
 					}
 					/**
 					 * 启动打印后要完成的几个工作：
@@ -312,12 +323,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					 * 2、启动DataTransfer线程，生成打印buffer，并下发数据
 					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
+					FpgaGpioOperation.clean();
+					FpgaGpioOperation.updateSettings(mContext);
 					if (mDTransThread == null) {
 						mDTransThread = DataTransferThread.getInstance(); 
 					}
+					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					mDTransThread.launch();
 					FpgaGpioOperation.init();
 					((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
+					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
+					/*打印过程中禁止切换打印对象*/
+					mBtnOpenfile.setClickable(false);
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -329,7 +346,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					if (mDTransThread != null) {
 						mDTransThread.finish();
 					}
-					
+					/*打印任务停止后允许切换打印对象*/
+					mBtnOpenfile.setClickable(true);
 					break;
 			}
 		}
@@ -567,9 +585,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mProgressShowing=false;
 	}
 	int mdata=0;
-	boolean mIsDemo=true;
+	boolean mIsDemo=false;
 	@Override
 	public void onClick(View v) {
+		
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				if(mIsDemo) {

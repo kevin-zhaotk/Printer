@@ -365,6 +365,10 @@
 	<string name="str_hint_preview">信息预览</string>
 	<string name="str_print_count">计数: </string>
 	<string name="str_print_count_default">0</string>
+	<string name="str_print_printing">打印任务运行中...</string>
+	<string name="str_print_startok">打印任务启动...</string>
+	<string name="str_toast_emptycontent">打印对象内容不能为空!!!</string>
+	<string name="str_toast_no_message">请先选择一个打印对象!!!</string>
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">01. 光电选择</string>
 	<string name="str_textview_param2">02. 触发模式选择</string>
@@ -401,6 +405,8 @@
 	<string name="str_notice_no_objects">没有可保存的对象</string>
 	<string name="str_file_title">信息：</string>
 	<string name="str_file_hint">保存编号</string>
+	<string name="str_page_prev">上一页</string>
+	<string name="str_page_next">下一页</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

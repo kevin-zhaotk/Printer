@@ -127,17 +127,17 @@ public class RFIDData {
 		//数据包内容
 		for (int i = 1; i < mRealData.length-1; i++) {
 			if (mRealData[i] == mIdentificator || mRealData[i] == mHeader || mRealData[i] == mTailer) {
-				Debug.d("", "===>data:"+0x10);
+				// Debug.d("", "===>data:"+0x10);
 				buffer.append((byte)0x10);
-				Debug.d("", "===>data:"+mRealData[i]);
+				// Debug.d("", "===>data:"+mRealData[i]);
 				buffer.append(mRealData[i]);
 			} else {
 				buffer.append(mRealData[i]);
-				Debug.d("", "===>data:"+mRealData[i]);
+				// Debug.d("", "===>data:"+mRealData[i]);
 			}
 		}
 		buffer.append(mRealData[mRealData.length-1]);
-		Debug.d("", "===>data:"+mRealData[mRealData.length-1]);
+		//Debug.d("", "===>data:"+mRealData[mRealData.length-1]);
 		mTransData = buffer.toByteArray();
 		
 	}

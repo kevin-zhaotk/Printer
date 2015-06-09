@@ -682,15 +682,21 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				RFIDOperation writer = RFIDOperation.getInstance();
 				//writer.connect();
 				//writer.setType();
+				//寻卡
 				writer.lookForCards();
+				//防冲突
 				byte[] sn = writer.avoidConflict();
 				Debug.d(TAG, "+++++++++++ SN +++++++++++");
 				Debug.print(sn);
 				Debug.d(TAG, "+++++++++++ SN +++++++++++");
+				//选卡
 				writer.selectCard(sn);
-				writer.keyVerfication((byte)5);	
+				//秘钥认证
+				writer.keyVerfication((byte)5);
+				//写块
 				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
-				//writer.writeBlock((byte)2, content);
+				writer.writeBlock((byte)5, content);
+				//读块
 				writer.readBlock((byte)5);
 			default:
 				break;

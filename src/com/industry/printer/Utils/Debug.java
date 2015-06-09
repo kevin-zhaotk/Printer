@@ -59,9 +59,11 @@ public class Debug {
 		if (value == null) {
 			return;
 		}
+		String log = "";
 		for (int i = 0; i < value.length; i++) {
-			Debug.d(TAG, "--->"+Integer.toHexString(value[i]&0x0ff));
+			log += "0x"+Integer.toHexString(value[i]&0x0ff)+" " ;
 		}
+		Debug.d(TAG, log);
 	}
 	
 }

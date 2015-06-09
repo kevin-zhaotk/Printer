@@ -74,7 +74,7 @@ public class DotMatrixReader {
 				//Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
 				//Debug.print(buffer);
 				Debug.d(TAG, "----------------------");
-				columnTransfer(buffer);
+				columnTransferSmallend(buffer);
 //				Debug.print(buffer);
 				Debug.d(TAG, "----------------------");
 				matrix.append(expendTo32Bit(buffer), 0, 64);
@@ -87,10 +87,10 @@ public class DotMatrixReader {
 	}
 	
 	/**
-	 * 把字库中取出的行点阵转换成列点阵
+	 * 把字库中取出的行点阵转换成列点阵,高字节在前
 	 * @param matrix
 	 */
-	private void columnTransfer(byte[] matrix) {
+	private void columnTransferBigend(byte[] matrix) {
 		if (matrix == null || matrix.length != 32) {
 			return;
 		}
@@ -103,6 +103,31 @@ public class DotMatrixReader {
 				// Debug.d(TAG, "i="+i+", j="+j+"-->"+data);
 				if ( data != 0) {
 					trans[i] |= (0x01 << (7-j));
+				}
+			}
+		}
+		Debug.print(trans);
+		ByteBuffer b = ByteBuffer.wrap(trans);
+		b.get(matrix);
+	}
+	
+	/**
+	 * 把字库中取出的行点阵转换成列点阵，低字节在前，与点阵显示工具对应
+	 * @param matrix
+	 */
+	private void columnTransferSmallend(byte[] matrix) {
+		if (matrix == null || matrix.length != 32) {
+			return;
+		}
+		byte[] trans = new byte[32];
+
+		for (int i = 0; i < trans.length; i++) {
+			for (int j = 0; j < 8; j++) {
+				byte data = (byte)((matrix[j*2 + i/16 + (i%2)*16]) & 0x0ff);
+				data = (byte) (data  & (0x01 <<(7-(i/2)%8))); 
+				// Debug.d(TAG, "i="+i+", j="+j+"-->"+data);
+				if ( data != 0) {
+					trans[i] |= (0x01 << j);
 				}
 			}
 		}

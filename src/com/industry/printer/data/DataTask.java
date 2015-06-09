@@ -45,7 +45,7 @@ public class DataTask {
 	public char[] mPrintBuffer;
 	public DataTask(Context context) {
 		mContext = context;
-		mObjList = null;
+		mObjList = new Vector<BaseObject>();
 	}
 	
 	/**
@@ -64,7 +64,11 @@ public class DataTask {
 		/**记录当前打印的信息路径**/
 		mMessage = path;
 		TLKFileParser.parse(mContext, mMessage+"/1.TLK", mObjList);
+		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		mBinInfo = new BinInfo(mMessage+"/1.bin");
+		if (mBinInfo == null) {
+			return ;
+		}
 		mBgBuffer = mBinInfo.getBgBuffer();
 		mPrintBuffer = new char[mBgBuffer.length];
 	}
@@ -148,4 +152,8 @@ public class DataTask {
 		}
 	}
 	
+	
+	public Vector<BaseObject> getObjList() {
+		return mObjList;
+	}
 }

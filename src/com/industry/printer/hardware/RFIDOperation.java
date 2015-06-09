@@ -198,10 +198,11 @@ public class RFIDOperation {
 			return null;
 		}
 		Debug.d(TAG, "************write begin******************");
+		String log="";
 		for (int i = 0; i < data.mTransData.length; i++) {
-			System.out.print("0x"+Integer.toHexString(data.mTransData[i])+" ");
-			Debug.d(TAG, "0x"+Integer.toHexString(data.mTransData[i]));
+			log += "0x"+Integer.toHexString(data.mTransData[i])+" ";
 		}
+		Debug.d(TAG, log);
 		Debug.d(TAG, "************write end******************");
 		int writed = write(fp, data.transferData(), data.getLength());
 		if (writed <= 0) {
@@ -216,9 +217,9 @@ public class RFIDOperation {
 			return null;
 		}
 		Debug.d(TAG, "************read begin******************");
+		log = "";
 		for (int i = 0; i < readin.length; i++) {
-			System.out.print("0x"+Integer.toHexString(readin[i])+" ");
-			Debug.d(TAG,"0x"+Integer.toHexString(readin[i]));
+			log += "0x"+Integer.toHexString(readin[i]) + " ";
 		}
 		Debug.d(TAG, "************read end******************");
 		close(fp);

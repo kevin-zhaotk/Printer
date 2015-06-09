@@ -369,6 +369,10 @@
 	<string name="str_hint_preview">message preview</string>
 	<string name="str_print_count">Records: </string>
 	<string name="str_print_count_default">0</string>
+	<string name="str_print_printing">Print Task Running already...</string>
+	<string name="str_print_startok">start print task success...</string>
+	<string name="str_toast_emptycontent">The message you selected is empty!!!</string>
+	<string name="str_toast_no_message">Please select a message file first!!!</string>
 <!-- 树莓派3 设置界面相关 -->
 	
 	<string name="str_textview_param1">01. Encoder selection</string>
@@ -407,6 +411,8 @@
 	<string name="str_notice_no_objects">No Object for save!</string>
 	<string name="str_file_title">Message：</string>
 	<string name="str_file_hint">file name</string>
+	<string name="str_page_prev">Page Prev</string>
+	<string name="str_page_next">Page Next</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">
