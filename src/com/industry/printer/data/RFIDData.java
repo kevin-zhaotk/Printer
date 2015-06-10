@@ -93,13 +93,21 @@ public class RFIDData {
 		if (isfilter) {
 			mTransData = data;
 			getRealData();
+			Debug.d("", "---------11-------");
+			Debug.print(mRealData);
+			Debug.d("", "---------11-------");
+			
 			//计算长度字
-			mLength = (byte) (mRealData.length-4);
+			mLength = (byte) (mRealData.length-5);
+			Debug.d("", "-------len: "+mLength);
 			mRealData[3] = mLength;
 			//计算校验字
 			for (int i = 1; i < mRealData.length-2; i++) {
 				mCheckCode += mRealData[i];	
 			}
+			Debug.d("", "---------22-------");
+			Debug.print(mRealData);
+			Debug.d("", "---------22-------");
 		} else {
 			mRealData = data;
 			getTransferData();
@@ -119,17 +127,17 @@ public class RFIDData {
 		//数据包内容
 		for (int i = 1; i < mRealData.length-1; i++) {
 			if (mRealData[i] == mIdentificator || mRealData[i] == mHeader || mRealData[i] == mTailer) {
-				Debug.d("", "===>data:"+0x10);
+				// Debug.d("", "===>data:"+0x10);
 				buffer.append((byte)0x10);
-				Debug.d("", "===>data:"+mRealData[i]);
+				// Debug.d("", "===>data:"+mRealData[i]);
 				buffer.append(mRealData[i]);
 			} else {
 				buffer.append(mRealData[i]);
-				Debug.d("", "===>data:"+mRealData[i]);
+				// Debug.d("", "===>data:"+mRealData[i]);
 			}
 		}
 		buffer.append(mRealData[mRealData.length-1]);
-		Debug.d("", "===>data:"+mRealData[mRealData.length-1]);
+		//Debug.d("", "===>data:"+mRealData[mRealData.length-1]);
 		mTransData = buffer.toByteArray();
 		
 	}
@@ -189,7 +197,8 @@ public class RFIDData {
 			return null;
 		}
 		mLength = mRealData[3];
-		if (mLength == 0 || (mLength + 4) != mRealData.length) {
+		Debug.d("", "--->data length: "+mLength+",  real len: "+mRealData.length);
+		if (mLength == 0 || (mLength + 5) != mRealData.length) {
 			return null;
 		}
 		for (int i = 0; i < mRealData.length; i++) {
@@ -197,7 +206,11 @@ public class RFIDData {
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(mRealData);
 		mData = new byte[mRealData.length - 7];
+		buffer.position(5);
 		buffer.get(mData, 0, mRealData.length - 7);
+		Debug.d("", "-----------getData------");
+		Debug.print(mData);
+		Debug.d("", "-----------getData------");
 		return mData;
 	}
 	

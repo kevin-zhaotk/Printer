@@ -23,6 +23,7 @@ public class Configs {
 	
 	public static int gParams;
 	
+	public static final boolean gMakeBinFromBitmap = false;
 	/**
 	 * PROC_MOUNT_FILE
 	 * proc/mounts sys file

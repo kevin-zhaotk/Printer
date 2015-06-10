@@ -22,6 +22,7 @@ public class FpgaGpioOperation {
 	public static final int FPGA_CMD_SYNCDATA	= 0x03;
 	public static final int FPGA_CMD_STARTPRINT	= 0x04;
 	public static final int FPGA_CMD_STOPPRINT	= 0x05;
+	public static final int FPGA_CMD_CLEAN		= 0x06;
 	
 	/**
 	 * 0x00 输出数据状态
@@ -164,7 +165,7 @@ public class FpgaGpioOperation {
 			Debug.d(TAG, "===>open fpga file error");
 			return;
 		}
-		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_CLEAN);
+		ioctl(fd, FPGA_CMD_CLEAN, 0);
 		// close(fd);
 	}
 	

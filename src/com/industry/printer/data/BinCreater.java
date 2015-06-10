@@ -3,7 +3,9 @@ package com.industry.printer.data;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -247,6 +249,12 @@ public class BinCreater {
     	return true;
     }
     
+    /**
+     * 保存bin文件
+     * @param f bin文件路径
+     * @param width bin文件总列数，单位byte
+     * @param single bin文件单列高度，单位bit
+     */
     public static boolean saveBin(String f, int width, int single)
     {
     	byte head[]=new byte[16];
@@ -281,6 +289,45 @@ public class BinCreater {
     	Debug.d(TAG, "+++++++++++++saveBin var");
     	return true;
     }
+    
+    /**
+     * 保存bin文件
+     * @param f bin文件存放路径
+     * @param dots 点阵buffer
+     * @param single bin文件单列高度，单位bit
+     * @return 保存成功返回true，保存失败返回false
+     */
+    public static boolean saveBin(String f, byte[] dots, int single) {
+    	int bytesPerCol = 0;
+    	bytesPerCol = single%4==0? single/4 : (single/4+1);
+    	int columns = dots.length/bytesPerCol;
+    	try {
+			FileOutputStream stream = new FileOutputStream(new File(f+"/1.bin"));
+			byte head[]=new byte[16];
+	    	head[2] = (byte) (columns & 0x0ff);
+	    	head[1] = (byte) ((columns>>8) & 0x0ff);
+	    	head[0] = (byte) ((columns>>16) & 0x0ff);
+	    	
+	    	/*save width of single element*/
+	    	head[5] = (byte) (single & 0x0ff);
+	    	head[4] = (byte) ((single>>8) & 0x0ff);
+	    	head[3] = (byte) ((single>>16) & 0x0ff);
+	    	stream.write(head);
+			stream.write(dots);
+			stream.flush();
+			stream.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
+			return false;
+		}
+    	return true;
+    }
+    
     
     public static Bitmap Bin2Bitmap(byte []map)
     {

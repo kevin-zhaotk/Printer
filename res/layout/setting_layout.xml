@@ -61,6 +61,7 @@
             android:layout_weight="1"
             android:text="@string/str_btn_settings_sync"
             android:textSize="@dimen/settingsBtnsize"
+            android:enabled="false"
             />
          
         <Button 
@@ -70,6 +71,7 @@
             android:layout_weight="1"
             android:text="@string/str_file_cancel"
             android:textSize="@dimen/settingsBtnsize"
+            android:enabled="false"
             />
 
          <Button 

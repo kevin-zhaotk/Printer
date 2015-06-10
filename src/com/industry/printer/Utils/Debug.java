@@ -55,4 +55,15 @@ public class Debug {
 		return 0;
 	}
 	
+	public static void print(byte[] value) {
+		if (value == null) {
+			return;
+		}
+		String log = "";
+		for (int i = 0; i < value.length; i++) {
+			log += "0x"+Integer.toHexString(value[i]&0x0ff)+" " ;
+		}
+		Debug.d(TAG, log);
+	}
+	
 }

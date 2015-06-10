@@ -86,6 +86,9 @@ public class RFIDOperation {
 	public boolean lookForCards() {
 		RFIDData data = new RFIDData(RFID_CMD_SEARCHCARD, RFID_DATA_SEARCHCARD_WAKE);
 		byte[] readin = writeCmd(data);
+		if (readin == null) {
+			return false;
+		}
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
 		if (rfid == null || rfid[0] != 0 || rfid.length < 3) {
@@ -109,22 +112,31 @@ public class RFIDOperation {
 	/*
 	 * 防冲突
 	 */
-	public void avoidConflict() {
+	public byte[] avoidConflict() {
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
 		byte[] readin = writeCmd(data);
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
+		Debug.print(rfid);
 		if (rfid == null || rfid[0] != 0 || rfid.length != 5) {
 			Debug.d(TAG, "===>rfid data error");
-			return ;
+			return null;
 		}
-		Debug.d(TAG, "===>rfid SN: 0x"+Integer.toHexString(rfid[1]) +", 0x"+Integer.toHexString(rfid[2])
-				+ ", 0x"+Integer.toHexString(rfid[3]) +", 0x"+Integer.toHexString(rfid[4]));
+		ByteBuffer buffer = ByteBuffer.wrap(rfid);
+		buffer.position(1);
+		byte[] serialNo = new byte[4]; 
+		buffer.get(serialNo, 0, serialNo.length);
+		Debug.print(serialNo);
+		return serialNo;
 	}
 	/*
 	 * 选卡
 	 */ 
 	public boolean selectCard(byte[] cardNo) {
+		if (cardNo == null || cardNo.length != 4) {
+			Debug.e(TAG, "===>select card No is null");
+			return false;
+		}
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
@@ -186,10 +198,11 @@ public class RFIDOperation {
 			return null;
 		}
 		Debug.d(TAG, "************write begin******************");
+		String log="";
 		for (int i = 0; i < data.mTransData.length; i++) {
-			System.out.print("0x"+Integer.toHexString(data.mTransData[i])+" ");
-			Debug.d(TAG, "0x"+Integer.toHexString(data.mTransData[i]));
+			log += "0x"+Integer.toHexString(data.mTransData[i])+" ";
 		}
+		Debug.d(TAG, log);
 		Debug.d(TAG, "************write end******************");
 		int writed = write(fp, data.transferData(), data.getLength());
 		if (writed <= 0) {
@@ -204,9 +217,9 @@ public class RFIDOperation {
 			return null;
 		}
 		Debug.d(TAG, "************read begin******************");
+		log = "";
 		for (int i = 0; i < readin.length; i++) {
-			System.out.print("0x"+Integer.toHexString(readin[i])+" ");
-			Debug.d(TAG,"0x"+Integer.toHexString(readin[i]));
+			log += "0x"+Integer.toHexString(readin[i]) + " ";
 		}
 		Debug.d(TAG, "************read end******************");
 		close(fp);

@@ -34,6 +34,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		public Button mConfirm;
 		public Button mCancel;
+		public Button mPagePrev;
+		public Button mPageNext;
 		public static String mTitle;
 		
 		public ListView mMessageList;
@@ -70,12 +72,20 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mCancel = (Button) findViewById(R.id.btn_cancel_message_list);
 			 mCancel.setOnClickListener(this);
 			 
+			 mPagePrev = (Button) findViewById(R.id.btn_page_prev);
+			 mPagePrev.setOnClickListener(this);
+			 
+			 mPageNext = (Button) findViewById(R.id.btn_page_next);
+			 mPageNext.setOnClickListener(this);
+			 
+			 
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
 			 
 			 mMessageList.setOnTouchListener(this);
 			 loadMessages();
 			 mFileAdapter.notifyDataSetChanged();
+			 
 		 }
 
 		@Override
@@ -96,6 +106,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 						nListener.onClick();
 					}
 					break;
+				case R.id.btn_page_prev:
+					mMessageList.scrollBy(0, -300);
+					break;
+				case R.id.btn_page_next:
+					mMessageList.scrollBy(0, 300);
+					break;
+				
 			}
 		}
 
