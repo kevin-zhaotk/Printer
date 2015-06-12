@@ -22,7 +22,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -262,7 +262,7 @@ public static final String TAG="SettingsTabActivity";
 //					pDialog.show();
 					Debug.d(TAG, "===>start upgrade service");
 					System.setProperty("ctl.start", "upgrade");
-					SystemProperties.set("ctl.start","upgrade");
+//					SystemProperties.set("ctl.start","upgrade");
 					break;
 				}
 				break;

@@ -49,11 +49,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	public TextView mEditTitle;
 	public TextView mSettingTitle;
 	
-	
+	/*
 	static {
 		System.loadLibrary("Hardware_jni");
 	}
-	
+	*/
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		
 		mContext.registerReceiver(mReceiver, filter);
 		
-		FpgaGpioOperation.updateSettings(this.getApplicationContext());
+		//FpgaGpioOperation.updateSettings(this.getApplicationContext());
 		
 		initView();
 		
