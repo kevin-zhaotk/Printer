@@ -302,7 +302,12 @@ public class BinCreater {
     	bytesPerCol = single%4==0? single/4 : (single/4+1);
     	int columns = dots.length/bytesPerCol;
     	try {
-			FileOutputStream stream = new FileOutputStream(new File(f+"/1.bin"));
+    		File file = new File(f+"/1.bin");
+    		if (!file.exists() && !file.createNewFile()) {
+				Debug.d(TAG, "===>error: create bin file failed");
+				return false;
+			}
+			FileOutputStream stream = new FileOutputStream(file);
 			byte head[]=new byte[16];
 	    	head[2] = (byte) (columns & 0x0ff);
 	    	head[1] = (byte) ((columns>>8) & 0x0ff);

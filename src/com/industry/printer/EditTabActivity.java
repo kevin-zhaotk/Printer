@@ -17,7 +17,7 @@ import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.HardwareJni;
-import com.industry.printer.hardware.RFIDOperation;
+import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TLKFileParser;
@@ -422,16 +422,18 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		
             	case HANDLER_MESSAGE_SAVE:    //save
             		progressDialog();
-            		if(mObjName != null)
-            		{
-            			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
-            		}
+            		if (mObjName == null) {
+						break;
+					}
             		if (Configs.gMakeBinFromBitmap == true) {
             			saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
 					} else {
 						saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
 					}
             		
+           			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
+            		
+           			
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
             		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
@@ -576,6 +578,15 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
 		byte[] dots = reader.getDotMatrix(code);
 		BinCreater.saveBin(f, dots, 32);
+		for(BaseObject o:mObjs)
+		{
+			if((o instanceof MessageObject)	) {
+				((MessageObject) o).setDotCount(reader.getDotCount(dots));
+				break;
+			}
+		}
+		
+		return ;
 	}
 	
 	public ProgressDialog mProgressDialog;
@@ -679,7 +690,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				break;
 			case R.id.btn_temp_5:
 				/******************/
-				RFIDOperation writer = RFIDOperation.getInstance();
+				RFIDDevice writer = RFIDDevice.getInstance();
 				//writer.connect();
 				//writer.setType();
 				//寻卡
@@ -692,12 +703,12 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				//选卡
 				writer.selectCard(sn);
 				//秘钥认证
-				writer.keyVerfication((byte)5);
+				writer.keyVerfication((byte)0);
 				//写块
 				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
-				writer.writeBlock((byte)5, content);
+				//writer.writeBlock((byte)5, content);
 				//读块
-				writer.readBlock((byte)5);
+				writer.readBlock((byte)0);
 			default:
 				break;
 		}

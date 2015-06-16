@@ -96,7 +96,9 @@ public class RFIDData {
 			Debug.d("", "---------11-------");
 			Debug.print(mRealData);
 			Debug.d("", "---------11-------");
-			
+			if (mRealData == null) {
+				return ;
+			}
 			//计算长度字
 			mLength = (byte) (mRealData.length-5);
 			Debug.d("", "-------len: "+mLength);
@@ -169,12 +171,14 @@ public class RFIDData {
 	public short[] transferData() {
 		short[] data = new short[mTransData.length/2+1];
 		for (int i = 0; i < mTransData.length; i++) {
+			// Debug.d("", "===>mTransData["+i+"]:"+Integer.toHexString(mTransData[i]));
 			if (i%2 == 0) {
 				data[i/2] = 0;
-				data[i/2] = mTransData[i];
+				data[i/2] = (short) (mTransData[i] & 0x0ff);
 			} else {
-				data[i/2] |= mTransData[i]<<8;
+				data[i/2] |= (mTransData[i]<<8 & 0x0ffff);
 			}
+			// Debug.d("", "===>data["+i/2+"]:"+Integer.toHexString(data[i/2]));
 		}
 		mDatalen = mTransData.length;
 		return data;

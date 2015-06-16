@@ -86,6 +86,17 @@ public class DotMatrixReader {
 		return matrix.toByteArray();
 	}
 	
+	public int getDotCount(byte[] dots) {
+		int count = 0;
+		for (int i = 0; i < dots.length; i++) {
+			for (int j = 0; j < 8; j++) {
+				if ((dots[i] & (0x01<< j)) > 0) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
 	/**
 	 * 把字库中取出的行点阵转换成列点阵,高字节在前
 	 * @param matrix
