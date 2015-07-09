@@ -54,6 +54,14 @@
         android:layout_marginTop="5dp"
         android:background="#949494"
         >
+        <Button
+            android:id="@+id/btn_prev"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="@string/str_page_prev"
+            android:textSize="@dimen/settingsBtnsize"
+            />
         <Button 
             android:id="@+id/btn_setting_ok"
             android:layout_width="0dp"
@@ -61,7 +69,7 @@
             android:layout_weight="1"
             android:text="@string/str_btn_settings_sync"
             android:textSize="@dimen/settingsBtnsize"
-            android:enabled="false"
+            android:enabled="true"
             />
          
         <Button 
@@ -72,6 +80,7 @@
             android:text="@string/str_file_cancel"
             android:textSize="@dimen/settingsBtnsize"
             android:enabled="false"
+            android:visibility="gone"
             />
 
          <Button 
@@ -90,11 +99,20 @@
             android:text="@string/str_system_setting"
             android:textSize="@dimen/settingsBtnsize"
             />
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="@string/str_page_next"
+            android:textSize="@dimen/settingsBtnsize"
+            />
     </LinearLayout>
 <!-- 打印头设置标签 -->	
 	
 <!-- 对应的Fragment -->
     <ScrollView
+        android:id="@+id/setting_frame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/settingBtns"

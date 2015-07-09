@@ -8,12 +8,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 import com.industry.printer.FileFormat.DotMatrixFont;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.TLKFileParser;
@@ -89,7 +91,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 * if no, poll state Thread will read print-header state
 	 * 
 	 */
-	public boolean isPrinting;
 	public boolean isRunning;
 	// public PrintingThread mPrintThread;
 	public DataTransferThread mDTransThread;
@@ -105,6 +106,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 * UsbSerial device name
 	 */
 	public String mSerialdev;
+	
+	private RFIDDevice mRfidDevice;
 	/**
 	 * current tlk path opened
 	 */
@@ -196,7 +199,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {	
 		super.onActivityCreated(savedInstanceState);
 		mIndex=0;
-		isPrinting = false;
 		mTlkList = new Vector<Vector<TlkObject>>();
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
 		mObjList = new Vector<BaseObject>();
@@ -218,7 +220,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mBtnStop = (Button) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
 		
-		mRecords = (TextView) getView().findViewById(R.id.tv_records);
+		//mRecords = (TextView) getView().findViewById(R.id.tv_records);
 		/*
 		 *clean the print head
 		 *this command unsupported now 
@@ -238,6 +240,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 //		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 //		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
 		
+		loadMessage();
+		
+		/****初始化RFID****/
+		mRfidDevice = RFIDDevice.getInstance();
+		if (mRfidDevice.init() != 0) {
+			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
+		}
+		
 	}
 	
 	@Override
@@ -248,6 +258,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		//UsbSerial.close(mFd);
 	}
 	
+	private void loadMessage() {
+			
+		String f = SystemConfigFile.getLastMsg();
+		Debug.d(TAG, "===>path: " + ConfigPath.getTlkPath() + "/" + f);
+		if (f == null || !new File(ConfigPath.getTlkPath() + "/" + f).exists()) {
+			return;
+		}
+		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		Bundle bundle = new Bundle();
+		bundle.putString("file", ConfigPath.getTlkPath() + "/" + f);
+		msg.setData(bundle);
+		mHandler.sendMessageDelayed(msg, 1000);
+	}
+	
 	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
@@ -255,9 +279,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
-					String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
-					mObjPath = f;
+					// String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
+					mObjPath = msg.getData().getString("file", null);
+					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
+					if (mObjPath == null) {
+						break;
+					}
 					//方案1：从bin文件生成buffer
 					if (mDTransThread == null) {
 						mDTransThread = DataTransferThread.getInstance(); 
@@ -268,10 +296,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					//parseTlk(f);
 					//initBgBuffer();
 					/**获取打印缩略图，用于预览展现**/
-					TLKFileParser parser = new TLKFileParser(f);
+					TLKFileParser parser = new TLKFileParser(mObjPath);
 					String preview = parser.getContentAbatract();
+					if (preview == null) {
+						preview = getString(R.string.str_message_no_content);
+					}
 					mMsgPreview.setText(preview);
-					mMsgFile.setText(MessageBrowserDialog.getSelected());
+					mMsgFile.setText(new File(mObjPath).getName());
+					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
@@ -304,13 +336,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_START:
-					if (isPrinting == true) {
+					if (mDTransThread != null && mDTransThread.isRunning()) {
 						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
 						break;
 					}
 					if (mObjPath == null || mObjPath.isEmpty()) {
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
+					}
+					if (mDTransThread == null) {
+						mDTransThread = DataTransferThread.getInstance(); 
+						mDTransThread.initDataBuffer(mContext, mObjPath);
 					}
 					DataTask dt = mDTransThread.getData();
 					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
@@ -324,14 +360,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
 					FpgaGpioOperation.clean();
-					FpgaGpioOperation.updateSettings(mContext);
-					if (mDTransThread == null) {
-						mDTransThread = DataTransferThread.getInstance(); 
-					}
+					//FpgaGpioOperation.updateSettings(mContext);
+					
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
-					mDTransThread.launch();
+					if (!mDTransThread.launch()) {
+						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
+						break;
+					}
 					FpgaGpioOperation.init();
-					((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
+					String cFormat = getResources().getString(R.string.str_print_count);
+					((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
 					/*打印过程中禁止切换打印对象*/
 					mBtnOpenfile.setClickable(false);
@@ -345,6 +383,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
+						mDTransThread = null;
 					}
 					/*打印任务停止后允许切换打印对象*/
 					mBtnOpenfile.setClickable(true);
@@ -612,7 +651,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					
 					@Override
 					public void onClick() {
-						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
+						String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
+						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+
+						Bundle bundle = new Bundle();
+						bundle.putString("file", f);
+						msg.setData(bundle);
+						mHandler.sendMessage(msg);
 					}
 				});
 				dialog.show();

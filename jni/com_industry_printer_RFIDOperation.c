@@ -76,6 +76,15 @@ int set_options(int fd, int databits, int stopbits, int parity)
 //    tcflush(fd,TCIFLUSH);
     opt.c_cc[VTIME] = 150; /*ds*/
     opt.c_cc[VMIN] = 0;
+
+    // 处理无法接收特殊字符的问题
+    opt.c_iflag &= ~(BRKINT | ICRNL | ISTRIP | IXON);
+    //opt.c_oflag &= ~OPOST;
+    opt.c_cflag |= CLOCAL | CREAD;
+    //opt.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    //tcsetattr(fd,TCSAFLUSH,&opt);
+
+
     tcflush(fd, TCIFLUSH);
     if (tcsetattr(fd,TCSANOW,&opt) != 0)
     {
@@ -160,7 +169,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
 	if(fd <= 0)
 		return 0;
 
-	tcflush(fd, TCIOFLUSH);
+	//tcflush(fd, TCIOFLUSH);
 	ret = write(fd, buf_utf, len);
 
 	(*env)->ReleaseCharArrayElements(env, buf, buf_utf, 0);
@@ -202,6 +211,9 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_RFID_read
 	{
 		ALOGD("********read ret=%d,error=%d\n",nread, errno);
 		return NULL;
+	}
+	for (i = 0; i< nread; i++) {
+		ALOGD("********read ret=0x%x\n",tempBuff[i]);
 	}
     tempBuff[nread+1] = '\0';
 

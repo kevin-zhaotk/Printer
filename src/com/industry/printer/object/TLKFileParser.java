@@ -247,7 +247,9 @@ public class TLKFileParser {
 		if (mPath == null || mPath.isEmpty()) {
 			return null;
 		}
-		
+		if (!new File(mPath + "/1.bin").exists()) {
+			return null;
+		}
 		File file = new File(mPath+"/1.TLK");
 		InputStream instream;
 		try {

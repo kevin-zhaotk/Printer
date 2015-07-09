@@ -93,23 +93,23 @@ public class RFIDData {
 		if (isfilter) {
 			mTransData = data;
 			getRealData();
-			Debug.d("", "---------11-------");
-			Debug.print(mRealData);
-			Debug.d("", "---------11-------");
+			// Debug.d("", "---------11-------");
+			// Debug.print(mRealData);
+			// Debug.d("", "---------11-------");
 			if (mRealData == null) {
 				return ;
 			}
 			//计算长度字
 			mLength = (byte) (mRealData.length-5);
 			Debug.d("", "-------len: "+mLength);
-			mRealData[3] = mLength;
+			// mRealData[3] = mLength;
 			//计算校验字
 			for (int i = 1; i < mRealData.length-2; i++) {
 				mCheckCode += mRealData[i];	
 			}
-			Debug.d("", "---------22-------");
-			Debug.print(mRealData);
-			Debug.d("", "---------22-------");
+			// Debug.d("", "---------22-------");
+			// Debug.print(mRealData);
+			// Debug.d("", "---------22-------");
 		} else {
 			mRealData = data;
 			getTransferData();
@@ -200,17 +200,19 @@ public class RFIDData {
 		if (mRealData == null || mRealData.length < 4) {
 			return null;
 		}
+		/*由于 readblock返回数据中没有长度字节，因此暂时不进行长度校验
 		mLength = mRealData[3];
 		Debug.d("", "--->data length: "+mLength+",  real len: "+mRealData.length);
 		if (mLength == 0 || (mLength + 5) != mRealData.length) {
 			return null;
-		}
-		for (int i = 0; i < mRealData.length; i++) {
-			Debug.d("", "===>mRealData["+i+"]="+Integer.toHexString(mRealData[i]));
-		}
+		}*/
 		ByteBuffer buffer = ByteBuffer.wrap(mRealData);
 		mData = new byte[mRealData.length - 7];
-		buffer.position(5);
+		if (mRealData[3] == 0x4B) {
+			buffer.position(4);
+		} else {
+			buffer.position(5);
+		}
 		buffer.get(mData, 0, mRealData.length - 7);
 		Debug.d("", "-----------getData------");
 		Debug.print(mData);

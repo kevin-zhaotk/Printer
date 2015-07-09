@@ -66,6 +66,10 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		mEncoder.setSelection(SystemConfigFile.mEncoder);
 		mEncoder.setOnItemSelectedListener(this);
 		
+		String[] items = getResources().getStringArray(R.array.encoder_item_entries); 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
+		mEncoder.setAdapter(adapter);
+		
 		mTrigermode = (EditText) getView().findViewById(R.id.ph_set_trigerMode_value);
 		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
 		mTrigermode.addTextChangedListener(new TextWatcher() {

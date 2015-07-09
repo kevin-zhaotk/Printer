@@ -1,8 +1,11 @@
 package com.industry.printer;
 
+import java.io.WriteAbortedException;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.DataTask;
@@ -27,6 +30,7 @@ public class DataTransferThread extends Thread {
 	public static DataTransferThread mInstance;
 	
 	public boolean mNeedUpdate=false;
+	private boolean isBufferReady = false;
 	
 	/**打印数据buffer**/
 	public DataTask mDataTask;
@@ -35,6 +39,7 @@ public class DataTransferThread extends Thread {
 		if(mInstance == null) {
 			Debug.d(TAG, "===>new thread");
 			mInstance = new DataTransferThread();
+			
 		}
 		return mInstance;
 	}
@@ -52,6 +57,7 @@ public class DataTransferThread extends Thread {
 		while(mRunning == true) {
 			
 			int writable = FpgaGpioOperation.pollState();
+			writable = 1;
 			if (writable == 0) { //timeout
 				Debug.d(TAG, "===>select timeout");
 			} else if (writable == -1) {
@@ -72,6 +78,12 @@ public class DataTransferThread extends Thread {
 				//在此处发生打印数据，同时
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 			}
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//Debug.d(TAG, "===>kernel buffer empty, fill it");
 			//TO-DO list 下面需要把打印数据下发
 		}
@@ -82,10 +94,14 @@ public class DataTransferThread extends Thread {
 		return mRunning;
 	}
 	
-	public void launch() {
+	public boolean launch() {
 		mRunning = true;
 		DataTransferThread thread = getInstance();
+		if (!isBufferReady) {
+			return false;
+		}
 		thread.start();
+		return true;
 	}
 	
 	public void finish() {
@@ -93,8 +109,10 @@ public class DataTransferThread extends Thread {
 		
 		DataTransferThread t = mInstance;
 		mInstance = null;
-		t.mHandler.removeMessages(MESSAGE_DATA_UPDATE);
-		t.interrupt();
+		mHandler.removeMessages(MESSAGE_DATA_UPDATE);
+		if (t != null) {
+			t.interrupt();
+		}
 	}
 	
 	
@@ -116,7 +134,7 @@ public class DataTransferThread extends Thread {
 		if (mDataTask == null) {
 			mDataTask = new DataTask(context);
 		}
-		mDataTask.prepareBackgroudBuffer(obj);
+		isBufferReady = mDataTask.prepareBackgroudBuffer(obj);
 	}
 	
 	public DataTask getData() {

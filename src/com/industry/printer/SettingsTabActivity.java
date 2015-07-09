@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class SettingsTabActivity extends Fragment implements OnClickListener {
@@ -88,11 +89,13 @@ public static final String TAG="SettingsTabActivity";
 	public Button		mUpgrade;
 	public Button		mSetDate;
 	public Button		mSettings;
-	
+	public Button 		mPagePrev;
+	public Button 		mPageNext;
 
 	Context 			mContext;
 	ProgressDialog 		pDialog;
 	
+	ScrollView			mScrollView;
 	PHSettingFragment 	mPHSettings;
 	
 	public ExtendMessageTitleFragment mMsgTitle;
@@ -158,6 +161,13 @@ public static final String TAG="SettingsTabActivity";
         mHorires.setSummary(mHorires.getEntry());
         mVertres.setSummary(mVertres.getEntry());
         */
+		
+		mPagePrev = (Button) getView().findViewById(R.id.btn_prev);
+		mPagePrev.setOnClickListener(this);
+		
+		mPageNext = (Button) getView().findViewById(R.id.btn_next);
+		mPageNext.setOnClickListener(this);
+		
 		mSave = (Button) getView().findViewById(R.id.btn_setting_ok);
 		mSave.setOnClickListener(this);
 		
@@ -167,6 +177,7 @@ public static final String TAG="SettingsTabActivity";
 		mSettings = (Button) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		
+		mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
 		mPHSettings = new PHSettingFragment(mContext);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
@@ -234,6 +245,12 @@ public static final String TAG="SettingsTabActivity";
 			return;
 		}
 		switch (arg0.getId()) {
+			case R.id.btn_prev:
+				mScrollView.arrowScroll(View.FOCUS_UP);
+				break;
+			case R.id.btn_next:
+				mScrollView.arrowScroll(View.FOCUS_DOWN);
+				break;
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
 				SystemConfigFile.saveConfig();

@@ -23,12 +23,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener {
+public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
@@ -41,6 +43,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public ListView mMessageList;
 		public View mVSelected;
 		
+		public boolean isTop;
+		public boolean isBottom;
+		
 		public MessageListAdater mFileAdapter;
 		public LinkedList<Map<String, Object>> mContent;
 		
@@ -50,7 +55,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			
 			mVSelected = null;
 			mContent = new LinkedList<Map<String, Object>>();
-			
+			isTop = false;
+			isBottom = false;
 			mFileAdapter = new MessageListAdater(context, 
 					mContent, 
 					R.layout.message_item_layout, 
@@ -83,6 +89,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mMessageList.setOnItemClickListener(this);
 			 
 			 mMessageList.setOnTouchListener(this);
+			 mMessageList.setOnScrollListener(this);
 			 loadMessages();
 			 mFileAdapter.notifyDataSetChanged();
 			 
@@ -107,10 +114,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					}
 					break;
 				case R.id.btn_page_prev:
-					mMessageList.scrollBy(0, -300);
+					mMessageList.smoothScrollBy(-200, 50);
 					break;
 				case R.id.btn_page_next:
-					mMessageList.scrollBy(0, 300);
+					mMessageList.smoothScrollBy(200, 50);
 					break;
 				
 			}
@@ -132,7 +139,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mVSelected.setBackgroundColor(Color.WHITE);
 				view.setBackgroundColor(R.color.message_selected_color);
 				mVSelected = view;
-			}}
+			}
+		}
 		
 		public void loadMessages()
 		{
@@ -175,6 +183,41 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public boolean onTouch(View arg0, MotionEvent arg1) {
 			// TODO Auto-generated method stub
 			return false;
+		}
+
+		@Override
+		public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			if(firstVisibleItem==0){
+				Debug.e(TAG, "滑到顶部");
+				isTop = true;
+            } else {
+            	isTop = false;
+            }
+			
+			if(visibleItemCount+firstVisibleItem==totalItemCount){
+            	Debug.e(TAG, "滑到底部");
+            	isBottom = true;
+            } else {
+            	isBottom = false;
+            }
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView view, int state) {
+			switch (state) {
+			case OnScrollListener.SCROLL_STATE_IDLE:
+				Debug.d(TAG, "===>idle");
+				
+				break;
+			case OnScrollListener.SCROLL_STATE_FLING:
+				Debug.d(TAG, "===>fling");
+				break;
+			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+				Debug.d(TAG, "===>touch scroll");
+				break;
+			default:
+				break;
+			}
 		}
 		
 }

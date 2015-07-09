@@ -43,6 +43,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,6 +127,9 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	// public EditText mObjLine2;
 	// public EditText mObjLine3;
 	// public EditText mObjLine4;
+	public Button mPrev;
+	public Button mNext;
+	
 	
 	public static Vector<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
@@ -173,6 +177,14 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		
 		mTest5 = (Button) getView().findViewById(R.id.btn_temp_5);
 		mTest5.setOnClickListener(this);
+		
+		mPrev = (Button) getView().findViewById(R.id.btn_page_up);
+		mPrev.setOnClickListener(this);
+		
+		mNext = (Button) getView().findViewById(R.id.btn_page_down);
+		mNext.setOnClickListener(this);
+		
+				
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 		mObjLine1.setText("");
 		mObjLine1.setOnEditorActionListener(new OnEditorActionListener() {
@@ -188,6 +200,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				}
 			}
 		});
+		
+	
 	}
 	
 	
@@ -298,18 +312,22 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		Debug.d(TAG, "=====>saveObjFile path="+path);
 		if(create==true)
 		{
-			if(file.exists()){
-				Toast.makeText(mContext, R.string.str_tlk_already_exist, Toast.LENGTH_LONG);
-				return;
-			}
-			if(!file.mkdirs())
-			{
-				Debug.d(TAG, "create dir error "+file.getPath());
-				Toast.makeText(mContext, R.string.str_createfile_failure, Toast.LENGTH_LONG);
-				return;
-			}
+//			if(file.exists()){
+//				Toast.makeText(mContext, R.string.str_tlk_already_exist, Toast.LENGTH_LONG);
+//				return;
+//			}
+//			if(!file.mkdirs())
+//			{
+//				Debug.d(TAG, "create dir error "+file.getPath());
+//				Toast.makeText(mContext, R.string.str_createfile_failure, Toast.LENGTH_LONG);
+//				return;
+//			}
 		}
-		
+		if(!file.exists() && !file.mkdirs())
+		{
+			Debug.d(TAG, "create dir error "+file.getPath());
+			return ;
+		}
 		File tlk = new File(path+"/1.TLK");
 		try {
 			if(!tlk.exists() && !tlk.createNewFile()){
@@ -425,6 +443,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		if (mObjName == null) {
 						break;
 					}
+            		createFolderIfNeed(mObjName);
             		if (Configs.gMakeBinFromBitmap == true) {
             			saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
 					} else {
@@ -462,6 +481,15 @@ public class EditTabActivity extends Fragment implements OnClickListener {
        } 
 	};
 	
+	private boolean createFolderIfNeed(String obj) {
+		File dir = new File(ConfigPath.getTlkPath() + "/" + obj);
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			Debug.d(TAG, "create dir error "+dir.getPath());
+			return false;
+		}
+		return true;
+	}
 	
 	int getTouchedObj(float x, float y)
 	{
@@ -643,6 +671,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		byte[] d;
 		int fd;
 		int ret;
+		RFIDDevice device = null;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
@@ -661,12 +690,18 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_save:
+				if (mObjLine1.getText().toString().isEmpty()) {
+					break;
+				}
 				getObjectList();
 				if (mObjName != null) {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
 					break;
 				}
 			case R.id.btn_saveas:
+				if (mObjLine1.getText().toString().isEmpty()) {
+					break;
+				}
 				getObjectList();
 				dialog = new MessageSaveDialog(mContext);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
@@ -680,35 +715,34 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				
 				break;
 			case R.id.btn_temp_4:
-				InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
-				char[] code = cal.getGBKCode("1");
-				DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
-				byte[] dots = reader.getDotMatrix(code);
-				Debug.d(TAG, "++++++++++++++++++++++");
-				Debug.print(dots);
-				Debug.d(TAG, "++++++++++++++++++++++");
+				//制卡
+				device = RFIDDevice.getInstance();
+				device.makeCard();
 				break;
 			case R.id.btn_temp_5:
 				/******************/
-				RFIDDevice writer = RFIDDevice.getInstance();
+				
 				//writer.connect();
 				//writer.setType();
 				//寻卡
-				writer.lookForCards();
-				//防冲突
-				byte[] sn = writer.avoidConflict();
-				Debug.d(TAG, "+++++++++++ SN +++++++++++");
-				Debug.print(sn);
-				Debug.d(TAG, "+++++++++++ SN +++++++++++");
-				//选卡
-				writer.selectCard(sn);
-				//秘钥认证
-				writer.keyVerfication((byte)0);
-				//写块
-				byte[] content = {0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55,0x00, 0x00,0x00, 0x55};
-				//writer.writeBlock((byte)5, content);
-				//读块
-				writer.readBlock((byte)0);
+				device = RFIDDevice.getInstance();
+				device.init();
+				break;
+			case R.id.btn_page_up:
+				float y = mObjLine1.getTranslationY();
+				Debug.d(TAG, "===>y="+y);
+				mObjLine1.scrollBy(0, -100);
+				break;
+			case R.id.btn_page_down:
+
+				float ny = mObjLine1.getY();
+				Debug.d(TAG, "===>y="+ny);
+				ny = mObjLine1.getScaleY();
+				Debug.d(TAG, "===>sy="+ny);
+				
+				mObjLine1.scrollBy(0, 100);
+				break;
+			
 			default:
 				break;
 		}

@@ -30,7 +30,6 @@
             android:spinnerMode="dropdown"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:dropDownWidth="@dimen/settingsValueLength"
-            android:entries="@array/encoder_item_entries"
             />
           
         <TextView

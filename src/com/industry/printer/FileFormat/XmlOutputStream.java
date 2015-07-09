@@ -62,7 +62,8 @@ public class XmlOutputStream {
 			if (mOutputStream != null) {
 				mOutputStream.write(writer.toString().getBytes());
 			}
-			
+			writer.flush();
+			writer.close();
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 			return false;

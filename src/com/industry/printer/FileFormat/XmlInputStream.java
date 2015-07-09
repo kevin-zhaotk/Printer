@@ -26,6 +26,7 @@ public class XmlInputStream {
 	private static final String TAG = XmlInputStream.class.getSimpleName();
 	
 	private FileInputStream mInputStream;
+	private boolean isReady = false;
 	
 	public XmlInputStream(String file) {
 		try {
@@ -36,6 +37,7 @@ public class XmlInputStream {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		isReady = true;
 	}
 	
 	public XmlInputStream(FileInputStream inputStream) {
@@ -44,6 +46,9 @@ public class XmlInputStream {
 	
 	public List<XmlTag> read() {
 		ArrayList<XmlTag> mPairs=null;
+		if (mInputStream == null) {
+			return null;
+		}
 		try {
 			XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
 			parser.setInput(mInputStream, "utf-8");

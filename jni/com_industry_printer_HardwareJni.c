@@ -80,7 +80,7 @@ int register_com_industry_printer_GPIOOperation(JNIEnv *env) {
  * 注册RFID操作的JNI方法
  */
 int register_com_industry_printer_RFIDOperation(JNIEnv* env) {
-	const char* kClassPathName = "com/industry/printer/hardware/RFIDOperation";
+	const char* kClassPathName = "com/industry/printer/hardware/RFIDDevice";
 	jclass clazz = (*env)->FindClass(env, kClassPathName);
 	if(clazz == NULL) {
 		return JNI_FALSE;

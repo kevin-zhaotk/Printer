@@ -53,7 +53,7 @@ public class DataTask {
 	 * @param f	the tlk object directory path
 	 * parse the 1.bin, and then read the file content into mBgBuffer, one bit extends to one byte
 	 */
-	public void prepareBackgroudBuffer(String tlk)
+	public boolean prepareBackgroudBuffer(String tlk)
 	{
 		String path=null;
 		File fp = new File(tlk);
@@ -67,10 +67,14 @@ public class DataTask {
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		mBinInfo = new BinInfo(mMessage+"/1.bin");
 		if (mBinInfo == null) {
-			return ;
+			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
+		if (mBgBuffer == null) {
+			return false;
+		}
 		mPrintBuffer = new char[mBgBuffer.length];
+		return true;
 	}
 	
 	

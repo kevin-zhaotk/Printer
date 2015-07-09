@@ -81,6 +81,9 @@ public class BinInfo {
 	
     public char[] getBgBuffer()
     {
+    	if (mLength <= 0) {
+			return null;
+		}
 		try {
 			mBufferBytes = new byte[mLength];
 			mBufferChars = new char[mLength/2];

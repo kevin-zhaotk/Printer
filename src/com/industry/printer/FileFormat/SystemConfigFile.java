@@ -38,6 +38,8 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_DELAY_PULSE = "delayPulse";
 	public static final String PH_SETTING_HIGH_LEN = "highLen";
 	
+	public static final String LAST_MESSAGE = "message";
+	
 	public static int mEncoder = 0;
 	public static int mTrigerMode = 0;
 	public static int mPHOHighDelay = 0;
@@ -61,18 +63,11 @@ public class SystemConfigFile{
 		/*
 		 * use this first usb as default 
 		 */
-		File file = new File(paths.get(0)+Configs.SYSTEM_CONFIG_FILE);
-		if (!file.exists()) {
-			return ;
-		}
-		Debug.d(TAG, "===>1111111111");
 		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.SYSTEM_CONFIG_XML);
 		List<XmlTag> list = inStream.read();
-		Debug.d(TAG, "===>2222222222222");
 		if (list == null) {
 			return;
 		}
-		Debug.d(TAG, "===>3333333");
 		for (XmlTag t : list) {
 			tag = t.getKey();
 			if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
@@ -219,65 +214,29 @@ public class SystemConfigFile{
 				return;
 		}
 		Debug.d(TAG, "===>dir:"+dir.getAbsolutePath());
-		try {
-			File file = new File(dev+Configs.SYSTEM_CONFIG_FILE);
-			if(!file.exists()) {
-				file.createNewFile();
-			}
-			Debug.d(TAG, "===>file:"+file.getAbsolutePath());
-			FileWriter writer = new FileWriter(file);
-			writer.write(PH_SETTING_ENCODER+" "+mEncoder);
-			writer.append("\n");
-			writer.append(PH_SETTING_TRIGER_MODE + " " +mTrigerMode);
-			writer.append("\n");
-			writer.append(PH_SETTING_HIGH_DELAY + " " +mPHOHighDelay);
-			writer.append("\n");
-			writer.append(PH_SETTING_LOW_DELAY + " " +mPHOLowDelay);
-			writer.append("\n");
-			writer.append(PH_SETTING_PHOOUTPUT_PERIOD + " " +mPHOOutputPeriod);
-			writer.append("\n");
-			writer.append(PH_SETTING_TIMED_PERIOD + " " +mTimedPeriod);
-			writer.append("\n");
-			writer.append(PH_SETTING_TRIGER_PULSE + " " +mTrigerPulse);
-			writer.append("\n");
-			writer.append(PH_SETTING_LENFIXED_PULSE + " " +mLenFixedPulse);
-			writer.append("\n");
-			writer.append(PH_SETTING_DELAY_PULSE + " " +mDelayPulse);
-			writer.append("\n");
-			writer.append(PH_SETTING_HIGH_LEN + " " +mHighLen);
-			writer.flush();
-			writer.close();
-			
-			ArrayList<XmlTag> list = new ArrayList<XmlTag>();
-			XmlTag tag1 = new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse));
-			list.add(tag1);
-			tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen));
-			list.add(tag1);
-			XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
-			stream.write(list);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ArrayList<XmlTag> list = new ArrayList<XmlTag>();
+		XmlTag tag1 = new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen));
+		list.add(tag1);
+		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
+		stream.write(list);
 	}
 	
 	public void saveSettings() {
@@ -293,4 +252,55 @@ public class SystemConfigFile{
 		tags.add(new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse)));
 		tags.add(new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen)));
 	}
+	
+	
+	public static String getLastMsg() {
+		
+		String tag;
+		ArrayList<String> paths = ConfigPath.getMountedUsb();
+		if (paths == null || paths.isEmpty()) {
+			return null;
+		}
+		Debug.d(TAG, "===>path:"+paths.get(0));
+		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.LAST_MESSAGE_XML);
+		List<XmlTag> list = inStream.read();
+		if (list == null) {
+			return null;
+		}
+		for (XmlTag t : list) {
+			tag = t.getKey();
+			if (tag.equalsIgnoreCase(LAST_MESSAGE)) {
+				return t.getValue();
+			} 
+			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
+		}
+		return null;
+	}
+	
+	public static void saveLastMsg(String name) {
+		
+		ArrayList<String> paths = ConfigPath.getMountedUsb();
+		if (paths == null || paths.isEmpty() || name == null) {
+			Debug.d(TAG, "===>saveConfig error");
+			return ;
+		}
+		File file = new File(name);
+		
+		/*
+		 * use the first usb as the default device
+		 */
+		String dev = paths.get(0);
+		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+		if (!dir.exists()) {
+			if(dir.mkdirs() == false)
+				return;
+		}
+		ArrayList<XmlTag> list = new ArrayList<XmlTag>();
+		XmlTag tag1 = new XmlTag(LAST_MESSAGE, file.getName());
+		list.add(tag1);
+		XmlOutputStream stream = new XmlOutputStream(dev+Configs.LAST_MESSAGE_XML);
+		stream.write(list);
+		
+	}
+	
 }

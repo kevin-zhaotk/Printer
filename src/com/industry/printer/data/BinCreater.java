@@ -9,12 +9,14 @@ import java.io.IOException;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.industry.printer.R;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.widget.Toast;
 
 public class BinCreater {
 	
@@ -302,7 +304,9 @@ public class BinCreater {
     	bytesPerCol = single%4==0? single/4 : (single/4+1);
     	int columns = dots.length/bytesPerCol;
     	try {
+    		
     		File file = new File(f+"/1.bin");
+    		Debug.d(TAG, "--->saveBin f:" + file.getAbsoluteFile());
     		if (!file.exists() && !file.createNewFile()) {
 				Debug.d(TAG, "===>error: create bin file failed");
 				return false;
