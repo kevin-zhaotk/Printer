@@ -424,7 +424,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
             		File tlk=new File(ConfigPath.getTlkPath()+"/" + mObjName +"/1.TLK");
             		if(tlk.isFile() && tlk.exists())
             		{
-	    				TLKFileParser.parse(mContext, tlk.getAbsolutePath(), mObjs);
+            			TLKFileParser parser = new TLKFileParser(tlk.getAbsolutePath());
+	    				parser.parse(mContext, tlk.getAbsolutePath(), mObjs);
 	    				setCurObj(0);
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		}

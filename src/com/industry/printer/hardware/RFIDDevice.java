@@ -401,9 +401,10 @@ public class RFIDDevice {
 	}
 	
 	public int getInkLevel() {
-		//先从主block读取墨水值
+		// 先从主block读取墨水值
 		int current = getInkLevel(false);
 		if (!isLevelValid(current)) {
+			// 如果主block墨水值不合法则从备份区读取
 			current = getInkLevel(true);
 		}
 		if (!isLevelValid(current)) {
@@ -436,8 +437,19 @@ public class RFIDDevice {
 		writeBlock(SECTOR_INKLEVEL, BLOCK_INKLEVEL, content);
 	}
 
+	/**
+	 *更新墨水值，即当前墨水值减1 
+	 */
 	public void updateInkLevel() {
-		
+		int level = getInkLevel();
+		level = level -1;
+		if (level <= 0) {
+			return;
+		}
+		// 将新的墨水量写回主block
+		setInkLevel(level, false);
+		// 将新的墨水量写回备份block
+		setInkLevel(level, true);
 		
 	}
 	/**
@@ -507,6 +519,9 @@ public class RFIDDevice {
 	}
 	
 	private boolean isLevelValid(int value) {
+		if (value < INK_LEVEL_MIN || value > INK_LEVEL_MAX) {
+			return false;
+		}
 		return true;
 	}
 }

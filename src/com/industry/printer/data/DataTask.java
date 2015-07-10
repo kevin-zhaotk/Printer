@@ -43,9 +43,13 @@ public class DataTask {
 	 */
 	public char[] mBgBuffer;
 	public char[] mPrintBuffer;
+	
+	private int mDots;
+	
 	public DataTask(Context context) {
 		mContext = context;
 		mObjList = new Vector<BaseObject>();
+		mDots = 0;
 	}
 	
 	/**
@@ -63,7 +67,8 @@ public class DataTask {
 			path = tlk;
 		/**记录当前打印的信息路径**/
 		mMessage = path;
-		TLKFileParser.parse(mContext, mMessage+"/1.TLK", mObjList);
+		TLKFileParser parser = new TLKFileParser(mMessage);
+		parser.parse(mContext, mMessage+"/1.TLK", mObjList);
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		mBinInfo = new BinInfo(mMessage+"/1.bin");
 		if (mBinInfo == null) {
@@ -160,4 +165,14 @@ public class DataTask {
 	public Vector<BaseObject> getObjList() {
 		return mObjList;
 	}
+	
+	
+	public void setDots(int dots) {
+		mDots = dots;
+	}
+	
+	public int getDots() {
+		return mDots;
+	}
+	
 }

@@ -297,6 +297,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					//initBgBuffer();
 					/**获取打印缩略图，用于预览展现**/
 					TLKFileParser parser = new TLKFileParser(mObjPath);
+					mDTransThread.setDotCount(parser.getDots());
 					String preview = parser.getContentAbatract();
 					if (preview == null) {
 						preview = getString(R.string.str_message_no_content);

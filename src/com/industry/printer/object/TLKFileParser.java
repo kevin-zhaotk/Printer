@@ -23,13 +23,14 @@ public class TLKFileParser {
 	public static Context mContext;
 	
 	public String mPath;
+	private int mDots = 0;
 	
 	public TLKFileParser(String file) {
 		setTlk(file);
 	}
 	
 	
-	public static void parse(Context context, String name, Vector<BaseObject> objlist)
+	public void parse(Context context, String name, Vector<BaseObject> objlist)
 	{
 		int i;
 		BaseObject pObj;
@@ -88,16 +89,18 @@ public class TLKFileParser {
 		}
 	}
 	
-	public static BaseObject parseLine(String str)
+	public BaseObject parseLine(String str)
 	{
 		Log.d(TAG, "*************************");
 		BaseObject obj = null;
 		String [] attr = str.split("\\^",0);
 		Log.d(TAG,"index="+str.indexOf("^"));
+		/*
 		for(int i=0; i< attr.length; i++)
 		{
-			//Log.d(TAG, "attr["+i+"]="+attr[i]);
+			Log.d(TAG, "attr["+i+"]="+attr[i]);
 		}
+		*/
 		Log.d(TAG, "attr[1]="+attr[1]);
 		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
 		{
@@ -152,11 +155,9 @@ public class TLKFileParser {
 		}
 		else if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
 		{
-//			obj = new MessageObject(mContext, 0);
-//			obj.setSelected(true);
-//			obj.setContent(attr[21]);
-//			Log.d(TAG, "Message object");
-//			Log.d(TAG, "Message name="+obj.getContent());
+			obj = new MessageObject(mContext, 0);
+			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
+			mDots = Integer.parseInt(attr[13]);
 		}
 		else if(BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))			//rect
 		{
@@ -274,5 +275,9 @@ public class TLKFileParser {
 			e.printStackTrace();
 		} 
 		return content;
+	}
+	
+	public int getDots() {
+		return mDots;
 	}
 }

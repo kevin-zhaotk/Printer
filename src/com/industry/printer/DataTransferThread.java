@@ -140,4 +140,19 @@ public class DataTransferThread extends Thread {
 	public DataTask getData() {
 		return mDataTask;
 	}
+	
+	public void setDotCount(int count) {
+		if (mDataTask == null) {
+			return;
+		}
+		mDataTask.setDots(count);
+	}
+	
+	public int getDotCount() {
+		if (mDataTask == null) {
+			return 0;
+		}
+		
+		return mDataTask.getDots();
+	}
 }
