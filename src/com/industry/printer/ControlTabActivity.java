@@ -12,6 +12,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -41,11 +42,12 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Fragment implements OnClickListener {
+public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -63,8 +65,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	//public EditText mDstline;
 	
 	public Button	mBtnOpenfile;
+	public HorizontalScrollView mScrollView;
 	public TextView mMsgFile;
-	public EditText mMsgPreview;
+	// public EditText mMsgPreview;
+	public TextView mMsgPreview;
 	public Button 	mBtnview;
 	public Button	mForward;
 	public Button 	mBackward;
@@ -151,7 +155,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 	 *   message tobe sent when dismiss loading dialog 
 	 */
 	public final int MESSAGE_PRINT_STOP = 6;
-		
+	
+	/**
+	 * MESSAGE_INKLEVEL_DOWN
+	 *   message tobe sent when ink level change 
+	 */
+	public final int MESSAGE_INKLEVEL_CHANGE = 7;
+	
+	/**
+	 * MESSAGE_COUNT_CHANGE
+	 *   message tobe sent when count change 
+	 */
+	public final int MESSAGE_COUNT_CHANGE = 8;
+	
 	
 	/**
 	 * the bitmap for preview
@@ -233,21 +249,36 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mBtnOpenfile = (Button) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
 		
-		mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
+		
+		mForward = (Button) getView().findViewById(R.id.btn_page_forward);
+		mForward.setOnClickListener(this);
+		
+		mBackward = (Button) getView().findViewById(R.id.btn_page_backward);
+		mBackward.setOnClickListener(this);
+		
+		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);
+		// mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
+		mMsgPreview = (TextView) getView().findViewById(R.id.message_preview);
+		
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
-//		mInkLevel = (TextView) findViewById(R.id.tv_inkValue);
+		mInkLevel = (TextView) getView().findViewById(R.id.tv_inkValue);
 //		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 //		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
 		
-		loadMessage();
-		
+		//  加载打印计数
+		PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
+		mCounter = db.getCount(mContext);
+		refreshCount();
 		/****初始化RFID****/
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
 			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
+		} else {
+			int ink = mRfidDevice.getInkLevel();
+			refreshInk(ink);
 		}
-		
+		loadMessage();
 	}
 	
 	@Override
@@ -272,6 +303,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
 	
+	private void refreshInk(int ink) {
+		String level = String.format(getResources().getString(R.string.str_state_inklevel), ink);
+		mInkLevel.setText(level);
+	}
+	
+	private void refreshCount() {
+		String cFormat = getResources().getString(R.string.str_print_count);
+		((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
+	}
+	
 	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
@@ -287,17 +328,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 						break;
 					}
 					//方案1：从bin文件生成buffer
-					if (mDTransThread == null) {
-						mDTransThread = DataTransferThread.getInstance(); 
-					}
-					/**打开一个打印对象，先处理打印数据，从1.bin文件中取出常量的内容**/
-					mDTransThread.initDataBuffer(mContext, mObjPath);
+					initDTThread();
 					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
 					//parseTlk(f);
 					//initBgBuffer();
 					/**获取打印缩略图，用于预览展现**/
 					TLKFileParser parser = new TLKFileParser(mObjPath);
-					mDTransThread.setDotCount(parser.getDots());
+					
 					String preview = parser.getContentAbatract();
 					if (preview == null) {
 						preview = getString(R.string.str_message_no_content);
@@ -345,10 +382,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
 					}
-					if (mDTransThread == null) {
-						mDTransThread = DataTransferThread.getInstance(); 
-						mDTransThread.initDataBuffer(mContext, mObjPath);
-					}
+					initDTThread();
 					DataTask dt = mDTransThread.getData();
 					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
@@ -369,8 +403,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 						break;
 					}
 					FpgaGpioOperation.init();
-					String cFormat = getResources().getString(R.string.str_print_count);
-					((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
 					/*打印过程中禁止切换打印对象*/
 					mBtnOpenfile.setClickable(false);
@@ -389,10 +421,38 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 					/*打印任务停止后允许切换打印对象*/
 					mBtnOpenfile.setClickable(true);
 					break;
+				case MESSAGE_INKLEVEL_CHANGE:
+					if (mRfidDevice == null) {
+						mRfidDevice = RFIDDevice.getInstance();
+					}
+					int ink = mRfidDevice.updateInkLevel();
+					refreshInk(ink);
+					break;
+				case MESSAGE_COUNT_CHANGE:
+					mCounter++;
+					refreshCount();
+					PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
+					db.updateCount(mContext, (int) mCounter);
+					break;
+					
 			}
 		}
 	};
 	
+	public void initDTThread() {
+		
+		if (mDTransThread != null) {
+			return; 
+		}
+		mDTransThread = DataTransferThread.getInstance();	
+		// 初始化buffer
+		mDTransThread.initDataBuffer(mContext, mObjPath);
+		TLKFileParser parser = new TLKFileParser(mObjPath);
+		// 设置dot count
+		mDTransThread.setDotCount(parser.getDots());
+		// 设置UI回调
+		mDTransThread.setOnInkChangeListener(this);
+	}
 	
 	public void startPreview()
 	{
@@ -663,10 +723,31 @@ public class ControlTabActivity extends Fragment implements OnClickListener {
 				});
 				dialog.show();
 				break;
+			case R.id.btn_page_forward:
+				mScrollView.smoothScrollBy(400, 0);
+				break;
+			case R.id.btn_page_backward:
+				mScrollView.smoothScrollBy(-400, 0);
+				break;
 			default:
 				break;
 		}
 		
+	}
+
+	@Override
+	public void onInkLevelDown() {
+		mHandler.sendEmptyMessage(MESSAGE_INKLEVEL_CHANGE);
+	}
+
+	@Override
+	public void onInkEmpty() {
+		
+	}
+
+	@Override
+	public void onCountChanged() {
+		mHandler.sendEmptyMessage(MESSAGE_COUNT_CHANGE);
 	}
 	
 }

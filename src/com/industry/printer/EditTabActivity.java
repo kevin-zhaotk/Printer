@@ -172,11 +172,11 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mBtnSave = (Button) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
 		
-		mTest = (Button) getView().findViewById(R.id.btn_temp_4);
-		mTest.setOnClickListener(this);
+		//mTest = (Button) getView().findViewById(R.id.btn_temp_4);
+		//mTest.setOnClickListener(this);
 		
-		mTest5 = (Button) getView().findViewById(R.id.btn_temp_5);
-		mTest5.setOnClickListener(this);
+		//mTest5 = (Button) getView().findViewById(R.id.btn_temp_5);
+		//mTest5.setOnClickListener(this);
 		
 		mPrev = (Button) getView().findViewById(R.id.btn_page_up);
 		mPrev.setOnClickListener(this);
@@ -191,6 +191,9 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			
 			@Override
 			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				if (arg2 == null) {
+					return false;
+				}
 				if (arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);  
 					imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
@@ -715,13 +718,13 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				dialog.show();
 				
 				break;
+			/*
 			case R.id.btn_temp_4:
 				//制卡
 				device = RFIDDevice.getInstance();
 				device.makeCard();
 				break;
 			case R.id.btn_temp_5:
-				/******************/
 				
 				//writer.connect();
 				//writer.setType();
@@ -729,6 +732,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				device = RFIDDevice.getInstance();
 				device.init();
 				break;
+			*/
 			case R.id.btn_page_up:
 				float y = mObjLine1.getTranslationY();
 				Debug.d(TAG, "===>y="+y);

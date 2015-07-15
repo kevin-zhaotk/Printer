@@ -1,13 +1,24 @@
 package com.industry.printer;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.StreamCorruptedException;
 import java.io.WriteAbortedException;
 
 import android.content.Context;
+import android.graphics.Bitmap.Config;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 
@@ -32,8 +43,11 @@ public class DataTransferThread extends Thread {
 	public boolean mNeedUpdate=false;
 	private boolean isBufferReady = false;
 	
+	private int mcountdown = 0;
 	/**打印数据buffer**/
 	public DataTask mDataTask;
+	
+	private InkLevelListener mInkListener = null;
 	
 	public static DataTransferThread getInstance() {
 		if(mInstance == null) {
@@ -51,6 +65,7 @@ public class DataTransferThread extends Thread {
 	 * 否则，处理这个message并置数据更新状态为true
 	 * run函数中一旦检测到数据更新状态变为true，就重新生成buffer并下发
 	 */
+	
 	@Override
 	public void run() {
 		
@@ -72,6 +87,13 @@ public class DataTransferThread extends Thread {
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
+				// 保存打印计数
+				// 墨水量count down计算
+				if (countDown()) {
+					mInkListener.onInkLevelDown();
+				}
+				mInkListener.onInkLevelDown();
+				mInkListener.onCountChanged();
 			}
 			
 			if(mNeedUpdate == true) {
@@ -108,11 +130,16 @@ public class DataTransferThread extends Thread {
 		mRunning = false;
 		
 		DataTransferThread t = mInstance;
+		
 		mInstance = null;
 		mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 		if (t != null) {
 			t.interrupt();
 		}
+	}
+	
+	public void setOnInkChangeListener(InkLevelListener listener) {
+		mInkListener = listener;
 	}
 	
 	
@@ -155,4 +182,27 @@ public class DataTransferThread extends Thread {
 		
 		return mDataTask.getDots();
 	}
+	
+	/**
+	 * 倒计数，当计数倒零时表示墨水量需要减1，同时倒计数回归
+	 * @return true 墨水量需要减1； false 墨水量不变
+	 */
+	private boolean countDown() {
+		mcountdown--;
+		if (mcountdown <= 0) {
+			// 赋初值
+			mcountdown = getInkThreshold();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 通过dot count计算RFID减1的阀值
+	 * @return
+	 */
+	private int getInkThreshold() {
+		return Configs.DOTS_PER_PRINT;
+	}
+
 }

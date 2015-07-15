@@ -71,7 +71,7 @@
 	    
 	    <Button
 	        android:id="@+id/btn_page_forward"
-	        android:layout_width="80dp"
+	        android:layout_width="120dp"
 	        android:layout_height="fill_parent"
 	        android:layout_alignParentRight="true"
 	        android:text="@string/str_page_forward"
@@ -81,7 +81,7 @@
 	    
 	    <Button
 	        android:id="@+id/btn_page_backward"
-	        android:layout_width="80dp"
+	        android:layout_width="120dp"
 	        android:layout_height="fill_parent"
 	        android:layout_toLeftOf="@id/btn_page_forward"
 	        android:text="@string/str_page_backward"
@@ -105,7 +105,26 @@
         android:layout_height="116dp"
         android:layout_below="@id/ctrl_msgname"
         android:orientation="vertical">
-        <EditText
+	    <HorizontalScrollView 
+	        android:id="@+id/preview_scroll"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        >
+
+	        <TextView
+            android:id="@+id/message_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:minWidth="800dp"
+            android:hint="@string/str_hint_preview"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/ctrlPreviewTextsize"
+            android:textColor="#8f8f8f"
+            android:singleLine="true"
+            />	    
+        <!-- 
+	    <EditText
             android:id="@+id/message_preview"
             android:layout_width="fill_parent"
             android:layout_height="116dp"
@@ -115,6 +134,8 @@
             android:editable="false"
             android:singleLine="true"
             />
+        -->
+        </HorizontalScrollView>
     </LinearLayout>
   
     <LinearLayout 
@@ -129,6 +150,7 @@
             android:layout_weight="1" 
             >
 	        <TextView
+	            android:id="@+id/tv_inkValue"
 	            android:layout_width="fill_parent"
 	            android:layout_height="fill_parent"
 	            android:text="@string/str_state_inklevel"

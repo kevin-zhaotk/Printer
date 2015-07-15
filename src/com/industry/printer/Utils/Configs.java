@@ -24,6 +24,17 @@ public class Configs {
 	public static int gParams;
 	
 	public static final boolean gMakeBinFromBitmap = false;
+	
+	/**
+	 * 一个单位的墨水量对应的打点数
+	 */
+	public static final int DOTS_PER_PRINT = 100;
+	
+	/**
+	 * 墨盒总墨水量
+	 */
+	public static final int INK_LEVEL_MAX = 1000;
+
 	/**
 	 * PROC_MOUNT_FILE
 	 * proc/mounts sys file
@@ -60,7 +71,6 @@ public class Configs {
 	public static final String SYSTEM_CONFIG_FILE = SYSTEM_CONFIG_DIR+"/system_config.txt";
 	public static final String SYSTEM_CONFIG_XML = SYSTEM_CONFIG_DIR+"/system_config.xml";
 	public static final String LAST_MESSAGE_XML = SYSTEM_CONFIG_DIR+"/last_message.xml";
-	
 	
 	/**
 	 * TLK文件存放路径

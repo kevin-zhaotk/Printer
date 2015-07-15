@@ -10,6 +10,7 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
 
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.EncryptionMethod;
 import com.industry.printer.data.RFIDData;
@@ -44,9 +45,9 @@ public class RFIDDevice {
 	public static byte SECTOR_COPY_FEATURE = 0x05;
 	public static byte BLOCK_COPY_FEATURE = 0x01;
 	
-	public static byte SECTOR_INKLEVEL = 0x04;
+	public static byte SECTOR_INKLEVEL = 0x09;
 	public static byte BLOCK_INKLEVEL = 0x02;
-	public static byte SECTOR_COPY_INKLEVEL = 0x05;
+	public static byte SECTOR_COPY_INKLEVEL = 0x08;
 	public static byte BLOCK_COPY_INKLEVEL = 0x02;
 	
 	//Command
@@ -200,6 +201,7 @@ public class RFIDDevice {
 			Debug.d(TAG, "===>invalide key");
 			return false;
 		}
+		Debug.d(TAG, "===>keyVerfication sector:" + sector + ", block:" +block);
 		byte[] keyA = {0x60,blk, key[0], key[1], key[2], key[3], key[4], key[5]};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
 		byte[] readin = writeCmd(data);
@@ -242,6 +244,7 @@ public class RFIDDevice {
 			Debug.d(TAG, "===>block over");
 			return null;
 		}
+		Debug.d(TAG, "===>readBlock sector:" + sector + ", block:" +block);
 		byte blk = (byte) (sector*4 + block); 
 		byte[] b = {blk};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_READ_BLOCK, b);
@@ -388,6 +391,7 @@ public class RFIDDevice {
 			sector = SECTOR_COPY_INKLEVEL;
 			block = BLOCK_COPY_INKLEVEL;
 		}
+		Debug.d(TAG, "===>getLevel sector:" + sector + ", block:" + block);
 		if ( !keyVerfication(sector, block, RFID_DEFAULT_KEY_A))
 		{
 			return 0;
@@ -401,6 +405,7 @@ public class RFIDDevice {
 	}
 	
 	public int getInkLevel() {
+		Debug.d(TAG, "===>getLevel");
 		// 先从主block读取墨水值
 		int current = getInkLevel(false);
 		if (!isLevelValid(current)) {
@@ -410,6 +415,10 @@ public class RFIDDevice {
 		if (!isLevelValid(current)) {
 			return 0;
 		}
+		if (current == 0) {
+			return 0;
+		}
+		current = current/Configs.INK_LEVEL_MAX > 1 ? current/Configs.INK_LEVEL_MAX : 1;
 		return current;
 	}
 	/**
@@ -425,32 +434,47 @@ public class RFIDDevice {
 			sector = SECTOR_COPY_INKLEVEL;
 			block = BLOCK_COPY_INKLEVEL;
 		}
+		
 		if ( !keyVerfication(sector, block, RFID_DEFAULT_KEY_A))
 		{
 			return ;
 		}
+		Debug.d(TAG, "===>setInkLevel sector:" + sector + ", block:" + block);
 		EncryptionMethod encryte = EncryptionMethod.getInstance();
 		byte[] content = encryte.encryptInkLevel(level);
 		if (content == null) {
 			return ;
 		}
-		writeBlock(SECTOR_INKLEVEL, BLOCK_INKLEVEL, content);
+		writeBlock(sector, block, content);
 	}
 
 	/**
 	 *更新墨水值，即当前墨水值减1 
 	 */
-	public void updateInkLevel() {
-		int level = getInkLevel();
-		level = level -1;
-		if (level <= 0) {
-			return;
+	public int updateInkLevel() {
+		Debug.d(TAG, "===>updateInkLevel");
+		int level = getInkLevel(false);
+		if (!isLevelValid(level)) {
+			// 如果主block墨水值不合法则从备份区读取
+			level = getInkLevel(true);
+		}
+		if (!isLevelValid(level)) {
+			return 0;
+		}
+		Debug.d(TAG, "===>updateInkLevel level = " + level);
+		level = level + 1;
+		if (level < 0) {
+			return 0;
 		}
 		// 将新的墨水量写回主block
 		setInkLevel(level, false);
 		// 将新的墨水量写回备份block
 		setInkLevel(level, true);
-		
+		if (level == 0) {
+			return 0;
+		}
+		level = level/Configs.INK_LEVEL_MAX > 1 ? level/Configs.INK_LEVEL_MAX : 1;
+		return level;
 	}
 	/**
 	 * 特征码读取

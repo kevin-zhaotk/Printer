@@ -360,7 +360,7 @@
 	
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">信息名称：</string>
-	<string name="str_state_inklevel">墨水量:  100%</string>
+	<string name="str_state_inklevel">墨水量:  %1$d%%</string>
 	<string name="str_state_battery">电量:  100%</string>
 	<string name="str_hint_preview">信息预览</string>
 	<string name="str_print_count">计数: %1$d</string>
@@ -371,8 +371,8 @@
 	<string name="str_toast_no_message">请先选择一个打印对象!!!</string>
 	<string name="str_toast_no_bin">没有可供打印的bin文件</string>
 	<string name="str_message_no_content">无法生成预览</string>
-	<string name="str_page_forward"></string>
-	<string name="str_page_backward"></string>
+	<string name="str_page_forward">前翻</string>
+	<string name="str_page_backward">后翻</string>
 	<string name="str_rfid_initfail_notify">卡初始化失败！</string>
 
 <!-- 树莓派3 设置界面相关 -->

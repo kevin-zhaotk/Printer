@@ -72,10 +72,10 @@ public class EncryptionMethod {
 	 * 暂时将墨水值放在byte0（高）和byte1（低）
 	 */
 	public int decryptInkLevel(byte[] level) {
-		if (level == null || level.length < 2) {
+		if (level == null || level.length < 3) {
 			return 0;
 		}
-		return ((level[0] & 0x0ff) * 256 + (level[1] & 0x0ff));
+		return ((level[1] & 0x0ff) * 256 + (level[2] & 0x0ff));
 		
 	}
 	

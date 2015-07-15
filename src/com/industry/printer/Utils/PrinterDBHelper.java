@@ -45,7 +45,6 @@ public class PrinterDBHelper extends SQLiteOpenHelper {
 		values.put("name", "count");
 		values.put("value", 0);
 		db.insert(TABLE_COUNT_NAME, null, values);
-		db.close();
 	}
 
 	@Override
@@ -58,11 +57,11 @@ public class PrinterDBHelper extends SQLiteOpenHelper {
 		PrinterDBHelper dbHelper = getInstance(context);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
+		values.clear();
 		values.put("name", "count");
 		values.put("value", count);
-		String where = "name = count";
-		db.update(DATABASE_NAME, values, where, null);
-		db.close();
+		String where = "name = 'count'";
+		db.update(TABLE_COUNT_NAME, values, null, null);
 	}
 	
 	public int getCount(Context context) {
@@ -70,6 +69,9 @@ public class PrinterDBHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		String[] columns = {"value"}; 
 		Cursor cursor = db.query(TABLE_COUNT_NAME, columns, null, null, null, null, null);
+		Debug.d("", "===>" + cursor.getColumnIndex("value"));
+		cursor.getColumnIndex("value");
+		cursor.moveToFirst();
 		int count = cursor.getInt(0);
 		return count;
 	}

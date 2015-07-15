@@ -51,60 +51,33 @@
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
 	    <Button 
-	        android:id="@+id/btn_temp_4"
+	        android:id="@+id/btn_page_up"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_temp4"
+	        android:text="@string/str_page_prev"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	    
 	    <Button 
-	        android:id="@+id/btn_temp_5"
+	        android:id="@+id/btn_page_down"
 	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_edit_btn_temp5"
+	        android:text="@string/str_page_next"
 	        android:layout_weight="1"
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	</LinearLayout>
 	
-	<LinearLayout
-	    android:id="@+id/page_btns"
-	    android:layout_width="50dp"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-	    android:layout_alignParentRight="true"
-	    android:layout_below="@id/edit_buttons"
-	    >
-	    <Button
-	        android:id="@+id/btn_page_up"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:text="@string/str_page_prev"
-	        android:textSize="30sp"
-	        />
-	    <Button
-	        android:id="@+id/btn_page_down"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:text="@string/str_page_next"
-	        android:textSize="30sp"
-	        />
-	    
-	</LinearLayout>
 	<EditText
 		     android:id="@+id/edit_line1"
 		     android:layout_width="fill_parent"
 		     android:layout_height="fill_parent"
 		     android:layout_below="@id/edit_buttons"
-		     android:layout_toLeftOf="@id/page_btns"
 		     android:layout_marginTop="10dp"
 		     android:layout_marginLeft="5dp"
 		     android:layout_marginRight="5dp"
 		     android:gravity="top"
 		     android:singleLine="false"
-		     android:imeOptions="flagNoExtractUi|actionDone"
+		     android:imeOptions="actionDone"
 		     android:scrollHorizontally="false"
 		     android:scrollbarStyle="outsideOverlay"
 		     android:scrollbars="vertical"
