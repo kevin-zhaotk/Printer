@@ -69,7 +69,7 @@
             android:layout_toRightOf="@id/ph_set_trigerMode"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="actionNone|flagNoFullscreen"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -110,7 +110,7 @@
             android:layout_toRightOf="@id/ph_set_PHODelayHigh"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -153,7 +153,7 @@
             android:layout_toRightOf="@id/ph_set_PHODelayLow"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -194,7 +194,7 @@
             android:layout_toRightOf="@id/ph_set_PHOOutput_period"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -236,7 +236,7 @@
             android:layout_toRightOf="@id/ph_set_TimeFixed_period"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -278,7 +278,7 @@
             android:layout_toRightOf="@id/ph_set_EncoderTriger_pulse"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -319,7 +319,7 @@
             android:layout_toRightOf="@id/ph_set_EncoderLenFixed_pulse"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -360,7 +360,7 @@
             android:layout_toRightOf="@id/ph_set_EncoderDelay_pulse"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionDone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           
@@ -400,7 +400,7 @@
             android:layout_toRightOf="@id/ph_set_OutputHight_length"
             android:inputType="number"
             android:maxLength="@integer/max_digit_length"
-            android:imeOptions="flagNoExtractUi|actionDone"
+            android:imeOptions="flagNoFullscreen|actionNone"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             />
           

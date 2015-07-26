@@ -61,6 +61,7 @@
             android:layout_weight="1"
             android:text="@string/str_page_prev"
             android:textSize="@dimen/settingsBtnsize"
+            android:focusable="false"
             />
         <Button 
             android:id="@+id/btn_setting_ok"
@@ -70,6 +71,7 @@
             android:text="@string/str_btn_settings_sync"
             android:textSize="@dimen/settingsBtnsize"
             android:enabled="true"
+            android:focusable="false"
             />
          
         <Button 
@@ -81,6 +83,7 @@
             android:textSize="@dimen/settingsBtnsize"
             android:enabled="false"
             android:visibility="gone"
+            android:focusable="false"
             />
 
          <Button 
@@ -90,6 +93,7 @@
             android:layout_weight="1"
             android:text="@string/str_setting_upgrade"
             android:textSize="@dimen/settingsBtnsize"
+            android:focusable="false"
             />
         <Button 
             android:id="@+id/btn_system_setting"
@@ -98,6 +102,7 @@
             android:layout_weight="1"
             android:text="@string/str_system_setting"
             android:textSize="@dimen/settingsBtnsize"
+            android:focusable="false"
             />
         <Button
             android:id="@+id/btn_next"
@@ -106,6 +111,7 @@
             android:layout_weight="1"
             android:text="@string/str_page_next"
             android:textSize="@dimen/settingsBtnsize"
+			android:focusable="false"
             />
     </LinearLayout>
 <!-- 打印头设置标签 -->	

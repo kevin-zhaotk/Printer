@@ -57,6 +57,7 @@
         android:layout_width="fill_parent"
         android:layout_height="58dp"
         android:layout_below="@id/ctrl_btn_layout"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 	     
 	    <TextView 
@@ -102,7 +103,7 @@
     <LinearLayout 
         android:id="@+id/ctrl_msg_preview"
         android:layout_width="fill_parent"
-        android:layout_height="116dp"
+        android:layout_height="100dp"
         android:layout_below="@id/ctrl_msgname"
         android:orientation="vertical">
 	    <HorizontalScrollView 
@@ -143,7 +144,8 @@
         android:layout_width="fill_parent"
         android:layout_height="58dp"
         android:layout_below="@id/ctrl_msg_preview"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"

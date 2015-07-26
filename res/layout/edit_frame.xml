@@ -67,23 +67,29 @@
 	        android:textSize="@dimen/editButtonsTextsize"/>
 	</LinearLayout>
 	
+	<ScrollView
+	    android:id="@+id/edit_scrollview_line1"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" 
+	    android:layout_below="@id/edit_buttons"
+        android:layout_marginTop="10dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+	    >
 	<EditText
 		     android:id="@+id/edit_line1"
 		     android:layout_width="fill_parent"
-		     android:layout_height="fill_parent"
+		     android:layout_height="wrap_content"
 		     android:layout_below="@id/edit_buttons"
-		     android:layout_marginTop="10dp"
-		     android:layout_marginLeft="5dp"
-		     android:layout_marginRight="5dp"
 		     android:gravity="top"
+		     android:minHeight="300dp"
 		     android:singleLine="false"
 		     android:imeOptions="actionDone"
 		     android:scrollHorizontally="false"
-		     android:scrollbarStyle="outsideOverlay"
 		     android:scrollbars="vertical"
 		     android:textSize="35sp"
 		    />
-	
+	</ScrollView>
 <!-- 	   
 	<LinearLayout
 	    android:id="@+id/object_options"

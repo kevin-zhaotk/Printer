@@ -47,6 +47,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -61,7 +62,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class EditTabActivity extends Fragment implements OnClickListener {
+public class EditTabActivity extends Fragment implements OnClickListener, OnLongClickListener {
 	public static final String TAG="EditTabActivity";
 	
 	public Context mContext;
@@ -123,6 +124,7 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 	/***********************
 	 * object edit lines for smfy-super3
 	 **********************/
+	public ScrollView mScrollView1;
 	public EditText mObjLine1;
 	// public EditText mObjLine2;
 	// public EditText mObjLine3;
@@ -184,9 +186,11 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		mNext = (Button) getView().findViewById(R.id.btn_page_down);
 		mNext.setOnClickListener(this);
 		
-				
+		mScrollView1 = (ScrollView) getView().findViewById(R.id.edit_scrollview_line1);
+		
 		mObjLine1 = (EditText) getView().findViewById(R.id.edit_line1);
 		mObjLine1.setText("");
+		mObjLine1.setOnLongClickListener(this);
 		mObjLine1.setOnEditorActionListener(new OnEditorActionListener() {
 			
 			@Override
@@ -736,7 +740,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 			case R.id.btn_page_up:
 				float y = mObjLine1.getTranslationY();
 				Debug.d(TAG, "===>y="+y);
-				mObjLine1.scrollBy(0, -100);
+				//mObjLine1.scrollBy(0, -100);
+				mScrollView1.smoothScrollBy(0, -50);
 				break;
 			case R.id.btn_page_down:
 
@@ -744,8 +749,8 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 				Debug.d(TAG, "===>y="+ny);
 				ny = mObjLine1.getScaleY();
 				Debug.d(TAG, "===>sy="+ny);
-				
-				mObjLine1.scrollBy(0, 100);
+				mScrollView1.smoothScrollBy(0, 50);
+				//mObjLine1.scrollBy(0, 100);
 				break;
 			
 			default:
@@ -763,5 +768,11 @@ public class EditTabActivity extends Fragment implements OnClickListener {
 		}
 		mObjs.addAll(objs);
 		return ;
+	}
+	@Override
+	public boolean onLongClick(View arg0) {
+		FileBrowserDialog dialog = new FileBrowserDialog(mContext, Configs.getUsbPath() + "/system", "txt", FileBrowserDialog.FLAG_OPEN_FILE);
+		dialog.show();
+		return false;
 	}
 }
