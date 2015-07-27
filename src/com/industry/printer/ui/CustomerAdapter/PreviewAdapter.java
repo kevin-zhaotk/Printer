@@ -60,7 +60,7 @@ public class PreviewAdapter extends SimpleAdapter {
 		if(mChecked == position)
 		{
 			Debug.d(TAG, "set color to blue for position "+mChecked);
-			view.setBackgroundColor(Color.BLUE);
+			view.setBackgroundColor(Color.GRAY);
 		}
 		else
 		{

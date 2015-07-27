@@ -81,4 +81,12 @@ public class ConfigPath {
 		}
 		return paths.get(0)+Configs.TLK_FILE_SUB_PATH;
 	}
+	
+	public static String getTxtPath() {
+		ArrayList<String> paths = getMountedUsb();
+		if (paths == null || paths.size() <= 0) {
+			return null;
+		}
+		return paths.get(0)+Configs.TXT_FILES_PATH;
+	}
 }

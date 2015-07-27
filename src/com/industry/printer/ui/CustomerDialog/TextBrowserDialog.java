@@ -3,12 +3,18 @@ package com.industry.printer.ui.CustomerDialog;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.industry.printer.R;
 import com.industry.printer.FileFormat.FilenameSuffixFilter;
+import com.industry.printer.FileFormat.TextInputStream;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
+import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +31,7 @@ public class TextBrowserDialog extends CustomerDialogBase implements android.vie
 	
 	public static final String TAG = TextBrowserDialog.class.getSimpleName();
 	
-	public ListAdapter mFileAdapter;
+	public PreviewAdapter mFileAdapter;
 	public LinkedList<Map<String, Object>> mContent;
 	
 	public ListView mFileList;
@@ -68,11 +74,16 @@ public class TextBrowserDialog extends CustomerDialogBase implements android.vie
 		
 		mContent = new LinkedList<Map<String, Object>>();
 		
-		mFileAdapter = new SimpleAdapter(context, 
+//		mFileAdapter = new SimpleAdapter(context, 
+//				mContent, 
+//				R.layout.text_browser_item, 
+//				new String[]{"content"}, 
+//				new int []{R.id.text_browser_content});
+		mFileAdapter = new PreviewAdapter(context, 
 				mContent, 
 				R.layout.text_browser_item, 
 				new String[]{"content"}, 
-				new int []{R.id.text_browser_content});
+				new int[] {R.id.text_browser_content});
 		mSuffix = null;
 	}
 	
@@ -113,12 +124,17 @@ public class TextBrowserDialog extends CustomerDialogBase implements android.vie
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					
+					Debug.d(TAG, "--->onitemclick " + position);
+					mFileAdapter.setChecked(position);
+					mFileAdapter.notifyDataSetChanged();
 				}
 	        	
 	        });
 	        
-	        fileOpen(new File(Configs.getUsbPath() + Configs.TXT_FILES_PATH));
+	        String path = ConfigPath.getTxtPath();
+	        if (path != null) {
+	        	fileOpen(new File(path));
+			}
 
 	 }
 	 
@@ -151,8 +167,10 @@ public class TextBrowserDialog extends CustomerDialogBase implements android.vie
 		 {
 			 Debug.d(TAG,"file name=" + files[i].toString());
 			 Map<String, Object> map = new HashMap<String, Object>();
-			 
-			 map.put("content", files[i].getName());
+			 TextInputStream stream = TextInputStream.getInstance();
+			 String txt = stream.getText(files[i].getAbsolutePath());
+			 Debug.d(TAG, "--->txt: " +txt);
+			 map.put("content", txt);
 			 mContent.add(map);
 		 }
 		 mFileList.setAdapter(mFileAdapter);

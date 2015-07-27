@@ -1,5 +1,7 @@
 package com.industry.printer.FileFormat;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,11 +30,12 @@ public class TextInputStream {
 	
 	public String getText(String file) {
 		
-		CharBuffer buffer = null;
 		try {
-			InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "GBK");
-			reader.read(buffer);
-			Debug.d(TAG, "===>" + buffer.toString());
+			InputStreamReader in = new InputStreamReader(new FileInputStream(file), "utf-8");
+			BufferedReader reader = new BufferedReader(in);
+			//Debug.d(TAG, "===>" + reader.readLine());
+			return reader.readLine();
+			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -40,9 +43,7 @@ public class TextInputStream {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (buffer == null) {
-			return null;
-		}
-		return buffer.toString();
+		
+		return null;
 	}
 }

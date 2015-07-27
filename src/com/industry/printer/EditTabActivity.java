@@ -33,6 +33,8 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListe
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
+import com.industry.printer.ui.CustomerDialog.TextBrowserDialog;
+
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -771,7 +773,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	}
 	@Override
 	public boolean onLongClick(View arg0) {
-		FileBrowserDialog dialog = new FileBrowserDialog(mContext, Configs.getUsbPath() + "/system", "txt", FileBrowserDialog.FLAG_OPEN_FILE);
+		TextBrowserDialog dialog = new TextBrowserDialog(mContext, "txt");
 		dialog.show();
 		return false;
 	}
