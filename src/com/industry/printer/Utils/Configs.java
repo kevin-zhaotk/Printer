@@ -64,6 +64,8 @@ public class Configs {
 	 */
 	public static final String SDCARD_ROOT_PATH = "/storage/sd_external";
 	
+	
+	
 	/**
 	 * SYSTEM_CONFIG_FILE
 	 */
@@ -71,6 +73,11 @@ public class Configs {
 	public static final String SYSTEM_CONFIG_FILE = SYSTEM_CONFIG_DIR+"/system_config.txt";
 	public static final String SYSTEM_CONFIG_XML = SYSTEM_CONFIG_DIR+"/system_config.xml";
 	public static final String LAST_MESSAGE_XML = SYSTEM_CONFIG_DIR+"/last_message.xml";
+	
+	/**
+	 * 用户pc端编辑的文本存放路径，编辑打印对象的内容时可以从这个目录加载，而不需要手动输入 
+	 */
+	public static final String TXT_FILES_PATH = SYSTEM_CONFIG_DIR + "/txt";
 	
 	/**
 	 * TLK文件存放路径
