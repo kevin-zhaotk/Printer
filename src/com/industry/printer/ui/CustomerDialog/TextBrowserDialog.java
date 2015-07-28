@@ -180,9 +180,17 @@ public class TextBrowserDialog extends CustomerDialogBase implements android.vie
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.dialog_save:
-			dismiss();
-			if(pListener != null)
-				pListener.onClick();
+			int position = mFileAdapter.getChecked();
+			Map<String, Object> item = (Map<String, Object>) mFileList.getItemAtPosition(position);
+			
+			if(pListener != null) {
+				if (item == null) {
+					pListener.onClick();
+				} else {
+					pListener.onClick((String) item.get("content"));
+				}
+			}
+			dismiss();	
 			break;
 		case R.id.dialog_cancel:
 			cancel();

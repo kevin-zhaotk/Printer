@@ -24,6 +24,7 @@ public class CustomerDialogBase extends Dialog {
 	  **/
 	 public interface OnPositiveListener{
 		 void onClick();
+		 void onClick(String content);
 	 }
 
 	 /**

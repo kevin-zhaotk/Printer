@@ -695,6 +695,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					public void onClick() {
 						mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN);
 					}
+
+					@Override
+					public void onClick(String content) {
+						// TODO Auto-generated method stub
+						
+					}
 				});
 				dialog.show();
 				
@@ -719,6 +725,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					@Override
 					public void onClick() {
 						mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+					}
+
+					@Override
+					public void onClick(String content) {
+						// TODO Auto-generated method stub
+						
 					}
 				});
 				dialog.show();
@@ -774,6 +786,18 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	@Override
 	public boolean onLongClick(View arg0) {
 		TextBrowserDialog dialog = new TextBrowserDialog(mContext, "txt");
+		dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+			
+			@Override
+			public void onClick() {
+				
+			}
+			@Override
+			public void onClick(String content) {
+				Debug.d(TAG, "--->content: " +content);
+				mObjLine1.setText(content);
+			}
+		});
 		dialog.show();
 		return false;
 	}

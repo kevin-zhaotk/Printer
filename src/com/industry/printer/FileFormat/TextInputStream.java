@@ -31,7 +31,7 @@ public class TextInputStream {
 	public String getText(String file) {
 		
 		try {
-			InputStreamReader in = new InputStreamReader(new FileInputStream(file), "utf-8");
+			InputStreamReader in = new InputStreamReader(new FileInputStream(file), "GBK");
 			BufferedReader reader = new BufferedReader(in);
 			//Debug.d(TAG, "===>" + reader.readLine());
 			return reader.readLine();

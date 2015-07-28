@@ -720,6 +720,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						msg.setData(bundle);
 						mHandler.sendMessage(msg);
 					}
+
+					@Override
+					public void onClick(String content) {
+						// TODO Auto-generated method stub
+						
+					}
+					
 				});
 				dialog.show();
 				break;
