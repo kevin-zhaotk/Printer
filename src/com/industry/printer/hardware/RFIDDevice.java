@@ -34,7 +34,7 @@ public class RFIDDevice {
 	public static final String SERIAL_INTERFACE = "/dev/ttyS3";
 	
 	/*墨水量上下限*/
-	public static final int INK_LEVEL_MAX = 1000;
+	public static final int INK_LEVEL_MAX = 100000;
 	public static final int INK_LEVEL_MIN = 0;
 	
 	//block definition
@@ -45,9 +45,9 @@ public class RFIDDevice {
 	public static byte SECTOR_COPY_FEATURE = 0x05;
 	public static byte BLOCK_COPY_FEATURE = 0x01;
 	
-	public static byte SECTOR_INKLEVEL = 0x09;
+	public static byte SECTOR_INKLEVEL = 0x04;
 	public static byte BLOCK_INKLEVEL = 0x02;
-	public static byte SECTOR_COPY_INKLEVEL = 0x08;
+	public static byte SECTOR_COPY_INKLEVEL = 0x05;
 	public static byte BLOCK_COPY_INKLEVEL = 0x02;
 	
 	//Command
@@ -86,13 +86,23 @@ public class RFIDDevice {
 	public byte[] mRFIDKeyA = null;
 	public byte[] mRFIDKeyB = null;
 	
-	
+	// UID
+	public byte[] mSN = null;
+
+	// 当前墨水量
+	private int mCurInkLevel = 0;
+	int mLastLevel = 0;
 	// 错误码定义
 	public static final int RFID_ERRNO_NOERROR = 0;
 	public static final int RFID_ERRNO_NOCARD = 1;
 	public static final int RFID_ERRNO_SERIALNO_UNAVILABLE = 2;
 	public static final int RFID_ERRNO_SELECT_FAIL = 3;
 	public static final int RFID_ERRNO_KEYVERIFICATION_FAIL = 4;
+	
+	// tags 
+	public static final String RFID_DATA_SEND = "RFID-SEND:";
+	public static final String RFID_DATA_RECV = "RFID-RECV:";
+	public static final String RFID_DATA_RSLT = "RFID-RSLT:";
 	
 	//串口
 	public static int mFd=0;
@@ -106,10 +116,16 @@ public class RFIDDevice {
 		}
 		return mRfidDevice;
 	}
+	
+	public RFIDDevice() {
+		mCurInkLevel = 0;
+		mLastLevel = mCurInkLevel;
+	}
 	/*
 	 * 端口连接
 	 */
 	public boolean connect() {
+		Debug.d(TAG, "--->RFID connect");
 		RFIDData data = new RFIDData(RFID_CMD_CONNECT, RFID_DATA_CONNECT);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
@@ -119,6 +135,7 @@ public class RFIDDevice {
 	 * 设置读卡器工作模式
 	 */
 	public boolean setType() {
+		Debug.d(TAG, "--->RFID setType");
 		RFIDData data = new RFIDData(RFID_CMD_TYPEA, RFID_DATA_TYPEA);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
@@ -127,6 +144,7 @@ public class RFIDDevice {
 	 * 寻卡
 	 */
 	public boolean lookForCards() {
+		Debug.d(TAG, "--->RFID lookForCards");
 		RFIDData data = new RFIDData(RFID_CMD_SEARCHCARD, RFID_DATA_SEARCHCARD_ALL);
 		byte[] readin = writeCmd(data);
 		if (readin == null) {
@@ -135,7 +153,7 @@ public class RFIDDevice {
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
 		if (rfid == null || rfid[0] != 0 || rfid.length < 3) {
-			Debug.d(TAG, "===>rfid data error");
+			Debug.e(TAG, "===>rfid data error");
 			return false;
 		}
 		if (rfid[1] == 0x04 && rfid[2] == 0x00) {
@@ -148,7 +166,7 @@ public class RFIDDevice {
 			Debug.d(TAG, "===>rfid type utralight");
 			return true;
 		} else {
-			Debug.d(TAG, "===>unknow rfid type");
+			Debug.e(TAG, "===>unknow rfid type");
 			return false;
 		}
 	}
@@ -156,20 +174,20 @@ public class RFIDDevice {
 	 * 防冲突
 	 */
 	public byte[] avoidConflict() {
+		Debug.d(TAG, "--->RFID avoidConflict");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
 		byte[] readin = writeCmd(data);
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
-		Debug.print(rfid);
 		if (rfid == null || rfid[0] != 0 || rfid.length != 5) {
-			Debug.d(TAG, "===>rfid data error");
+			Debug.e(TAG, "===>rfid data error");
 			return null;
 		}
 		ByteBuffer buffer = ByteBuffer.wrap(rfid);
 		buffer.position(1);
 		byte[] serialNo = new byte[4]; 
 		buffer.get(serialNo, 0, serialNo.length);
-		Debug.print(serialNo);
+		Debug.print(RFID_DATA_RSLT, serialNo);
 		return serialNo;
 	}
 	/*
@@ -180,6 +198,7 @@ public class RFIDDevice {
 			Debug.e(TAG, "===>select card No is null");
 			return false;
 		}
+		Debug.d(TAG, "--->RFID selectCard");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
 		byte[] readin = writeCmd(data);
 		return isCorrect(readin);
@@ -192,16 +211,17 @@ public class RFIDDevice {
 	 */
 	public boolean keyVerfication(byte sector, byte block, byte[] key) {
 		
+		Debug.d(TAG, "--->keyVerfication sector:" + sector + ", block:" +block);
 		if (sector >= 16 || block >= 4) {
-			Debug.d(TAG, "===>block over");
+			Debug.e(TAG, "===>block over");
 			return false;
 		}
 		byte blk = (byte) (sector*4 + block); 
 		if (key == null || key.length != 6) {
-			Debug.d(TAG, "===>invalide key");
+			Debug.e(TAG, "===>invalide key");
 			return false;
 		}
-		Debug.d(TAG, "===>keyVerfication sector:" + sector + ", block:" +block);
+		
 		byte[] keyA = {0x60,blk, key[0], key[1], key[2], key[3], key[4], key[5]};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
 		byte[] readin = writeCmd(data);
@@ -215,9 +235,9 @@ public class RFIDDevice {
 	 * @return true 成功， false 失败
 	 */
 	public boolean writeBlock(byte sector, byte block, byte[] content) {
-		
+		Debug.d(TAG, "--->writeBlock sector:" + sector + ", block:" +block);
 		if (sector >= 16 || block >= 4) {
-			Debug.d(TAG, "===>block over");
+			Debug.e(TAG, "===>block over");
 			return false;
 		}
 		byte blk = (byte) (sector*4 + block); 
@@ -244,7 +264,7 @@ public class RFIDDevice {
 			Debug.d(TAG, "===>block over");
 			return null;
 		}
-		Debug.d(TAG, "===>readBlock sector:" + sector + ", block:" +block);
+		Debug.d(TAG, "--->readBlock sector:" + sector + ", block:" +block);
 		byte blk = (byte) (sector*4 + block); 
 		byte[] b = {blk};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_READ_BLOCK, b);
@@ -264,25 +284,19 @@ public class RFIDDevice {
 		if (mFd <= 0) {
 			mFd = open(SERIAL_INTERFACE);
 		}
-		Debug.d(TAG, "************write begin******************");
-		Debug.print(data.mTransData);
-		Debug.d(TAG, "************write end******************");
+		Debug.print(RFID_DATA_SEND, data.mTransData);
 		int writed = write(mFd, data.transferData(), data.getLength());
-		//short[] key = {0x0002, 0x0b00,0x604a, (short) 0xff05, (short) 0xffff, (short) 0xffff, (short) 0xb4ff, 0x0003};
-		//int writed = write(fp, key, 15);
 		if (writed <= 0) {
-			Debug.d(TAG, "===>write err, return");
+			Debug.e(TAG, "===>write err, return");
 			return null;
 		}
 		byte[] readin = read(mFd, 64);
-		
+		Debug.print(RFID_DATA_RECV, readin);
 		if (readin == null || readin.length == 0) {
-			Debug.d(TAG, "===>read err");
+			Debug.e(TAG, "===>read err");
 			return null;
 		}
-		Debug.d(TAG, "************read begin******************");
-		Debug.print(readin);
-		Debug.d(TAG, "************read end******************");
+		
 		return readin;
 	}
 	
@@ -295,6 +309,9 @@ public class RFIDDevice {
 		byte[] rfid = rfidData.getData();
 		if (rfid == null || rfid[0] != 0) {
 			Debug.d(TAG, "===>rfid data error");
+			// 如果操作失败就关闭串口文件
+			close(mFd);
+			mFd = 0;
 			return false;
 		}
 		return true;
@@ -313,15 +330,13 @@ public class RFIDDevice {
 			return RFID_ERRNO_NOCARD;
 		}
 		//防冲突
-		byte[] sn = avoidConflict();
-		if (sn == null || sn.length == 0) {
+		mSN = avoidConflict();
+		if (mSN == null || mSN.length == 0) {
 			return RFID_ERRNO_SERIALNO_UNAVILABLE;
 		}
-		Debug.d(TAG, "+++++++++++ SN +++++++++++");
-		Debug.print(sn);
-		Debug.d(TAG, "+++++++++++ SN +++++++++++");
+		
 		//选卡
-		if (!selectCard(sn)) {
+		if (!selectCard(mSN)) {
 			return RFID_ERRNO_SELECT_FAIL;
 		}
 		return RFID_ERRNO_NOERROR;
@@ -336,9 +351,6 @@ public class RFIDDevice {
 		}
 		
 		byte[] block = readBlock((byte)0, (byte) 0);
-		Debug.d(TAG, "*********block 0*********");
-		Debug.print(block);
-		Debug.d(TAG, "*********block 0*********");
 		byte[] sn = new byte[4];
 		ByteArrayInputStream stream = new ByteArrayInputStream(block);
 		stream.skip(1);
@@ -363,15 +375,14 @@ public class RFIDDevice {
 			return errno;
 		}
 		// 读UID
-		byte[] uid = getSerialNo();
-		if (uid == null || uid.length != 4) {
+		//byte[] uid = getSerialNo();
+		if (mSN == null || mSN.length != 4) {
 			Debug.d(TAG, "===>get uid fail");
 		}
-		Debug.print(uid);
 		EncryptionMethod method = EncryptionMethod.getInstance();
-		byte [] key = method.getKeyA(uid);
+		byte [] key = method.getKeyA(mSN);
 		setKeyA(key);
-		Debug.print(key);
+		Debug.print(RFID_DATA_RSLT, key);
 		
 		return 0;
 	}
@@ -391,34 +402,39 @@ public class RFIDDevice {
 			sector = SECTOR_COPY_INKLEVEL;
 			block = BLOCK_COPY_INKLEVEL;
 		}
-		Debug.d(TAG, "===>getLevel sector:" + sector + ", block:" + block);
-		if ( !keyVerfication(sector, block, RFID_DEFAULT_KEY_A))
+		Debug.d(TAG, "--->getInkLevel sector:" + sector + ", block:" + block);
+		// 只使用唯一密钥验证
+		if ( !keyVerfication(sector, block, mRFIDKeyA))
 		{
-			return 0;
+			Debug.d(TAG, "--->key verfy fail,init and try once");
+			// 如果秘钥校验失败则重新初始化RFID卡
+			init();
+			if (!keyVerfication(sector, block, mRFIDKeyA)) {
+				return 0;
+			}
+			
 		}
 		byte[] ink = readBlock(sector, block);
-		Debug.d(TAG, "************ink level***********");
-		Debug.print(ink);
-		Debug.d(TAG, "************ink level***********"); 
 		EncryptionMethod encryt = EncryptionMethod.getInstance();
+		Debug.d(TAG, "--->ink level:" + encryt.decryptInkLevel(ink));
 		return encryt.decryptInkLevel(ink);
 	}
 	
 	public int getInkLevel() {
-		Debug.d(TAG, "===>getLevel");
+		Debug.d(TAG, "--->getInkLevel");
 		// 先从主block读取墨水值
 		int current = getInkLevel(false);
 		if (!isLevelValid(current)) {
 			// 如果主block墨水值不合法则从备份区读取
+			Debug.e(TAG, "--->read from master block failed, try backup block");
 			current = getInkLevel(true);
+			if (!isLevelValid(current)) {
+				Debug.e(TAG, "--->read from backup block failed");
+				mCurInkLevel = 0;
+				return 0;
+			}
 		}
-		if (!isLevelValid(current)) {
-			return 0;
-		}
-		if (current == 0) {
-			return 0;
-		}
-		current = current/Configs.INK_LEVEL_MAX > 1 ? current/Configs.INK_LEVEL_MAX : 1;
+		mCurInkLevel = current;
 		return current;
 	}
 	/**
@@ -435,11 +451,11 @@ public class RFIDDevice {
 			block = BLOCK_COPY_INKLEVEL;
 		}
 		
-		if ( !keyVerfication(sector, block, RFID_DEFAULT_KEY_A))
+		if ( !keyVerfication(sector, block, mRFIDKeyA))
 		{
 			return ;
 		}
-		Debug.d(TAG, "===>setInkLevel sector:" + sector + ", block:" + block);
+		Debug.d(TAG, "--->setInkLevel sector:" + sector + ", block:" + block);
 		EncryptionMethod encryte = EncryptionMethod.getInstance();
 		byte[] content = encryte.encryptInkLevel(level);
 		if (content == null) {
@@ -452,44 +468,71 @@ public class RFIDDevice {
 	 *更新墨水值，即当前墨水值减1 
 	 */
 	public int updateInkLevel() {
-		Debug.d(TAG, "===>updateInkLevel");
+		Debug.d(TAG, "--->updateInkLevel");
+		/* 为了提高效率，更新墨水量时不再从RFID读取，而是使用上次读出的墨水量
 		int level = getInkLevel(false);
 		if (!isLevelValid(level)) {
 			// 如果主block墨水值不合法则从备份区读取
 			level = getInkLevel(true);
+			if (!isLevelValid(level)) {
+				return 0;
+			}
 		}
-		if (!isLevelValid(level)) {
-			return 0;
+		*/
+		
+		if (mCurInkLevel > 0) {
+			mCurInkLevel = mCurInkLevel -1;
+		} else if (mCurInkLevel <= 0) {
+			mCurInkLevel = 0;
 		}
-		Debug.d(TAG, "===>updateInkLevel level = " + level);
-		level = level + 1;
-		if (level < 0) {
-			return 0;
-		}
+		
 		// 将新的墨水量写回主block
-		setInkLevel(level, false);
+		setInkLevel(mCurInkLevel, false);
 		// 将新的墨水量写回备份block
-		setInkLevel(level, true);
-		if (level == 0) {
-			return 0;
-		}
-		level = level/Configs.INK_LEVEL_MAX > 1 ? level/Configs.INK_LEVEL_MAX : 1;
-		return level;
+		setInkLevel(mCurInkLevel, true);
+		return mCurInkLevel;
 	}
+	
+	/**
+	 *更新墨水值，即当前墨水值减1 
+	 */
+	public void updateToDevice() {
+		Debug.d(TAG, "--->updateInkLevel");
+		/* 为了提高效率，更新墨水量时不再从RFID读取，而是使用上次读出的墨水量
+		int level = getInkLevel(false);
+		if (!isLevelValid(level)) {
+			// 如果主block墨水值不合法则从备份区读取
+			level = getInkLevel(true);
+			if (!isLevelValid(level)) {
+				return 0;
+			}
+		}
+		*/
+		if (mLastLevel == mCurInkLevel) {
+			return;
+		}
+		if (mCurInkLevel <= 0) {
+			mCurInkLevel = 0;
+		}
+		Debug.d(TAG, "--->updateInkLevel level = " + mCurInkLevel);
+		
+		// 将新的墨水量写回主block
+		setInkLevel(mCurInkLevel, false);
+		// 将新的墨水量写回备份block
+		setInkLevel(mCurInkLevel, true);
+	}
+	
 	/**
 	 * 特征码读取
 	 */
 	public byte[] getFeatureCode() {
 		int errno = 0;
-		
-		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, RFID_DEFAULT_KEY_A))
+		Debug.d(TAG, "--->RFID getFeatureCode");
+		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
 		{
 			return null;
 		}
 		byte[] feature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
-		Debug.d(TAG, "************feature code***********");
-		Debug.print(feature);
-		Debug.d(TAG, "************feature code***********");
 		return feature;
 	}
 	
@@ -529,14 +572,14 @@ public class RFIDDevice {
 		}
 		
 		byte[] block = readBlock((byte)6, (byte)0);
-		Debug.print(block);
+		
 		for(int i = 0; i < 6; i++) {
 			block[i] = 0x11;
 		}
 		writeBlock((byte)6, (byte)0, block);
 		
 		block = readBlock((byte)6, (byte)0);
-		Debug.print(block);
+		
 		
 		//byte[] feature = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,0x0A, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 		//writeBlock(SECTOR_FEATURE, BLOCK_FEATURE, feature);

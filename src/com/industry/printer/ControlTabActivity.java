@@ -420,6 +420,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					/*打印任务停止后允许切换打印对象*/
 					mBtnOpenfile.setClickable(true);
+					
+					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					if (mRfidDevice == null) {
@@ -731,10 +733,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				dialog.show();
 				break;
 			case R.id.btn_page_forward:
-				mScrollView.smoothScrollBy(400, 0);
+				mScrollView.smoothScrollBy(-400, 0);
 				break;
 			case R.id.btn_page_backward:
-				mScrollView.smoothScrollBy(-400, 0);
+				mScrollView.smoothScrollBy(400, 0);
 				break;
 			default:
 				break;

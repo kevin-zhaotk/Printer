@@ -75,7 +75,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 
 	    for (InputMethodInfo inputMethodInfo : inputMethodInfos) {
 	    		Debug.d(TAG, "inputMethod="+inputMethodInfo.getId());
-	            if (inputMethodInfo.getId().equals("com.android.inputmethod.latin/.LatinIME")) {
+	            if (inputMethodInfo.getId().equals("com.android.inputmethod.pinyin/.PinyinIME")) {
 	                    inputManager.setInputMethod(null, inputMethodInfo.getId());
 	            }
 	    }
@@ -154,7 +154,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	  // TODO Auto-generated method stub
-	 
+		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		return ;
 	}
 	
 //	public void setLocale()

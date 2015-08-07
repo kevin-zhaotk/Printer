@@ -360,13 +360,17 @@
 	
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">信息名称：</string>
+	<!-- 
 	<string name="str_state_inklevel">墨水量:  %1$d%%</string>
+	-->
+	<string name="str_state_inklevel">墨水量:  %1$d</string>
 	<string name="str_state_battery">电量:  100%</string>
 	<string name="str_hint_preview">信息预览</string>
 	<string name="str_print_count">计数: %1$d</string>
 	<string name="str_print_count_default">0</string>
 	<string name="str_print_printing">打印任务运行中...</string>
-	<string name="str_print_startok">打印任务启动...</string>
+	<string name="str_print_startok">打印任务已启动...</string>
+	<string name="str_print_stopok">打印任务已停止</string>
 	<string name="str_toast_emptycontent">打印对象内容不能为空!!!</string>
 	<string name="str_toast_no_message">请先选择一个打印对象!!!</string>
 	<string name="str_toast_no_bin">没有可供打印的bin文件</string>
@@ -395,6 +399,7 @@
 	<string name="str_time_unit">0.1ms</string>
 	<string name="str_system_setting">系统设置</string>
 	<string name="str_upgrade_progress">系统升级中....</string>
+	
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">插入</string>
 	<string name="str_edit_btn_temp1">测试1</string>

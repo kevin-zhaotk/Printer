@@ -58,7 +58,7 @@ public class RFIDData {
 		mCheckCode = 0x00;
 		mCommand = cmd;
 		mData = data;
-		Debug.d("", "===>cmd:"+cmd +", mCommand:"+mCommand);
+		//Debug.d("", "===>cmd:"+cmd +", mCommand:"+mCommand);
 		
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		buffer.append(mHeader);
@@ -214,9 +214,8 @@ public class RFIDData {
 			buffer.position(5);
 		}
 		buffer.get(mData, 0, mRealData.length - 7);
-		Debug.d("", "-----------getData------");
-		Debug.print(mData);
-		Debug.d("", "-----------getData------");
+		
+		Debug.print("RFID-DATA:", mData);
 		return mData;
 	}
 	

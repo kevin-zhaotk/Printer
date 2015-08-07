@@ -75,7 +75,7 @@ public class EncryptionMethod {
 		if (level == null || level.length < 3) {
 			return 0;
 		}
-		return ((level[1] & 0x0ff) * 256 + (level[2] & 0x0ff));
+		return (int) ((level[1] & 0x0ff) + (level[2] & 0x0ff)* 256 + (level[3] & 0x0ff)* Math.pow(256, 2) + (level[4] & 0x0ff)* Math.pow(256, 3));
 		
 	}
 	
@@ -84,8 +84,10 @@ public class EncryptionMethod {
 			return null;
 		}
 		byte[] ink = new byte[16];
-		ink[0] = (byte) ((level >> 8) & 0x0ff); 
-		ink[1] = (byte) (level & 0x0ff);
+		ink[0] = (byte) (level & 0x0ff); 
+		ink[1] = (byte) ((level>>8) & 0x0ff);
+		ink[2] = (byte) ((level>>(8*2)) & 0x0ff);
+		ink[3] = (byte) ((level>>(8*3)) & 0x0ff);
 		return ink;
 	}
 }

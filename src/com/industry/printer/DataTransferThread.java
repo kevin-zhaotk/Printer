@@ -71,6 +71,9 @@ public class DataTransferThread extends Thread {
 		
 		while(mRunning == true) {
 			
+			char[] buffer = mDataTask.getPrintBuffer();
+			Debug.d(TAG, "===>buffer size="+buffer.length);
+			FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			int writable = FpgaGpioOperation.pollState();
 			writable = 1;
 			if (writable == 0) { //timeout
@@ -83,15 +86,19 @@ public class DataTransferThread extends Thread {
 				mNeedUpdate = false;
 				//在此处发生打印数据，同时
 				//Debug.d(TAG, "===>kernel buffer empty, fill it");
-				char[] buffer = mDataTask.getPrintBuffer();
-				Debug.d(TAG, "===>buffer size="+buffer.length);
-				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+				// 只有打印数据中有变量时才重新下发数据，否则不需要重新下发
+				if (mDataTask.isNeedRefresh()) {
+					buffer = mDataTask.getPrintBuffer();
+					Debug.d(TAG, "===>buffer size="+buffer.length);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+				}
+				
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, 10000);
 				// 保存打印计数
 				// 墨水量count down计算
-				if (countDown()) {
-					mInkListener.onInkLevelDown();
-				}
+				//if (countDown()) {
+				//	mInkListener.onInkLevelDown();
+				//}
 				mInkListener.onInkLevelDown();
 				mInkListener.onCountChanged();
 			}

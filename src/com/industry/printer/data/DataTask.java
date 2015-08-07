@@ -87,7 +87,9 @@ public class DataTask {
 		CharArrayReader cReader = new CharArrayReader(mBgBuffer);
 		try {
 			cReader.read(mPrintBuffer);
-			refreshVariables();
+			if (isNeedRefresh()) {
+				refreshVariables();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -175,4 +177,20 @@ public class DataTask {
 		return mDots;
 	}
 	
+	public boolean isNeedRefresh() {
+		
+		if (mObjList == null || mObjList.isEmpty()) {
+			return false;
+		}
+		for(BaseObject o:mObjList)
+		{
+			if((o instanceof CounterObject)
+					|| (o instanceof RealtimeObject)
+					|| (o instanceof JulianDayObject))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

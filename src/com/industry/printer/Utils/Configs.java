@@ -28,12 +28,12 @@ public class Configs {
 	/**
 	 * 一个单位的墨水量对应的打点数
 	 */
-	public static final int DOTS_PER_PRINT = 100;
+	public static final int DOTS_PER_PRINT = 1;
 	
 	/**
 	 * 墨盒总墨水量
 	 */
-	public static final int INK_LEVEL_MAX = 1000;
+	public static final int INK_LEVEL_MAX = 100000;
 
 	/**
 	 * PROC_MOUNT_FILE

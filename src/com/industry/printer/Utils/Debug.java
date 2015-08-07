@@ -55,7 +55,7 @@ public class Debug {
 		return 0;
 	}
 	
-	public static void print(byte[] value) {
+	public static void print(String tag, byte[] value) {
 		if (value == null) {
 			return;
 		}
@@ -63,7 +63,7 @@ public class Debug {
 		for (int i = 0; i < value.length; i++) {
 			log += "0x"+Integer.toHexString(value[i]&0x0ff)+" " ;
 		}
-		Debug.d(TAG, log);
+		Debug.d(TAG, tag + " [ " + log + " ]");
 	}
 	
 }

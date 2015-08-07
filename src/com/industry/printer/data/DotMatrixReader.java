@@ -117,7 +117,7 @@ public class DotMatrixReader {
 				}
 			}
 		}
-		Debug.print(trans);
+		Debug.print("", trans);
 		ByteBuffer b = ByteBuffer.wrap(trans);
 		b.get(matrix);
 	}
@@ -142,7 +142,7 @@ public class DotMatrixReader {
 				}
 			}
 		}
-		Debug.print(trans);
+		Debug.print("", trans);
 		ByteBuffer b = ByteBuffer.wrap(trans);
 		b.get(matrix);
 	}
