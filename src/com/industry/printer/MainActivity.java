@@ -73,12 +73,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		InputMethodManager inputManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
 		List<InputMethodInfo> inputMethodInfos = inputManager.getInputMethodList();
 
-	    for (InputMethodInfo inputMethodInfo : inputMethodInfos) {
-	    		Debug.d(TAG, "inputMethod="+inputMethodInfo.getId());
-	            if (inputMethodInfo.getId().equals("com.android.inputmethod.pinyin/.PinyinIME")) {
-	                    inputManager.setInputMethod(null, inputMethodInfo.getId());
-	            }
-	    }
+//	    for (InputMethodInfo inputMethodInfo : inputMethodInfos) {
+//	    		Debug.d(TAG, "inputMethod="+inputMethodInfo.getId());
+//	            if (inputMethodInfo.getId().equals("com.android.inputmethod.pinyin/.PinyinIME")) {
+//	                    inputManager.setInputMethod(getApplicationContext(), inputMethodInfo.getId());
+//	            }
+//	    }
 	    
 	    mRadioCtl = (RadioButton) findViewById(R.id.btn_control);
 	    mRadioCtl.setOnCheckedChangeListener(this);

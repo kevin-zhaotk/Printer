@@ -27,9 +27,11 @@
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="@dimen/settingsSPinnerSize"
             android:layout_toRightOf="@id/ph_set_encoder"
+            android:gravity="center_vertical"
             android:spinnerMode="dropdown"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:dropDownWidth="@dimen/settingsValueLength"
+            android:background="#ffffff"
             />
           
         <TextView

@@ -3,7 +3,7 @@
     android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#CFCFCF"
+    android:background="#436EEE"
     >
     
     <RadioGroup
