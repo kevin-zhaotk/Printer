@@ -5,7 +5,7 @@
     android:padding="5dp"
     android:focusable="true"
 	android:focusableInTouchMode="true"
-	android:background="#FFFFFF"
+	android:background="#436EEE"
     >
     <LinearLayout 
         android:id="@+id/message_list_btns"
@@ -13,16 +13,9 @@
         android:layout_height="80dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="#DEDEDE"
+        android:background="#436EEE"
         >
-        <Button
-            android:id="@+id/btn_page_prev"
-			android:layout_width="0dp"
-			android:layout_height="fill_parent"
-			android:layout_weight="1"
-			android:text="@string/str_page_prev"
-			android:textSize="@dimen/dialogBtnTextSize"
-            />
+        
         <Button 
             android:id="@+id/btn_ok_message_list"
             android:layout_width="0dp"
@@ -42,6 +35,16 @@
             android:textColor="#000000"
             android:textSize="@dimen/dialogBtnTextSize"
             />
+        
+        <Button
+            android:id="@+id/btn_page_prev"
+			android:layout_width="0dp"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"
+			android:text="@string/str_page_prev"
+			android:textSize="@dimen/dialogBtnTextSize"
+            />
+        
         <Button
             android:id="@+id/btn_page_next"
 			android:layout_width="0dp"

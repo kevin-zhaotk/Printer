@@ -274,6 +274,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
 			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
+			refreshInk(0);
 		} else {
 			int ink = mRfidDevice.getInkLevel();
 			refreshInk(ink);
@@ -405,7 +406,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
 					/*打印过程中禁止切换打印对象*/
-					mBtnOpenfile.setClickable(false);
+					switchState(STATE_PRINTING);
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -419,7 +420,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mDTransThread = null;
 					}
 					/*打印任务停止后允许切换打印对象*/
-					mBtnOpenfile.setClickable(true);
+					switchState(STATE_STOPPED);
 					
 					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
 					break;
@@ -454,6 +455,26 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mDTransThread.setDotCount(parser.getDots());
 		// 设置UI回调
 		mDTransThread.setOnInkChangeListener(this);
+	}
+	
+	private final int STATE_PRINTING = 0;
+	private final int STATE_STOPPED = 1;
+	
+	public void switchState(int state) {
+		switch(state) {
+			case STATE_PRINTING:
+				mBtnStart.setClickable(false);
+				mBtnStop.setClickable(true);
+				mBtnOpenfile.setClickable(false);
+				break;
+			case STATE_STOPPED:
+				mBtnStart.setClickable(true);
+				mBtnStop.setClickable(false);
+				mBtnOpenfile.setClickable(true);
+				break;
+			default:
+				Debug.d(TAG, "--->unknown state");
+		}
 	}
 	
 	public void startPreview()
@@ -686,25 +707,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	{
 		mProgressShowing=false;
 	}
+	
 	int mdata=0;
-	boolean mIsDemo=false;
 	@Override
 	public void onClick(View v) {
 		
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				if(mIsDemo) {
-					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
-				} else {
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
-				}
+				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
 				break;
 			case R.id.StopPrint:
-				if (mIsDemo) {
-					mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
-				} else {
+				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
 					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
-				}
 				break;
 			case R.id.btnFlush:
 				break;

@@ -99,9 +99,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void onClick(View arg0) {
 			switch (arg0.getId()) {
 				case R.id.btn_ok_message_list:
-					if (mVSelected == null) {
-						break;
-					}
+					
 					dismiss();
 					if (pListener != null) {
 						pListener.onClick();
@@ -126,9 +124,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			Map<String, Object> selected = mContent.get(position);
-			
+			mFileAdapter.setSelected(position);
+			mFileAdapter.notifyDataSetChanged();
 			mTitle = (String) selected.get("title");
-
+			/*
 			if(mVSelected == null)
 			{
 				view.setBackgroundColor(R.color.message_selected_color);
@@ -139,7 +138,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mVSelected.setBackgroundColor(Color.WHITE);
 				view.setBackgroundColor(R.color.message_selected_color);
 				mVSelected = view;
-			}
+			}*/
+			
 		}
 		
 		public void loadMessages()

@@ -129,7 +129,7 @@ public class FpgaGpioOperation {
 			return -1;
 		}
 		ioctl(fd, FPGA_CMD_SETTING, type);
-		
+		Debug.d(TAG, "--->writeData len=" + len);
 		int wlen = write(fd, data, len);
 		if(wlen != len) {
 			//close(fd);

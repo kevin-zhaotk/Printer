@@ -219,6 +219,7 @@ public class RFIDDevice {
 		byte blk = (byte) (sector*4 + block); 
 		if (key == null || key.length != 6) {
 			Debug.e(TAG, "===>invalide key");
+			// init();
 			return false;
 		}
 		
@@ -281,9 +282,7 @@ public class RFIDDevice {
 	 */
 	private byte[] writeCmd(RFIDData data) {
 		
-		if (mFd <= 0) {
-			mFd = open(SERIAL_INTERFACE);
-		}
+		openDevice();
 		Debug.print(RFID_DATA_SEND, data.mTransData);
 		int writed = write(mFd, data.transferData(), data.getLength());
 		if (writed <= 0) {
@@ -294,6 +293,7 @@ public class RFIDDevice {
 		Debug.print(RFID_DATA_RECV, readin);
 		if (readin == null || readin.length == 0) {
 			Debug.e(TAG, "===>read err");
+			close(mFd);
 			return null;
 		}
 		
@@ -408,7 +408,7 @@ public class RFIDDevice {
 		{
 			Debug.d(TAG, "--->key verfy fail,init and try once");
 			// 如果秘钥校验失败则重新初始化RFID卡
-			init();
+			//init();
 			if (!keyVerfication(sector, block, mRFIDKeyA)) {
 				return 0;
 			}
@@ -590,5 +590,20 @@ public class RFIDDevice {
 			return false;
 		}
 		return true;
+	}
+	
+	private int openDevice() {
+		if (mFd <= 0) {
+			mFd = open(SERIAL_INTERFACE);
+			init();
+		}
+		return mFd;
+	}
+	
+	private void closeDevice() {
+		if (mFd > 0) {
+			close(mFd);
+		}
+		mFd = -1;
 	}
 }

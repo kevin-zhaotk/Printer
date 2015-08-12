@@ -7,7 +7,9 @@ import java.util.Map;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 
+import android.R.integer;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,11 +63,17 @@ public class MessageListAdater extends BaseAdapter {
 	
 	
 	/**
+	 * 
+	 */
+	private int mSelected;
+	
+	/**
 	 * Construct
 	 */
 	public MessageListAdater(Context context, LinkedList<Map<String, Object>> list, int resource,
 			String from[], int to[])
 	{
+		mSelected = 0;
 		mCntList = list;
 		mContext = context;
 		mKeys = new String[from.length];
@@ -98,6 +106,10 @@ public class MessageListAdater extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return arg0;
 	}
+	
+	public void setSelected(int position) {
+		mSelected = position;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -115,13 +127,22 @@ public class MessageListAdater extends BaseAdapter {
 		}
 		
 		HashMap<String, Object> item = (HashMap<String, Object>) mCntList.get(position);
-		if(item!=null)
+		
+		String title = (String) item.get(mKeys[0]);
+		String abstrace = (String) item.get(mKeys[1]);
+		//fill the elements into the empty view created early 
+		mHolder.mTitle.setText(title);
+		mHolder.mAbstract.setText(abstrace);
+		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
+		if(position == mSelected)
 		{
-			String title = (String) item.get(mKeys[0]);
-			String abstrace = (String) item.get(mKeys[1]);
-			//fill the elements into the empty view created early 
-			mHolder.mTitle.setText(title);
-			mHolder.mAbstract.setText(abstrace);
+			Debug.d(TAG, "---blue");
+			//convertView.setBackgroundResource(R.color.message_selected_color);
+			convertView.setBackgroundColor(Color.LTGRAY);
+		}
+		else {
+			Debug.d(TAG, "---transparent");
+			convertView.setBackgroundColor(Color.TRANSPARENT);
 		}
 		
 		

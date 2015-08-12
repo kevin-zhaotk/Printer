@@ -52,17 +52,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:background="#949494"
+        android:background="#436EEE"
         >
-        <Button
-            android:id="@+id/btn_prev"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:text="@string/str_page_prev"
-            android:textSize="@dimen/settingsBtnsize"
-            android:focusable="false"
-            />
+        
         <Button 
             android:id="@+id/btn_setting_ok"
             android:layout_width="0dp"
@@ -104,6 +96,17 @@
             android:textSize="@dimen/settingsBtnsize"
             android:focusable="false"
             />
+        
+        <Button
+            android:id="@+id/btn_prev"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:text="@string/str_page_prev"
+            android:textSize="@dimen/settingsBtnsize"
+            android:focusable="false"
+            />
+        
         <Button
             android:id="@+id/btn_next"
             android:layout_width="0dp"
