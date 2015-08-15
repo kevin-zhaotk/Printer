@@ -18,53 +18,126 @@
 	    android:orientation="horizontal"
 	    >
 	    
-	    <Button 
-	        android:id="@+id/btn_new"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_new" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_btn_new"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_btn_new" 
+			    />
+	    </RelativeLayout>
 	    
-	    <Button 
-	        android:id="@+id/btn_open"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_open" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_btn_open"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_btn_open" 
+			    />
+	    </RelativeLayout>
 	    
-	    <Button 
-	        android:id="@+id/btn_save"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_save" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_btn_save"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_btn_save" 
+			    />
+	    </RelativeLayout>
 	    
-	    <Button 
-	        android:id="@+id/btn_saveas"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_saveas" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_btn_saveas"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_btn_saveas" 
+			    />
+	    </RelativeLayout>
 	    
-	    <Button 
-	        android:id="@+id/btn_page_up"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_page_up" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_page_prev"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_page_prev" 
+			    />
+	    </RelativeLayout>
 	    
-	    <Button 
-	        android:id="@+id/btn_page_down"
-	        android:layout_width="0dp"
+	    <RelativeLayout
+		    android:id="@+id/btn_page_down" 
+		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:text="@string/str_page_next"
-	        android:layout_weight="1"
-	        android:textSize="@dimen/editButtonsTextsize"/>
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="#000000"
+		        android:text="@string/str_page_next" 
+			    />
+	    </RelativeLayout>
+	    
 	</LinearLayout>
 	
 	<ScrollView

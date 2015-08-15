@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -84,13 +85,13 @@ public static final String TAG="SettingsTabActivity";
 	public TextView mTime;
 	public TextView mVersion;
 
-	public Button		mSave;
+	public RelativeLayout		mSave;
 	
-	public Button		mUpgrade;
-	public Button		mSetDate;
-	public Button		mSettings;
-	public Button 		mPagePrev;
-	public Button 		mPageNext;
+	public RelativeLayout		mUpgrade;
+	public RelativeLayout		mSetDate;
+	public RelativeLayout		mSettings;
+	public RelativeLayout 		mPagePrev;
+	public RelativeLayout 		mPageNext;
 
 	Context 			mContext;
 	ProgressDialog 		pDialog;
@@ -162,19 +163,19 @@ public static final String TAG="SettingsTabActivity";
         mVertres.setSummary(mVertres.getEntry());
         */
 		
-		mPagePrev = (Button) getView().findViewById(R.id.btn_prev);
+		mPagePrev = (RelativeLayout) getView().findViewById(R.id.btn_prev);
 		mPagePrev.setOnClickListener(this);
 		
-		mPageNext = (Button) getView().findViewById(R.id.btn_next);
+		mPageNext = (RelativeLayout) getView().findViewById(R.id.btn_next);
 		mPageNext.setOnClickListener(this);
 		
-		mSave = (Button) getView().findViewById(R.id.btn_setting_ok);
+		mSave = (RelativeLayout) getView().findViewById(R.id.btn_setting_ok);
 		mSave.setOnClickListener(this);
 		
-		mUpgrade = (Button) getView().findViewById(R.id.btn_setting_upgrade);
+		mUpgrade = (RelativeLayout) getView().findViewById(R.id.btn_setting_upgrade);
 		mUpgrade.setOnClickListener(this);
 		
-		mSettings = (Button) getView().findViewById(R.id.btn_system_setting);
+		mSettings = (RelativeLayout) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		
 		mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);

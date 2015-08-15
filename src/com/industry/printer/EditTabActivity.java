@@ -58,6 +58,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -77,10 +78,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	/*************************
 	 * file operation buttons
 	 * ***********************/
-	public Button mBtnNew;
-	public Button mBtnSave;
-	public Button mBtnSaveas;
-	public Button mBtnOpen;
+	public RelativeLayout mBtnNew;
+	public RelativeLayout mBtnSave;
+	public RelativeLayout mBtnSaveas;
+	public RelativeLayout mBtnOpen;
+	public RelativeLayout mPrev;
+	public RelativeLayout mNext;
 	
 	/*************************
 	 * object operation buttons
@@ -131,8 +134,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	// public EditText mObjLine2;
 	// public EditText mObjLine3;
 	// public EditText mObjLine4;
-	public Button mPrev;
-	public Button mNext;
+	
 	
 	
 	public static Vector<BaseObject> mObjs;
@@ -164,16 +166,16 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		mObjs.add(new MessageObject(mContext, 0));
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		
-		mBtnNew = (Button) getView().findViewById(R.id.btn_new);
+		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		
-		mBtnOpen = (Button) getView().findViewById(R.id.btn_open);
+		mBtnOpen = (RelativeLayout) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
 		
-		mBtnSaveas = (Button) getView().findViewById(R.id.btn_saveas);
+		mBtnSaveas = (RelativeLayout) getView().findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
 		
-		mBtnSave = (Button) getView().findViewById(R.id.btn_save);
+		mBtnSave = (RelativeLayout) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
 		
 		//mTest = (Button) getView().findViewById(R.id.btn_temp_4);
@@ -182,10 +184,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		//mTest5 = (Button) getView().findViewById(R.id.btn_temp_5);
 		//mTest5.setOnClickListener(this);
 		
-		mPrev = (Button) getView().findViewById(R.id.btn_page_up);
+		mPrev = (RelativeLayout) getView().findViewById(R.id.btn_page_up);
 		mPrev.setOnClickListener(this);
 		
-		mNext = (Button) getView().findViewById(R.id.btn_page_down);
+		mNext = (RelativeLayout) getView().findViewById(R.id.btn_page_down);
 		mNext.setOnClickListener(this);
 		
 		mScrollView1 = (ScrollView) getView().findViewById(R.id.edit_scrollview_line1);

@@ -43,7 +43,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,21 +61,21 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public Context mContext;
 	public ExtendMessageTitleFragment mMsgTitle;
 	public long mCounter;
-	public Button mBtnStart;
-	public Button mBtnStop;
-	public Button mBtnClean;
+	public RelativeLayout mBtnStart;
+	public RelativeLayout mBtnStop;
+	public RelativeLayout mBtnClean;
 	public Button mBtnOpen;
 	//public Button mGoto;
 	//public EditText mDstline;
 	
-	public Button	mBtnOpenfile;
+	public RelativeLayout	mBtnOpenfile;
 	public HorizontalScrollView mScrollView;
 	public TextView mMsgFile;
 	// public EditText mMsgPreview;
 	public TextView mMsgPreview;
 	public Button 	mBtnview;
-	public Button	mForward;
-	public Button 	mBackward;
+	public RelativeLayout	mForward;
+	public RelativeLayout 	mBackward;
 	
 	public TextView mRecords;
 	
@@ -230,10 +234,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		mPreview = (PreviewScrollView ) getView().findViewById(R.id.sv_preview);
 		
-		mBtnStart = (Button) getView().findViewById(R.id.StartPrint);
+		mBtnStart = (RelativeLayout) getView().findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(this);
 		
-		mBtnStop = (Button) getView().findViewById(R.id.StopPrint);
+		mBtnStop = (RelativeLayout) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
 		
 		//mRecords = (TextView) getView().findViewById(R.id.tv_records);
@@ -242,18 +246,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		 *this command unsupported now 
 		 */
 		
-		mBtnClean = (Button) getView().findViewById(R.id.btnFlush);
+		mBtnClean = (RelativeLayout) getView().findViewById(R.id.btnFlush);
 		mBtnClean.setOnClickListener(this);
 		
 				
-		mBtnOpenfile = (Button) getView().findViewById(R.id.btnBinfile);
+		mBtnOpenfile = (RelativeLayout) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
 		
 		
-		mForward = (Button) getView().findViewById(R.id.btn_page_forward);
+		mForward = (RelativeLayout) getView().findViewById(R.id.btn_page_forward);
 		mForward.setOnClickListener(this);
 		
-		mBackward = (Button) getView().findViewById(R.id.btn_page_backward);
+		mBackward = (RelativeLayout) getView().findViewById(R.id.btn_page_backward);
 		mBackward.setOnClickListener(this);
 		
 		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);

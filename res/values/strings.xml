@@ -394,7 +394,7 @@
 	<string name="str_textview_param8">08. Encoder length-fixed pulse number</string>
 	<string name="str_textview_param9">09. Encoder delayed condition pulse number</string>
 	<string name="str_textview_param10">10. High length</string>
-	<string name="str_btn_settings_sync">Sync Settings</string>
+	<string name="str_btn_settings_sync">Ok</string>
 	<string-array name="encoder_item_entries">
 	    <item>PHO1</item>
 	    <item>PHO2</item>

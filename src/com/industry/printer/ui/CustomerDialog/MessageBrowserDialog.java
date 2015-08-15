@@ -29,15 +29,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
-		public Button mConfirm;
-		public Button mCancel;
-		public Button mPagePrev;
-		public Button mPageNext;
+		public RelativeLayout mConfirm;
+		public RelativeLayout mCancel;
+		public RelativeLayout mPagePrev;
+		public RelativeLayout mPageNext;
 		public static String mTitle;
 		
 		public ListView mMessageList;
@@ -72,16 +73,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			 this.setContentView(R.layout.message_list_layout);
 			 
-			 mConfirm = (Button) findViewById(R.id.btn_ok_message_list);
+			 mConfirm = (RelativeLayout) findViewById(R.id.btn_ok_message_list);
 			 mConfirm.setOnClickListener(this);
 			 
-			 mCancel = (Button) findViewById(R.id.btn_cancel_message_list);
+			 mCancel = (RelativeLayout) findViewById(R.id.btn_cancel_message_list);
 			 mCancel.setOnClickListener(this);
 			 
-			 mPagePrev = (Button) findViewById(R.id.btn_page_prev);
+			 mPagePrev = (RelativeLayout) findViewById(R.id.btn_page_prev);
 			 mPagePrev.setOnClickListener(this);
 			 
-			 mPageNext = (Button) findViewById(R.id.btn_page_next);
+			 mPageNext = (RelativeLayout) findViewById(R.id.btn_page_next);
 			 mPageNext.setOnClickListener(this);
 			 
 			 
