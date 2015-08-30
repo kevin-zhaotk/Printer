@@ -1,6 +1,10 @@
 package com.industry.printer.hardware;
 
+import java.util.Calendar;
+
+import android.R.integer;
 import android.content.Context;
+import android.os.SystemClock;
 
 import com.industry.printer.DataTransferThread;
 import com.industry.printer.FileFormat.SystemConfigFile;
@@ -201,6 +205,15 @@ public class FpgaGpioOperation {
 		data[7] = (char) SystemConfigFile.mLenFixedPulse;
 		data[8] = (char) SystemConfigFile.mDelayPulse;
 		data[9] = (char) SystemConfigFile.mHighLen;
+		
+		//时间参数放在最后3个
+		Calendar c = Calendar.getInstance();
+		int hour = c.get(Calendar.HOUR_OF_DAY);  
+        int minute = c.get(Calendar.MINUTE);
+        int second = c.get(Calendar.SECOND);
+		data[Configs.gParams - 3] = (char)hour;
+		data[Configs.gParams - 2] = (char)minute;
+		data[Configs.gParams - 1] = (char)second;
 		
 		writeData(FPGA_STATE_SETTING, data, data.length*2);	
 	}

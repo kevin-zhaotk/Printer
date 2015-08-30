@@ -2,10 +2,12 @@ package com.industry.printer.ui.CustomerDialog;
 
 
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 import com.industry.printer.R;
 import com.industry.printer.R.id;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.RTCDevice;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +15,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -36,12 +39,14 @@ public class CalendarDialog extends Dialog {
 	{
 		super(context);
 		mLayout = resLayout;
+		Debug.d(TAG, "--->context="+context);
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(mLayout);
 		
 		mDPicker = (DatePicker) findViewById(R.id.picker_date);
@@ -66,6 +71,8 @@ public class CalendarDialog extends Dialog {
 		        if (when / 1000 < Integer.MAX_VALUE) {
 		            SystemClock.setCurrentTimeMillis(when);
 		        }
+		        RTCDevice rtcDevice = RTCDevice.getInstance();
+		        rtcDevice.syncSystemTimeToRTC(getContext());
 				dismiss();
 			}
 		});

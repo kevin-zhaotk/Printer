@@ -22,6 +22,7 @@
 		    android:id="@+id/btn_new" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
 	        android:layout_weight="1">
 	        <ImageView 
 		        android:layout_width="match_parent"
@@ -42,6 +43,7 @@
 		    android:id="@+id/btn_open" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
 	        android:layout_weight="1">
 	        <ImageView 
 		        android:layout_width="match_parent"
@@ -62,6 +64,7 @@
 		    android:id="@+id/btn_save" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
 	        android:layout_weight="1">
 	        <ImageView 
 		        android:layout_width="match_parent"
@@ -82,6 +85,7 @@
 		    android:id="@+id/btn_saveas" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
 	        android:layout_weight="1">
 	        <ImageView 
 		        android:layout_width="match_parent"
@@ -102,6 +106,7 @@
 		    android:id="@+id/btn_page_up" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
 	        android:layout_weight="1">
 	        <ImageView 
 		        android:layout_width="match_parent"
@@ -122,7 +127,9 @@
 		    android:id="@+id/btn_page_down" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
-	        android:layout_weight="1">
+	        android:layout_weight="1"
+			android:focusable="false"
+	        >
 	        <ImageView 
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"

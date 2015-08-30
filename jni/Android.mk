@@ -8,6 +8,7 @@ LOCAL_SHARED_LIBRARIES := libutils \
 LOCAL_SRC_FILES := com_industry_printer_UsbSerial.c \
 					com_industry_printer_RFIDOperation.c \
 					com_industry_printer_GPIOOperation.c \
+					com_industry_printer_RTCDevice.c \
 					com_industry_printer_HardwareJni.c
 					 
 include $(BUILD_SHARED_LIBRARY)

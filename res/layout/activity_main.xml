@@ -26,6 +26,7 @@
 	        android:text="@string/ControlTab"
 	        android:textColor="@color/tab_color_selector"
 	        android:textSize="40sp"
+	        android:focusable="false"
             />
         
         <RadioButton 
@@ -39,6 +40,7 @@
 	        android:text="@string/Edit"
 	        android:textColor="@color/tab_color_selector"
 	        android:textSize="40sp"
+	        android:focusable="false"
             />
         
         <RadioButton 
@@ -52,6 +54,7 @@
 	        android:text="@string/Settings"
 	        android:textColor="@color/tab_color_selector"
 	        android:textSize="40sp"
+	        android:focusable="false"
             />
     </RadioGroup>
     <!--
@@ -81,6 +84,7 @@
          android:layout_height="80dp"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
+         android:text="@string/str_filename_no"
          android:textColor="#000000"
          android:textSize="30sp"
          android:gravity="center"
@@ -94,7 +98,7 @@
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
          android:textColor="#000000"
-         android:textSize="30sp"
+         android:textSize="40sp"
          android:visibility="gone"
          android:gravity="center"
         />

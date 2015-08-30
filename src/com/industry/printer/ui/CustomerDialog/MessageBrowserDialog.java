@@ -145,7 +145,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		public void loadMessages()
 		{
-			TLKFileParser parser = new TLKFileParser(null);
+			TLKFileParser parser = new TLKFileParser(getContext(), null);
 			String tlkPath = ConfigPath.getTlkPath();
 			if (tlkPath == null) {
 				return ;
@@ -163,6 +163,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				}
 				
 				Map<String, Object> map = new HashMap<String, Object>();
+				Debug.d(TAG, "--->loadMessage:" + t.getAbsolutePath());
 				parser.setTlk(t.getAbsolutePath());
 				String content = parser.getContentAbatract();
 				map.put("title", t.getName());

@@ -1,14 +1,18 @@
 package com.industry.printer;
 
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -124,12 +128,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		//filter.addDataScheme("file");
 		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
 		filter.addAction(ACTION_USB_PERMISSION);
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-		filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+		filter.addDataScheme("file");
+		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
 		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
 		
 		
-		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver();
+		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
 		
 		mContext.registerReceiver(mReceiver, filter);
 		
@@ -229,12 +234,43 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 				if (arg1 == true) {
 					fts.show(mSettingsTab);
 					mSettingTitle.setVisibility(View.VISIBLE);
+					mHander.sendEmptyMessage(REFRESH_TIME_DISPLAY);
+					
 				} else {
 					fts.hide(mSettingsTab);
 					mSettingTitle.setVisibility(View.GONE);
+					mHander.removeMessages(REFRESH_TIME_DISPLAY);
 				}
 				break;
 		}
 		fts.commit();
 	}
+	
+	
+	public static final int USB_STORAGE_ATTACHED = 0;
+	public static final int REFRESH_TIME_DISPLAY = 1;
+	
+	public Handler mHander = new Handler(){
+		
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case USB_STORAGE_ATTACHED:
+				Debug.d(TAG, "--->reload system settings");
+				mControlTab.loadMessage();
+				mSettingsTab.reloadSettings();
+				break;
+			case REFRESH_TIME_DISPLAY:
+				Calendar calendar = Calendar.getInstance();
+				int hour = calendar.get(Calendar.HOUR_OF_DAY);
+				int min = calendar.get(Calendar.MINUTE);
+				int second = calendar.get(Calendar.SECOND);
+				String time = String.format(getResources().getString(R.string.str_time_format), hour, min, second);
+				mSettingTitle.setText(time);
+				mHander.sendEmptyMessageDelayed(REFRESH_TIME_DISPLAY, 1000);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 }

@@ -52,6 +52,17 @@ static JNINativeMethod gRFIDMethods[] = {
 };
 
 /**
+ * RTC操作jni接口
+ */
+static JNINativeMethod gRTCMethods[] = {
+	{"open",					"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_RTC_open},
+	{"syncSystemTimeFromRTC",	"(I)V",						(void *)Java_com_industry_printer_RTC_read},
+	{"syncSystemTimeToRTC",		"(I)V",						(void *)Java_com_industry_printer_RTC_write},
+	{"close",					"(I)I",						(void *)Java_com_industry_printer_RTC_close},
+};
+
+
+/**
  * 注册usb转串口的JNI方法
  */
 int register_com_industry_printer_Usb2Serial(JNIEnv *env) {
@@ -88,6 +99,19 @@ int register_com_industry_printer_RFIDOperation(JNIEnv* env) {
 	return (*env)->RegisterNatives(env, clazz, gRFIDMethods, sizeof(gRFIDMethods) / sizeof(gRFIDMethods[0]));
 }
 
+/**
+ * 注册RTC操作的JNI方法
+ */
+int register_com_industry_printer_RTCOperation(JNIEnv* env) {
+	const char* kClassPathName = "com/industry/printer/hardware/RTCDevice";
+	jclass clazz = (*env)->FindClass(env, kClassPathName);
+	if(clazz == NULL) {
+		return JNI_FALSE;
+	}
+	return (*env)->RegisterNatives(env, clazz, gRTCMethods, sizeof(gRTCMethods)/sizeof(gRTCMethods[0]));
+}
+
+
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
     JNIEnv* env = NULL;
@@ -107,6 +131,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
     }
 
     if (register_com_industry_printer_RFIDOperation(env) < 0) {
+    	goto fail;
+    }
+
+    if (register_com_industry_printer_RTCOperation(env) < 0) {
     	goto fail;
     }
     /* success -- return valid version number */

@@ -382,6 +382,9 @@
 	<string name="str_page_forward"> 《 </string>
 	<string name="str_page_backward"> 《 </string>
 	<string name="str_message_no_content">can not create preview</string>
+	<string name="str_state_printing">Print Running</string>
+	<string name="str_state_stopped">Print Stopped</string>
+	
 <!-- 树莓派3 设置界面相关 -->
 	
 	<string name="str_textview_param1">01. Encoder selection</string>
@@ -401,8 +404,10 @@
 	</string-array>
 	
 	<string name="str_time_unit">0.1ms</string>
+	<string name="str_setting_time">Clock</string>
 	<string name="str_system_setting">Settings</string>
 	<string name="str_upgrade_progress">system upgrading....</string>
+	<string name="str_time_format">%1$02d:%2$02d:%3$02d</string>
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">Insert</string>
 	<string name="str_edit_btn_temp1">Temp1</string>
@@ -422,6 +427,7 @@
 	<string name="str_file_hint">file name</string>
 	<string name="str_page_prev">Page Prev</string>
 	<string name="str_page_next">Page Next</string>
+	<string name="str_filename_no">Unkonw file</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

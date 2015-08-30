@@ -80,6 +80,12 @@ public class XmlOutputStream {
 		return true;
 	}
 	
-	
+	public void close() {
+		try {
+			mOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

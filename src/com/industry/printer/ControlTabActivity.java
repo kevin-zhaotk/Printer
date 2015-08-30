@@ -17,6 +17,7 @@ import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.RFIDDevice;
+import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.TLKFileParser;
@@ -33,6 +34,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -62,9 +65,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public ExtendMessageTitleFragment mMsgTitle;
 	public long mCounter;
 	public RelativeLayout mBtnStart;
+	public TextView		  mTvStart; 
 	public RelativeLayout mBtnStop;
+	public TextView		  mTvStop;
 	public RelativeLayout mBtnClean;
+	public TextView		  mTvClean;
 	public Button mBtnOpen;
+	public TextView		  mTvOpen;
 	//public Button mGoto;
 	//public EditText mDstline;
 	
@@ -106,6 +113,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public int mIndex;
 	public TextView mPrintStatus;
 	public TextView mInkLevel;
+	public TextView mTVPrinting;
+	public TextView mTVStopped;
 	public TextView mPhotocellState;
 	public TextView mEncoderState;
 	public TextView mPrintState;
@@ -236,10 +245,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		mBtnStart = (RelativeLayout) getView().findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(this);
+		mTvStart = (TextView) getView().findViewById(R.id.tv_start);
 		
 		mBtnStop = (RelativeLayout) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
-		
+		mTvStop = (TextView) getView().findViewById(R.id.tv_stop);
 		//mRecords = (TextView) getView().findViewById(R.id.tv_records);
 		/*
 		 *clean the print head
@@ -248,11 +258,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		mBtnClean = (RelativeLayout) getView().findViewById(R.id.btnFlush);
 		mBtnClean.setOnClickListener(this);
-		
+		mTvClean = (TextView) getView().findViewById(R.id.tv_flush);
 				
 		mBtnOpenfile = (RelativeLayout) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
-		
+		mTvOpen = (TextView) getView().findViewById(R.id.tv_binfile);
 		
 		mForward = (RelativeLayout) getView().findViewById(R.id.btn_page_forward);
 		mForward.setOnClickListener(this);
@@ -260,6 +270,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mBackward = (RelativeLayout) getView().findViewById(R.id.btn_page_backward);
 		mBackward.setOnClickListener(this);
 		
+		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);
+		mTVStopped = (TextView) getView().findViewById(R.id.tv_stopState);
+		
+		switchState(STATE_STOPPED);
 		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);
 		// mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
 		mMsgPreview = (TextView) getView().findViewById(R.id.message_preview);
@@ -284,6 +298,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			refreshInk(ink);
 		}
 		loadMessage();
+		RTCDevice rtcDevice = RTCDevice.getInstance();
+		rtcDevice.initSystemTime(mContext);
 	}
 	
 	@Override
@@ -294,7 +310,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		//UsbSerial.close(mFd);
 	}
 	
-	private void loadMessage() {
+	public void loadMessage() {
 			
 		String f = SystemConfigFile.getLastMsg();
 		Debug.d(TAG, "===>path: " + ConfigPath.getTlkPath() + "/" + f);
@@ -338,7 +354,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//parseTlk(f);
 					//initBgBuffer();
 					/**获取打印缩略图，用于预览展现**/
-					TLKFileParser parser = new TLKFileParser(mObjPath);
+					TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 					
 					String preview = parser.getContentAbatract();
 					if (preview == null) {
@@ -427,6 +443,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					switchState(STATE_STOPPED);
 					
 					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
+					FpgaGpioOperation.clean();
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					if (mRfidDevice == null) {
@@ -454,7 +471,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mDTransThread = DataTransferThread.getInstance();	
 		// 初始化buffer
 		mDTransThread.initDataBuffer(mContext, mObjPath);
-		TLKFileParser parser = new TLKFileParser(mObjPath);
+		TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 		// 设置dot count
 		mDTransThread.setDotCount(parser.getDots());
 		// 设置UI回调
@@ -468,18 +485,33 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		switch(state) {
 			case STATE_PRINTING:
 				mBtnStart.setClickable(false);
+				mTvStart.setTextColor(Color.DKGRAY);
 				mBtnStop.setClickable(true);
+				mTvStop.setTextColor(Color.BLACK);
 				mBtnOpenfile.setClickable(false);
+				mTvOpen.setTextColor(Color.DKGRAY);
+				mTVPrinting.setVisibility(View.VISIBLE);
+				mTVStopped.setVisibility(View.GONE);
+				mBtnClean.setEnabled(false);
+				mTvClean.setTextColor(Color.DKGRAY);
 				break;
 			case STATE_STOPPED:
 				mBtnStart.setClickable(true);
+				mTvStart.setTextColor(Color.BLACK);
 				mBtnStop.setClickable(false);
+				mTvStop.setTextColor(Color.DKGRAY);
 				mBtnOpenfile.setClickable(true);
+				mTvOpen.setTextColor(Color.BLACK);
+				mTVPrinting.setVisibility(View.GONE);
+				mTVStopped.setVisibility(View.VISIBLE);
+				mBtnClean.setEnabled(true);
+				mTvClean.setTextColor(Color.BLACK);
 				break;
 			default:
 				Debug.d(TAG, "--->unknown state");
 		}
 	}
+	
 	
 	public void startPreview()
 	{

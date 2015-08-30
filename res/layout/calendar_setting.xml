@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="400dp"
+    android:layout_width="460dp"
     android:layout_height="match_parent"
     android:background="#C0C0C0" 
     android:gravity="center"
     >
     
     <TextView
+        android:id="@+id/tv_year"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="@string/str_year"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="30dp"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        />
+    <TextView
         android:id="@+id/tv_month"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_toRightOf="@id/tv_year"
+        android:layout_alignTop="@id/tv_year"
         android:text="@string/str_month"
-        android:layout_marginLeft="10dp"
-         android:textSize="20dp"
+        android:textSize="20dp"
+        android:textColor="#000000"
         />
     <TextView
         android:id="@+id/tv_date"
@@ -21,18 +34,9 @@
         android:text="@string/str_date"
         android:layout_marginLeft="0dp"
         android:layout_toRightOf="@id/tv_month"
-        android:layout_alignTop="@id/tv_month"
-         android:textSize="20dp"
-        />
-    <TextView
-        android:id="@+id/tv_year"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:text="@string/str_year"
-        android:layout_marginLeft="0dp"
-        android:layout_toRightOf="@id/tv_date"
-        android:layout_alignTop="@id/tv_month"
-         android:textSize="20dp"
+        android:layout_alignTop="@id/tv_year"
+        android:textSize="20dp"
+        android:textColor="#000000"
         />
     
     <TextView
@@ -41,9 +45,10 @@
         android:layout_height="wrap_content"
         android:text="@string/str_hour"
         android:layout_marginLeft="0dp"
-        android:layout_toRightOf="@id/tv_year"
-        android:layout_alignTop="@id/tv_month"
-         android:textSize="20dp"
+        android:layout_toRightOf="@id/tv_date"
+        android:layout_alignTop="@id/tv_year"
+        android:textSize="20dp"
+        android:textColor="#000000"
         />
     
     <TextView
@@ -53,14 +58,16 @@
         android:text="@string/str_minute"
         android:layout_marginLeft="0dp"
         android:layout_toRightOf="@id/tv_hour"
-        android:layout_alignTop="@id/tv_month"
-         android:textSize="20dp"
+        android:layout_alignTop="@id/tv_year"
+        android:textSize="20dp"
+		android:textColor="#000000"
         />
 	<DatePicker 
 	    android:id="@+id/picker_date"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/tv_month"
+	    android:layout_marginLeft="20dp"
 	    />
 	
 	<TimePicker
@@ -74,21 +81,23 @@
 	
 	<Button
 	    android:id="@+id/btn_setTimeOk"
-	    android:layout_width="80dp"
+	    android:layout_width="150dp"
 	    android:layout_height="60dp"
 	    android:layout_below="@id/picker_date"
-	    android:layout_marginTop="40dp"
-	    android:layout_marginLeft="80dp"
+	    android:layout_marginTop="20dp"
+	    android:layout_marginBottom="20dp"
+	    android:layout_marginLeft="50dp"
 	    android:text="@string/str_ok"
-	    
+	    android:textSize="30dp"
 	    />
 	<Button
 	    android:id="@+id/btn_setTimeCnl"
-	    android:layout_width="80dp"
+	    android:layout_width="150dp"
 	    android:layout_height="60dp"
 	    android:layout_alignTop="@id/btn_setTimeOk"
 	    android:layout_toRightOf="@id/btn_setTimeOk"
 	    android:layout_marginLeft="40dp"
-	    android:text="@string/strNativeBtn"	     
+	    android:text="@string/strNativeBtn"
+	    android:textSize="30dp"	     
 	    />
 </RelativeLayout>

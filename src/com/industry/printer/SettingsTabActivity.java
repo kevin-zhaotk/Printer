@@ -8,9 +8,11 @@ import java.util.Locale;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
+import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -92,6 +94,7 @@ public static final String TAG="SettingsTabActivity";
 	public RelativeLayout		mSettings;
 	public RelativeLayout 		mPagePrev;
 	public RelativeLayout 		mPageNext;
+	public RelativeLayout		mTimeset;
 
 	Context 			mContext;
 	ProgressDialog 		pDialog;
@@ -175,6 +178,9 @@ public static final String TAG="SettingsTabActivity";
 		mUpgrade = (RelativeLayout) getView().findViewById(R.id.btn_setting_upgrade);
 		mUpgrade.setOnClickListener(this);
 		
+		mTimeset = (RelativeLayout) getView().findViewById(R.id.btn_setting_timeset);
+		mTimeset.setOnClickListener(this);
+		
 		mSettings = (RelativeLayout) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		
@@ -224,6 +230,11 @@ public static final String TAG="SettingsTabActivity";
 	public void savePreference()
 	{
 		
+	}
+	
+	public void reloadSettings() {
+		Configs.initConfigs(mContext);
+		mPHSettings.reloadSettings();
 	}
 	
 	
@@ -283,6 +294,10 @@ public static final String TAG="SettingsTabActivity";
 //					SystemProperties.set("ctl.start","upgrade");
 					break;
 				}
+				break;
+			case R.id.btn_setting_timeset:
+				CalendarDialog dialog = new CalendarDialog(this.getActivity(), R.layout.calendar_setting);
+				dialog.show();
 				break;
 			default :
 				Debug.d(TAG, "===>unknown view clicked");

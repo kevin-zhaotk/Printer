@@ -427,7 +427,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
         		case HANDLER_MESSAGE_NEW:
         			mObjName = null;
         			mObjLine1.setText("");
-        			((MainActivity) getActivity()).mEditTitle.setText("");
+        			((MainActivity) getActivity()).mEditTitle.setText(getResources().getString(R.string.str_filename_no));
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
@@ -435,7 +435,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             		File tlk=new File(ConfigPath.getTlkPath()+"/" + mObjName +"/1.TLK");
             		if(tlk.isFile() && tlk.exists())
             		{
-            			TLKFileParser parser = new TLKFileParser(tlk.getAbsolutePath());
+            			TLKFileParser parser = new TLKFileParser(mContext, tlk.getAbsolutePath());
 	    				parser.parse(mContext, tlk.getAbsolutePath(), mObjs);
 	    				setCurObj(0);
 	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);

@@ -75,6 +75,7 @@ public class XmlInputStream {
 				}
 				event = parser.next();
 			}
+			
 		} catch (XmlPullParserException e) {
 			Debug.d(TAG, "read error:"+e.getMessage());
 			return null;
@@ -82,6 +83,16 @@ public class XmlInputStream {
 			Debug.d(TAG, "read error:"+e.getMessage());
 			return null;
 		}
+		
 		return mPairs;
+	}
+	
+	public void close() {
+		try {
+			mInputStream.close();
+			Debug.d(TAG, "--->close sysconfig.xml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,6 +1,8 @@
 package com.industry.printer.object;
 
 import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
+
 import android.content.Context;
 
 public class MessageObject extends BaseObject {
@@ -12,6 +14,7 @@ public class MessageObject extends BaseObject {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
 		//mIndex = index;
 		mPrinter=0;
+		Debug.d(TAG, "--->MessageObject: " + context.getResources());
 		String name = (String)context.getResources().getString(R.string.object_msg_name);
 		mContent = name;
 	}

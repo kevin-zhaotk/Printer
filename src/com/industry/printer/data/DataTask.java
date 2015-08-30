@@ -67,7 +67,7 @@ public class DataTask {
 			path = tlk;
 		/**记录当前打印的信息路径**/
 		mMessage = path;
-		TLKFileParser parser = new TLKFileParser(mMessage);
+		TLKFileParser parser = new TLKFileParser(mContext, mMessage);
 		parser.parse(mContext, mMessage+"/1.TLK", mObjList);
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		mBinInfo = new BinInfo(mMessage+"/1.bin");

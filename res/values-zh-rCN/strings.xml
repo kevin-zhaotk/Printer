@@ -378,6 +378,9 @@
 	<string name="str_page_forward">前翻</string>
 	<string name="str_page_backward">后翻</string>
 	<string name="str_rfid_initfail_notify">卡初始化失败！</string>
+	<string name="str_state_printing">打印运行中</string>
+	<string name="str_state_stopped">打印已停止</string>
+	
 
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">01. 光电选择</string>
@@ -397,8 +400,10 @@
 	</string-array>
 	
 	<string name="str_time_unit">0.1ms</string>
+	<string name="str_setting_time">时间设置</string>
 	<string name="str_system_setting">系统设置</string>
 	<string name="str_upgrade_progress">系统升级中....</string>
+	<string name="str_time_format">%1$02d:%2$02d:%3$02d</string>
 	
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">插入</string>
@@ -418,6 +423,7 @@
 	<string name="str_file_hint">保存编号</string>
 	<string name="str_page_prev">上翻</string>
 	<string name="str_page_next">下翻</string>
+	<string name="str_filename_no">未命名</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

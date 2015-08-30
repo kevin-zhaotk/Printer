@@ -93,6 +93,7 @@ public class SystemConfigFile{
 			}
 			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
 		}
+		inStream.close();
 		/*
 		try {
 			reader = new FileReader(file);
@@ -237,6 +238,7 @@ public class SystemConfigFile{
 		list.add(tag1);
 		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
+		stream.close();
 	}
 	
 	public void saveSettings() {
