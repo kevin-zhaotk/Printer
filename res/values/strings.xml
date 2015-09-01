@@ -125,19 +125,14 @@
 	
 	<string name="strRtFmt">Time Format</string>
 	<string-array name="strTimeFormat">
-	    <item>YYYY-MM-DD HH:NN</item>
 	    <item>YYYY-MM-DD</item>
 	    <item>MM-DD-YYYY</item>
-	    <item>DD-MM-YYYY</item>
 	    <item>YY-MM-DD</item>
 	    <item>MM-DD-YY</item>
-	    <item>DD-MM-YY</item>
 	    <item>YYYY/MM/DD</item>
 	    <item>MM/DD/YYYY</item>
-	    <item>DD/MM/YYYY</item>
 	    <item>YY/MM/DD</item>
 	    <item>MM/DD/YY</item>
-	    <item>DD/MM/YY</item>
 	</string-array>
 	
 	<!-- object list -->

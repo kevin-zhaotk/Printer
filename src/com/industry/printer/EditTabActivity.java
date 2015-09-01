@@ -33,6 +33,8 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListe
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
 import com.industry.printer.ui.CustomerDialog.TextBrowserDialog;
 
 import android.app.Fragment;
@@ -717,6 +719,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					break;
 				}
 			case R.id.btn_saveas:
+				/*
 				if (mObjLine1.getText().toString().isEmpty()) {
 					break;
 				}
@@ -736,7 +739,9 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					}
 				});
 				dialog.show();
-				
+				*/
+				ObjectInsertDialog dialog1 = new ObjectInsertDialog(getActivity());
+				dialog1.show();
 				break;
 			/*
 			case R.id.btn_temp_4:

@@ -40,4 +40,8 @@ public class RTCDevice {
 		AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		aManager.SystemClockToHw();
 	}
+	
+	public void writeCounter(Context context, int count) {
+		SystemWriteManager manager = (SystemWriteManager) context.getSystemService(Context.);
+	}
 }
