@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_version">version:</string>
+    <string name="system_time">clock:</string>
     <string name="app_name">Printer</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -423,6 +424,7 @@
 	<string name="str_page_prev">Page Prev</string>
 	<string name="str_page_next">Page Next</string>
 	<string name="str_filename_no">Unkonw file</string>
+	<string name="str_btn_back">Back</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

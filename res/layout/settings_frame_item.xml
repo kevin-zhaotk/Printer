@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+	android:layout_marginLeft="@dimen/settingsMarginLeft" >
+    
+    	<TextView
+            android:id="@+id/ph_set_header"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/str_textview_param1"
+            android:textColor="@color/black"
+            />
+        <Spinner 
+            android:id="@+id/ph_set_content_sp"
+            style="@style/edit_spinner_style"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="@dimen/settingsSPinnerSize"
+            android:layout_toRightOf="@id/ph_set_header"
+            android:gravity="center_vertical"
+            android:spinnerMode="dropdown"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:dropDownWidth="@dimen/settingsValueLength"
+            android:entries="@array/encoder_item_entries"
+            android:background="#ffffff"
+            android:visibility="gone"
+            />
+        
+        <EditText
+            android:id="@+id/ph_set_content_et"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:textSize="@dimen/settingsEditTextsize"
+            android:layout_toRightOf="@id/ph_set_header"
+            android:inputType="number"
+            android:maxLength="@integer/max_digit_length"
+            android:imeOptions="actionNone|flagNoFullscreen"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+        
+        <TextView
+            android:id="@+id/ph_set_unit"
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsTextsize" 
+            android:textColor="@color/UnitText"
+            android:gravity="center_vertical"
+            />
+</RelativeLayout>

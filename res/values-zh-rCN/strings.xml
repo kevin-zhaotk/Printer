@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_version">软件版本:</string>
+    <string name="system_time">系统时间:</string>
     <string name="app_name">打印机</string>
     <string name="action_settings">设置</string>
     <string name="hello_world">Hello world!</string>
@@ -389,6 +390,72 @@
 	<string name="str_textview_param9">09. 编码器延时条件脉冲数</string>
 	<string name="str_textview_param10">10. 每次输出高时间</string> 
 	<string name="str_btn_settings_sync">确认</string>
+	<string-array name="str_settings_params">
+	    <item>01. 光电选择</item>
+	    <item>02. 触发模式选择</item>
+	    <item>03. PHO延时高位</item>
+	    <item>04. PHO延时低位</item>
+	    <item>05. PHO 输出周期</item>
+	    <item>06. 定时输出周期</item>
+	    <item>07. 编码器触发条件脉冲数</item>
+	    <item>08. 编码器定长脉数</item>
+	    <item>09. 编码器延时条件脉冲数</item>
+	    <item>10. 每次输出高时间</item>
+	    <item>11. 保留</item>
+	    <item>12. 保留</item>
+	    <item>13. 保留</item>
+	    <item>14. 保留</item>
+	    <item>15. 保留</item>
+	    <item>16. 保留</item>
+	    <item>17. 保留</item>
+	    <item>18. 保留</item>
+	    <item>19. 保留</item>
+	    <item>20. 保留</item>
+	    <item>21. 保留</item>
+	    <item>22. 保留</item>
+	    <item>23. 保留</item>
+	    <item>24. 保留</item>
+	    <item>25. 保留</item>
+	    <item>26. 保留</item>
+	    <item>27. 保留</item>
+	    <item>28. 保留</item>
+	    <item>29. 保留</item>
+	    <item>30. 保留</item>
+	    <item>31. 保留</item>
+	    <item>32. 保留</item>
+	    <item>33. 保留</item>
+	    <item>34. 保留</item>
+	    <item>35. 保留</item>
+	    <item>36. 保留</item>
+	    <item>37. 保留</item>
+	    <item>38. 保留</item>
+	    <item>39. 保留</item>
+	    <item>40. 保留</item>
+	    <item>41. 保留</item>
+	    <item>42. 保留</item>
+	    <item>43. 保留</item>
+	    <item>44. 保留</item>
+	    <item>45. 保留</item>
+	    <item>46. 保留</item>
+	    <item>47. 保留</item>
+	    <item>48. 保留</item>
+	    <item>49. 保留</item>
+	    <item>50. 保留</item>
+	    <item>51. 保留</item>
+	    <item>52. 保留</item>
+	    <item>53. 保留</item>
+	    <item>54. 保留</item>
+	    <item>55. 保留</item>
+	    <item>56. 保留</item>
+	    <item>57. 保留</item>
+	    <item>58. 保留</item>
+	    <item>59. 保留</item>
+	    <item>60. 保留</item>
+	    <item>61. 保留</item>
+	    <item>62. 保留</item>
+	    <item>63. 保留</item>
+	</string-array>
+	
 	<string-array name="encoder_item_entries">
 	    <item>PHO1</item>
 	    <item>PHO2</item>
@@ -419,6 +486,7 @@
 	<string name="str_page_prev">上翻</string>
 	<string name="str_page_next">下翻</string>
 	<string name="str_filename_no">未命名</string>
+	<string name="str_btn_back">返回</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">

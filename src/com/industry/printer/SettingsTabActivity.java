@@ -12,6 +12,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
+import com.industry.printer.ui.CustomerAdapter.SettingsListAdapter;
 import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 
 import android.app.Fragment;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -96,11 +98,14 @@ public static final String TAG="SettingsTabActivity";
 	public RelativeLayout 		mPageNext;
 	public RelativeLayout		mTimeset;
 
-	Context 			mContext;
-	ProgressDialog 		pDialog;
+	public Context 			mContext;
+	public ProgressDialog 		pDialog;
 	
-	ScrollView			mScrollView;
-	PHSettingFragment 	mPHSettings;
+	public ScrollView			mScrollView;
+	public PHSettingFragment 	mPHSettings;
+	public SettingsFragment		mSettingsFragment;
+	public ListView 			mListView;
+	public SettingsListAdapter 	mAdapter;
 	
 	public ExtendMessageTitleFragment mMsgTitle;
 	
@@ -186,11 +191,17 @@ public static final String TAG="SettingsTabActivity";
 		
 		mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
 		mPHSettings = new PHSettingFragment(mContext);
+		
+		// mSettingsFragment = new SettingsFragment(mContext);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
+		//transaction.replace(R.id.phsetting_fragment, mSettingsFragment);
 		transaction.commit();
-		
-		
+		/*
+		mListView = (ListView) getView().findViewById(R.id.settings_list_view);
+		mAdapter = new SettingsListAdapter(mContext);
+		mListView.setAdapter(mAdapter);
+		*/
 	}
 	
 //	@Override
@@ -259,9 +270,11 @@ public static final String TAG="SettingsTabActivity";
 		switch (arg0.getId()) {
 			case R.id.btn_prev:
 				mScrollView.arrowScroll(View.FOCUS_UP);
+				// mListView.smoothScrollBy(-200, 2);
 				break;
 			case R.id.btn_next:
 				mScrollView.arrowScroll(View.FOCUS_DOWN);
+				// mListView.smoothScrollBy(200, 2);
 				break;
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");

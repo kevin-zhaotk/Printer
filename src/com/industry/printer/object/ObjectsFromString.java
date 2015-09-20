@@ -25,7 +25,7 @@ public class ObjectsFromString {
 	public static final String TAG = ObjectsFromString.class.getSimpleName();
 	
 	//各对象之间以；作为分隔符
-	public static final String SPLITOR = "*|*";
+	public static final String SPLITOR = "@#@";
 	
 	public static List<BaseObject> makeObjs(Context context, String str) {
 		int xcor=0;
@@ -43,7 +43,7 @@ public class ObjectsFromString {
 		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {
-			if (s.startsWith("#N")) { //计数器对象
+			if (s.startsWith("#N#")) { //计数器对象
 				if(s.length() != 4 || !s.substring(3, 4).equals("'")) {
 					Debug.d(TAG, "makeObjs format not counter, parse as text object");
 					TextObject obj = new TextObject(context, xcor);
@@ -60,13 +60,12 @@ public class ObjectsFromString {
 					objList.add(obj);
 					xcor += obj.getXEnd() + 5;
 				}
-			} else if (s.startsWith("#P")) {	//图形对象
+			} else if (s.startsWith("#P#")) {	//图形对象
 				Debug.d(TAG, "makeObjs image object");
-			} else if(s.startsWith("#YY") || s.startsWith("#yy")
-					|| s.startsWith("#MM") || s.startsWith("#mm")
-					|| s.startsWith("#DD") || s.startsWith("#dd")) {
+			} else if(s.startsWith("#T#")) {
 				RealtimeObject object = new RealtimeObject(context, 0);
-				
+				object.setIndex(index++);
+				objList.add(object);
 			} else {	//文本对象
 				if (s==null || s.isEmpty()) {
 					continue;

@@ -27,6 +27,7 @@ import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.ObjectsFromString;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
+import com.industry.printer.object.TextObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
@@ -254,11 +255,27 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			
 			case REFRESH_OBJECT_CHANGED:	
 				String content = "";
+				String obj = "";
+				Debug.d(TAG, "===========refresh object============");
 				for (BaseObject object : mObjs) {
-					if(object instanceof MessageObject)
+					if(object instanceof MessageObject) {
 						continue;
-					content += object.getContent();
+					} else if (object instanceof TextObject) {
+						obj = object.getContent();
+					} else if (object instanceof RealtimeObject) {
+						obj = "#T#" + ((RealtimeObject)object).getContent();
+					} else {
+						continue;
+					}
+					
+					if (content.isEmpty()) {
+						content += obj;
+					} else {
+						content += ObjectsFromString.SPLITOR + obj;
+					}
+					
 				}
+				Debug.d(TAG, "===========refresh object============");
 				mObjLine1.setText(content);
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
@@ -419,6 +436,13 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	 */
 	public static final int HANDLER_MESSAGE_DISMISSDIALOG=5;
 	
+	/**
+	 * HANDLER_MESSAGE_INSERT_MSG
+	 * Handler message for insert a new object
+	 */
+	public static final int HANDLER_MESSAGE_INSERT_OBJECT = 6;
+	
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -489,6 +513,23 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             		
             	case HANDLER_MESSAGE_DISMISSDIALOG:
             		mProgressDialog.dismiss();
+            		break;
+            	case HANDLER_MESSAGE_INSERT_OBJECT:
+            		Bundle bundle = msg.getData();
+            		if (bundle == null) {
+						break;
+					}
+            		String text = bundle.getString("object", null);
+            		if (text != null) {
+            			String content = mObjLine1.getText().toString();
+            			if (content.isEmpty() || content.endsWith(ObjectsFromString.SPLITOR)) {
+            				mObjLine1.append(text);
+						} else {
+							mObjLine1.append(ObjectsFromString.SPLITOR + text);
+						}
+            			
+					}
+            		
             		break;
             }   
             super.handleMessage(msg);   
@@ -716,8 +757,24 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				getObjectList();
 				if (mObjName != null) {
 					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
-					break;
+				} else {
+					dialog = new MessageSaveDialog(mContext);
+					dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+						
+						@Override
+						public void onClick() {
+							mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+						}
+
+						@Override
+						public void onClick(String content) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+					dialog.show();
 				}
+				break;
 			case R.id.btn_saveas:
 				/*
 				if (mObjLine1.getText().toString().isEmpty()) {
@@ -742,6 +799,9 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				*/
 				ObjectInsertDialog dialog1 = new ObjectInsertDialog(getActivity());
 				dialog1.show();
+				Message msg = mHandler.obtainMessage();
+				msg.what = HANDLER_MESSAGE_INSERT_OBJECT;
+				dialog1.setDismissMessage(msg);
 				break;
 			/*
 			case R.id.btn_temp_4:
@@ -808,4 +868,5 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		dialog.show();
 		return false;
 	}
+	
 }

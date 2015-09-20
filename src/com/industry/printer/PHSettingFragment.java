@@ -1,7 +1,9 @@
 package com.industry.printer;
 
 import java.util.Collection;
+import java.util.MissingResourceException;
 
+import com.industry.printer.R.string;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 
@@ -38,6 +40,20 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public EditText mLenPulse;
 	public EditText mDelayPulse;
 	public EditText mHighLen;
+	public EditText mResv11;
+	public EditText mResv12;
+	public EditText mResv13;
+	public EditText mResv14;
+	public EditText mResv15;
+	public EditText mResv16;
+	public EditText mResv17;
+	public EditText mResv18;
+	public EditText mResv19;
+	public EditText mResv20;
+	public EditText mResv21;
+	public EditText mResv22;
+	public EditText mResv23;
+	public EditText mResv24;
 	
 	InputMethodManager mImm;
 	public Context mContext;
@@ -259,6 +275,62 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 			}
 		});
 		
+		mResv11 = (EditText) getView().findViewById(R.id.ph_set_resolved_value11);
+		mResv11.addTextChangedListener(new SelfTextWatcher(mResv11));
+		mResv11.setText(String.valueOf(SystemConfigFile.mResv11));
+
+		mResv12 = (EditText) getView().findViewById(R.id.ph_set_resolved_value12);
+		mResv12.addTextChangedListener(new SelfTextWatcher(mResv12));
+		mResv12.setText(String.valueOf(SystemConfigFile.mResv12));
+
+		mResv13 = (EditText) getView().findViewById(R.id.ph_set_resolved_value13);
+		mResv13.addTextChangedListener(new SelfTextWatcher(mResv13));
+		mResv13.setText(String.valueOf(SystemConfigFile.mResv13));
+
+		mResv14 = (EditText) getView().findViewById(R.id.ph_set_resolved_value14);
+		mResv14.addTextChangedListener(new SelfTextWatcher(mResv14));
+		mResv14.setText(String.valueOf(SystemConfigFile.mResv14));
+
+		mResv15 = (EditText) getView().findViewById(R.id.ph_set_resolved_value15);
+		mResv15.addTextChangedListener(new SelfTextWatcher(mResv15));
+		mResv15.setText(String.valueOf(SystemConfigFile.mResv15));
+
+		mResv16 = (EditText) getView().findViewById(R.id.ph_set_resolved_value16);
+		mResv16.addTextChangedListener(new SelfTextWatcher(mResv16));
+		mResv16.setText(String.valueOf(SystemConfigFile.mResv16));
+
+		mResv17 = (EditText) getView().findViewById(R.id.ph_set_resolved_value17);
+		mResv17.addTextChangedListener(new SelfTextWatcher(mResv17));
+		mResv17.setText(String.valueOf(SystemConfigFile.mResv17));
+
+		mResv18 = (EditText) getView().findViewById(R.id.ph_set_resolved_value18);
+		mResv18.addTextChangedListener(new SelfTextWatcher(mResv18));
+		mResv18.setText(String.valueOf(SystemConfigFile.mResv18));
+
+		mResv19 = (EditText) getView().findViewById(R.id.ph_set_resolved_value19);
+		mResv19.addTextChangedListener(new SelfTextWatcher(mResv19));
+		mResv19.setText(String.valueOf(SystemConfigFile.mResv19));
+
+		mResv20 = (EditText) getView().findViewById(R.id.ph_set_resolved_value20);
+		mResv20.addTextChangedListener(new SelfTextWatcher(mResv20));
+		mResv20.setText(String.valueOf(SystemConfigFile.mResv20));
+
+		mResv21 = (EditText) getView().findViewById(R.id.ph_set_resolved_value21);
+		mResv21.addTextChangedListener(new SelfTextWatcher(mResv21));
+		mResv21.setText(String.valueOf(SystemConfigFile.mResv21));
+
+		mResv22 = (EditText) getView().findViewById(R.id.ph_set_resolved_value22);
+		mResv22.addTextChangedListener(new SelfTextWatcher(mResv22));
+		mResv22.setText(String.valueOf(SystemConfigFile.mResv22));
+
+		mResv23 = (EditText) getView().findViewById(R.id.ph_set_resolved_value23);
+		mResv23.addTextChangedListener(new SelfTextWatcher(mResv23));
+		mResv23.setText(String.valueOf(SystemConfigFile.mResv23));
+
+		mResv24 = (EditText) getView().findViewById(R.id.ph_set_resolved_value24);
+		mResv24.addTextChangedListener(new SelfTextWatcher(mResv24));
+		mResv24.setText(String.valueOf(SystemConfigFile.mResv24));
+		
 		mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE); 
 	}
 	@Override
@@ -280,6 +352,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		String value = s.toString();
 		try {
 			iv = Integer.parseInt(value);
+			Debug.d(TAG, "--->getValueFromEditText:" + iv);
 		} catch (Exception e) {
 			
 		}
@@ -316,4 +389,59 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 			}
 		}
 	};
+
+	
+	private class SelfTextWatcher implements TextWatcher {
+		
+		private EditText mEditText;
+		
+		public SelfTextWatcher(EditText e) {
+			mEditText = e;
+		}
+		
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			if (mEditText == mResv11) {
+				SystemConfigFile.mResv11 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv12) {
+				SystemConfigFile.mResv12 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv13) {
+				SystemConfigFile.mResv13 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv14) {
+				SystemConfigFile.mResv14 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv15) {
+				SystemConfigFile.mResv15 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv16) {
+				SystemConfigFile.mResv16 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv17) {
+				SystemConfigFile.mResv17 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv18) {
+				SystemConfigFile.mResv18 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv19) {
+				SystemConfigFile.mResv19 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv20) {
+				SystemConfigFile.mResv20 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv21) {
+				SystemConfigFile.mResv21 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv22) {
+				SystemConfigFile.mResv22 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv23) {
+				SystemConfigFile.mResv23 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv24) {
+				SystemConfigFile.mResv24 = getValueFromEditText(arg0);
+			}
+			
+		}
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 }

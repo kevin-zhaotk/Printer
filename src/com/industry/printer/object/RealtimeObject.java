@@ -270,6 +270,16 @@ public class RealtimeObject extends BaseObject {
 		}
 	}
 	
+	@Override
+	public String getContent() {
+		mContent = "";
+		
+		for (BaseObject object : mSubObjs) {
+			mContent += object.getContent();
+		}
+		return mContent;
+	}
+	
 	public String toString()
 	{
 		String str="";

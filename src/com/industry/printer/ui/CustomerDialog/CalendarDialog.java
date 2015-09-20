@@ -71,7 +71,7 @@ public class CalendarDialog extends Dialog {
 		        if (when / 1000 < Integer.MAX_VALUE) {
 		            SystemClock.setCurrentTimeMillis(when);
 		        }
-		        RTCDevice rtcDevice = RTCDevice.getInstance();
+		        RTCDevice rtcDevice = RTCDevice.getInstance(getContext());
 		        rtcDevice.syncSystemTimeToRTC(getContext());
 				dismiss();
 			}

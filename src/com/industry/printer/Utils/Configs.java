@@ -36,10 +36,6 @@ public class Configs {
 	public static final int INK_LEVEL_MAX = 100000;
 
 	/**
-	 * 打印内容更新时间, 60秒
-	 */
-	public static final int BUFFER_EXCEED_TIMEOUT = 60 * 1000; 
-	/**
 	 * PROC_MOUNT_FILE
 	 * proc/mounts sys file
 	 */

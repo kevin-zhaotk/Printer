@@ -37,6 +37,20 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_LENFIXED_PULSE = "lenFixedPulse";
 	public static final String PH_SETTING_DELAY_PULSE = "delayPulse";
 	public static final String PH_SETTING_HIGH_LEN = "highLen";
+	public static final String PH_SETTING_RESERVED_11 = "reserved11";
+	public static final String PH_SETTING_RESERVED_12 = "reserved12";
+	public static final String PH_SETTING_RESERVED_13 = "reserved13";
+	public static final String PH_SETTING_RESERVED_14 = "reserved14";
+	public static final String PH_SETTING_RESERVED_15 = "reserved15";
+	public static final String PH_SETTING_RESERVED_16 = "reserved16";
+	public static final String PH_SETTING_RESERVED_17 = "reserved17";
+	public static final String PH_SETTING_RESERVED_18 = "reserved18";
+	public static final String PH_SETTING_RESERVED_19 = "reserved19";
+	public static final String PH_SETTING_RESERVED_20 = "reserved20";
+	public static final String PH_SETTING_RESERVED_21 = "reserved21";
+	public static final String PH_SETTING_RESERVED_22 = "reserved22";
+	public static final String PH_SETTING_RESERVED_23 = "reserved23";
+	public static final String PH_SETTING_RESERVED_24 = "reserved24";
 	
 	public static final String LAST_MESSAGE = "message";
 	
@@ -50,6 +64,20 @@ public class SystemConfigFile{
 	public static int mLenFixedPulse = 0;
 	public static int mDelayPulse = 0;
 	public static int mHighLen = 0;
+	public static int mResv11 = 0;
+	public static int mResv12 = 0;
+	public static int mResv13 = 0;
+	public static int mResv14 = 0;
+	public static int mResv15 = 0;
+	public static int mResv16 = 0;
+	public static int mResv17 = 0;
+	public static int mResv18 = 0;
+	public static int mResv19 = 0;
+	public static int mResv20 = 0;
+	public static int mResv21 = 0;
+	public static int mResv22 = 0;
+	public static int mResv23 = 0;
+	public static int mResv24 = 0;
 
 	
 	public static void parseSystemCofig() {
@@ -90,7 +118,35 @@ public class SystemConfigFile{
 				mDelayPulse = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
 				mHighLen = Integer.parseInt(t.getValue());
-			}
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
+				mResv11 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
+				mResv12 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_13)) {
+				mResv13 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_14)) {
+				mResv14 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_15)) {
+				mResv15 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_16)) {
+				mResv16 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
+				mResv17 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
+				mResv18 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_19)) {
+				mResv19 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_20)) {
+				mResv20 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_21)) {
+				mResv21 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_22)) {
+				mResv22 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_23)) {
+				mResv23 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_24)) {
+				mResv24 = Integer.parseInt(t.getValue());
+			} 
 			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
 		}
 		inStream.close();
@@ -236,6 +292,34 @@ public class SystemConfigFile{
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen));
 		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_11, String.valueOf(mResv11));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_12, String.valueOf(mResv12));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_13, String.valueOf(mResv13));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_14, String.valueOf(mResv14));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_15, String.valueOf(mResv15));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_16, String.valueOf(mResv16));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_17, String.valueOf(mResv17));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_18, String.valueOf(mResv18));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_19, String.valueOf(mResv19));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_20, String.valueOf(mResv20));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_21, String.valueOf(mResv21));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_22, String.valueOf(mResv22));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_23, String.valueOf(mResv23));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_24, String.valueOf(mResv24));
+		list.add(tag1);
 		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
 		stream.close();
@@ -253,6 +337,20 @@ public class SystemConfigFile{
 		tags.add(new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse)));
 		tags.add(new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse)));
 		tags.add(new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_11, String.valueOf(mResv11)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_12, String.valueOf(mResv12)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_13, String.valueOf(mResv13)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_14, String.valueOf(mResv14)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_15, String.valueOf(mResv15)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_16, String.valueOf(mResv16)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_17, String.valueOf(mResv17)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_18, String.valueOf(mResv18)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_19, String.valueOf(mResv19)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_20, String.valueOf(mResv20)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_21, String.valueOf(mResv21)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_22, String.valueOf(mResv22)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_23, String.valueOf(mResv23)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_24, String.valueOf(mResv24)));
 	}
 	
 	

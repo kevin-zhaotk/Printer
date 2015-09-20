@@ -1,5 +1,10 @@
 package com.industry.printer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,6 +25,7 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -51,8 +57,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	
 	public TextView mCtrlTitle;
 	public TextView mEditTitle;
+	public LinearLayout mSettings;
 	public TextView mSettingTitle;
-	
+	public TextView mVersion;
 	
 	static {
 		System.loadLibrary("Hardware_jni");
@@ -179,13 +186,20 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	private void initView() {
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
+		mSettings = (LinearLayout) findViewById(R.id.settings_view);
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
-		
-		
+		mVersion = (TextView) findViewById(R.id.setting_version);
+		try {
+			InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
+			BufferedReader reader = new BufferedReader(sReader);
+			mVersion.setText(reader.readLine());
+		} catch (Exception e) {
+			
+		}
 		mControlTab = new ControlTabActivity();
 		mEditTab = new EditTabActivity();
 		mSettingsTab = new SettingsTabActivity();
-		
+		Debug.d(TAG, "===>initview");
 		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //		transaction.replace(R.id.tab_content, mControlTab);
@@ -193,6 +207,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		transaction.add(R.id.tab_content, mControlTab);
 		transaction.add(R.id.tab_content, mEditTab);
 		transaction.add(R.id.tab_content, mSettingsTab);
+		Debug.d(TAG, "===>transaction");
 		// transaction.add(R.id.tv_counter_msg, mCtrlTitle);
 		// transaction.add(R.id.tv_counter_msg, mEditTitle);
 		// transaction.add(R.id.tv_counter_msg, mSettingTitle);
@@ -200,6 +215,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		transaction.hide(mEditTab);
 		transaction.hide(mSettingsTab);
 		transaction.show(mControlTab);
+		Debug.d(TAG, "===>show");
 //		transaction.commit();
 	}
 
@@ -233,12 +249,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 				
 				if (arg1 == true) {
 					fts.show(mSettingsTab);
-					mSettingTitle.setVisibility(View.VISIBLE);
+					mSettings.setVisibility(View.VISIBLE);
+					// mSettingTitle.setVisibility(View.VISIBLE);
+					// mVersion.setVisibility(View.VISIBLE);
 					mHander.sendEmptyMessage(REFRESH_TIME_DISPLAY);
 					
 				} else {
 					fts.hide(mSettingsTab);
-					mSettingTitle.setVisibility(View.GONE);
+					mSettings.setVisibility(View.GONE);
+					//mSettingTitle.setVisibility(View.GONE);
+					//mVersion.setVisibility(View.GONE);
 					mHander.removeMessages(REFRESH_TIME_DISPLAY);
 				}
 				break;

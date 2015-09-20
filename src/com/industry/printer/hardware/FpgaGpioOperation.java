@@ -1,6 +1,7 @@
 package com.industry.printer.hardware;
 
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 import android.R.integer;
 import android.content.Context;
@@ -203,6 +204,7 @@ public class FpgaGpioOperation {
 		data[5] = (char) SystemConfigFile.mTimedPeriod;
 		data[6] = (char) SystemConfigFile.mTrigerPulse;
 		data[7] = (char) SystemConfigFile.mLenFixedPulse;
+		Debug.d(TAG, "===>data7:" + Integer.toHexString(data[7]));
 		data[8] = (char) SystemConfigFile.mDelayPulse;
 		data[9] = (char) SystemConfigFile.mHighLen;
 		
@@ -214,6 +216,7 @@ public class FpgaGpioOperation {
 		data[Configs.gParams - 3] = (char)hour;
 		data[Configs.gParams - 2] = (char)minute;
 		data[Configs.gParams - 1] = (char)second;
+		data[Configs.gParams - 1] = 0x4040;
 		
 		writeData(FPGA_STATE_SETTING, data, data.length*2);	
 	}

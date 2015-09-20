@@ -63,7 +63,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public Context mContext;
 	public ExtendMessageTitleFragment mMsgTitle;
-	public long mCounter;
+	public int mCounter;
 	public RelativeLayout mBtnStart;
 	public TextView		  mTvStart; 
 	public RelativeLayout mBtnStop;
@@ -286,8 +286,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		//  加载打印计数
 		PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
-		mCounter = db.getCount(mContext);
+		//mCounter = db.getCount(mContext);
+		RTCDevice rtcDevice = RTCDevice.getInstance(mContext);
+
+		// 如果是第一次启动，向RTC的NVRAM写入0
+		rtcDevice.initSystemTime(mContext);
+		mCounter = rtcDevice.readCounter(mContext);
+		if (mCounter == 0) {
+			rtcDevice.writeCounter(mContext, 0);
+			db.setFirstBoot(mContext, false);
+		}
 		refreshCount();
+		
 		/****初始化RFID****/
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
@@ -297,9 +307,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			int ink = mRfidDevice.getInkLevel();
 			refreshInk(ink);
 		}
+		//Debug.d(TAG, "===>loadMessage");
+		// 通过监听系统广播加载
 		loadMessage();
-		RTCDevice rtcDevice = RTCDevice.getInstance();
-		rtcDevice.initSystemTime(mContext);
+		
 	}
 	
 	@Override
@@ -416,7 +427,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
 					FpgaGpioOperation.clean();
-					//FpgaGpioOperation.updateSettings(mContext);
+					FpgaGpioOperation.updateSettings(mContext);
 					
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					if (!mDTransThread.launch()) {
@@ -455,8 +466,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
 					refreshCount();
-					PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
-					db.updateCount(mContext, (int) mCounter);
+					//PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
+					//db.updateCount(mContext, (int) mCounter);
+					RTCDevice device = RTCDevice.getInstance(mContext);
+					device.writeCounter(mContext, mCounter);
 					break;
 					
 			}
@@ -718,6 +731,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public void progressDialog()
 	{
 		mLoadingDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strLoading), true,false);
+		Debug.d(TAG, "===>show loading");
 		mProgressShowing = true;
 		mProgressThread = new Thread(){
 			
@@ -729,6 +743,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					{
 						Thread.sleep(2000);
 					}
+					Debug.d(TAG, "===>dismiss loading");
 					mHandler.sendEmptyMessage(MESSAGE_DISMISS_DIALOG);
 				}catch(Exception e)
 				{

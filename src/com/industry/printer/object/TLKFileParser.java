@@ -20,7 +20,7 @@ import android.content.Context;
 import android.util.Log;
 
 public class TLKFileParser {
-	public static final String TAG="Fileparser";
+	public static final String TAG="TLKFileParser";
 	public static Context mContext;
 	
 	public String mPath;
@@ -43,7 +43,7 @@ public class TLKFileParser {
 		File file = new File(name);
 		if(file.isDirectory())
 		{
-			Log.d(TAG, "this is a directory");
+			Debug.d(TAG, "this is a directory");
 			return;
 		}
 		try{
@@ -55,7 +55,7 @@ public class TLKFileParser {
                  String line;
                  
                  while (( line = buffreader.readLine()) != null) {
-                     Log.d(TAG, "line="+line);
+                     Debug.d(TAG, "line="+line);
                      pObj = parseLine(line);
                      if (pObj == null) {
                     	 continue;
@@ -68,14 +68,14 @@ public class TLKFileParser {
                     	 for(int j=0; j<i ; j++)
                     	 {
                     		 line = buffreader.readLine();
-                    		 Log.d(TAG, "line="+line);
+                    		 Debug.d(TAG, "line="+line);
                     		 for(int k=0; k<i; k++)
                     		 {
                     			 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(k);
                     			 if(obj.getId().equals(line.substring(4, 7)))
                     			 {
                     				 ((RealtimeObject) pObj).mSubObjs.get(j).setIndex(Integer.parseInt(line.substring(0, 3)));
-                            		 Log.d(TAG, "pObj "+((RealtimeObject) pObj).mSubObjs.get(j).getId()+",index="+((RealtimeObject) pObj).mSubObjs.get(j).getIndex()); 
+                    				 Debug.d(TAG, "pObj "+((RealtimeObject) pObj).mSubObjs.get(j).getId()+",index="+((RealtimeObject) pObj).mSubObjs.get(j).getIndex()); 
                             		 break;
                     			 }
                     		 }
@@ -87,7 +87,7 @@ public class TLKFileParser {
 			 }
 		}catch(Exception e)
 		{
-			Log.d(TAG, "parse error: "+e.getMessage());
+			Debug.d(TAG, "parse error: "+e.getMessage());
 		}
 	}
 	
@@ -96,21 +96,21 @@ public class TLKFileParser {
 		Log.d(TAG, "*************************");
 		BaseObject obj = null;
 		String [] attr = str.split("\\^",0);
-		Log.d(TAG,"index="+str.indexOf("^"));
+		Debug.d(TAG,"index="+str.indexOf("^"));
 		/*
 		for(int i=0; i< attr.length; i++)
 		{
 			Log.d(TAG, "attr["+i+"]="+attr[i]);
 		}
 		*/
-		Log.d(TAG, "attr[1]="+attr[1]);
+		Debug.d(TAG, "attr[1]="+attr[1]);
 		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
 		{
 			obj = new BarcodeObject(mContext, 0);
 			((BarcodeObject) obj).setCode(attr[9]);
 			((BarcodeObject) obj).setShow(Boolean.parseBoolean(attr[11])); 
 			((BarcodeObject) obj).setContent(attr[12]);
-			Log.d(TAG, "Barcode object: ");
+			Debug.d(TAG, "Barcode object: ");
 			//Log.d(TAG, ""+((BarcodeObject) obj).getCode());
 			//Log.d(TAG, ""+((BarcodeObject) obj).getShow());
 			//Log.d(TAG, ""+((BarcodeObject) obj).getContent());
@@ -122,7 +122,7 @@ public class TLKFileParser {
 			((CounterObject) obj).setMax(Integer.parseInt(attr[13]));
 			((CounterObject) obj).setMin(Integer.parseInt(attr[14]));
 			//((CounterObject) obj).setContent(attr[8]);
-			Log.d(TAG, "Counter object");
+			Debug.d(TAG, "Counter object");
 			//Log.d(TAG, ""+((CounterObject) obj).getBits());
 			//Log.d(TAG, ""+((CounterObject) obj).getMax());
 			//Log.d(TAG, ""+((CounterObject) obj).getMin());
@@ -133,7 +133,7 @@ public class TLKFileParser {
 			obj = new EllipseObject(mContext, 0);
 			((EllipseObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((EllipseObject) obj).setLineType(Integer.parseInt(attr[9]));
-			Log.d(TAG, "Ellipse object");
+			Debug.d(TAG, "Ellipse object");
 			//Log.d(TAG, "line type="+((EllipseObject) obj).getLineType());
 			//Log.d(TAG, "line width="+((EllipseObject) obj).getLineWidth());
 		}
@@ -144,14 +144,14 @@ public class TLKFileParser {
 		else if(BaseObject.OBJECT_TYPE_JULIAN.equals(attr[1]))		//julian day
 		{
 			obj = new JulianDayObject(mContext, 0);
-			Log.d(TAG, "Julian day");
+			Debug.d(TAG, "Julian day");
 		}
 		else if(BaseObject.OBJECT_TYPE_LINE.equals(attr[1]))			//line
 		{
 			obj = new LineObject(mContext, 0);
 			((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
-			Log.d(TAG, "line object");
+			Debug.d(TAG, "line object");
 			//Log.d(TAG, "line type="+((LineObject) obj).getLineType());
 			//Log.d(TAG, "line width="+((LineObject) obj).getLineWidth());
 		}
@@ -173,7 +173,7 @@ public class TLKFileParser {
 		}
 		else if(BaseObject.OBJECT_TYPE_RT.equals(attr[1]))				//realtime
 		{
-			Log.d(TAG, "Real time object");
+			Debug.d(TAG, "Real time object");
 			obj = new RealtimeObject(mContext, 0);
 			((RealtimeObject) obj).setFormat(attr[21]);
 		}
@@ -185,8 +185,8 @@ public class TLKFileParser {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			Log.d(TAG, "Txt object");
-			Log.d(TAG, "content="+obj.getContent());
+			Debug.d(TAG, "Txt object");
+			Debug.d(TAG, "content="+obj.getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
 		{
@@ -194,7 +194,7 @@ public class TLKFileParser {
 		}
 		else
 		{
-			Log.d(TAG, "Unknown object type: "+attr[1]);
+			Debug.d(TAG, "Unknown object type: "+attr[1]);
 			return null;
 		}
 		if(obj != null && !(obj instanceof MessageObject) )
@@ -265,9 +265,19 @@ public class TLKFileParser {
 	            String line;
 	            while ( (line = buffreader.readLine()) != null) {
 	            	pObj = parseLine(line);
+	            	String objString = "";
 	            	if (pObj instanceof TextObject) {
-	            		content += pObj.getContent();
-	            	}
+	            		objString = pObj.getContent();
+	            	} else if (pObj instanceof RealtimeObject) {
+						objString = pObj.getContent();
+						int lines = ((RealtimeObject) pObj).getSubObjs().size();
+						for (int i = 0; i <lines; i++) {
+							buffreader.readLine();
+						}
+					} else {
+						continue;
+					}
+	            	content += objString;
 	            }
 			 }
 			instream.close();

@@ -5,12 +5,23 @@
 	android:background="#436EEE"
 	>
     
+    <TextView 
+        android:id="@+id/dialog_back"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/insertdialog_back_style"
+	    android:text="@string/str_btn_back"
+	    android:gravity="center"
+	    android:textSize="40dp"
+	    android:textColor="#000000"/>
+    
     <RadioGroup 
         android:id="@+id/object_dialog_btns"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:background="#436EEE"
         android:layout_marginBottom="20dp"
+        android:layout_below="@id/dialog_back"
         >
         <RadioButton 
             android:id="@+id/objinsert_text"
@@ -38,31 +49,34 @@
 	        android:textColor="#000000"
             />
     </RadioGroup>
-    
+    <View 
+        android:id="@+id/dialog_split"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/object_dialog_btns"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ffffff"
+        />
     <RelativeLayout
         android:id="@+id/objinsert_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/object_dialog_btns"
+        android:layout_toRightOf="@id/dialog_split"
         android:visibility="gone"
         >
-	    <Button 
+	    <ImageView
 	        android:id="@+id/obj_dialog_btn_pageup"
 	        android:layout_width="match_parent"
-	        android:layout_height="60dp"
-	        android:layout_alignParentTop="true"
-	        android:text="@string/str_page_prev"
-	        android:textSize="30dp"
-	        android:textColor="#000000"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/style_arrow_up"
 	        />
-	    <Button 
+	    <ImageView 
 	        android:id="@+id/obj_dialog_btn_pagedown"
 	        android:layout_width="match_parent"
-	        android:layout_height="60dp"
+	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
-	        android:text="@string/str_page_next"
-	        android:textSize="30dp"
-	        android:textColor="#000000"
+	        android:src="@drawable/style_arrow_down"
 	        />
 	    <ListView
 	        android:id="@+id/objinsert_list_time"

@@ -35,6 +35,7 @@ import com.industry.printer.hardware.FpgaGpioOperation;
 public class DataTransferThread extends Thread {
 	
 	public static final String TAG = DataTransferThread.class.getSimpleName();
+	private static final int MESSAGE_EXCEED_TIMEOUT = 60 * 1000;
 	
 	public static boolean mRunning;
 	
@@ -69,10 +70,12 @@ public class DataTransferThread extends Thread {
 	@Override
 	public void run() {
 		
-		
+		char[] buffer;
 		while(mRunning == true) {
 			
-			char[] buffer = mDataTask.getPrintBuffer();
+			// Debug.d(TAG, "===>buffer size="+buffer.length);
+			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+			
 			int writable = FpgaGpioOperation.pollState();
 			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
@@ -84,27 +87,35 @@ public class DataTransferThread extends Thread {
 				
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
+				//在此处发生打印数据，同时
+				//Debug.d(TAG, "===>kernel buffer empty, fill it");
+				// 只有打印数据中有变量时才重新下发数据，否则不需要重新下发
+				//if (mDataTask.isNeedRefresh()) {
 				buffer = mDataTask.getPrintBuffer();
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+				//}
 				
-				// 打印内容有效期为1分钟，一分钟后更新数据 
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, Configs.BUFFER_EXCEED_TIMEOUT);
-				
+				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
+				// 保存打印计数
+				// 墨水量count down计算
+				//if (countDown()) {
+				//	mInkListener.onInkLevelDown();
+				//}
 				mInkListener.onInkLevelDown();
 				mInkListener.onCountChanged();
 			}
 			
 			if(mNeedUpdate == true) {
-				//在此处发生打印数据
+				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
+				//在此处发生打印数据，同时
 				buffer = mDataTask.getPrintBuffer();
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				// 重新开始进行生命周期计时
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, Configs.BUFFER_EXCEED_TIMEOUT);
+				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
 			}
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -131,7 +142,9 @@ public class DataTransferThread extends Thread {
 	
 	public void finish() {
 		mRunning = false;
+		
 		DataTransferThread t = mInstance;
+		
 		mInstance = null;
 		mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 		if (t != null) {
