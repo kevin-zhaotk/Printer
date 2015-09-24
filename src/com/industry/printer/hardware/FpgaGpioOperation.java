@@ -170,7 +170,7 @@ public class FpgaGpioOperation {
 			Debug.d(TAG, "===>open fpga file error");
 			return;
 		}
-		ioctl(fd, FPGA_CMD_CLEAN, 0);
+		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_CLEAN);
 		// close(fd);
 	}
 	
@@ -232,7 +232,7 @@ public class FpgaGpioOperation {
 		/*启动内核轮训线程*/
 		ioctl(fd, FPGA_CMD_STARTPRINT, 0);
 		/*设置状态为输出*/
-		ioctl(fd, FPGA_CMD_SENDDATA, FPGA_STATE_OUTPUT);
+		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_OUTPUT);
 	}
 	
 	/**

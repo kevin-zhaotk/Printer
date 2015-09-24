@@ -297,7 +297,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			db.setFirstBoot(mContext, false);
 		}
 		refreshCount();
-		
+		/******初始化FPGA******/
+		FpgaGpioOperation.clean();
 		/****初始化RFID****/
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
