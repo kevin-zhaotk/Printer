@@ -359,7 +359,7 @@
 	<!-- 
 	<string name="str_state_inklevel">墨水量:  %1$d%%</string>
 	-->
-	<string name="str_state_inklevel">墨水量:  %1$d</string>
+	<string name="str_state_inklevel">墨水量:  %1$s</string>
 	<string name="str_state_battery">电量:  100%</string>
 	<string name="str_hint_preview">信息预览</string>
 	<string name="str_print_count">计数: %1$d</string>

@@ -93,7 +93,15 @@ public class DataTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+		//BinCreater.Bin2Bitmap(mPrintBuffer);
+		/*test bin*/
+		byte[] buffer = new byte[mPrintBuffer.length * 2];
+		for (int i = 0; i < buffer.length/2; i++) {
+			buffer[i] = (byte)(mPrintBuffer[i] & 0x00ff);
+			buffer[i+1] = (byte) (mPrintBuffer[i] >> 8 & 0x0ff);
+		}
+		BinCreater.saveBin("/mnt/usbhost1/", buffer, 32);
+		/*test bin*/
 		return mPrintBuffer;
 	}
 	

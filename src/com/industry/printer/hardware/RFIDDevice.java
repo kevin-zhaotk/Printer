@@ -1,3 +1,26 @@
+/**
+ * RFID 存储分配表
+ * ————————————————————————————————————————————
+ * 	SECTOR    |    BLOCK    |   Description
+ * ————————————————————————————————————————————
+ *     4      |	     0      |    墨水总量
+ * ————————————————————————————————————————————
+ *     4      |	     1      |    特征值
+ * ————————————————————————————————————————————
+ *     4      |      2      |    墨水量
+ * ————————————————————————————————————————————
+ *     4      |      3      |    秘钥
+ * ————————————————————————————————————————————
+ *     5      |	     0      |    墨水总量备份
+ * ————————————————————————————————————————————
+ *     5      |      1      |    特征值备份
+ * ————————————————————————————————————————————
+ *     5      |      2      |    墨水量备份
+ * ————————————————————————————————————————————
+ *     5      |      3      |    秘钥
+ * ————————————————————————————————————————————
+ */
+
 package com.industry.printer.hardware;
 
 import java.io.ByteArrayInputStream;
@@ -37,18 +60,41 @@ public class RFIDDevice {
 	public static final int INK_LEVEL_MAX = 100000;
 	public static final int INK_LEVEL_MIN = 0;
 	
-	//block definition
+	/**
+	 * 特征值
+	 */
 	public static byte SECTOR_FEATURE = 0x04;
 	public static byte BLOCK_FEATURE = 0x01;
+	
+	/**
+	 * 秘钥块
+	 */
 	public static byte BLOCK_KEY = 0x03;
 	
+	/**
+	 * 特征值备份
+	 */
 	public static byte SECTOR_COPY_FEATURE = 0x05;
 	public static byte BLOCK_COPY_FEATURE = 0x01;
 	
+	/**
+	 * 墨水量
+	 */
 	public static byte SECTOR_INKLEVEL = 0x04;
 	public static byte BLOCK_INKLEVEL = 0x02;
+	
+	/**
+	 * 墨水量备份
+	 */
 	public static byte SECTOR_COPY_INKLEVEL = 0x05;
 	public static byte BLOCK_COPY_INKLEVEL = 0x02;
+	
+	/**
+	 * 墨水总量
+	 */
+	public static byte SECTOR_INK_MAX = 0x04;
+	public static byte BLOCK_INK_MAX = 0x00;
+	
 	
 	//Command
 	public static byte RFID_CMD_CONNECT = 0x15;
@@ -91,7 +137,8 @@ public class RFIDDevice {
 
 	// 当前墨水量
 	private int mCurInkLevel = 0;
-	int mLastLevel = 0;
+	private int mLastLevel = 0;
+	public 	int mInkMax = 0;
 	// 错误码定义
 	public static final int RFID_ERRNO_NOERROR = 0;
 	public static final int RFID_ERRNO_NOCARD = 1;
@@ -384,9 +431,31 @@ public class RFIDDevice {
 		setKeyA(key);
 		Debug.print(RFID_DATA_RSLT, key);
 		
+		mInkMax = getInkMax();
+		Debug.d(TAG, "===>max ink: " + mInkMax);
 		return 0;
 	}
 	
+	
+	/**
+	 * 读取墨水总量
+	 * @return
+	 */
+	private int getInkMax() {
+		if ( !keyVerfication(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA))
+		{
+			Debug.d(TAG, "--->key verfy fail,init and try once");
+			// 如果秘钥校验失败则重新初始化RFID卡
+			//init();
+			if (!keyVerfication(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA)) {
+				return 0;
+			}
+			
+		}
+		byte[] ink = readBlock(SECTOR_INK_MAX, BLOCK_INK_MAX);
+		EncryptionMethod encrypt = EncryptionMethod.getInstance();
+		return encrypt.decryptInkMAX(ink);
+	}
 	
 	/**
 	 * 寿命值读取，寿命值保存在sector 4， 和 sector5  的 block 2.
@@ -420,7 +489,7 @@ public class RFIDDevice {
 		return encryt.decryptInkLevel(ink);
 	}
 	
-	public int getInkLevel() {
+	public float getInkLevel() {
 		Debug.d(TAG, "--->getInkLevel");
 		// 先从主block读取墨水值
 		int current = getInkLevel(false);
@@ -435,7 +504,14 @@ public class RFIDDevice {
 			}
 		}
 		mCurInkLevel = current;
-		return current;
+		Debug.d(TAG, "===>curInk=" + mCurInkLevel + ", max=" + mInkMax);
+		if (mInkMax <= 0) {
+			return 0;
+		} else if (mCurInkLevel > mInkMax) {
+			return 100;
+		} else {
+			return (mCurInkLevel * 100)/mInkMax;
+		}
 	}
 	/**
 	 * 寿命值写入
@@ -467,7 +543,7 @@ public class RFIDDevice {
 	/**
 	 *更新墨水值，即当前墨水值减1 
 	 */
-	public int updateInkLevel() {
+	public float updateInkLevel() {
 		Debug.d(TAG, "--->updateInkLevel");
 		/* 为了提高效率，更新墨水量时不再从RFID读取，而是使用上次读出的墨水量
 		int level = getInkLevel(false);
@@ -490,7 +566,17 @@ public class RFIDDevice {
 		setInkLevel(mCurInkLevel, false);
 		// 将新的墨水量写回备份block
 		setInkLevel(mCurInkLevel, true);
-		return mCurInkLevel;
+		Debug.d(TAG, "===>cur=" + mCurInkLevel + ", max=" + mInkMax);
+		if (mInkMax <= 0) {
+			return 0;
+		} else if (mCurInkLevel > mInkMax) {
+			return 100;
+		} else if ((mCurInkLevel * 100)/mInkMax < 0.1) {
+			return (float) 0.1;
+		} else {
+			return (mCurInkLevel * 100)/mInkMax;
+		}
+		
 	}
 	
 	/**
@@ -525,15 +611,22 @@ public class RFIDDevice {
 	/**
 	 * 特征码读取
 	 */
-	public byte[] getFeatureCode() {
+	public boolean checkFeatureCode() {
 		int errno = 0;
 		Debug.d(TAG, "--->RFID getFeatureCode");
 		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
 		{
-			return null;
+			return false;
 		}
 		byte[] feature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
-		return feature;
+		if (feature == null ) {
+			return false;
+		}
+		Debug.d(TAG, "===>feature:" + feature[0] + ", " +feature[1]);
+		if (feature[1] == 100 && feature[2] == 1) {
+			return true;
+		}
+		return false;
 	}
 	
 	public void setKeyA(byte[] key) {

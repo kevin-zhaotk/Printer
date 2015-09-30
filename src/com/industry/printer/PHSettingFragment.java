@@ -54,6 +54,42 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public EditText mResv22;
 	public EditText mResv23;
 	public EditText mResv24;
+	public EditText mResv25;
+	public EditText mResv26;
+	public EditText mResv27;
+	public EditText mResv28;
+	public EditText mResv29;
+	public EditText mResv30;
+	public EditText mResv31;
+	public EditText mResv32;
+	public EditText mResv33;
+	public EditText mResv34;
+	public EditText mResv35;
+	public EditText mResv36;
+	public EditText mResv37;
+	public EditText mResv38;
+	public EditText mResv39;
+	public EditText mResv40;
+	public EditText mResv41;
+	public EditText mResv42;
+	public EditText mResv43;
+	public EditText mResv44;
+	public EditText mResv45;
+	public EditText mResv46;
+	public EditText mResv47;
+	public EditText mResv48;
+	public EditText mResv49;
+	public EditText mResv50;
+	public EditText mResv51;
+	public EditText mResv52;
+	public EditText mResv53;
+	public EditText mResv54;
+	public EditText mResv55;
+	public EditText mResv56;
+	public EditText mResv57;
+	public EditText mResv58;
+	public EditText mResv59;
+	public EditText mResv60;
 	
 	InputMethodManager mImm;
 	public Context mContext;
@@ -331,6 +367,152 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		mResv24.addTextChangedListener(new SelfTextWatcher(mResv24));
 		mResv24.setText(String.valueOf(SystemConfigFile.mResv24));
 		
+		mResv25 = (EditText) getView().findViewById(R.id.ph_set_resolved_value25);
+		mResv25.addTextChangedListener(new SelfTextWatcher(mResv25));
+		mResv25.setText(String.valueOf(SystemConfigFile.mResv25));
+		
+		mResv26 = (EditText) getView().findViewById(R.id.ph_set_resolved_value26);
+		mResv26.addTextChangedListener(new SelfTextWatcher(mResv26));
+		mResv26.setText(String.valueOf(SystemConfigFile.mResv26));
+		
+		mResv27 = (EditText) getView().findViewById(R.id.ph_set_resolved_value27);
+		mResv27.addTextChangedListener(new SelfTextWatcher(mResv27));
+		mResv27.setText(String.valueOf(SystemConfigFile.mResv27));
+		
+		mResv28 = (EditText) getView().findViewById(R.id.ph_set_resolved_value28);
+		mResv28.addTextChangedListener(new SelfTextWatcher(mResv28));
+		mResv28.setText(String.valueOf(SystemConfigFile.mResv28));
+		
+		mResv29 = (EditText) getView().findViewById(R.id.ph_set_resolved_value29);
+		mResv29.addTextChangedListener(new SelfTextWatcher(mResv29));
+		mResv29.setText(String.valueOf(SystemConfigFile.mResv29));
+		
+		mResv30 = (EditText) getView().findViewById(R.id.ph_set_resolved_value30);
+		mResv30.addTextChangedListener(new SelfTextWatcher(mResv30));
+		mResv30.setText(String.valueOf(SystemConfigFile.mResv30));
+		
+		mResv31 = (EditText) getView().findViewById(R.id.ph_set_resolved_value31);
+		mResv31.addTextChangedListener(new SelfTextWatcher(mResv31));
+		mResv31.setText(String.valueOf(SystemConfigFile.mResv31));
+
+		mResv32 = (EditText) getView().findViewById(R.id.ph_set_resolved_value32);
+		mResv32.addTextChangedListener(new SelfTextWatcher(mResv32));
+		mResv32.setText(String.valueOf(SystemConfigFile.mResv32));
+
+		mResv33 = (EditText) getView().findViewById(R.id.ph_set_resolved_value33);
+		mResv33.addTextChangedListener(new SelfTextWatcher(mResv33));
+		mResv33.setText(String.valueOf(SystemConfigFile.mResv33));
+
+		mResv34 = (EditText) getView().findViewById(R.id.ph_set_resolved_value34);
+		mResv34.addTextChangedListener(new SelfTextWatcher(mResv34));
+		mResv34.setText(String.valueOf(SystemConfigFile.mResv34));
+		
+		mResv35 = (EditText) getView().findViewById(R.id.ph_set_resolved_value35);
+		mResv35.addTextChangedListener(new SelfTextWatcher(mResv35));
+		mResv35.setText(String.valueOf(SystemConfigFile.mResv35));
+		
+		mResv36 = (EditText) getView().findViewById(R.id.ph_set_resolved_value36);
+		mResv36.addTextChangedListener(new SelfTextWatcher(mResv36));
+		mResv36.setText(String.valueOf(SystemConfigFile.mResv36));
+		
+		mResv37 = (EditText) getView().findViewById(R.id.ph_set_resolved_value37);
+		mResv37.addTextChangedListener(new SelfTextWatcher(mResv37));
+		mResv37.setText(String.valueOf(SystemConfigFile.mResv37));
+		
+		mResv38 = (EditText) getView().findViewById(R.id.ph_set_resolved_value38);
+		mResv38.addTextChangedListener(new SelfTextWatcher(mResv38));
+		mResv38.setText(String.valueOf(SystemConfigFile.mResv38));
+		
+		mResv39 = (EditText) getView().findViewById(R.id.ph_set_resolved_value39);
+		mResv39.addTextChangedListener(new SelfTextWatcher(mResv39));
+		mResv39.setText(String.valueOf(SystemConfigFile.mResv39));
+		
+		mResv40 = (EditText) getView().findViewById(R.id.ph_set_resolved_value40);
+		mResv40.addTextChangedListener(new SelfTextWatcher(mResv40));
+		mResv40.setText(String.valueOf(SystemConfigFile.mResv40));
+		
+		mResv41 = (EditText) getView().findViewById(R.id.ph_set_resolved_value41);
+		mResv41.addTextChangedListener(new SelfTextWatcher(mResv41));
+		mResv41.setText(String.valueOf(SystemConfigFile.mResv41));
+
+		mResv42 = (EditText) getView().findViewById(R.id.ph_set_resolved_value42);
+		mResv42.addTextChangedListener(new SelfTextWatcher(mResv42));
+		mResv42.setText(String.valueOf(SystemConfigFile.mResv42));
+
+		mResv43 = (EditText) getView().findViewById(R.id.ph_set_resolved_value43);
+		mResv43.addTextChangedListener(new SelfTextWatcher(mResv43));
+		mResv43.setText(String.valueOf(SystemConfigFile.mResv43));
+
+		mResv44 = (EditText) getView().findViewById(R.id.ph_set_resolved_value44);
+		mResv44.addTextChangedListener(new SelfTextWatcher(mResv44));
+		mResv44.setText(String.valueOf(SystemConfigFile.mResv44));
+	
+		mResv45 = (EditText) getView().findViewById(R.id.ph_set_resolved_value45);
+		mResv45.addTextChangedListener(new SelfTextWatcher(mResv45));
+		mResv45.setText(String.valueOf(SystemConfigFile.mResv45));
+		
+		mResv46 = (EditText) getView().findViewById(R.id.ph_set_resolved_value46);
+		mResv46.addTextChangedListener(new SelfTextWatcher(mResv46));
+		mResv46.setText(String.valueOf(SystemConfigFile.mResv46));
+		
+		mResv47 = (EditText) getView().findViewById(R.id.ph_set_resolved_value47);
+		mResv47.addTextChangedListener(new SelfTextWatcher(mResv47));
+		mResv47.setText(String.valueOf(SystemConfigFile.mResv47));
+		
+		mResv48 = (EditText) getView().findViewById(R.id.ph_set_resolved_value48);
+		mResv48.addTextChangedListener(new SelfTextWatcher(mResv48));
+		mResv48.setText(String.valueOf(SystemConfigFile.mResv48));
+		
+		mResv49 = (EditText) getView().findViewById(R.id.ph_set_resolved_value49);
+		mResv49.addTextChangedListener(new SelfTextWatcher(mResv49));
+		mResv49.setText(String.valueOf(SystemConfigFile.mResv49));
+		
+		mResv50 = (EditText) getView().findViewById(R.id.ph_set_resolved_value50);
+		mResv50.addTextChangedListener(new SelfTextWatcher(mResv50));
+		mResv50.setText(String.valueOf(SystemConfigFile.mResv50));
+		
+		mResv51 = (EditText) getView().findViewById(R.id.ph_set_resolved_value51);
+		mResv51.addTextChangedListener(new SelfTextWatcher(mResv51));
+		mResv51.setText(String.valueOf(SystemConfigFile.mResv51));
+
+		mResv52 = (EditText) getView().findViewById(R.id.ph_set_resolved_value52);
+		mResv52.addTextChangedListener(new SelfTextWatcher(mResv52));
+		mResv52.setText(String.valueOf(SystemConfigFile.mResv52));
+
+		mResv53 = (EditText) getView().findViewById(R.id.ph_set_resolved_value53);
+		mResv53.addTextChangedListener(new SelfTextWatcher(mResv53));
+		mResv53.setText(String.valueOf(SystemConfigFile.mResv53));
+
+		mResv54 = (EditText) getView().findViewById(R.id.ph_set_resolved_value54);
+		mResv54.addTextChangedListener(new SelfTextWatcher(mResv54));
+		mResv54.setText(String.valueOf(SystemConfigFile.mResv54));
+		
+		mResv55 = (EditText) getView().findViewById(R.id.ph_set_resolved_value55);
+		mResv55.addTextChangedListener(new SelfTextWatcher(mResv55));
+		mResv55.setText(String.valueOf(SystemConfigFile.mResv55));
+		
+		mResv56 = (EditText) getView().findViewById(R.id.ph_set_resolved_value56);
+		mResv56.addTextChangedListener(new SelfTextWatcher(mResv56));
+		mResv56.setText(String.valueOf(SystemConfigFile.mResv56));
+		
+		mResv57 = (EditText) getView().findViewById(R.id.ph_set_resolved_value57);
+		mResv57.addTextChangedListener(new SelfTextWatcher(mResv57));
+		mResv57.setText(String.valueOf(SystemConfigFile.mResv57));
+		
+		mResv58 = (EditText) getView().findViewById(R.id.ph_set_resolved_value58);
+		mResv58.addTextChangedListener(new SelfTextWatcher(mResv58));
+		mResv58.setText(String.valueOf(SystemConfigFile.mResv58));
+		
+		mResv59 = (EditText) getView().findViewById(R.id.ph_set_resolved_value59);
+		mResv59.addTextChangedListener(new SelfTextWatcher(mResv59));
+		mResv59.setText(String.valueOf(SystemConfigFile.mResv59));
+		
+		mResv60 = (EditText) getView().findViewById(R.id.ph_set_resolved_value60);
+		mResv60.addTextChangedListener(new SelfTextWatcher(mResv60));
+		mResv60.setText(String.valueOf(SystemConfigFile.mResv60));
+		
+		
+		
 		mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE); 
 	}
 	@Override
@@ -429,6 +611,78 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 				SystemConfigFile.mResv23 = getValueFromEditText(arg0);
 			} else if (mEditText == mResv24) {
 				SystemConfigFile.mResv24 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv25) {
+				SystemConfigFile.mResv25 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv26) {
+				SystemConfigFile.mResv26 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv27) {
+				SystemConfigFile.mResv27 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv28) {
+				SystemConfigFile.mResv28 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv29) {
+				SystemConfigFile.mResv29 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv30) {
+				SystemConfigFile.mResv30 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv31) {
+				SystemConfigFile.mResv31 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv32) {
+				SystemConfigFile.mResv32 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv33) {
+				SystemConfigFile.mResv33 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv34) {
+				SystemConfigFile.mResv34 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv35) {
+				SystemConfigFile.mResv35 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv36) {
+				SystemConfigFile.mResv36 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv37) {
+				SystemConfigFile.mResv37 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv38) {
+				SystemConfigFile.mResv38 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv39) {
+				SystemConfigFile.mResv39 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv40) {
+				SystemConfigFile.mResv40 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv41) {
+				SystemConfigFile.mResv41 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv42) {
+				SystemConfigFile.mResv42 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv43) {
+				SystemConfigFile.mResv43 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv44) {
+				SystemConfigFile.mResv44 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv45) {
+				SystemConfigFile.mResv45 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv46) {
+				SystemConfigFile.mResv46 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv47) {
+				SystemConfigFile.mResv47 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv48) {
+				SystemConfigFile.mResv48 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv49) {
+				SystemConfigFile.mResv49 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv50) {
+				SystemConfigFile.mResv50 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv51) {
+				SystemConfigFile.mResv51 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv52) {
+				SystemConfigFile.mResv52 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv53) {
+				SystemConfigFile.mResv53 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv54) {
+				SystemConfigFile.mResv54 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv55) {
+				SystemConfigFile.mResv55 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv56) {
+				SystemConfigFile.mResv56 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv57) {
+				SystemConfigFile.mResv57 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv58) {
+				SystemConfigFile.mResv58 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv59) {
+				SystemConfigFile.mResv59 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv60) {
+				SystemConfigFile.mResv60 = getValueFromEditText(arg0);
 			}
 			
 		}

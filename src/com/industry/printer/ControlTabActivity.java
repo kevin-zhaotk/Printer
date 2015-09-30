@@ -43,6 +43,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -209,6 +211,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 */
 	public byte[] mPreviewBuffer;
 	
+	private boolean mFeatureCorrect = false;
+	
 	public ControlTabActivity() {
 		//mMsgTitle = (ExtendMessageTitleFragment)fragment;
 		mCounter = 0;
@@ -297,15 +301,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			db.setFirstBoot(mContext, false);
 		}
 		refreshCount();
-		/******初始化FPGA******/
+		
+		/***PG1 PG2输出状态为 0x11，清零模式**/
 		FpgaGpioOperation.clean();
+		
 		/****初始化RFID****/
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
 			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
 			refreshInk(0);
 		} else {
-			int ink = mRfidDevice.getInkLevel();
+			float ink = mRfidDevice.getInkLevel();
+			mFeatureCorrect = mRfidDevice.checkFeatureCode();
 			refreshInk(ink);
 		}
 		//Debug.d(TAG, "===>loadMessage");
@@ -336,9 +343,24 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
 	
-	private void refreshInk(int ink) {
-		String level = String.format(getResources().getString(R.string.str_state_inklevel), ink);
+	private void refreshInk(float ink) {
+		
+		String level = String.format(getResources().getString(R.string.str_state_inklevel), String.valueOf(ink) + "%");
 		mInkLevel.setText(level);
+		if (!mFeatureCorrect) {
+			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
+			mInkLevel.setText(level);
+		} else if (ink <= 0) {
+			mInkLevel.setBackgroundColor(Color.RED);
+			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.ink_alarm_animation);
+			if (mInkLevel.getAnimation() == null) {
+				mInkLevel.setAnimation(animation);
+				//mInkLevel.startAnimation(animation);
+			}
+		} else {
+			mInkLevel.clearAnimation();
+		}
+		
 	}
 	
 	private void refreshCount() {
@@ -461,7 +483,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mRfidDevice == null) {
 						mRfidDevice = RFIDDevice.getInstance();
 					}
-					int ink = mRfidDevice.updateInkLevel();
+					float ink = mRfidDevice.updateInkLevel();
 					refreshInk(ink);
 					break;
 				case MESSAGE_COUNT_CHANGE:

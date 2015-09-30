@@ -18,6 +18,11 @@ public class EncryptionMethod {
 	
 	/**
 	 * 通过序列号获取密钥A
+	 * 1、序列号的1-2byte经过按位取反存到密钥的1-2byte，
+	 * 2、序列号的3-4byte经过按位取反存到密钥的4-5byte，
+	 * 3、密钥的1、2、4、5  4个byte的异或校验值保存到密钥的byte3
+	 * 4、密钥的前5个byte的校验和放在密钥的byte6
+
 	 * @param sn
 	 * @return
 	 */
@@ -89,5 +94,14 @@ public class EncryptionMethod {
 		ink[2] = (byte) ((level>>(8*2)) & 0x0ff);
 		ink[3] = (byte) ((level>>(8*3)) & 0x0ff);
 		return ink;
+	}
+	
+	
+	public int decryptInkMAX(byte[] level) {
+		if (level == null || level.length < 6) {
+			return 0;
+		}
+		return (int) ((level[1] & 0x0ff) + (level[2] & 0x0ff)* 256 + (level[3] & 0x0ff)* Math.pow(256, 2) + (level[4] & 0x0ff)* Math.pow(256, 3) + (level[5] & 0x0ff)* Math.pow(256, 4));
+		
 	}
 }

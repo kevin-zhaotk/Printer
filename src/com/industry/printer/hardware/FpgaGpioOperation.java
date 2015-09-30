@@ -170,7 +170,7 @@ public class FpgaGpioOperation {
 			Debug.d(TAG, "===>open fpga file error");
 			return;
 		}
-		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_CLEAN);
+		ioctl(fd, FPGA_CMD_CLEAN, 0);
 		// close(fd);
 	}
 	
@@ -207,6 +207,20 @@ public class FpgaGpioOperation {
 		Debug.d(TAG, "===>data7:" + Integer.toHexString(data[7]));
 		data[8] = (char) SystemConfigFile.mDelayPulse;
 		data[9] = (char) SystemConfigFile.mHighLen;
+		data[10] = (char) SystemConfigFile.mResv11;
+		data[11] = (char) SystemConfigFile.mResv12;
+		data[12] = (char) SystemConfigFile.mResv13;
+		data[13] = (char) SystemConfigFile.mResv14;
+		data[14] = (char) SystemConfigFile.mResv15;
+		data[15] = (char) SystemConfigFile.mResv16;
+		data[16] = (char) SystemConfigFile.mResv17;
+		data[17] = (char) SystemConfigFile.mResv18;
+		data[18] = (char) SystemConfigFile.mResv19;
+		data[19] = (char) SystemConfigFile.mResv20;
+		data[10] = (char) SystemConfigFile.mResv21;
+		data[21] = (char) SystemConfigFile.mResv22;
+		data[22] = (char) SystemConfigFile.mResv23;
+		data[23] = (char) SystemConfigFile.mResv24;
 		
 		//时间参数放在最后3个
 		Calendar c = Calendar.getInstance();
@@ -216,7 +230,6 @@ public class FpgaGpioOperation {
 		data[Configs.gParams - 3] = (char)hour;
 		data[Configs.gParams - 2] = (char)minute;
 		data[Configs.gParams - 1] = (char)second;
-		data[Configs.gParams - 1] = 0x4040;
 		
 		writeData(FPGA_STATE_SETTING, data, data.length*2);	
 	}

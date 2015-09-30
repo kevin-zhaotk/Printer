@@ -64,6 +64,8 @@ public class ObjectsFromString {
 				Debug.d(TAG, "makeObjs image object");
 			} else if(s.startsWith("#T#")) {
 				RealtimeObject object = new RealtimeObject(context, 0);
+				String format = s.substring(3);
+				object.setFormat(format);
 				object.setIndex(index++);
 				objList.add(object);
 			} else {	//文本对象

@@ -641,6 +641,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			else if(o instanceof RealtimeObject)
 			{
 				content += o.getContent();
+				o.generateVarBuffer();
+				Debug.d(TAG, "--->realtime: " + content);
 			}
 			else if(o instanceof JulianDayObject)
 			{

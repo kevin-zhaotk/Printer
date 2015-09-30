@@ -75,7 +75,7 @@ public class DataTransferThread extends Thread {
 			
 			// Debug.d(TAG, "===>buffer size="+buffer.length);
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-			
+			mDataTask.getPrintBuffer();
 			int writable = FpgaGpioOperation.pollState();
 			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
@@ -176,12 +176,13 @@ public class DataTransferThread extends Thread {
 			mDataTask = new DataTask(context);
 		}
 		isBufferReady = mDataTask.prepareBackgroudBuffer(obj);
+		
 	}
 	
 	public DataTask getData() {
 		return mDataTask;
 	}
-	
+																																																																																																																
 	public void setDotCount(int count) {
 		if (mDataTask == null) {
 			return;
@@ -193,7 +194,7 @@ public class DataTransferThread extends Thread {
 		if (mDataTask == null) {
 			return 0;
 		}
-		
+			
 		return mDataTask.getDots();
 	}
 	

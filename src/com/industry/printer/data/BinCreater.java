@@ -301,7 +301,7 @@ public class BinCreater {
      */
     public static boolean saveBin(String f, byte[] dots, int single) {
     	int bytesPerCol = 0;
-    	bytesPerCol = single%4==0? single/4 : (single/4+1);
+    	bytesPerCol = single%8==0? single/8 : (single/8+1);
     	int columns = dots.length/bytesPerCol;
     	try {
     		
