@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.DotMatrixReader;
+import com.industry.printer.data.InternalCodeCalculater;
 
 import android.R;
 import android.content.Context;
@@ -71,7 +73,9 @@ public class RealtimeObject extends BaseObject {
 				o = new TextObject(mContext, x);
 				o.setContent(str.substring(0, i));
 				mSubObjs.add(o);
-				x = o.getXEnd();
+				// x = o.getXEnd();
+				// 树莓系统通过点阵字库计算坐标，每个字模列宽为16bit
+				x = x + o.getContent().length() * 16;
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
@@ -116,9 +120,12 @@ public class RealtimeObject extends BaseObject {
 				o = new RealtimeMinute(mContext, x);
 				mSubObjs.add(o);
 				i += 2;
+			} else {
+				continue;
 			}
 			
-			x = o.getXEnd();
+			// x = o.getXEnd();
+			x = x + o.getContent().length() * 16;
 			str = str.substring(i);
 			i=0;
 			System.out.println("realtime c x_end="+x);
@@ -278,6 +285,18 @@ public class RealtimeObject extends BaseObject {
 			mContent += object.getContent();
 		}
 		return mContent;
+	}
+	
+	
+	@Override
+	public void generateVarbinFromMatrix(String f) {
+		for (BaseObject object : getSubObjs()) {
+			if (object.mId.equals(BaseObject.OBJECT_TYPE_TEXT)) {
+				continue;
+			}
+			object.generateVarbinFromMatrix(f);
+			
+		}
 	}
 	
 	public String toString()

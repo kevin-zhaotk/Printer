@@ -50,7 +50,7 @@ public class ObjectsFromString {
 					obj.setContent(s);
 					obj.setIndex(index++);
 					objList.add(obj);
-					xcor += obj.getXEnd()+5;
+					// xcor += obj.getXEnd()+5;
 				} else {
 					Log.d(TAG, "===>counter: "+s);
 					int count = Integer.parseInt(s.substring(2, 3));
@@ -58,26 +58,28 @@ public class ObjectsFromString {
 					obj.setBits(count);
 					obj.setIndex(index++);
 					objList.add(obj);
-					xcor += obj.getXEnd() + 5;
+					// xcor += obj.getXEnd() + 5;
 				}
+				xcor += s.length() * 16;
 			} else if (s.startsWith("#P#")) {	//图形对象
 				Debug.d(TAG, "makeObjs image object");
 			} else if(s.startsWith("#T#")) {
-				RealtimeObject object = new RealtimeObject(context, 0);
+				RealtimeObject object = new RealtimeObject(context, xcor);
 				String format = s.substring(3);
 				object.setFormat(format);
 				object.setIndex(index++);
 				objList.add(object);
+				xcor += format.length() * 16;
 			} else {	//文本对象
 				if (s==null || s.isEmpty()) {
 					continue;
 				}
-				Log.d(TAG, "===>text: "+s);
+				Debug.d(TAG, "===>text: "+s + "-->len=" + s.length());
 				TextObject obj = new TextObject(context, xcor);
 				obj.setContent(s);
 				obj.setIndex(index++);
 				objList.add(obj);
-				xcor += obj.getXEnd() + 5;
+				xcor += 16*s.length();
 			}
 		}
 		return objList;

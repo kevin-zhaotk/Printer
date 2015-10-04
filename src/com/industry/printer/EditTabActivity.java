@@ -263,7 +263,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					} else if (object instanceof TextObject) {
 						obj = object.getContent();
 					} else if (object instanceof RealtimeObject) {
-						obj = "#T#" + ((RealtimeObject)object).getContent();
+						// obj = "#T#" + ((RealtimeObject)object).getContent();
+						obj = "#T#" + ((RealtimeObject)object).getFormat();
 					} else {
 						continue;
 					}
@@ -490,6 +491,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             		
            			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
             		
+           			//保存变量bin文件
+           			saveVarBin(ConfigPath.getTlkPath()+"/"+mObjName);
            			
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
@@ -641,7 +644,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			else if(o instanceof RealtimeObject)
 			{
 				content += o.getContent();
-				o.generateVarBuffer();
 				Debug.d(TAG, "--->realtime: " + content);
 			}
 			else if(o instanceof JulianDayObject)
@@ -662,7 +664,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		char[] code = cal.getGBKCode(content);
 		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
 		byte[] dots = reader.getDotMatrix(code);
-		BinCreater.saveBin(f, dots, 32);
+		BinCreater.saveBin(f + "/1.bin", dots, 32);
 		for(BaseObject o:mObjs)
 		{
 			if((o instanceof MessageObject)	) {
@@ -672,6 +674,15 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		}
 		
 		return ;
+	}
+	
+	private void saveVarBin(String f) {
+		for (BaseObject object : mObjs) {
+			if((object instanceof CounterObject) || (object instanceof RealtimeObject))
+			{
+				object.generateVarbinFromMatrix(f);
+			}
+		}
 	}
 	
 	public ProgressDialog mProgressDialog;

@@ -10,6 +10,8 @@ import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.DotMatrixReader;
+import com.industry.printer.data.InternalCodeCalculater;
 
 import android.R.color;
 import android.content.Context;
@@ -203,6 +205,16 @@ public class BaseObject{
 		BinCreater.recyleBitmap(bmp);
 		BinCreater.recyleBitmap(bg);
 	}
+	
+	public void generateVarbinFromMatrix(String f) {
+		InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
+		char[] code = cal.getGBKCode("0123456789");
+		Debug.d(TAG, "===>context: " + mContext);
+		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
+		byte[] dots = reader.getDotMatrix(code);
+		BinCreater.saveBin(f + "/v" + this.mIndex + ".bin", dots, 32);
+	}
+	
 	
 	public Canvas getCanvas()
 	{

@@ -305,7 +305,7 @@ public class BinCreater {
     	int columns = dots.length/bytesPerCol;
     	try {
     		
-    		File file = new File(f+"/1.bin");
+    		File file = new File(f);
     		Debug.d(TAG, "--->saveBin f:" + file.getAbsoluteFile());
     		if (!file.exists() && !file.createNewFile()) {
 				Debug.d(TAG, "===>error: create bin file failed");

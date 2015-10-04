@@ -95,12 +95,14 @@ public class DataTask {
 		} 
 		//BinCreater.Bin2Bitmap(mPrintBuffer);
 		/*test bin*/
-		byte[] buffer = new byte[mPrintBuffer.length * 2];
+		/*
+		byte[] buffer = new byte[mBgBuffer.length * 2];
 		for (int i = 0; i < buffer.length/2; i++) {
-			buffer[i] = (byte)(mPrintBuffer[i] & 0x00ff);
-			buffer[i+1] = (byte) (mPrintBuffer[i] >> 8 & 0x0ff);
+			buffer[2*i] = (byte)(mBgBuffer[i] & 0x00ff);
+			buffer[2*i+1] = (byte) (((int) mBgBuffer[i])/256 & 0x00ff);
 		}
-		BinCreater.saveBin("/mnt/usbhost1/", buffer, 32);
+		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, 32);
+		*/
 		/*test bin*/
 		return mPrintBuffer;
 	}
@@ -154,7 +156,7 @@ public class DataTask {
 						continue;
 					BinInfo varbin = new BinInfo(mMessage+"/" + "v"+rtSub.getIndex() +".bin");
 					var = varbin.getVarBuffer(substr);
-					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX(), varbin.getCharsPerColumn());
+					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX()*2, varbin.getCharsPerColumn());
 				}				
 			}
 			else if(o instanceof JulianDayObject)
