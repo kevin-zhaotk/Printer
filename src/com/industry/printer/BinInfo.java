@@ -8,6 +8,7 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 
 /**
@@ -162,7 +163,11 @@ public class BinInfo {
     	}
     	for(int i=0; i< len; i++)
     	{
-    		dst[x*high+i] |= src[i];
+    		if (PlatformInfo.isBufferFromDotMatrix()) {
+    			dst[x * high + 1] = src[i];
+    		} else {
+    			dst[x*high+i] |= src[i];
+    		}
     	}
     }
     /**

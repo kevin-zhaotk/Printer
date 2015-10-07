@@ -3,6 +3,7 @@ package com.industry.printer.data;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import android.content.Context;
@@ -33,7 +34,6 @@ public class DataTask {
 	
 	public Context	mContext;
 	public Vector<BaseObject> mObjList;
-	public BinInfo mBinInfo;
 	public String mMessage;
 
 	/**
@@ -46,10 +46,22 @@ public class DataTask {
 	
 	private int mDots;
 	
+	/**
+	 * 背景的binInfo，
+	 */
+	public BinInfo mBinInfo;
+	/**
+	 * 保存所有变量bin文件的列表；在prepareBackgroudBuffer时解析所有变量的bin文件
+	 * 然后保存到这个列表中，以便在填充打印buffer时直接从这个binInfo的列表中读取相应变量buffer
+	 * 无需重新解析bin文件，提高效率
+	 */
+	public HashMap<BaseObject, BinInfo> mVarBinList;
+	
 	public DataTask(Context context) {
 		mContext = context;
 		mObjList = new Vector<BaseObject>();
 		mDots = 0;
+		mVarBinList = new HashMap<BaseObject, BinInfo>();
 	}
 	
 	/**
@@ -120,14 +132,19 @@ public class DataTask {
 			if(o instanceof CounterObject)
 			{
 				String str = ((CounterObject) o).getNext();
-				BinInfo varbin = new BinInfo(mMessage+"/" + "v" + o.getIndex() +".bin");
-				var = varbin.getVarBuffer(str);
-				BinInfo.overlap(mPrintBuffer, var, (int)o.getX(), varbin.getCharsPerColumn());
+				BinInfo info = mVarBinList.get(o);
+				if (info == null) {
+					info = new BinInfo(mMessage+"/" + "v" + o.getIndex() +".bin");
+					mVarBinList.put(o, info);
+				}
+				var = info.getVarBuffer(str);
+				BinInfo.overlap(mPrintBuffer, var, (int)o.getX() * 2, info.getCharsPerColumn());
 			}
 			else if(o instanceof RealtimeObject)
 			{
 				
 				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
+				BinInfo info = mVarBinList.get(o);
 				for(BaseObject rtSub : rt)
 				{
 					if(rtSub instanceof RealtimeYear)
@@ -154,9 +171,12 @@ public class DataTask {
 					}
 					else
 						continue;
-					BinInfo varbin = new BinInfo(mMessage+"/" + "v"+rtSub.getIndex() +".bin");
-					var = varbin.getVarBuffer(substr);
-					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX()*2, varbin.getCharsPerColumn());
+					if (info == null) {
+						info = new BinInfo(mMessage+"/" + "v"+rtSub.getIndex() +".bin");
+						mVarBinList.put(o, info);
+					}
+					var = info.getVarBuffer(substr);
+					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX()*2, info.getCharsPerColumn());
 				}				
 			}
 			else if(o instanceof JulianDayObject)
@@ -164,7 +184,7 @@ public class DataTask {
 				String vString = ((JulianDayObject)o).getContent();
 				BinInfo varbin= new BinInfo(mMessage + "/v" + o.getIndex() + ".bin");
 				var = varbin.getVarBuffer(vString);
-				BinInfo.overlap(mPrintBuffer, var, (int)o.getX(), varbin.getCharsPerColumn());
+				BinInfo.overlap(mPrintBuffer, var, (int)o.getX() *2, varbin.getCharsPerColumn());
 			}
 			else
 			{

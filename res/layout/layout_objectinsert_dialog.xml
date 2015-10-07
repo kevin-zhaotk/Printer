@@ -48,6 +48,19 @@
 	        android:textSize="40dp"
 	        android:textColor="#000000"
             />
+        
+        <RadioButton 
+            android:id="@+id/objinsert_counter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/style_objectinsert_btn"
+            android:button="@null"
+	        android:gravity="center"
+	        android:text="@string/object_counter"
+	        android:textSize="40dp"
+	        android:textColor="#000000"
+            />
     </RadioGroup>
     <View 
         android:id="@+id/dialog_split"
@@ -63,6 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/dialog_split"
+        android:gravity="center_horizontal"
         android:visibility="gone"
         >
 	    <ImageView
@@ -87,5 +101,17 @@
 	        android:layout_above="@id/obj_dialog_btn_pagedown"
 	        android:entries="@array/strTimeFormat"
 	        />
+	    
+	    <ListView 
+	        android:id="@+id/objinsert_list_counter"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginLeft="20dp"
+	        android:layout_below="@id/obj_dialog_btn_pageup"
+	        android:layout_above="@id/obj_dialog_btn_pagedown"
+	        android:entries="@array/strarrayCounter"
+	        android:visibility="gone"
+	        ></ListView>
     </RelativeLayout>
+    
 </RelativeLayout>

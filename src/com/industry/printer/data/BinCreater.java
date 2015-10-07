@@ -31,11 +31,10 @@ public class BinCreater {
 	
 	public static void create(Bitmap bmp, int colEach)
 	{
-		Bitmap scaledImg = scaleHeight(bmp, bmp.getHeight()																																					);
+		Bitmap scaledImg = scaleHeight(bmp, bmp.getHeight());
 		mBmpBytes = new int[scaledImg.getByteCount()/2];
 		mBmpBits = new byte[scaledImg.getWidth()*(scaledImg.getHeight()%8==0 ? scaledImg.getHeight()/8 : scaledImg.getHeight()/8+1)];
 		Debug.d(TAG, "width="+scaledImg.getWidth()+", height="+scaledImg.getHeight()+", mBmpBits="+mBmpBits.length);
-		convertGreyImg(scaledImg);
 		BinCreater.recyleBitmap(scaledImg);
 		//Debug.d(TAG, "width *height="+img.getWidth() * img.getHeight());
 		//Debug.d(TAG, "byteCount="+img.getByteCount());
@@ -58,59 +57,7 @@ public class BinCreater {
     	//return Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
 	}
 	  
-    public static void convertGreyImg(Bitmap bmp) { 
-    	int width = bmp.getWidth();         
-        int height = bmp.getHeight(); 
-        
-        int []pixels = new int[width * height]; 
-        int colEach = height%8==0?height/8:height/8+1;
-        Debug.d(TAG, "=====width="+width+", height="+height+", colEach="+colEach);
-        /*move to saveBin for head info fill*/
-        //mBmpBits[2] = (byte) (width & 0x0ff);
-    	//mBmpBits[1] = (byte) ((width>>8) & 0x0ff);
-    	//mBmpBits[0] = (byte) ((width>>16) & 0x0ff);
-        
-        bmp.getPixels(pixels, 0, width, 0, 0, width, height); 
-        //int alpha = 0x00 << 24;  
-        for(int i = 0; i < height; i++)  { 
-            for(int j = 0; j < width; j++) { 
-                int grey = pixels[width * i + j]; 
-                
-                int red = ((grey  & 0x00FF0000 ) >> 16); 
-                int green = ((grey & 0x0000FF00) >> 8); 
-                int blue = (grey & 0x000000FF);
-                /*`
-                if((grey & 0xFF000000) != 0)
-                {
-                	pixels[width * i + j] = 1;
-                }
-                else
-                {
-                	grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
-                	pixels[width * i + j] = 0;
-                }
-                */
-                //grey = alpha | ((grey >128?255:0) << 16) | ((grey >128?255:0) << 8) | (grey >128?255:0); //grey >128?255:0; //
-                //grey = alpha | (grey  << 16) | (grey  << 8) | grey ; 
-                grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
-                pixels[width * i + j] = grey>128? 0x0:0xffffff;
-                if(grey>128)
-                	mBmpBits[j*colEach+i/8] &= ~(0x01<<(i%8));
-                else
-                	mBmpBits[j*colEach+i/8] |= 0x01<<(i%8); 
-                //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
-            }
-        }
-        //saveBin("/mnt/usb/1.bin", width,height);
-        /*swap the high 8bits with low 8bits*/
-        //swap(height);
-        //Bitmap result = Bitmap.createBitmap(width, height, Config.RGB_565); 
-        //result.setPixels(pixels, 0, width, 0, 0, width, height);
-        /*just for debug*/
-        //saveBitmap(result, "bk.png");
-        
-        return ; 
-    }
+    
     
     /*
      * height - pixes per column

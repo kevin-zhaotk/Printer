@@ -14,10 +14,12 @@ import android.util.Log;
  * 解析编辑的字符串，得到打印对象列表
  * @author kevin
  * 用户输入文本字符串规则如下：
+ * 对象分隔符为 @#@ 
  * 文本对象：一串简单字符
- * 计数器对象： 以单引号包围，以N为主键 Nx表示（x表示计数器的位数，比如 ‘N5‘表示一个5位计数器）
+ * 计数器对象： 以#N#作为起始标示，字符串的长度表示计数器的位数，比如 #N#000000‘表示一个6位计数器）
+ * 实时时间对象：以#T#作为起始符，字符串表示实时时间变量的格式 如 #T#YYYY/MM/DD
  * 图形对象：	以单引号包围，以G为主键
- * 注：所有以分号（；）作为分隔符
+ * 注：所有对象以 @#@ 作为分隔符
  */
 
 public class ObjectsFromString {
@@ -26,6 +28,9 @@ public class ObjectsFromString {
 	
 	//各对象之间以；作为分隔符
 	public static final String SPLITOR = "@#@";
+	public static final String COUNTER_FLAG = "#N#";
+	public static final String REALTIME_FLAG = "#T#";
+	public static final String IMAGE_FLAG = "#P#";
 	
 	public static List<BaseObject> makeObjs(Context context, String str) {
 		int xcor=0;
@@ -43,27 +48,18 @@ public class ObjectsFromString {
 		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {
-			if (s.startsWith("#N#")) { //计数器对象
-				if(s.length() != 4 || !s.substring(3, 4).equals("'")) {
-					Debug.d(TAG, "makeObjs format not counter, parse as text object");
-					TextObject obj = new TextObject(context, xcor);
-					obj.setContent(s);
-					obj.setIndex(index++);
-					objList.add(obj);
-					// xcor += obj.getXEnd()+5;
-				} else {
-					Log.d(TAG, "===>counter: "+s);
-					int count = Integer.parseInt(s.substring(2, 3));
-					CounterObject obj = new CounterObject(context, xcor);
-					obj.setBits(count);
-					obj.setIndex(index++);
-					objList.add(obj);
-					// xcor += obj.getXEnd() + 5;
-				}
+			if (s.startsWith(COUNTER_FLAG)) { //计数器对象
+				Log.d(TAG, "===>counter: "+s);
+				int count = s.length() - 3;
+				CounterObject obj = new CounterObject(context, xcor);
+				obj.setBits(count);
+				obj.setIndex(index++);
+				objList.add(obj);
+				// xcor += obj.getXEnd() + 5;
 				xcor += s.length() * 16;
-			} else if (s.startsWith("#P#")) {	//图形对象
+			} else if (s.startsWith(IMAGE_FLAG)) {	//图形对象
 				Debug.d(TAG, "makeObjs image object");
-			} else if(s.startsWith("#T#")) {
+			} else if(s.startsWith(REALTIME_FLAG)) {
 				RealtimeObject object = new RealtimeObject(context, xcor);
 				String format = s.substring(3);
 				object.setFormat(format);

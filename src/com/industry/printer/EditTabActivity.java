@@ -12,6 +12,7 @@ import java.util.Vector;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
@@ -483,10 +484,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 						break;
 					}
             		createFolderIfNeed(mObjName);
-            		if (Configs.gMakeBinFromBitmap == true) {
-            			saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
+            		if (PlatformInfo.isBufferFromDotMatrix()) {
+            			saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
 					} else {
-						saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
+						saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
 					}
             		
            			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);

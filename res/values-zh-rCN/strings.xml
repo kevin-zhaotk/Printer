@@ -136,6 +136,17 @@
 	    <item>MM/DD/YY</item>
 	</string-array>
 	
+	<string-array name="strarryCounter">
+	    <item>3位</item>
+	    <item>4位</item>
+	    <item>5位</item>
+	    <item>6位</item>
+	    <item>7位</item>
+	    <item>8位</item>
+	    <item>9位</item>
+	    <item>10位</item>
+	</string-array>
+	
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
 	<string name="objectInfoName">显示对象信息</string>

@@ -34,6 +34,12 @@ public class CounterObject extends BaseObject {
 		setContent( BaseObject.intToFormatString(mValue, mBits));
 	}
 	
+//	@Override
+//	public void setContent(String content) {
+//		super.setContent(content);
+//		
+//	}
+	
 	public int getBits()
 	{
 		return mBits;

@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.ObjectsFromString;
 import com.industry.printer.object.TextObject;
 
 public class ObjectInsertDialog extends Dialog implements android.view.View.OnClickListener, OnItemClickListener {
@@ -24,7 +26,9 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	private Context mContext;
 	public RadioButton mText;
 	public RadioButton mRTime;
+	public RadioButton mCounter;
 	public ListView 	mTimestyle;
+	public ListView 	mCounterSize;
 	public RelativeLayout mTimeLayout;
 	public ImageView		mPageup;
 	public ImageView		mPagedown;
@@ -51,6 +55,11 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		mTimestyle = (ListView)findViewById(R.id.objinsert_list_time);
 		mTimestyle.setOnItemClickListener(this);
 		
+		mCounter = (RadioButton) findViewById(R.id.objinsert_counter);
+		mCounter.setOnClickListener(this);
+		mCounterSize = (ListView)findViewById(R.id.objinsert_list_counter);
+		mCounterSize.setOnItemClickListener(this);
+		
 		mPagedown = (ImageView) findViewById(R.id.obj_dialog_btn_pagedown);
 		mPagedown.setOnClickListener(this);
 		mPageup = (ImageView) findViewById(R.id.obj_dialog_btn_pageup);
@@ -72,12 +81,28 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				break;
 			case R.id.objinsert_time:
 				mTimeLayout.setVisibility(View.VISIBLE);
+				mTimestyle.setVisibility(View.VISIBLE);
+				mCounterSize.setVisibility(View.GONE);
+				break;
+			case R.id.objinsert_counter:
+				mTimeLayout.setVisibility(View.VISIBLE);
+				mTimestyle.setVisibility(View.GONE);
+				mCounterSize.setVisibility(View.VISIBLE);
 				break;
 			case R.id.obj_dialog_btn_pageup:
-				mTimestyle.smoothScrollBy(-200, 1000);
+				if (mRTime.isChecked()) {
+					mTimestyle.smoothScrollBy(-200, 1000);
+				} else if (mCounter.isChecked()) {
+					mCounterSize.smoothScrollBy(-200, 1000);
+				}
+				
 				break;
 			case R.id.obj_dialog_btn_pagedown:
-				mTimestyle.smoothScrollBy(200, 1000);
+				if (mRTime.isChecked()) {
+					mTimestyle.smoothScrollBy(200, 1000);
+				} else if (mCounter.isChecked()) {
+					mCounterSize.smoothScrollBy(200, 1000);
+				}
 				break;
 			case R.id.dialog_back:
 				dismiss();
@@ -97,10 +122,19 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Debug.d("", "--->arg2=" + arg2);
-		String[] formats = mContext.getResources().getStringArray(R.array.strTimeFormat);
-		Debug.d("", "--->arg2=" + formats[arg2]);
-		Bundle bundle = new Bundle();
-		bundle.putString("object", "#T#" + formats[arg2]);
+		Bundle bundle = null;
+		if (mRTime.isChecked()) {
+			String[] formats = mContext.getResources().getStringArray(R.array.strTimeFormat);
+			Debug.d("", "--->arg2=" + formats[arg2]);
+			bundle = new Bundle();
+			bundle.putString("object", ObjectsFromString.REALTIME_FLAG + formats[arg2]);
+		} else if (mCounter.isChecked()) {
+			String[] formats = mContext.getResources().getStringArray(R.array.strarrayCounter);
+			Debug.d("", "--->arg2=" + formats[arg2]);
+			bundle = new Bundle();
+			bundle.putString("object", ObjectsFromString.COUNTER_FLAG + BaseObject.intToFormatString(0, arg2 + 3));
+		}
+		
 		mDismissMsg.setData(bundle);
 		dismiss();
 	}
