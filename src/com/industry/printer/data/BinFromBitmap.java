@@ -32,6 +32,7 @@ public class BinFromBitmap extends BinCreater {
         int colEach = mHeight%8==0?mHeight/8:mHeight/8+1;
         Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
         
+        mBinBits = new byte[colEach * mWidth];
         // 将bitmap的每个像素读取到pixels数组中，数组的每个元素对应一个像素值
         bmp.getPixels(pixels, 0, mWidth, 0, 0, mWidth, mHeight); 
         //int alpha = 0x00 << 24;  

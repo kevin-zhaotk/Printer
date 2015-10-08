@@ -1,5 +1,6 @@
 package com.industry.printer.Utils;
 
+import android.os.SystemProperties;
 
 public class PlatformInfo {
 
@@ -18,7 +19,8 @@ public class PlatformInfo {
 	 */
 	public static boolean isBufferFromDotMatrix() {
 		
-		String product = System.getProperty(PROPERTY_PRODUCT);
+		String product = SystemProperties.get(PROPERTY_PRODUCT);
+		Debug.d(TAG, "--->product=" + product);
 		if (PRODUCT_SMFY_SUPER3.equalsIgnoreCase(product)) {
 			return true;
 		} else {
