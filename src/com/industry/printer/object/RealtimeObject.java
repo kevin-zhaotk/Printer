@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
 
@@ -147,7 +148,7 @@ public class RealtimeObject extends BaseObject {
 			//System.out.println(""+o.getContent()+",id="+o.mId);
 			Bitmap b = o.getScaledBitmap(context);
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
-			BinCreater.recyleBitmap(b);
+			BinFromBitmap.recyleBitmap(b);
 		}
 		return bmp;
 	}
@@ -167,7 +168,7 @@ public class RealtimeObject extends BaseObject {
 			{
 				Bitmap b = o.getScaledBitmap(context);
 				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
-				BinCreater.recyleBitmap(b);
+				BinFromBitmap.recyleBitmap(b);
 			}
 			else	//variable
 			{
@@ -192,7 +193,7 @@ public class RealtimeObject extends BaseObject {
 			{
 				Bitmap b = o.getScaledBitmap(context);
 				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
-				BinCreater.recyleBitmap(b);
+				BinFromBitmap.recyleBitmap(b);
 			}
 			else	//variable
 			{

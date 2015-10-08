@@ -557,7 +557,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mPreviewBuffer = Arrays.copyOf(mPrintBuffer, mPrintBuffer.length);
 			BinInfo.Matrix880Revert(mPreviewBuffer);
 			mPreBytes = new int[mPreviewBuffer.length*8];
-			BinCreater.bin2byte(mPreviewBuffer, mPreBytes);
+			// BinCreater.bin2byte(mPreviewBuffer, mPreBytes);
 			mPreview.createBitmap(mPreBytes, mBgBuffer.length/110, Configs.gDots);
 			mPreview.invalidate();
 			

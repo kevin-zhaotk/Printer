@@ -10,6 +10,8 @@ import com.industry.printer.MainActivity;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFileMaker;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
 
@@ -159,13 +161,13 @@ public class BaseObject{
 			can.drawText(String.valueOf(i), 0, height-5, mPaint);
 			//Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			gCan.drawBitmap(bmp, i*bmp.getWidth(), (int)getY(), mPaint);
-			BinCreater.recyleBitmap(bmp);
+			BinFromBitmap.recyleBitmap(bmp);
 		}
-		BinCreater.recyleBitmap(bmp);
-		BinCreater.create(gBmp, singleW);		
-		BinCreater.saveBin(f+"/v"+mIndex+".bin", gBmp.getWidth());
-		
-		BinCreater.recyleBitmap(gBmp);
+		BinFromBitmap.recyleBitmap(bmp);
+		BinFileMaker maker = new BinFileMaker(mContext);
+		maker.save(f + getVarBinFileName());
+		//
+		BinFromBitmap.recyleBitmap(gBmp);
 	}
 	/**
 	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap
@@ -196,23 +198,21 @@ public class BaseObject{
 			Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			mCan.drawBitmap(b, 0, getY(), mPaint);
 			Bitmap scaledBg = Bitmap.createScaledBitmap(bg, singleW, Configs.gDots, true);
-			BinCreater.create(scaledBg, 0);
-//			byte[] buffer = new byte[BinCreater.mBmpBits.length];
-			byte[] buffer = Arrays.copyOf(BinCreater.mBmpBits, BinCreater.mBmpBits.length);
-			BinCreater.recyleBitmap(b);
+			BinFileMaker maker = new BinFileMaker(mContext);
+			maker.extract(bmp);
+			//byte[] buffer = new byte[BinCreater.mBmpBits.length];
+			byte[] buffer = Arrays.copyOf(maker.getBuffer(), maker.getBuffer().length);
+			BinFromBitmap.recyleBitmap(b);
 			mVBuffer.put(String.valueOf(i), buffer);
 		}
-		BinCreater.recyleBitmap(bmp);
-		BinCreater.recyleBitmap(bg);
+		BinFromBitmap.recyleBitmap(bmp);
+		BinFromBitmap.recyleBitmap(bg);
 	}
 	
 	public void generateVarbinFromMatrix(String f) {
-		InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
-		char[] code = cal.getGBKCode("0123456789");
-		Debug.d(TAG, "===>context: " + mContext);
-		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
-		byte[] dots = reader.getDotMatrix(code);
-		BinCreater.saveBin(f + "/v" + this.mIndex + ".bin", dots, 32);
+		BinFileMaker maker = new BinFileMaker(mContext);
+		maker.extract("0123456789");
+		maker.save(f + getVarBinFileName());
 	}
 	
 	
@@ -401,6 +401,15 @@ public class BaseObject{
 	{
 		return mIndex;
 	}
+	
+	private String getBinFileName() {
+		return "/1.bin";
+	}
+	
+	private String getVarBinFileName() {
+		return "/v" + mIndex + ".bin";
+	}
+	
 	
 	public byte[] getBufferFromContent()
 	{

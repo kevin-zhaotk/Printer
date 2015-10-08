@@ -9,6 +9,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -106,7 +107,7 @@ public class BarcodeObject extends BaseObject {
 				mPaint.setTextSize(10);
 				can.drawBitmap(bitmap, 0, 0, mPaint);
 				can.drawText(mContent, 0, height+10, mPaint);
-				BinCreater.recyleBitmap(bitmap);
+				BinFromBitmap.recyleBitmap(bitmap);
 				bitmap = bmp;
 			}
 			return bitmap;

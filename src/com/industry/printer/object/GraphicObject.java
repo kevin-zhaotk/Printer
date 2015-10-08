@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import com.industry.printer.ImageConverter;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 
 public class GraphicObject  extends BaseObject{
 
@@ -38,7 +39,7 @@ public class GraphicObject  extends BaseObject{
 		mContent = file;
 		Bitmap b = BitmapFactory.decodeFile(mContent);
 		mBitmap = ImageConverter.convertGreyImg(b);
-		BinCreater.recyleBitmap(b);
+		BinFromBitmap.recyleBitmap(b);
 	}
 	
 	public Bitmap getScaledBitmap(Context context)

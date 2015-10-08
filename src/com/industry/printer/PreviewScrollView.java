@@ -12,6 +12,7 @@ import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.TlkObject;
@@ -66,7 +67,7 @@ public class PreviewScrollView extends View {
 		}
 		Bitmap bmp = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
 		mPreBitmap = bmp.createScaledBitmap(bmp, w, Configs.gFixedRows, true);
-		BinCreater.recyleBitmap(bmp);
+		BinFromBitmap.recyleBitmap(bmp);
 		//mPreBitmap = Bitmap.createScaledBitmap(mPreBitmap, w, 150, true);
 		
 	}
@@ -92,7 +93,7 @@ public class PreviewScrollView extends View {
 		 mPaint.setAlpha(128);
 		 Canvas can = new Canvas(mPreBitmap);
 		 can.drawBitmap(bm, x, y, mPaint);
-		 BinCreater.recyleBitmap(bmp);
+		 BinFromBitmap.recyleBitmap(bmp);
 	}
 
 	

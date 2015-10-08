@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
 
@@ -62,7 +63,7 @@ public class EditScrollView extends View {
 					Debug.d(TAG, "$$$$$$$$$$context=null");
 			 Bitmap bitmap = obj.getScaledBitmap(mContext);
 			 canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
-			 BinCreater.recyleBitmap(bitmap);
+			 BinFromBitmap.recyleBitmap(bitmap);
 		 }
 		 Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);

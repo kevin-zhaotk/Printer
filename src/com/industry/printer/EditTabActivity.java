@@ -14,6 +14,8 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFileMaker;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.data.RFIDData;
@@ -599,7 +601,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			{
 				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext,f);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
-				BinCreater.recyleBitmap(t);
+				BinFromBitmap.recyleBitmap(t);
 			}
 			else if(o instanceof JulianDayObject)
 			{
@@ -613,14 +615,16 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			{
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
-				BinCreater.recyleBitmap(t);
+				BinFromBitmap.recyleBitmap(t);
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		//BinCreater.saveBitmap(bmp, "back.png");
-		Debug.d(TAG,"******background png width="+bmp.getWidth()+"height="+bmp.getHeight());
-		BinCreater.create(bmp, 0);
-		BinCreater.saveBin(f+"/1.bin", width, bmp.getHeight());
+		// 生成bin文件
+		BinFileMaker maker = new BinFileMaker(mContext);
+		maker.extract(bmp);
+		// 保存bin文件
+		maker.save(f + "/1.bin");
+		
 		return ;
 	}
 	
@@ -661,15 +665,15 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		InternalCodeCalculater cal = InternalCodeCalculater.getInstance();
-		char[] code = cal.getGBKCode(content);
-		DotMatrixReader reader = DotMatrixReader.getInstance(mContext);
-		byte[] dots = reader.getDotMatrix(code);
-		BinCreater.saveBin(f + "/1.bin", dots, 32);
+		// 生成bin文件
+		BinFileMaker maker = new BinFileMaker(mContext);
+		int dotCount = maker.extract(content);
+		// 保存bin文件
+		maker.save(f + "/1.bin");
 		for(BaseObject o:mObjs)
 		{
 			if((o instanceof MessageObject)	) {
-				((MessageObject) o).setDotCount(reader.getDotCount(dots));
+				((MessageObject) o).setDotCount(dotCount);
 				break;
 			}
 		}
