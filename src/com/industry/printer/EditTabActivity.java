@@ -32,6 +32,8 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
@@ -40,6 +42,7 @@ import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
 import com.industry.printer.ui.CustomerDialog.TextBrowserDialog;
+import com.industry.printer.widget.PopWindowSpiner;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -71,7 +74,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class EditTabActivity extends Fragment implements OnClickListener, OnLongClickListener {
+public class EditTabActivity extends Fragment implements OnClickListener, OnLongClickListener, IOnItemClickListener {
 	public static final String TAG="EditTabActivity";
 	
 	public Context mContext;
@@ -90,7 +93,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	public RelativeLayout mBtnOpen;
 	public RelativeLayout mPrev;
 	public RelativeLayout mNext;
-	
+	public PopWindowSpiner mSpBtnSave;
 	/*************************
 	 * object operation buttons
 	 ************************/
@@ -218,9 +221,14 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 			}
 		});
 		
-	
+		// 初始化下拉按钮界面
+		mSpBtnSave = new PopWindowSpiner(getActivity());
+		PopWindowAdapter adapter = new PopWindowAdapter(getActivity(), null);
+		adapter.addItem(getString(R.id.btn_save));
+		adapter.addItem(getString(R.id.btn_saveas));
+		mSpBtnSave.setAdapter(adapter);
+		mSpBtnSave.setOnItemClickListener(this);
 	}
-	
 	
 //	@Override
 //	public boolean onTouchEvent(MotionEvent event)
@@ -820,6 +828,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				Message msg = mHandler.obtainMessage();
 				msg.what = HANDLER_MESSAGE_INSERT_OBJECT;
 				dialog1.setDismissMessage(msg);
+				
+				
 				break;
 			/*
 			case R.id.btn_temp_4:
@@ -853,6 +863,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				break;
 			
 			default:
+				mSpBtnSave.setWidth(mBtnSave.getWidth());
+				mSpBtnSave.showAsDropDown(mBtnSave);
 				break;
 		}
 	}
@@ -885,6 +897,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		});
 		dialog.show();
 		return false;
+	}
+	@Override
+	public void onItemClick(int index) {
+		Debug.d(TAG, "--->onPopWinowdItemClick: " + index);
 	}
 	
 }
