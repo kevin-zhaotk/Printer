@@ -748,11 +748,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	@Override
 	public void onClick(View arg0) {
 		CustomerDialogBase dialog;
-		List<BaseObject> objs = null;
-		byte[] d;
-		int fd;
-		int ret;
-		RFIDDevice device = null;
 		switch (arg0.getId()) {
 			case R.id.btn_new:
 				mHandler.sendEmptyMessage(HANDLER_MESSAGE_NEW);
