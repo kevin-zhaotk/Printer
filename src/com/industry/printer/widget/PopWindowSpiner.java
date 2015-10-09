@@ -2,10 +2,11 @@ package com.industry.printer.widget;
 
 import java.util.ArrayList;
 
+import com.industry.printer.Utils.Debug;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.R;
 
-import android.R;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.view.LayoutInflater;

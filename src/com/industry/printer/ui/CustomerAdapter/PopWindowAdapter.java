@@ -2,7 +2,9 @@ package com.industry.printer.ui.CustomerAdapter;
 
 import java.util.ArrayList;
 
-import android.R;
+import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 public class PopWindowAdapter extends BaseAdapter {
 
+	private static final String TAG = PopWindowAdapter.class.getSimpleName();
 	public Context mContext;
 	public ArrayList<String> mItems;
 	public LayoutInflater mInflater;
@@ -27,8 +30,9 @@ public class PopWindowAdapter extends BaseAdapter {
 	
 	public void addItem(String item) {
 		if (mItems == null) {
-			mItems = new ArrayList<>();
+			mItems = new ArrayList<String>();
 		}
+		Debug.d(TAG, "--->addItem: " + item);
 		mItems.add(item);
 	}
 	
@@ -71,7 +75,7 @@ public class PopWindowAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = getInflater().inflate(R.layout.popwindow_spiner_item_layout, null);
 			holder = new ViewHolder();
-			holder.mTextView = convertView.findViewById(R.id.textview);
+			holder.mTextView = (TextView)convertView.findViewById(R.id.textview);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder)convertView.getTag();

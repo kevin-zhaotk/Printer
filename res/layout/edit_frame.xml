@@ -3,7 +3,7 @@
     android:id="@+id/EditTab"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#436EEE">"
+    android:background="#436EEE">
 
 <!-- 
     <include layout="@layout/layout_buttons" />
@@ -69,7 +69,7 @@
 	        <ImageView 
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
-		        android:src="@drawable/style_editbtn"
+		        android:src="@drawable/style_editbtn_pop"
 			    />
 			<TextView
 			    android:layout_width="match_parent"

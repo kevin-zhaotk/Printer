@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -224,9 +225,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		// 初始化下拉按钮界面
 		mSpBtnSave = new PopWindowSpiner(getActivity());
 		PopWindowAdapter adapter = new PopWindowAdapter(getActivity(), null);
-		adapter.addItem(getString(R.id.btn_save));
-		adapter.addItem(getString(R.id.btn_saveas));
+		adapter.addItem(getResources().getString(R.string.str_btn_save));
+		adapter.addItem(getResources().getString(R.string.str_btn_saveas));
 		mSpBtnSave.setAdapter(adapter);
+		mSpBtnSave.setFocusable(true);
 		mSpBtnSave.setOnItemClickListener(this);
 	}
 	
@@ -772,29 +774,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				
 				break;
 			case R.id.btn_save:
-				if (mObjLine1.getText().toString().isEmpty()) {
-					break;
-				}
-				getObjectList();
-				if (mObjName != null) {
-					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
-				} else {
-					dialog = new MessageSaveDialog(mContext);
-					dialog.setOnPositiveClickedListener(new OnPositiveListener() {
-						
-						@Override
-						public void onClick() {
-							mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
-						}
-
-						@Override
-						public void onClick(String content) {
-							// TODO Auto-generated method stub
-							
-						}
-					});
-					dialog.show();
-				}
+				mSpBtnSave.setWidth(mBtnSave.getWidth());
+				mSpBtnSave.showAsDropDown(mBtnSave);
+				
+				
 				break;
 			case R.id.btn_saveas:
 				/*
@@ -823,8 +806,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				Message msg = mHandler.obtainMessage();
 				msg.what = HANDLER_MESSAGE_INSERT_OBJECT;
 				dialog1.setDismissMessage(msg);
-				
-				
 				break;
 			/*
 			case R.id.btn_temp_4:
@@ -858,11 +839,37 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				break;
 			
 			default:
-				mSpBtnSave.setWidth(mBtnSave.getWidth());
-				mSpBtnSave.showAsDropDown(mBtnSave);
+				
 				break;
 		}
 	}
+	
+	private void onSaveClicked(boolean saveas) {
+		CustomerDialogBase dialog;
+		if (mObjLine1.getText().toString().isEmpty()) {
+			return;
+		}
+		getObjectList();
+		if (!saveas && mObjName != null) {
+			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
+		} else {
+			dialog = new MessageSaveDialog(mContext);
+			dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+				
+				@Override
+				public void onClick() {
+					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVEAS);
+				}
+
+				@Override
+				public void onClick(String content) {
+					
+				}
+			});
+			dialog.show();
+		}
+	}
+	
 	
 	private void getObjectList() {
 		List<BaseObject> objs=null;
@@ -896,6 +903,11 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	@Override
 	public void onItemClick(int index) {
 		Debug.d(TAG, "--->onPopWinowdItemClick: " + index);
+		if (index == 0) {
+			onSaveClicked(false);
+		} else {
+			onSaveClicked(true);
+		}
 	}
 	
 }
