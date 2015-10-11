@@ -21,6 +21,7 @@
             android:text="@string/str_textview_param1"
             android:textColor="@color/black"
             />
+        <!--  
         <Spinner 
             android:id="@+id/ph_set_encoder_value"
             style="@style/edit_spinner_style"
@@ -33,7 +34,20 @@
             android:dropDownWidth="@dimen/settingsValueLength"
             android:background="#ffffff"
             />
-          
+         -->
+         <TextView
+             android:id="@+id/ph_set_encoder_value"
+             android:layout_width="@dimen/settingsValueLength"
+             android:layout_height="@dimen/settingsSPinnerSize"
+             android:layout_toRightOf="@id/ph_set_encoder"
+             android:drawableRight="@drawable/spiner_down_btn"
+             android:gravity="center_vertical"
+             android:layout_marginLeft="@dimen/settingsMarginLeft"
+             android:textSize="@dimen/settingsEditTextsize"
+             android:textColor="#000000"
+             android:background="#ffffff"
+             />
+             
         <TextView
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="wrap_content"

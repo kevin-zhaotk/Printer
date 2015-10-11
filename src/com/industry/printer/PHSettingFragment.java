@@ -6,6 +6,9 @@ import java.util.MissingResourceException;
 import com.industry.printer.R.string;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.widget.PopWindowSpiner;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -25,12 +29,17 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class PHSettingFragment extends Fragment implements OnItemSelectedListener {
+public class PHSettingFragment extends Fragment implements OnItemSelectedListener, OnClickListener, IOnItemClickListener {
 	
 	private static final String TAG= PHSettingFragment.class.getSimpleName();
 
-	public Spinner mEncoder;
+	//public Spinner mEncoder;
+	public TextView mEncoder;
+	public PopWindowSpiner mSpiner;
+	public PopWindowAdapter mEncoderAdapter;
+	
 	public EditText mTrigermode;
 	public EditText mPHO_H;
 	public EditText mPHO_L;
@@ -114,13 +123,24 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		SystemConfigFile.parseSystemCofig();
-		mEncoder = (Spinner) getView().findViewById(R.id.ph_set_encoder_value);
-		mEncoder.setSelection(SystemConfigFile.mEncoder);
-		mEncoder.setOnItemSelectedListener(this);
+		// mEncoder = (Spinner) getView().findViewById(R.id.ph_set_encoder_value);
+		mEncoder = (TextView) getView().findViewById(R.id.ph_set_encoder_value);
 		
+		//mEncoder.setSelection(SystemConfigFile.mEncoder);
+		//mEncoder.setOnItemSelectedListener(this);
+		
+		mSpiner = new PopWindowSpiner(getActivity());
+		mEncoderAdapter = new PopWindowAdapter(getActivity(), null);
 		String[] items = getResources().getStringArray(R.array.encoder_item_entries); 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
-		mEncoder.setAdapter(adapter);
+		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
+		for (int i = 0; i < items.length; i++) {
+			mEncoderAdapter.addItem(items[i]);
+		}
+		mSpiner.setAdapter(mEncoderAdapter);
+		mSpiner.setFocusable(true);
+		mEncoder.setOnClickListener(this);
+		mSpiner.setOnItemClickListener(this);
+		//mEncoder.setAdapter(adapter);
 		
 		mTrigermode = (EditText) getView().findViewById(R.id.ph_set_trigerMode_value);
 		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
@@ -520,7 +540,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 			long id) {
 		switch (view.getId()) {
 			case R.id.ph_set_encoder_value:
-				SystemConfigFile.mEncoder = mEncoder.getSelectedItemPosition();
+				SystemConfigFile.mEncoder = getEncoderIndex(mEncoder.getText().toString());
 				break;
 		}
 	}
@@ -545,7 +565,9 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	
 	public void reloadSettings() {
 		SystemConfigFile.parseSystemCofig();
-		mEncoder.setSelection(SystemConfigFile.mEncoder);
+		//mEncoder.setSelection(SystemConfigFile.mEncoder);
+		
+		mEncoder.setText(getEncoder(SystemConfigFile.mEncoder));
 		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
 		mPHO_H.setText(String.valueOf(SystemConfigFile.mPHOHighDelay));
 		mPHO_L.setText(String.valueOf(SystemConfigFile.mPHOLowDelay));
@@ -697,5 +719,46 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 			// TODO Auto-generated method stub
 			
 		}
+	}
+
+
+	@Override
+	public void onClick(View arg0) {
+		switch(arg0.getId()) {
+			case R.id.ph_set_encoder_value:
+				Debug.d(TAG, "--->onclick encoder");
+				mSpiner.setWidth(mEncoder.getWidth());
+				mSpiner.showAsDropDown(mEncoder);
+				break;
+		}
+	}
+	
+	private String getEncoder(int index) {
+		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
+		if (entries == null || entries.length <= 0) {
+			return null;
+		}
+		if (index<0 || index >= entries.length) {
+			return entries[0];
+		}
+		return entries[index];
+	}
+	
+	private int getEncoderIndex(String entry) {
+		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
+		if (entry == null || entries == null || entries.length <= 0) {
+			return 0;
+		}
+		for (int i = 0; i < entries.length; i++) {
+			if (entry.equalsIgnoreCase(entries[i])) {
+				return i;
+			}
+		}
+		return 0;
+	}
+	@Override
+	public void onItemClick(int index) {
+		mEncoder.setText(getEncoder(index));
+		SystemConfigFile.mEncoder = index;
 	}
 }
