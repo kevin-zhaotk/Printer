@@ -5,17 +5,17 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="scrollbar_size">20dp</dimen>
 <!-- 设置界面相关尺寸定义 -->	
-	<dimen name="settingsTextsize">40sp</dimen>
-	<dimen name="settingsEditTextsize">40sp</dimen>
+	<dimen name="settingsTextsize">30sp</dimen>
+	<dimen name="settingsEditTextsize">30sp</dimen>
 	<dimen name="settingsBtnsize">30sp</dimen>
 	<dimen name="settingsUnitTextsize">20sp</dimen>
-	<dimen name="settingsMarginLeft">10dp</dimen>
-	<dimen name="settingsItemLength">500dp</dimen>
-	<dimen name="settingsValueLength">180dp</dimen>
+	<dimen name="settingsMarginLeft">5dp</dimen>
+	<dimen name="settingsItemLength">200dp</dimen>
+	<dimen name="settingsValueLength">110dp</dimen>
 	<dimen name="settingsUnitLength">80dp</dimen>
-	<dimen name="settingsSPinnerSize">80dp</dimen>
-	<dimen name="settingsMarginTop">20dp</dimen>
-	<dimen name="settingsTextViewHeight">80dp</dimen>
+	<dimen name="settingsSPinnerSize">60dp</dimen>
+	<dimen name="settingsMarginTop">5dp</dimen>
+	<dimen name="settingsTextViewHeight">60dp</dimen>
 	
 <!-- 编辑界面相关尺寸定义 -->
 	<dimen name="editButtonsHeight">80dp</dimen>

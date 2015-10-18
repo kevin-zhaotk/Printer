@@ -254,6 +254,7 @@
 	<string name="strResvname61">61.保留</string>
 	<string name="strResvname62">62.保留</string>
 	<string name="strResvname63">63.保留</string>
+	<string name="strResvname64">64.保留</string>
 	<string name="strBtnSave">确认</string>
 	
 	<string-array name="trigger_mode_name">
@@ -391,15 +392,16 @@
 
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">01. 光电选择</string>
-	<string name="str_textview_param2">02. 触发模式选择</string>
-	<string name="str_textview_param3">03. PHO延时高位</string> 
-	<string name="str_textview_param4">04. PHO延时低位</string>
-	<string name="str_textview_param5">05. PHO 输出周期</string>
-	<string name="str_textview_param6">06. 定时输出周期</string>
-	<string name="str_textview_param7">07. 编码器触发条件脉冲数</string>
-	<string name="str_textview_param8">08. 编码器定长脉数</string>
-	<string name="str_textview_param9">09. 编码器延时条件脉冲数</string>
-	<string name="str_textview_param10">10. 每次输出高时间</string> 
+	<string name="str_textview_param2">02. 触发模式</string>
+	<string name="str_textview_param3">03. 光电防抖</string> 
+	<string name="str_textview_param4">04. 光电延时</string>
+	<string name="str_textview_param5">05. 字宽</string>
+	<string name="str_textview_param6">06. 定时打印</string>
+	<string name="str_textview_param7">07. 列间脉冲</string>
+	<string name="str_textview_param8">08. 定长脉冲</string>
+	<string name="str_textview_param9">09. 脉冲延时</string>
+	<string name="str_textview_param10">10. 墨点大小</string>
+	<string name="str_textview_param16">16. 加重</string>
 	<string name="str_btn_settings_sync">确认</string>
 	<string-array name="str_settings_params">
 	    <item>01. 光电选择</item>
@@ -472,12 +474,16 @@
 	    <item>PHO2</item>
 	</string-array>
 	
-	<string name="str_time_unit">0.1ms</string>
+	<string name="str_time_unit_ms">毫秒</string>
+	<string name="str_time_unit_us">微秒</string>
 	<string name="str_setting_time">时间设置</string>
 	<string name="str_system_setting">系统设置</string>
 	<string name="str_upgrade_progress">系统升级中....</string>
 	<string name="str_time_format">%1$02d:%2$02d:%3$02d</string>
-	
+	<string name="str_toast_ink_unvalid">墨点大小超出范围,设为默认值：800</string>
+	<string name="str_toast_photoelectricity_delay">光电延时超出范围，设为默认值:100</string>
+	<string name="str_toast_photoelectricity_antishake">光电防抖超出范围，设为默认值:20</string>
+	<string name="str_toast_timingprint">定时打印超出范围，设为默认值:1000</string>
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">插入</string>
 	<string name="str_edit_btn_temp1">测试1</string>

@@ -20,7 +20,7 @@ public class PlatformInfo {
 	public static boolean isBufferFromDotMatrix() {
 		
 		String product = SystemProperties.get(PROPERTY_PRODUCT);
-		Debug.d(TAG, "--->product=" + product);
+		//Debug.d(TAG, "--->product=" + product);
 		if (PRODUCT_SMFY_SUPER3.equalsIgnoreCase(product)) {
 			return true;
 		} else {

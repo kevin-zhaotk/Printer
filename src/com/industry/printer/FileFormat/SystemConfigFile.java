@@ -15,6 +15,7 @@ import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.industry.printer.R;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -42,7 +43,7 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_RESERVED_13 = "reserved13";
 	public static final String PH_SETTING_RESERVED_14 = "reserved14";
 	public static final String PH_SETTING_RESERVED_15 = "reserved15";
-	public static final String PH_SETTING_RESERVED_16 = "reserved16";
+	public static final String PH_SETTING_RESERVED_16 = "bold";
 	public static final String PH_SETTING_RESERVED_17 = "reserved17";
 	public static final String PH_SETTING_RESERVED_18 = "reserved18";
 	public static final String PH_SETTING_RESERVED_19 = "reserved19";
@@ -87,19 +88,23 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_RESERVED_58 = "reserved58";
 	public static final String PH_SETTING_RESERVED_59 = "reserved59";
 	public static final String PH_SETTING_RESERVED_60 = "reserved60";
+	public static final String PH_SETTING_RESERVED_61 = "reserved61";
+	public static final String PH_SETTING_RESERVED_62 = "reserved62";
+	public static final String PH_SETTING_RESERVED_63 = "reserved63";
+	public static final String PH_SETTING_RESERVED_64 = "reserved64";
 	
 	public static final String LAST_MESSAGE = "message";
 	
-	public static int mEncoder = 0;
-	public static int mTrigerMode = 0;
-	public static int mPHOHighDelay = 0;
-	public static int mPHOLowDelay = 0;
-	public static int mPHOOutputPeriod = 0;
-	public static int mTimedPeriod = 0;
-	public static int mTrigerPulse = 0;
-	public static int mLenFixedPulse = 0;
-	public static int mDelayPulse = 0;
-	public static int mHighLen = 0;
+	public static int mParam1 = 0;
+	public static int mParam2 = 0;
+	public static int mParam3 = 400;
+	public static int mParam4 = 100;
+	public static int mParam5 = 0;
+	public static int mParam6 = 400;
+	public static int mParam7 = 0;
+	public static int mParam8 = 0;
+	public static int mParam9 = 0;
+	public static int mParam10 = 800;
 	public static int mResv11 = 0;
 	public static int mResv12 = 0;
 	public static int mResv13 = 0;
@@ -150,6 +155,10 @@ public class SystemConfigFile{
 	public static int mResv58 = 0;
 	public static int mResv59 = 0;
 	public static int mResv60 = 0;
+	public static int mResv61 = 0;
+	public static int mResv62 = 0;
+	public static int mResv63 = 0;
+	public static int mResv64 = 0;
 
 	
 	public static void parseSystemCofig() {
@@ -171,25 +180,61 @@ public class SystemConfigFile{
 		for (XmlTag t : list) {
 			tag = t.getKey();
 			if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
-				mEncoder = Integer.parseInt(t.getValue());
+				mParam1 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
-				mTrigerMode = Integer.parseInt(t.getValue());
+				mParam2 = Integer.parseInt(t.getValue());
+				/*触发模式,有效值1,2,3,4*/
+				if (mParam2 < 1 || mParam2 > 4) {
+					mParam2 = 1;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_DELAY)) {
-				mPHOHighDelay = Integer.parseInt(t.getValue());
+				mParam3 = Integer.parseInt(t.getValue());
+				/*光电防抖 0-400 默认值20*/
+				if (mParam3 < 0 || mParam3 > 600) {
+					mParam3 = 20;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_LOW_DELAY)) {
-				mPHOLowDelay = Integer.parseInt(t.getValue());
+				mParam4 = Integer.parseInt(t.getValue());
+				/*光电延时 0-65535 默认值100*/
+				if (mParam4 < 0 || mParam4 > 65535) {
+					mParam4 = 100;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_PHOOUTPUT_PERIOD)) {
-				mPHOOutputPeriod = Integer.parseInt(t.getValue());
+				mParam5 = Integer.parseInt(t.getValue());
+				/*字宽(毫秒） 下发FPGA-S5 0-65535*/
+				if (mParam5 < 0 || mParam5 > 65535) {
+					mParam5 = 1000;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TIMED_PERIOD)) {
-				mTimedPeriod = Integer.parseInt(t.getValue());
+				mParam6 = Integer.parseInt(t.getValue());
+				/*墨点大小 0-65535 默认值1000*/
+				if (mParam6 < 0 || mParam6 > 65535) {
+					mParam6 = 1000;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_PULSE)) {
-				mTrigerPulse = Integer.parseInt(t.getValue());
+				mParam7 = Integer.parseInt(t.getValue());
+				/*列间脉冲 下发FPGA- S7	1-50*/
+				if (mParam7 < 1 || mParam7 > 50) {
+					mParam7 = 1;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_LENFIXED_PULSE)) {
-				mLenFixedPulse = Integer.parseInt(t.getValue());
+				mParam8 = Integer.parseInt(t.getValue());
+				/*定长脉冲 下发FPGA-S8 	1-65535*/
+				if (mParam8 < 1 || mParam8 > 65535) {
+					mParam8 = 1;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_DELAY_PULSE)) {
-				mDelayPulse = Integer.parseInt(t.getValue());
+				mParam9 = Integer.parseInt(t.getValue());
+				/*脉冲延时 下发FPGA-S9 	1-65535*/
+				if (mParam9 < 1 || mParam9 > 65535) {
+					mParam9 = 1;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
-				mHighLen = Integer.parseInt(t.getValue());
+				mParam10 = Integer.parseInt(t.getValue());
+				/*墨点大小 200-2000 默认值800*/
+				if (mParam10 < 200 || mParam10 > 2000) {
+					mParam10 = 800;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
 				mResv11 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
@@ -202,6 +247,10 @@ public class SystemConfigFile{
 				mResv15 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_16)) {
 				mResv16 = Integer.parseInt(t.getValue());
+				/*加重 0-9 默认值0*/
+				if (mResv16 < 0 || mResv16 > 9) {
+					mResv16 = 0;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
 				mResv17 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
@@ -290,6 +339,14 @@ public class SystemConfigFile{
 				mResv59 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_60)) {
 				mResv60 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_61)) {
+				mResv61 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_62)) {
+				mResv62 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_63)) {
+				mResv63 = Integer.parseInt(t.getValue());
+			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_64)) {
+				mResv64 = Integer.parseInt(t.getValue());
 			} 
 			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
 		}
@@ -304,80 +361,80 @@ public class SystemConfigFile{
 				if (PH_SETTING_ENCODER.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_ENCODER);
 					if (args.length < 2) {
-						mEncoder = 0;
+						mParam1 = 0;
 					} else {
-						mEncoder = Integer.parseInt(args[1]);
+						mParam1 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_TRIGER_MODE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TRIGER_MODE);
 					if (args.length < 2) {
-						mTrigerMode = 0;
+						mParam2 = 0;
 					} else {
-						mTrigerMode = Integer.parseInt(args[1]);
+						mParam2 = Integer.parseInt(args[1]);
 					}
 				} else if (PH_SETTING_HIGH_DELAY.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_HIGH_DELAY);
 					if (args.length < 2) {
-						mPHOHighDelay = 0;
+						mParam3 = 0;
 					} else {
-						mPHOHighDelay = Integer.parseInt(args[1]);
+						mParam3 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_LOW_DELAY.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_LOW_DELAY);
 					if (args.length < 2) {
-						mPHOLowDelay = 0;
+						mParam4 = 0;
 					} else {
-						mPHOLowDelay = Integer.parseInt(args[1]);
+						mParam4 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_PHOOUTPUT_PERIOD.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_PHOOUTPUT_PERIOD);
 					if (args.length < 2) {
-						mPHOOutputPeriod = 0;
+						mParam5 = 0;
 					} else {
-						mPHOOutputPeriod = Integer.parseInt(args[1]);
+						mParam5 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_TIMED_PERIOD.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TIMED_PERIOD);
 					if (args.length < 2) {
-						mTimedPeriod = 0;
+						mParam6 = 0;
 					} else {
-						mTimedPeriod = Integer.parseInt(args[1]);
+						mParam6 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_TRIGER_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_TRIGER_PULSE);
 					if (args.length < 2) {
-						mTrigerPulse = 0;
+						mParam7 = 0;
 					} else {
-						mTrigerPulse = Integer.parseInt(args[1]);
+						mParam7 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_LENFIXED_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_LENFIXED_PULSE);
 					if (args.length < 2) {
-						mLenFixedPulse = 0;
+						mParam8 = 0;
 					} else {
-						mLenFixedPulse = Integer.parseInt(args[1]);
+						mParam8 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_DELAY_PULSE.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_DELAY_PULSE);
 					if (args.length < 2) {
-						mDelayPulse = 0;
+						mParam9 = 0;
 					} else {
-						mDelayPulse = Integer.parseInt(args[1]);
+						mParam9 = Integer.parseInt(args[1]);
 					}
 					
 				} else if (PH_SETTING_HIGH_LEN.equals(args[0])) {
 					Debug.d(TAG, "===>param: "+PH_SETTING_HIGH_LEN);
 					if (args.length < 2) {
-						mHighLen = 0;
+						mParam10 = 0;
 					} else {
-						mHighLen = Integer.parseInt(args[1]);
+						mParam10 = Integer.parseInt(args[1]);
 					}
 				} else {
 					Debug.d(TAG, "===>unknow param: "+args[0]);
@@ -416,25 +473,25 @@ public class SystemConfigFile{
 		}
 		Debug.d(TAG, "===>dir:"+dir.getAbsolutePath());
 		ArrayList<XmlTag> list = new ArrayList<XmlTag>();
-		XmlTag tag1 = new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder));
+		XmlTag tag1 = new XmlTag(PH_SETTING_ENCODER, String.valueOf(mParam1));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode));
+		tag1 = new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mParam2));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay));
+		tag1 = new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mParam3));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay));
+		tag1 = new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mParam4));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod));
+		tag1 = new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mParam5));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod));
+		tag1 = new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mParam6));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse));
+		tag1 = new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mParam7));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse));
+		tag1 = new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mParam8));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse));
+		tag1 = new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mParam9));
 		list.add(tag1);
-		tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen));
+		tag1 = new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mParam10));
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_RESERVED_11, String.valueOf(mResv11));
 		list.add(tag1);
@@ -536,6 +593,10 @@ public class SystemConfigFile{
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_RESERVED_60, String.valueOf(mResv60));
 		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_61, String.valueOf(mResv61));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_62, String.valueOf(mResv62));
+		list.add(tag1);
 		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
 		stream.close();
@@ -543,16 +604,16 @@ public class SystemConfigFile{
 	
 	public void saveSettings() {
 		ArrayList<XmlTag> tags = new ArrayList<XmlTag>();
-		tags.add(new XmlTag(PH_SETTING_ENCODER, String.valueOf(mEncoder)));
-		tags.add(new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mTrigerMode)));
-		tags.add(new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mPHOHighDelay)));
-		tags.add(new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mPHOLowDelay)));
-		tags.add(new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mPHOOutputPeriod)));
-		tags.add(new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mTimedPeriod)));
-		tags.add(new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mTrigerPulse)));
-		tags.add(new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mLenFixedPulse)));
-		tags.add(new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mDelayPulse)));
-		tags.add(new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mHighLen)));
+		tags.add(new XmlTag(PH_SETTING_ENCODER, String.valueOf(mParam1)));
+		tags.add(new XmlTag(PH_SETTING_TRIGER_MODE, String.valueOf(mParam2)));
+		tags.add(new XmlTag(PH_SETTING_HIGH_DELAY, String.valueOf(mParam3)));
+		tags.add(new XmlTag(PH_SETTING_LOW_DELAY, String.valueOf(mParam4)));
+		tags.add(new XmlTag(PH_SETTING_PHOOUTPUT_PERIOD, String.valueOf(mParam5)));
+		tags.add(new XmlTag(PH_SETTING_TIMED_PERIOD, String.valueOf(mParam6)));
+		tags.add(new XmlTag(PH_SETTING_TRIGER_PULSE, String.valueOf(mParam7)));
+		tags.add(new XmlTag(PH_SETTING_LENFIXED_PULSE, String.valueOf(mParam8)));
+		tags.add(new XmlTag(PH_SETTING_DELAY_PULSE, String.valueOf(mParam9)));
+		tags.add(new XmlTag(PH_SETTING_HIGH_LEN, String.valueOf(mParam10)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_11, String.valueOf(mResv11)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_12, String.valueOf(mResv12)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_13, String.valueOf(mResv13)));
@@ -603,6 +664,8 @@ public class SystemConfigFile{
 		tags.add(new XmlTag(PH_SETTING_RESERVED_58, String.valueOf(mResv58)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_59, String.valueOf(mResv59)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_60, String.valueOf(mResv60)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_61, String.valueOf(mResv61)));
+		tags.add(new XmlTag(PH_SETTING_RESERVED_62, String.valueOf(mResv62)));
 	}
 	
 	

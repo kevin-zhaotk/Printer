@@ -274,6 +274,8 @@ public class TLKFileParser {
 						for (int i = 0; i <lines; i++) {
 							buffreader.readLine();
 						}
+					} else if (pObj instanceof CounterObject) {
+						objString = pObj.getContent();
 					} else {
 						continue;
 					}

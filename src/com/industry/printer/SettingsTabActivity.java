@@ -129,7 +129,7 @@ public static final String TAG="SettingsTabActivity";
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//this.addPreferencesFromResource(R.xml.settings_layout);
 		mContext = getActivity().getApplicationContext();
-		
+		Debug.d(TAG, "--->onActivityCreated");
 		
 //		mTime = (TextView) findViewById(R.id.tv_systemTime);
 //		mTimeRefreshHandler.sendEmptyMessageDelayed(0, 2000);
@@ -191,12 +191,15 @@ public static final String TAG="SettingsTabActivity";
 		
 		mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
 		mPHSettings = new PHSettingFragment(mContext);
-		
+		Debug.d(TAG, "--->onActivityCreated layout frame");
 		// mSettingsFragment = new SettingsFragment(mContext);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		Debug.d(TAG, "--->onActivityCreated layout frame");
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
+		Debug.d(TAG, "--->onActivityCreated layout frame 111");
 		//transaction.replace(R.id.phsetting_fragment, mSettingsFragment);
 		transaction.commit();
+		Debug.d(TAG, "--->onActivityCreated layout frame 222");
 		/*
 		mListView = (ListView) getView().findViewById(R.id.settings_list_view);
 		mAdapter = new SettingsListAdapter(mContext);
@@ -204,6 +207,18 @@ public static final String TAG="SettingsTabActivity";
 		*/
 	}
 	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Debug.d(TAG, "--->onstart");
+	}
+	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		Debug.d(TAG, "--->onResume");
+	}
 //	@Override
 //	public boolean  onKeyDown(int keyCode, KeyEvent event)  
 //	{
@@ -269,15 +284,18 @@ public static final String TAG="SettingsTabActivity";
 		}
 		switch (arg0.getId()) {
 			case R.id.btn_prev:
-				mScrollView.arrowScroll(View.FOCUS_UP);
+				// mScrollView.arrowScroll(View.FOCUS_UP);
+				mScrollView.scrollBy(0, -300);
 				// mListView.smoothScrollBy(-200, 2);
 				break;
 			case R.id.btn_next:
-				mScrollView.arrowScroll(View.FOCUS_DOWN);
+				// mScrollView.arrowScroll(View.FOCUS_DOWN);
+				mScrollView.scrollBy(0, 300);
 				// mListView.smoothScrollBy(200, 2);
 				break;
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
+				mPHSettings.checkParams();
 				SystemConfigFile.saveConfig();
 				FpgaGpioOperation.updateSettings(mContext);
 				break;

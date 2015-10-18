@@ -3,12 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-        
+    
+    <LinearLayout 
+        android:id="@+id/param_row1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+    <!-- 参数1 -->
     <RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:gravity="center_vertical"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	     android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_encoder"
@@ -59,12 +68,14 @@
             />
 	</RelativeLayout>
 	
+    <!-- 参数2 -->
     <RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_trigerMode"
@@ -99,13 +110,23 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+    <!-- 参数3 -->
     <RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_PHODelayHigh"
@@ -137,18 +158,19 @@
             android:layout_toRightOf="@id/ph_set_PHODelayHigh_value"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
-            android:text="@string/str_time_unit"
+            android:text="@string/str_time_unit_ms"
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
 	
-    
+    <!-- 参数4 -->
     <RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_PHODelayLow"
@@ -180,16 +202,27 @@
             android:layout_toRightOf="@id/ph_set_PHODelayLow_value"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
-            android:text="@string/str_time_unit"
+            android:text="@string/str_time_unit_ms"
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+    <!-- 参数5 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_PHOOutput_period"
@@ -221,17 +254,19 @@
             android:layout_toRightOf="@id/ph_set_PHOOutput_period_value"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize" 
-            android:text="@string/str_time_unit"
+            android:text="@string/str_time_unit_ms"
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
 	
+	<!-- 参数6 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_TimeFixed_period"
@@ -262,18 +297,28 @@
             android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_TimeFixed_period_value"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:text="@string/str_time_unit_ms"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
-	
+    <LinearLayout 
+        android:id="@+id/param_row4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数7 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderTriger_pulse"
@@ -309,12 +354,14 @@
             />
 	</RelativeLayout>
 	
+	<!-- 参数8 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderLenFixed_pulse"
@@ -349,13 +396,23 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数9 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
 	    android:gravity="center_vertical"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_EncoderDelay_pulse"
@@ -391,11 +448,13 @@
             />
 	</RelativeLayout>
 	
+	<!-- 参数10 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_OutputHight_length"
@@ -427,17 +486,27 @@
             android:layout_toRightOf="@id/ph_set_OutputHight_length_value"
             android:layout_alignBaseline="@id/ph_set_OutputHight_length"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:text="@string/str_time_unit_us"
             android:textSize="@dimen/settingsUnitTextsize" 
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row6"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数11 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved11"
@@ -479,8 +548,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved12"
             android:layout_width="@dimen/settingsItemLength"
@@ -515,14 +584,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row7"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数13 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved13"
             android:layout_width="@dimen/settingsItemLength"
@@ -557,13 +634,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	
 	<!-- 参数14 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved14"
             android:layout_width="@dimen/settingsItemLength"
@@ -598,14 +676,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row8"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数15 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved15"
             android:layout_width="@dimen/settingsItemLength"
@@ -646,8 +732,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved16"
             android:layout_width="@dimen/settingsItemLength"
@@ -656,7 +742,7 @@
             android:layout_alignParentLeft="true"
             android:singleLine="true"
             android:textSize="@dimen/settingsTextsize"
-            android:text="@string/strResvname16"
+            android:text="@string/str_textview_param16"
             android:textColor="@color/black"
             />
         <EditText
@@ -682,14 +768,23 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    
+    <LinearLayout 
+        android:id="@+id/param_row9"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数17 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved17"
             android:layout_width="@dimen/settingsItemLength"
@@ -730,8 +825,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved18"
             android:layout_width="@dimen/settingsItemLength"
@@ -766,14 +861,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row10"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数19 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved19"
             android:layout_width="@dimen/settingsItemLength"
@@ -814,8 +917,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved20"
             android:layout_width="@dimen/settingsItemLength"
@@ -850,14 +953,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row11"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数21 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved21"
             android:layout_width="@dimen/settingsItemLength"
@@ -893,13 +1004,13 @@
             />
 	</RelativeLayout>
 	
-	<!-- 参数20 -->
+	<!-- 参数22 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved22"
             android:layout_width="@dimen/settingsItemLength"
@@ -934,14 +1045,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row12"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数23 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved23"
             android:layout_width="@dimen/settingsItemLength"
@@ -982,8 +1101,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved24"
             android:layout_width="@dimen/settingsItemLength"
@@ -1018,14 +1137,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
+    <LinearLayout 
+        android:id="@+id/param_row13"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
 	<!-- 参数25 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved25"
             android:layout_width="@dimen/settingsItemLength"
@@ -1061,13 +1188,13 @@
             />
 	</RelativeLayout>
 	
-	<!-- 参数24 -->
+	<!-- 参数26 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved26"
             android:layout_width="@dimen/settingsItemLength"
@@ -1102,14 +1229,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
-	<!-- 参数24 -->
+    <LinearLayout 
+        android:id="@+id/param_row14"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数27 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved27"
             android:layout_width="@dimen/settingsItemLength"
@@ -1145,13 +1280,13 @@
             />
 	</RelativeLayout>
 	
-	<!-- 参数24 -->
+	<!-- 参数28 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved28"
             android:layout_width="@dimen/settingsItemLength"
@@ -1186,14 +1321,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
-	<!-- 参数24 -->
+    <LinearLayout 
+        android:id="@+id/param_row15"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数29 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved29"
             android:layout_width="@dimen/settingsItemLength"
@@ -1229,13 +1372,13 @@
             />
 	</RelativeLayout>
 	
-	<!-- 参数24 -->
+	<!-- 参数30 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved30"
             android:layout_width="@dimen/settingsItemLength"
@@ -1270,14 +1413,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
 	
-	<!-- 参数24 -->
+    <LinearLayout 
+        android:id="@+id/param_row16"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数31 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved31"
             android:layout_width="@dimen/settingsItemLength"
@@ -1313,13 +1464,13 @@
             />
 	</RelativeLayout>
 	
-	<!-- 参数24 -->
+	<!-- 参数32 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved32"
             android:layout_width="@dimen/settingsItemLength"
@@ -1354,13 +1505,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row17"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数33 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved33"
             android:layout_width="@dimen/settingsItemLength"
@@ -1395,13 +1555,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+	<!-- 参数34 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved34"
             android:layout_width="@dimen/settingsItemLength"
@@ -1436,13 +1597,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row18"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数35 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved35"
             android:layout_width="@dimen/settingsItemLength"
@@ -1477,13 +1647,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数36 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved36"
             android:layout_width="@dimen/settingsItemLength"
@@ -1518,13 +1688,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row19"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数37 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved37"
             android:layout_width="@dimen/settingsItemLength"
@@ -1559,13 +1738,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+	<!-- 参数38 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved38"
             android:layout_width="@dimen/settingsItemLength"
@@ -1600,13 +1780,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row20"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数39 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved39"
             android:layout_width="@dimen/settingsItemLength"
@@ -1641,13 +1830,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+	<!-- 参数40 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved40"
             android:layout_width="@dimen/settingsItemLength"
@@ -1682,13 +1872,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row21"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数41 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved41"
             android:layout_width="@dimen/settingsItemLength"
@@ -1723,13 +1922,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+	<!-- 参数42 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
-	    >
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1">
         <TextView
             android:id="@+id/ph_set_resolved42"
             android:layout_width="@dimen/settingsItemLength"
@@ -1764,12 +1964,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row22"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数43 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved43"
@@ -1805,12 +2015,14 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+	<!-- 参数44 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved44"
@@ -1846,12 +2058,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row23"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数45 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved45"
@@ -1887,12 +2109,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数46 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved46"
@@ -1928,12 +2151,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row24"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数47 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved47"
@@ -1969,12 +2202,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数48 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved48"
@@ -2010,12 +2244,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row25"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数49 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved49"
@@ -2051,12 +2295,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数50 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved50"
@@ -2092,12 +2337,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row26"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数51 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved51"
@@ -2133,12 +2388,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数52 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved52"
@@ -2174,12 +2430,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row27"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数53 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved53"
@@ -2215,12 +2481,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数54 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+		android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved54"
@@ -2256,12 +2523,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row28"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数55 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+		android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved55"
@@ -2297,12 +2574,13 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	<!-- 参数56 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved56"
@@ -2338,12 +2616,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row29"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数57 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved57"
@@ -2379,12 +2667,15 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+    
+	<!-- 参数58 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved58"
@@ -2420,12 +2711,22 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row30"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数59 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved59"
@@ -2461,12 +2762,15 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
-	<!-- 参数24 -->
+	
+    
+	<!-- 参数60 -->
 	<RelativeLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="@dimen/settingsMarginLeft"
-	    android:layout_marginTop="@dimen/settingsMarginTop"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
 	    >
         <TextView
             android:id="@+id/ph_set_resolved60"
@@ -2502,4 +2806,193 @@
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>
+	</LinearLayout>
+	
+    <LinearLayout 
+        android:id="@+id/param_row31"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数61 -->
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
+	    >
+        <TextView
+            android:id="@+id/ph_set_resolved61"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/strResvname61"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_resolved_value61"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsEditTextsize"
+            android:layout_toRightOf="@id/ph_set_resolved61"
+            android:inputType="number"
+            android:maxLength="@integer/max_digit_length"
+            android:imeOptions="flagNoFullscreen|actionNone"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/ph_set_resolved_value61"
+            android:layout_alignBaseline="@id/ph_set_resolved61"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsUnitTextsize" 
+            android:textColor="@color/UnitText"
+            />
+	</RelativeLayout>
+	
+	<!-- 参数62 -->
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
+	    >
+        <TextView
+            android:id="@+id/ph_set_resolved62"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/strResvname62"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_resolved_value62"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsEditTextsize"
+            android:layout_toRightOf="@id/ph_set_resolved62"
+            android:inputType="number"
+            android:maxLength="@integer/max_digit_length"
+            android:imeOptions="flagNoFullscreen|actionNone"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/ph_set_resolved_value62"
+            android:layout_alignBaseline="@id/ph_set_resolved62"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsUnitTextsize" 
+            android:textColor="@color/UnitText"
+            />
+	</RelativeLayout>
+	</LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/param_row32"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsMarginTop"
+        android:orientation="horizontal"
+        >
+	<!-- 参数63 -->
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
+	    >
+        <TextView
+            android:id="@+id/ph_set_resolved63"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/strResvname63"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_resolved_value63"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsEditTextsize"
+            android:layout_toRightOf="@id/ph_set_resolved63"
+            android:inputType="number"
+            android:maxLength="@integer/max_digit_length"
+            android:imeOptions="flagNoFullscreen|actionNone"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/ph_set_resolved_value63"
+            android:layout_alignBaseline="@id/ph_set_resolved63"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsUnitTextsize" 
+            android:textColor="@color/UnitText"
+            />
+	</RelativeLayout>
+	
+	<!-- 参数64 -->
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/settingsMarginLeft"
+	    android:layout_marginTop="0dp"
+	    android:layout_weight="1"
+	    >
+        <TextView
+            android:id="@+id/ph_set_resolved64"
+            android:layout_width="@dimen/settingsItemLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:singleLine="true"
+            android:textSize="@dimen/settingsTextsize"
+            android:text="@string/strResvname64"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/ph_set_resolved_value64"
+            android:layout_width="@dimen/settingsValueLength"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settingsEditTextsize"
+            android:layout_toRightOf="@id/ph_set_resolved64"
+            android:inputType="number"
+            android:maxLength="@integer/max_digit_length"
+            android:imeOptions="flagNoFullscreen|actionNone"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            />
+          
+        <TextView
+            android:layout_width="@dimen/settingsUnitLength"
+            android:layout_height="@dimen/settingsTextViewHeight"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/ph_set_resolved_value64"
+            android:layout_alignBaseline="@id/ph_set_resolved64"
+            android:layout_marginLeft="@dimen/settingsMarginLeft"
+            android:textSize="@dimen/settingsUnitTextsize" 
+            android:textColor="@color/UnitText"
+            />
+	</RelativeLayout>
+	</LinearLayout>
 </LinearLayout>

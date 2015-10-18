@@ -196,17 +196,17 @@ public class FpgaGpioOperation {
 		for (int i = 0; i < data.length; i++) {
 			data[i] = 0;
  		}
-		data[0] = (char) SystemConfigFile.mEncoder;
-		data[1] = (char) SystemConfigFile.mTrigerMode;
-		data[2] = (char) SystemConfigFile.mPHOHighDelay;
-		data[3] = (char) SystemConfigFile.mPHOLowDelay;
-		data[4] = (char) SystemConfigFile.mPHOOutputPeriod;
-		data[5] = (char) SystemConfigFile.mTimedPeriod;
-		data[6] = (char) SystemConfigFile.mTrigerPulse;
-		data[7] = (char) SystemConfigFile.mLenFixedPulse;
+		data[0] = (char) SystemConfigFile.mParam1;
+		data[1] = (char) SystemConfigFile.mParam2;
+		data[2] = (char) SystemConfigFile.mParam3;
+		data[3] = (char) SystemConfigFile.mParam4;
+		data[4] = (char) SystemConfigFile.mParam5;
+		data[5] = (char) SystemConfigFile.mParam6;
+		data[6] = (char) SystemConfigFile.mParam7;
+		data[7] = (char) SystemConfigFile.mParam8;
 		Debug.d(TAG, "===>data7:" + Integer.toHexString(data[7]));
-		data[8] = (char) SystemConfigFile.mDelayPulse;
-		data[9] = (char) SystemConfigFile.mHighLen;
+		data[8] = (char) SystemConfigFile.mParam9;
+		data[9] = (char) SystemConfigFile.mParam10;
 		data[10] = (char) SystemConfigFile.mResv11;
 		data[11] = (char) SystemConfigFile.mResv12;
 		data[12] = (char) SystemConfigFile.mResv13;

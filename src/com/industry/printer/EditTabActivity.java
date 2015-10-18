@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import com.industry.printer.FileFormat.TlkFileParser;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -277,7 +278,9 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 						obj = object.getContent();
 					} else if (object instanceof RealtimeObject) {
 						// obj = "#T#" + ((RealtimeObject)object).getContent();
-						obj = "#T#" + ((RealtimeObject)object).getFormat();
+						obj = ObjectsFromString.REALTIME_FLAG + ((RealtimeObject)object).getFormat();
+					} else if (object instanceof CounterObject) {
+						obj = ObjectsFromString.COUNTER_FLAG + ((CounterObject)object).getContent();
 					} else {
 						continue;
 					}

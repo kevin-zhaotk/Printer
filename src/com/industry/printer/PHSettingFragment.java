@@ -30,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PHSettingFragment extends Fragment implements OnItemSelectedListener, OnClickListener, IOnItemClickListener {
 	
@@ -41,14 +42,14 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public PopWindowAdapter mEncoderAdapter;
 	
 	public EditText mTrigermode;
-	public EditText mPHO_H;
-	public EditText mPHO_L;
+	public EditText mPHO_H; //已经改成光电防抖
+	public EditText mPHO_L; //已经改成光电延时
 	public EditText mOutPeriod;
-	public EditText mTimedPeriod;
+	public EditText mTimedPeriod; //定时打印
 	public EditText mTimedPulse;
 	public EditText mLenPulse;
 	public EditText mDelayPulse;
-	public EditText mHighLen;
+	public EditText mHighLen; //墨点大小
 	public EditText mResv11;
 	public EditText mResv12;
 	public EditText mResv13;
@@ -99,6 +100,10 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public EditText mResv58;
 	public EditText mResv59;
 	public EditText mResv60;
+	public EditText mResv61;
+	public EditText mResv62;
+	public EditText mResv63;
+	public EditText mResv64;
 	
 	InputMethodManager mImm;
 	public Context mContext;
@@ -122,11 +127,12 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Debug.d(TAG, "--->onActivityCreated");
 		SystemConfigFile.parseSystemCofig();
 		// mEncoder = (Spinner) getView().findViewById(R.id.ph_set_encoder_value);
 		mEncoder = (TextView) getView().findViewById(R.id.ph_set_encoder_value);
-		
-		//mEncoder.setSelection(SystemConfigFile.mEncoder);
+		mEncoder.setText(getEncoder(SystemConfigFile.mParam1));
+		//mEncoder.setSelection(SystemConfigFile.mParam1);
 		//mEncoder.setOnItemSelectedListener(this);
 		
 		mSpiner = new PopWindowSpiner(getActivity());
@@ -143,193 +149,41 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		//mEncoder.setAdapter(adapter);
 		
 		mTrigermode = (EditText) getView().findViewById(R.id.ph_set_trigerMode_value);
-		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
-		mTrigermode.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mTrigerMode = getValueFromEditText(s);
-			}
-		});
+		mTrigermode.setText(String.valueOf(SystemConfigFile.mParam2));
+		mTrigermode.addTextChangedListener(new SelfTextWatcher(mTrigermode));
 
 		mPHO_H = (EditText) getView().findViewById(R.id.ph_set_PHODelayHigh_value);
-		mPHO_H.setText(String.valueOf(SystemConfigFile.mPHOHighDelay));
-		mPHO_H.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mPHOHighDelay = getValueFromEditText(s);
-			}
-		});
+		mPHO_H.setText(String.valueOf(SystemConfigFile.mParam3));
+		mPHO_H.addTextChangedListener(new SelfTextWatcher(mPHO_H));
 
 		mPHO_L = (EditText) getView().findViewById(R.id.ph_set_PHODelayLow_value);
-		mPHO_L.setText(String.valueOf(SystemConfigFile.mPHOLowDelay));
-		mPHO_L.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mPHOLowDelay = getValueFromEditText(s);
-			}
-		});
+		mPHO_L.setText(String.valueOf(SystemConfigFile.mParam4));
+		mPHO_L.addTextChangedListener(new SelfTextWatcher(mPHO_L));
 
 		mOutPeriod = (EditText) getView().findViewById(R.id.ph_set_PHOOutput_period_value);
-		mOutPeriod.setText(String.valueOf(SystemConfigFile.mPHOOutputPeriod));
-		mOutPeriod.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mPHOOutputPeriod = getValueFromEditText(s);
-			}
-		});
+		mOutPeriod.setText(String.valueOf(SystemConfigFile.mParam5));
+		mOutPeriod.addTextChangedListener(new SelfTextWatcher(mOutPeriod));
 
 		mTimedPeriod = (EditText) getView().findViewById(R.id.ph_set_TimeFixed_period_value);
-		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mTimedPeriod));
-		mTimedPeriod.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mTimedPeriod = getValueFromEditText(s);
-			}
-		});
+		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mParam6));
+		mTimedPeriod.addTextChangedListener(new SelfTextWatcher(mTimedPeriod));
 
 		mTimedPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderTriger_pulse_value);
-		mTimedPulse.setText(String.valueOf(SystemConfigFile.mTrigerPulse));
-		mTimedPulse.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mTrigerPulse = getValueFromEditText(s);
-			}
-		});
+		mTimedPulse.setText(String.valueOf(SystemConfigFile.mParam7));
+		mTimedPulse.addTextChangedListener(new SelfTextWatcher(mTimedPulse));
+
 
 		mLenPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderLenFixed_pulse_value);
-		mLenPulse.setText(String.valueOf(SystemConfigFile.mLenFixedPulse));
-		mLenPulse.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mLenFixedPulse = getValueFromEditText(s);
-			}
-		});
+		mLenPulse.setText(String.valueOf(SystemConfigFile.mParam8));
+		mLenPulse.addTextChangedListener(new SelfTextWatcher(mLenPulse));
 
 		mDelayPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderDelay_pulse_value);
-		mDelayPulse.setText(String.valueOf(SystemConfigFile.mDelayPulse));
-		mDelayPulse.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mDelayPulse = getValueFromEditText(s);
-			}
-		});
+		mDelayPulse.setText(String.valueOf(SystemConfigFile.mParam9));
+		mDelayPulse.addTextChangedListener(new SelfTextWatcher(mDelayPulse));
 
 		mHighLen = (EditText) getView().findViewById(R.id.ph_set_OutputHight_length_value);
-		mHighLen.setText(String.valueOf(SystemConfigFile.mHighLen));
-		mHighLen.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				SystemConfigFile.mHighLen = getValueFromEditText(s);
-			}
-		});
+		mHighLen.setText(String.valueOf(SystemConfigFile.mParam10));
+		mHighLen.addTextChangedListener(new SelfTextWatcher(mHighLen));
 		
 		mResv11 = (EditText) getView().findViewById(R.id.ph_set_resolved_value11);
 		mResv11.addTextChangedListener(new SelfTextWatcher(mResv11));
@@ -531,16 +385,45 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		mResv60.addTextChangedListener(new SelfTextWatcher(mResv60));
 		mResv60.setText(String.valueOf(SystemConfigFile.mResv60));
 		
+		mResv61 = (EditText) getView().findViewById(R.id.ph_set_resolved_value61);
+		mResv61.addTextChangedListener(new SelfTextWatcher(mResv61));
+		mResv61.setText(String.valueOf(SystemConfigFile.mResv61));
 		
+		mResv62 = (EditText) getView().findViewById(R.id.ph_set_resolved_value62);
+		mResv62.addTextChangedListener(new SelfTextWatcher(mResv62));
+		mResv62.setText(String.valueOf(SystemConfigFile.mResv62));
+		
+		mResv63 = (EditText) getView().findViewById(R.id.ph_set_resolved_value63);
+		mResv63.addTextChangedListener(new SelfTextWatcher(mResv63));
+		mResv63.setText(String.valueOf(SystemConfigFile.mResv63));
+		
+		mResv64 = (EditText) getView().findViewById(R.id.ph_set_resolved_value64);
+		mResv64.addTextChangedListener(new SelfTextWatcher(mResv64));
+		mResv64.setText(String.valueOf(SystemConfigFile.mResv64));
+		
+		Debug.d(TAG, "--->onActivityCreated 384");
 		
 		mImm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE); 
 	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Debug.d(TAG, "--->onstart");
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		Debug.d(TAG, "--->onResume");
+	}
+	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
 		switch (view.getId()) {
 			case R.id.ph_set_encoder_value:
-				SystemConfigFile.mEncoder = getEncoderIndex(mEncoder.getText().toString());
+				SystemConfigFile.mParam1 = getEncoderIndex(mEncoder.getText().toString());
 				break;
 		}
 	}
@@ -565,18 +448,19 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	
 	public void reloadSettings() {
 		SystemConfigFile.parseSystemCofig();
-		//mEncoder.setSelection(SystemConfigFile.mEncoder);
+		// mEncoder.setSelection(SystemConfigFile.mParam1);
 		
-		mEncoder.setText(getEncoder(SystemConfigFile.mEncoder));
-		mTrigermode.setText(String.valueOf(SystemConfigFile.mTrigerMode));
-		mPHO_H.setText(String.valueOf(SystemConfigFile.mPHOHighDelay));
-		mPHO_L.setText(String.valueOf(SystemConfigFile.mPHOLowDelay));
-		mOutPeriod.setText(String.valueOf(SystemConfigFile.mPHOOutputPeriod));
-		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mTimedPeriod));
-		mTimedPulse.setText(String.valueOf(SystemConfigFile.mTrigerPulse));
-		mLenPulse.setText(String.valueOf(SystemConfigFile.mLenFixedPulse));
-		mDelayPulse.setText(String.valueOf(SystemConfigFile.mDelayPulse));
-		mHighLen.setText(String.valueOf(SystemConfigFile.mHighLen));
+		mEncoder.setText(getEncoder(SystemConfigFile.mParam1));
+		mTrigermode.setText(String.valueOf(SystemConfigFile.mParam2));
+		mPHO_H.setText(String.valueOf(SystemConfigFile.mParam3));
+		mPHO_L.setText(String.valueOf(SystemConfigFile.mParam4));
+		mOutPeriod.setText(String.valueOf(SystemConfigFile.mParam5));
+		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mParam6));
+		mTimedPulse.setText(String.valueOf(SystemConfigFile.mParam7));
+		mLenPulse.setText(String.valueOf(SystemConfigFile.mParam8));
+		mDelayPulse.setText(String.valueOf(SystemConfigFile.mParam9));
+		mHighLen.setText(String.valueOf(SystemConfigFile.mParam10));
+		mResv16.setText(String.valueOf(SystemConfigFile.mResv16));
 	}
 	
 	private static final int PRINTER_SETTINGS_CHANGED = 1;
@@ -605,7 +489,25 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			if (mEditText == mResv11) {
+			if (mEditText == mTrigermode) {
+				SystemConfigFile.mParam2 = getValueFromEditText(arg0);
+			} else if (mEditText == mDelayPulse) {
+				SystemConfigFile.mParam9 = getValueFromEditText(arg0);
+			} else if (mEditText == mTimedPulse){
+				SystemConfigFile.mParam7 = getValueFromEditText(arg0);
+			} else if (mEditText == mTimedPeriod) {
+				SystemConfigFile.mParam6 = getValueFromEditText(arg0);
+			} else if (mEditText == mOutPeriod) {
+				SystemConfigFile.mParam5 = getValueFromEditText(arg0);
+			} else if (mEditText == mPHO_H) {
+				SystemConfigFile.mParam3 = getValueFromEditText(arg0);
+			} else if (mEditText == mPHO_L) {
+				SystemConfigFile.mParam4 = getValueFromEditText(arg0);
+			} else if (mEditText == mLenPulse){
+				SystemConfigFile.mParam8 = getValueFromEditText(arg0);
+			} else if (mEditText == mHighLen) {
+				SystemConfigFile.mParam10 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv11) {
 				SystemConfigFile.mResv11 = getValueFromEditText(arg0);
 			} else if (mEditText == mResv12) {
 				SystemConfigFile.mResv12 = getValueFromEditText(arg0);
@@ -705,6 +607,14 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 				SystemConfigFile.mResv59 = getValueFromEditText(arg0);
 			} else if (mEditText == mResv60) {
 				SystemConfigFile.mResv60 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv61) {
+				SystemConfigFile.mResv61 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv62) {
+				SystemConfigFile.mResv62 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv63) {
+				SystemConfigFile.mResv63 = getValueFromEditText(arg0);
+			} else if (mEditText == mResv64) {
+				SystemConfigFile.mResv64 = getValueFromEditText(arg0);
 			}
 			
 		}
@@ -735,6 +645,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	
 	private String getEncoder(int index) {
 		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
+		Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
 		if (entries == null || entries.length <= 0) {
 			return null;
 		}
@@ -759,6 +670,76 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	@Override
 	public void onItemClick(int index) {
 		mEncoder.setText(getEncoder(index));
-		SystemConfigFile.mEncoder = index;
+		SystemConfigFile.mParam1 = index;
+	}
+	
+	public void checkParams() {
+		/*触发模式,有效值1,2,3,4*/
+		if (SystemConfigFile.mParam2 < 1 || SystemConfigFile.mParam2 > 4) {
+			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
+			mTrigermode.setText("1");
+			SystemConfigFile.mParam2 = 1;
+		}
+		
+		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
+		if (SystemConfigFile.mParam3 < 0 || SystemConfigFile.mParam3 > 600) {
+			Toast.makeText(mContext, R.string.str_toast_photoelectricity_delay, Toast.LENGTH_LONG);
+			mPHO_H.setText("20");
+			SystemConfigFile.mParam3 = 20;
+		}
+		
+		/*光电延时(毫秒）下发FPGA-S4	有效值0-65535*/
+		if (SystemConfigFile.mParam4 < 0 || SystemConfigFile.mParam4 > 65535) {
+			Toast.makeText(mContext, R.string.str_toast_photoelectricity_antishake, Toast.LENGTH_LONG);
+			mPHO_L.setText("0");
+			SystemConfigFile.mParam4 = 0;
+		}
+		
+		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
+		if (SystemConfigFile.mParam5 < 0 || SystemConfigFile.mParam5 > 65535) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mOutPeriod.setText("0");
+			SystemConfigFile.mParam6 = 0;
+		}
+		
+		/*定时打印(毫秒) 下发FPGA- S6	0-65535*/
+		if (SystemConfigFile.mParam6 < 0 || SystemConfigFile.mParam6 > 65535) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mTimedPeriod.setText("1000");
+			SystemConfigFile.mParam6 = 1000;
+		}
+		
+		/*列间脉冲 下发FPGA- S7	1-50*/
+		if (SystemConfigFile.mParam7 < 1 || SystemConfigFile.mParam7 > 50) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mTimedPulse.setText("0");
+			SystemConfigFile.mParam7 = 0;
+		}
+		
+		/*定长脉冲 下发FPGA-S8 	1-65535*/
+		if (SystemConfigFile.mParam8 < 1 || SystemConfigFile.mParam8 > 65535) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mLenPulse.setText("0");
+			SystemConfigFile.mParam8 = 0;
+		}
+		
+		/*脉冲延时 下发FPGA-S9 	1-65535*/
+		if (SystemConfigFile.mParam9 < 1 || SystemConfigFile.mParam9 > 65535) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mDelayPulse.setText("0");
+			SystemConfigFile.mParam9 = 0;
+		}
+		/*墨点大小(微秒)	下发FPGA-S10	有效值200-2000, */
+		if (SystemConfigFile.mParam10 < 200 || SystemConfigFile.mParam10 > 2000) {
+			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
+			mHighLen.setText("800");
+			SystemConfigFile.mParam10 = 800;
+		}
+		
+		if (SystemConfigFile.mResv16 < 0 || SystemConfigFile.mResv16 > 9) {
+			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
+			mResv16.setText("0");
+			SystemConfigFile.mResv16 = 0;
+		}
 	}
 }
