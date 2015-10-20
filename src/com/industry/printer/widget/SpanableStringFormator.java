@@ -10,39 +10,27 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.TextObject;
 
 import android.graphics.Color;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
-import android.widget.TextView;
 
-public class SpanableStringFormator {
+public class SpanableStringFormator extends SpannableStringBuilder {
 
 	private static final String TAG = SpanableStringFormator.class.getSimpleName();
-	
-	private static SpanableStringFormator mInstanceFormator=null;
-	
-	private SpannableStringBuilder mBuilder;
-	
-	public static SpanableStringFormator getInstance() {
-		if (mInstanceFormator == null) {
-			mInstanceFormator = new SpanableStringFormator();
-		}
-		return mInstanceFormator;
-	}
+
 	
 	public SpanableStringFormator() {
-		mBuilder = new SpannableStringBuilder();
+		super();
 	}
 	
 	public void setText(String text) {
-		mBuilder.clear();
-		mBuilder.clearSpans();
+		this.clear();
+		this.clearSpans();
 		List<ContentType> list = parseElements(text);
 		for (ContentType contentType : list) {
-			mBuilder.append(contentType.text);
+			this.append(contentType.text);
 			if (contentType.isVar) {
-				mBuilder.setSpan(new BackgroundColorSpan(Color.YELLOW), contentType.start, contentType.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				this.setSpan(new BackgroundColorSpan(Color.YELLOW), contentType.start, contentType.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}
 		
@@ -53,20 +41,36 @@ public class SpanableStringFormator {
 		if (objlist == null) {
 			return;
 		}
-		mBuilder.clear();
-		mBuilder.clearSpans();
+		this.clear();
+		this.clearSpans();
 		List<ContentType> list = parseElements(objlist);
 		
 		for (ContentType type : list) {
-			mBuilder.append(type.text);
+			this.append(type.text);
 			if (type.isVar) {
-				mBuilder.setSpan(new BackgroundColorSpan(Color.YELLOW), type.start, type.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				this.setSpan(new BackgroundColorSpan(Color.YELLOW), type.start, type.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}
 	}
 	
+	/**
+	 * 向SpanableStringFormator追加内容，需要根据添加的内容实事分析是否需要设置span
+	 * 同理，delete函数也一样
+	 * @param text
+	 */
 	public void append(String text) {
-		mBuilder.append(text);
+		super.append(text);
+		setText(toString());
+	}
+	
+	/**
+	 * 从SpanableStringFormator删除start开始的内容，需要根据添加的内容实事分析是否需要设置span
+	 * 
+	 * @param start TextView/EditText字符串的最后一个字符index
+	 */
+	public void delete(int start) {
+		super.delete(start, this.length()-1);
+		setText(toString());
 	}
 	
 	private List<ContentType> parseElements(String text) {
@@ -93,7 +97,7 @@ public class SpanableStringFormator {
 	
 	private List<ContentType> parseElements(List<BaseObject> objlist) {
 		int start = 0;
-		ContentType contentType;
+		ContentType contentType = null;
 		List<ContentType> mElements = new ArrayList<ContentType>();
 		if (objlist == null) {
 			return mElements;
@@ -102,17 +106,17 @@ public class SpanableStringFormator {
 		for (BaseObject object : objlist) {
 			if (object instanceof RealtimeObject || object instanceof CounterObject) {
 				contentType = new ContentType(start, start + object.getContent().length(), object.getContent(), true);
-			}
-			if (object instanceof TextObject) {
+			} else if (object instanceof TextObject) {
 				contentType = new ContentType(start, start + object.getContent().length(), object.getContent(), false);
+			} else {
+				continue;
 			}
+			start += object.getContent().length();
+			mElements.add(contentType);
 		}
 		return mElements;
 	}
 	
-	public SpanableStringFormator getSpannableString() {
-		return this;
-	}
 			
 	public class ContentType {
 		public boolean isVar=false;
