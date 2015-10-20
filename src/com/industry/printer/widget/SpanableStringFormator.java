@@ -3,12 +3,18 @@ package com.industry.printer.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.ObjectsFromString;
+import com.industry.printer.object.RealtimeObject;
+import com.industry.printer.object.TextObject;
 
 import android.graphics.Color;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
+import android.widget.TextView;
 
 public class SpanableStringFormator {
 
@@ -28,6 +34,7 @@ public class SpanableStringFormator {
 	public SpanableStringFormator() {
 		mBuilder = new SpannableStringBuilder();
 	}
+	
 	public void setText(String text) {
 		mBuilder.clear();
 		mBuilder.clearSpans();
@@ -41,13 +48,34 @@ public class SpanableStringFormator {
 		
 	}
 	
+	public void setText(List<BaseObject> objlist) {
+		
+		if (objlist == null) {
+			return;
+		}
+		mBuilder.clear();
+		mBuilder.clearSpans();
+		List<ContentType> list = parseElements(objlist);
+		
+		for (ContentType type : list) {
+			mBuilder.append(type.text);
+			if (type.isVar) {
+				mBuilder.setSpan(new BackgroundColorSpan(Color.YELLOW), type.start, type.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
+		}
+	}
+	
+	public void append(String text) {
+		mBuilder.append(text);
+	}
+	
 	private List<ContentType> parseElements(String text) {
 		int start=0;
 		List<ContentType> mElements = new ArrayList<ContentType>();
-		ContentType contentType=null;
+		ContentType contentType = null;
 		String[] elements = text.split(ObjectsFromString.SPLITOR);
 		if (elements == null) {
-			return null;
+			return mElements;
 		}
 		for (String element: elements) {
 			//实时时钟
@@ -60,6 +88,30 @@ public class SpanableStringFormator {
 			mElements.add(contentType);
 		}
 		return mElements;
+		
+	}
+	
+	private List<ContentType> parseElements(List<BaseObject> objlist) {
+		int start = 0;
+		ContentType contentType;
+		List<ContentType> mElements = new ArrayList<ContentType>();
+		if (objlist == null) {
+			return mElements;
+		}
+		
+		for (BaseObject object : objlist) {
+			if (object instanceof RealtimeObject || object instanceof CounterObject) {
+				contentType = new ContentType(start, start + object.getContent().length(), object.getContent(), true);
+			}
+			if (object instanceof TextObject) {
+				contentType = new ContentType(start, start + object.getContent().length(), object.getContent(), false);
+			}
+		}
+		return mElements;
+	}
+	
+	public SpanableStringFormator getSpannableString() {
+		return this;
 	}
 			
 	public class ContentType {
