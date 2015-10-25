@@ -45,6 +45,7 @@ import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
 import com.industry.printer.ui.CustomerDialog.TextBrowserDialog;
 import com.industry.printer.widget.PopWindowSpiner;
+import com.industry.printer.widget.SpanableStringFormator;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -56,6 +57,8 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -142,6 +145,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	 **********************/
 	public ScrollView mScrollView1;
 	public EditText mObjLine1;
+	public SpannableString mSpanText;
 	// public EditText mObjLine2;
 	// public EditText mObjLine3;
 	// public EditText mObjLine4;
@@ -222,7 +226,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 				}
 			}
 		});
-		
+		mSpanText = new SpannableString("");
 		// 初始化下拉按钮界面
 		mSpBtnSave = new PopWindowSpiner(getActivity());
 		PopWindowAdapter adapter = new PopWindowAdapter(getActivity(), null);
@@ -260,6 +264,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	 */
 	public static final int REFRESH_OBJECT_JUST=2;
 	
+	/**
+	 * REFRESH_OBJECT_CHANGED
+	 *   some object changes, need to resave the tlk&bin files
+	 */
+	public static final int REFRESH_TEXT_CHANGED=3;
+	
 	public Handler mObjRefreshHandler = new Handler(){
 		@Override
 		public void  handleMessage (Message msg)
@@ -293,7 +303,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					
 				}
 				Debug.d(TAG, "===========refresh object============");
-				mObjLine1.setText(content);
+				mObjLine1.setText(new SpanableStringFormator(content));
+				break;
+			case REFRESH_TEXT_CHANGED:
+				Bundle bundle = msg.getData();
+				String text = (String)bundle.getString("key_text");
+				mObjLine1.setText(new SpanableStringFormator(text));
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
 				OnPropertyChanged(true);
@@ -541,12 +556,20 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             		String text = bundle.getString("object", null);
             		if (text != null) {
             			String content = mObjLine1.getText().toString();
+            			Message message = mObjRefreshHandler.obtainMessage(REFRESH_TEXT_CHANGED);
+        				Bundle bundle2 = new Bundle();
+        				
             			if (content.isEmpty() || content.endsWith(ObjectsFromString.SPLITOR)) {
-            				mObjLine1.append(text);
+            				bundle2.putString("key_text", content + text);
+            				// mObjLine1.append(text);
 						} else {
-							mObjLine1.append(ObjectsFromString.SPLITOR + text);
+							bundle2.putString("key_text",  content + ObjectsFromString.SPLITOR  + text);
+							// mObjLine1.append(ObjectsFromString.SPLITOR + text);
 						}
-            			
+            			message.setData(bundle2);
+            			mObjRefreshHandler.removeMessages(REFRESH_TEXT_CHANGED);
+        				mObjRefreshHandler.sendMessage(message);
+        				
 					}
             		
             		break;

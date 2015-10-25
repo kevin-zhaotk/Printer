@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PrinterDBHelper;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 
@@ -76,6 +77,7 @@ public class DataTransferThread extends Thread {
 			// Debug.d(TAG, "===>buffer size="+buffer.length);
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			mDataTask.getPrintBuffer();
+			BinCreater.saveBin("/mnt/usbhost1/print.bin", mDataTask.mBgBuffer, 32);
 			int writable = FpgaGpioOperation.pollState();
 			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;

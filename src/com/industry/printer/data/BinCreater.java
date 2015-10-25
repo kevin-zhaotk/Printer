@@ -263,6 +263,56 @@ public class BinCreater {
     	return true;
     }
     
+    /**
+     * 保存bin文件
+     * @param f bin文件存放路径
+     * @param dots 点阵buffer
+     * @param single bin文件单列高度，单位bit
+     * @return 保存成功返回true，保存失败返回false
+     */
+    public static boolean saveBin(String f, char[] c_dots, int single) {
+    	int bytesPerCol = 0;
+    	bytesPerCol = single%8==0? single/8 : (single/8+1);
+    	byte[] dots = new byte[c_dots.length * 2];
+    	for(int i=0; i<c_dots.length; i++ ) {
+    		dots[2*i] = (byte) (c_dots[i] & 0x0ff);
+    		dots[2*i +1] = (byte) ((c_dots[i] >> 8) & 0x0ff);
+    	}
+    	int columns = dots.length/bytesPerCol;
+    	try {
+    		
+    		File file = new File(f);
+    		Debug.d(TAG, "--->saveBin f:" + file.getAbsoluteFile());
+    		if (!file.exists() && !file.createNewFile()) {
+				Debug.d(TAG, "===>error: create bin file failed");
+				return false;
+			}
+			FileOutputStream stream = new FileOutputStream(file);
+			byte head[]=new byte[16];
+	    	head[2] = (byte) (columns & 0x0ff);
+	    	head[1] = (byte) ((columns>>8) & 0x0ff);
+	    	head[0] = (byte) ((columns>>16) & 0x0ff);
+	    	
+	    	/*save width of single element*/
+	    	head[5] = (byte) (single & 0x0ff);
+	    	head[4] = (byte) ((single>>8) & 0x0ff);
+	    	head[3] = (byte) ((single>>16) & 0x0ff);
+	    	stream.write(head);
+			stream.write(dots);
+			stream.flush();
+			stream.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
+			return false;
+		}
+    	return true;
+    }
+    
     
     public boolean saveBin(String f) {
     	int bytesPerCol = 0;

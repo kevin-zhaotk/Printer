@@ -372,7 +372,7 @@
 	<string name="str_state_inklevel">墨水量:  %1$d%%</string>
 	-->
 	<string name="str_state_inklevel">墨水量:  %1$s</string>
-	<string name="str_state_battery">电量:  100%</string>
+	<string name="str_state_battery">电量:%1$d</string>
 	<string name="str_hint_preview">信息预览</string>
 	<string name="str_print_count">计数: %1$d</string>
 	<string name="str_print_count_default">0</string>
@@ -391,35 +391,89 @@
 	
 
 <!-- 树莓派3 设置界面相关 -->
-	<string name="str_textview_param1">01. 光电选择</string>
-	<string name="str_textview_param2">02. 触发模式</string>
-	<string name="str_textview_param3">03. 光电防抖</string> 
-	<string name="str_textview_param4">04. 光电延时</string>
-	<string name="str_textview_param5">05. 字宽</string>
-	<string name="str_textview_param6">06. 定时打印</string>
-	<string name="str_textview_param7">07. 列间脉冲</string>
-	<string name="str_textview_param8">08. 定长脉冲</string>
-	<string name="str_textview_param9">09. 脉冲延时</string>
-	<string name="str_textview_param10">10. 墨点大小</string>
-	<string name="str_textview_param16">16. 加重</string>
+	<string name="str_textview_param1">01.光电选择</string>
+	<string name="str_textview_param2">02.触发模式</string>
+	<string name="str_textview_param3">03.光电防抖</string> 
+	<string name="str_textview_param4">04.光电延时</string>
+	<string name="str_textview_param5">05.字宽</string>
+	<string name="str_textview_param6">06.定时打印</string>
+	<string name="str_textview_param7">07.列间脉冲</string>
+	<string name="str_textview_param8">08.定长脉冲</string>
+	<string name="str_textview_param9">09.脉冲延时</string>
+	<string name="str_textview_param10">10.墨点大小</string>
+	<string name="str_textview_param11">11.保留</string>
+	<string name="str_textview_param12">12.保留</string>
+	<string name="str_textview_param13">13.保留</string>
+	<string name="str_textview_param14">14.保留</string>
+	<string name="str_textview_param15">15.保留</string>
+	<string name="str_textview_param16">16.加重</string>
+	<string name="str_textview_param17">17.保留</string>
+	<string name="str_textview_param18">18.保留</string>
+	<string name="str_textview_param19">19.保留</string>
+	<string name="str_textview_param20">20.保留</string>
+	<string name="str_textview_param21">21.保留</string>
+	<string name="str_textview_param22">22.保留</string>
+	<string name="str_textview_param23">23.保留</string>
+	<string name="str_textview_param24">24.保留</string>
+	<string name="str_textview_param25">25.保留</string>
+	<string name="str_textview_param26">26.保留</string>
+	<string name="str_textview_param27">27.保留</string>
+	<string name="str_textview_param28">28.保留</string>
+	<string name="str_textview_param29">29.保留</string>
+	<string name="str_textview_param30">30.保留</string>
+	<string name="str_textview_param31">31.保留</string>
+	<string name="str_textview_param32">32.保留</string>
+	<string name="str_textview_param33">33.保留</string>
+	<string name="str_textview_param34">34.保留</string>
+	<string name="str_textview_param35">35.保留</string>
+	<string name="str_textview_param36">36.保留</string>
+	<string name="str_textview_param37">37.保留</string>
+	<string name="str_textview_param38">38.保留</string>
+	<string name="str_textview_param39">39.保留</string>
+	<string name="str_textview_param40">40.保留</string>
+	<string name="str_textview_param41">41.保留</string>
+	<string name="str_textview_param42">42.保留</string>
+	<string name="str_textview_param43">43.保留</string>
+	<string name="str_textview_param44">44.保留</string>
+	<string name="str_textview_param45">45.保留</string>
+	<string name="str_textview_param46">46.保留</string>
+	<string name="str_textview_param47">47.保留</string>
+	<string name="str_textview_param48">48.保留</string>
+	<string name="str_textview_param49">49.保留</string>
+	<string name="str_textview_param50">50.保留</string>
+	<string name="str_textview_param51">51.保留</string>
+	<string name="str_textview_param52">52.保留</string>
+	<string name="str_textview_param53">53.保留</string>
+	<string name="str_textview_param54">54.保留</string>
+	<string name="str_textview_param55">55.保留</string>
+	<string name="str_textview_param56">56.保留</string>
+	<string name="str_textview_param57">57.保留</string>
+	<string name="str_textview_param58">58.保留</string>
+	<string name="str_textview_param59">59.保留</string>
+	<string name="str_textview_param60">60.保留</string>
+	<string name="str_textview_param61">61.保留</string>
+	<string name="str_textview_param62">62.保留</string>
+	<string name="str_textview_param63">63.保留</string>
+	<string name="str_textview_param64">64.保留</string>
+	
 	<string name="str_btn_settings_sync">确认</string>
 	<string-array name="str_settings_params">
 	    <item>01. 光电选择</item>
-	    <item>02. 触发模式选择</item>
-	    <item>03. PHO延时高位</item>
-	    <item>04. PHO延时低位</item>
-	    <item>05. PHO 输出周期</item>
-	    <item>06. 定时输出周期</item>
-	    <item>07. 编码器触发条件脉冲数</item>
-	    <item>08. 编码器定长脉数</item>
-	    <item>09. 编码器延时条件脉冲数</item>
-	    <item>10. 每次输出高时间</item>
+	    <item>02. 触发模式</item>
+	    <item>03. 光电防抖</item>
+	    <item>04. 光电延时</item>
+	    <item>05. 字宽</item>
+	    <item>06. 定时打印</item>
+	    <item>07. 列间脉冲</item>
+	    <item>08. 定长脉冲</item>
+	    <item>09. 脉冲延时</item>
+	    <item>10. 墨点大小</item>
 	    <item>11. 保留</item>
 	    <item>12. 保留</item>
 	    <item>13. 保留</item>
 	    <item>14. 保留</item>
 	    <item>15. 保留</item>
-	    <item>16. 保留</item>
+	    <item>16. 加重</item>
 	    <item>17. 保留</item>
 	    <item>18. 保留</item>
 	    <item>19. 保留</item>
@@ -467,6 +521,7 @@
 	    <item>61. 保留</item>
 	    <item>62. 保留</item>
 	    <item>63. 保留</item>
+	    <item>64. 保留</item>
 	</string-array>
 	
 	<string-array name="encoder_item_entries">
@@ -476,6 +531,7 @@
 	
 	<string name="str_time_unit_ms">毫秒</string>
 	<string name="str_time_unit_us">微秒</string>
+	<string name="str_time_unit_100us">100微秒</string>
 	<string name="str_setting_time">时间设置</string>
 	<string name="str_system_setting">系统设置</string>
 	<string name="str_upgrade_progress">系统升级中....</string>

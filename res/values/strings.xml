@@ -376,7 +376,7 @@
 	<string name="str_state_inklevel">INK:  %1$d%%</string>
 	-->
 	<string name="str_state_inklevel">INK:  %1$s</string>
-	<string name="str_state_battery">battery:  100%</string>
+	<string name="str_state_battery">Power:%1$d</string>
 	<string name="str_hint_preview">message preview</string>
 	<string name="str_print_count">Records: </string>
 	<string name="str_print_count_default">0</string>
@@ -405,8 +405,129 @@
 	<string name="str_textview_param8">08. Repeat pulse</string>
 	<string name="str_textview_param9">09. Delay Pulse</string>
 	<string name="str_textview_param10">10. Dot Size</string>
-	<string name="str_textview_param16">16. Bold</string>
+	<string name="str_textview_param11">11.Reserved</string>
+	<string name="str_textview_param12">12.Reserved</string>
+	<string name="str_textview_param13">13.Reserved</string>
+	<string name="str_textview_param14">14.Reserved</string>
+	<string name="str_textview_param15">15.Reserved</string>
+	<string name="str_textview_param16">16.Bold</string>
+	<string name="str_textview_param17">17.Reserved</string>
+	<string name="str_textview_param18">18.Reserved</string>
+	<string name="str_textview_param19">19.Reserved</string>
+	<string name="str_textview_param20">20.Reserved</string>
+	<string name="str_textview_param21">21.Reserved</string>
+	<string name="str_textview_param22">22.Reserved</string>
+	<string name="str_textview_param23">23.Reserved</string>
+	<string name="str_textview_param24">24.Reserved</string>
+	<string name="str_textview_param25">25.Reserved</string>
+	<string name="str_textview_param26">26.Reserved</string>
+	<string name="str_textview_param27">27.Reserved</string>
+	<string name="str_textview_param28">28.Reserved</string>
+	<string name="str_textview_param29">29.Reserved</string>
+	<string name="str_textview_param30">30.Reserved</string>
+	<string name="str_textview_param31">31.Reserved</string>
+	<string name="str_textview_param32">32.Reserved</string>
+	<string name="str_textview_param33">33.Reserved</string>
+	<string name="str_textview_param34">34.Reserved</string>
+	<string name="str_textview_param35">35.Reserved</string>
+	<string name="str_textview_param36">36.Reserved</string>
+	<string name="str_textview_param37">37.Reserved</string>
+	<string name="str_textview_param38">38.Reserved</string>
+	<string name="str_textview_param39">39.Reserved</string>
+	<string name="str_textview_param40">40.Reserved</string>
+	<string name="str_textview_param41">41.Reserved</string>
+	<string name="str_textview_param42">42.Reserved</string>
+	<string name="str_textview_param43">43.Reserved</string>
+	<string name="str_textview_param44">44.Reserved</string>
+	<string name="str_textview_param45">45.Reserved</string>
+	<string name="str_textview_param46">46.Reserved</string>
+	<string name="str_textview_param47">47.Reserved</string>
+	<string name="str_textview_param48">48.Reserved</string>
+	<string name="str_textview_param49">49.Reserved</string>
+	<string name="str_textview_param50">50.Reserved</string>
+	<string name="str_textview_param51">51.Reserved</string>
+	<string name="str_textview_param52">52.Reserved</string>
+	<string name="str_textview_param53">53.Reserved</string>
+	<string name="str_textview_param54">54.Reserved</string>
+	<string name="str_textview_param55">55.Reserved</string>
+	<string name="str_textview_param56">56.Reserved</string>
+	<string name="str_textview_param57">57.Reserved</string>
+	<string name="str_textview_param58">58.Reserved</string>
+	<string name="str_textview_param59">59.Reserved</string>
+	<string name="str_textview_param60">60.Reserved</string>
+	<string name="str_textview_param61">61.Reserved</string>
+	<string name="str_textview_param62">62.Reserved</string>
+	<string name="str_textview_param63">63.Reserved</string>
+	<string name="str_textview_param64">64.Reserved</string>
 	<string name="str_btn_settings_sync">Ok</string>
+	
+	<string-array name="str_settings_params">
+	    <item>01. Photocell</item>
+	    <item>02. Trigger</item>
+	    <item>03. Fitler</item>
+	    <item>04. Delay</item>
+	    <item>05. Speed</item>
+	    <item>06. Repeat Time</item>
+	    <item>07. Encoder width</item>
+	    <item>08. Repeat pulse</item>
+	    <item>09. Delay Pulse</item>
+	    <item>10. Dot Size</item>
+	    <item>11. Reserved</item>
+	    <item>12. Reserved</item>
+	    <item>13. Reserved</item>
+	    <item>14. Reserved</item>
+	    <item>15. Reserved</item>
+	    <item>16. Bold</item>
+	    <item>17. Reserved</item>
+	    <item>18. Reserved</item>
+	    <item>19. Reserved</item>
+	    <item>20. Reserved</item>
+	    <item>21. Reserved</item>
+	    <item>22. Reserved</item>
+	    <item>23. Reserved</item>
+	    <item>24. Reserved</item>
+	    <item>25. Reserved</item>
+	    <item>26. Reserved</item>
+	    <item>27. Reserved</item>
+	    <item>28. Reserved</item>
+	    <item>29. Reserved</item>
+	    <item>30. Reserved</item>
+	    <item>31. Reserved</item>
+	    <item>32. Reserved</item>
+	    <item>33. Reserved</item>
+	    <item>34. Reserved</item>
+	    <item>35. Reserved</item>
+	    <item>36. Reserved</item>
+	    <item>37. Reserved</item>
+	    <item>38. Reserved</item>
+	    <item>39. Reserved</item>
+	    <item>40. Reserved</item>
+	    <item>41. Reserved</item>
+	    <item>42. Reserved</item>
+	    <item>43. Reserved</item>
+	    <item>44. Reserved</item>
+	    <item>45. Reserved</item>
+	    <item>46. Reserved</item>
+	    <item>47. Reserved</item>
+	    <item>48. Reserved</item>
+	    <item>49. Reserved</item>
+	    <item>50. Reserved</item>
+	    <item>51. Reserved</item>
+	    <item>52. Reserved</item>
+	    <item>53. Reserved</item>
+	    <item>54. Reserved</item>
+	    <item>55. Reserved</item>
+	    <item>56. Reserved</item>
+	    <item>57. Reserved</item>
+	    <item>58. Reserved</item>
+	    <item>59. Reserved</item>
+	    <item>60. Reserved</item>
+	    <item>61. Reserved</item>
+	    <item>62. Reserved</item>
+	    <item>63. Reserved</item>
+	    <item>64. Reserved</item>
+	</string-array>
+	
 	<string-array name="encoder_item_entries">
 	    <item>PHO1</item>
 	    <item>PHO2</item>
@@ -414,6 +535,7 @@
 	
 	<string name="str_time_unit_ms">ms</string>
 	<string name="str_time_unit_us">us</string>
+	<string name="str_time_unit_100us">100us</string>
 	<string name="str_setting_time">Clock</string>
 	<string name="str_system_setting">Settings</string>
 	<string name="str_upgrade_progress">system upgrading....</string>

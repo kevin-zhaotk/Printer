@@ -208,7 +208,7 @@
 <!-- 打印头设置标签 -->	
 	
 <!-- 对应的Fragment -->
- 
+<!--  
     <ScrollView
         android:id="@+id/setting_frame"
         android:layout_width="fill_parent"
@@ -223,15 +223,16 @@
 	        android:layout_height="fill_parent"
         />
     </ScrollView>
-
- <!-- 
+ -->
+ 
  	<ListView
         android:id="@+id/settings_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/settingBtns"
+        android:divider="@null"
         >
  	    
  	</ListView>
- -->
+
 </RelativeLayout>

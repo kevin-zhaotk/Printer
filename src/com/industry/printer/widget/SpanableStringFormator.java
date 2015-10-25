@@ -2,7 +2,9 @@ package com.industry.printer.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.ObjectsFromString;
@@ -18,17 +20,30 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 
 	private static final String TAG = SpanableStringFormator.class.getSimpleName();
 
-	
-	public SpanableStringFormator() {
+	public SpanableStringFormator(Vector<BaseObject> objlist) {
 		super();
+		setText(objlist);
+	}
+	
+	
+	public SpanableStringFormator(String text) {
+		super();
+		setText(text);
 	}
 	
 	public void setText(String text) {
 		this.clear();
 		this.clearSpans();
+		boolean isFirst=true;
 		List<ContentType> list = parseElements(text);
 		for (ContentType contentType : list) {
-			this.append(contentType.text);
+			if (isFirst) {
+				this.append(contentType.text);
+				isFirst = false;
+			} else {
+				this.append(ObjectsFromString.SPLITOR + contentType.text);
+			}
+			
 			if (contentType.isVar) {
 				this.setSpan(new BackgroundColorSpan(Color.YELLOW), contentType.start, contentType.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
@@ -36,9 +51,10 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 		
 	}
 	
-	public void setText(List<BaseObject> objlist) {
+	public void setText(Vector<BaseObject> objlist) {
 		
 		if (objlist == null) {
+			Debug.d(TAG, "--->objlist is null");
 			return;
 		}
 		this.clear();
@@ -46,6 +62,7 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 		List<ContentType> list = parseElements(objlist);
 		
 		for (ContentType type : list) {
+			Debug.d(TAG, "--->text=" + type.text);
 			this.append(type.text);
 			if (type.isVar) {
 				this.setSpan(new BackgroundColorSpan(Color.YELLOW), type.start, type.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -58,20 +75,20 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 	 * 同理，delete函数也一样
 	 * @param text
 	 */
-	public void append(String text) {
-		super.append(text);
+	/*public void append(String text) {
+		//super.append(text);
 		setText(toString());
-	}
+	}*/
 	
 	/**
 	 * 从SpanableStringFormator删除start开始的内容，需要根据添加的内容实事分析是否需要设置span
 	 * 
 	 * @param start TextView/EditText字符串的最后一个字符index
 	 */
-	public void delete(int start) {
-		super.delete(start, this.length()-1);
+	/*public void delete(int start) {
+		//super.delete(start, this.length()-1);
 		setText(toString());
-	}
+	}*/
 	
 	private List<ContentType> parseElements(String text) {
 		int start=0;

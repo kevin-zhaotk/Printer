@@ -253,8 +253,9 @@
             android:gravity="center_vertical"
             android:layout_toRightOf="@id/ph_set_PHOOutput_period_value"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
-            android:textSize="@dimen/settingsUnitTextsize" 
-            android:text="@string/str_time_unit_ms"
+            android:textSize="@dimen/settingsUnitTextsize"
+            android:maxLines="2" 
+            android:text="@string/str_time_unit_100us"
             android:textColor="@color/UnitText"
             />
 	</RelativeLayout>

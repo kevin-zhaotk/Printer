@@ -248,8 +248,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 				Debug.d(TAG, "====>setting checked?"+arg1);
 				
 				if (arg1 == true) {
+					Debug.d(TAG, "--->show SettingTab");
 					fts.show(mSettingsTab);
+					Debug.d(TAG, "--->show SettingTab ok");
 					mSettings.setVisibility(View.VISIBLE);
+					Debug.d(TAG, "--->show SettingTab visible");
 					// mSettingTitle.setVisibility(View.VISIBLE);
 					// mVersion.setVisibility(View.VISIBLE);
 					mHander.sendEmptyMessage(REFRESH_TIME_DISPLAY);

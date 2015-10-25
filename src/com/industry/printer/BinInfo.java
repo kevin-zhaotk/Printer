@@ -94,7 +94,7 @@ public class BinInfo {
 	    	//mFStream.close();
 	    	//把byte[]存为char[]
 	    	for(int i = 0; i < mBufferChars.length; i++) {
-	    		mBufferChars[i] = (char) ((char)(mBufferBytes[2*i+1] << 8) | (mBufferBytes[2*i])); 
+	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
 	    	}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -189,22 +189,21 @@ public static final String TAG="SettingsTabActivity";
 		mSettings = (RelativeLayout) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		
-		mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
-		mPHSettings = new PHSettingFragment(mContext);
-		Debug.d(TAG, "--->onActivityCreated layout frame");
-		// mSettingsFragment = new SettingsFragment(mContext);
+		//mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
+		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		Debug.d(TAG, "--->onActivityCreated layout frame");
-		transaction.replace(R.id.phsetting_fragment, mPHSettings);
-		Debug.d(TAG, "--->onActivityCreated layout frame 111");
-		//transaction.replace(R.id.phsetting_fragment, mSettingsFragment);
-		transaction.commit();
-		Debug.d(TAG, "--->onActivityCreated layout frame 222");
 		/*
+		mPHSettings = new PHSettingFragment(mContext);
+		transaction.replace(R.id.phsetting_fragment, mPHSettings);
+		
+		*/
+		
+		//mSettingsFragment = new SettingsFragment(mContext);
+		//transaction.replace(R.id.phsetting_fragment, mSettingsFragment);
 		mListView = (ListView) getView().findViewById(R.id.settings_list_view);
 		mAdapter = new SettingsListAdapter(mContext);
 		mListView.setAdapter(mAdapter);
-		*/
+		//transaction.commit();
 	}
 	
 	@Override
@@ -285,17 +284,17 @@ public static final String TAG="SettingsTabActivity";
 		switch (arg0.getId()) {
 			case R.id.btn_prev:
 				// mScrollView.arrowScroll(View.FOCUS_UP);
-				mScrollView.scrollBy(0, -300);
-				// mListView.smoothScrollBy(-200, 2);
+				// mScrollView.scrollBy(0, -300);
+				 mListView.smoothScrollBy(-300, 2);
 				break;
 			case R.id.btn_next:
 				// mScrollView.arrowScroll(View.FOCUS_DOWN);
-				mScrollView.scrollBy(0, 300);
-				// mListView.smoothScrollBy(200, 2);
+				// mScrollView.scrollBy(0, 300);
+				mListView.smoothScrollBy(300, 2);
 				break;
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
-				mPHSettings.checkParams();
+				mAdapter.checkParams();
 				SystemConfigFile.saveConfig();
 				FpgaGpioOperation.updateSettings(mContext);
 				break;

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import com.industry.printer.FileFormat.DotMatrixFont;
@@ -16,6 +17,7 @@ import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.hardware.LRADCBattery;
 import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
@@ -26,6 +28,7 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+import com.industry.printer.widget.SpanableStringFormator;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -120,6 +123,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mPhotocellState;
 	public TextView mEncoderState;
 	public TextView mPrintState;
+	public TextView mPower;
 	
 	/**
 	 * UsbSerial device name
@@ -183,6 +187,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 */
 	public final int MESSAGE_COUNT_CHANGE = 8;
 	
+	public final int MESSAGE_REFRESH_POWERSTAT = 9;
 	
 	/**
 	 * the bitmap for preview
@@ -277,6 +282,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);
 		mTVStopped = (TextView) getView().findViewById(R.id.tv_stopState);
 		
+		
 		switchState(STATE_STOPPED);
 		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);
 		// mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
@@ -285,9 +291,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) getView().findViewById(R.id.tv_inkValue);
+		mPower = (TextView) getView().findViewById(R.id.power_state);
 //		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 //		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
 		
+		refreshPower();
 		//  加载打印计数
 		PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
 		//mCounter = db.getCount(mContext);
@@ -368,6 +376,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
 	}
 	
+	private void refreshPower() {
+		int power = LRADCBattery.getPower();
+		String pwState = String.format(getString(R.string.str_state_battery), power);
+		mPower.setText(pwState);
+		mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
+	}
+	
 	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
@@ -394,7 +409,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (preview == null) {
 						preview = getString(R.string.str_message_no_content);
 					}
-					mMsgPreview.setText(preview);
+					parser.parse(mContext, mObjPath + "/1.TLK", mObjList);
+					mMsgPreview.setText(new SpanableStringFormator(mObjList));
 					mMsgFile.setText(new File(mObjPath).getName());
 					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();
@@ -494,7 +510,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					RTCDevice device = RTCDevice.getInstance(mContext);
 					device.writeCounter(mContext, mCounter);
 					break;
-					
+				case MESSAGE_REFRESH_POWERSTAT:
+					refreshPower();
+					break;
 			}
 		}
 	};
