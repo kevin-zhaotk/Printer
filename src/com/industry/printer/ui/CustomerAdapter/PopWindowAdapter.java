@@ -19,6 +19,7 @@ public class PopWindowAdapter extends BaseAdapter {
 	public ArrayList<String> mItems;
 	public LayoutInflater mInflater;
 	
+	
 	public interface IOnItemClickListener {
 		public void onItemClick(int index);
 	}
@@ -91,6 +92,7 @@ public class PopWindowAdapter extends BaseAdapter {
 		return mInflater;
 	}
 	
+			
 	private class ViewHolder {
 		public TextView mTextView;
 	}

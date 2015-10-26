@@ -43,6 +43,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	
 	public PopWindowSpiner mSpiner;
 	public PopWindowAdapter mEncoderAdapter;
+	public PopWindowAdapter mTrigerMode;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -122,6 +123,10 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		// mTitles = mContext.getResources().getStringArray(R.array.str_settings_params);
 		mHoldMap = new HashMap<Integer, ItemViewHolder>();
 		mSettingItems[0].mValueL = getEncoder(SystemConfigFile.mParam1);
+		
+		mEncoderAdapter = new PopWindowAdapter(mContext, null);
+		mTrigerMode = new PopWindowAdapter(mContext, null);
+		initAdapters();
 	}
 	
 	@Override
@@ -168,17 +173,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mHolder.mUnitR = (TextView) itemView.findViewById(R.id.setting_unit_right);
 			
 			if (position == 0) {
-				mSpiner = new PopWindowSpiner(mContext);
-				mEncoderAdapter = new PopWindowAdapter(mContext, null);
-				String[] items = mContext.getResources().getStringArray(R.array.encoder_item_entries); 
-				// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
-				for (int i = 0; i < items.length; i++) {
-					mEncoderAdapter.addItem(items[i]);
-				}
-				mSpiner.setAdapter(mEncoderAdapter);
-				mSpiner.setFocusable(true);
 				mHolder.mValueLTv.setOnClickListener(this);
-				mSpiner.setOnItemClickListener(this);
+				mHolder.mValueRTv.setOnClickListener(this);
 			}
 			itemView.setTag(mHolder);
 			mHoldMap.put(position, mHolder);
@@ -191,17 +187,23 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			}
 			mHolder.mTitleL.setText(mContext.getString(mSettingItems[position].mTitleL));
 			mHolder.mTitleR.setText(mContext.getString(mSettingItems[position].mTitleR));
-			mHolder.mValueREt.setText(mSettingItems[position].mValueR);
+			
 			
 			if (position == 0) {
 				mHolder.mValueLTv.setVisibility(View.VISIBLE);
 				mHolder.mValueLEt.setVisibility(View.GONE);
+				mHolder.mValueRTv.setVisibility(View.VISIBLE);
+				mHolder.mValueREt.setVisibility(View.GONE);
 				mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
+				mHolder.mValueRTv.setText(mSettingItems[position].mValueR);
 			} else {
 
 				mHolder.mValueLTv.setVisibility(View.GONE);
 				mHolder.mValueLEt.setVisibility(View.VISIBLE);
+				mHolder.mValueRTv.setVisibility(View.GONE);
+				mHolder.mValueREt.setVisibility(View.VISIBLE);
 				mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
+				mHolder.mValueREt.setText(mSettingItems[position].mValueR);
 			}
 			
 			mHolder.mValueLEt.addTextChangedListener(new SelfTextWatcher(position, mHolder.mValueLEt));
@@ -212,6 +214,25 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		return itemView;
 	}
 	
+	
+	private void initAdapters() {
+		
+		mSpiner = new PopWindowSpiner(mContext);
+		mSpiner.setFocusable(true);
+		mSpiner.setOnItemClickListener(this);
+		
+		String[] items = mContext.getResources().getStringArray(R.array.encoder_item_entries); 
+		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
+		for (int i = 0; i < items.length; i++) {
+			mEncoderAdapter.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.array_triger_mode); 
+		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
+		for (int i = 0; i < items.length; i++) {
+			mTrigerMode.addItem(items[i]);
+		}
+	}
 	private String getEncoder(int index) {
 		mContext.getResources();
 		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
@@ -241,11 +262,21 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	@Override
 	public void onClick(View arg0) {
 		ItemViewHolder holder = mHoldMap.get(0);
+		Debug.d(TAG, "====>onClick:" + arg0.getId());
+		Debug.d(TAG, "====>onClick valueL:" + holder.mValueLEt.getId());
+		Debug.d(TAG, "====>onClick valueR:" + holder.mValueREt.getId());
+		
 		if (holder != null) {
+			return;
+		} else if (holder.mValueLTv == arg0) {
+			mSpiner.setAdapter(mEncoderAdapter);
 			mSpiner.setWidth(holder.mValueLTv.getWidth());
 			mSpiner.showAsDropDown(holder.mValueLTv);
-		}
-		
+		} else if (holder.mValueRTv == arg0) {
+			mSpiner.setAdapter(mTrigerMode);
+			mSpiner.setWidth(holder.mValueRTv.getWidth());
+			mSpiner.showAsDropDown(holder.mValueLTv);
+		}	
 	}
 
 	@Override

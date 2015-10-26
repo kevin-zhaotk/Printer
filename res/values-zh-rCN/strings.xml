@@ -457,6 +457,14 @@
 	<string name="str_textview_param64">64.保留</string>
 	
 	<string name="str_btn_settings_sync">确认</string>
+	
+	<string-array name="array_triger_mode">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	    <item>4</item>
+	</string-array>
+	
 	<string-array name="str_settings_params">
 	    <item>01. 光电选择</item>
 	    <item>02. 触发模式</item>
