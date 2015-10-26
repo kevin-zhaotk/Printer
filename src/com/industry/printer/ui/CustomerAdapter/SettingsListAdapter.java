@@ -144,25 +144,28 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if(convertView != null) {
+		
+		View itemView;
+		if(convertView != null && mHoldMap.get(position) != null) {
 			mHolder = (ItemViewHolder) convertView.getTag();
+			itemView = convertView;
 		}
 		else
 		{
 			//prepare a empty view 
-			convertView = mInflater.inflate(R.layout.settings_frame_item, null);
+			itemView = mInflater.inflate(R.layout.settings_frame_item, null);
 			mHolder = new ItemViewHolder();
 			//Left 
-			mHolder.mTitleL = (TextView) convertView.findViewById(R.id.setting_title_left);
-			mHolder.mValueLTv = (TextView) convertView.findViewById(R.id.setting_value_left_tv);
-			mHolder.mValueLEt = (EditText) convertView.findViewById(R.id.setting_value_left_et);
-			mHolder.mUnitL = (TextView) convertView.findViewById(R.id.setting_unit_left);
+			mHolder.mTitleL = (TextView) itemView.findViewById(R.id.setting_title_left);
+			mHolder.mValueLTv = (TextView) itemView.findViewById(R.id.setting_value_left_tv);
+			mHolder.mValueLEt = (EditText) itemView.findViewById(R.id.setting_value_left_et);
+			mHolder.mUnitL = (TextView) itemView.findViewById(R.id.setting_unit_left);
 			
 			//Right
-			mHolder.mTitleR = (TextView) convertView.findViewById(R.id.setting_title_right);
-			mHolder.mValueRTv = (TextView) convertView.findViewById(R.id.setting_value_right_tv);
-			mHolder.mValueREt = (EditText) convertView.findViewById(R.id.setting_value_right_et);
-			mHolder.mUnitR = (TextView) convertView.findViewById(R.id.setting_unit_right);
+			mHolder.mTitleR = (TextView) itemView.findViewById(R.id.setting_title_right);
+			mHolder.mValueRTv = (TextView) itemView.findViewById(R.id.setting_value_right_tv);
+			mHolder.mValueREt = (EditText) itemView.findViewById(R.id.setting_value_right_et);
+			mHolder.mUnitR = (TextView) itemView.findViewById(R.id.setting_unit_right);
 			
 			if (position == 0) {
 				mSpiner = new PopWindowSpiner(mContext);
@@ -177,7 +180,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				mHolder.mValueLTv.setOnClickListener(this);
 				mSpiner.setOnItemClickListener(this);
 			}
-			convertView.setTag(mHolder);
+			itemView.setTag(mHolder);
 			mHoldMap.put(position, mHolder);
 			
 			if (mSettingItems[position].mUnitL > 0) {
@@ -190,25 +193,23 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mHolder.mTitleR.setText(mContext.getString(mSettingItems[position].mTitleR));
 			mHolder.mValueREt.setText(mSettingItems[position].mValueR);
 			
+			if (position == 0) {
+				mHolder.mValueLTv.setVisibility(View.VISIBLE);
+				mHolder.mValueLEt.setVisibility(View.GONE);
+				mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
+			} else {
+
+				mHolder.mValueLTv.setVisibility(View.GONE);
+				mHolder.mValueLEt.setVisibility(View.VISIBLE);
+				mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
+			}
+			
 			mHolder.mValueLEt.addTextChangedListener(new SelfTextWatcher(position, mHolder.mValueLEt));
 			mHolder.mValueREt.addTextChangedListener(new SelfTextWatcher(position, mHolder.mValueREt));
 		}
 		
-		
-		if (position == 0) {
-			mHolder.mValueLTv.setVisibility(View.VISIBLE);
-			mHolder.mValueLEt.setVisibility(View.GONE);
-			mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
-		} else {
-
-			mHolder.mValueLTv.setVisibility(View.GONE);
-			mHolder.mValueLEt.setVisibility(View.VISIBLE);
-			mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
-		}
-		
-		
 		Debug.d(TAG, "--->getView:position=" + position);
-		return convertView;
+		return itemView;
 	}
 	
 	private String getEncoder(int index) {
@@ -252,6 +253,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		ItemViewHolder holder = mHoldMap.get(0);
 		if (holder != null) {
 			holder.mValueLTv.setText(getEncoder(index));
+			// mSettingItems[0].mValueL = getEncoder(index);
 			SystemConfigFile.mParam1 = index;
 		}
 	}
@@ -364,6 +366,15 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			ItemViewHolder holder = mHoldMap.get(position);
+			if (holder == null) {
+				return;
+			} /*else {
+				if (mEditText == holder.mValueLEt) {
+					mSettingItems[position].mValueL = arg0.toString();
+				} else if (mEditText == holder.mValueREt) {
+					mSettingItems[position].mValueR = arg0.toString();
+				}
+			}*/
 			switch (position) {
 			case 0:
 				if (mEditText == holder.mValueLEt) {
