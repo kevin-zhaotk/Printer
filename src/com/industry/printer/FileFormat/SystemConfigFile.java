@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.BreakIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.industry.printer.R;
@@ -597,6 +598,10 @@ public class SystemConfigFile{
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_RESERVED_62, String.valueOf(mResv62));
 		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_63, String.valueOf(mResv63));
+		list.add(tag1);
+		tag1 = new XmlTag(PH_SETTING_RESERVED_64, String.valueOf(mResv64));
+		list.add(tag1);
 		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
 		stream.close();
@@ -716,6 +721,31 @@ public class SystemConfigFile{
 		XmlOutputStream stream = new XmlOutputStream(dev+Configs.LAST_MESSAGE_XML);
 		stream.write(list);
 		
+	}
+	
+	
+	public static void initParamRange() {
+		HashMap<Integer, HashMap<String,Integer>> mParamRange = new HashMap<Integer, HashMap<String,Integer>>();
+		
+		// param2
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 4);
+		mParamRange.put(2, map);
+		// param3
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 600);
+		map.put("default", 20);
+		mParamRange.put(3, map);
+		
+		// param3
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 6553);
+		map.put("default", 0);
+		mParamRange.put(4, map);
+				
 	}
 	
 }

@@ -49,38 +49,70 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
 	
 	private ItemOneLine[] mSettingItems = {
-		new ItemOneLine(R.string.str_textview_param1, "", 0, 	R.string.str_textview_param2, String.valueOf(SystemConfigFile.mParam2), 0),
-		new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms,		R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), R.string.str_time_unit_ms),
-		new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us,		R.string.str_textview_param6, String.valueOf(SystemConfigFile.mParam6), R.string.str_time_unit_ms),
-		new ItemOneLine(R.string.str_textview_param7, String.valueOf(SystemConfigFile.mParam7), 0,		R.string.str_textview_param8, String.valueOf(SystemConfigFile.mParam8), 0),
-		new ItemOneLine(R.string.str_textview_param9, String.valueOf(SystemConfigFile.mParam9), 0,		R.string.str_textview_param10, String.valueOf(SystemConfigFile.mParam10), R.string.str_time_unit_us),
-		new ItemOneLine(R.string.str_textview_param11, String.valueOf(SystemConfigFile.mResv11), 0,	R.string.str_textview_param12, String.valueOf(SystemConfigFile.mResv12), 0),
-		new ItemOneLine(R.string.str_textview_param13, String.valueOf(SystemConfigFile.mResv13), 0,		R.string.str_textview_param14, String.valueOf(SystemConfigFile.mResv14), 0),
-		new ItemOneLine(R.string.str_textview_param15, String.valueOf(SystemConfigFile.mResv15), 0,		R.string.str_textview_param16, String.valueOf(SystemConfigFile.mResv16), 0),
-		new ItemOneLine(R.string.str_textview_param17, String.valueOf(SystemConfigFile.mResv17), 0,		R.string.str_textview_param18, String.valueOf(SystemConfigFile.mResv18), 0),
-		new ItemOneLine(R.string.str_textview_param19, String.valueOf(SystemConfigFile.mResv19), 0,		R.string.str_textview_param20, String.valueOf(SystemConfigFile.mResv20), 0),
-		new ItemOneLine(R.string.str_textview_param21, String.valueOf(SystemConfigFile.mResv21), 0,		R.string.str_textview_param22, String.valueOf(SystemConfigFile.mResv22), 0),
-		new ItemOneLine(R.string.str_textview_param23, String.valueOf(SystemConfigFile.mResv23), 0,		R.string.str_textview_param24, String.valueOf(SystemConfigFile.mResv24), 0),
-		new ItemOneLine(R.string.str_textview_param25, String.valueOf(SystemConfigFile.mResv25), 0,		R.string.str_textview_param26, String.valueOf(SystemConfigFile.mResv26), 0),
-		new ItemOneLine(R.string.str_textview_param27, String.valueOf(SystemConfigFile.mResv27), 0,		R.string.str_textview_param28, String.valueOf(SystemConfigFile.mResv28), 0),
-		new ItemOneLine(R.string.str_textview_param29, String.valueOf(SystemConfigFile.mResv29), 0,		R.string.str_textview_param30, String.valueOf(SystemConfigFile.mResv30), 0),
-		new ItemOneLine(R.string.str_textview_param31, String.valueOf(SystemConfigFile.mResv31), 0,		R.string.str_textview_param32, String.valueOf(SystemConfigFile.mResv32), 0),
-		new ItemOneLine(R.string.str_textview_param33, String.valueOf(SystemConfigFile.mResv33), 0,		R.string.str_textview_param34, String.valueOf(SystemConfigFile.mResv34), 0),
-		new ItemOneLine(R.string.str_textview_param35, String.valueOf(SystemConfigFile.mResv35), 0,		R.string.str_textview_param36, String.valueOf(SystemConfigFile.mResv36), 0),
-		new ItemOneLine(R.string.str_textview_param37, String.valueOf(SystemConfigFile.mResv37), 0,		R.string.str_textview_param38, String.valueOf(SystemConfigFile.mResv38), 0),
-		new ItemOneLine(R.string.str_textview_param39, String.valueOf(SystemConfigFile.mResv39), 0,		R.string.str_textview_param40, String.valueOf(SystemConfigFile.mResv40), 0),
-		new ItemOneLine(R.string.str_textview_param41, String.valueOf(SystemConfigFile.mResv41), 0,		R.string.str_textview_param42, String.valueOf(SystemConfigFile.mResv42), 0),
-		new ItemOneLine(R.string.str_textview_param43, String.valueOf(SystemConfigFile.mResv43), 0,		R.string.str_textview_param44, String.valueOf(SystemConfigFile.mResv44), 0),
-		new ItemOneLine(R.string.str_textview_param45, String.valueOf(SystemConfigFile.mResv45), 0,		R.string.str_textview_param46, String.valueOf(SystemConfigFile.mResv46), 0),
-		new ItemOneLine(R.string.str_textview_param47, String.valueOf(SystemConfigFile.mResv47), 0,		R.string.str_textview_param48, String.valueOf(SystemConfigFile.mResv48), 0),
-		new ItemOneLine(R.string.str_textview_param49, String.valueOf(SystemConfigFile.mResv49), 0,		R.string.str_textview_param50, String.valueOf(SystemConfigFile.mResv50), 0),
-		new ItemOneLine(R.string.str_textview_param51, String.valueOf(SystemConfigFile.mResv51), 0,		R.string.str_textview_param52, String.valueOf(SystemConfigFile.mResv52), 0),
-		new ItemOneLine(R.string.str_textview_param53, String.valueOf(SystemConfigFile.mResv53), 0,		R.string.str_textview_param54, String.valueOf(SystemConfigFile.mResv54), 0),
-		new ItemOneLine(R.string.str_textview_param55, String.valueOf(SystemConfigFile.mResv55), 0,		R.string.str_textview_param56, String.valueOf(SystemConfigFile.mResv56), 0),
-		new ItemOneLine(R.string.str_textview_param57, String.valueOf(SystemConfigFile.mResv57), 0,		R.string.str_textview_param58, String.valueOf(SystemConfigFile.mResv58), 0),
-		new ItemOneLine(R.string.str_textview_param59, String.valueOf(SystemConfigFile.mResv59), 0,		R.string.str_textview_param60, String.valueOf(SystemConfigFile.mResv60), 0),
-		new ItemOneLine(R.string.str_textview_param61, String.valueOf(SystemConfigFile.mResv61), 0,		R.string.str_textview_param62, String.valueOf(SystemConfigFile.mResv62), 0),
-		new ItemOneLine(R.string.str_textview_param63, String.valueOf(SystemConfigFile.mResv63), 0,		R.string.str_textview_param64, String.valueOf(SystemConfigFile.mResv64), 0),
+		new ItemOneLine(R.string.str_textview_param1, "", 0, 	
+				R.string.str_textview_param2, "", 0),
+		new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms,		
+				R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), 		R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us,		
+				R.string.str_textview_param6, String.valueOf(SystemConfigFile.mParam6), 		R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param7, String.valueOf(SystemConfigFile.mParam7), 0,		
+				R.string.str_textview_param8, String.valueOf(SystemConfigFile.mParam8), 0),
+		new ItemOneLine(R.string.str_textview_param9, String.valueOf(SystemConfigFile.mParam9), 0,
+				R.string.str_textview_param10, String.valueOf(SystemConfigFile.mParam10), 		R.string.str_time_unit_us),
+		new ItemOneLine(R.string.str_textview_param11, String.valueOf(SystemConfigFile.mResv11), 0,
+				R.string.str_textview_param12, String.valueOf(SystemConfigFile.mResv12), 0),
+		new ItemOneLine(R.string.str_textview_param13, String.valueOf(SystemConfigFile.mResv13),R.string.str_time_unit_ms,
+				R.string.str_textview_param14, String.valueOf(SystemConfigFile.mResv14), 0),
+		new ItemOneLine(R.string.str_textview_param15, String.valueOf(SystemConfigFile.mResv15), 0,
+				R.string.str_textview_param16, String.valueOf(SystemConfigFile.mResv16), 0),
+		new ItemOneLine(R.string.str_textview_param17, String.valueOf(SystemConfigFile.mResv17), 0,
+				R.string.str_textview_param18, String.valueOf(SystemConfigFile.mResv18), 0),
+		new ItemOneLine(R.string.str_textview_param19, String.valueOf(SystemConfigFile.mResv19), 0,
+				R.string.str_textview_param20, String.valueOf(SystemConfigFile.mResv20), 0),
+		new ItemOneLine(R.string.str_textview_param21, String.valueOf(SystemConfigFile.mResv21), 0,
+				R.string.str_textview_param22, String.valueOf(SystemConfigFile.mResv22), 0),
+		new ItemOneLine(R.string.str_textview_param23, String.valueOf(SystemConfigFile.mResv23), 0,
+				R.string.str_textview_param24, String.valueOf(SystemConfigFile.mResv24), 0),
+		new ItemOneLine(R.string.str_textview_param25, String.valueOf(SystemConfigFile.mResv25), 0,
+				R.string.str_textview_param26, String.valueOf(SystemConfigFile.mResv26), 0),
+		new ItemOneLine(R.string.str_textview_param27, String.valueOf(SystemConfigFile.mResv27), 0,
+				R.string.str_textview_param28, String.valueOf(SystemConfigFile.mResv28), 0),
+		new ItemOneLine(R.string.str_textview_param29, String.valueOf(SystemConfigFile.mResv29), 0,
+				R.string.str_textview_param30, String.valueOf(SystemConfigFile.mResv30), 0),
+		new ItemOneLine(R.string.str_textview_param31, String.valueOf(SystemConfigFile.mResv31), 0,
+				R.string.str_textview_param32, String.valueOf(SystemConfigFile.mResv32), 0),
+		new ItemOneLine(R.string.str_textview_param33, String.valueOf(SystemConfigFile.mResv33), 0,
+				R.string.str_textview_param34, String.valueOf(SystemConfigFile.mResv34), 0),
+		new ItemOneLine(R.string.str_textview_param35, String.valueOf(SystemConfigFile.mResv35), 0,
+				R.string.str_textview_param36, String.valueOf(SystemConfigFile.mResv36), 0),
+		new ItemOneLine(R.string.str_textview_param37, String.valueOf(SystemConfigFile.mResv37), 0,	
+				R.string.str_textview_param38, String.valueOf(SystemConfigFile.mResv38), 0),
+		new ItemOneLine(R.string.str_textview_param39, String.valueOf(SystemConfigFile.mResv39), 0,
+				R.string.str_textview_param40, String.valueOf(SystemConfigFile.mResv40), 0),
+		new ItemOneLine(R.string.str_textview_param41, String.valueOf(SystemConfigFile.mResv41), 0,
+				R.string.str_textview_param42, String.valueOf(SystemConfigFile.mResv42), 0),
+		new ItemOneLine(R.string.str_textview_param43, String.valueOf(SystemConfigFile.mResv43), 0,
+				R.string.str_textview_param44, String.valueOf(SystemConfigFile.mResv44), 0),
+		new ItemOneLine(R.string.str_textview_param45, String.valueOf(SystemConfigFile.mResv45), 0,
+				R.string.str_textview_param46, String.valueOf(SystemConfigFile.mResv46), 0),
+		new ItemOneLine(R.string.str_textview_param47, String.valueOf(SystemConfigFile.mResv47), 0,
+				R.string.str_textview_param48, String.valueOf(SystemConfigFile.mResv48), 0),
+		new ItemOneLine(R.string.str_textview_param49, String.valueOf(SystemConfigFile.mResv49), 0,	
+				R.string.str_textview_param50, String.valueOf(SystemConfigFile.mResv50), 0),
+		new ItemOneLine(R.string.str_textview_param51, String.valueOf(SystemConfigFile.mResv51), 0,
+				R.string.str_textview_param52, String.valueOf(SystemConfigFile.mResv52), 0),
+		new ItemOneLine(R.string.str_textview_param53, String.valueOf(SystemConfigFile.mResv53), 0,
+				R.string.str_textview_param54, String.valueOf(SystemConfigFile.mResv54), 0),
+		new ItemOneLine(R.string.str_textview_param55, String.valueOf(SystemConfigFile.mResv55), 0,
+				R.string.str_textview_param56, String.valueOf(SystemConfigFile.mResv56), 0),
+		new ItemOneLine(R.string.str_textview_param57, String.valueOf(SystemConfigFile.mResv57), 0,
+				R.string.str_textview_param58, String.valueOf(SystemConfigFile.mResv58), 0),
+		new ItemOneLine(R.string.str_textview_param59, String.valueOf(SystemConfigFile.mResv59), 0,
+				R.string.str_textview_param60, String.valueOf(SystemConfigFile.mResv60), 0),
+		new ItemOneLine(R.string.str_textview_param61, String.valueOf(SystemConfigFile.mResv61), 0,
+				R.string.str_textview_param62, String.valueOf(SystemConfigFile.mResv62), 0),
+		new ItemOneLine(R.string.str_textview_param63, String.valueOf(SystemConfigFile.mResv63), 0,
+				R.string.str_textview_param64, String.valueOf(SystemConfigFile.mResv64), 0),
 	};
 	/**
 	 * A customerized view holder for widgets 
@@ -150,68 +182,71 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		View itemView;
-		if(convertView != null && mHoldMap.get(position) != null) {
+		if(convertView != null) {
 			mHolder = (ItemViewHolder) convertView.getTag();
-			itemView = convertView;
 		}
 		else
 		{
 			//prepare a empty view 
-			itemView = mInflater.inflate(R.layout.settings_frame_item, null);
+			convertView = mInflater.inflate(R.layout.settings_frame_item, null);
 			mHolder = new ItemViewHolder();
 			//Left 
-			mHolder.mTitleL = (TextView) itemView.findViewById(R.id.setting_title_left);
-			mHolder.mValueLTv = (TextView) itemView.findViewById(R.id.setting_value_left_tv);
-			mHolder.mValueLEt = (EditText) itemView.findViewById(R.id.setting_value_left_et);
-			mHolder.mUnitL = (TextView) itemView.findViewById(R.id.setting_unit_left);
+			mHolder.mTitleL = (TextView) convertView.findViewById(R.id.setting_title_left);
+			mHolder.mValueLTv = (TextView) convertView.findViewById(R.id.setting_value_left_tv);
+			mHolder.mValueLEt = (EditText) convertView.findViewById(R.id.setting_value_left_et);
+			mHolder.mUnitL = (TextView) convertView.findViewById(R.id.setting_unit_left);
 			
 			//Right
-			mHolder.mTitleR = (TextView) itemView.findViewById(R.id.setting_title_right);
-			mHolder.mValueRTv = (TextView) itemView.findViewById(R.id.setting_value_right_tv);
-			mHolder.mValueREt = (EditText) itemView.findViewById(R.id.setting_value_right_et);
-			mHolder.mUnitR = (TextView) itemView.findViewById(R.id.setting_unit_right);
+			mHolder.mTitleR = (TextView) convertView.findViewById(R.id.setting_title_right);
+			mHolder.mValueRTv = (TextView) convertView.findViewById(R.id.setting_value_right_tv);
+			mHolder.mValueREt = (EditText) convertView.findViewById(R.id.setting_value_right_et);
+			mHolder.mUnitR = (TextView) convertView.findViewById(R.id.setting_unit_right);
 			
-			if (position == 0) {
-				mHolder.mValueLTv.setOnClickListener(this);
-				mHolder.mValueRTv.setOnClickListener(this);
-			}
-			itemView.setTag(mHolder);
+			
+			convertView.setTag(mHolder);
 			mHoldMap.put(position, mHolder);
 			
-			if (mSettingItems[position].mUnitL > 0) {
-				mHolder.mUnitL.setText(mSettingItems[position].mUnitL);
-			}
-			if (mSettingItems[position].mUnitR > 0) {
-				mHolder.mUnitR.setText(mSettingItems[position].mUnitR);
-			}
-			mHolder.mTitleL.setText(mContext.getString(mSettingItems[position].mTitleL));
-			mHolder.mTitleR.setText(mContext.getString(mSettingItems[position].mTitleR));
-			
-			
-			if (position == 0) {
-				mHolder.mValueLTv.setVisibility(View.VISIBLE);
-				mHolder.mValueLEt.setVisibility(View.GONE);
-				mHolder.mValueRTv.setVisibility(View.VISIBLE);
-				mHolder.mValueREt.setVisibility(View.GONE);
-				mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
-				mHolder.mValueRTv.setText(mSettingItems[position].mValueR);
-			} else {
+		}
+		mHolder.mValueLEt.setTag(2*position);
+		mHolder.mValueREt.setTag(2*position+1);
+		mHolder.mValueLEt.addTextChangedListener(new SelfTextWatcher(mHolder.mValueLEt));
+		mHolder.mValueREt.addTextChangedListener(new SelfTextWatcher(mHolder.mValueREt));
+		
+		if (mSettingItems[position].mUnitL > 0) {
+			mHolder.mUnitL.setText(mSettingItems[position].mUnitL);
+		} else {
+			mHolder.mUnitL.setText("");
+		}
+		if (mSettingItems[position].mUnitR > 0) {
+			mHolder.mUnitR.setText(mSettingItems[position].mUnitR);
+		} else {
+			mHolder.mUnitR.setText("");
+		}
+		mHolder.mTitleL.setText(mContext.getString(mSettingItems[position].mTitleL));
+		mHolder.mTitleR.setText(mContext.getString(mSettingItems[position].mTitleR));
+		Debug.d(TAG, "===>getView position=" + position);
+		
+		if (position == 0) {
+			mHolder.mValueLTv.setVisibility(View.VISIBLE);
+			mHolder.mValueLEt.setVisibility(View.GONE);
+			mHolder.mValueRTv.setVisibility(View.VISIBLE);
+			mHolder.mValueREt.setVisibility(View.GONE);
+			mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
+			mHolder.mValueRTv.setText(mSettingItems[position].mValueR);
+			mHolder.mValueLTv.setOnClickListener(this);
+			mHolder.mValueRTv.setOnClickListener(this);
+		} else {
 
-				mHolder.mValueLTv.setVisibility(View.GONE);
-				mHolder.mValueLEt.setVisibility(View.VISIBLE);
-				mHolder.mValueRTv.setVisibility(View.GONE);
-				mHolder.mValueREt.setVisibility(View.VISIBLE);
-				mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
-				mHolder.mValueREt.setText(mSettingItems[position].mValueR);
-			}
-			
-			mHolder.mValueLEt.addTextChangedListener(new SelfTextWatcher(position, mHolder.mValueLEt));
-			mHolder.mValueREt.addTextChangedListener(new SelfTextWatcher(position, mHolder.mValueREt));
+			mHolder.mValueLTv.setVisibility(View.GONE);
+			mHolder.mValueLEt.setVisibility(View.VISIBLE);
+			mHolder.mValueRTv.setVisibility(View.GONE);
+			mHolder.mValueREt.setVisibility(View.VISIBLE);
+			Debug.d(TAG, "--->getView:left=" + mSettingItems[position].mValueL + "---right=" + mSettingItems[position].mValueR);
+			mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
+			mHolder.mValueREt.setText(mSettingItems[position].mValueR);
 		}
 		
-		Debug.d(TAG, "--->getView:position=" + position);
-		return itemView;
+		return convertView;
 	}
 	
 	
@@ -266,27 +301,39 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		Debug.d(TAG, "====>onClick valueL:" + holder.mValueLEt.getId());
 		Debug.d(TAG, "====>onClick valueR:" + holder.mValueREt.getId());
 		
-		if (holder != null) {
+		if (holder == null) {
 			return;
 		} else if (holder.mValueLTv == arg0) {
+			mSpiner.setAttachedView(holder.mValueLTv);
 			mSpiner.setAdapter(mEncoderAdapter);
 			mSpiner.setWidth(holder.mValueLTv.getWidth());
 			mSpiner.showAsDropDown(holder.mValueLTv);
 		} else if (holder.mValueRTv == arg0) {
+			mSpiner.setAttachedView(holder.mValueRTv);
 			mSpiner.setAdapter(mTrigerMode);
 			mSpiner.setWidth(holder.mValueRTv.getWidth());
-			mSpiner.showAsDropDown(holder.mValueLTv);
+			mSpiner.showAsDropDown(holder.mValueRTv);
 		}	
 	}
 
 	@Override
 	public void onItemClick(int index) {
+		TextView view = mSpiner.getAttachedView();
+		
+		
 		ItemViewHolder holder = mHoldMap.get(0);
-		if (holder != null) {
-			holder.mValueLTv.setText(getEncoder(index));
-			// mSettingItems[0].mValueL = getEncoder(index);
+		if (holder == null) {
+			return;
+		} else if (holder.mValueLTv == view) {
+			view.setText(getEncoder(index));
 			SystemConfigFile.mParam1 = index;
+			mSettingItems[0].mValueL = view.getText().toString();
+		} else if (holder.mValueRTv == view) {
+			view.setText((String)mTrigerMode.getItem(index));
+			SystemConfigFile.mParam2 = index;
+			mSettingItems[0].mValueR = view.getText().toString();
 		}
+		
 	}
 	
 	public void checkParams() {
@@ -386,250 +433,209 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	}
 	private class SelfTextWatcher implements TextWatcher {
 		
-		private int position;
 		private EditText mEditText;
 		
-		public SelfTextWatcher(int pos, EditText e) {
+		public SelfTextWatcher(EditText e) {
 			mEditText = e;
-			position = pos;
 		}
 		
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			ItemViewHolder holder = mHoldMap.get(position);
-			if (holder == null) {
-				return;
-			} /*else {
-				if (mEditText == holder.mValueLEt) {
-					mSettingItems[position].mValueL = arg0.toString();
-				} else if (mEditText == holder.mValueREt) {
-					mSettingItems[position].mValueR = arg0.toString();
-				}
-			}*/
-			switch (position) {
-			case 0:
-				if (mEditText == holder.mValueLEt) {
-					// SystemConfigFile.mParam2 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mParam2 = getValueFromEditText(arg0);
-				}
-				break;
-			case 1:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mParam3 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mParam4 = getValueFromEditText(arg0);
-				}
-				break;
+			int pos = (Integer) mEditText.getTag();
+			
+			Debug.d(TAG, "===>afterTextChanged, position=" + mEditText.getTag());
+			
+			if (pos%2 == 0) {
+				mSettingItems[pos/2].mValueL = arg0.toString();
+			} else {
+				mSettingItems[pos/2].mValueR = arg0.toString();
+			}
+			
+			switch (pos) {
 			case 2:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mParam5 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mParam6 = getValueFromEditText(arg0);
-				}
+				SystemConfigFile.mParam3 = getValueFromEditText(arg0);
 				break;
 			case 3:
-				if (mEditText == holder.mValueLEt){
-					SystemConfigFile.mParam7 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt){
-					SystemConfigFile.mParam8 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam4 = getValueFromEditText(arg0);
 				break;
 			case 4:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mParam9 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mParam10 = getValueFromEditText(arg0);
-				}
+				SystemConfigFile.mParam5 = getValueFromEditText(arg0);
 				break;
 			case 5:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv11 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv12 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam6 = getValueFromEditText(arg0);
 				break;
 			case 6:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv13 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv14 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam7 = getValueFromEditText(arg0);
 				break;
 			case 7:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv15 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv16 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam8 = getValueFromEditText(arg0);
 				break;
 			case 8:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv17 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv18 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam9 = getValueFromEditText(arg0);
 				break;
 			case 9:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv19 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv20 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mParam10 = getValueFromEditText(arg0);
 				break;
 			case 10:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv21 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv22 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv11 = getValueFromEditText(arg0);
 				break;
 			case 11:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv23 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv24 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv12 = getValueFromEditText(arg0);
 				break;
 			case 12:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv25 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv26 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv13 = getValueFromEditText(arg0);
 				break;
 			case 13:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv27 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv28 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv14 = getValueFromEditText(arg0);
 				break;
 			case 14:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv29 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv30 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv15 = getValueFromEditText(arg0);
 				break;
 			case 15:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv31 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv32 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv16 = getValueFromEditText(arg0);
 				break;
 			case 16:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv33 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv34 = getValueFromEditText(arg0);
-				} 
-				break;
+				SystemConfigFile.mResv17 = getValueFromEditText(arg0);
 			case 17:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv35 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv36 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv18 = getValueFromEditText(arg0);
 				break;
 			case 18:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv37 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv38 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv19 = getValueFromEditText(arg0);
 				break;
 			case 19:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv39 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv40 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv20 = getValueFromEditText(arg0);
 				break;
 			case 20:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv41 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv42 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv21 = getValueFromEditText(arg0);
 				break;
 			case 21:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv43 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv44 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv22 = getValueFromEditText(arg0);
 				break;
 			case 22:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv45 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv46 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv23 = getValueFromEditText(arg0);
 				break;
 			case 23:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv47 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv48 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv24 = getValueFromEditText(arg0);
 				break;
 			case 24:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv49 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv50 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv25 = getValueFromEditText(arg0);
 				break;
 			case 25:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv51 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv52 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv26 = getValueFromEditText(arg0);
 				break;
 			case 26:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv53 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv54 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv27 = getValueFromEditText(arg0);
 				break;
 			case 27:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv55 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv56 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv28 = getValueFromEditText(arg0);
 				break;
 			case 28:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv57 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv58 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv29 = getValueFromEditText(arg0);
 				break;
 			case 29:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv59 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv60 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv30 = getValueFromEditText(arg0);
 				break;
 			case 30:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv61 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv62 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv31 = getValueFromEditText(arg0);
 				break;
 			case 31:
-				if (mEditText == holder.mValueLEt) {
-					SystemConfigFile.mResv63 = getValueFromEditText(arg0);
-				} else if (mEditText == holder.mValueREt) {
-					SystemConfigFile.mResv64 = getValueFromEditText(arg0);
-				} 
+				SystemConfigFile.mResv32 = getValueFromEditText(arg0);
+				break;
+			case 32:
+				SystemConfigFile.mResv33 = getValueFromEditText(arg0);
+				break;
+			case 33:
+				SystemConfigFile.mResv34 = getValueFromEditText(arg0);
+				break;
+			case 34:
+				SystemConfigFile.mResv35 = getValueFromEditText(arg0);
+				break;
+			case 35:
+				SystemConfigFile.mResv36 = getValueFromEditText(arg0);
+				break;
+			case 36:
+				SystemConfigFile.mResv37 = getValueFromEditText(arg0);
+				break;
+			case 37:
+				SystemConfigFile.mResv38 = getValueFromEditText(arg0);
+				break;
+			case 38:
+				SystemConfigFile.mResv39 = getValueFromEditText(arg0);
+				break;
+			case 39:
+				SystemConfigFile.mResv40 = getValueFromEditText(arg0);
+				break;
+			case 40:
+				SystemConfigFile.mResv41 = getValueFromEditText(arg0);
+				break;
+			case 41:
+				SystemConfigFile.mResv42 = getValueFromEditText(arg0);
+				break;
+			case 42:
+				SystemConfigFile.mResv43 = getValueFromEditText(arg0);
+				break;
+			case 43:
+				SystemConfigFile.mResv44 = getValueFromEditText(arg0);
+				break;
+			case 44:
+				SystemConfigFile.mResv45 = getValueFromEditText(arg0);
+				break;
+			case 45:
+				SystemConfigFile.mResv46 = getValueFromEditText(arg0);
+				break;
+			case 46:
+				SystemConfigFile.mResv47 = getValueFromEditText(arg0);
+				break;
+			case 47:
+				SystemConfigFile.mResv48 = getValueFromEditText(arg0);
+				break;
+			case 48:
+				SystemConfigFile.mResv49 = getValueFromEditText(arg0);
+				break;
+			case 49:
+				SystemConfigFile.mResv50 = getValueFromEditText(arg0);
+				break;
+			case 50:
+				SystemConfigFile.mResv51 = getValueFromEditText(arg0);
+				break;
+			case 51:
+				SystemConfigFile.mResv52 = getValueFromEditText(arg0);
+				break;
+			case 52:
+				SystemConfigFile.mResv53 = getValueFromEditText(arg0);
+				break;
+			case 53:
+				SystemConfigFile.mResv54 = getValueFromEditText(arg0);
+				break;
+			case 54:
+				SystemConfigFile.mResv55 = getValueFromEditText(arg0);
+				break;
+			case 55:
+				SystemConfigFile.mResv56 = getValueFromEditText(arg0);
+				break;
+			case 56:
+				SystemConfigFile.mResv57 = getValueFromEditText(arg0);
+				break;
+			case 57:
+				SystemConfigFile.mResv58 = getValueFromEditText(arg0);
+				break;
+			case 58:
+				SystemConfigFile.mResv59 = getValueFromEditText(arg0);
+				break;
+			case 59:
+				SystemConfigFile.mResv60 = getValueFromEditText(arg0);
+				break;
+			case 60:
+				SystemConfigFile.mResv61 = getValueFromEditText(arg0);
+				break;
+			case 61:
+				SystemConfigFile.mResv62 = getValueFromEditText(arg0);
+				break;
+			case 62:
+				SystemConfigFile.mResv63 = getValueFromEditText(arg0);
+				break;
+			case 63:
+				SystemConfigFile.mResv64 = getValueFromEditText(arg0);
 				break;
 				
 			default:

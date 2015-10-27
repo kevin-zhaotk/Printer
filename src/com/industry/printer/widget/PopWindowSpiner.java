@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 public class PopWindowSpiner extends PopupWindow implements OnItemClickListener {
 
@@ -22,6 +23,8 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener 
 	public ListView mListView;
 	public PopWindowAdapter mAdapter;
 	public IOnItemClickListener mItemClickListener;
+	
+	private TextView mView;
 	
 	public PopWindowSpiner(Context context) {
 		super(context);
@@ -62,6 +65,14 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener 
 		if (mItemClickListener != null) {
 			mItemClickListener.onItemClick(position);
 		}
+	}
+	
+	public void setAttachedView(TextView view) {
+		mView = view;
+	}
+	
+	public TextView getAttachedView() {
+		return mView;
 	}
 
 }

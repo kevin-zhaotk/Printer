@@ -402,10 +402,10 @@
 	<string name="str_textview_param9">09.脉冲延时</string>
 	<string name="str_textview_param10">10.墨点大小</string>
 	<string name="str_textview_param11">11.保留</string>
-	<string name="str_textview_param12">12.保留</string>
-	<string name="str_textview_param13">13.保留</string>
-	<string name="str_textview_param14">14.保留</string>
-	<string name="str_textview_param15">15.保留</string>
+	<string name="str_textview_param12">12.设置</string>
+	<string name="str_textview_param13">13.重复延时</string>
+	<string name="str_textview_param14">14.重复脉冲</string>
+	<string name="str_textview_param15">15.光电模式</string>
 	<string name="str_textview_param16">16.加重</string>
 	<string name="str_textview_param17">17.保留</string>
 	<string name="str_textview_param18">18.保留</string>
