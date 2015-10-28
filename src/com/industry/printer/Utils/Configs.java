@@ -99,7 +99,7 @@ public class Configs {
 		//如果需要，在u盘根目录创建系统所需的目录，当u盘插入是也需要调用
 		ConfigPath.makeSysDirsIfNeed();
 		/*从U盘中读取系统设置，解析*/
-		SystemConfigFile.parseSystemCofig();
+		SystemConfigFile.init();
 	}
 	
 	/**

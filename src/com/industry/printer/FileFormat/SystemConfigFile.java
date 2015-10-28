@@ -1,29 +1,17 @@
 package com.industry.printer.FileFormat;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.industry.printer.R;
+import android.R.integer;
+
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-
-import android.text.StaticLayout;
-import android.util.Log;
-import android.widget.Toast;
 
 public class SystemConfigFile{
 	private static final String TAG = SystemConfigFile.class.getSimpleName();
@@ -161,7 +149,13 @@ public class SystemConfigFile{
 	public static int mResv63 = 0;
 	public static int mResv64 = 0;
 
+	public static HashMap<Integer, HashMap<String,Integer>> mParamRange = new HashMap<Integer, HashMap<String,Integer>>();
 	
+	
+	public static void init() {
+		parseSystemCofig();
+		initParamRange();
+	}
 	public static void parseSystemCofig() {
 		FileReader reader=null;
 		BufferedReader br = null;
@@ -607,6 +601,7 @@ public class SystemConfigFile{
 		stream.close();
 	}
 	
+	/*
 	public void saveSettings() {
 		ArrayList<XmlTag> tags = new ArrayList<XmlTag>();
 		tags.add(new XmlTag(PH_SETTING_ENCODER, String.valueOf(mParam1)));
@@ -672,7 +667,7 @@ public class SystemConfigFile{
 		tags.add(new XmlTag(PH_SETTING_RESERVED_61, String.valueOf(mResv61)));
 		tags.add(new XmlTag(PH_SETTING_RESERVED_62, String.valueOf(mResv62)));
 	}
-	
+	*/
 	
 	public static String getLastMsg() {
 		
@@ -723,29 +718,93 @@ public class SystemConfigFile{
 		
 	}
 	
-	
+	/**
+	 * 初始化已知参数的取值范围和默认值
+	 * TODO:后期做成通过xml进行配置
+	 */
 	public static void initParamRange() {
-		HashMap<Integer, HashMap<String,Integer>> mParamRange = new HashMap<Integer, HashMap<String,Integer>>();
 		
-		// param2
+		/*触发模式,有效值1,2,3,4*/
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 4);
 		mParamRange.put(2, map);
-		// param3
+		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 600);
 		map.put("default", 20);
 		mParamRange.put(3, map);
 		
-		// param3
+		/*光电延时(毫秒）下发FPGA-S4	有效值0-65535*/
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
-		map.put("max", 6553);
+		map.put("max", 65535);
 		map.put("default", 0);
 		mParamRange.put(4, map);
-				
+		
+		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 65535);
+		map.put("default", 0);
+		mParamRange.put(5, map);
+		
+		/*定时打印(毫秒) 下发FPGA- S6	0-65535*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 65535);
+		map.put("default", 1000);
+		mParamRange.put(6, map);
+
+		/*列间脉冲 下发FPGA- S7	1-50*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 50);
+		map.put("default", 1);
+		mParamRange.put(7, map);
+
+		/*定长脉冲 下发FPGA-S8 	1-65535*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 65535);
+		map.put("default", 1);
+		mParamRange.put(8, map);
+
+		/*脉冲延时 下发FPGA-S9 	1-65535*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 65535);
+		map.put("default", 1);
+		mParamRange.put(9, map);
+
+		/*墨点大小(微秒)	下发FPGA-S10	有效值200-2000, */
+		map = new HashMap<String, Integer>();
+		map.put("min", 200);
+		map.put("max", 2000);
+		map.put("default", 800);
+		mParamRange.put(10, map);
+
+		// param16
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 9);
+		map.put("default", 0);
+		mParamRange.put(16, map);
+		
 	}
 	
+	public static int checkParam(int param, int value) {
+		if (mParamRange == null) {
+			return value;
+		}
+		HashMap<String, Integer> p = mParamRange.get(param);
+		int min = p.get("min");
+		int max = p.get("max");
+		int def = p.get("default");
+		if (param < min || param > max) {
+			return def;
+		}
+		return value;
+	}
 }

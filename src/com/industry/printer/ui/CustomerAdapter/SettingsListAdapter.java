@@ -49,70 +49,70 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
 	
 	private ItemOneLine[] mSettingItems = {
-		new ItemOneLine(R.string.str_textview_param1, "", 0, 	
-				R.string.str_textview_param2, "", 0),
-		new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms,		
-				R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), 		R.string.str_time_unit_ms),
-		new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us,		
-				R.string.str_textview_param6, String.valueOf(SystemConfigFile.mParam6), 		R.string.str_time_unit_ms),
-		new ItemOneLine(R.string.str_textview_param7, String.valueOf(SystemConfigFile.mParam7), 0,		
-				R.string.str_textview_param8, String.valueOf(SystemConfigFile.mParam8), 0),
-		new ItemOneLine(R.string.str_textview_param9, String.valueOf(SystemConfigFile.mParam9), 0,
-				R.string.str_textview_param10, String.valueOf(SystemConfigFile.mParam10), 		R.string.str_time_unit_us),
-		new ItemOneLine(R.string.str_textview_param11, String.valueOf(SystemConfigFile.mResv11), 0,
-				R.string.str_textview_param12, String.valueOf(SystemConfigFile.mResv12), 0),
-		new ItemOneLine(R.string.str_textview_param13, String.valueOf(SystemConfigFile.mResv13),R.string.str_time_unit_ms,
-				R.string.str_textview_param14, String.valueOf(SystemConfigFile.mResv14), 0),
-		new ItemOneLine(R.string.str_textview_param15, String.valueOf(SystemConfigFile.mResv15), 0,
-				R.string.str_textview_param16, String.valueOf(SystemConfigFile.mResv16), 0),
-		new ItemOneLine(R.string.str_textview_param17, String.valueOf(SystemConfigFile.mResv17), 0,
-				R.string.str_textview_param18, String.valueOf(SystemConfigFile.mResv18), 0),
-		new ItemOneLine(R.string.str_textview_param19, String.valueOf(SystemConfigFile.mResv19), 0,
-				R.string.str_textview_param20, String.valueOf(SystemConfigFile.mResv20), 0),
-		new ItemOneLine(R.string.str_textview_param21, String.valueOf(SystemConfigFile.mResv21), 0,
-				R.string.str_textview_param22, String.valueOf(SystemConfigFile.mResv22), 0),
-		new ItemOneLine(R.string.str_textview_param23, String.valueOf(SystemConfigFile.mResv23), 0,
-				R.string.str_textview_param24, String.valueOf(SystemConfigFile.mResv24), 0),
-		new ItemOneLine(R.string.str_textview_param25, String.valueOf(SystemConfigFile.mResv25), 0,
-				R.string.str_textview_param26, String.valueOf(SystemConfigFile.mResv26), 0),
-		new ItemOneLine(R.string.str_textview_param27, String.valueOf(SystemConfigFile.mResv27), 0,
-				R.string.str_textview_param28, String.valueOf(SystemConfigFile.mResv28), 0),
-		new ItemOneLine(R.string.str_textview_param29, String.valueOf(SystemConfigFile.mResv29), 0,
-				R.string.str_textview_param30, String.valueOf(SystemConfigFile.mResv30), 0),
-		new ItemOneLine(R.string.str_textview_param31, String.valueOf(SystemConfigFile.mResv31), 0,
-				R.string.str_textview_param32, String.valueOf(SystemConfigFile.mResv32), 0),
-		new ItemOneLine(R.string.str_textview_param33, String.valueOf(SystemConfigFile.mResv33), 0,
-				R.string.str_textview_param34, String.valueOf(SystemConfigFile.mResv34), 0),
-		new ItemOneLine(R.string.str_textview_param35, String.valueOf(SystemConfigFile.mResv35), 0,
-				R.string.str_textview_param36, String.valueOf(SystemConfigFile.mResv36), 0),
-		new ItemOneLine(R.string.str_textview_param37, String.valueOf(SystemConfigFile.mResv37), 0,	
-				R.string.str_textview_param38, String.valueOf(SystemConfigFile.mResv38), 0),
-		new ItemOneLine(R.string.str_textview_param39, String.valueOf(SystemConfigFile.mResv39), 0,
-				R.string.str_textview_param40, String.valueOf(SystemConfigFile.mResv40), 0),
-		new ItemOneLine(R.string.str_textview_param41, String.valueOf(SystemConfigFile.mResv41), 0,
-				R.string.str_textview_param42, String.valueOf(SystemConfigFile.mResv42), 0),
-		new ItemOneLine(R.string.str_textview_param43, String.valueOf(SystemConfigFile.mResv43), 0,
-				R.string.str_textview_param44, String.valueOf(SystemConfigFile.mResv44), 0),
-		new ItemOneLine(R.string.str_textview_param45, String.valueOf(SystemConfigFile.mResv45), 0,
-				R.string.str_textview_param46, String.valueOf(SystemConfigFile.mResv46), 0),
-		new ItemOneLine(R.string.str_textview_param47, String.valueOf(SystemConfigFile.mResv47), 0,
-				R.string.str_textview_param48, String.valueOf(SystemConfigFile.mResv48), 0),
-		new ItemOneLine(R.string.str_textview_param49, String.valueOf(SystemConfigFile.mResv49), 0,	
-				R.string.str_textview_param50, String.valueOf(SystemConfigFile.mResv50), 0),
-		new ItemOneLine(R.string.str_textview_param51, String.valueOf(SystemConfigFile.mResv51), 0,
-				R.string.str_textview_param52, String.valueOf(SystemConfigFile.mResv52), 0),
-		new ItemOneLine(R.string.str_textview_param53, String.valueOf(SystemConfigFile.mResv53), 0,
-				R.string.str_textview_param54, String.valueOf(SystemConfigFile.mResv54), 0),
-		new ItemOneLine(R.string.str_textview_param55, String.valueOf(SystemConfigFile.mResv55), 0,
-				R.string.str_textview_param56, String.valueOf(SystemConfigFile.mResv56), 0),
-		new ItemOneLine(R.string.str_textview_param57, String.valueOf(SystemConfigFile.mResv57), 0,
-				R.string.str_textview_param58, String.valueOf(SystemConfigFile.mResv58), 0),
-		new ItemOneLine(R.string.str_textview_param59, String.valueOf(SystemConfigFile.mResv59), 0,
-				R.string.str_textview_param60, String.valueOf(SystemConfigFile.mResv60), 0),
-		new ItemOneLine(R.string.str_textview_param61, String.valueOf(SystemConfigFile.mResv61), 0,
-				R.string.str_textview_param62, String.valueOf(SystemConfigFile.mResv62), 0),
-		new ItemOneLine(R.string.str_textview_param63, String.valueOf(SystemConfigFile.mResv63), 0,
-				R.string.str_textview_param64, String.valueOf(SystemConfigFile.mResv64), 0),
+		new ItemOneLine(R.string.str_textview_param1, "", 0),
+		new ItemOneLine(R.string.str_textview_param2, "", 0),
+		new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us),
+		new ItemOneLine(R.string.str_textview_param6, String.valueOf(SystemConfigFile.mParam6),	R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param7, String.valueOf(SystemConfigFile.mParam7), 0),
+		new ItemOneLine(R.string.str_textview_param8, String.valueOf(SystemConfigFile.mParam8), 0),
+		new ItemOneLine(R.string.str_textview_param9, String.valueOf(SystemConfigFile.mParam9), 0),
+		new ItemOneLine(R.string.str_textview_param10, String.valueOf(SystemConfigFile.mParam10),R.string.str_time_unit_us),
+		new ItemOneLine(R.string.str_textview_param11, String.valueOf(SystemConfigFile.mResv11), 0),
+		new ItemOneLine(R.string.str_textview_param12, String.valueOf(SystemConfigFile.mResv12), 0),
+		new ItemOneLine(R.string.str_textview_param13, String.valueOf(SystemConfigFile.mResv13), R.string.str_time_unit_ms),
+		new ItemOneLine(R.string.str_textview_param14, String.valueOf(SystemConfigFile.mResv14), 0),
+		new ItemOneLine(R.string.str_textview_param15, String.valueOf(SystemConfigFile.mResv15), 0),
+		new ItemOneLine(R.string.str_textview_param16, String.valueOf(SystemConfigFile.mResv16), 0),
+		new ItemOneLine(R.string.str_textview_param17, String.valueOf(SystemConfigFile.mResv17), 0),
+		new ItemOneLine(R.string.str_textview_param18, String.valueOf(SystemConfigFile.mResv18), 0),
+		new ItemOneLine(R.string.str_textview_param19, String.valueOf(SystemConfigFile.mResv19), 0),
+		new ItemOneLine(R.string.str_textview_param20, String.valueOf(SystemConfigFile.mResv20), 0),
+		new ItemOneLine(R.string.str_textview_param21, String.valueOf(SystemConfigFile.mResv21), 0),
+		new ItemOneLine(R.string.str_textview_param22, String.valueOf(SystemConfigFile.mResv22), 0),
+		new ItemOneLine(R.string.str_textview_param23, String.valueOf(SystemConfigFile.mResv23), 0),
+		new ItemOneLine(R.string.str_textview_param24, String.valueOf(SystemConfigFile.mResv24), 0),
+		new ItemOneLine(R.string.str_textview_param25, String.valueOf(SystemConfigFile.mResv25), 0),
+		new ItemOneLine(R.string.str_textview_param26, String.valueOf(SystemConfigFile.mResv26), 0),
+		new ItemOneLine(R.string.str_textview_param27, String.valueOf(SystemConfigFile.mResv27), 0),
+		new ItemOneLine(R.string.str_textview_param28, String.valueOf(SystemConfigFile.mResv28), 0),
+		new ItemOneLine(R.string.str_textview_param29, String.valueOf(SystemConfigFile.mResv29), 0),
+		new ItemOneLine(R.string.str_textview_param30, String.valueOf(SystemConfigFile.mResv30), 0),
+		new ItemOneLine(R.string.str_textview_param31, String.valueOf(SystemConfigFile.mResv31), 0),
+		new ItemOneLine(R.string.str_textview_param32, String.valueOf(SystemConfigFile.mResv32), 0),
+		new ItemOneLine(R.string.str_textview_param33, String.valueOf(SystemConfigFile.mResv33), 0),
+		new ItemOneLine(R.string.str_textview_param34, String.valueOf(SystemConfigFile.mResv34), 0),
+		new ItemOneLine(R.string.str_textview_param35, String.valueOf(SystemConfigFile.mResv35), 0),
+		new ItemOneLine(R.string.str_textview_param36, String.valueOf(SystemConfigFile.mResv36), 0),
+		new ItemOneLine(R.string.str_textview_param37, String.valueOf(SystemConfigFile.mResv37), 0),
+		new ItemOneLine(R.string.str_textview_param38, String.valueOf(SystemConfigFile.mResv38), 0),
+		new ItemOneLine(R.string.str_textview_param39, String.valueOf(SystemConfigFile.mResv39), 0),
+		new ItemOneLine(R.string.str_textview_param40, String.valueOf(SystemConfigFile.mResv40), 0),
+		new ItemOneLine(R.string.str_textview_param41, String.valueOf(SystemConfigFile.mResv41), 0),
+		new ItemOneLine(R.string.str_textview_param42, String.valueOf(SystemConfigFile.mResv42), 0),
+		new ItemOneLine(R.string.str_textview_param43, String.valueOf(SystemConfigFile.mResv43), 0),
+		new ItemOneLine(R.string.str_textview_param44, String.valueOf(SystemConfigFile.mResv44), 0),
+		new ItemOneLine(R.string.str_textview_param45, String.valueOf(SystemConfigFile.mResv45), 0),
+		new ItemOneLine(R.string.str_textview_param46, String.valueOf(SystemConfigFile.mResv46), 0),
+		new ItemOneLine(R.string.str_textview_param47, String.valueOf(SystemConfigFile.mResv47), 0),
+		new ItemOneLine(R.string.str_textview_param48, String.valueOf(SystemConfigFile.mResv48), 0),
+		new ItemOneLine(R.string.str_textview_param49, String.valueOf(SystemConfigFile.mResv49), 0),
+		new ItemOneLine(R.string.str_textview_param50, String.valueOf(SystemConfigFile.mResv50), 0),
+		new ItemOneLine(R.string.str_textview_param51, String.valueOf(SystemConfigFile.mResv51), 0),
+		new ItemOneLine(R.string.str_textview_param52, String.valueOf(SystemConfigFile.mResv52), 0),
+		new ItemOneLine(R.string.str_textview_param53, String.valueOf(SystemConfigFile.mResv53), 0),
+		new ItemOneLine(R.string.str_textview_param54, String.valueOf(SystemConfigFile.mResv54), 0),
+		new ItemOneLine(R.string.str_textview_param55, String.valueOf(SystemConfigFile.mResv55), 0),
+		new ItemOneLine(R.string.str_textview_param56, String.valueOf(SystemConfigFile.mResv56), 0),
+		new ItemOneLine(R.string.str_textview_param57, String.valueOf(SystemConfigFile.mResv57), 0),
+		new ItemOneLine(R.string.str_textview_param58, String.valueOf(SystemConfigFile.mResv58), 0),
+		new ItemOneLine(R.string.str_textview_param59, String.valueOf(SystemConfigFile.mResv59), 0),
+		new ItemOneLine(R.string.str_textview_param60, String.valueOf(SystemConfigFile.mResv60), 0),
+		new ItemOneLine(R.string.str_textview_param61, String.valueOf(SystemConfigFile.mResv61), 0),
+		new ItemOneLine(R.string.str_textview_param62, String.valueOf(SystemConfigFile.mResv62), 0),
+		new ItemOneLine(R.string.str_textview_param63, String.valueOf(SystemConfigFile.mResv63), 0),
+		new ItemOneLine(R.string.str_textview_param64, String.valueOf(SystemConfigFile.mResv64), 0),
 	};
 	/**
 	 * A customerized view holder for widgets 
@@ -131,20 +131,14 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	}
 	
 	private class ItemOneLine {
-		public int mTitleL;
-		public String mValueL;
-		public int mUnitL;
-		public int mTitleR;
-		public String mValueR;
-		public int mUnitR;
+		public int mTitle;
+		public String mValue;
+		public int mUnit;
 		
-		public ItemOneLine(int id, String vl, int ul, int id2, String vr, int ur) {
-			mTitleL = id;
-			mValueL = vl;
-			mUnitL = ul;
-			mTitleR = id2;
-			mValueR = vr;
-			mUnitR = ur;
+		public ItemOneLine(int id, String value, int unit) {
+			mTitle = id;
+			mValue = value;
+			mUnit = unit;
 			
 		}
 	}
@@ -154,7 +148,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// mTitles = mContext.getResources().getStringArray(R.array.str_settings_params);
 		mHoldMap = new HashMap<Integer, ItemViewHolder>();
-		mSettingItems[0].mValueL = getEncoder(SystemConfigFile.mParam1);
+		mSettingItems[0].mValue = getEncoder(SystemConfigFile.mParam1);
 		
 		mEncoderAdapter = new PopWindowAdapter(mContext, null);
 		mTrigerMode = new PopWindowAdapter(mContext, null);
@@ -164,7 +158,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	@Override
 	public int getCount() {
 		Debug.d(TAG, "--->getCount=" + mSettingItems.length);
-		return mSettingItems.length;
+		return mSettingItems.length/2;
 		//return Configs.gParams;
 	}
 
@@ -212,18 +206,18 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mHolder.mValueLEt.addTextChangedListener(new SelfTextWatcher(mHolder.mValueLEt));
 		mHolder.mValueREt.addTextChangedListener(new SelfTextWatcher(mHolder.mValueREt));
 		
-		if (mSettingItems[position].mUnitL > 0) {
-			mHolder.mUnitL.setText(mSettingItems[position].mUnitL);
+		if (mSettingItems[2*position].mUnit > 0) {
+			mHolder.mUnitL.setText(mSettingItems[2*position].mUnit);
 		} else {
 			mHolder.mUnitL.setText("");
 		}
-		if (mSettingItems[position].mUnitR > 0) {
-			mHolder.mUnitR.setText(mSettingItems[position].mUnitR);
+		if (mSettingItems[2*position+1].mUnit > 0) {
+			mHolder.mUnitR.setText(mSettingItems[2*position+1].mUnit);
 		} else {
 			mHolder.mUnitR.setText("");
 		}
-		mHolder.mTitleL.setText(mContext.getString(mSettingItems[position].mTitleL));
-		mHolder.mTitleR.setText(mContext.getString(mSettingItems[position].mTitleR));
+		mHolder.mTitleL.setText(mContext.getString(mSettingItems[2*position].mTitle));
+		mHolder.mTitleR.setText(mContext.getString(mSettingItems[2*position+1].mTitle));
 		Debug.d(TAG, "===>getView position=" + position);
 		
 		if (position == 0) {
@@ -231,8 +225,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mHolder.mValueLEt.setVisibility(View.GONE);
 			mHolder.mValueRTv.setVisibility(View.VISIBLE);
 			mHolder.mValueREt.setVisibility(View.GONE);
-			mHolder.mValueLTv.setText(mSettingItems[position].mValueL);
-			mHolder.mValueRTv.setText(mSettingItems[position].mValueR);
+			mHolder.mValueLTv.setText(mSettingItems[2*position].mValue);
+			mHolder.mValueRTv.setText(mSettingItems[2*position+1].mValue);
 			mHolder.mValueLTv.setOnClickListener(this);
 			mHolder.mValueRTv.setOnClickListener(this);
 		} else {
@@ -241,9 +235,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mHolder.mValueLEt.setVisibility(View.VISIBLE);
 			mHolder.mValueRTv.setVisibility(View.GONE);
 			mHolder.mValueREt.setVisibility(View.VISIBLE);
-			Debug.d(TAG, "--->getView:left=" + mSettingItems[position].mValueL + "---right=" + mSettingItems[position].mValueR);
-			mHolder.mValueLEt.setText(mSettingItems[position].mValueL);
-			mHolder.mValueREt.setText(mSettingItems[position].mValueR);
+			Debug.d(TAG, "--->getView:left=" + mSettingItems[2*position].mValue + "---right=" + mSettingItems[2*position+1].mValue);
+			mHolder.mValueLEt.setText(mSettingItems[2*position].mValue);
+			mHolder.mValueREt.setText(mSettingItems[2*position+1].mValue);
 		}
 		
 		return convertView;
@@ -327,110 +321,47 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		} else if (holder.mValueLTv == view) {
 			view.setText(getEncoder(index));
 			SystemConfigFile.mParam1 = index;
-			mSettingItems[0].mValueL = view.getText().toString();
+			mSettingItems[0].mValue = view.getText().toString();
 		} else if (holder.mValueRTv == view) {
 			view.setText((String)mTrigerMode.getItem(index));
 			SystemConfigFile.mParam2 = index;
-			mSettingItems[0].mValueR = view.getText().toString();
+			mSettingItems[1].mValue = view.getText().toString();
 		}
 		
 	}
 	
+	/**
+	 * 检查已给定参数是否越界，如果越界就重置为默认值	
+	 */
 	public void checkParams() {
-		/*触发模式,有效值1,2,3,4*/
-		ItemViewHolder holder = mHoldMap.get(0);
-		if (SystemConfigFile.mParam2 < 1 || SystemConfigFile.mParam2 > 4) {
-			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueREt.setText("1");
-				SystemConfigFile.mParam2 = 1;
-			}
-		}
 		
-		holder = mHoldMap.get(1);
-		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
-		if (SystemConfigFile.mParam3 < 0 || SystemConfigFile.mParam3 > 600) {
-			Toast.makeText(mContext, R.string.str_toast_photoelectricity_delay, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueLEt.setText("20");
-				SystemConfigFile.mParam3 = 20;
-			}
-		}
-		
-		/*光电延时(毫秒）下发FPGA-S4	有效值0-65535*/
-		if (SystemConfigFile.mParam4 < 0 || SystemConfigFile.mParam4 > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_photoelectricity_antishake, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueREt.setText("0");
-				SystemConfigFile.mParam4 = 0;
-			}
-		}
-		
-		holder = mHoldMap.get(2);
-		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
-		if (SystemConfigFile.mParam5 < 0 || SystemConfigFile.mParam5 > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueLEt.setText("0");
-				SystemConfigFile.mParam6 = 0;
-			}
-		}
-		
-		/*定时打印(毫秒) 下发FPGA- S6	0-65535*/
-		if (SystemConfigFile.mParam6 < 0 || SystemConfigFile.mParam6 > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueREt.setText("1000");
-				SystemConfigFile.mParam6 = 1000;
-			}
-		}
-		
-		holder = mHoldMap.get(3);
-		/*列间脉冲 下发FPGA- S7	1-50*/
-		if (SystemConfigFile.mParam7 < 1 || SystemConfigFile.mParam7 > 50) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueLEt.setText("0");
-				SystemConfigFile.mParam7 = 0;
-			}
-		}
-		
-		/*定长脉冲 下发FPGA-S8 	1-65535*/
-		if (SystemConfigFile.mParam8 < 1 || SystemConfigFile.mParam8 > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueREt.setText("0");
-				SystemConfigFile.mParam8 = 0;
-			}
-		}
-		
-		holder = mHoldMap.get(4);
-		/*脉冲延时 下发FPGA-S9 	1-65535*/
-		if (SystemConfigFile.mParam9 < 1 || SystemConfigFile.mParam9 > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueLEt.setText("0");
-				SystemConfigFile.mParam9 = 0;
-			}
-		}
-		/*墨点大小(微秒)	下发FPGA-S10	有效值200-2000, */
-		if (SystemConfigFile.mParam10 < 200 || SystemConfigFile.mParam10 > 2000) {
-			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueREt.setText("800");
-				SystemConfigFile.mParam10 = 800;
-			}
-		}
-		
-		holder = mHoldMap.get(7);
-		if (SystemConfigFile.mResv16 < 0 || SystemConfigFile.mResv16 > 9) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			if (holder != null) {
-				holder.mValueLEt.setText("0");
-				SystemConfigFile.mResv16 = 0;
-			}
-		}
+		SystemConfigFile.mParam2 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam2);
+		mSettingItems[1].mValue = (String) mEncoderAdapter.getItem(SystemConfigFile.mParam2); 
+		SystemConfigFile.mParam3 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam3);
+		mSettingItems[2].mValue = String.valueOf(SystemConfigFile.mParam3);
+		SystemConfigFile.mParam4 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam4);
+		mSettingItems[3].mValue = String.valueOf(SystemConfigFile.mParam4);
+		SystemConfigFile.mParam5 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam5);
+		mSettingItems[4].mValue = String.valueOf(SystemConfigFile.mParam5);
+		SystemConfigFile.mParam6 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam6);
+		mSettingItems[5].mValue = String.valueOf(SystemConfigFile.mParam6);
+		SystemConfigFile.mParam7 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam7);
+		mSettingItems[6].mValue = String.valueOf(SystemConfigFile.mParam7);
+		SystemConfigFile.mParam8 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam8);
+		mSettingItems[7].mValue = String.valueOf(SystemConfigFile.mParam8);
+		SystemConfigFile.mParam9 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam9);
+		mSettingItems[8].mValue = String.valueOf(SystemConfigFile.mParam9);
+		SystemConfigFile.mParam10 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam10);
+		mSettingItems[9].mValue = String.valueOf(SystemConfigFile.mParam10);
+		SystemConfigFile.mResv16 = SystemConfigFile.checkParam(2, SystemConfigFile.mResv16);
+		mSettingItems[15].mValue = String.valueOf(SystemConfigFile.mResv16);
+		refresh();
 	}
+	
+	public void refresh() {
+		notifyDataSetChanged();
+	}
+	
 	private class SelfTextWatcher implements TextWatcher {
 		
 		private EditText mEditText;
@@ -445,11 +376,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			
 			Debug.d(TAG, "===>afterTextChanged, position=" + mEditText.getTag());
 			
-			if (pos%2 == 0) {
-				mSettingItems[pos/2].mValueL = arg0.toString();
-			} else {
-				mSettingItems[pos/2].mValueR = arg0.toString();
-			}
+			mSettingItems[pos].mValue = arg0.toString();
 			
 			switch (pos) {
 			case 2:
