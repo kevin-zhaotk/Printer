@@ -337,23 +337,23 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		
 		SystemConfigFile.mParam2 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam2);
 		mSettingItems[1].mValue = (String) mEncoderAdapter.getItem(SystemConfigFile.mParam2); 
-		SystemConfigFile.mParam3 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam3);
+		SystemConfigFile.mParam3 = SystemConfigFile.checkParam(3, SystemConfigFile.mParam3);
 		mSettingItems[2].mValue = String.valueOf(SystemConfigFile.mParam3);
-		SystemConfigFile.mParam4 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam4);
+		SystemConfigFile.mParam4 = SystemConfigFile.checkParam(4, SystemConfigFile.mParam4);
 		mSettingItems[3].mValue = String.valueOf(SystemConfigFile.mParam4);
-		SystemConfigFile.mParam5 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam5);
+		SystemConfigFile.mParam5 = SystemConfigFile.checkParam(5, SystemConfigFile.mParam5);
 		mSettingItems[4].mValue = String.valueOf(SystemConfigFile.mParam5);
-		SystemConfigFile.mParam6 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam6);
+		SystemConfigFile.mParam6 = SystemConfigFile.checkParam(6, SystemConfigFile.mParam6);
 		mSettingItems[5].mValue = String.valueOf(SystemConfigFile.mParam6);
-		SystemConfigFile.mParam7 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam7);
+		SystemConfigFile.mParam7 = SystemConfigFile.checkParam(7, SystemConfigFile.mParam7);
 		mSettingItems[6].mValue = String.valueOf(SystemConfigFile.mParam7);
-		SystemConfigFile.mParam8 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam8);
+		SystemConfigFile.mParam8 = SystemConfigFile.checkParam(8, SystemConfigFile.mParam8);
 		mSettingItems[7].mValue = String.valueOf(SystemConfigFile.mParam8);
-		SystemConfigFile.mParam9 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam9);
+		SystemConfigFile.mParam9 = SystemConfigFile.checkParam(9, SystemConfigFile.mParam9);
 		mSettingItems[8].mValue = String.valueOf(SystemConfigFile.mParam9);
-		SystemConfigFile.mParam10 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam10);
+		SystemConfigFile.mParam10 = SystemConfigFile.checkParam(10, SystemConfigFile.mParam10);
 		mSettingItems[9].mValue = String.valueOf(SystemConfigFile.mParam10);
-		SystemConfigFile.mResv16 = SystemConfigFile.checkParam(2, SystemConfigFile.mResv16);
+		SystemConfigFile.mResv16 = SystemConfigFile.checkParam(16, SystemConfigFile.mResv16);
 		mSettingItems[15].mValue = String.valueOf(SystemConfigFile.mResv16);
 		refresh();
 	}
