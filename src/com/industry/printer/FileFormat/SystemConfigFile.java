@@ -153,8 +153,8 @@ public class SystemConfigFile{
 	
 	
 	public static void init() {
-		parseSystemCofig();
 		initParamRange();
+		parseSystemCofig();
 	}
 	public static void parseSystemCofig() {
 		FileReader reader=null;
@@ -178,74 +178,59 @@ public class SystemConfigFile{
 				mParam1 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
 				mParam2 = Integer.parseInt(t.getValue());
-				/*触发模式,有效值1,2,3,4*/
-				if (mParam2 < 1 || mParam2 > 4) {
-					mParam2 = 1;
-				}
+				mParam2 = checkParam(2, mParam2);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_DELAY)) {
 				mParam3 = Integer.parseInt(t.getValue());
-				/*光电防抖 0-400 默认值20*/
-				if (mParam3 < 0 || mParam3 > 600) {
-					mParam3 = 20;
-				}
+				mParam3 = checkParam(3, mParam3);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_LOW_DELAY)) {
 				mParam4 = Integer.parseInt(t.getValue());
 				/*光电延时 0-65535 默认值100*/
-				if (mParam4 < 0 || mParam4 > 65535) {
-					mParam4 = 100;
-				}
+				mParam4 = checkParam(4, mParam4);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_PHOOUTPUT_PERIOD)) {
 				mParam5 = Integer.parseInt(t.getValue());
 				/*字宽(毫秒） 下发FPGA-S5 0-65535*/
-				if (mParam5 < 0 || mParam5 > 65535) {
-					mParam5 = 1000;
-				}
+				mParam5 = checkParam(5, mParam5);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TIMED_PERIOD)) {
 				mParam6 = Integer.parseInt(t.getValue());
-				/*墨点大小 0-65535 默认值1000*/
-				if (mParam6 < 0 || mParam6 > 65535) {
-					mParam6 = 1000;
-				}
+				mParam6 = checkParam(6, mParam6);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_PULSE)) {
 				mParam7 = Integer.parseInt(t.getValue());
 				/*列间脉冲 下发FPGA- S7	1-50*/
-				if (mParam7 < 1 || mParam7 > 50) {
-					mParam7 = 1;
-				}
+				mParam7 = checkParam(7, mParam7);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_LENFIXED_PULSE)) {
 				mParam8 = Integer.parseInt(t.getValue());
 				/*定长脉冲 下发FPGA-S8 	1-65535*/
-				if (mParam8 < 1 || mParam8 > 65535) {
-					mParam8 = 1;
-				}
+				mParam8 = checkParam(8, mParam8);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_DELAY_PULSE)) {
 				mParam9 = Integer.parseInt(t.getValue());
 				/*脉冲延时 下发FPGA-S9 	1-65535*/
-				if (mParam9 < 1 || mParam9 > 65535) {
-					mParam9 = 1;
-				}
+				mParam9 = checkParam(9, mParam9);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
 				mParam10 = Integer.parseInt(t.getValue());
 				/*墨点大小 200-2000 默认值800*/
-				if (mParam10 < 200 || mParam10 > 2000) {
-					mParam10 = 800;
+				mParam10 = checkParam(10, mParam10);
+				/*墨点大小（参数10）不能小于字宽（参数05）*/
+				if (mParam10 < mParam5) {
+					mParam10 = mParam5;
 				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
 				mResv11 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
 				mResv12 = Integer.parseInt(t.getValue());
+				mResv12 = checkParam(12, mResv12);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_13)) {
 				mResv13 = Integer.parseInt(t.getValue());
+				mResv13 = checkParam(13, mResv13);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_14)) {
 				mResv14 = Integer.parseInt(t.getValue());
+				mResv14 = checkParam(14, mResv14);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_15)) {
 				mResv15 = Integer.parseInt(t.getValue());
+				mResv15 = checkParam(15, mResv15);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_16)) {
 				mResv16 = Integer.parseInt(t.getValue());
 				/*加重 0-9 默认值0*/
-				if (mResv16 < 0 || mResv16 > 9) {
-					mResv16 = 0;
-				}
+				mResv16 = checkParam(16, mResv16);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
 				mResv17 = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
@@ -723,11 +708,18 @@ public class SystemConfigFile{
 	 * TODO:后期做成通过xml进行配置
 	 */
 	public static void initParamRange() {
-		
-		/*触发模式,有效值1,2,3,4*/
+		Debug.d(TAG, "====>initParamRange");
+		/*编码器,有效值0,1*/
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(1, map);
+		/*触发模式,有效值1,2,3,4*/
+		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 4);
+		map.put("default", 1);
 		mParamRange.put(2, map);
 		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
 		map = new HashMap<String, Integer>();
@@ -740,7 +732,7 @@ public class SystemConfigFile{
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 65535);
-		map.put("default", 0);
+		map.put("default", 100);
 		mParamRange.put(4, map);
 		
 		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
@@ -785,6 +777,35 @@ public class SystemConfigFile{
 		map.put("default", 800);
 		mParamRange.put(10, map);
 
+		/*参数12 设置， （默认值为1 ， 1-1000次）, */
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 1000);
+		map.put("default", 1);
+		mParamRange.put(12, map);
+
+		/*参数13 重复延时， 单位，毫秒（默认值为0 ， 0-65535）, */
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 65535);
+		map.put("default", 0);
+		mParamRange.put(13, map);
+
+		/*参数14 重复脉冲， 无。  （0-65535） */
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 65535);
+		map.put("default", 0);
+		mParamRange.put(14, map);
+
+		/*6.参数15 ， 光电模式,  0,1   (默认值是1)*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 1);
+		mParamRange.put(15, map);
+
+		
 		// param16
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
@@ -799,12 +820,20 @@ public class SystemConfigFile{
 			return value;
 		}
 		HashMap<String, Integer> p = mParamRange.get(param);
+		if (p == null) {
+			return value;
+		}
 		int min = p.get("min");
 		int max = p.get("max");
 		int def = p.get("default");
-		if (param < min || param > max) {
+		Debug.d(TAG, "*************Param" + param + "************");
+		Debug.d(TAG, "min=" + min + ", max=" + max +", default=" + def);
+		if (value < min || value > max) {
+			Debug.d(TAG, "resetTo:" + def);
 			return def;
 		}
+		
 		return value;
 	}
+	
 }

@@ -67,8 +67,8 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener 
 		}
 	}
 	
-	public void setAttachedView(TextView view) {
-		mView = view;
+	public void setAttachedView(View view) {
+		mView = (TextView) view;
 	}
 	
 	public TextView getAttachedView() {
