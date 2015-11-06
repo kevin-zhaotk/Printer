@@ -1,6 +1,8 @@
 package com.industry.printer.ui.CustomerDialog;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -152,21 +154,43 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			}
 			
 			File rootpath = new File(tlkPath);
-			File[] Tlks = rootpath.listFiles();
+			// File[] Tlks = rootpath.listFiles();
+			String[] Tlks = rootpath.list();
 			if (Tlks == null) {
 				return ;
 			}
-			for (File t:Tlks) {
+			Arrays.sort(Tlks, new Comparator() {
+				public int compare(Object arg0, Object arg1) {
+					int cp1 = 0;
+					int cp2 = 0;
+					try {
+				    	cp1 = Integer.parseInt((String) arg0);
+				    	cp2 = Integer.parseInt((String) arg1);
+				    } catch(NumberFormatException e) {
+				    	e.printStackTrace();
+				    }
+				    if (cp1 > cp2) {
+				    	return 1;
+				    } else if(cp1 == cp2) {
+				    	return 0;
+				    }
+				    return -1;
+				}
+			});
+			
+			
+			for (String t:Tlks) {
 				
-				if (!t.isDirectory()) {
+				String path = rootpath.getAbsolutePath() + "/" + t;
+				if (!new File(path).isDirectory()) {
 					continue;
 				}
 				
 				Map<String, Object> map = new HashMap<String, Object>();
-				Debug.d(TAG, "--->loadMessage:" + t.getAbsolutePath());
-				parser.setTlk(t.getAbsolutePath());
+				Debug.d(TAG, "--->loadMessage:" + path);
+				parser.setTlk(path);
 				String content = parser.getContentAbatract();
-				map.put("title", t.getName());
+				map.put("title", t);
 				map.put("abstract", content);
 				mContent.add(map);
 			}

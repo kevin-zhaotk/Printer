@@ -1,14 +1,22 @@
 package com.industry.printer.Utils;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
 import android.os.Environment;
 import android.provider.ContactsContract.Directory;
+import android.view.ViewDebug.FlagToString;
 
 import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.object.BaseObject;
 
 public class Configs {
 	
@@ -22,6 +30,30 @@ public class Configs {
 	public static int gFixedRows;
 	
 	public static int gParams;
+	
+	public static boolean mTextEnable	=false;
+	public static boolean mCounterEnable=false;
+	public static boolean mRTYearEnable =false;
+	public static boolean mRTMonThEnable=false;
+	public static boolean mRTDateEnable=false;
+	public static boolean mRTHourEnable=false;
+	public static boolean mRTMinuteEnable=false;
+	public static boolean mRTEnable=false;
+	public static boolean mShiftEnable=false;
+	public static boolean mDLYearEnable=false;
+	public static boolean mDLMonthEnable=false;
+	public static boolean mDLDateEnable=false;
+	public static boolean mJulianEnable=false;
+	public static boolean mGraphicEnable=false;
+	public static boolean mBarcodeEnable=false;
+	public static boolean mLineEnable=false;
+	public static boolean mRectEnable=false;
+	public static boolean mEllipseEnable=false;
+	public static boolean mRTSecondEnable=false;
+	public static boolean mQREnable=false;
+	public static boolean mWeekDayEnable=false;
+	public static boolean mWeeksEnable=false;
+	
 	
 	public static final boolean gMakeBinFromBitmap = false;
 	
@@ -122,6 +154,94 @@ public class Configs {
 	 */
 	public static String getUsbPath() {
 		return USB_ROOT_PATH;
+	}
+	
+	public static void objectsConfig(Context context) {
+		String id="";
+		int flag=0;
+		try {
+		InputStream stream = context.getResources().openRawResource(R.raw.objectconfig);
+		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+		XmlPullParser parser = factory.newPullParser();
+		parser.setInput(stream, "UTF-8");
+		
+		int eventType = parser.getEventType();  
+        while (eventType != XmlPullParser.END_DOCUMENT) {  
+            switch (eventType) {  
+            case XmlPullParser.START_DOCUMENT:  
+                break;
+            case XmlPullParser.START_TAG:
+            	if (parser.getName().equals("object")) {
+					parser.next();
+					if (parser.getName().equals("id")) {
+						id = parser.getText();
+					} else if (parser.getName().equals("flag")) {
+						flag = Integer.parseInt(parser.getText());
+						setObjectFlag(id, flag);
+					}
+					parser.next();
+				} else {
+					parser.next();
+				}
+            	break;
+            case XmlPullParser.END_TAG:
+            	break;
+            }
+        }
+		} catch (Exception e) {
+		}
+	}
+	
+	private static void setObjectFlag(String id, int flag) {
+		boolean enable = false;
+		if ( flag > 0) {
+			enable = true;
+		}
+		if (id == null) {
+			return;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_TEXT)) {
+			mTextEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_CNT)) {
+			mCounterEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_YEAR)) {
+			mRTYearEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_MON)) {
+			mRTMonThEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_DATE)) {
+			mRTDateEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_HOUR)) {
+			mRTHourEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_MIN)) {
+			mRTMinuteEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_SHIFT)) {
+			mRTSecondEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_DL_YEAR)) {
+			mDLYearEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_DL_MON)) {
+			mDLMonthEnable= enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_DL_DATE)) {
+			mDLDateEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_JULIAN)) {
+			mJulianEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_GRAPHIC)) {
+			mGraphicEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_BARCODE)) {
+			mBarcodeEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_LINE)) {
+			mLineEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RECT)) {
+			mRectEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_ELLIPSE)) {
+			mEllipseEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_RT_SECOND)) {
+			mRTSecondEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_QR)) {
+			mQREnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_WEEKDAY)) {
+			mWeekDayEnable = enable;
+		} else if (id.equalsIgnoreCase(BaseObject.OBJECT_TYPE_WEEKS)) {
+			mWeeksEnable = enable;
+		}
 	}
 	
 }

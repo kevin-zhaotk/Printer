@@ -338,7 +338,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	public void checkParams() {
 		Debug.d(TAG, "===>checkParams");
 		SystemConfigFile.mParam2 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam2);
-		mSettingItems[1].mValue = (String) mTrigerMode.getItem(SystemConfigFile.mParam2); 
+		mSettingItems[1].mValue = String.valueOf(SystemConfigFile.mParam2); 
 		
 		SystemConfigFile.mParam3 = SystemConfigFile.checkParam(3, SystemConfigFile.mParam3);
 		mSettingItems[2].mValue = String.valueOf(SystemConfigFile.mParam3);

@@ -32,26 +32,29 @@ public class BaseObject{
 	public static final String TAG="BaseObject";
 	
 	public static final String OBJECT_TYPE_TEXT		="001";
-	public static final String OBJECT_TYPE_CNT			="002";
+	public static final String OBJECT_TYPE_CNT		="002";
 	public static final String OBJECT_TYPE_RT_YEAR	="003";
 	public static final String OBJECT_TYPE_RT_MON	="004";
 	public static final String OBJECT_TYPE_RT_DATE	="005";
-	public static final String OBJECT_TYPE_RT_HOUR="006";
+	public static final String OBJECT_TYPE_RT_HOUR	="006";
 	public static final String OBJECT_TYPE_RT_MIN	="007";
-	public static final String OBJECT_TYPE_YEAR			="008";
-	public static final String OBJECT_TYPE_SHIFT		="009";
+	public static final String OBJECT_TYPE_YEAR		="008";
+	public static final String OBJECT_TYPE_SHIFT	="009";
 	public static final String OBJECT_TYPE_DL_YEAR	="013";
 	public static final String OBJECT_TYPE_DL_MON	="014";
 	public static final String OBJECT_TYPE_DL_DATE	="015";
-	public static final String OBJECT_TYPE_JULIAN		="025";
+	public static final String OBJECT_TYPE_JULIAN	="025";
 	public static final String OBJECT_TYPE_GRAPHIC	="026";
-	public static final String OBJECT_TYPE_BARCODE="027";
-	public static final String OBJECT_TYPE_LINE			="028";
+	public static final String OBJECT_TYPE_BARCODE	="027";
+	public static final String OBJECT_TYPE_LINE		="028";
 	public static final String OBJECT_TYPE_RECT		="029";
 	public static final String OBJECT_TYPE_ELLIPSE	="030";
 	public static final String OBJECT_TYPE_MsgName	="031";
-	public static final String OBJECT_TYPE_RT				="032";
-	public static final String OBJECT_TYPE_RT_SECOND="033";
+	public static final String OBJECT_TYPE_RT_SECOND="032";
+	public static final String OBJECT_TYPE_QR		="033";
+	public static final String OBJECT_TYPE_WEEKDAY  ="034";
+	public static final String OBJECT_TYPE_WEEKS	="035";
+	public static final String OBJECT_TYPE_RT		="036";
 	
 	
 	public Context mContext;
