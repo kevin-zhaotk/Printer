@@ -9,9 +9,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.industry.printer.EditTabActivity;
+import com.industry.printer.MessageTask;
+import com.industry.printer.FileFormat.TlkFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -19,19 +22,17 @@ import com.industry.printer.Utils.Debug;
 import android.content.Context;
 import android.util.Log;
 
-public class TLKFileParser {
-	public static final String TAG="TLKFileParser";
-	public static Context mContext;
+public class TLKFileParser  extends TlkFile{
 	
-	public String mPath;
+	public static final String TAG="TLKFileParser";
+	
 	private int mDots = 0;
 	
 	public TLKFileParser(Context context, String file) {
-		mContext = context;
-		setTlk(file);
+		super(context, file);
 	}
 	
-	
+	/*
 	public void parse(Context context, String name, Vector<BaseObject> objlist)
 	{
 		int i;
@@ -90,8 +91,69 @@ public class TLKFileParser {
 			Debug.d(TAG, "parse error: "+e.getMessage());
 		}
 	}
+	*/
+	public void parse(Context context, MessageTask task, ArrayList<BaseObject> objlist)
+	{
+		int i;
+		BaseObject pObj;
+		mContext = context;
+		if(objlist == null) {
+			Debug.d(TAG, "objlist is null");
+			return;
+		}
+		objlist.clear();
+		File file = new File(mPath);
+		if(file.isDirectory() || !file.exists())
+		{
+			Debug.d(TAG, "File:" + mPath + " is directory or not exist");
+			return;
+		}
+		try{
+			 InputStream instream = new FileInputStream(file); 
+			 if(instream != null)
+			 {
+				 InputStreamReader inputreader = new InputStreamReader(instream,"UTF-8");
+                 BufferedReader buffreader = new BufferedReader(inputreader);
+                 String line;
+                 
+                 while (( line = buffreader.readLine()) != null) {
+                     Debug.d(TAG, "line="+line);
+                     pObj = parseLine(task, line);
+                     if (pObj == null) {
+                    	 continue;
+                     }
+                     objlist.add(pObj);
+                     if(pObj instanceof RealtimeObject)
+                     {
+                    	 i = ((RealtimeObject) pObj).mSubObjs.size();
+                    	 
+                    	 for(int j=0; j<i ; j++)
+                    	 {
+                    		 line = buffreader.readLine();
+                    		 Debug.d(TAG, "line="+line);
+                    		 for(int k=0; k<i; k++)
+                    		 {
+                    			 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(k);
+                    			 if(obj.getId().equals(line.substring(4, 7)))
+                    			 {
+                    				 ((RealtimeObject) pObj).mSubObjs.get(j).setIndex(Integer.parseInt(line.substring(0, 3)));
+                    				 Debug.d(TAG, "pObj "+((RealtimeObject) pObj).mSubObjs.get(j).getId()+",index="+((RealtimeObject) pObj).mSubObjs.get(j).getIndex()); 
+                            		 break;
+                    			 }
+                    		 }
+                    		 
+                    	 }
+                     }
+                 }
+                 instream.close();
+			 }
+		}catch(Exception e)
+		{
+			Debug.d(TAG, "parse error: "+e.getMessage());
+		}
+	}
 	
-	public BaseObject parseLine(String str)
+	public BaseObject parseLine(MessageTask task, String str)
 	{
 		Log.d(TAG, "*************************");
 		BaseObject obj = null;
@@ -197,6 +259,10 @@ public class TLKFileParser {
 			Debug.d(TAG, "Unknown object type: "+attr[1]);
 			return null;
 		}
+		
+		// 设置object的task
+		obj.setTask(task);
+		
 		if(obj != null && !(obj instanceof MessageObject) )
 		{
 			obj.setIndex(Integer.parseInt(attr[0]));
@@ -229,22 +295,12 @@ public class TLKFileParser {
 	
 	
 
-	/**
-	 * 设置需要解析的tlk文件名，可以是绝对路径或相对路径
-	 */
-	public void setTlk(String file) {
-		if (file == null || file.isEmpty())
-			return;
-		if (file.startsWith(Configs.USB_ROOT_PATH) || file.startsWith(Configs.USB_ROOT_PATH2)) {
-			mPath = file;
-		} else {
-			mPath = ConfigPath.getTlkPath() + file;
-		}
-	}
+	
 	/**
 	 * 获取打印对象的内容缩略信息
 	 * 暂时只支持文本对象，后续会添加对变量的支持
 	 */
+	
 	public String getContentAbatract() {
 		String content = "";
 		BaseObject pObj;
@@ -264,7 +320,7 @@ public class TLKFileParser {
 	            BufferedReader buffreader = new BufferedReader(inputreader);
 	            String line;
 	            while ( (line = buffreader.readLine()) != null) {
-	            	pObj = parseLine(line);
+	            	pObj = parseLine(null, line);
 	            	String objString = "";
 	            	if (pObj instanceof TextObject) {
 	            		objString = pObj.getContent();

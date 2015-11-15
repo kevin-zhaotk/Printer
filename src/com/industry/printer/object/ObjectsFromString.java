@@ -32,13 +32,13 @@ public class ObjectsFromString {
 	public static final String REALTIME_FLAG = "#T#";
 	public static final String IMAGE_FLAG = "#P#";
 	
-	public static List<BaseObject> makeObjs(Context context, String str) {
+	public static ArrayList<BaseObject> makeObjs(Context context, String str) {
 		int xcor=0;
 		int index=1;
 		if (str==null || str.isEmpty()) {
 			return null;
 		}
-		List<BaseObject> objList=new ArrayList<BaseObject>();
+		ArrayList<BaseObject> objList=new ArrayList<BaseObject>();
 		
 		/**第一个对象为Messageobject，与其他项目保持一致**/
 		MessageObject msgObject = new MessageObject(context, 0);

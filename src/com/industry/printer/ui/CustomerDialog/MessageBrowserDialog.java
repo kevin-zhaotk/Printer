@@ -145,6 +145,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void loadMessages()
 		{
 			TLKFileParser parser = new TLKFileParser(getContext(), null);

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import android.R.integer;
 import android.graphics.Path;
 
 /**
@@ -89,4 +90,42 @@ public class ConfigPath {
 		}
 		return paths.get(0)+Configs.TXT_FILES_PATH;
 	}
+	
+	
+	/**
+	 * 通过MessageTask的name构造出tlk文件夹的路径
+	 * @param name
+	 * @return
+	 */
+	public static String getTlkDir(String name) {
+		return getTlkPath() + "/" + name;
+	}
+	
+	/**
+	 * 通过MessageTask的name构造出tlk文件的路径
+	 * @param name
+	 * @return
+	 */
+	public static String getTlkAbsolute(String name) {
+		return getTlkPath() + "/" + name + Configs.TLK_FILE_NAME;
+	}
+	
+	/**
+	 * 通过MessageTask的name构造出1.bin文件的路径
+	 * @param name
+	 * @return
+	 */
+	public static String getBinAbsolute(String name) {
+		return getTlkPath() + "/" + name + Configs.BIN_FILE_NAME;
+	}
+	
+	/**
+	 * 通过MessageTask的name构造出vx.bin文件的路径
+	 * @param name
+	 * @return
+	 */
+	public static String getVBinAbsolute(String name, int index) {
+		return getTlkPath() + "/" + name + "/v" + String.valueOf(index) + ".bin";
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.industry.printer.data;
 import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -10,6 +11,9 @@ import android.content.Context;
 import android.database.CharArrayBuffer;
 
 import com.industry.printer.BinInfo;
+import com.industry.printer.MessageTask;
+import com.industry.printer.Utils.ConfigPath;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -33,8 +37,8 @@ public class DataTask {
 	public static final String TAG = DataTask.class.getSimpleName();
 	
 	public Context	mContext;
-	public Vector<BaseObject> mObjList;
-	public String mMessage;
+	public ArrayList<BaseObject> mObjList;
+	public MessageTask mTask;
 
 	/**
 	 * background buffer
@@ -57,32 +61,31 @@ public class DataTask {
 	 */
 	public HashMap<BaseObject, BinInfo> mVarBinList;
 	
-	public DataTask(Context context) {
+	public DataTask(Context context, MessageTask task) {
 		mContext = context;
-		mObjList = new Vector<BaseObject>();
+		mTask = task;
+		mObjList = task.getObjects();
 		mDots = 0;
 		mVarBinList = new HashMap<BaseObject, BinInfo>();
 	}
 	
+	public void setTask(MessageTask task) {
+		if (task == null) {
+			return;
+		}
+		mTask = task;
+		mObjList = task.getObjects();
+		mVarBinList = new HashMap<BaseObject, BinInfo>();
+	}
 	/**
 	 * prepareBackgroudBuffer
 	 * @param f	the tlk object directory path
 	 * parse the 1.bin, and then read the file content into mBgBuffer, one bit extends to one byte
 	 */
-	public boolean prepareBackgroudBuffer(String tlk)
+	public boolean prepareBackgroudBuffer()
 	{
-		String path=null;
-		File fp = new File(tlk);
-		if(fp.isFile())
-			path = new File(tlk).getParent();
-		else
-			path = tlk;
 		/**记录当前打印的信息路径**/
-		mMessage = path;
-		TLKFileParser parser = new TLKFileParser(mContext, mMessage);
-		parser.parse(mContext, mMessage+"/1.TLK", mObjList);
-		Debug.d(TAG, "-----objlist size="+mObjList.size());
-		mBinInfo = new BinInfo(mMessage+"/1.bin");
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()));
 		if (mBinInfo == null) {
 			return false;
 		}
@@ -134,7 +137,7 @@ public class DataTask {
 				String str = ((CounterObject) o).getNext();
 				BinInfo info = mVarBinList.get(o);
 				if (info == null) {
-					info = new BinInfo(mMessage+"/" + "v" + o.getIndex() +".bin");
+					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
@@ -172,7 +175,7 @@ public class DataTask {
 					else
 						continue;
 					if (info == null) {
-						info = new BinInfo(mMessage+"/" + "v"+rtSub.getIndex() +".bin");
+						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 						mVarBinList.put(o, info);
 					}
 					var = info.getVarBuffer(substr);
@@ -182,7 +185,7 @@ public class DataTask {
 			else if(o instanceof JulianDayObject)
 			{
 				String vString = ((JulianDayObject)o).getContent();
-				BinInfo varbin= new BinInfo(mMessage + "/v" + o.getIndex() + ".bin");
+				BinInfo varbin= new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 				var = varbin.getVarBuffer(vString);
 				BinInfo.overlap(mPrintBuffer, var, (int)o.getX() *2, varbin.getCharsPerColumn());
 			}
@@ -194,7 +197,7 @@ public class DataTask {
 	}
 	
 	
-	public Vector<BaseObject> getObjList() {
+	public ArrayList<BaseObject> getObjList() {
 		return mObjList;
 	}
 	

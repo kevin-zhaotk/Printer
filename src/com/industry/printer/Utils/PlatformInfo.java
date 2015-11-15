@@ -27,4 +27,8 @@ public class PlatformInfo {
 			return false;
 		}
 	}
+	
+	public static String getProduct() {
+		return SystemProperties.get(PROPERTY_PRODUCT);
+	}
 }

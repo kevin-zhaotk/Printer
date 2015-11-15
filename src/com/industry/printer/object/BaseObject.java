@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.MainActivity;
+import com.industry.printer.MessageTask;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
@@ -77,6 +78,7 @@ public class BaseObject{
 	public boolean mIsSelected;
 	public String mContent;
 	public HashMap<String, byte[]> mVBuffer;
+	public MessageTask mTask;
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -428,6 +430,22 @@ public class BaseObject{
 		}
 		Debug.d(TAG, "--->Arraybuffer len="+buffer.length());
 		return buffer.buffer();
+	}
+	
+	/**
+	 * 设置当前object所在的Task
+	 * @param task
+	 */
+	public void setTask(MessageTask task) {
+		mTask = task;
+	}
+	
+	/**
+	 * 当前object所在的Task
+	 * @return MessageTask
+	 */
+	public MessageTask getTask() {
+		return mTask;
 	}
 	
 }

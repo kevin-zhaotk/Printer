@@ -2,8 +2,6 @@ package com.industry.printer.widget;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -20,7 +18,7 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 
 	private static final String TAG = SpanableStringFormator.class.getSimpleName();
 
-	public SpanableStringFormator(Vector<BaseObject> objlist) {
+	public SpanableStringFormator(ArrayList<BaseObject> objlist) {
 		super();
 		setText(objlist);
 	}
@@ -51,7 +49,7 @@ public class SpanableStringFormator extends SpannableStringBuilder {
 		
 	}
 	
-	public void setText(Vector<BaseObject> objlist) {
+	public void setText(ArrayList<BaseObject> objlist) {
 		
 		if (objlist == null) {
 			Debug.d(TAG, "--->objlist is null");

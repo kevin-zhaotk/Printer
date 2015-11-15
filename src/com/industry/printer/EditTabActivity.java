@@ -6,11 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import com.industry.printer.FileFormat.TlkFileParser;
+import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -151,8 +153,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	// public EditText mObjLine4;
 	
 	
-	
-	public static Vector<BaseObject> mObjs;
+	public MessageTask mMsgTask;
+	public static ArrayList<BaseObject> mObjs;
 	public ArrayAdapter<String> mNameAdapter;
 	
 	public EditTabActivity() {
@@ -177,7 +179,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		//this.setVisible(false);
 		mContext = getActivity();
 		
-		mObjs = new Vector<BaseObject>();
+		mObjs = new ArrayList<BaseObject>();
 		mObjs.add(new MessageObject(mContext, 0));
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		
@@ -359,79 +361,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		return x;
 	}
 
-
-	/**
-	 * 鍝嶅簲save/saveas鎿嶄綔锛屼繚瀛榯lk瀵硅薄
-	 * @param path 鏂囦欢璺緞锛堟瘡鏉′俊鎭殑鐩綍锛�
-	 * @param create 鏄惁闇�瑕佸垱寤轰竴涓俊鎭洰褰�
-	 */
-	public void saveObjFile(String path, boolean create)
-	{
-		int i=1;
-		FileWriter fw=null;
-		BufferedWriter bw=null;
-		File file = new File(path);
-		Debug.d(TAG, "=====>saveObjFile path="+path);
-		if(create==true)
-		{
-//			if(file.exists()){
-//				Toast.makeText(mContext, R.string.str_tlk_already_exist, Toast.LENGTH_LONG);
-//				return;
-//			}
-//			if(!file.mkdirs())
-//			{
-//				Debug.d(TAG, "create dir error "+file.getPath());
-//				Toast.makeText(mContext, R.string.str_createfile_failure, Toast.LENGTH_LONG);
-//				return;
-//			}
-		}
-		if(!file.exists() && !file.mkdirs())
-		{
-			Debug.d(TAG, "create dir error "+file.getPath());
-			return ;
-		}
-		File tlk = new File(path+"/1.TLK");
-		try {
-			if(!tlk.exists() && !tlk.createNewFile()){
-				Debug.d(TAG, "create error "+tlk.getPath());
-				return;
-			}
-			fw = new FileWriter(tlk);
-			bw = new BufferedWriter(fw);
-			for(BaseObject o: mObjs)
-			{
-				if(o instanceof RealtimeObject)
-				{
-					System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+o.toString());
-					bw.write(BaseObject.intToFormatString(i, 3)+"^"+o.toString());
-					bw.newLine();
-					o.setIndex(i++);
-					for(BaseObject so : ((RealtimeObject) o).getSubObjs())
-					{
-						System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+so.toString());
-						bw.write(BaseObject.intToFormatString(i, 3)+"^"+so.toString());
-						bw.newLine();
-						so.setIndex(i++);
-					}
-				}
-				else
-				{
-					Debug.d(TAG, "filestr="+BaseObject.intToFormatString(i, 3) +"^"+o.toString());
-					bw.write(BaseObject.intToFormatString(i, 3)+"^"+o.toString());
-					bw.newLine();
-					o.setIndex(i++);
-				}
-				
-			}
-			bw.flush();
-			bw.close();
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
 	/**
 	 * HANDLER_MESSAGE_NEW
 	 *  Handler message for new a tlk file
@@ -490,15 +419,10 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
             		mObjName = MessageBrowserDialog.getSelected();
-            		File tlk=new File(ConfigPath.getTlkPath()+"/" + mObjName +"/1.TLK");
-            		if(tlk.isFile() && tlk.exists())
-            		{
-            			TLKFileParser parser = new TLKFileParser(mContext, tlk.getAbsolutePath());
-	    				parser.parse(mContext, tlk.getAbsolutePath(), mObjs);
-	    				setCurObj(0);
-	    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-            		}
-            		
+            		mMsgTask = new MessageTask(mContext, mObjName);
+            		mObjs = mMsgTask.getObjects();
+    				setCurObj(0);
+    				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
             		//mMsgTitle.setTitle(mObjName);
             		break;
@@ -513,17 +437,20 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             		if (mObjName == null) {
 						break;
 					}
-            		createFolderIfNeed(mObjName);
+            		mMsgTask = new MessageTask(mContext, mObjName, mObjLine1.getText().toString());
+            		mMsgTask.createTaskFolderIfNeed();
+            		/*
             		if (PlatformInfo.isBufferFromDotMatrix()) {
             			saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
 					} else {
 						saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
-					}
-            		
-           			saveObjFile(ConfigPath.getTlkPath()+"/"+mObjName, createfile);
-            		
-           			//保存变量bin文件
-           			saveVarBin(ConfigPath.getTlkPath()+"/"+mObjName);
+					}*/
+            		//保存1.bin文件
+            		mMsgTask.saveBin();
+            		//保存1.TLK文件
+           			mMsgTask.saveTlk(mContext);
+           			//保存vx.bin文件
+           			mMsgTask.saveVarBin();
            			
             		dismissProgressDialog();
             		// OnPropertyChanged(false);
@@ -578,15 +505,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
        } 
 	};
 	
-	private boolean createFolderIfNeed(String obj) {
-		File dir = new File(ConfigPath.getTlkPath() + "/" + obj);
-		if(!dir.exists() && !dir.mkdirs())
-		{
-			Debug.d(TAG, "create dir error "+dir.getPath());
-			return false;
-		}
-		return true;
-	}
 	
 	int getTouchedObj(float x, float y)
 	{
@@ -609,122 +527,113 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	 * 使用系统字库，生成bitmap，然后通过灰度化和二值化之后提取点阵生成buffer
 	 * @param f
 	 */
-	public void saveObjectBin(String f)
-	{
-		int width=0;
-		Paint p=new Paint();
-		if(mObjs==null || mObjs.size() <= 0)
-			return ;
-		for(BaseObject o:mObjs)
-		{
-			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
-		}
-		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDotsTotal);
-		Canvas can = new Canvas(bmp);
-		can.drawColor(Color.WHITE);
-		for(BaseObject o:mObjs)
-		{
-			if((o instanceof MessageObject)	)
-				continue;
-			
-			if(o instanceof CounterObject)
-			{
-				o.drawVarBitmap(f);
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext,f);
-				can.drawBitmap(t, o.getX(), o.getY(), p);
-				BinFromBitmap.recyleBitmap(t);
-			}
-			else if(o instanceof JulianDayObject)
-			{
-				o.drawVarBitmap(f);
-			}
-			else if(o instanceof ShiftObject)
-			{
-				o.drawVarBitmap(f);
-			}
-			else
-			{
-				Bitmap t = o.getScaledBitmap(mContext);
-				can.drawBitmap(t, o.getX(), o.getY(), p);
-				BinFromBitmap.recyleBitmap(t);
-			}
-		//can.drawText(mContent, 0, height-30, mPaint);
-		}
-		// 生成bin文件
-		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract(bmp);
-		// 保存bin文件
-		maker.save(f + "/1.bin");
-		
-		return ;
-	}
-	
-	/**
-	 * 从16*16的点阵字库中提取点阵，生成打印buffer
-	 * @param f
-	 */
-	public void saveBinDotMatrix(String f) {
-		if(mObjs==null || mObjs.size() <= 0)
-			return ;
-		
-		String content="";
-		for(BaseObject o:mObjs)
-		{
-			if((o instanceof MessageObject)	)
-				continue;
-			
-			if(o instanceof CounterObject)
-			{
-				content += o.getContent();
-			}
-			else if(o instanceof RealtimeObject)
-			{
-				content += o.getContent();
-				Debug.d(TAG, "--->realtime: " + content);
-			}
-			else if(o instanceof JulianDayObject)
-			{
-				content += o.getContent();
-			}
-			else if(o instanceof ShiftObject)
-			{
-				content += o.getContent();
-			}
-			else
-			{
-				content += o.getContent();
-			}
-		//can.drawText(mContent, 0, height-30, mPaint);
-		}
-		// 生成bin文件
-		BinFileMaker maker = new BinFileMaker(mContext);
-		int dotCount = maker.extract(content);
-		// 保存bin文件
-		maker.save(f + "/1.bin");
-		for(BaseObject o:mObjs)
-		{
-			if((o instanceof MessageObject)	) {
-				((MessageObject) o).setDotCount(dotCount);
-				break;
-			}
-		}
-		
-		return ;
-	}
-	
-	private void saveVarBin(String f) {
-		for (BaseObject object : mObjs) {
-			if((object instanceof CounterObject) || (object instanceof RealtimeObject))
-			{
-				object.generateVarbinFromMatrix(f);
-			}
-		}
-	}
+//	public void saveObjectBin(String f)
+//	{
+//		int width=0;
+//		Paint p=new Paint();
+//		if(mObjs==null || mObjs.size() <= 0)
+//			return ;
+//		for(BaseObject o:mObjs)
+//		{
+//			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+//		}
+//		
+//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+//		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDotsTotal);
+//		Canvas can = new Canvas(bmp);
+//		can.drawColor(Color.WHITE);
+//		for(BaseObject o:mObjs)
+//		{
+//			if((o instanceof MessageObject)	)
+//				continue;
+//			
+//			if(o instanceof CounterObject)
+//			{
+//				o.drawVarBitmap(f);
+//			}
+//			else if(o instanceof RealtimeObject)
+//			{
+//				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext,f);
+//				can.drawBitmap(t, o.getX(), o.getY(), p);
+//				BinFromBitmap.recyleBitmap(t);
+//			}
+//			else if(o instanceof JulianDayObject)
+//			{
+//				o.drawVarBitmap(f);
+//			}
+//			else if(o instanceof ShiftObject)
+//			{
+//				o.drawVarBitmap(f);
+//			}
+//			else
+//			{
+//				Bitmap t = o.getScaledBitmap(mContext);
+//				can.drawBitmap(t, o.getX(), o.getY(), p);
+//				BinFromBitmap.recyleBitmap(t);
+//			}
+//		//can.drawText(mContent, 0, height-30, mPaint);
+//		}
+//		// 生成bin文件
+//		BinFileMaker maker = new BinFileMaker(mContext);
+//		maker.extract(bmp);
+//		// 保存bin文件
+//		maker.save(f + "/1.bin");
+//		
+//		return ;
+//	}
+//	
+//	/**
+//	 * 从16*16的点阵字库中提取点阵，生成打印buffer
+//	 * @param f
+//	 */
+//	public void saveBinDotMatrix(String f) {
+//		if(mObjs==null || mObjs.size() <= 0)
+//			return ;
+//		
+//		String content="";
+//		for(BaseObject o:mObjs)
+//		{
+//			if((o instanceof MessageObject)	)
+//				continue;
+//			
+//			if(o instanceof CounterObject)
+//			{
+//				content += o.getContent();
+//			}
+//			else if(o instanceof RealtimeObject)
+//			{
+//				content += o.getContent();
+//				Debug.d(TAG, "--->realtime: " + content);
+//			}
+//			else if(o instanceof JulianDayObject)
+//			{
+//				content += o.getContent();
+//			}
+//			else if(o instanceof ShiftObject)
+//			{
+//				content += o.getContent();
+//			}
+//			else
+//			{
+//				content += o.getContent();
+//			}
+//		//can.drawText(mContent, 0, height-30, mPaint);
+//		}
+//		// 生成bin文件
+//		BinFileMaker maker = new BinFileMaker(mContext);
+//		int dotCount = maker.extract(content);
+//		// 保存bin文件
+//		maker.save(f + "/1.bin");
+//		for(BaseObject o:mObjs)
+//		{
+//			if((o instanceof MessageObject)	) {
+//				((MessageObject) o).setDotCount(dotCount);
+//				break;
+//			}
+//		}
+//		
+//		return ;
+//	}
 	
 	public ProgressDialog mProgressDialog;
 	public Thread mProgressThread;
@@ -875,7 +784,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		if (mObjLine1.getText().toString().isEmpty()) {
 			return;
 		}
-		getObjectList();
+		
 		if (!saveas && mObjName != null) {
 			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
 		} else {
@@ -897,17 +806,6 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	}
 	
 	
-	private void getObjectList() {
-		List<BaseObject> objs=null;
-		objs = ObjectsFromString.makeObjs(mContext, mObjLine1.getText().toString());
-		mObjs.clear();
-		if(objs == null) {
-			Toast.makeText(mContext, R.string.str_notice_no_objects, Toast.LENGTH_LONG);
-			return ;
-		}
-		mObjs.addAll(objs);
-		return ;
-	}
 	@Override
 	public boolean onLongClick(View arg0) {
 		TextBrowserDialog dialog = new TextBrowserDialog(mContext, "txt");

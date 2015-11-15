@@ -96,8 +96,17 @@ public class Configs {
 	 */
 	public static final String SDCARD_ROOT_PATH = "/storage/sd_external";
 	
-	
-	
+	/**
+	 * TLK_FILE_NAME
+	 * tlk file
+	 */
+	public static final String TLK_FILE_NAME = "/1.TLK";
+
+	/**
+	 * BIN_FILE_NAME
+	 * Bin file
+	 */
+	public static final String BIN_FILE_NAME = "/1.bin";
 	/**
 	 * SYSTEM_CONFIG_FILE
 	 */

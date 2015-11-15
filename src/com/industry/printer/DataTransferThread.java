@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StreamCorruptedException;
 import java.io.WriteAbortedException;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap.Config;
@@ -22,6 +23,7 @@ import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.object.BaseObject;
 
 /**
  * class DataTransferThread
@@ -173,11 +175,13 @@ public class DataTransferThread extends Thread {
 		}
 	};
 	
-	public void initDataBuffer(Context context, String obj) {
+	public void initDataBuffer(Context context, MessageTask task) {
 		if (mDataTask == null) {
-			mDataTask = new DataTask(context);
+			mDataTask = new DataTask(context, task);
+		} else {
+			mDataTask.setTask(task);
 		}
-		isBufferReady = mDataTask.prepareBackgroudBuffer(obj);
+		isBufferReady = mDataTask.prepareBackgroudBuffer();
 		
 	}
 	

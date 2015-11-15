@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -96,7 +97,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public ListView mMessageList;
 	
 	public PreviewScrollView mPreview;
-	public Vector<BaseObject> mObjList;
+	public ArrayList<BaseObject> mObjList;
 	
 	public static int mFd;
 	
@@ -211,6 +212,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public byte[] mPrintBuffer;
 	
 	/**
+	 * 当前打印任务
+	 */
+	public MessageTask mMsgTask;
+	/**
 	 * preview buffer
 	 * 	you should use this buffer for preview
 	 */
@@ -239,7 +244,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mIndex=0;
 		mTlkList = new Vector<Vector<TlkObject>>();
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
-		mObjList = new Vector<BaseObject>();
+		mObjList = new ArrayList<BaseObject>();
 		mContext = this.getActivity();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
@@ -346,7 +351,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 		Bundle bundle = new Bundle();
-		bundle.putString("file", ConfigPath.getTlkPath() + "/" + f);
+		bundle.putString("file", f);
 		msg.setData(bundle);
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
@@ -397,23 +402,26 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mObjPath == null) {
 						break;
 					}
-					//方案1：从bin文件生成buffer
-					initDTThread();
+					
 					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
 					//parseTlk(f);
 					//initBgBuffer();
 					/**获取打印缩略图，用于预览展现**/
-					TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
-					
-					String preview = parser.getContentAbatract();
+					mMsgTask = new MessageTask(mContext, mObjPath);
+					mObjList = mMsgTask.getObjects();
+					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
+					//String preview = parser.getContentAbatract();
+					String preview = mMsgTask.getAbstract();
 					if (preview == null) {
 						preview = getString(R.string.str_message_no_content);
 					}
-					parser.parse(mContext, mObjPath + "/1.TLK", mObjList);
+					// parser.parse(mContext, mObjPath + "/1.TLK", mObjList);
 					mMsgPreview.setText(new SpanableStringFormator(mObjList));
-					mMsgFile.setText(new File(mObjPath).getName());
+					mMsgFile.setText(mMsgTask.getName());
 					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();
+					//方案1：从bin文件生成buffer
+					initDTThread();
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
 					String text = msg.getData().getString("text");
@@ -455,6 +463,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					initDTThread();
 					DataTask dt = mDTransThread.getData();
+					
 					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
 						break;
@@ -524,10 +533,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		mDTransThread = DataTransferThread.getInstance();	
 		// 初始化buffer
-		mDTransThread.initDataBuffer(mContext, mObjPath);
-		TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
+		mDTransThread.initDataBuffer(mContext, mMsgTask);
+		// TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 		// 设置dot count
-		mDTransThread.setDotCount(parser.getDots());
+		mDTransThread.setDotCount(mMsgTask.getDots());
 		// 设置UI回调
 		mDTransThread.setOnInkChangeListener(this);
 	}
@@ -821,7 +830,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					@Override
 					public void onClick() {
-						String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
+						String f = MessageBrowserDialog.getSelected();
 						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 
 						Bundle bundle = new Bundle();
