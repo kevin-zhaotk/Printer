@@ -7,12 +7,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.google.zxing.Reader;
 import com.industry.printer.Utils.Debug;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Service;
+import android.content.Intent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -136,6 +138,7 @@ public static final String TAG="SettingsTabActivity";
 	public Button		mSave;
 	public Button		mUpgrade;
 	public Button		mSetDate;
+	public Button		mSettings;
 
 	Context 			mContext;
 
@@ -336,6 +339,18 @@ public static final String TAG="SettingsTabActivity";
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				new CalendarDialog(SettingsTabActivity.this, R.layout.calendar_setting).show();
+			}
+			
+		});
+		
+		mSettings = (Button) findViewById(R.id.btn_system_setting);
+		mSettings.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClassName("com.android.settings","com.android.settings.Settings");
+				startActivity(intent);
 			}
 			
 		});

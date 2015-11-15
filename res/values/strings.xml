@@ -50,6 +50,7 @@
 	<string name="str_btn_upgrade">Upgrade</string>
 	<string name="str_btn_setDate">Set Date</string>
 	<string name="str_btn_setTime">Set Time</string>
+	<string name="str_btn_systemsetting">Setting</string>
 	<string name="str_btn_image">Image</string>
 	
 	<string name="str_goto">goto</string>
