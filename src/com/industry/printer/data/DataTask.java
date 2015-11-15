@@ -147,7 +147,7 @@ public class DataTask {
 			{
 				
 				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
-				BinInfo info = mVarBinList.get(o);
+				
 				for(BaseObject rtSub : rt)
 				{
 					if(rtSub instanceof RealtimeYear)
@@ -174,9 +174,10 @@ public class DataTask {
 					}
 					else
 						continue;
+					BinInfo info = mVarBinList.get(rtSub);
 					if (info == null) {
-						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
-						mVarBinList.put(o, info);
+						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()));
+						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
 					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX()*2, info.getCharsPerColumn());

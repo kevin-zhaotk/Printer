@@ -109,6 +109,9 @@ public class BinInfo {
     public char[] getVarBuffer(String var)
     {
     	int n;
+    	if (mFStream == null) {
+			return null;
+		}
     	mFStream.mark(BinCreater.RESERVED_FOR_HEADER);
     	byte[] buffer = new byte[mLength];
     	
@@ -130,6 +133,7 @@ public class BinInfo {
    		if (mBufferChars == null) {
    			mBufferChars = new char[mBufferBytes.length/2];
    		}
+   		Debug.d(TAG, "---->charsize:" + mBufferChars.length + ", byte:" + mBufferBytes.length);
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)(mBufferBytes[2*i+1] << 8) | (mBufferBytes[2*i])); 
     	}

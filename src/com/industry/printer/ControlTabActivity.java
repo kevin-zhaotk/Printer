@@ -345,7 +345,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public void loadMessage() {
 			
 		String f = SystemConfigFile.getLastMsg();
-		Debug.d(TAG, "===>path: " + ConfigPath.getTlkPath() + "/" + f);
+		Debug.d(TAG, "===>load message: " + f);
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
@@ -395,7 +395,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
-					// String f = ConfigPath.getTlkPath()+"/"+MessageBrowserDialog.getSelected();
 					mObjPath = msg.getData().getString("file", null);
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();

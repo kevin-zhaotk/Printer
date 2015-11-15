@@ -13,15 +13,12 @@ import java.util.logging.Logger;
 
 import com.industry.printer.FileFormat.TlkFileParser;
 import com.industry.printer.FileFormat.TlkFileWriter;
-import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
-import com.industry.printer.data.DotMatrixReader;
-import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.HardwareJni;
 import com.industry.printer.hardware.RFIDDevice;
@@ -442,12 +439,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 					}
             		mMsgTask = new MessageTask(mContext, mObjName, mObjLine1.getText().toString());
             		mMsgTask.createTaskFolderIfNeed();
-            		/*
-            		if (PlatformInfo.isBufferFromDotMatrix()) {
-            			saveBinDotMatrix(ConfigPath.getTlkPath()+"/"+mObjName);
-					} else {
-						saveObjectBin(ConfigPath.getTlkPath()+"/"+mObjName);
-					}*/
+            		
             		//保存1.bin文件
             		mMsgTask.saveBin();
             		//保存1.TLK文件
