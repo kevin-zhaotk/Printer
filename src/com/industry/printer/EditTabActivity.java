@@ -419,6 +419,9 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
             		mObjName = MessageBrowserDialog.getSelected();
+            		if (mObjName == null || mObjName.isEmpty()) {
+						break;
+					}
             		mMsgTask = new MessageTask(mContext, mObjName);
             		mObjs = mMsgTask.getObjects();
     				setCurObj(0);
@@ -453,9 +456,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
            			mMsgTask.saveVarBin();
            			
             		dismissProgressDialog();
-            		// OnPropertyChanged(false);
             		((MainActivity) getActivity()).mEditTitle.setText(title + mObjName);
-            		// mMsgTitle.setTitle(mObjName);
+
             		break;
             		
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image

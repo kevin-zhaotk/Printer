@@ -73,7 +73,7 @@ public class MessageListAdater extends BaseAdapter {
 	public MessageListAdater(Context context, LinkedList<Map<String, Object>> list, int resource,
 			String from[], int to[])
 	{
-		mSelected = 0;
+		mSelected = -1;
 		mCntList = list;
 		mContext = context;
 		mKeys = new String[from.length];

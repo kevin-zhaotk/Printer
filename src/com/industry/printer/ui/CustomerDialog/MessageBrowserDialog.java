@@ -95,7 +95,6 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mMessageList.setOnScrollListener(this);
 			 loadMessages();
 			 mFileAdapter.notifyDataSetChanged();
-			 
 		 }
 
 		@Override
@@ -196,6 +195,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mContent.add(map);
 			}
 			mMessageList.setAdapter(mFileAdapter);
+			
 		}
 		
 		public static String getSelected() {

@@ -346,7 +346,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			
 		String f = SystemConfigFile.getLastMsg();
 		Debug.d(TAG, "===>path: " + ConfigPath.getTlkPath() + "/" + f);
-		if (f == null || !new File(ConfigPath.getTlkPath() + "/" + f).exists()) {
+		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
 		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
@@ -831,6 +831,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					@Override
 					public void onClick() {
 						String f = MessageBrowserDialog.getSelected();
+						if (f==null || f.isEmpty()) {
+							return;
+						}
 						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 
 						Bundle bundle = new Bundle();
