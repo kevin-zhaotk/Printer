@@ -107,7 +107,7 @@ public class ObjectInfoDialog extends Dialog {
 	
 	public Context mContext;
 	public BaseObject mObj;
-	protected ObjectInfoDialog(Context context, BaseObject obj) {
+	public ObjectInfoDialog(Context context, BaseObject obj) {
 		super(context);
 		mContext = context;
 		mObj = obj;
