@@ -1,13 +1,14 @@
 package com.industry.printer.hardware;
 
-import android.R.integer;
+import java.lang.reflect.Method;
+
 import android.app.AlarmManager;
-import android.app.SystemWriteManager;
 import android.content.Context;
 import android.graphics.Bitmap.Config;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.SystemFs;
 
 public class RTCDevice {
 
@@ -25,7 +26,6 @@ public class RTCDevice {
 	private final String I2C_DEVICE = "/sys/class/device_of_i2c/device";
 	
 	public static RTCDevice mInstance = null;
-	public static SystemWriteManager mManager = null;
 	
 	public static RTCDevice getInstance(Context context) {
 		if (mInstance == null) {
@@ -35,26 +35,34 @@ public class RTCDevice {
 	}
 	
 	public RTCDevice(Context context) {
-		mManager = (SystemWriteManager) context.getSystemService(Context.SYSWRITE_SERVICE);
-		mManager.writeSysfs(I2C_DEVICE, "1,0x68");
+		
+		SystemFs.writeSysfs(I2C_DEVICE, "1,0x68");
 		String cmd = "5,0x08";
-		mManager.writeSysfs(I2C_READ, cmd);
+		SystemFs.writeSysfs(I2C_READ, cmd);
 	}
 	
 	public void initSystemTime(Context context) {
-//		Debug.d(TAG, "--->initSystemTime");
-//		int fd = open(RTC_DEV);
-//		Debug.d(TAG, "--->initSystemTime fd=" + fd);
-//		syncSystemTimeFromRTC(fd);
-//		Debug.d(TAG, "--->initSystemTime sync success");
-//		close(fd);
 		AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		aManager.HwToSystemClock();
+		// aManager.HwToSystemClock();
+		Class<?> cls = aManager.getClass();
+		try {
+			Method sync = cls.getMethod("HwToSystemClock", null);
+			sync.invoke(cls, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void syncSystemTimeToRTC(Context context) {
 		AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		aManager.SystemClockToHw();
+		//aManager.SystemClockToHw();
+		Class<?> cls = aManager.getClass();
+		try {
+			Method sync = cls.getMethod("SystemClockToHw", null);
+			sync.invoke(cls, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -68,8 +76,6 @@ public class RTCDevice {
 	 * 总计数为8位10进制数字，保存在DS1338的NVRAM中的08H～11H 4个字节中
 	 */
 	public void writeCounter(Context context, int count) {
-		// SystemWriteManager manager = (SystemWriteManager) context.getSystemService(Context.SYSWRITE_SERVICE);
-		// mManager.writeSysfs(I2C_DEVICE, "1,0x68");
 		byte byte0 = (byte) (count & 0x0ff);
 		byte byte1 = (byte) ((count >> 8) & 0x0ff);
 		byte byte2 = (byte) ((count >> 16) & 0x0ff);
@@ -78,17 +84,19 @@ public class RTCDevice {
 		String cmd = "0x08," + Integer.toHexString(byte0) + ","
 					+ Integer.toHexString(byte1) + "," + Integer.toHexString(byte2) + "," 
 					+ Integer.toHexString(byte3) + "," + Integer.toHexString(checkSum);
-		mManager.writeSysfs(I2C_WRITE, cmd);
+		SystemFs.writeSysfs(I2C_WRITE, cmd);
 	}
 	
 	/**
 	 * 总计数为8位10进制数字，保存在DS1338的NVRAM中的08H～11H 4个字节中
 	 */
 	public int readCounter(Context context) {
-		// SystemWriteManager manager = (SystemWriteManager) context.getSystemService(Context.SYSWRITE_SERVICE);
-		// mManager.writeSysfs(I2C_DEVICE, "1,0x68");
+		SystemFs.writeSysfs(I2C_DEVICE, "1,0x68");
 		int index=0;
-		String out = mManager.readSysfs(I2C_READ);
+		String out = SystemFs.readSysfs(I2C_READ);
+		if (out==null) {
+			return 0;
+		}
 		Debug.d(TAG, "--->NVRAM out = " + out);
 		String[] bytes = out.split("/r/n");
 		Debug.d(TAG, "---> NVRAM Counter <---");
