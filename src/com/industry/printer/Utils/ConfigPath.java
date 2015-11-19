@@ -29,7 +29,7 @@ public class ConfigPath {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 			String line = reader.readLine();
 			for(;line != null;) {
-				if (!line.contains("/mnt/usb")) {
+				if (!line.contains("/mnt/usbhost")) {
 					line = reader.readLine();
 					continue;
 				}
