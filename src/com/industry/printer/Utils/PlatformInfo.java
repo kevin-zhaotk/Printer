@@ -17,7 +17,7 @@ public class PlatformInfo {
 	
 	private static final String PROPERTY_PRODUCT = "ro.build.product";
 	
-	private static final String PRODUCT_SMFY_SUPER3 = "smfy-super3";
+	public static final String PRODUCT_SMFY_SUPER3 = "smfy-super3";
 	
 	
 	/**

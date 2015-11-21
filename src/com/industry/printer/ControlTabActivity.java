@@ -14,6 +14,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
@@ -307,12 +308,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		RTCDevice rtcDevice = RTCDevice.getInstance(mContext);
 
 		// 如果是第一次启动，向RTC的NVRAM写入0
-		rtcDevice.initSystemTime(mContext);
-		mCounter = rtcDevice.readCounter(mContext);
-		if (mCounter == 0) {
-			rtcDevice.writeCounter(mContext, 0);
-			db.setFirstBoot(mContext, false);
+		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
+			rtcDevice.initSystemTime(mContext);
+			mCounter = rtcDevice.readCounter(mContext);
+			if (mCounter == 0) {
+				rtcDevice.writeCounter(mContext, 0);
+				db.setFirstBoot(mContext, false);
+			}
 		}
+		
 		refreshCount();
 		
 		/***PG1 PG2输出状态为 0x11，清零模式**/
@@ -382,10 +386,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	private void refreshPower() {
-		int power = LRADCBattery.getPower();
-		String pwState = String.format(getString(R.string.str_state_battery), power);
-		mPower.setText(pwState);
-		mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
+		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
+			int power = LRADCBattery.getPower();
+			String pwState = String.format(getString(R.string.str_state_battery), power);
+			mPower.setText(pwState);
+			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
+		}
 	}
 	
 	public int testdata=0;

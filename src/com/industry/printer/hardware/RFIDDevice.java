@@ -688,7 +688,7 @@ public class RFIDDevice {
 	private int openDevice() {
 		if (mFd <= 0) {
 			mFd = open(SERIAL_INTERFACE);
-			init();
+			//init();
 		}
 		return mFd;
 	}

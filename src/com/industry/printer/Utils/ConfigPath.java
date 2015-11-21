@@ -37,6 +37,9 @@ public class ConfigPath {
 				mPaths.add(items[1]);
 				line = reader.readLine();
 			}
+			file.close();
+			reader.close();
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
