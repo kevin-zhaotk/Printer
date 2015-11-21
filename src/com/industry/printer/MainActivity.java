@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	
 	public ControlTabActivity 	mControlTab;
 	public EditTabActivity		mEditTab;
+	public EditMultiTabActivity mEditFullTab;
 	public SettingsTabActivity	mSettingsTab;
 	
 	public TextView mCtrlTitle;
@@ -198,6 +200,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		}
 		mControlTab = new ControlTabActivity();
 		mEditTab = new EditTabActivity();
+		mEditFullTab = new EditMultiTabActivity();
 		mSettingsTab = new SettingsTabActivity();
 		Debug.d(TAG, "===>initview");
 		
@@ -205,14 +208,22 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 //		transaction.replace(R.id.tab_content, mControlTab);
 //		transaction.commit();
 		transaction.add(R.id.tab_content, mControlTab);
-		transaction.add(R.id.tab_content, mEditTab);
+		if (PlatformInfo.isFriendlyProduct()) {
+			transaction.add(R.id.tab_content, mEditFullTab);
+		} else if (PlatformInfo.isSmfyProduct()) {
+			transaction.add(R.id.tab_content, mEditTab);
+		}
 		transaction.add(R.id.tab_content, mSettingsTab);
 		Debug.d(TAG, "===>transaction");
 		// transaction.add(R.id.tv_counter_msg, mCtrlTitle);
 		// transaction.add(R.id.tv_counter_msg, mEditTitle);
 		// transaction.add(R.id.tv_counter_msg, mSettingTitle);
 		transaction.commit();
-		transaction.hide(mEditTab);
+		if (PlatformInfo.isFriendlyProduct()) {
+			transaction.hide(mEditFullTab);
+		} else if (PlatformInfo.isSmfyProduct()) {
+			transaction.hide(mEditTab);
+		}
 		transaction.hide(mSettingsTab);
 		transaction.show(mControlTab);
 		Debug.d(TAG, "===>show");
@@ -237,7 +248,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 			case R.id.btn_edit:
 				Debug.d(TAG, "====>edit checked?"+arg1);
 				if( arg1 == true) {
-					fts.show(mEditTab);
+					if (PlatformInfo.isFriendlyProduct()) {
+						fts.show(mEditFullTab);
+					} else if (PlatformInfo.isSmfyProduct()) {
+						fts.show(mEditTab);
+					}
+					
 					mEditTitle.setVisibility(View.VISIBLE);
 				} else {
 					fts.hide(mEditTab);

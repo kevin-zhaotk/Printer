@@ -141,6 +141,9 @@ public class Configs {
 		ConfigPath.makeSysDirsIfNeed();
 		/*从U盘中读取系统设置，解析*/
 		SystemConfigFile.init();
+		
+		/*读设备号*/
+		PlatformInfo.init();
 	}
 	
 	/**

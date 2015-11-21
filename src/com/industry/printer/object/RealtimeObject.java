@@ -3,6 +3,7 @@ package com.industry.printer.object;
 import java.util.Vector;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
@@ -74,9 +75,15 @@ public class RealtimeObject extends BaseObject {
 				o = new TextObject(mContext, x);
 				o.setContent(str.substring(0, i));
 				mSubObjs.add(o);
-				// x = o.getXEnd();
-				// 树莓系统通过点阵字库计算坐标，每个字模列宽为16bit
-				x = x + o.getContent().length() * 16;
+				/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
+				if (PlatformInfo.isSmfyProduct()) {
+					x = x + o.getContent().length() * 16;
+				} 
+				/*通过bitmap提取点阵的系统用下面的计算方法*/
+				else if (PlatformInfo.isFriendlyProduct()) {
+					x = o.getXEnd();
+				}
+				
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
@@ -125,8 +132,14 @@ public class RealtimeObject extends BaseObject {
 				continue;
 			}
 			
-			// x = o.getXEnd();
-			x = x + o.getContent().length() * 16;
+			/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
+			if (PlatformInfo.isSmfyProduct()) {
+				x = x + o.getContent().length() * 16;
+			} 
+			/*通过bitmap提取点阵的系统用下面的计算方法*/
+			else if (PlatformInfo.isFriendlyProduct()) {
+				x = o.getXEnd();
+			}
 			str = str.substring(i);
 			i=0;
 			System.out.println("realtime c x_end="+x);
@@ -138,7 +151,7 @@ public class RealtimeObject extends BaseObject {
 	@Override
 	public Bitmap getScaledBitmap(Context context)
 	{
-		System.out.println("getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);

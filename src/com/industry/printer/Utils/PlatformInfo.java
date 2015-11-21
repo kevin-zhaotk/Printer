@@ -1,6 +1,7 @@
 package com.industry.printer.Utils;
 
 import java.lang.reflect.Method;
+import java.security.PublicKey;
 
 
 //import android.os.SystemProperties;
@@ -18,7 +19,13 @@ public class PlatformInfo {
 	private static final String PROPERTY_PRODUCT = "ro.build.product";
 	
 	public static final String PRODUCT_SMFY_SUPER3 = "smfy-super3";
+	public static final String PRODUCT_FRIENDLY_4412 = "tiny4412";
 	
+	private static String mProduct;
+	
+	public static void init() {
+		mProduct = getProduct();
+	}
 	
 	/**
 	 * 判断buffer获取方式，通过BMP图片提取或者点阵字库提取
@@ -54,5 +61,21 @@ public class PlatformInfo {
 		} catch (Exception e) {
 		}
 		return product;
+	}
+	
+	public static boolean isFriendlyProduct() {
+		
+		if (PRODUCT_FRIENDLY_4412.equalsIgnoreCase(mProduct)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean isSmfyProduct() {
+		
+		if (PRODUCT_SMFY_SUPER3.equalsIgnoreCase(mProduct)) {
+			return true;
+		}
+		return false;
 	}
 }
