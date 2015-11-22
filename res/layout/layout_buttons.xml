@@ -1,33 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
     
-	<Button android:id="@+id/btn_new"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:text="@string/str_btn_new"/>
+    <RelativeLayout
+          android:id="@+id/btn_new"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+        >
+        <ImageView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:background="@drawable/edit_default_btn_style"
+        	/>
+		<TextView 
+		    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="@string/str_btn_new"
+	        android:textSize="20sp"
+	        android:textColor="#ffffff"
+		    />
+    </RelativeLayout>
 	
-	<Button android:id="@+id/btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/btn_new"
-        android:text="@string/str_btn_new"
-        />
-	<Button android:id="@+id/btn_saveas"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@id/btn_save"
-	    android:text="@string/str_btn_new"
-	    />
-	
-	<Button android:id="@+id/btn_open"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@id/btn_saveas"
-	    android:text="@string/str_btn_new"
-	    />
+    <RelativeLayout
+          android:id="@+id/btn_save"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/btn_new"
+          android:gravity="center"
+        >
+        <ImageView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:background="@drawable/edit_default_btn_style"
+        	/>
+		<TextView 
+		    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="@string/str_btn_save"
+	        android:textSize="20sp"
+	        android:textColor="#ffffff"
+		    />
+    </RelativeLayout>
+    
+    <RelativeLayout
+          android:id="@+id/btn_saveas"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/btn_save"
+          android:gravity="center"
+        >
+        <ImageView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:background="@drawable/edit_default_btn_style"
+        	/>
+		<TextView 
+		    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="@string/str_btn_saveas"
+	        android:textSize="20sp"
+	        android:textColor="#ffffff"
+		    />
+    </RelativeLayout>
+    
+    <RelativeLayout
+          android:id="@+id/btn_open"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toRightOf="@id/btn_saveas"
+          android:gravity="center"
+        >
+        <ImageView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:background="@drawable/edit_default_btn_style"
+        	/>
+		<TextView 
+		    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="@string/str_btn_open"
+	        android:textSize="20sp"
+	        android:textColor="#ffffff"
+		    />
+    </RelativeLayout>
+    
+
 	<ImageButton android:id="@+id/btn_left"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
@@ -92,32 +159,12 @@
 	    android:background="@drawable/style_zoomouty"
 	    />
 
-<!-- buttons on the 2nd line -->
 
-	
-	<ImageButton android:id="@+id/btn_delete"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/btn_new"
-	    android:layout_marginTop="5dp"
-	    android:layout_alignParentLeft="true"
-	    android:background="@drawable/style_del"
-	    android:contentDescription="@string/str_btn_new"
-	    />
-	
-	<ImageButton android:id="@+id/btn_trans"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBottom="@id/btn_delete"
-	    android:layout_toRightOf="@id/btn_delete"
-	    android:background="@drawable/style_trans"
-	    />
-
-<!-- buttons on the 3rd line -->		
+<!-- buttons on the 2rd line -->
 	<ImageButton android:id="@+id/btn_ABC"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@id/btn_delete"
+	    android:layout_below="@id/btn_new"
 	    android:layout_marginTop="5dp"
 	    android:layout_alignParentLeft="true"
 	    android:contentDescription="@string/str_btn_new"
@@ -223,6 +270,15 @@
 	    android:layout_toRightOf="@id/btn_shift"
 	    android:layout_alignBaseline="@id/btn_ABC"
 	    android:background="@drawable/style_second"
+	    android:contentDescription="@string/str_btn_new"
+	    />
+	<ImageButton android:id="@+id/btn_delete"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignTop="@id/btn_ABC"
+	    android:layout_alignBaseline="@id/btn_ABC"
+	    android:layout_toRightOf="@id/btn_second"
+	    android:background="@drawable/style_del"
 	    android:contentDescription="@string/str_btn_new"
 	    />
 </RelativeLayout>

@@ -69,6 +69,7 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -80,17 +81,17 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	
 	public Context mContext;
 	public EditScrollView mObjView;
-	public ScrollView mHScroll;
+	public HorizontalScrollView mHScroll;
 	
 	public String mObjName;
 	public MessageTask mMsgTask;
 	/*************************
 	 * file operation buttons
 	 * ***********************/
-	public ImageButton mBtnNew;
-	public ImageButton mBtnSave;
-	public ImageButton mBtnSaveas;
-	public ImageButton mBtnOpen;
+	public RelativeLayout mBtnNew;
+	public RelativeLayout mBtnSave;
+	public RelativeLayout mBtnSaveas;
+	public RelativeLayout mBtnOpen;
 	
 	/*************************
 	 * object operation buttons
@@ -152,21 +153,21 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		mMsgTask = new MessageTask(mContext);
 		mMsgTask.addObject(new MessageObject(mContext, 0));  //
 		
-		mBtnNew = (ImageButton) getView().findViewById(R.id.btn_new);
+		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		
-		mBtnSave = (ImageButton) getView().findViewById(R.id.btn_save);
+		mBtnSave = (RelativeLayout) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
 		
-		mBtnSaveas = (ImageButton) getView().findViewById(R.id.btn_saveas);
+		mBtnSaveas = (RelativeLayout) getView().findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
 		
-		mBtnOpen = (ImageButton) getView().findViewById(R.id.btn_open);
+		mBtnOpen = (RelativeLayout) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
-		mHScroll = (ScrollView) getView().findViewById(R.id.scrollView1);
+		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
 		mObjView.setOnTouchListener(this);
-
+		mObjView.setTask(mMsgTask);
 		mObjList = (Spinner) getView().findViewById(R.id.object_list);
 		mNameAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
 		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -233,16 +234,8 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		mDel = (ImageButton) getView().findViewById(R.id.btn_delete);
 		mDel.setOnClickListener(this);
 		
-		mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
-		mTrans.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
+		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
-			}
-			
-		});
-		
 		mBtnText = (ImageButton) getView().findViewById(R.id.btn_ABC);
 		mBtnText.setOnClickListener(this);
 		
@@ -456,6 +449,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 					}
             		mMsgTask = new MessageTask(mContext, mObjName);
             		clearCurObj();
+            		mObjView.setTask(mMsgTask);
 	    			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		break;
             	case HANDLER_MESSAGE_SAVEAS:		//saveas

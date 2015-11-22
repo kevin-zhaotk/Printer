@@ -25,6 +25,7 @@ public class EditScrollView extends View {
 	public Paint p;
 	public HorizontalScrollView mParent;
 	public Context mContext;
+	public MessageTask mTask;
 	
 	public EditScrollView(Context context) {
 		super(context);
@@ -55,7 +56,7 @@ public class EditScrollView extends View {
 	 protected void onDraw(Canvas canvas) {
 		 Debug.d(TAG, "====>onDraw");
 		
-		 for(BaseObject obj : EditTabActivity.mObjs)
+		 for(BaseObject obj : mTask.getObjects())
 		 {
 			 if(obj instanceof MessageObject)
 				 continue;
@@ -67,6 +68,10 @@ public class EditScrollView extends View {
 		 }
 		 Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
-	 }  
+	 } 
+	
+	public void setTask(MessageTask task) {
+		mTask = task;
+	}
 
 }

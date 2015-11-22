@@ -9,7 +9,7 @@
     <RadioGroup
         android:id="@+id/tab_group"
         android:layout_width="480dp"
-        android:layout_height="80dp"
+        android:layout_height="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_marginTop="0dip">
@@ -25,7 +25,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/ControlTab"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="40sp"
+	        android:textSize="25sp"
 	        android:focusable="false"
             />
         
@@ -39,7 +39,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/Edit"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="40sp"
+	        android:textSize="25sp"
 	        android:focusable="false"
             />
         
@@ -53,7 +53,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/Settings"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="40sp"
+	        android:textSize="25sp"
 	        android:focusable="false"
             />
     </RadioGroup>
@@ -70,30 +70,30 @@
      <TextView
          android:id="@+id/ctrl_counter_view"
          android:layout_width="320dp"
-         android:layout_height="80dp"
+         android:layout_height="40dp"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
          android:textColor="#000000"
-         android:textSize="30sp"
+         android:textSize="25sp"
          android:gravity="center"
         />
      
      <TextView
          android:id="@+id/edit_message_view"
          android:layout_width="320dp"
-         android:layout_height="80dp"
+         android:layout_height="40dp"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
          android:text="@string/str_filename_no"
          android:textColor="#000000"
-         android:textSize="30sp"
+         android:textSize="25sp"
          android:gravity="center"
          android:visibility="gone"
         />
      <LinearLayout 
          android:id="@+id/settings_view"
          android:layout_width="320dp"
-         android:layout_height="80dp"
+         android:layout_height="40dp"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
          android:orientation="vertical"
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_version"
                 android:textColor="#000000"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 />
             <TextView
 		        android:id="@+id/setting_version"
@@ -118,7 +118,7 @@
 		        android:layout_height="wrap_content"
 		        android:layout_toRightOf="@id/setting_version_key"
 		        android:textColor="#000000"
-		        android:textSize="30sp"
+		        android:textSize="25sp"
         	/>
         </RelativeLayout>
         <RelativeLayout
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/system_time"
                 android:textColor="#000000"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 />
 	        <TextView
 		         android:id="@+id/setting_ext_view"
@@ -140,7 +140,7 @@
 		         android:layout_height="wrap_content"
 		         android:layout_toRightOf="@id/setting_time_key"
 		         android:textColor="#000000"
-		         android:textSize="30sp"
+		         android:textSize="25sp"
 	        />
         </RelativeLayout>
      </LinearLayout>

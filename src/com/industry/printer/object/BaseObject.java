@@ -123,9 +123,9 @@ public class BaseObject{
 	{
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
-		// Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
+		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
 		
-		return bmp;
+		return scaledBmp;
 	}
 	
 	protected Bitmap getBitmap(Context context)
@@ -136,11 +136,11 @@ public class BaseObject{
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawText(mContent, 0, height-5, mPaint);
-		BinCreater.saveBitmap(bmp, "bg.png");
+		//BinCreater.saveBitmap(bmp, "bg.png");
 		return bmp;
 	}
 	
