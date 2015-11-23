@@ -225,21 +225,21 @@ public class MessageTask {
 			
 			if(o instanceof CounterObject)
 			{
-				o.drawVarBitmap(ConfigPath.getTlkDir(mName));
+				o.drawVarBitmap();
 			}
 			else if(o instanceof RealtimeObject)
 			{
-				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext,ConfigPath.getTlkDir(mName));
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				BinFromBitmap.recyleBitmap(t);
 			}
 			else if(o instanceof JulianDayObject)
 			{
-				o.drawVarBitmap(ConfigPath.getTlkDir(mName));
+				o.drawVarBitmap();
 			}
 			else if(o instanceof ShiftObject)
 			{
-				o.drawVarBitmap(ConfigPath.getTlkDir(mName));
+				o.drawVarBitmap();
 			}
 			else
 			{

@@ -8,6 +8,7 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import com.industry.printer.MainActivity;
 import com.industry.printer.MessageTask;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
@@ -123,6 +124,9 @@ public class BaseObject{
 	{
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
+		if (mWidth <= 0) {
+			mWidth = bmp.getWidth();
+		}
 		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
 		
 		return scaledBmp;
@@ -136,7 +140,7 @@ public class BaseObject{
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
-		Bitmap bmp = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawText(mContent, 0, height-5, mPaint);
@@ -144,19 +148,19 @@ public class BaseObject{
 		return bmp;
 	}
 	
-	public void drawVarBitmap(String f)
+	public void drawVarBitmap()
 	{
 		//mPaint.setTextSize(mHeight);
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, Configs.gDots, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots, Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -164,13 +168,13 @@ public class BaseObject{
 			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
 			can.drawText(String.valueOf(i), 0, height-5, mPaint);
-			//Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
-			gCan.drawBitmap(bmp, i*bmp.getWidth(), (int)getY(), mPaint);
-			BinFromBitmap.recyleBitmap(bmp);
+			Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
+			gCan.drawBitmap(b, i*b.getWidth(), (int)getY(), mPaint);
+			BinFromBitmap.recyleBitmap(b);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.save(f + getVarBinFileName());
+		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
 	}

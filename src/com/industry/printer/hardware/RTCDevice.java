@@ -46,8 +46,8 @@ public class RTCDevice {
 		// aManager.HwToSystemClock();
 		Class<?> cls = aManager.getClass();
 		try {
-			Method sync = cls.getMethod("HwToSystemClock", null);
-			sync.invoke(cls, null);
+			Method sync = cls.getMethod("HwToSystemClock", new Class[0]);
+			sync.invoke(cls, new Object[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,8 +58,8 @@ public class RTCDevice {
 		//aManager.SystemClockToHw();
 		Class<?> cls = aManager.getClass();
 		try {
-			Method sync = cls.getMethod("SystemClockToHw", null);
-			sync.invoke(cls, null);
+			Method sync = cls.getMethod("SystemClockToHw", new Class[0]);
+			sync.invoke(cls, new Object[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
