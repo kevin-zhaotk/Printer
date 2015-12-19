@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.R.integer;
+
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
@@ -28,6 +30,8 @@ public class BinInfo {
 	/**bin文件每列的字节数**/
 	public int mBytesPerColumn;
 	
+	/* 是否需要对列进行补偿 */
+	public boolean mNeedFeed = false;
 	/**bin文件每列的字符数**/
 	public int mCharsPerColumn;
 	
@@ -57,6 +61,10 @@ public class BinInfo {
 			
 			//文件的总字节数/总列数 = 每列的字节数
 			mBytesPerColumn = mLength/mColumn;
+			/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
+			if (mBytesPerColumn%2 != 0) {
+				mNeedFeed = true;
+			}
 			
 			//文件的总字符数/总列数/2 = 每列的字符数
 			mCharsPerColumn = mBytesPerColumn/2;
@@ -85,13 +93,21 @@ public class BinInfo {
     	if (mLength <= 0) {
 			return null;
 		}
+    	
 		try {
-			mBufferBytes = new byte[mLength];
-			mBufferChars = new char[mLength/2];
+			mBufferBytes = new byte[mLength + mColumn];
+			mBufferChars = new char[(mLength + mColumn)/2];
 			if(mBufferBytes == null || mBufferChars == null)
 				return null;
-			mFStream.read(mBufferBytes, 0, mBufferBytes.length);
+			int bytesPer = mBytesPerColumn + (mNeedFeed==true? 1 : 0);
+			for(int i=0; i < mColumn; i++) {
+				if (mNeedFeed) {
+					mFStream.read(mBufferBytes, i*bytesPer, bytesPer);
+				}
+			}
 	    	//mFStream.close();
+			/* 如果是奇数列在每列最后添加一个byte */
+			
 	    	//把byte[]存为char[]
 	    	for(int i = 0; i < mBufferChars.length; i++) {
 	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
@@ -109,6 +125,7 @@ public class BinInfo {
     public char[] getVarBuffer(String var)
     {
     	int n;
+    	byte[] feed = {0};
     	if (mFStream == null) {
 			return null;
 		}
@@ -126,6 +143,9 @@ public class BinInfo {
    		{
    			n = Integer.parseInt(var.substring(i, i+1));
    			ba.append(buffer, n*mColPerElement+16, mColPerElement*mBytesPerColumn);
+   			if (mNeedFeed) {
+				ba.append(feed, 0, 1);
+			}
    		}
 
    		mBufferBytes = ba.buffer();
