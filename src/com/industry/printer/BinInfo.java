@@ -81,10 +81,16 @@ public class BinInfo {
 	}
 	
 	public int getCharsPerColumn() {
+		if (mNeedFeed) {
+			return mCharsPerColumn + 1;
+		}
 		return mCharsPerColumn;
 	}
 	
 	public int getBytesPerColumn() {
+		if (mNeedFeed) {
+			return mBytesPerColumn + 1;
+		}
 		return mBytesPerColumn;
 	}
 	
