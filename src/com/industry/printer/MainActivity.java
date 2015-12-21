@@ -316,4 +316,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 			}
 		}
 	};
+	
+	@Override
+	public void onDestroy() {
+		FpgaGpioOperation.close();
+	}
 }

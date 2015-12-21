@@ -21,6 +21,24 @@ public class PlatformInfo {
 	public static final String PRODUCT_SMFY_SUPER3 = "smfy-super3";
 	public static final String PRODUCT_FRIENDLY_4412 = "tiny4412";
 	
+	/**
+	 * The Serial Used for RFID device
+	 */
+	// 4412 device
+	public static final String RFID_SERIAL_4412 = "/dev/s3c2410_serial1";
+	// smfy device
+	public static final String RFID_SERIAL_SMFY = "/dev/ttyS3";
+	
+	/**
+	 * usb mount paths
+	 */
+	// 4412
+	public static final String USB_MOUNT_PATH_4412 = "/storage/usbdisk";
+	// smfy
+	public static final String USB_MOUNT_PATH_SMFY = "/mnt/usb";
+	
+	
+	
 	private static String mProduct;
 	
 	public static void init() {
@@ -59,7 +77,9 @@ public class PlatformInfo {
 			Method mGetMethod = mClassType.getDeclaredMethod("get", String.class);
 			product = (String) mGetMethod.invoke(mClassType, PROPERTY_PRODUCT);
 		} catch (Exception e) {
+			Debug.d(TAG, "Exception: " + e.getMessage());
 		}
+		Debug.d(TAG, "===>product: " + product);
 		return product;
 	}
 	
@@ -77,5 +97,35 @@ public class PlatformInfo {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * RFID device connected Serial Port
+	 */
+	public static String getRfidDevice() {
+		if (isFriendlyProduct()) {
+			return RFID_SERIAL_4412;
+		} else if (isSmfyProduct()) {
+			return RFID_SERIAL_SMFY;
+		} else {
+			Debug.d(TAG, "unsupported platform right now");
+		}
+		return null;
+	}
+	
+	/**
+	 * usb storage device mounted path
+	 * @return
+	 */
+	public static String getMntPath() {
+		if (isFriendlyProduct()) {
+			return USB_MOUNT_PATH_4412;
+		} else if (isSmfyProduct()) {
+			return USB_MOUNT_PATH_SMFY;
+		} else {
+			Debug.d(TAG, "unsupported platform right now");
+			Debug.d(TAG, "use 4412 as default");
+		}
+		return USB_MOUNT_PATH_4412;
 	}
 }

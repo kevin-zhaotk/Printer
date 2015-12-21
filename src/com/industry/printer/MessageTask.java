@@ -104,6 +104,7 @@ public class MessageTask {
 		if (mObjects == null) {
 			mObjects = new ArrayList<BaseObject>();
 		}
+		object.setTask(this);
 		mObjects.add(object);
 	}
 	
@@ -185,7 +186,11 @@ public class MessageTask {
 		for (BaseObject object : mObjects) {
 			if((object instanceof CounterObject) || (object instanceof RealtimeObject))
 			{
-				object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
+				if(PlatformInfo.isBufferFromDotMatrix()) {
+					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
+				} else {
+					object.drawVarBitmap();
+				}
 			}
 		}
 	}
@@ -225,7 +230,7 @@ public class MessageTask {
 			
 			if(o instanceof CounterObject)
 			{
-				o.drawVarBitmap();
+				// o.drawVarBitmap();
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -235,11 +240,11 @@ public class MessageTask {
 			}
 			else if(o instanceof JulianDayObject)
 			{
-				o.drawVarBitmap();
+				// o.drawVarBitmap();
 			}
 			else if(o instanceof ShiftObject)
 			{
-				o.drawVarBitmap();
+				// o.drawVarBitmap();
 			}
 			else
 			{

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import com.industry.printer.Utils.PlatformInfo;
+
 import android.R.integer;
 import android.graphics.Path;
 
@@ -29,7 +31,8 @@ public class ConfigPath {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(file));
 			String line = reader.readLine();
 			for(;line != null;) {
-				if (!line.contains("/mnt/usb")) {
+				Debug.d(TAG, "===>getMountUsb: " + line);
+				if (!line.contains(PlatformInfo.getMntPath())) {
 					line = reader.readLine();
 					continue;
 				}

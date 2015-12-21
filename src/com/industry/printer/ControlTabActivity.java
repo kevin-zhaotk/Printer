@@ -41,6 +41,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -473,6 +474,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
 						break;
 					}
+					/**
+					 * 测试buffer生成是否正确，按打印按钮把打印内容保存到u盘
+					 */
+					char[] buf = dt.getPrintBuffer();
+					
+					ArrayList<String> usbs = ConfigPath.getMountedUsb();
+					if (usbs != null && usbs.size() > 0) {
+						String path = usbs.get(0);
+						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesPerColumn() * 8);
+					}
+					
 					/**
 					 * 启动打印后要完成的几个工作：
 					 * 1、每次打印，  先清空 （见文件）， 然后 发设置

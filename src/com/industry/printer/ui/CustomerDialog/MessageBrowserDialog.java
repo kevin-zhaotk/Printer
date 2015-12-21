@@ -13,6 +13,7 @@ import com.industry.printer.R.id;
 import com.industry.printer.R.layout;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
 import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
@@ -95,7 +96,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mMessageList.setOnScrollListener(this);
 			 loadMessages();
 			 mFileAdapter.notifyDataSetChanged();
+			 
+			 setupViews();
 		 }
+		
+		private void setupViews() {
+			if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
+				mPagePrev.setVisibility(View.GONE);
+				mPageNext.setVisibility(View.GONE);
+			}
+		}
 
 		@Override
 		public void onClick(View arg0) {

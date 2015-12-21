@@ -36,6 +36,7 @@ import android.R.integer;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.EncryptionMethod;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.RFIDData;
 
 public class RFIDDevice {
@@ -54,7 +55,7 @@ public class RFIDDevice {
 	
 	public static RFIDDevice mRfidDevice;
 	//串口节点
-	public static final String SERIAL_INTERFACE = "/dev/ttyS3";
+	// public static final String SERIAL_INTERFACE = "/dev/ttyS3";
 	
 	/*墨水量上下限*/
 	public static final int INK_LEVEL_MAX = 100000;
@@ -159,7 +160,7 @@ public class RFIDDevice {
 			mRfidDevice = new RFIDDevice();
 		}
 		if (mFd <= 0) {
-			mFd = open(SERIAL_INTERFACE);
+			mFd = open(PlatformInfo.getRfidDevice());
 		}
 		return mRfidDevice;
 	}
@@ -687,7 +688,7 @@ public class RFIDDevice {
 	
 	private int openDevice() {
 		if (mFd <= 0) {
-			mFd = open(SERIAL_INTERFACE);
+			mFd = open(PlatformInfo.getRfidDevice());
 			//init();
 		}
 		return mFd;

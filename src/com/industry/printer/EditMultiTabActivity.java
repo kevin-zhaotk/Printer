@@ -798,6 +798,9 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
 			@Override
 			public void onClick() {
+				Debug.d(TAG, "===>onShowinfo  clicked");
+				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_JUST);
+				msg.sendToTarget();
 			}
 		});
 		objDialog.show();

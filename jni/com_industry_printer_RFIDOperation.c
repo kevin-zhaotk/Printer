@@ -164,7 +164,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
   (JNIEnv *env, jclass arg, jint fd, jshortArray buf, jint len)
 {
 	int i,ret;
-	jchar *buf_utf = (*env)->GetByteArrayElements(env, buf, NULL);
+	jshort *buf_utf = (*env)->GetShortArrayElements(env, buf, NULL);
 
 	if(fd <= 0)
 		return 0;
@@ -172,7 +172,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
 	//tcflush(fd, TCIOFLUSH);
 	ret = write(fd, buf_utf, len);
 
-	(*env)->ReleaseCharArrayElements(env, buf, buf_utf, 0);
+	(*env)->ReleaseShortArrayElements(env, buf, buf_utf, 0);
 	return ret;
 }
 

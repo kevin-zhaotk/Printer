@@ -16,6 +16,16 @@
 
 #define JNI_TAG "serial_jni"
 
+
+static jboolean isSmfyProduct(JNIEnv *env) {
+	jboolean isSmfy;
+	jclass cls = (*env)->FindClass(env, "com/industry/printer/Utils/PlatformInfo");
+	jclass gCls = (*env)->NewGlobalRef(env, cls);
+	jmethodID isSm = (*env)->GetStaticMethodID(env, gCls, "isSmfyProduct", "()Z");
+	isSmfy = (*env)->CallStaticBooleanMethod(env, gCls, isSm, NULL);
+	return isSmfy;
+}
+
 /**
  * 读写UsbSerial的Jni接口
  */
@@ -134,8 +144,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
     	goto fail;
     }
 
-    if (register_com_industry_printer_RTCOperation(env) < 0) {
-    	goto fail;
+    if (1 == isSmfyProduct(env)) {
+		if (register_com_industry_printer_RTCOperation(env) < 0) {
+			goto fail;
+		}
     }
     /* success -- return valid version number */
     result = JNI_VERSION_1_4;

@@ -174,6 +174,7 @@ public class BaseObject{
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);
+		maker.extract(gBmp);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);

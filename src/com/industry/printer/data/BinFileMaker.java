@@ -19,6 +19,7 @@ public class BinFileMaker {
 	private Context mContext;
 	public BinFileMaker(Context context) {
 		mContext = context;
+		init();
 	}
 	
 	public void init() {
