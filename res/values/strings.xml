@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_version">version:</string>
+    <string name="app_version">Version:</string>
     <string name="system_time">clock:</string>
     <string name="app_name">Printer</string>
     <string name="action_settings">Settings</string>
@@ -17,9 +17,9 @@
 	<string name="str_btn_new">New</string>
 	<string name="str_btn_save">Save</string>
 	<string name="str_btn_saveas">Saveas</string>
+	<string name="str_btn_prerecord">Up</string>
+	<string name="str_btn_nextrecord">Down</string>
 	<string name="str_btn_send">Send</string>
-	<string name="str_btn_prerecord">Prev</string>
-	<string name="str_btn_nextrecord">Next</string>
 	<string name="str_btn_set">Set</string>
 	<string name="str_btn_get">GetInfo</string>
 	<string name="str_btn_print">Print</string>
@@ -32,13 +32,12 @@
 	<string name="strInklevel">Surplus: </string>
 	<string name="strPhotocellState">Photocell</string>
 	<string name="strEncoderState">Encoder</string>
-	<string name="strOn">On</string>
-	<string name="strOff">Off</string>
-	<string name="strwaitting">printing,wait......</string>
 	<string name="strPrintstate">State：</string>
 	<string name="strPrinting">Printing</string>
 	<string name="strPrintok">Ready</string>
-	
+	<string name="strOn">On</string>
+	<string name="strOff">Off</string>
+	<string name="strwaitting">printing,wait......</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
 	<string name="str_binfile">Open</string>
@@ -82,8 +81,8 @@
 	<string name="strUpgradeNoApk">No Upgrade Image found!!!</string>
 	<string name="strSaving">saving, please wait...</string>
 	<string name="strLoading">loading, please wait...</string>
-	<string name="strInsertSerial">请插入打印设备</string>
-	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
+	<string name="strInsertSerial">Please connect device...</string>
+	<string name="strReinsertSerial">Error, please reconnect device</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP head</item>
 	    <item>12.7 mm HP standard</item>
@@ -352,9 +351,10 @@
 	<string name="str_column_text14">text14</string>
 	<string name="str_column_text15">text15</string>
 	<string name="str_column_text16">text16</string>
-	
-	
 	<string name="str_notlkfile">Please select a TLK file</string>
+	<string name="str_tlk_already_exist">Tlk file is already exist!!!</string>
+	<string name="str_createfile_failure">Create error</string>
+	<string name="str_no_print_target">Please chose a target</string>
 	
 	<string name="str_radioLocal">Local</string>
 	<string name="str_radioUsb">USB</string>
@@ -363,12 +363,6 @@
 	<string name="str_radioSdcard">SDCard</string>
 	
 	<string name="str_title_infodialog">Object Info</string>
-	
-	<string name="str_fileopt_del">Delete</string>
-	<string name="str_fileopt_cancel">Cancel</string>
-	<string name="str_tlk_already_exist">The message you wanna save is already exist,please rename</string>
-	<string name="str_createfile_failure">New a message failure</string>
-	<string name="str_no_print_target">Please chose a Print target</string>
 
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">MSG:</string>

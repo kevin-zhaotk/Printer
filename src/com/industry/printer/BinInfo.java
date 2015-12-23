@@ -22,6 +22,8 @@ public class BinInfo {
 	
 	private File mFile;
 	private FileInputStream mFStream;
+	
+	private MessageTask mTask;
 	/**bin文件的总列数**/
 	public int mColumn;
 

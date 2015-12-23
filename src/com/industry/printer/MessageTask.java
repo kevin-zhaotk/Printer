@@ -39,6 +39,8 @@ public class MessageTask {
 	private int mDots=0; 
 	private String mName;
 	private ArrayList<BaseObject> mObjects;
+
+	public int mType;
 	
 	public MessageTask(Context context) {
 		mName="";
@@ -316,6 +318,11 @@ public class MessageTask {
 		return ;
 	}
 	
-	
+	public static class MessageType {
+		public static int MESSAGE_TYPE_SINGLE = 1;
+		public static int MESSAGE_TYPE_DOUBLE = 2;
+		public static int MESSAGE_TYPE_TREBLE = 3;
+		public static int MESSAGE_TYPE_FOUR   = 4;
+	}
 	
 }

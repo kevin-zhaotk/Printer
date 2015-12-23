@@ -18,6 +18,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
 import com.industry.printer.object.RealtimeMinute;
@@ -25,6 +26,7 @@ import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
 import com.industry.printer.object.TLKFileParser;
+import com.industry.printer.object.data.SegmentBuffer;
 
 
 /**
@@ -47,6 +49,7 @@ public class DataTask {
 	 */
 	public char[] mBgBuffer;
 	public char[] mPrintBuffer;
+	public char[] mBuffer;
 	
 	private int mDots;
 	
@@ -107,7 +110,9 @@ public class DataTask {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
+		/*完成平移/列变换得到真正的打印buffer*/
+		rebuildBuffer();
 		//BinCreater.Bin2Bitmap(mPrintBuffer);
 		/*test bin*/
 		/*
@@ -119,7 +124,7 @@ public class DataTask {
 		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, 32);
 		*/
 		/*test bin*/
-		return mPrintBuffer;
+		return mBuffer;
 	}
 	
 	public void refreshVariables()
@@ -226,5 +231,39 @@ public class DataTask {
 			}
 		}
 		return false;
+	}
+	
+	public void rebuildBuffer() {
+		boolean isMsg=false;
+		BaseObject object = null;
+		ArrayList<SegmentBuffer> buffers = new ArrayList<SegmentBuffer>();
+		for (BaseObject msg : mTask.getObjects()) {
+			if (msg instanceof MessageObject) {
+				object = msg;
+				break;
+			}
+		}
+		/*分头处理*/
+		int type = ((MessageObject) object).getType();
+		for (int i = 0; i < type; i++) {
+			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsPerColumn()));
+		}
+		
+		/*计算转换后的buffer总列数*/
+		int columns=0;
+		int hight = 0;
+		for (SegmentBuffer segmentBuffer : buffers) {
+			columns = segmentBuffer.mBuffer.length() > columns?segmentBuffer.mBuffer.length():columns;
+			hight = segmentBuffer.mHight * buffers.size();
+		}
+		
+		mBuffer = new char[columns * hight];
+		/*处理完之后重新合并为一个buffer, 因为涉及到坐标平移，所以不能对齐的段要补0*/
+		for (int j=0; j < columns; j++) {
+			for (SegmentBuffer buffer : buffers) {
+				buffer.readColumn(mBuffer, j, j*hight);
+			}
+		}
+		
 	}
 }

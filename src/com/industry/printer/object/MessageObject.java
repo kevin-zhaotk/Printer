@@ -9,6 +9,7 @@ public class MessageObject extends BaseObject {
 
 	public int mPrinter;
 	public int mDots;
+	public int mType;
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -35,6 +36,15 @@ public class MessageObject extends BaseObject {
 	public void setDotCount(int count) {
 		mDots = count;
 	}
+	
+	public int getType() {
+		return mType;
+	}
+	
+	public void setType(int type) {
+		mType = type;
+	}
+	
 	public String toString()
 	{
 		String str="";
