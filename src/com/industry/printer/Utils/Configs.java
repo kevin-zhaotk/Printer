@@ -107,6 +107,8 @@ public class Configs {
 	 * Bin file
 	 */
 	public static final String BIN_FILE_NAME = "/1.bin";
+	
+	public static final String UPGRADE_APK_FILE = "/Printer.apk";
 	/**
 	 * SYSTEM_CONFIG_FILE
 	 */

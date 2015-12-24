@@ -134,4 +134,11 @@ public class ConfigPath {
 		return getTlkPath() + "/" + name + "/v" + String.valueOf(index) + ".bin";
 	}
 	
+	public static String getUpgradePath() {
+		ArrayList<String> paths = getMountedUsb();
+		if (paths == null || paths.size() <= 0) {
+			return null;
+		}
+		return paths.get(0) + Configs.UPGRADE_APK_FILE;
+	}
 }

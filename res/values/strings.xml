@@ -577,4 +577,6 @@
 	    <item>5</item>
 	    <item>6</item>
 	</string-array>
+	
+	<string name="str_no_upgrade">Already the last Version right now</string>
 </resources>

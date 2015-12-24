@@ -578,4 +578,6 @@
 	    <item>5</item>
 	    <item>6</item>
 	</string-array>
+	
+	<string name="str_no_upgrade">已经是最新版本</string>
 </resources>
