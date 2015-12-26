@@ -28,4 +28,24 @@ public class PWMAudio {
 		// mThreadPoll.shutdown();
 		
 	}
+	
+	public static void PlayLong() {
+		mThreadPoll.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				HardwareControler.PWMPlay(1000);
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				HardwareControler.PWMStop();
+			}
+		});
+		// mThreadPoll.shutdown();
+		
+	}
+	
+	
 }

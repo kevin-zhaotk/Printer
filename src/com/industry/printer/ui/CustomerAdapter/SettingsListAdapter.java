@@ -13,7 +13,6 @@ import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickList
 import com.industry.printer.ui.CustomerDialog.NewMessageDialog;
 import com.industry.printer.widget.PopWindowSpiner;
 
-import android.R.integer;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -181,9 +180,10 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		return convertView;
 	}
 	
-	private void loadSettings() {
-		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, getEncoder(SystemConfigFile.mParam1), 0);
-		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, String.valueOf(SystemConfigFile.mParam2), 0);
+	public void loadSettings() {
+		Debug.d(TAG, "--->loadSettings");
+		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, getEntry(R.array.encoder_item_entries, SystemConfigFile.mParam1), 0);
+		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, getEntry(R.array.array_triger_mode, SystemConfigFile.mParam2), 0);
 		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms);
 		mSettingItems[3] = new ItemOneLine(R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), R.string.str_time_unit_ms);
 		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us);
@@ -246,6 +246,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[61] = new ItemOneLine(R.string.str_textview_param62, String.valueOf(SystemConfigFile.mResv62), 0);
 		mSettingItems[62] = new ItemOneLine(R.string.str_textview_param63, String.valueOf(SystemConfigFile.mResv63), 0);
 		mSettingItems[63] = new ItemOneLine(R.string.str_textview_param64, String.valueOf(SystemConfigFile.mResv64), 0);
+		Debug.d(TAG, "--->loadSettings");
 	}
 	
 	private void initAdapters() {
@@ -266,9 +267,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mTrigerMode.addItem(items[i]);
 		}
 	}
-	private String getEncoder(int index) {
-		mContext.getResources();
-		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
+	private String getEntry(int id,int index) {
+		String entries[] = mContext.getResources().getStringArray(id);
 		Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
 		if (entries == null || entries.length <= 0) {
 			return null;
@@ -279,8 +279,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		return entries[index];
 	}
 	
-	private int getEncoderIndex(String entry) {
-		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
+	private int getIndexByEntry(int id, String entry) {
+		String entries[] = mContext.getResources().getStringArray(id);
 		if (entry == null || entries == null || entries.length <= 0) {
 			return 0;
 		}
@@ -291,6 +291,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		}
 		return 0;
 	}
+	
+	
 
 	@Override
 	public void onClick(View view) {
@@ -320,13 +322,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		TextView view = mSpiner.getAttachedView();
 		int position = (Integer) view.getTag();
 		if (position == 0) {
-			view.setText(getEncoder(index));
+			view.setText(getEntry(R.array.array_triger_mode, index));
 			SystemConfigFile.mParam1 = index;
 			mSettingItems[0].mValue = view.getText().toString();
 		} else if (position == 1) {
 			String trigger = (String)mTrigerMode.getItem(index);
 			view.setText(trigger);
-			SystemConfigFile.mParam2 = Integer.parseInt(trigger);
+			SystemConfigFile.mParam2 = index;
 			mSettingItems[1].mValue = trigger;
 		}
 		

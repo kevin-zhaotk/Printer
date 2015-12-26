@@ -221,8 +221,8 @@ public class MessageTask {
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDotsTotal);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
 		for(BaseObject o:mObjects)
@@ -256,9 +256,11 @@ public class MessageTask {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
+		/*生成bin的bitmap要进行处理，高度根据message的类型调整*/
+		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight() * getColumnHeight(), true);
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract(bmp);
+		maker.extract(bitmap);
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
@@ -318,11 +320,47 @@ public class MessageTask {
 		return ;
 	}
 	
+	public MessageObject getMsgObject() {
+		MessageObject msg = null;
+		for (BaseObject object: mObjects) {
+			if (object instanceof MessageObject) {
+				msg = (MessageObject) object;
+				break;
+			}
+		}
+		return msg;
+	}
+	
+	private int getColumnHeight() {
+		int height = 1;
+		MessageObject obj = getMsgObject();
+		if (obj == null) {
+			return height;
+		}
+		switch (obj.getType()) {
+		case MessageType.MESSAGE_TYPE_SINGLE:
+			height = 1;
+			break;
+		case MessageType.MESSAGE_TYPE_DOUBLE:
+			height = 2;
+			break;
+		case MessageType.MESSAGE_TYPE_TREBLE:
+			height = 3;
+			break;
+		case MessageType.MESSAGE_TYPE_FOUR:
+			height = 4;
+			break;
+		default:
+			break;
+		}
+		return height;
+	}
+	
 	public static class MessageType {
-		public static int MESSAGE_TYPE_SINGLE = 1;
-		public static int MESSAGE_TYPE_DOUBLE = 2;
-		public static int MESSAGE_TYPE_TREBLE = 3;
-		public static int MESSAGE_TYPE_FOUR   = 4;
+		public static final int MESSAGE_TYPE_SINGLE = 0;
+		public static final int MESSAGE_TYPE_DOUBLE = 1;
+		public static final int MESSAGE_TYPE_TREBLE = 2;
+		public static final int MESSAGE_TYPE_FOUR   = 3;
 	}
 	
 }

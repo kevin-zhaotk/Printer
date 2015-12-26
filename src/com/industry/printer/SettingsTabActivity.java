@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -28,7 +29,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-//import android.os.SystemProperties;
+import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,6 +42,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsTabActivity extends Fragment implements OnClickListener, OnTouchListener {
 public static final String TAG="SettingsTabActivity";
@@ -270,6 +272,12 @@ public static final String TAG="SettingsTabActivity";
 //		return true;
 //	}
 	
+	private void loadSettings() {
+		/*从U盘中读取系统设置，解析*/
+		SystemConfigFile.init();
+		mAdapter.loadSettings();
+	}
+	
 	public void setLocale()
 	{
 		Configuration config = getResources().getConfiguration(); 
@@ -286,6 +294,7 @@ public static final String TAG="SettingsTabActivity";
 	
 	public void reloadSettings() {
 		Configs.initConfigs(mContext);
+		loadSettings();
 		// mPHSettings.reloadSettings();
 	}
 	
@@ -336,8 +345,28 @@ public static final String TAG="SettingsTabActivity";
 			case R.id.btn_setting_upgrade:
 				
 				// ArrayList<String> paths = ConfigPath.getMountedUsb();
-				PackageInstaller installer = PackageInstaller.getInstance(mContext);
-				installer.silentUpgrade();
+				if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
+					PackageInstaller installer = PackageInstaller.getInstance(mContext);
+					installer.silentUpgrade();
+				} else {
+					String str = ConfigPath.getUpgradePath();
+					File file = new File(str);
+					Debug.d(TAG, "===>file:"+file.getPath());
+					if (!file.exists()) {
+						Toast.makeText(mContext, R.string.strUpgradeNoApk, Toast.LENGTH_LONG);
+						break;
+					}
+					Debug.d(TAG, "===>start upgrade service");
+					// System.setProperty("ctl.start", "Upgrade");
+					// SystemProperties.set("ctl.start","Upgrade");
+					Toast.makeText(mContext, R.string.str_upgrade_progress, Toast.LENGTH_LONG);
+					try {
+						Class<?> mClassType = Class.forName("android.os.SystemProperties");
+						Method mSetMethod = mClassType.getDeclaredMethod("set", String.class, String.class);
+						mSetMethod.invoke(mClassType, "ctl.start", "Upgrade");
+					} catch (Exception e) {
+					}
+				}
 				break;
 			case R.id.btn_setting_timeset:
 				CalendarDialog dialog = new CalendarDialog(this.getActivity(), R.layout.calendar_setting);

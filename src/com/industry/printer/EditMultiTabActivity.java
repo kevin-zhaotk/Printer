@@ -752,6 +752,9 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		default:
 			break;
 		}
+		if (v.getId() == R.id.scrollView1) {
+			return false;
+		}
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			PWMAudio.Play();
 		}
@@ -1055,24 +1058,16 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	}
 	 
 	private void onInsertText() {
-		clearCurObj();
-		mMsgTask.addObject(new TextObject(mContext,  getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		mObjList.invalidate();
+		onInsertObject(new TextObject(mContext,  getNextXcor()));
 	}
 
 	
 	private void onInsertCount() {
-		clearCurObj();
-		mMsgTask.addObject(new CounterObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		
+		onInsertObject(new CounterObject(mContext, getNextXcor()));		
 	}
 	
 	private void onInsertBarcode() {
-		clearCurObj();
-		mMsgTask.addObject(new BarcodeObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		onInsertObject(new BarcodeObject(mContext, getNextXcor()));
 		
 	}
 	
@@ -1080,47 +1075,40 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onInsertJulian() {
-		clearCurObj();
-		mMsgTask.addObject(new JulianDayObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		
+		onInsertObject(new JulianDayObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertTime() {
-		clearCurObj();
-		mMsgTask.addObject(new RealtimeObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		onInsertObject(new RealtimeObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertLine() {
-		clearCurObj();
-		mMsgTask.addObject(new LineObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		onInsertObject(new LineObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertRect() {
-		clearCurObj();
-		mMsgTask.addObject(new RectObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		onInsertObject(new RectObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertElliose() {
-		clearCurObj();
-		mMsgTask.addObject(new EllipseObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		onInsertObject(new EllipseObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertShift() {
-		clearCurObj();
-		mMsgTask.addObject(new ShiftObject(mContext, getNextXcor()));
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		
+		onInsertObject(new ShiftObject(mContext, getNextXcor()));
 	}
 	
 	private void onInsertSecond() {
-		clearCurObj();
-		mMsgTask.addObject(new RTSecondObject(mContext, getNextXcor()));
+		onInsertObject(new RTSecondObject(mContext, getNextXcor()));
+	}
+	
+	private void onInsertObject(BaseObject object) {
+		mMsgTask.addObject(object);
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-	}	
+		clearCurObj();
+		mObjList.setSelection(mMsgTask.getObjects().size() -1);
+	}
 	
 	private boolean onObjectTouch(MotionEvent event) {
 		Debug.d(TAG, "onTouch x="+event.getX()+", y="+event.getY());

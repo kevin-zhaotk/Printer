@@ -18,6 +18,7 @@ public class MessageObject extends BaseObject {
 		Debug.d(TAG, "--->MessageObject: " + context.getResources());
 		String name = (String)context.getResources().getString(R.string.object_msg_name);
 		mContent = name;
+		mType = 0;
 	}
 	
 	public void setPrinter(int i)

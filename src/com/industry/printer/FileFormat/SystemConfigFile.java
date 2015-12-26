@@ -162,14 +162,17 @@ public class SystemConfigFile{
 		String tag;
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.isEmpty()) {
+			Debug.d(TAG, "--->no usb storage mounted");
 			return;
 		}
 		/*
 		 * use this first usb as default 
 		 */
+		Debug.d(TAG, "--->usb root path:" + paths.get(0));
 		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.SYSTEM_CONFIG_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
+			Debug.d(TAG, "--->read system_config file fail");
 			return;
 		}
 		for (XmlTag t : list) {
@@ -717,9 +720,9 @@ public class SystemConfigFile{
 		mParamRange.put(1, map);
 		/*触发模式,有效值1,2,3,4*/
 		map = new HashMap<String, Integer>();
-		map.put("min", 1);
-		map.put("max", 4);
-		map.put("default", 1);
+		map.put("min", 0);
+		map.put("max", 3);
+		map.put("default", 0);
 		mParamRange.put(2, map);
 		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
 		map = new HashMap<String, Integer>();
