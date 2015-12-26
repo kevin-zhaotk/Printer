@@ -20,6 +20,7 @@ import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.LRADCBattery;
+import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
@@ -46,7 +47,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -62,7 +65,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener {
+public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -261,10 +264,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		mBtnStart = (RelativeLayout) getView().findViewById(R.id.StartPrint);
 		mBtnStart.setOnClickListener(this);
+		mBtnStart.setOnTouchListener(this);
 		mTvStart = (TextView) getView().findViewById(R.id.tv_start);
 		
 		mBtnStop = (RelativeLayout) getView().findViewById(R.id.StopPrint);
 		mBtnStop.setOnClickListener(this);
+		mBtnStop.setOnTouchListener(this);
 		mTvStop = (TextView) getView().findViewById(R.id.tv_stop);
 		//mRecords = (TextView) getView().findViewById(R.id.tv_records);
 		/*
@@ -274,17 +279,21 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		mBtnClean = (RelativeLayout) getView().findViewById(R.id.btnFlush);
 		mBtnClean.setOnClickListener(this);
+		mBtnClean.setOnTouchListener(this);
 		mTvClean = (TextView) getView().findViewById(R.id.tv_flush);
 				
 		mBtnOpenfile = (RelativeLayout) getView().findViewById(R.id.btnBinfile);
 		mBtnOpenfile.setOnClickListener(this);
+		mBtnOpenfile.setOnTouchListener(this);
 		mTvOpen = (TextView) getView().findViewById(R.id.tv_binfile);
 		
 		mForward = (RelativeLayout) getView().findViewById(R.id.btn_page_forward);
 		mForward.setOnClickListener(this);
+		mForward.setOnTouchListener(this);
 		
 		mBackward = (RelativeLayout) getView().findViewById(R.id.btn_page_backward);
 		mBackward.setOnClickListener(this);
+		mBackward.setOnTouchListener(this);
 		
 		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);
 		mTVStopped = (TextView) getView().findViewById(R.id.tv_stopState);
@@ -893,6 +902,24 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	@Override
 	public void onCountChanged() {
 		mHandler.sendEmptyMessage(MESSAGE_COUNT_CHANGE);
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		switch(view.getId()) {
+			case R.id.StartPrint:
+			case R.id.StopPrint:
+			case R.id.btnFlush:
+			case R.id.btnBinfile:
+			case R.id.btn_page_forward:
+			case R.id.btn_page_backward:
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					PWMAudio.Play();
+				}
+			default:
+				break;
+		}
+		return false;
 	}
 	
 }

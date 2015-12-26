@@ -21,6 +21,7 @@ import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.HardwareJni;
+import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -61,8 +62,10 @@ import android.text.SpannableString;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -78,7 +81,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class EditTabActivity extends Fragment implements OnClickListener, OnLongClickListener, IOnItemClickListener {
+public class EditTabActivity extends Fragment implements OnClickListener, OnLongClickListener, IOnItemClickListener, OnTouchListener {
 	public static final String TAG="EditTabActivity";
 	
 	public Context mContext;
@@ -182,15 +185,19 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		
 		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
+		mBtnNew.setOnTouchListener(this);
 		
 		mBtnOpen = (RelativeLayout) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
+		mBtnOpen.setOnTouchListener(this);
 		
 		mBtnSaveas = (RelativeLayout) getView().findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
+		mBtnSaveas.setOnTouchListener(this);
 		
 		mBtnSave = (RelativeLayout) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
+		mBtnSave.setOnTouchListener(this);
 		
 		//mTest = (Button) getView().findViewById(R.id.btn_temp_4);
 		//mTest.setOnClickListener(this);
@@ -200,9 +207,11 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		
 		mPrev = (RelativeLayout) getView().findViewById(R.id.btn_page_up);
 		mPrev.setOnClickListener(this);
+		mPrev.setOnTouchListener(this);
 		
 		mNext = (RelativeLayout) getView().findViewById(R.id.btn_page_down);
 		mNext.setOnClickListener(this);
+		mNext.setOnTouchListener(this);
 		
 		mScrollView1 = (ScrollView) getView().findViewById(R.id.edit_scrollview_line1);
 		
@@ -826,6 +835,24 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 		} else {
 			onSaveClicked(true);
 		}
+	}
+	
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		switch(view.getId()) {
+			case R.id.StartPrint:
+			case R.id.StopPrint:
+			case R.id.btnFlush:
+			case R.id.btnBinfile:
+			case R.id.btn_page_forward:
+			case R.id.btn_page_backward:
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					PWMAudio.Play();
+				}
+			default:
+				break;
+		}
+		return false;
 	}
 	
 }

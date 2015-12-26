@@ -8,6 +8,7 @@ import android.R.integer;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.IPackageInstallObserver;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.widget.Toast;
@@ -62,7 +63,7 @@ public class PackageInstaller {
 		}
 		PackageInfo pInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
 		int newVersion = pInfo.versionCode;
-		if (curVersion >= newVersion) {
+		if (curVersion > newVersion) {
 			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
 			return;
 		}

@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -34,11 +36,12 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
 //import android.app.TabActivity;
 
-public class MainActivity extends Activity implements OnCheckedChangeListener {
+public class MainActivity extends Activity implements OnCheckedChangeListener, OnTouchListener {
 
 	public static final String TAG="MainActivity";
 	public static final String ACTION_USB_PERMISSION="com.industry.printer.USB_PERMISSION";
@@ -95,12 +98,15 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	    
 	    mRadioCtl = (RadioButton) findViewById(R.id.btn_control);
 	    mRadioCtl.setOnCheckedChangeListener(this);
+	    mRadioCtl.setOnTouchListener(this);
 	    
 	    mRadioEdit = (RadioButton) findViewById(R.id.btn_edit);
 	    mRadioEdit.setOnCheckedChangeListener(this);
+	    mRadioEdit.setOnTouchListener(this);
 	    
 	    mRadioSet = (RadioButton) findViewById(R.id.btn_setting);
 	    mRadioSet.setOnCheckedChangeListener(this);
+	    mRadioSet.setOnTouchListener(this);
 	    
 	    //mExtStatus = (TextView) findViewById(R.id.tv_counter_msg);
 	    
@@ -320,5 +326,20 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 	@Override
 	public void onDestroy() {
 		FpgaGpioOperation.close();
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		switch(view.getId()) {
+		case R.id.btn_control:
+		case R.id.btn_edit:
+		case R.id.btn_setting:
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				PWMAudio.Play();
+			}
+		default:
+			break;
+		}
+		return false;
 	}
 }

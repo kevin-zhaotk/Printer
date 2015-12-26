@@ -16,6 +16,7 @@ import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -155,15 +156,20 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		
 		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
+		mBtnNew.setOnTouchListener(this);
 		
 		mBtnSave = (RelativeLayout) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
+		mBtnSave.setOnTouchListener(this);
 		
 		mBtnSaveas = (RelativeLayout) getView().findViewById(R.id.btn_saveas);
 		mBtnSaveas.setOnClickListener(this);
+		mBtnSaveas.setOnTouchListener(this);
 		
 		mBtnOpen = (RelativeLayout) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
+		mBtnOpen.setOnTouchListener(this);
+		
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
 		mObjView.setOnTouchListener(this);
@@ -196,6 +202,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		
 		mShowInfo = (Button) getView().findViewById(R.id.btn_objinfo);
 		mShowInfo.setOnClickListener(this);
+		mShowInfo.setOnTouchListener(this);
 		
 		mBtnLeft = (ImageButton) getView().findViewById(R.id.btn_left);
 		mBtnLeft.setOnClickListener(this);
@@ -233,42 +240,52 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		
 		mDel = (ImageButton) getView().findViewById(R.id.btn_delete);
 		mDel.setOnClickListener(this);
-		
+		mDel.setOnTouchListener(this);
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
 		mBtnText = (ImageButton) getView().findViewById(R.id.btn_ABC);
 		mBtnText.setOnClickListener(this);
+		mBtnText.setOnTouchListener(this);
 		
 		mBtnCnt = (ImageButton) getView().findViewById(R.id.btn_cnt);
 		mBtnCnt.setOnClickListener(this);
+		mBtnCnt.setOnTouchListener(this);
 
 		mBtnBar = (ImageButton) getView().findViewById(R.id.btn_barcode);
 		mBtnBar.setOnClickListener(this);
+		mBtnBar.setOnTouchListener(this);
 		
 		mImage = (ImageButton) getView().findViewById(R.id.btn_image);
 		mImage.setOnClickListener(this);
+		mImage.setOnTouchListener(this);
 		
 		mBtnDay = (ImageButton) getView().findViewById(R.id.btn_julian);
 		mBtnDay.setOnClickListener(this);
+		mBtnDay.setOnTouchListener(this);
 		
 		mBtnTime = (ImageButton) getView().findViewById(R.id.btn_time);
 		mBtnTime.setOnClickListener(this);
-		
+		mBtnTime.setOnTouchListener(this);
 
 		mBtnLine = (ImageButton) getView().findViewById(R.id.btn_line);
 		mBtnLine.setOnClickListener(this);
+		mBtnLine.setOnTouchListener(this);
 
 		mBtnRect = (ImageButton) getView().findViewById(R.id.btn_rect);
 		mBtnRect.setOnClickListener(this);
+		mBtnRect.setOnTouchListener(this);
 
 		mBtnEllipse = (ImageButton) getView().findViewById(R.id.btn_ellipse);
 		mBtnEllipse.setOnClickListener(this);
+		mBtnEllipse.setOnTouchListener(this);
 		
 		mShift = (ImageButton) getView().findViewById(R.id.btn_shift);
 		mShift.setOnClickListener(this);
+		mShift.setOnTouchListener(this);
 		
 		mScnd = (ImageButton) getView().findViewById(R.id.btn_second);
 		mScnd.setOnClickListener(this);
+		mScnd.setOnTouchListener(this);
 
 		/*initialize the object list spinner*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
@@ -734,6 +751,9 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 			
 		default:
 			break;
+		}
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			PWMAudio.Play();
 		}
 		return false;
 	}
