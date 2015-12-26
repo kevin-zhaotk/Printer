@@ -10,8 +10,10 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.SettingsListAdapter;
 import com.industry.printer.ui.CustomerDialog.CalendarDialog;
@@ -29,7 +31,9 @@ import android.os.Message;
 //import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,7 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class SettingsTabActivity extends Fragment implements OnClickListener {
+public class SettingsTabActivity extends Fragment implements OnClickListener, OnTouchListener {
 public static final String TAG="SettingsTabActivity";
 	
 	SharedPreferences mPreference=null;
@@ -174,21 +178,27 @@ public static final String TAG="SettingsTabActivity";
 		
 		mPagePrev = (RelativeLayout) getView().findViewById(R.id.btn_prev);
 		mPagePrev.setOnClickListener(this);
+		mPagePrev.setOnTouchListener(this);
 		
 		mPageNext = (RelativeLayout) getView().findViewById(R.id.btn_next);
 		mPageNext.setOnClickListener(this);
+		mPageNext.setOnTouchListener(this);
 		
 		mSave = (RelativeLayout) getView().findViewById(R.id.btn_setting_ok);
 		mSave.setOnClickListener(this);
+		mSave.setOnTouchListener(this);
 		
 		mUpgrade = (RelativeLayout) getView().findViewById(R.id.btn_setting_upgrade);
 		mUpgrade.setOnClickListener(this);
+		mUpgrade.setOnTouchListener(this);
 		
 		mTimeset = (RelativeLayout) getView().findViewById(R.id.btn_setting_timeset);
 		mTimeset.setOnClickListener(this);
+		mTimeset.setOnTouchListener(this);
 		
 		mSettings = (RelativeLayout) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
+		mSettings.setOnTouchListener(this);
 		
 		//mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
 		
@@ -325,22 +335,9 @@ public static final String TAG="SettingsTabActivity";
 				break;
 			case R.id.btn_setting_upgrade:
 				
-				ArrayList<String> paths = ConfigPath.getMountedUsb();
-				for (String str : paths) {
-					File file = new File(str+"/Printer.apk");
-					Debug.d(TAG, "===>file:"+file.getPath());
-					if (!file.exists()) {
-						continue;
-					}
-//					ProgressDialog pDialog = new ProgressDialog(mContext);
-//					pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//					pDialog.setMessage(getResources().getString(R.string.str_upgrade_progress));
-//					pDialog.show();
-					Debug.d(TAG, "===>start upgrade service");
-					System.setProperty("ctl.start", "upgrade");
-//					SystemProperties.set("ctl.start","upgrade");
-					break;
-				}
+				// ArrayList<String> paths = ConfigPath.getMountedUsb();
+				PackageInstaller installer = PackageInstaller.getInstance(mContext);
+				installer.silentUpgrade();
 				break;
 			case R.id.btn_setting_timeset:
 				CalendarDialog dialog = new CalendarDialog(this.getActivity(), R.layout.calendar_setting);
@@ -350,5 +347,24 @@ public static final String TAG="SettingsTabActivity";
 				Debug.d(TAG, "===>unknown view clicked");
 				break;
 		}
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		
+		switch(view.getId()) {
+			case R.id.btn_prev:
+			case R.id.btn_next:
+			case R.id.btn_setting_ok:
+			case R.id.btn_setting_upgrade:
+			case R.id.btn_setting_timeset:
+			case R.id.btn_system_setting:
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					PWMAudio.Play();
+				}
+			default:
+				break;
+		}
+		return false;
 	}
 }
