@@ -29,4 +29,9 @@
 	
 <!-- dialog相关尺寸 -->
 	<dimen name="dialogBtnTextSize">30sp</dimen>
+	
+<!-- 顶部三个RadioButton尺寸 -->
+	<dimen name="top_btn_height">40dp</dimen>
+	<dimen name="top_btn_textsize">25sp</dimen>
+		
 </resources>

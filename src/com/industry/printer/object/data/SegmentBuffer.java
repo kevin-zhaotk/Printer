@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.apache.http.util.CharArrayBuffer;
 
 import com.industry.printer.BinInfo;
+import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 
 public class SegmentBuffer {
 	
@@ -34,21 +36,25 @@ public class SegmentBuffer {
 	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction) {
 		this(info, type, heads, ch, direction, 0);
 	}
-	
+
+
 	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction, int shift) {
-		CharArrayBuffer mBuffer = new CharArrayBuffer(0);
+		mBuffer = new CharArrayBuffer(0);
 		/*计算info的总列数*/
 		mColumns = info.length/ch;
 		/*计算每个打印头的高度*/
 		mHight = ch/heads;
+		Debug.d(TAG, "--->mHight=" + mHight + ",  columns=" + mColumns + ", ch=" + ch);
 		/*计算当前打印头的起始*/
 		int start = mHight * type;
 		
+		/*打印起始位平移shift列*/
+		for (int j = 0; j < mHight * shift; j++) {
+			mBuffer.append(0);
+		}
+		
 		for (int i = 0; i < mColumns; i++) {
-			/*打印起始位平移shift列*/
-			for (int j = 0; j < mHight * shift; j++) {
-				mBuffer.append(0);
-			}
+			
 			if (direction == DIRECTION_NORMAL) {
 				mBuffer.append(info, i * ch + start, mHight);
 			} else if (direction == DIRECTION_REVERS) {
@@ -61,15 +67,22 @@ public class SegmentBuffer {
 	
 	public void readColumn(char[] buffer, int col, int offset) {
 		CharArrayReader reader = new CharArrayReader(mBuffer.buffer());
-		
+		// Debug.d(TAG, "--->col=" + col + ", mColumns=" + mColumns);
 		if (col < mColumns) {
 			try {
-				reader.mark(col * mHight);
+				reader.skip(col * mHight);
 				reader.read(buffer, offset, mHight);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 		}
+	}
+	
+	public int getColumns() {
+		if (mHight <= 0) {
+			return 0;
+		}
+		return mBuffer.length()/mHight;
 	}
 }

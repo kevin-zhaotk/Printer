@@ -234,7 +234,6 @@ public class DataTask {
 	}
 	
 	public void rebuildBuffer() {
-		boolean isMsg=false;
 		BaseObject object = null;
 		ArrayList<SegmentBuffer> buffers = new ArrayList<SegmentBuffer>();
 		for (BaseObject msg : mTask.getObjects()) {
@@ -244,7 +243,11 @@ public class DataTask {
 			}
 		}
 		/*分头处理*/
-		int type = ((MessageObject) object).getType();
+		int type = 1;
+		if (object != null) {
+			type = mTask.getColumnHeight();
+		}
+		
 		for (int i = 0; i < type; i++) {
 			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsPerColumn()));
 		}
@@ -253,7 +256,7 @@ public class DataTask {
 		int columns=0;
 		int hight = 0;
 		for (SegmentBuffer segmentBuffer : buffers) {
-			columns = segmentBuffer.mBuffer.length() > columns?segmentBuffer.mBuffer.length():columns;
+			columns = segmentBuffer.getColumns() > columns?segmentBuffer.getColumns():columns;
 			hight = segmentBuffer.mHight * buffers.size();
 		}
 		

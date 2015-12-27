@@ -78,8 +78,7 @@ public class DataTransferThread extends Thread {
 			
 			// Debug.d(TAG, "===>buffer size="+buffer.length);
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-			mDataTask.getPrintBuffer();
-			BinCreater.saveBin("/mnt/usbhost1/print.bin", mDataTask.mBgBuffer, 32);
+			
 			int writable = FpgaGpioOperation.pollState();
 			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
@@ -100,7 +99,7 @@ public class DataTransferThread extends Thread {
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				//}
 				
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
+				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
 				// 保存打印计数
 				// 墨水量count down计算
 				//if (countDown()) {

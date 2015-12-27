@@ -331,7 +331,7 @@ public class MessageTask {
 		return msg;
 	}
 	
-	private int getColumnHeight() {
+	public int getColumnHeight() {
 		int height = 1;
 		MessageObject obj = getMsgObject();
 		if (obj == null) {

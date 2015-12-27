@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.friendlyarm.AndroidSDK.HardwareControler;
+import com.industry.printer.Utils.PlatformInfo;
 
 import android.drm.DrmStore.Playback;
 
@@ -16,13 +17,19 @@ public class PWMAudio {
 			
 			@Override
 			public void run() {
-				HardwareControler.PWMPlay(1000);
+				if (PlatformInfo.PRODUCT_FRIENDLY_4412.equalsIgnoreCase(PlatformInfo.getProduct())) {
+					HardwareControler.PWMPlay(1000);
+				}
+				
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				HardwareControler.PWMStop();
+				if (PlatformInfo.PRODUCT_FRIENDLY_4412.equalsIgnoreCase(PlatformInfo.getProduct())) {
+					HardwareControler.PWMStop();
+				}
+				
 			}
 		});
 		// mThreadPoll.shutdown();
@@ -34,13 +41,17 @@ public class PWMAudio {
 			
 			@Override
 			public void run() {
-				HardwareControler.PWMPlay(1000);
+				if (PlatformInfo.PRODUCT_FRIENDLY_4412.equalsIgnoreCase(PlatformInfo.getProduct())) {
+					HardwareControler.PWMPlay(1000);
+				}
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				HardwareControler.PWMStop();
+				if (PlatformInfo.PRODUCT_FRIENDLY_4412.equalsIgnoreCase(PlatformInfo.getProduct())) {
+					HardwareControler.PWMStop();
+				}
 			}
 		});
 		// mThreadPoll.shutdown();

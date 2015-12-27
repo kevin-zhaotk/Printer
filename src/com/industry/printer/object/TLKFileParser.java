@@ -222,7 +222,13 @@ public class TLKFileParser  extends TlkFile{
 			Debug.d(TAG, "--->msgObject " + mContext);
 			obj = new MessageObject(mContext, 0);
 			/*参数8表示打印头类型*/
-			((MessageObject)obj).setType(Integer.parseInt(attr[8]));
+			 int type = Integer.parseInt(attr[8]);
+			 if (type == 2) {	//双头信息
+				 ((MessageObject)obj).setType(1);
+			} else { //单头信息
+				((MessageObject)obj).setType(0);
+			}
+			
 			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
 			mDots = Integer.parseInt(attr[13]);
 		}

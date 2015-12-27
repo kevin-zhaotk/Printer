@@ -9,7 +9,7 @@
     <RadioGroup
         android:id="@+id/tab_group"
         android:layout_width="480dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/top_btn_height"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_marginTop="0dip">
@@ -25,7 +25,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/ControlTab"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="25sp"
+	        android:textSize="@dimen/top_btn_textsize"
 	        android:focusable="false"
             />
         
@@ -39,7 +39,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/Edit"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="25sp"
+	        android:textSize="@dimen/top_btn_textsize"
 	        android:focusable="false"
             />
         
@@ -53,7 +53,7 @@
 	        android:background="@drawable/main_tab_item"
 	        android:text="@string/Settings"
 	        android:textColor="@color/tab_color_selector"
-	        android:textSize="25sp"
+	        android:textSize="@dimen/top_btn_textsize"
 	        android:focusable="false"
             />
     </RadioGroup>

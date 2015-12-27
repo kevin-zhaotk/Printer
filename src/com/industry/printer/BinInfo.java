@@ -103,15 +103,14 @@ public class BinInfo {
 		}
     	
 		try {
-			mBufferBytes = new byte[mLength + mColumn];
-			mBufferChars = new char[(mLength + mColumn)/2];
+			int feed = (mNeedFeed==true?mColumn : 0);
+			mBufferBytes = new byte[mLength + feed];
+			mBufferChars = new char[(mLength + feed)/2];
 			if(mBufferBytes == null || mBufferChars == null)
 				return null;
 			int bytesPer = mBytesPerColumn + (mNeedFeed==true? 1 : 0);
 			for(int i=0; i < mColumn; i++) {
-				if (mNeedFeed) {
-					mFStream.read(mBufferBytes, i*bytesPer, bytesPer);
-				}
+				mFStream.read(mBufferBytes, i*bytesPer, bytesPer);
 			}
 	    	//mFStream.close();
 			/* 如果是奇数列在每列最后添加一个byte */
