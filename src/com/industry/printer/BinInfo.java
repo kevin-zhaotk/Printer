@@ -110,7 +110,7 @@ public class BinInfo {
 				return null;
 			int bytesPer = mBytesPerColumn + (mNeedFeed==true? 1 : 0);
 			for(int i=0; i < mColumn; i++) {
-				mFStream.read(mBufferBytes, i*bytesPer, bytesPer);
+				mFStream.read(mBufferBytes, i*bytesPer, mBytesPerColumn);
 			}
 	    	//mFStream.close();
 			/* 如果是奇数列在每列最后添加一个byte */
@@ -126,7 +126,7 @@ public class BinInfo {
 		} finally {
 			
 		}
-    	return mBufferChars;//bmp.createScaledBitmap(bmp, columns, 150, true);
+    	return mBufferChars; // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     
     public char[] getVarBuffer(String var)
