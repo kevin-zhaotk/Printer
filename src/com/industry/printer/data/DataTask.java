@@ -141,12 +141,14 @@ public class DataTask {
 			{
 				String str = ((CounterObject) o).getNext();
 				BinInfo info = mVarBinList.get(o);
+				Debug.d(TAG, "--->object index=" + o.getIndex());
 				if (info == null) {
 					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
-				BinInfo.overlap(mPrintBuffer, var, (int)o.getX() * 2, info.getCharsPerColumn());
+				Debug.d(TAG, "--->object x=" + o.getX());
+				BinInfo.overlap(mPrintBuffer, var, (int)o.getX(), info.getCharsPerColumn());
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -185,7 +187,7 @@ public class DataTask {
 						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
-					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX()*2, info.getCharsPerColumn());
+					BinInfo.overlap(mPrintBuffer, var, (int)rtSub.getX(), info.getCharsPerColumn());
 				}				
 			}
 			else if(o instanceof JulianDayObject)
@@ -193,7 +195,7 @@ public class DataTask {
 				String vString = ((JulianDayObject)o).getContent();
 				BinInfo varbin= new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 				var = varbin.getVarBuffer(vString);
-				BinInfo.overlap(mPrintBuffer, var, (int)o.getX() *2, varbin.getCharsPerColumn());
+				BinInfo.overlap(mPrintBuffer, var, (int)o.getX(), varbin.getCharsPerColumn());
 			}
 			else
 			{

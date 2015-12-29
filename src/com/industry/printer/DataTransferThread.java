@@ -74,6 +74,10 @@ public class DataTransferThread extends Thread {
 	public void run() {
 		
 		char[] buffer;
+		/*逻辑要求，必须先发数据*/
+		buffer = mDataTask.getPrintBuffer();
+		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+		FpgaGpioOperation.init();
 		while(mRunning == true) {
 			
 			// Debug.d(TAG, "===>buffer size="+buffer.length);

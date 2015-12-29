@@ -491,6 +491,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					ArrayList<String> usbs = ConfigPath.getMountedUsb();
 					if (usbs != null && usbs.size() > 0) {
 						String path = usbs.get(0);
+						File file = new File(path + "/print.bin");
+						if (file.exists()) {
+							file.delete();
+						}
 						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesPerColumn() * 8);
 					}
 					
@@ -508,7 +512,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
 						break;
 					}
-					FpgaGpioOperation.init();
+					// FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
 					/*打印过程中禁止切换打印对象*/
 					switchState(STATE_PRINTING);
