@@ -23,6 +23,7 @@ public class SegmentBuffer {
 	
 	public int mColumns;
 	public int mHight;
+	public int mType;
 	public CharArrayBuffer mBuffer;
 	/**
 	 * 从BinInfo中提取指定打印头的buffer数据，比如该TLK支持3头打印，从中取出第二个打印头的buffer数据
@@ -38,8 +39,20 @@ public class SegmentBuffer {
 	}
 
 
+	/**
+	 * 从BinInfo中取出的buffer是原始的数据，没有进行补偿和偏移转换计算
+	 * 所有的处理工作都是在SegmentBuffer中完成
+	 * @param info 
+	 * @param type 打印头索引
+	 * @param heads 打印头数量
+	 * @param ch 补偿后的列高（双字节数）
+	 * @param direction 数据方向
+	 * @param shift  顺移列数
+	 */
 	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction, int shift) {
+		mType = type;
 		mBuffer = new CharArrayBuffer(0);
+		
 		/*计算info的总列数*/
 		mColumns = info.length/ch;
 		/*计算每个打印头的高度*/

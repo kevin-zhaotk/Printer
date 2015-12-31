@@ -251,7 +251,7 @@ public class DataTask {
 		}
 		
 		for (int i = 0; i < type; i++) {
-			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsPerColumn()));
+			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsFeed()));
 		}
 		
 		/*计算转换后的buffer总列数*/
@@ -266,7 +266,7 @@ public class DataTask {
 		/*处理完之后重新合并为一个buffer, 因为涉及到坐标平移，所以不能对齐的段要补0*/
 		for (int j=0; j < columns; j++) {
 			for (SegmentBuffer buffer : buffers) {
-				buffer.readColumn(mBuffer, j, j*hight);
+				buffer.readColumn(mBuffer, j, j*hight + buffer.mHight*buffer.mType);
 			}
 		}
 		

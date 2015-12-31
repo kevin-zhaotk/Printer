@@ -29,27 +29,56 @@ public class BinInfo {
 
 	/**bin文件总长度**/
 	public int mLength;
-	/**bin文件每列的字节数**/
+	
+	/** 是否需要对列进行补偿 */
+	public boolean mNeedFeed = false;
+	
+	/**打印头类型，单头，双头，三头和四头， 默认为单头*/
+	public int mType = 1;
+	
+	/**每个打印头每列的字节数*/
+	public int mBytesPerH;
+	
+	/**每个打印头每列的双字节数*/
+	public int mCharsPerH;
+	
+	/**每个打印头每列的字节数*/
+	public int mBytesPerHFeed;
+	
+	/**每个打印头每列的双字节数*/
+	public int mCharsPerHFeed;
+	
+	/**bin文件每列的总字节数**/
 	public int mBytesPerColumn;
 	
-	/* 是否需要对列进行补偿 */
-	public boolean mNeedFeed = false;
-	/**bin文件每列的字符数**/
+	/**bin文件每列的总字符数**/
 	public int mCharsPerColumn;
+	
+	/**补偿之后的列总字节数*/
+	public int mBytesFeed;
+	
+	/**补偿之后的列总双字节数*/
+	public int mCharsFeed;
 	
 	/**变量的每个字符所占列数**/
 	public int mColPerElement;
+	
 	/**bin文件的字节缓存**/
 	public byte[] mBufferBytes;
 	
 	/**bin文件的字符缓存**/
 	public char[] mBufferChars;
 
-	public BinInfo(String file)
+	public BinInfo(String file) {
+		this(file, 1);
+	}
+	
+	public BinInfo(String file, int type)
 	{
 		mColumn = 0;
 		mBufferBytes = null;
 		mBufferChars = null;
+		mType = type;
 		/**读取文件头信息**/
 		byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
 		mFile = new File(file);
@@ -61,16 +90,34 @@ public class BinInfo {
 			//bin文件总长度
 			mLength = mFStream.available();
 			
-			//文件的总字节数/总列数 = 每列的字节数
-			mBytesPerColumn = mLength/mColumn;
-			/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
-			if (mBytesPerColumn%2 != 0) {
-				mNeedFeed = true;
+			if (type <=0 || type > 4) {
+				type = 1;
 			}
 			
+			//文件的总字节数/总列数 = 每列的字节数
+			mBytesPerColumn = mLength/mColumn;
 			//文件的总字符数/总列数/2 = 每列的字符数
 			mCharsPerColumn = mBytesPerColumn/2;
-			
+			/*如果mBytesPerColumn不是type的整数倍，说明这个bin文件不是一个合法的bin文件
+			 *那么我们不会保证打印结果是否正确，所以这里不需要容错
+			 */
+			mBytesPerH = mBytesPerColumn/type;
+			mCharsPerH = mBytesPerH/2;
+			/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
+			if (mBytesPerH%2 != 0) {
+				mNeedFeed = true;
+			}
+
+			/** 计算补偿后的字节数和双字节数 */
+			if (mNeedFeed) {
+				mBytesPerHFeed = mBytesPerH + 1;
+				mBytesFeed = mBytesPerColumn + mType;
+			} else {
+				mBytesPerHFeed = mBytesPerH;
+				mBytesFeed = mBytesPerColumn;
+			}
+			mCharsPerHFeed = mBytesPerHFeed/2;
+			mCharsFeed = mBytesFeed/2;
 			//通过文件后缀是否带有v判断是否为变量的bin文件
 			if (mFile.getName().contains("v")) {
 				mColPerElement = mColumn/10;
@@ -83,17 +130,35 @@ public class BinInfo {
 	}
 	
 	public int getCharsPerColumn() {
-		if (mNeedFeed) {
-			return mCharsPerColumn + 1;
-		}
 		return mCharsPerColumn;
 	}
 	
 	public int getBytesPerColumn() {
-		if (mNeedFeed) {
-			return mBytesPerColumn + 1;
-		}
 		return mBytesPerColumn;
+	}
+	
+	public int getBytesFeed() {
+		return mBytesFeed;
+	}
+	
+	public int getCharsFeed() {
+		return mCharsFeed;
+	}
+	
+	public int getBytesPerH() {
+		return mBytesPerH;
+	}
+	
+	public int getBytesPerHFeed() {
+		return mBytesPerHFeed;
+	}
+	
+	public int getCharsPerH() {
+		return mCharsPerH;
+	}
+	
+	public int getCharsPerHFeed() {
+		return mCharsPerHFeed;
 	}
 	
     public char[] getBgBuffer()
@@ -103,14 +168,19 @@ public class BinInfo {
 		}
     	
 		try {
-			int feed = (mNeedFeed==true?mColumn : 0);
+			/*计算整个buffer需要补偿的字节数*/
+			int feed = (mNeedFeed==true?mColumn*mType : 0);
 			mBufferBytes = new byte[mLength + feed];
 			mBufferChars = new char[(mLength + feed)/2];
 			if(mBufferBytes == null || mBufferChars == null)
 				return null;
-			int bytesPer = mBytesPerColumn + (mNeedFeed==true? 1 : 0);
+			// int bytesPer = mBytesPerColumn + (mNeedFeed==true? mType : 0);
+			/** 从当前位置读取mBytesPerH个字节到背景buffer中，由于需要处理多头情况，所以要注意在每个头的列尾要注意补偿问题（双字节对齐）*/
 			for(int i=0; i < mColumn; i++) {
-				mFStream.read(mBufferBytes, i*bytesPer, mBytesPerColumn);
+				for (int j = 0; j < mType; j++) {
+					mFStream.read(mBufferBytes, i*mBytesFeed + j*mBytesPerHFeed, mBytesPerH);
+				}
+				
 			}
 	    	//mFStream.close();
 			/* 如果是奇数列在每列最后添加一个byte */
@@ -149,9 +219,13 @@ public class BinInfo {
    		for(int i=0; i<var.length(); i++)
    		{
    			n = Integer.parseInt(var.substring(i, i+1));
-   			ba.append(buffer, n*mColPerElement+16, mColPerElement*mBytesPerColumn);
-   			if (mNeedFeed) {
-				ba.append(feed, 0, 1);
+   			for (int k = 0; k < mColPerElement; k++) {
+   				for (int j = 0; j < mType; j++) {
+   	   				ba.append(buffer, n*mColPerElement+16 + k* mColPerElement + mBytesPerHFeed * mType, mBytesPerH);
+   	   	   			if (mNeedFeed) {
+   	   					ba.append(feed, 0, 1);
+   	   				}
+   				}
 			}
    		}
 
