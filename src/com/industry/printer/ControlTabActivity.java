@@ -495,7 +495,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						if (file.exists()) {
 							file.delete();
 						}
-						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesPerColumn() * 8);
+						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
 					}
 					
 					/**

@@ -17,6 +17,7 @@ import android.view.ViewDebug.FlagToString;
 import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.data.SegmentBuffer;
 
 public class Configs {
 	
@@ -258,4 +259,49 @@ public class Configs {
 		}
 	}
 	
+	
+	public static int getMessageDir(int index) {
+		int dir=0;
+		switch (index) {
+		case 0:
+			dir = SystemConfigFile.mResv25;
+			break;
+		case 1:
+			dir = SystemConfigFile.mResv27;
+			break;
+		case 2:
+			dir = SystemConfigFile.mResv29;
+			break;
+		case 3:
+			dir = SystemConfigFile.mResv31;
+			break;
+		default:
+			break;
+		}
+		if (dir != SegmentBuffer.DIRECTION_NORMAL && dir != SegmentBuffer.DIRECTION_REVERS) {
+			dir = SegmentBuffer.DIRECTION_NORMAL;
+		}
+		return dir;
+	}
+	
+	public static int getMessageShift(int index) {
+		int shift=0;
+		switch (index) {
+		case 0:
+			shift = SystemConfigFile.mResv26;
+			break;
+		case 1:
+			shift = SystemConfigFile.mResv28;
+			break;
+		case 2:
+			shift = SystemConfigFile.mResv30;
+			break;
+		case 3:
+			shift = SystemConfigFile.mResv32;
+			break;
+		default:
+			break;
+		}
+		return shift;
+	}
 }

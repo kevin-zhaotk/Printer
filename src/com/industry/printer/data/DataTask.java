@@ -12,6 +12,7 @@ import android.database.CharArrayBuffer;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -88,7 +89,7 @@ public class DataTask {
 	public boolean prepareBackgroudBuffer()
 	{
 		/**记录当前打印的信息路径**/
-		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()));
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), 2);
 		if (mBinInfo == null) {
 			return false;
 		}
@@ -249,9 +250,9 @@ public class DataTask {
 		if (object != null) {
 			type = mTask.getColumnHeight();
 		}
-		
+		Debug.d(TAG, "--->type=" + type);
 		for (int i = 0; i < type; i++) {
-			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsFeed()));
+			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
 		}
 		
 		/*计算转换后的buffer总列数*/

@@ -52,18 +52,19 @@ public class SegmentBuffer {
 	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction, int shift) {
 		mType = type;
 		mBuffer = new CharArrayBuffer(0);
-		
+		char feed = 0x0;
 		/*计算info的总列数*/
-		mColumns = info.length/ch;
+		mColumns = info.length/ch;	
 		/*计算每个打印头的高度*/
 		mHight = ch/heads;
-		Debug.d(TAG, "--->mHight=" + mHight + ",  columns=" + mColumns + ", ch=" + ch);
+		Debug.d(TAG, "--->mHight=" + mHight + ",  columns=" + mColumns );
+		Debug.d(TAG, "--->ch=" + ch + ", direction=" + direction + ", shift=" + shift);
 		/*计算当前打印头的起始*/
 		int start = mHight * type;
 		
 		/*打印起始位平移shift列*/
 		for (int j = 0; j < mHight * shift; j++) {
-			mBuffer.append(0);
+			mBuffer.append(feed);
 		}
 		
 		for (int i = 0; i < mColumns; i++) {
@@ -71,7 +72,7 @@ public class SegmentBuffer {
 			if (direction == DIRECTION_NORMAL) {
 				mBuffer.append(info, i * ch + start, mHight);
 			} else if (direction == DIRECTION_REVERS) {
-				mBuffer.append(info, (mColumns-i) * ch + start, mHight);
+				mBuffer.append(info, (mColumns-i-1) * ch + start, mHight);
 			}
 		}
 		/*原始列数+偏移列数=该buffer的总列数*/

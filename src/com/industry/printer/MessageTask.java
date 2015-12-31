@@ -358,9 +358,9 @@ public class MessageTask {
 	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_SINGLE = 0;
-		public static final int MESSAGE_TYPE_DOUBLE = 1;
-		public static final int MESSAGE_TYPE_TREBLE = 2;
-		public static final int MESSAGE_TYPE_FOUR   = 3;
+		public static final int MESSAGE_TYPE_DOUBLE = 2;
+		public static final int MESSAGE_TYPE_TREBLE = 3;
+		public static final int MESSAGE_TYPE_FOUR   = 4;
 	}
 	
 }

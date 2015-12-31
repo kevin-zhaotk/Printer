@@ -224,7 +224,7 @@ public class TLKFileParser  extends TlkFile{
 			/*参数8表示打印头类型*/
 			 int type = Integer.parseInt(attr[8]);
 			 if (type == 2) {	//双头信息
-				 ((MessageObject)obj).setType(1);
+				 ((MessageObject)obj).setType(2);
 			} else { //单头信息
 				((MessageObject)obj).setType(0);
 			}
