@@ -91,17 +91,19 @@ public class BinInfo {
 			mLength = mFStream.available();
 			
 			if (type <=0 || type > 4) {
-				type = 1;
+				mType = 1;
 			}
 			
 			//文件的总字节数/总列数 = 每列的字节数
 			mBytesPerColumn = mLength/mColumn;
+			Debug.d(TAG, "--->mBytesPerColumn =" + mBytesPerColumn);
 			//文件的总字符数/总列数/2 = 每列的字符数
 			mCharsPerColumn = mBytesPerColumn/2;
 			/*如果mBytesPerColumn不是type的整数倍，说明这个bin文件不是一个合法的bin文件
 			 *那么我们不会保证打印结果是否正确，所以这里不需要容错
 			 */
-			mBytesPerH = mBytesPerColumn/type;
+			mBytesPerH = mBytesPerColumn/mType;
+			Debug.d(TAG, "--->mBytesPerH =" + mBytesPerH + ", type=" + mType);
 			mCharsPerH = mBytesPerH/2;
 			/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
 			if (mBytesPerH%2 != 0) {
@@ -112,9 +114,11 @@ public class BinInfo {
 			if (mNeedFeed) {
 				mBytesPerHFeed = mBytesPerH + 1;
 				mBytesFeed = mBytesPerColumn + mType;
+				Debug.d(TAG, "--->117 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
 			} else {
 				mBytesPerHFeed = mBytesPerH;
 				mBytesFeed = mBytesPerColumn;
+				Debug.d(TAG, "--->120 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
 			}
 			mCharsPerHFeed = mBytesPerHFeed/2;
 			mCharsFeed = mBytesFeed/2;
@@ -266,12 +270,13 @@ public class BinInfo {
     		len = dst.length - x*high;
     		//return;
     	}
+    	boolean matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
-    		if (PlatformInfo.isBufferFromDotMatrix()) {
-    			dst[x * high + 1] = src[i];
+    		if (matrix) {
+    			dst[x*high + i] = src[i];
     		} else {
-    			dst[x*high+i] |= src[i];
+    			dst[x*high + i] |= src[i];
     		}
     	}
     }

@@ -183,7 +183,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	public void loadSettings() {
 		Debug.d(TAG, "--->loadSettings");
 		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, getEntry(R.array.encoder_item_entries, SystemConfigFile.mParam1), 0);
-		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, getEntry(R.array.array_triger_mode, SystemConfigFile.mParam2), 0);
+		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, String.valueOf(SystemConfigFile.mParam2), 0);
 		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms);
 		mSettingItems[3] = new ItemOneLine(R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), R.string.str_time_unit_ms);
 		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us);
@@ -328,7 +328,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		} else if (position == 1) {
 			String trigger = (String)mTrigerMode.getItem(index);
 			view.setText(trigger);
-			SystemConfigFile.mParam2 = index;
+			SystemConfigFile.mParam2 = Integer.parseInt(trigger);
 			mSettingItems[1].mValue = trigger;
 		}
 		

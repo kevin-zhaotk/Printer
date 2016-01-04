@@ -18,6 +18,7 @@ import com.industry.printer.FileFormat.TlkFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.StringUtil;
 
 import android.content.Context;
 import android.util.Log;
@@ -118,6 +119,9 @@ public class TLKFileParser  extends TlkFile{
                  
                  while (( line = buffreader.readLine()) != null) {
                      Debug.d(TAG, "line="+line);
+                     if (StringUtil.isEmpty(line.trim())) {
+						continue;
+					}
                      pObj = parseLine(task, line);
                      if (pObj == null) {
                     	 continue;
@@ -158,6 +162,9 @@ public class TLKFileParser  extends TlkFile{
 		Log.d(TAG, "*************************");
 		BaseObject obj = null;
 		String [] attr = str.split("\\^",0);
+		if (attr == null || attr.length != 22) {
+			return null;
+		}
 		Debug.d(TAG,"index="+str.indexOf("^"));
 		/*
 		for(int i=0; i< attr.length; i++)
@@ -330,6 +337,9 @@ public class TLKFileParser  extends TlkFile{
 	            while ( (line = buffreader.readLine()) != null) {
 	            	pObj = parseLine(null, line);
 	            	String objString = "";
+	            	if (pObj == null) {
+						continue;
+					}
 	            	if (pObj instanceof TextObject) {
 	            		objString = pObj.getContent();
 	            	} else if (pObj instanceof RealtimeObject) {

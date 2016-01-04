@@ -371,8 +371,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	private void refreshInk(float ink) {
-		
-		String level = String.format(getResources().getString(R.string.str_state_inklevel), String.valueOf(ink) + "%");
+		/*
+		if (mRfidDevice.mInkMax <= 0) {
+			ink = 0;
+		} else if (ink > mRfidDevice.mInkMax) {
+			ink = 100;
+		} else {
+			ink = (ink * 100)/mRfidDevice.mInkMax;
+		}
+		*/
+		String level = String.format(getResources().getString(R.string.str_state_inklevel), String.valueOf((int)ink));// + "%");
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
 			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");

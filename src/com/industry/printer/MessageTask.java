@@ -257,7 +257,7 @@ public class MessageTask {
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		/*生成bin的bitmap要进行处理，高度根据message的类型调整*/
-		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight() * getColumnHeight(), true);
+		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight() * getHeads(), true);
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		maker.extract(bitmap);
@@ -331,7 +331,7 @@ public class MessageTask {
 		return msg;
 	}
 	
-	public int getColumnHeight() {
+	public int getHeads() {
 		int height = 1;
 		MessageObject obj = getMsgObject();
 		if (obj == null) {

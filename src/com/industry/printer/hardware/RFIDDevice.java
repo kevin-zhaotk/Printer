@@ -332,12 +332,22 @@ public class RFIDDevice {
 		
 		openDevice();
 		Debug.print(RFID_DATA_SEND, data.mTransData);
-		int writed = write(mFd, data.transferData(), data.getLength());
-		if (writed <= 0) {
-			Debug.e(TAG, "===>write err, return");
-			return null;
+		
+		byte[] readin = null;
+		for (int i=0;(readin==null || readin.length <= 0)&& i<3; i++ ) {
+			int writed = write(mFd, data.transferData(), data.getLength());
+			if (writed <= 0) {
+				Debug.e(TAG, "===>write err, return");
+				return null;
+			}
+			try{
+				Thread.sleep(10);
+			} catch(Exception e) {
+				
+			}
+			readin = read(mFd, 64);
+			Debug.e(TAG, "===>writeCmd 349: readin=" + readin);
 		}
-		byte[] readin = read(mFd, 64);
 		Debug.print(RFID_DATA_RECV, readin);
 		if (readin == null || readin.length == 0) {
 			Debug.e(TAG, "===>read err");
@@ -377,12 +387,19 @@ public class RFIDDevice {
 		if (!lookForCards()) {
 			return RFID_ERRNO_NOCARD;
 		}
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+		}
 		//防冲突
 		mSN = avoidConflict();
 		if (mSN == null || mSN.length == 0) {
 			return RFID_ERRNO_SERIALNO_UNAVILABLE;
 		}
-		
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+		}
 		//选卡
 		if (!selectCard(mSN)) {
 			return RFID_ERRNO_SELECT_FAIL;
@@ -506,13 +523,14 @@ public class RFIDDevice {
 		}
 		mCurInkLevel = current;
 		Debug.d(TAG, "===>curInk=" + mCurInkLevel + ", max=" + mInkMax);
-		if (mInkMax <= 0) {
+		return mCurInkLevel;
+		/*if (mInkMax <= 0) {
 			return 0;
 		} else if (mCurInkLevel > mInkMax) {
 			return 100;
 		} else {
 			return (mCurInkLevel * 100)/mInkMax;
-		}
+		}*/
 	}
 	/**
 	 * 寿命值写入
@@ -568,6 +586,8 @@ public class RFIDDevice {
 		// 将新的墨水量写回备份block
 		setInkLevel(mCurInkLevel, true);
 		Debug.d(TAG, "===>cur=" + mCurInkLevel + ", max=" + mInkMax);
+		return mCurInkLevel;
+		/*
 		if (mInkMax <= 0) {
 			return 0;
 		} else if (mCurInkLevel > mInkMax) {
@@ -577,7 +597,7 @@ public class RFIDDevice {
 		} else {
 			return (mCurInkLevel * 100)/mInkMax;
 		}
-		
+		*/
 	}
 	
 	/**
@@ -623,7 +643,7 @@ public class RFIDDevice {
 		if (feature == null ) {
 			return false;
 		}
-		Debug.d(TAG, "===>feature:" + feature[0] + ", " +feature[1]);
+		Debug.d(TAG, "===>feature:" + feature[1] + ", " +feature[2]);
 		if (feature[1] == 100 && feature[2] == 1) {
 			return true;
 		}

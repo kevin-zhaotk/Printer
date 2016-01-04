@@ -1,12 +1,14 @@
 package com.industry.printer.data;
 
 import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import android.R.integer;
 import android.content.Context;
 import android.database.CharArrayBuffer;
 
@@ -89,7 +91,7 @@ public class DataTask {
 	public boolean prepareBackgroudBuffer()
 	{
 		/**记录当前打印的信息路径**/
-		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), 2);
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask.getHeads());
 		if (mBinInfo == null) {
 			return false;
 		}
@@ -112,8 +114,12 @@ public class DataTask {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/*完成平移/列变换得到真正的打印buffer*/
-		rebuildBuffer();
+		if (mBinInfo.mBytesPerColumn == 4) {
+			evenBitShift();
+		} else {
+			/*完成平移/列变换得到真正的打印buffer*/
+			rebuildBuffer();
+		}
 		//BinCreater.Bin2Bitmap(mPrintBuffer);
 		/*test bin*/
 		/*
@@ -236,6 +242,9 @@ public class DataTask {
 		return false;
 	}
 	
+	/**
+	 * 对buffer进行左右移动变换，生成真正的打印数据
+	 */
 	public void rebuildBuffer() {
 		BaseObject object = null;
 		ArrayList<SegmentBuffer> buffers = new ArrayList<SegmentBuffer>();
@@ -248,7 +257,7 @@ public class DataTask {
 		/*分头处理*/
 		int type = 1;
 		if (object != null) {
-			type = mTask.getColumnHeight();
+			type = mTask.getHeads();
 		}
 		Debug.d(TAG, "--->type=" + type);
 		for (int i = 0; i < type; i++) {
@@ -271,5 +280,47 @@ public class DataTask {
 			}
 		}
 		
+	}
+	/**
+	 * 对齐设定, 只针对32Bit × N的buffer，其他buffer不处理
+	 * 1.  原来在buffer的总长度， 增加N 列。 
+	 * 2.原buffer列中第X列，所有偶数bit，   0,2,4。。。 34 bit，  后移到第n+X列。
+	 * 例如·， 
+	 * a. 如果设为 0，  就是现在的buffer , 完全没变化。 
+	 * b. 如果设为4，  则 buffer 增加 4 列，  16 B。 
+     * 例如：  没4B 为一列， 
+	 * 第0 列的 的偶数bit （在0-3  字节中，）会 移到 新buffer的第（0+4）= 列的偶数bit， （在16-19Ｂ）。　
+	 */
+	public void evenBitShift() {
+		int shift = Configs.getEvenShift();
+		mBuffer = new char[mPrintBuffer.length + shift  * 2];
+		CharArrayReader cReader = new CharArrayReader(mPrintBuffer);
+		try {
+			cReader.read(mBuffer);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		/**/
+		char next=0;
+		char cur = 0;
+		int columns = mBinInfo.mColumn + shift;
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < 2; j++) {
+				cur = mBuffer[(columns-1-i)*2 + j];
+				System.out.println("--->cur=" + String.valueOf((int)cur));
+				int col = shift + i + 1; 
+				if (col >= columns) {
+					next = 0;
+				} else {
+					next = mBuffer[2*(columns - col) + j];
+				}
+				cur = (char) (cur & 0x0AAAA);
+				next = (char) (next & 0x05555);
+				// System.out.println("--->cur&a0a0=" + String.valueOf((int)cur) + ",  next&a0a0=" + String.valueOf((int)next));
+				mBuffer[(columns-1-i)*2 + j] = (char) (cur | next);
+				// System.out.println("--->buffer[" + ((columns-1-i)*2 + j) + "]=" + String.valueOf((int)mBuffer[(columns-1-i)*2 + j]));
+			}
+			
+		}
 	}
 }

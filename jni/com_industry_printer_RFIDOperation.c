@@ -74,18 +74,23 @@ int set_options(int fd, int databits, int stopbits, int parity)
 
     if (parity != 'n')  opt.c_iflag |= INPCK;
 //    tcflush(fd,TCIFLUSH);
-    opt.c_cc[VTIME] = 150; /*ds*/
-    opt.c_cc[VMIN] = 0;
+    opt.c_cc[VTIME] = 1500; /*ds*/
+    opt.c_cc[VMIN] = 8;
 
+    //
+    opt.c_iflag &= ~(IXON | IXOFF | IXANY);
     // 处理无法接收特殊字符的问题
-    opt.c_iflag &= ~(BRKINT | ICRNL | ISTRIP | IXON);
+    opt.c_iflag &= ~(BRKINT | ISTRIP);
+    opt.c_iflag &= ~(INLCR | ICRNL | IGNCR);
+
+    opt.c_oflag &= ~(ONLCR | OCRNL);
     //opt.c_oflag &= ~OPOST;
     opt.c_cflag |= CLOCAL | CREAD;
     //opt.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
     //tcsetattr(fd,TCSAFLUSH,&opt);
+    cfmakeraw(&opt);
 
-
-    tcflush(fd, TCIFLUSH);
+    tcflush(fd, TCIOFLUSH);
     if (tcsetattr(fd,TCSANOW,&opt) != 0)
     {
         ALOGD("SetupSerial 3\n");
@@ -132,7 +137,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
 {
 	int ret;
 	char *dev_utf = (*env)->GetStringUTFChars(env, dev, JNI_FALSE);
-	ret = open(dev_utf, O_RDWR|O_NOCTTY|O_NONBLOCK);
+	ret = open(dev_utf, O_RDWR|O_NOCTTY|O_NONBLOCK |O_NDELAY);
 
 	if( ret == -1)
 	{
@@ -164,6 +169,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
   (JNIEnv *env, jclass arg, jint fd, jshortArray buf, jint len)
 {
 	int i,ret;
+	char tempBuff[256];
 	jshort *buf_utf = (*env)->GetShortArrayElements(env, buf, NULL);
 
 	if(fd <= 0)
@@ -172,6 +178,13 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
 	//tcflush(fd, TCIOFLUSH);
 	ret = write(fd, buf_utf, len);
 
+	/**/
+//	ret = read(fd, tempBuff, 64);
+//	if(ret<=0)
+//		{
+//			ALOGD("********line180 read ret=%d,error=%d\n",ret, errno);
+//			return NULL;
+//		}
 	(*env)->ReleaseShortArrayElements(env, buf, buf_utf, 0);
 	return ret;
 }
@@ -186,27 +199,53 @@ JNIEXPORT jbyteArray JNICALL Java_com_industry_printer_RFID_read
   (JNIEnv *env, jclass arg, jint fd, jint len)
 {
 	int i;
-	int nread=0;
+	int ret=0,nread=0;
 	int repeat=0;
+	int nfds=0;
+	fd_set readfds;
 	char tempBuff[256];
 	//char response[];
 	jbyteArray jResp=NULL;
+	struct timeval tv;
 
-	struct termios Opt;
-	tcgetattr(fd, &Opt);
-	Opt.c_cc[VMIN] = len;
-	Opt.c_cc[VTIME] = 1000;
-	tcsetattr(fd, TCSANOW, &Opt);
+//	struct termios Opt;
+//	tcgetattr(fd, &Opt);
+//	Opt.c_cc[VMIN] = len;
+//	Opt.c_cc[VTIME] = 1000;
+//	tcsetattr(fd, TCSANOW, &Opt);
 	bzero(tempBuff, sizeof(tempBuff));
 	if(fd <= 0)
 		return NULL;
 	ALOGD("remove tcflush\n");
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+	FD_ZERO(&readfds);
+	FD_SET(fd, &readfds);
+	for(;;) {
+		nfds = select(fd+1, &readfds, NULL, NULL, &tv);
+		if(nfds <= 0) {
+			ALOGD("--->select timeout, nfds=%d\n", nfds);
+			return NULL;
+		} else if (nfds == 0) {
+			continue;
+		}
+		ret = read(fd, tempBuff, len);
+		if(ret < 0) {
+			return NULL;
+		}
+		nread += ret;
+		if(nread >2 && tempBuff[nread-1] == 0x03 && tempBuff[nread-2] != 0x10) {
+			break;
+		}
+	/*
 	while((nread = read(fd, tempBuff, len))<=0 && repeat<10)
 	{
 		usleep(20000);
 		repeat++;
 	}
+	 */
 
+	}
 	if(nread<=0)
 	{
 		ALOGD("********read ret=%d,error=%d\n",nread, errno);

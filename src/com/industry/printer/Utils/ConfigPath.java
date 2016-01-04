@@ -23,6 +23,12 @@ public class ConfigPath {
 	
 	private static final String TAG = ConfigPath.class.getSimpleName();
 	
+	private static ArrayList<String> mUsbPaths=null;
+	
+//	public static ArrayList<String> getMountedUsb() {
+//		return mUsbPaths;
+//	}
+	
 	public static ArrayList<String> getMountedUsb() {
 		ArrayList<String> mPaths = new ArrayList<String>();
 		Debug.d(TAG, "===>getMountedUsb");
@@ -43,12 +49,10 @@ public class ConfigPath {
 			file.close();
 			reader.close();
 			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		mUsbPaths = mPaths;
 		return mPaths;
 	}
 	
