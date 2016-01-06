@@ -217,12 +217,13 @@ public class FpgaGpioOperation {
 		data[17] = (char) SystemConfigFile.mResv18;
 		data[18] = (char) SystemConfigFile.mResv19;
 		data[19] = (char) SystemConfigFile.mResv20;
-		data[10] = (char) SystemConfigFile.mResv21;
+		data[20] = (char) SystemConfigFile.mResv21;
 		data[21] = (char) SystemConfigFile.mResv22;
 		data[22] = (char) SystemConfigFile.mResv23;
 		data[23] = (char) SystemConfigFile.mResv24;
 		
 		//时间参数放在最后3个
+		/*
 		Calendar c = Calendar.getInstance();
 		int hour = c.get(Calendar.HOUR_OF_DAY);  
         int minute = c.get(Calendar.MINUTE);
@@ -230,7 +231,7 @@ public class FpgaGpioOperation {
 		data[Configs.gParams - 3] = (char)hour;
 		data[Configs.gParams - 2] = (char)minute;
 		data[Configs.gParams - 1] = (char)second;
-		
+		*/
 		writeData(FPGA_STATE_SETTING, data, data.length*2);	
 	}
 	
