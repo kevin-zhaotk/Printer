@@ -433,6 +433,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				break;
 			case 10:
 				SystemConfigFile.mResv11 = getValueFromEditText(arg0);
+				Debug.d(TAG, "--->mResv11=" + SystemConfigFile.mResv11);
 				break;
 			case 11:
 				SystemConfigFile.mResv12 = getValueFromEditText(arg0);

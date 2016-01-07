@@ -62,19 +62,12 @@ public class XmlOutputStream {
 			if (mOutputStream != null) {
 				mOutputStream.write(writer.toString().getBytes());
 			}
-			writer.flush();
+			mOutputStream.flush();
 			writer.close();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
+			mOutputStream.close();
+			
+		} catch (Exception e) {
+			Debug.d(TAG, "--->error: " + e.toString());
 			return false;
 		}
 		return true;

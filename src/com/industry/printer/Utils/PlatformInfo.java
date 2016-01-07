@@ -39,7 +39,7 @@ public class PlatformInfo {
 	
 	
 	
-	private static String mProduct;
+	private static String mProduct=null;
 	
 	public static void init() {
 		mProduct = getProduct();
@@ -70,17 +70,19 @@ public class PlatformInfo {
 	
 	public static String getProduct() {
 		// return SystemProperties.get(PROPERTY_PRODUCT);
-		String product = null;
-		
+		//String product = null;
+		if(!StringUtil.isEmpty(mProduct)) {
+			return mProduct;
+		}
 		try {
 			Class<?> mClassType = Class.forName("android.os.SystemProperties");
 			Method mGetMethod = mClassType.getDeclaredMethod("get", String.class);
-			product = (String) mGetMethod.invoke(mClassType, PROPERTY_PRODUCT);
+			mProduct = (String) mGetMethod.invoke(mClassType, PROPERTY_PRODUCT);
 		} catch (Exception e) {
 			Debug.d(TAG, "Exception: " + e.getMessage());
 		}
-		Debug.d(TAG, "===>product: " + product);
-		return product;
+		Debug.d(TAG, "===>product: " + mProduct);
+		return mProduct;
 	}
 	
 	public static boolean isFriendlyProduct() {
