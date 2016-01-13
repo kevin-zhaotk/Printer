@@ -222,9 +222,15 @@ public class RFIDDevice {
 	 * 防冲突
 	 */
 	public byte[] avoidConflict() {
+		int limit = 0; 
 		Debug.d(TAG, "--->RFID avoidConflict");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
-		byte[] readin = writeCmd(data);
+		byte[] readin = null;
+		for (; readin == null && limit < 3; ) {
+			readin = writeCmd(data);
+			limit++;
+		}
+		
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
 		if (rfid == null || rfid[0] != 0 || rfid.length != 5) {
@@ -242,13 +248,18 @@ public class RFIDDevice {
 	 * 选卡
 	 */ 
 	public boolean selectCard(byte[] cardNo) {
+		int limit = 0;
 		if (cardNo == null || cardNo.length != 4) {
 			Debug.e(TAG, "===>select card No is null");
 			return false;
 		}
 		Debug.d(TAG, "--->RFID selectCard");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
-		byte[] readin = writeCmd(data);
+		byte[] readin = null;
+		for (;!isCorrect(readin) && limit < 3;) {
+			readin = writeCmd(data);
+			limit++;
+		}
 		return isCorrect(readin);
 	}
 	
@@ -258,7 +269,7 @@ public class RFIDDevice {
 	 * @return
 	 */
 	public boolean keyVerfication(byte sector, byte block, byte[] key) {
-		
+		boolean certify = false;
 		Debug.d(TAG, "--->keyVerfication sector:" + sector + ", block:" +block);
 		if (sector >= 16 || block >= 4) {
 			Debug.e(TAG, "===>block over");
@@ -270,11 +281,17 @@ public class RFIDDevice {
 			// init();
 			return false;
 		}
-		
-		byte[] keyA = {0x60,blk, key[0], key[1], key[2], key[3], key[4], key[5]};
-		RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
-		byte[] readin = writeCmd(data);
-		return isCorrect(readin);
+		for(int i = 0; i < 3; i++) {
+			byte[] keyA = {0x60,blk, key[0], key[1], key[2], key[3], key[4], key[5]};
+			RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
+			
+			byte[] readin = writeCmd(data);
+			certify = isCorrect(readin);
+			if (certify) {
+				break;
+			}
+		}
+		return certify;
 	}
 	
 	/**
@@ -338,20 +355,25 @@ public class RFIDDevice {
 			int writed = write(mFd, data.transferData(), data.getLength());
 			if (writed <= 0) {
 				Debug.e(TAG, "===>write err, return");
-				return null;
+				reopen();
+				continue;
 			}
-			try{
+			try {
 				Thread.sleep(10);
-			} catch(Exception e) {
-				
+			}catch (Exception e) {
 			}
 			readin = read(mFd, 64);
+			if (readin == null) {
+				reopen();
+			} else {
+				break;
+			}
 			Debug.e(TAG, "===>writeCmd 349: readin=" + readin);
 		}
 		Debug.print(RFID_DATA_RECV, readin);
 		if (readin == null || readin.length == 0) {
 			Debug.e(TAG, "===>read err");
-			close(mFd);
+			closeDevice();
 			return null;
 		}
 		
@@ -719,5 +741,10 @@ public class RFIDDevice {
 			close(mFd);
 		}
 		mFd = -1;
+	}
+	private void reopen() {
+		close(mFd);
+		mFd = 0;
+		openDevice();
 	}
 }

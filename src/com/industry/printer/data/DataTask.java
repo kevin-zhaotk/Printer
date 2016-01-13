@@ -307,7 +307,6 @@ public class DataTask {
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < 2; j++) {
 				cur = mBuffer[(columns-1-i)*2 + j];
-				System.out.println("--->cur=" + String.valueOf((int)cur));
 				int col = shift + i + 1; 
 				if (col >= columns) {
 					next = 0;

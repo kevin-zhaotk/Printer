@@ -140,7 +140,7 @@ public class Configs {
 		gFixedRows = context.getResources().getInteger(R.integer.fixed_rows);
 		gParams = context.getResources().getInteger(R.integer.total_params);
 		
-		//ConfigPath.refreshMountedUsb();
+		ConfigPath.updateMountedUsb();
 		//如果需要，在u盘根目录创建系统所需的目录，当u盘插入是也需要调用
 		ConfigPath.makeSysDirsIfNeed();
 		/*从U盘中读取系统设置，解析*/
@@ -306,6 +306,10 @@ public class Configs {
 		return shift;
 	}
 	
+	/**
+	 * 设置参数33表示32×Nbuffer的双数bit位移值
+	 * @return
+	 */
 	public static int getEvenShift() {
 		return SystemConfigFile.mResv33;
 	}

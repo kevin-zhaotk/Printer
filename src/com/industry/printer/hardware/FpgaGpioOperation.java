@@ -243,10 +243,11 @@ public class FpgaGpioOperation {
 		if(fd <= 0) {
 			return ;
 		}
+		/*设置状态为输出*/
+		// ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_OUTPUT);
 		/*启动内核轮训线程*/
 		ioctl(fd, FPGA_CMD_STARTPRINT, 0);
-		/*设置状态为输出*/
-		ioctl(fd, FPGA_CMD_SETTING, FPGA_STATE_OUTPUT);
+		
 	}
 	
 	/**

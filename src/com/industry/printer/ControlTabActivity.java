@@ -484,7 +484,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
 					}
+					Debug.d(TAG, "--->initDTThread");
 					initDTThread();
+					Debug.d(TAG, "--->prepare buffer");
 					DataTask dt = mDTransThread.getData();
 					
 					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
@@ -495,7 +497,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 测试buffer生成是否正确，按打印按钮把打印内容保存到u盘
 					 */
 					char[] buf = dt.getPrintBuffer();
-					
+					Debug.d(TAG, "--->save print bin");
 					ArrayList<String> usbs = ConfigPath.getMountedUsb();
 					if (usbs != null && usbs.size() > 0) {
 						String path = usbs.get(0);
@@ -505,25 +507,28 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						}
 						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
 					}
-					
+					Debug.d(TAG, "--->clean");
 					/**
 					 * 启动打印后要完成的几个工作：
 					 * 1、每次打印，  先清空 （见文件）， 然后 发设置
 					 * 2、启动DataTransfer线程，生成打印buffer，并下发数据
 					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
 					 */
+					/*打印过程中禁止切换打印对象*/
+					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
+					Debug.d(TAG, "--->update settings");
 					FpgaGpioOperation.updateSettings(mContext);
-					
+					Debug.d(TAG, "--->launch thread");
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					if (!mDTransThread.launch()) {
 						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
 						break;
 					}
+					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
-					/*打印过程中禁止切换打印对象*/
-					switchState(STATE_PRINTING);
+					
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -583,6 +588,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private final int STATE_STOPPED = 1;
 	
 	public void switchState(int state) {
+		Debug.d(TAG, "--->switchState=" + state);
 		switch(state) {
 			case STATE_PRINTING:
 				mBtnStart.setClickable(false);

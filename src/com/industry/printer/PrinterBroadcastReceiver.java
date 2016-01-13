@@ -36,7 +36,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		Debug.d(TAG, "--->action="+intent.getAction());
 		if(intent.getAction().equals(BOOT_COMPLETED))
 		{
-			ArrayList<String> st = ConfigPath.getMountedUsb();
+			ArrayList<String> st = ConfigPath.updateMountedUsb();
 			mUsbAttached = st.size();
 			Debug.d(TAG, "--->boot usbStorage: " + mUsbAttached);
 		}
@@ -44,7 +44,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		else if(intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED))
 		{
 			Debug.d(TAG, "new usb device attached");
-			ArrayList<String> usbs = ConfigPath.getMountedUsb();
+			ArrayList<String> usbs = ConfigPath.updateMountedUsb();
 			if (mUsbAttached == 0 && usbs.size() == 1) {
 				mCallback.sendEmptyMessage(MainActivity.USB_STORAGE_ATTACHED);
 			}
@@ -54,7 +54,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 		else if(intent.getAction().equals(Intent.ACTION_MEDIA_UNMOUNTED))
 		{
 			Debug.d(TAG, "usb disconnected");
-			ArrayList<String> usbs = ConfigPath.getMountedUsb();
+			ArrayList<String> usbs = ConfigPath.updateMountedUsb();
 			mUsbAttached = usbs.size();
 			Debug.d(TAG, "--->detach usbStorage: " + mUsbAttached);
 		}

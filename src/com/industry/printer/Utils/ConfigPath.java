@@ -25,11 +25,11 @@ public class ConfigPath {
 	
 	private static ArrayList<String> mUsbPaths=null;
 	
-//	public static ArrayList<String> getMountedUsb() {
-//		return mUsbPaths;
-//	}
-	
 	public static ArrayList<String> getMountedUsb() {
+		return mUsbPaths;
+	}
+	
+	public static ArrayList<String> updateMountedUsb() {
 		ArrayList<String> mPaths = new ArrayList<String>();
 		Debug.d(TAG, "===>getMountedUsb");
 		try {
