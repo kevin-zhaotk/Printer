@@ -27,7 +27,7 @@ public class PlatformInfo {
 	// 4412 device
 	public static final String RFID_SERIAL_4412 = "/dev/s3c2410_serial1";
 	// smfy device
-	public static final String RFID_SERIAL_SMFY = "/dev/ttyS3";
+	public static final String RFID_SERIAL_SMFY = "/dev/ttySAC3";
 	
 	/**
 	 * usb mount paths
@@ -38,11 +38,10 @@ public class PlatformInfo {
 	public static final String USB_MOUNT_PATH_SMFY = "/mnt/usb";
 	
 	
-	
-	private static String mProduct=null;
+	private static String mProduct = PRODUCT_SMFY_SUPER3;
 	
 	public static void init() {
-		mProduct = getProduct();
+		// mProduct = getProduct();
 	}
 	
 	/**

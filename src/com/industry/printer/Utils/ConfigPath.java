@@ -38,7 +38,7 @@ public class ConfigPath {
 			String line = reader.readLine();
 			for(;line != null;) {
 				Debug.d(TAG, "===>getMountUsb: " + line);
-				if (!line.contains(PlatformInfo.USB_MOUNT_PATH_4412) && !line.contains(PlatformInfo.USB_MOUNT_PATH_SMFY)) {
+				if (!line.contains(PlatformInfo.getMntPath())) {
 					line = reader.readLine();
 					continue;
 				}
