@@ -8,6 +8,11 @@ import java.security.PublicKey;
 /**
  * 系统属性调用SystemProperties是隐藏的{hide}无法直接调用
  * 因此通过类反射机制调用
+ * 
+ * 各个产品区分方式：
+ * 1. 树莓32位系统： (mProduct = PRODUCT_SMFY_SUPER3) + fpga-sunxi-32.ko
+ * 2. 树莓HP系统： (mProduct = PRODUCT_SMFY_SUPER3) + fpga-sunxi-hp.ko
+ * 3. 4412系统： mProduct = 
  * @author zhaotongkai
  *
  */
@@ -23,11 +28,11 @@ public class PlatformInfo {
 	
 	/**
 	 * The Serial Used for RFID device
+	 * 4412平台: /dev/ttySAC2
+	 * 树莓平台： /dev/ttyS3 
 	 */
-	// 4412 device
-	public static final String RFID_SERIAL_4412 = "/dev/s3c2410_serial1";
-	// smfy device
-	public static final String RFID_SERIAL_SMFY = "/dev/ttySAC3";
+	public static final String RFID_SERIAL_4412 = "/dev/ttySAC2";
+	public static final String RFID_SERIAL_SMFY = "/dev/ttyS3";
 	
 	/**
 	 * usb mount paths

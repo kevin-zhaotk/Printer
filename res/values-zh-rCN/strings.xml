@@ -327,6 +327,9 @@
 	<string name="str_date">日</string>
 	<string name="str_hour">时</string>
 	<string name="str_minute">分</string>
+	<string name="str_format">24小时制</string>
+	<string name="str_format_24">是</string>
+	<string name="str_format_12">否</string>
 	<string name="cor_unit">dp</string>
 	
 	<string name="str_trans">==></string>

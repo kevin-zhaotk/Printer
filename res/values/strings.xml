@@ -326,6 +326,9 @@
 	<string name="str_date">Date</string>
 	<string name="str_hour">Hour</string>
 	<string name="str_minute">Minute</string>
+	<string name="str_format">24-Format</string>
+	<string name="str_format_24">Yes</string>
+	<string name="str_format_12">No</string>
 	<string name="cor_unit">dp</string>
 	
 	<string name="str_trans">toRight</string>
