@@ -294,6 +294,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mBackward = (RelativeLayout) getView().findViewById(R.id.btn_page_backward);
 		mBackward.setOnClickListener(this);
 		mBackward.setOnTouchListener(this);
+		setupViews();
 		
 		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);
 		mTVStopped = (TextView) getView().findViewById(R.id.tv_stopState);
@@ -346,6 +347,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		// 通过监听系统广播加载
 		loadMessage();
 		
+	}
+	
+	private void setupViews() {
+		if (PlatformInfo.PRODUCT_FRIENDLY_4412.equalsIgnoreCase(PlatformInfo.getProduct())) {
+			mForward.setVisibility(View.GONE);
+			mBackward.setVisibility(View.GONE);
+		}
 	}
 	
 	@Override
