@@ -16,6 +16,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
+import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -33,6 +34,7 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListe
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.widget.SpanableStringFormator;
 
+import android.animation.AnimatorSet.Builder;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -146,54 +148,54 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 * MESSAGE_OPEN_TLKFILE
 	 *   message tobe sent when open tlk file
 	 */
-	public final int MESSAGE_OPEN_TLKFILE=0;
+	public static final int MESSAGE_OPEN_TLKFILE=0;
 	/**
 	 * MESSAGE_UPDATE_PRINTSTATE
 	 *   message tobe sent when update print state
 	 */
-	public final int MESSAGE_UPDATE_PRINTSTATE=1;
+	public static final int MESSAGE_UPDATE_PRINTSTATE=1;
 	/**
 	 * MESSAGE_UPDATE_INKLEVEL
 	 *   message tobe sent when update ink level
 	 */
-	public final int MESSAGE_UPDATE_INKLEVEL=2;
+	public static final int MESSAGE_UPDATE_INKLEVEL=2;
 	/**
 	 * MESSAGE_DISMISS_DIALOG
 	 *   message tobe sent when dismiss loading dialog 
 	 */
-	public final int MESSAGE_DISMISS_DIALOG=3;
+	public static final int MESSAGE_DISMISS_DIALOG=3;
 	
 	/**
 	 * MESSAGE_PAOMADENG_TEST
 	 *   message tobe sent when dismiss loading dialog 
 	 */
-	public final int MESSAGE_PAOMADENG_TEST=4;
+	public static final int MESSAGE_PAOMADENG_TEST=4;
 
 	/**
 	 * MESSAGE_PRINT_START
 	 *   message tobe sent when dismiss loading dialog 
 	 */
-	public final int MESSAGE_PRINT_START = 5;
+	public static final int MESSAGE_PRINT_START = 5;
 	
 	/**
 	 * MESSAGE_PRINT_STOP
 	 *   message tobe sent when dismiss loading dialog 
 	 */
-	public final int MESSAGE_PRINT_STOP = 6;
+	public static final int MESSAGE_PRINT_STOP = 6;
 	
 	/**
 	 * MESSAGE_INKLEVEL_DOWN
 	 *   message tobe sent when ink level change 
 	 */
-	public final int MESSAGE_INKLEVEL_CHANGE = 7;
+	public static final int MESSAGE_INKLEVEL_CHANGE = 7;
 	
 	/**
 	 * MESSAGE_COUNT_CHANGE
 	 *   message tobe sent when count change 
 	 */
-	public final int MESSAGE_COUNT_CHANGE = 8;
+	public static final int MESSAGE_COUNT_CHANGE = 8;
 	
-	public final int MESSAGE_REFRESH_POWERSTAT = 9;
+	public static final int MESSAGE_REFRESH_POWERSTAT = 9;
 	
 	/**
 	 * the bitmap for preview
@@ -339,9 +341,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
 			refreshInk(0);
 		} else {
-			float ink = mRfidDevice.getInkLevel();
-			mFeatureCorrect = mRfidDevice.checkFeatureCode();
-			refreshInk(ink);
+//			float ink = mRfidDevice.getInkLevel();
+//			mFeatureCorrect = mRfidDevice.checkFeatureCode();
+//			refreshInk(ink);
+			RFIDAsyncTask.getInstance(mHandler).execute();
 		}
 		//Debug.d(TAG, "===>loadMessage");
 		// 通过监听系统广播加载
@@ -459,8 +462,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mPrintStatus.setText("result: "+text);
 					break;
 				case MESSAGE_UPDATE_INKLEVEL:
-					//mPrintDialog.dismiss();
-					//updateInkLevel(msg.getData().getByteArray("info"));
+					Bundle bundle = msg.getData();
+					int level = bundle.getInt("ink_levle");
+					mFeatureCorrect = bundle.getBoolean("feature", true);
+					refreshInk(level);
 					break;
 				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
