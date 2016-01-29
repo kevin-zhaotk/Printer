@@ -109,6 +109,11 @@ public class Configs {
 	 */
 	public static final String BIN_FILE_NAME = "/1.bin";
 	
+	/**
+	 * 16*16的点阵字库，用于提取点阵图
+	 */
+	public static final String FONT_16_16 = "/16*16.zk";
+	
 	public static final String UPGRADE_APK_FILE = "/Printer.apk";
 	/**
 	 * SYSTEM_CONFIG_FILE
@@ -117,6 +122,7 @@ public class Configs {
 	public static final String SYSTEM_CONFIG_FILE = SYSTEM_CONFIG_DIR+"/system_config.txt";
 	public static final String SYSTEM_CONFIG_XML = SYSTEM_CONFIG_DIR+"/system_config.xml";
 	public static final String LAST_MESSAGE_XML = SYSTEM_CONFIG_DIR+"/last_message.xml";
+	public static final String FONT_METRIC_PATH = SYSTEM_CONFIG_DIR + "/ZK";
 	
 	public static final String SYSTEM_CONFIG_MSG_PATH = "/MSG1";
 	/**

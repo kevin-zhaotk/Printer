@@ -79,6 +79,14 @@ public class ConfigPath {
 		return paths;
 	}
 	
+	public static String getFont() {
+		ArrayList<String> paths = makeSysDirsIfNeed();
+		if (paths == null || paths.size() <= 0) {
+			return null;
+		}
+		return paths.get(0) + Configs.FONT_METRIC_PATH + Configs.FONT_16_16;
+	}
+	
 	/**
 	 * 获取当前TLK文件目录
 	 * 如果有多个u盘挂载，则只使用第一个u盘

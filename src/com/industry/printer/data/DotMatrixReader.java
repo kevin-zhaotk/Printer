@@ -40,7 +40,12 @@ public class DotMatrixReader {
 	public DotMatrixReader(Context context) {
 		
 		try {
+			/*
 			mReader = context.getAssets().open("dotmatrix/HZK16");
+			mReader.mark(0);
+			mReader.reset();
+			*/
+			mReader = new FileInputStream(ConfigPath.getFont());
 			mReader.mark(0);
 			mReader.reset();
 		} catch (FileNotFoundException e) {
