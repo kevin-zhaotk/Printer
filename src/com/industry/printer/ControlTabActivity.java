@@ -410,8 +410,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	private void refreshCount() {
-		String cFormat = getResources().getString(R.string.str_print_count);
-		((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
+		// String cFormat = getResources().getString(R.string.str_print_count);
+		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
+		((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
 	}
 	
 	private void refreshPower() {
@@ -509,17 +510,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					/**
 					 * 测试buffer生成是否正确，按打印按钮把打印内容保存到u盘
 					 */
-					char[] buf = dt.getPrintBuffer();
-					Debug.d(TAG, "--->save print bin");
-					ArrayList<String> usbs = ConfigPath.getMountedUsb();
-					if (usbs != null && usbs.size() > 0) {
-						String path = usbs.get(0);
-						File file = new File(path + "/print.bin");
-						if (file.exists()) {
-							file.delete();
-						}
-						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
-					}
+//					char[] buf = dt.getPrintBuffer();
+//					Debug.d(TAG, "--->save print bin");
+//					ArrayList<String> usbs = ConfigPath.getMountedUsb();
+//					if (usbs != null && usbs.size() > 0) {
+//						String path = usbs.get(0);
+//						File file = new File(path + "/print.bin");
+//						if (file.exists()) {
+//							file.delete();
+//						}
+//						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
+//					}
 					Debug.d(TAG, "--->clean");
 					/**
 					 * 启动打印后要完成的几个工作：
@@ -837,6 +838,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
+		if (mProgressShowing || (mLoadingDialog != null && mLoadingDialog.isShowing())) {
+			return;
+		}
 		mLoadingDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strLoading), true,false);
 		Debug.d(TAG, "===>show loading");
 		mProgressShowing = true;

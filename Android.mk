@@ -1,6 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
-$(shell date +%Y-%m-%d > $(LOCAL_PATH)/assets/Version)
+# $(shell date +%Y-%m-%d > $(LOCAL_PATH)/assets/Version)
 
 include $(CLEAR_VARS)
 

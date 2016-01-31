@@ -13,6 +13,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -198,9 +199,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
 		try {
-			InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
-			BufferedReader reader = new BufferedReader(sReader);
-			mVersion.setText(reader.readLine());
+			// InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
+			// BufferedReader reader = new BufferedReader(sReader);
+			PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+			mVersion.setText(packageInfo.versionName);
 		} catch (Exception e) {
 			
 		}

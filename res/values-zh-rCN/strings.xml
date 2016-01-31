@@ -369,6 +369,8 @@
 	<string name="str_fileopt_del">删除</string>
 	<string name="str_fileopt_cancel">取消</string>
 	
+	<string name="str_radioUsb1">USB1</string>
+	<string name="str_radioUsb2">USB2</string>
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">信息名称：</string>
 	<!-- 

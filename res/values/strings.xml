@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_version">Version:</string>
-    <string name="system_time">clock:</string>
+    <string name="app_version">Ver:</string>
+    <string name="system_time">Time:</string>
     <string name="app_name">Printer</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Set</string>
     <string name="hello_world">Hello world!</string>
 	<string name="ControlTab">Control</string>
 	<string name="manualCtrlTab">Control man</string>
@@ -12,7 +12,7 @@
 	<string name="Settings">Settings</string>
 	<string name="str_btn_start">Start</string>
 	<string name="str_btn_stop">Stop</string>
-	<string name="str_btn_clean">Clean</string>
+	<string name="str_btn_clean">Purge</string>
 	<string name="str_btn_open">Open</string>
 	<string name="str_btn_new">New</string>
 	<string name="str_btn_save">Save</string>
@@ -21,23 +21,23 @@
 	<string name="str_btn_nextrecord">Down</string>
 	<string name="str_btn_send">Send</string>
 	<string name="str_btn_set">Set</string>
-	<string name="str_btn_get">GetInfo</string>
+	<string name="str_btn_get">Text</string>
 	<string name="str_btn_print">Print</string>
 	<string name="str_btn_finish">Finish</string>
-	<string name="str_btn_header1">Head_1</string>
-	<string name="str_btn_header2">Head_2</string>
-	<string name="str_btn_header3">Head_3</string>
-	<string name="str_btn_header4">Head_4</string>
+	<string name="str_btn_header1">Pen1</string>
+	<string name="str_btn_header2">Pen2</string>
+	<string name="str_btn_header3">Pen3</string>
+	<string name="str_btn_header4">Pen4</string>
 	<string name="strDate">Date:</string>
-	<string name="strInklevel">Surplus: </string>
+	<string name="strInklevel">Remain </string>
 	<string name="strPhotocellState">Photocell</string>
 	<string name="strEncoderState">Encoder</string>
-	<string name="strPrintstate">State：</string>
+	<string name="strPrintstate">Printing：</string>
 	<string name="strPrinting">Printing</string>
 	<string name="strPrintok">Ready</string>
 	<string name="strOn">On</string>
 	<string name="strOff">Off</string>
-	<string name="strwaitting">printing,wait......</string>
+	<string name="strwaitting">printing......</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
 	<string name="str_binfile">Open</string>
@@ -48,12 +48,12 @@
 	
 	<string name="str_del">Del</string>
 	<string name="str_btn_shift">Shift</string>
-	<string name="str_btn_second">Scnd</string>
+	<string name="str_btn_second">Second</string>
 	
 	<string name="str_btn_upgrade">Upgrade</string>
 	<string name="str_btn_setDate">Set Date</string>
 	<string name="str_btn_setTime">Set Time</string>
-	<string name="str_btn_image">Image</string>
+	<string name="str_btn_image">Logo</string>
 	
 	<string name="str_goto">goto</string>
 	<!-- object info table -->
@@ -75,10 +75,10 @@
 	<string name="strShift3">Shift3</string>
 	<string name="strShift4">Shift4</string>
 	<string name="strShift5">Shift5</string>
-	<string name="strInfoname">InfoName</string>
-	<string name="strHeadType">PrinterType</string>
-	<string name="strUpgradeConfirm">sure to upgrade?</string>
-	<string name="strUpgradeNoApk">No Upgrade Image found!!!</string>
+	<string name="strInfoname">Subject</string>
+	<string name="strHeadType">PenType</string>
+	<string name="strUpgradeConfirm">Do upgrade?</string>
+	<string name="strUpgradeNoApk">No Upgrade file!!!</string>
 	<string name="strSaving">saving, please wait...</string>
 	<string name="strLoading">loading, please wait...</string>
 	<string name="strInsertSerial">Please connect device...</string>
@@ -88,13 +88,13 @@
 	    <item>12.7 mm HP standard</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
-	    <item>133 mm Xaar dual</item>
+	    <item>33 mm Xaar dual</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
 	    <item>Arial</item>
-	    <item>宋体</item>
-	    <item>楷体</item>
+	    <item>Song</item>
+	    <item>Kai</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
@@ -136,32 +136,32 @@
 	</string-array>
 	
 	<string-array name="strarrayCounter">
-	    <item>3位</item>
-	    <item>4位</item>
-	    <item>5位</item>
-	    <item>6位</item>
-	    <item>7位</item>
-	    <item>8位</item>
-	    <item>9位</item>
-	    <item>10位</item>
+	    <item>3 bit</item>
+	    <item>4 bit</item>
+	    <item>5 bit</item>
+	    <item>6 bit</item>
+	    <item>7 bit</item>
+	    <item>8 bit</item>
+	    <item>9 bit</item>
+	    <item>10 bit</item>
 	</string-array>
 	
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
-	<string name="objectInfoName">Show Info</string>
-	<string name="object_Msg">Message</string>
-	<string name="object_text">Text Object</string>
-	<string name="object_realtime">Real-Time Object</string>
-	<string name="object_counter">Counter Object</string>
-	<string name="object_bar">Barcode Object</string>
-	<string name="object_pic">Graphic Object</string>
-	<string name="object_julian">Julian-Date Object</string>
-	<string name="object_line">Line Object</string>
-	<string name="object_rect">Rect Object</string>
-	<string name="object_ellipse">Ellipse Object</string>
-	<string name="object_shift">Shift Object</string>
-	<string name="object_second">Second Obejct</string>
-	<string name="object_msg_name">Message name</string>
+	<string name="objectInfoName">Show TEXT</string>
+	<string name="object_Msg">TEXT</string>
+	<string name="object_text">Text</string>
+	<string name="object_realtime">Real-Time</string>
+	<string name="object_counter">Counter</string>
+	<string name="object_bar">Barcode</string>
+	<string name="object_pic">Graphic</string>
+	<string name="object_julian">Julian-Date</string>
+	<string name="object_line">Line</string>
+	<string name="object_rect">Rectangle</string>
+	<string name="object_ellipse">Ellipse</string>
+	<string name="object_shift">Shift</string>
+	<string name="object_second">Second</string>
+	<string name="object_msg_name">Subject</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Reserved</string>
 	<string name="strPrSpeedname">01.Speed</string>
@@ -171,19 +171,19 @@
 	<string name="strParam3">03.Reserved</string>
 	<string name="strTrigger_key">trigger_key</string>
 	<string name="strTriggername">04.Trigger</string>
-	<string name="strTrigger_summary">Set Trigger Mode</string>
+	<string name="strTrigger_summary">Trigger Mode</string>
 	<string name="strDirection_key">direction_key</string>
-	<string name="strSyncname">05.Sync</string>
+	<string name="strSyncname">05.Encoder</string>
 	<string name="strDirectionname">05.Sync</string>
 	<string name="strBold">06.Bold</string>
-	<string name="strFixlen">07.Fix Len</string>
+	<string name="strFixlen">07.Length</string>
 	<string name="strFixtime">08.Fix Time</string>
 	<string name="strHeadTemp">09.Head Temp</string>
 	<string name="strResvTemp">10.Box Temp</string>
 	<string name="strfontwidth">11.fontWidth</string>
-	<string name="strDotname">12.Dots</string>
+	<string name="strDotname">12.Dotsize</string>
 	<string name="strDirection_summary">Choose Direction</string>
-	<string name="strEncoder_key">encoder_key</string>
+	<string name="strEncoder_key">encoder</string>
 	<string name="strEncodername">03.Encoder</string>
 	<string name="strEncoder_summary">Set Encoder mode</string>
 	<string name="strHoriRes_key">horires_key</string>

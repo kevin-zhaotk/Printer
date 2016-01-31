@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
+
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
@@ -91,15 +93,16 @@ public class BinInfo {
 			mBuffer = new byte[mFStream.available()];
 			mFStream.read(mBuffer);
 			mFStream.close();
+			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
 			/*把bin文件内容读入内存*/
 			mCacheStream = new ByteArrayInputStream(mBuffer);
-			
+			Debug.d(TAG, "--->buffer.size=" + mCacheStream.available());
 			mCacheStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
 			mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
 			
 			//bin文件总长度
 			mLength = mCacheStream.available();
-			
+			Debug.d(TAG, "--->mLength=" + mLength);
 			if (type <=0 || type > 4) {
 				mType = 1;
 			}

@@ -96,6 +96,7 @@ public class DataTask {
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
+		Debug.d(TAG, "--->bgbuffer = " + mBgBuffer.length);
 		if (mBgBuffer == null) {
 			return false;
 		}
@@ -131,6 +132,7 @@ public class DataTask {
 		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, 32);
 		*/
 		/*test bin*/
+		Debug.d(TAG, "--->buffer = " + mBuffer.length);
 		return mBuffer;
 	}
 	
