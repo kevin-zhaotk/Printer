@@ -133,7 +133,7 @@ public class Configs {
 	/**
 	 * TLK文件存放路径
 	 */
-	public static final String TLK_FILE_SUB_PATH = SYSTEM_CONFIG_MSG_PATH + "/tlks";
+	public static final String TLK_FILE_SUB_PATH = SYSTEM_CONFIG_MSG_PATH;
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 
 	 * @param context

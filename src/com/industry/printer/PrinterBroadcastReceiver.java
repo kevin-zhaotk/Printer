@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 
 //import android.os.SystemProperties;
 import android.content.BroadcastReceiver;
@@ -40,6 +41,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 			mUsbAttached = st.size();
 			Debug.d(TAG, "--->boot usbStorage: " + mUsbAttached);
 		}
+		/*
 		//else if(intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED))
 		else if(intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED))
 		{
@@ -58,6 +60,34 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 			mUsbAttached = usbs.size();
 			Debug.d(TAG, "--->detach usbStorage: " + mUsbAttached);
 		}
+		*/
+		new Handler().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED))
+				{
+					Debug.d(TAG, "new usb device attached");
+					ArrayList<String> usbs = ConfigPath.updateMountedUsb();
+					if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
+						mCallback.sendEmptyMessage(MainActivity.USB_STORAGE_ATTACHED);
+					} else if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
+						if (mUsbAttached == 0 && usbs.size() == 1) {
+							mCallback.sendEmptyMessage(MainActivity.USB_STORAGE_ATTACHED);
+						}
+					}
+					mUsbAttached = usbs.size();
+				}
+				//else if(intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED))
+				else if(intent.getAction().equals(Intent.ACTION_MEDIA_UNMOUNTED))
+				{
+					Debug.d(TAG, "usb disconnected");
+					ArrayList<String> usbs = ConfigPath.updateMountedUsb();
+					mUsbAttached = usbs.size();
+					Debug.d(TAG, "--->detach usbStorage: " + mUsbAttached);
+				}
+			}
+		}, 3000);
 	}
 
 }

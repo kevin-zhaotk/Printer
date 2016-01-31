@@ -1,5 +1,6 @@
 package com.industry.printer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,6 +69,9 @@ public class BinInfo {
 	
 	/**bin文件的字符缓存**/
 	public char[] mBufferChars;
+	
+	public byte[] mBuffer;
+	public ByteArrayInputStream mCacheStream;
 
 	public BinInfo(String file) {
 		this(file, 1);
@@ -84,11 +88,17 @@ public class BinInfo {
 		mFile = new File(file);
 		try {
 			mFStream = new FileInputStream(mFile);
-			mFStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
+			mBuffer = new byte[mFStream.available()];
+			mFStream.read(mBuffer);
+			mFStream.close();
+			/*把bin文件内容读入内存*/
+			mCacheStream = new ByteArrayInputStream(mBuffer);
+			
+			mCacheStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
 			mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
 			
 			//bin文件总长度
-			mLength = mFStream.available();
+			mLength = mCacheStream.available();
 			
 			if (type <=0 || type > 4) {
 				mType = 1;
@@ -182,7 +192,7 @@ public class BinInfo {
 			/** 从当前位置读取mBytesPerH个字节到背景buffer中，由于需要处理多头情况，所以要注意在每个头的列尾要注意补偿问题（双字节对齐）*/
 			for(int i=0; i < mColumn; i++) {
 				for (int j = 0; j < mType; j++) {
-					mFStream.read(mBufferBytes, i*mBytesFeed + j*mBytesPerHFeed, mBytesPerH);
+					mCacheStream.read(mBufferBytes, i*mBytesFeed + j*mBytesPerHFeed, mBytesPerH);
 				}
 				
 			}
@@ -193,9 +203,7 @@ public class BinInfo {
 	    	for(int i = 0; i < mBufferChars.length; i++) {
 	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
 	    	}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			
@@ -207,14 +215,14 @@ public class BinInfo {
     {
     	int n;
     	byte[] feed = {0};
-    	if (mFStream == null) {
+    	if (mCacheStream == null) {
 			return null;
 		}
-    	mFStream.mark(BinCreater.RESERVED_FOR_HEADER);
+    	mCacheStream.mark(BinCreater.RESERVED_FOR_HEADER);
     	byte[] buffer = new byte[mLength];
     	
     	try {
-			mFStream.read(buffer);
+    		mCacheStream.read(buffer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
