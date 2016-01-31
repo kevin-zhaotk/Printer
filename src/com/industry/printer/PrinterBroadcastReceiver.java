@@ -30,7 +30,7 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 	}
 	
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void onReceive(Context context, final Intent intent) {
 		// TODO Auto-generated method stub
 		boolean isSerial=false;
 		
