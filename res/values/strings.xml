@@ -372,7 +372,8 @@
 	<!-- 
 	<string name="str_state_inklevel">INK:  %1$d%%</string>
 	-->
-	<string name="str_state_inklevel">INK:%1$s</string>
+	<string name="str_state_inklevel">INK:</string>
+	<string name="str_invalid_ink">--</string>
 	<string name="str_state_battery">Power:%1$d</string>
 	<string name="str_hint_preview">message preview</string>
 	<string name="str_print_count">Records: </string>

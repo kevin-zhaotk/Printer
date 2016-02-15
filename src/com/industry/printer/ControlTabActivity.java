@@ -309,7 +309,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
-		mInkLevel = (TextView) getView().findViewById(R.id.tv_inkValue);
+		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
 		mPower = (TextView) getView().findViewById(R.id.power_state);
 //		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 //		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
@@ -391,7 +391,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			ink = (ink * 100)/mRfidDevice.mInkMax;
 		}
 		*/
-		String level = String.format(getResources().getString(R.string.str_state_inklevel), String.valueOf((int)ink));// + "%");
+		Debug.d(TAG, "--->refreshInk:" + ink);
+		String level = String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
 			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
@@ -464,7 +465,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_UPDATE_INKLEVEL:
 					Bundle bundle = msg.getData();
-					int level = bundle.getInt("ink_levle");
+					int level = bundle.getInt("ink_level");
 					mFeatureCorrect = bundle.getBoolean("feature", true);
 					refreshInk(level);
 					break;

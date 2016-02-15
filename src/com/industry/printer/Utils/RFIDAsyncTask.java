@@ -32,6 +32,7 @@ public class RFIDAsyncTask extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected Void doInBackground(Void...params) {
 		RFIDDevice device = RFIDDevice.getInstance();
+		boolean feature;
 		while (true) {
 			mInk = (int) device.getInkLevel();
 			if(mInk >= RFIDDevice.INK_LEVEL_MIN && mInk <= RFIDDevice.INK_LEVEL_MAX) {
@@ -44,7 +45,7 @@ public class RFIDAsyncTask extends AsyncTask<Void, Integer, Void> {
 			}
 		}
 		while(true) {
-			boolean feature = device.checkFeatureCode();
+			feature = device.checkFeatureCode();
 			if (feature) {
 				break;
 			}
@@ -57,7 +58,9 @@ public class RFIDAsyncTask extends AsyncTask<Void, Integer, Void> {
 		return null;
 	}
 
-	protected void onPostExecute(Integer integer) {
+	@Override
+	protected void onPostExecute(Void v) {
+		Debug.d("*****", "--->sendmessage");
 		Message msg = mHandler.obtainMessage(ControlTabActivity.MESSAGE_UPDATE_INKLEVEL);
 		Bundle bundle = new Bundle();
 		bundle.putInt("ink_level", mInk);

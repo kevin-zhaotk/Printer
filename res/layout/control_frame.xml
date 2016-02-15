@@ -228,16 +228,29 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
         
-	    <TextView
-	        android:id="@+id/tv_inkValue"
-	        android:layout_width="0dp"
-	        android:layout_height="fill_parent"
-	        android:layout_weight="1"
-	        android:text="@string/str_state_inklevel"
-	        android:textSize="@dimen/ctrlButtonsTextsize"
-	        android:textColor="#000000"
-	        />
-	    
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            >
+		    <TextView
+		        android:id="@+id/tv_inkValue"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:text="@string/str_state_inklevel"
+		        android:textSize="@dimen/ctrlButtonsTextsize"
+		        android:textColor="#000000"
+		        />
+		    <TextView
+		        android:id="@+id/ink_value"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:layout_toRightOf="@id/tv_inkValue"
+		        android:text="@string/str_invalid_ink"
+		        android:textSize="@dimen/ctrlButtonsTextsize"
+		        android:textColor="#000000"
+		        />
+	    </RelativeLayout>
 	    <TextView
 	        android:id="@+id/power_state"
 	        android:layout_width="0dp"
