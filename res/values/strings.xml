@@ -568,7 +568,7 @@
 	<string name="str_file_hint">file name</string>
 	<string name="str_page_prev">Page Prev</string>
 	<string name="str_page_next">Page Next</string>
-	<string name="str_filename_no">Unkonw file</string>
+	<string name="str_filename_no">No file</string>
 	<string name="str_btn_back">Back</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>

@@ -31,7 +31,7 @@ public class PlatformInfo {
 	 * 4412平台: /dev/ttySAC2
 	 * 树莓平台： /dev/ttyS3 
 	 */
-	public static final String RFID_SERIAL_4412 = "/dev/ttySAC2";
+	public static final String RFID_SERIAL_4412 = "/dev/ttySAC3";
 	public static final String RFID_SERIAL_SMFY = "/dev/ttyS3";
 	
 	/**

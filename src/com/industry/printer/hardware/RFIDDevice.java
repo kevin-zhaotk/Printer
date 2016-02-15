@@ -733,6 +733,7 @@ public class RFIDDevice {
 			mFd = open(PlatformInfo.getRfidDevice());
 			//init();
 		}
+		Debug.d(TAG, "===>mFd=" + mFd);
 		return mFd;
 	}
 	

@@ -5,8 +5,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="scrollbar_size">20dp</dimen>
 <!-- 设置界面相关尺寸定义 -->	
-	<dimen name="settingsTextsize">30sp</dimen>
-	<dimen name="settingsEditTextsize">30sp</dimen>
+	<dimen name="settingsTextsize">25sp</dimen>
+	<dimen name="settingsEditTextsize">25sp</dimen>
 	<dimen name="settingsBtnsize">30sp</dimen>
 	<dimen name="settingsUnitTextsize">20sp</dimen>
 	<dimen name="settingsMarginLeft">5dp</dimen>

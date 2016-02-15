@@ -87,10 +87,10 @@ public class DataTransferThread extends Thread {
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			
 			int writable = FpgaGpioOperation.pollState();
-			Debug.d(TAG, "--->writeable=" + writable);
+			// Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
 			if (writable == 0) { //timeout
-				Debug.d(TAG, "===>select timeout");
+				// Debug.d(TAG, "===>select timeout");
 			} else if (writable == -1) {
 				
 			} else {
@@ -125,7 +125,7 @@ public class DataTransferThread extends Thread {
 				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
 			}
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
