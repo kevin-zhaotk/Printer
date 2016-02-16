@@ -395,7 +395,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		String level = String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
-			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
+			// level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
 			mInkLevel.setText(level);
 		} else if (ink <= 0) {
 			mInkLevel.setBackgroundColor(Color.RED);
