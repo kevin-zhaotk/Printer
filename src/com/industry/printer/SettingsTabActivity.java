@@ -140,43 +140,6 @@ public static final String TAG="SettingsTabActivity";
 		
 //		mTime = (TextView) findViewById(R.id.tv_systemTime);
 //		mTimeRefreshHandler.sendEmptyMessageDelayed(0, 2000);
-
-//		mVersion = (TextView) findViewById(R.id.tv_version);
-		InputStream version=null;
-		byte[] buffer=null;
-		try{
-			version = mContext.getAssets().open("Version");
-			buffer =new byte[version.available()];
-			version.read(buffer);
-			version.close();
-		}catch(Exception e)
-		{
-			Debug.d(TAG, "version read error: "+e.getMessage());
-		}
-//		mVersion.setText(getResources().getString(R.string.app_version)+new String(buffer));
-		/*
-        mPreference=PreferenceManager.getDefaultSharedPreferences(this);
-        mDelay = (EditTextPreference) findPreference(getString(R.string.strDelay_key));
-        mTrigger = (ListPreference) findPreference(getString(R.string.strTrigger_key));
-        mDirection = (ListPreference) findPreference(getString(R.string.strDirection_key));
-        mEncoder = (ListPreference) findPreference(getString(R.string.strEncoder_key));
-        mHorires = (ListPreference) findPreference(getString(R.string.strHoriRes_key));
-        mVertres = (ListPreference) findPreference(getString(R.string.strVertRes_key));
-        
-        mDelay.setOnPreferenceChangeListener(this);
-        mTrigger.setOnPreferenceChangeListener(this);
-        mDirection.setOnPreferenceChangeListener(this);
-        mEncoder.setOnPreferenceChangeListener(this);
-        mHorires.setOnPreferenceChangeListener(this);
-        mVertres.setOnPreferenceChangeListener(this);
-        
-        mDelay.setSummary(mDelay.getText());
-        mTrigger.setSummary(mTrigger.getEntry());
-        mDirection.setSummary(mDirection.getEntry());
-        mEncoder.setSummary(mEncoder.getEntry());
-        mHorires.setSummary(mHorires.getEntry());
-        mVertres.setSummary(mVertres.getEntry());
-        */
 		
 		mPagePrev = (RelativeLayout) getView().findViewById(R.id.btn_prev);
 		mPagePrev.setOnClickListener(this);
