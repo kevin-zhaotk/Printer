@@ -43,6 +43,7 @@ public class PlatformInfo {
 	public static final String USB_MOUNT_PATH_SMFY = "/mnt/usb";
 	
 	
+	/* 通过该常量来区分硬件平台 */
 	private static String mProduct = PRODUCT_SMFY_SUPER3;
 	
 	public static void init() {
