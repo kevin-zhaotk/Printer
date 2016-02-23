@@ -51,7 +51,8 @@ public class MessageObject extends BaseObject {
 		String str="";
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
 		str += mId+"^";
-		str += "00000^00000^00000^00000^0^000^000^000^000^000^000^";
+		str += "00000^00000^00000^00000^0^000^";
+		str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
 		str += BaseObject.intToFormatString(mDots, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
 		System.out.println("file string ["+str+"]");
 		return str;

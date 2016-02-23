@@ -89,7 +89,9 @@
 	    <item>12.7 mm HP standard</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
-	    <item>133 mm Xaar dual</item>
+	    <item>33 mm Xaar dual</item>
+	    <item>38.1 mm HP Triple</item>
+	    <item>50.8 mm HP quadruple</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
