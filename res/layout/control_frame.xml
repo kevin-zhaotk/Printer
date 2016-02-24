@@ -192,7 +192,7 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
 	        >
-
+<!--
 	        <TextView
             android:id="@+id/message_preview"
             android:layout_width="wrap_content"
@@ -204,7 +204,16 @@
             android:textSize="@dimen/ctrlPreviewTextsize"
             android:textColor="#8f8f8f"
             android:singleLine="true"
-            />	    
+            />
+-->
+			<ImageView
+				android:id="@+id/message_prev_img"
+				android:layout_width="wrap_content"
+				android:layout_height="50dp"
+				android:minWidth="800dp"
+				android:background="#ffffff"
+				android:gravity="center_vertical"
+				/>
         <!-- 
 	    <EditText
             android:id="@+id/message_preview"

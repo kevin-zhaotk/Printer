@@ -93,6 +93,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mMsgFile;
 	// public EditText mMsgPreview;
 	public TextView mMsgPreview;
+	public ImageView mMsgPreImg;
 	public Button 	mBtnview;
 	public RelativeLayout	mForward;
 	public RelativeLayout 	mBackward;
@@ -304,9 +305,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		switchState(STATE_STOPPED);
 		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);
-		// mMsgPreview = (EditText) getView().findViewById(R.id.message_preview);
-		mMsgPreview = (TextView) getView().findViewById(R.id.message_preview);
-		
+		// mMsgPreview = (TextView) getView().findViewById(R.id.message_preview);
+		mMsgPreImg = (ImageView) getView().findViewById(R.id.message_prev_img);
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
@@ -451,8 +451,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (preview == null) {
 						preview = getString(R.string.str_message_no_content);
 					}
-					// parser.parse(mContext, mObjPath + "/1.TLK", mObjList);
-					mMsgPreview.setText(new SpanableStringFormator(mObjList));
+					// mMsgPreview.setText(new SpanableStringFormator(mObjList));
+					mMsgPreImg.setImageURI("file://" + mMsgTask.getPreview());
 					mMsgFile.setText(mMsgTask.getName());
 					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();

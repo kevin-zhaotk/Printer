@@ -34,7 +34,7 @@ import com.industry.printer.object.TextObject;
 public class MessageTask {
 
 	private static final String TAG = MessageTask.class.getSimpleName();
-	
+	private static final String MSG_PREV_IMAGE = "/1.bmp";
 	private Context mContext;
 	private int mDots=0; 
 	private String mName;
@@ -354,6 +354,10 @@ public class MessageTask {
 			break;
 		}
 		return height;
+	}
+
+	public String getPreview() {
+		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
 	}
 	
 	public static class MessageType {
