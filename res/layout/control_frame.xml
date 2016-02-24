@@ -191,6 +191,7 @@
 	        android:id="@+id/preview_scroll"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
+	        android:scrollbars="none"
 	        >
 <!--
 	        <TextView
@@ -209,10 +210,10 @@
 			<ImageView
 				android:id="@+id/message_prev_img"
 				android:layout_width="wrap_content"
-				android:layout_height="50dp"
+				android:layout_height="100dp"
 				android:minWidth="800dp"
 				android:background="#ffffff"
-				android:gravity="center_vertical"
+				android:scaleType="fitStart"
 				/>
 
         </HorizontalScrollView>

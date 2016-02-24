@@ -45,6 +45,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -452,7 +453,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						preview = getString(R.string.str_message_no_content);
 					}
 					// mMsgPreview.setText(new SpanableStringFormator(mObjList));
-					mMsgPreImg.setImageURI("file://" + mMsgTask.getPreview());
+					mMsgPreImg.setImageURI(Uri.parse("file://" + mMsgTask.getPreview()));
 					mMsgFile.setText(mMsgTask.getName());
 					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();
