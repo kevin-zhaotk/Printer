@@ -338,20 +338,23 @@ public class MessageTask {
 			return height;
 		}
 		switch (obj.getType()) {
-		case MessageType.MESSAGE_TYPE_SINGLE:
-			height = 1;
-			break;
-		case MessageType.MESSAGE_TYPE_DOUBLE:
-			height = 2;
-			break;
-		case MessageType.MESSAGE_TYPE_TREBLE:
-			height = 3;
-			break;
-		case MessageType.MESSAGE_TYPE_FOUR:
-			height = 4;
-			break;
-		default:
-			break;
+			case MessageType.MESSAGE_TYPE_12_7:
+			case MessageType.MESSAGE_TYPE_12_7_S:
+			case MessageType.MESSAGE_TYPE_16_3:
+				height = 1;
+				break;
+			case MessageType.MESSAGE_TYPE_25_4:
+			case MessageType.MESSAGE_TYPE_33:
+				height = 2;
+				break;
+			case MessageType.MESSAGE_TYPE_38_1:
+				height = 3;
+				break;
+			case MessageType.MESSAGE_TYPE_50_8:
+				height = 4;
+				break;
+			default:
+				break;
 		}
 		return height;
 	}
@@ -361,10 +364,13 @@ public class MessageTask {
 	}
 	
 	public static class MessageType {
-		public static final int MESSAGE_TYPE_SINGLE = 0;
-		public static final int MESSAGE_TYPE_DOUBLE = 2;
-		public static final int MESSAGE_TYPE_TREBLE = 3;
-		public static final int MESSAGE_TYPE_FOUR   = 4;
+		public static final int MESSAGE_TYPE_12_7 	= 0;
+		public static final int MESSAGE_TYPE_12_7_S = 1;
+		public static final int MESSAGE_TYPE_25_4 	= 2;
+		public static final int MESSAGE_TYPE_16_3 	= 3;
+		public static final int MESSAGE_TYPE_33	   	= 4;
+		public static final int MESSAGE_TYPE_38_1  	= 5;
+		public static final int MESSAGE_TYPE_50_8  	= 6;
 	}
 	
 }
