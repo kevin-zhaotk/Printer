@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.industry.printer.MessageTask;
 import com.industry.printer.R;
+import com.industry.printer.Utils.ConfigPath;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.R.integer;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +33,7 @@ public class MessageListAdater extends BaseAdapter {
 	private class ItemViewHolder{
 		TextView	mTitle;		//message title
 		TextView	mAbstract;	//message abstract
+		ImageView	mImage;
 	}
 	
 	/**
@@ -121,18 +126,20 @@ public class MessageListAdater extends BaseAdapter {
 			//prepare a empty view 
 			convertView = mInflater.inflate(R.layout.message_item_layout, null);
 			mHolder = new ItemViewHolder();
-			mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
-			mHolder.mAbstract = (TextView) convertView.findViewById(mViewIDs[1]);
+			// mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
+			// mHolder.mAbstract = (TextView) convertView.findViewById(mViewIDs[1]);
+			mHolder.mImage = (ImageView) convertView.findViewById(mViewIDs[0]);
 			convertView.setTag(mHolder);
 		}
 		
 		HashMap<String, Object> item = (HashMap<String, Object>) mCntList.get(position);
 		
 		String title = (String) item.get(mKeys[0]);
-		String abstrace = (String) item.get(mKeys[1]);
+		// String abstrace = (String) item.get(mKeys[1]);
 		//fill the elements into the empty view created early 
-		mHolder.mTitle.setText(title);
-		mHolder.mAbstract.setText(abstrace);
+		// mHolder.mTitle.setText(title);
+		// mHolder.mAbstract.setText(abstrace);
+		mHolder.mImage.setImageURI(Uri.parse("file://" + ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE));
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
 		{

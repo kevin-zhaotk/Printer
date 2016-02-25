@@ -4,6 +4,7 @@
     android:background="@drawable/style_filelist"
     android:descendantFocusability= "blocksDescendants"
     >
+<!-- 
     <TextView 
         android:id="@+id/tv_message_title"
         android:layout_width="match_parent"
@@ -21,4 +22,12 @@
         android:textSize="30sp"
         android:textColor="@color/message_abstract_color"
         />
+-->
+	<ImageView 
+	    android:id="@+id/message_image"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:scaleType="fitStart"
+	    
+	    />
 </RelativeLayout>    
