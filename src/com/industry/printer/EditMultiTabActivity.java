@@ -199,7 +199,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 			}
 			
 		});
-		
+
 		mShowInfo = (Button) getView().findViewById(R.id.btn_objinfo);
 		mShowInfo.setOnClickListener(this);
 		mShowInfo.setOnTouchListener(this);
@@ -482,12 +482,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
             		
-            		//保存1.bin文件
-            		mMsgTask.saveBin();
-            		//保存1.TLK文件
-           			mMsgTask.saveTlk(mContext);
-           			//保存vx.bin文件
-           			mMsgTask.saveVarBin();
+            		mMsgTask.save();
            			
             		dismissProgressDialog();
             		OnPropertyChanged(false);

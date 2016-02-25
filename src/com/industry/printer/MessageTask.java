@@ -319,7 +319,47 @@ public class MessageTask {
 		
 		return ;
 	}
-	
+
+	public void savePreview() {
+		int width=0;
+		Paint p=new Paint();
+		if(mObjects==null || mObjects.size() <= 0)
+			return ;
+		for(BaseObject o:mObjects)
+		{
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjects)
+		{
+			if (o instanceof MessageObject) {
+				continue;
+			}
+			Bitmap t = o.getScaledBitmap(mContext);
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			BinFromBitmap.recyleBitmap(t);
+		}
+		// Bitmap.createScaledBitmap();
+		float scale = bmp.getHeight() / 100;
+		width = width / scale;
+		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
+		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
+	}
+
+	public void save() {
+		//保存1.bin文件
+		saveBin();
+		//保存1.TLK文件
+		saveTlk(mContext);
+		//保存vx.bin文件
+		saveVarBin();
+		//保存1.bmp文件
+		savePreview();
+	}
 	public MessageObject getMsgObject() {
 		MessageObject msg = null;
 		for (BaseObject object: mObjects) {
