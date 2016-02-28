@@ -52,11 +52,11 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_RECT		="029";
 	public static final String OBJECT_TYPE_ELLIPSE	="030";
 	public static final String OBJECT_TYPE_MsgName	="031";
-	public static final String OBJECT_TYPE_RT_SECOND="032";
+	public static final String OBJECT_TYPE_RT		="032";
 	public static final String OBJECT_TYPE_QR		="033";
 	public static final String OBJECT_TYPE_WEEKDAY  ="034";
 	public static final String OBJECT_TYPE_WEEKS	="035";
-	public static final String OBJECT_TYPE_RT		="036";
+	public static final String OBJECT_TYPE_RT_SECOND="036";
 	
 	
 	public Context mContext;

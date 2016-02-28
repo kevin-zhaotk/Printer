@@ -1,5 +1,6 @@
 package com.industry.printer.ui.CustomerAdapter;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -139,7 +140,14 @@ public class MessageListAdater extends BaseAdapter {
 		//fill the elements into the empty view created early 
 		// mHolder.mTitle.setText(title);
 		// mHolder.mAbstract.setText(abstrace);
-		mHolder.mImage.setImageURI(Uri.parse("file://" + ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE));
+		String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
+		File img = new File(path);
+		if (img.exists()) {
+			mHolder.mImage.setImageURI(Uri.parse("file://" + path));
+		} else {
+			mHolder.mImage.setImageResource(R.drawable.preview_null);
+		}
+		
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
 		{

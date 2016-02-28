@@ -77,6 +77,7 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		Debug.d(TAG, "--->printbuffer: TreadId=" + Thread.currentThread().getId());
 		buffer = mDataTask.getPrintBuffer();
+		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, mDataTask.getInfo().mCharsPerHFeed*16);
 		Debug.d(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		Debug.d(TAG, "--->start print");

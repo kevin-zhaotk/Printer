@@ -77,6 +77,7 @@ public class BinInfo {
 
 	public BinInfo(String file) {
 		this(file, 1);
+		Debug.d(TAG, "===>binFile: " + file);
 	}
 	
 	public BinInfo(String file, int type)
@@ -218,40 +219,49 @@ public class BinInfo {
     {
     	int n;
     	byte[] feed = {0};
-    	if (mCacheStream == null) {
-			return null;
-		}
-    	mCacheStream.mark(BinCreater.RESERVED_FOR_HEADER);
-    	byte[] buffer = new byte[mLength];
+//    	if (mCacheStream == null) {
+//			return null;
+//		}
+    	// mCacheStream.mark(BinCreater.RESERVED_FOR_HEADER);
+    	// byte[] buffer = new byte[mLength];
     	
-    	try {
-    		mCacheStream.read(buffer);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//    	try {
+//    		mCacheStream.reset();
+//    		mCacheStream.read(buffer, 0, mLength);
+//		} catch (Exception e) {
+//			Debug.d(TAG, "$$$$$$$$$$$$$$$$$$err:" + e.getMessage());
+//		}
     	ByteArrayBuffer ba = new ByteArrayBuffer(0);
    		for(int i=0; i<var.length(); i++)
    		{
    			n = Integer.parseInt(var.substring(i, i+1));
+   			//Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerColumn=" + mBytesPerColumn + ", type=" + mType);
+   			/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
    			for (int k = 0; k < mColPerElement; k++) {
    				for (int j = 0; j < mType; j++) {
-   	   				ba.append(buffer, n*mColPerElement+16 + k* mColPerElement + mBytesPerHFeed * mType, mBytesPerH);
+   	   				ba.append(mBuffer, n*mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn, mBytesPerColumn);
    	   	   			if (mNeedFeed) {
    	   					ba.append(feed, 0, 1);
    	   				}
+   	   	   			// Debug.d(TAG, "===>offset:" + (n*mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn) + " ,mBytesPerH=" + mBytesPerColumn);
    				}
 			}
    		}
-
-   		mBufferBytes = ba.buffer();
+   		mBufferBytes = ba.toByteArray();
+   		/*
+   		for (int i = 0; i < mBufferBytes.length; i++) {
+			if ( i!=0 && i%16 == 0) {
+				System.out.println();
+			}
+			System.out.print(mBufferBytes[i]);
+			System.out.print("  ");
+		}*/
    		//把byte[]存为char[]
    		if (mBufferChars == null) {
    			mBufferChars = new char[mBufferBytes.length/2];
    		}
-   		Debug.d(TAG, "---->charsize:" + mBufferChars.length + ", byte:" + mBufferBytes.length);
     	for(int i = 0; i < mBufferChars.length; i++) {
-    		mBufferChars[i] = (char) ((char)(mBufferBytes[2*i+1] << 8) | (mBufferBytes[2*i])); 
+    		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
     	return mBufferChars;
     }
