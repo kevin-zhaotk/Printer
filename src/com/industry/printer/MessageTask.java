@@ -25,6 +25,7 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.object.data.BitmapWriter;
 
 /**
  * MessageTask包含多个object
@@ -345,7 +346,7 @@ public class MessageTask {
 		}
 		// Bitmap.createScaledBitmap();
 		float scale = bmp.getHeight() / 100;
-		width = width / scale;
+		width = (int) (width / scale);
 		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
 		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
 	}
