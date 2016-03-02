@@ -257,8 +257,11 @@ public class MessageTask {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		/*生成bin的bitmap要进行处理，高度根据message的类型调整*/
-		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth(), bmp.getHeight() * getHeads(), true);
+		/* 生成bin的bitmap要进行处理，高度根据message的类型调整
+		 * 注： 为了跟PC端保持一致，生成的bin文件宽度为1.tlk中坐标的四分之一，在提取点阵之前先对原始Bitmap进行X坐标缩放（为原图的1/4）
+		 * 	  然后进行灰度和二值化处理；
+		 */
+		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth()/4, bmp.getHeight() * getHeads(), true);
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		maker.extract(bitmap);

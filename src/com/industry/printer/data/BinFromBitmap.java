@@ -11,6 +11,9 @@ import android.graphics.Bitmap.Config;
  * 1、对图片进行灰度化处理
  * 2、根据设定的阈值进行二值化处理 （文字纠错，有人把阈值写成了阀值，呵呵）
  * 3、每个pixel占一个bit，重新组织成buffer数据
+ * 
+ * 注： 为了跟PC端保持一致，生成的bin文件宽度为1.tlk中坐标的四分之一，在提取点阵之前先对原始Bitmap进行X坐标缩放（为原图的1/4）
+ * 	  然后进行灰度和二值化处理；
  * @author kevin
  *
  */
