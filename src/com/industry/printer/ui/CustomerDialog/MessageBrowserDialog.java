@@ -64,9 +64,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mFileAdapter = new MessageListAdater(context, 
 					mContent, 
 					R.layout.message_item_layout, 
-					new String[]{"title", "abstract"}, 
+					new String[]{"title", "abstract", ""}, 
 					// new int[]{R.id.tv_message_title, R.id.tv_message_abstract
-					new int[]{R.id.message_image});
+					new int[]{R.id.tv_msg_title, R.id.message_image, R.id.image_selected});
 		}
 		
 		@Override

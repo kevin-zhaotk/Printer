@@ -35,6 +35,7 @@ public class MessageListAdater extends BaseAdapter {
 		TextView	mTitle;		//message title
 		TextView	mAbstract;	//message abstract
 		ImageView	mImage;
+		ImageView	mMark;
 	}
 	
 	/**
@@ -129,7 +130,9 @@ public class MessageListAdater extends BaseAdapter {
 			mHolder = new ItemViewHolder();
 			// mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
 			// mHolder.mAbstract = (TextView) convertView.findViewById(mViewIDs[1]);
-			mHolder.mImage = (ImageView) convertView.findViewById(mViewIDs[0]);
+			mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
+			mHolder.mImage = (ImageView) convertView.findViewById(mViewIDs[1]);
+			mHolder.mMark = (ImageView) convertView.findViewById(mViewIDs[2]);
 			convertView.setTag(mHolder);
 		}
 		
@@ -138,7 +141,7 @@ public class MessageListAdater extends BaseAdapter {
 		String title = (String) item.get(mKeys[0]);
 		// String abstrace = (String) item.get(mKeys[1]);
 		//fill the elements into the empty view created early 
-		// mHolder.mTitle.setText(title);
+		mHolder.mTitle.setText(title);
 		// mHolder.mAbstract.setText(abstrace);
 		String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
 		File img = new File(path);
@@ -152,14 +155,12 @@ public class MessageListAdater extends BaseAdapter {
 		if(position == mSelected)
 		{
 			Debug.d(TAG, "---blue");
-			//convertView.setBackgroundResource(R.color.message_selected_color);
-			convertView.setBackgroundColor(Color.LTGRAY);
+			mHolder.mMark.setVisibility(View.VISIBLE);
 		}
 		else {
 			Debug.d(TAG, "---transparent");
-			convertView.setBackgroundColor(Color.TRANSPARENT);
+			mHolder.mMark.setVisibility(View.GONE);
 		}
-		
 		
 		return convertView;
 	}

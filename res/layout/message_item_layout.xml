@@ -29,4 +29,22 @@
 	    android:layout_height="100dp"
 	    android:scaleType="fitStart"
 	    />
+	<TextView
+	    android:id="@+id/tv_msg_title"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignParentRight="true"
+	    android:background="#000000"
+	    android:textSize="16sp"
+	    android:textColor="#ffffff"
+	    />
+	
+	<ImageView
+	    android:id="@+id/image_selected"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:src="@drawable/msg_selected"
+	    android:visibility="gone"	    
+	    />
 </RelativeLayout>    
