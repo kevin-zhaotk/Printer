@@ -83,8 +83,15 @@ public class CalendarDialog extends Dialog {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Calendar c = Calendar.getInstance();
+				check();
+				c.set( Integer.parseInt(mYear.getText().toString()), 
+						Integer.parseInt(mMonth.getText().toString()) -1, 
+						Integer.parseInt(mDate.getText().toString()),
+						Integer.parseInt(mHour.getText().toString()),
+						Integer.parseInt(mMinute.getText().toString()));
 				long when = c.getTimeInMillis();
-
+				
+				Debug.d(TAG, "===>setDate");
 		        if (when / 1000 < Integer.MAX_VALUE) {
 		            SystemClock.setCurrentTimeMillis(when);
 		        }
@@ -104,6 +111,9 @@ public class CalendarDialog extends Dialog {
 			}
 		});
 	}
+	/**
+	 * 验证时间是否有效
+	 */
 	
 	private void check() {
 		int year = Integer.parseInt(mYear.getText().toString());

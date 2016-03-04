@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/style_filelist"
+    android:background="#ffffff"
     android:descendantFocusability= "blocksDescendants"
     >
 <!-- 
@@ -35,16 +35,17 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentTop="true"
 	    android:layout_alignParentRight="true"
+	    android:layout_marginRight="5dp"
 	    android:background="#000000"
-	    android:textSize="16sp"
+	    android:textSize="24sp"
 	    android:textColor="#ffffff"
 	    />
 	
 	<ImageView
 	    android:id="@+id/image_selected"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:src="@drawable/msg_selected"
+	    android:layout_height="100dp"
+	    android:background="@drawable/message_selector"
 	    android:visibility="gone"	    
 	    />
 </RelativeLayout>    

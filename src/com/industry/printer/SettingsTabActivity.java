@@ -29,6 +29,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -301,16 +302,17 @@ public static final String TAG="SettingsTabActivity";
 				// mPHSettings.reloadSettings();
 				break;
 			case R.id.btn_system_setting:	//进入系统设置
-				Intent intent = new Intent();
+				/*Intent intent = new Intent();
 				intent.setClassName("com.android.settings","com.android.settings.Settings");
 				startActivity(intent);
-				break;
+				break;*/
 			case R.id.btn_setting_upgrade:
 				
 				// ArrayList<String> paths = ConfigPath.getMountedUsb();
 				if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
-					PackageInstaller installer = PackageInstaller.getInstance(mContext);
+					PackageInstaller installer = PackageInstaller.getInstance(getActivity());
 					installer.silentUpgrade();
+					
 				} else {
 					String str = ConfigPath.getUpgradePath();
 					File file = new File(str);

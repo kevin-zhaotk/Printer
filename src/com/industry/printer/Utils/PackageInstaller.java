@@ -5,12 +5,14 @@ import java.io.File;
 import com.industry.printer.R;
 
 import android.R.integer;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.IPackageInstallObserver;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.widget.Toast;
 
 public class PackageInstaller {
@@ -44,10 +46,15 @@ public class PackageInstaller {
 		pm.installPackage(uri, observer, flags, packageName);
 	}
 	
+	private void install() {
+		PowerManager manager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+		manager.upgrade();
+	}
+	
 	public void silentUpgrade() {
 		int curVersion = 0;
-		String pkName = mContext.getPackageName();
-		String path = ConfigPath.getUpgradePath();
+		final String pkName = mContext.getPackageName();
+		final String path = ConfigPath.getUpgradePath();
 		
 		/*判断升级包是否存在*/
 		if (!new File(path).exists()) {
@@ -63,11 +70,27 @@ public class PackageInstaller {
 		}
 		PackageInfo pInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
 		int newVersion = pInfo.versionCode;
-		if (curVersion > newVersion) {
+		Debug.d(TAG, "===>curVer:" + curVersion + ",  newVer:" + newVersion);
+		if (curVersion >= newVersion) {
 			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
 			return;
 		}
-		silentInstall(pkName, path);
+		ProgressDialog dialog = new ProgressDialog(mContext);
+		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		dialog.setMessage(mContext.getText(R.string.str_upgrade_progress));
+		dialog.show();
+		new Thread() {
+			public void run() {
+				try{
+					Thread.sleep(5000);
+				}catch (Exception e) {
+					
+				}
+				// silentInstall(pkName, path);
+				install();
+			}
+		}.start();
+		
 	}
 	
 	
