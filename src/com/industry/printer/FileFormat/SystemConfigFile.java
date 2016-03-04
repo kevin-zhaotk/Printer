@@ -668,15 +668,18 @@ public class SystemConfigFile{
 		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.LAST_MESSAGE_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
+			inStream.close();
 			return null;
 		}
 		for (XmlTag t : list) {
 			tag = t.getKey();
 			if (tag.equalsIgnoreCase(LAST_MESSAGE)) {
+				inStream.close();
 				return t.getValue();
 			} 
 			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
 		}
+		inStream.close();
 		return null;
 	}
 	

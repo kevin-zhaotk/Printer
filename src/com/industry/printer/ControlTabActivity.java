@@ -18,6 +18,7 @@ import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.LRADCBattery;
@@ -43,6 +44,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.net.Uri;
@@ -202,7 +205,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	/**
 	 * the bitmap for preview
 	 */
-	public byte[] mPreBitmap;
+	private Bitmap mPreBitmap;
 	/**
 	 * 
 	 */
@@ -453,7 +456,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						preview = getString(R.string.str_message_no_content);
 					}
 					// mMsgPreview.setText(new SpanableStringFormator(mObjList));
-					mMsgPreImg.setImageURI(Uri.parse("file://" + mMsgTask.getPreview()));
+					// mMsgPreImg.setImageURI(Uri.parse("file://" + mMsgTask.getPreview()));
+					if (mPreBitmap != null) {
+						BinFromBitmap.recyleBitmap(mPreBitmap);
+					}
+					mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
+					mMsgPreImg.setImageBitmap(mPreBitmap);
 					mMsgFile.setText(mMsgTask.getName());
 					SystemConfigFile.saveLastMsg(mObjPath);
 					dismissProgressDialog();

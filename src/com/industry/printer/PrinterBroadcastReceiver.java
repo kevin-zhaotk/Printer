@@ -72,9 +72,9 @@ public class PrinterBroadcastReceiver extends BroadcastReceiver {
 					if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
 						mCallback.sendEmptyMessage(MainActivity.USB_STORAGE_ATTACHED);
 					} else if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
-						if (mUsbAttached == 0 && usbs.size() == 1) {
+						// if (mUsbAttached == 0 && usbs.size() == 1) {
 							mCallback.sendEmptyMessage(MainActivity.USB_STORAGE_ATTACHED);
-						}
+						// }
 					}
 					mUsbAttached = usbs.size();
 				}
