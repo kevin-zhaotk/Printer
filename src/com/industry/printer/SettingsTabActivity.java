@@ -302,10 +302,10 @@ public static final String TAG="SettingsTabActivity";
 				// mPHSettings.reloadSettings();
 				break;
 			case R.id.btn_system_setting:	//进入系统设置
-				/*Intent intent = new Intent();
+				Intent intent = new Intent();
 				intent.setClassName("com.android.settings","com.android.settings.Settings");
 				startActivity(intent);
-				break;*/
+				break;
 			case R.id.btn_setting_upgrade:
 				
 				// ArrayList<String> paths = ConfigPath.getMountedUsb();

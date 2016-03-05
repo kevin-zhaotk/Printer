@@ -80,8 +80,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		mContext = getApplicationContext();
-		/*初始化系统配置*/
-		Configs.initConfigs(mContext);
+		
 		
 		/*get write permission of ttyACM0*/
 		//SystemProperties.set("ctl.start","mptty");

@@ -51,14 +51,14 @@ public class PackageInstaller {
 		manager.upgrade();
 	}
 	
-	public void silentUpgrade() {
+	public boolean silentUpgrade() {
 		int curVersion = 0;
 		final String pkName = mContext.getPackageName();
 		final String path = ConfigPath.getUpgradePath();
-		
+		Debug.d(TAG, "path:" + path);
 		/*判断升级包是否存在*/
 		if (!new File(path).exists()) {
-			return ;
+			return false;
 		}
 		/*判断版本号*/
 		PackageManager pm = mContext.getPackageManager();
@@ -73,7 +73,7 @@ public class PackageInstaller {
 		Debug.d(TAG, "===>curVer:" + curVersion + ",  newVer:" + newVersion);
 		if (curVersion >= newVersion) {
 			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
-			return;
+			return false;
 		}
 		ProgressDialog dialog = new ProgressDialog(mContext);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -90,7 +90,7 @@ public class PackageInstaller {
 				install();
 			}
 		}.start();
-		
+		return true;
 	}
 	
 	
