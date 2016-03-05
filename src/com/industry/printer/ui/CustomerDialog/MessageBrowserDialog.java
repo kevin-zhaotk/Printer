@@ -55,7 +55,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		
 		public MessageBrowserDialog(Context context) {
-			super(context);
+			super(context, R.style.Dialog_Fullscreen);
 			
 			mVSelected = null;
 			mContent = new LinkedList<Map<String, Object>>();

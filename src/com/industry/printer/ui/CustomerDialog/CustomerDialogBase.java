@@ -18,7 +18,10 @@ public class CustomerDialogBase extends Dialog {
 		super(context);
 	}
 
-	
+	public CustomerDialogBase(Context context, int theme) {
+		super(context, theme);
+	}
+
 	/**
 	  *Interface definition when positive button clicked 
 	  **/
