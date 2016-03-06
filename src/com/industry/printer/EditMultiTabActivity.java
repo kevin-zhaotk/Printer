@@ -311,11 +311,12 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		@Override
 		public void  handleMessage (Message msg)
 		{
+			Debug.d(TAG, "====== 44444");
 			ArrayList<BaseObject> objects = mMsgTask.getObjects();
 			switch (msg.what) {
 			
 			case REFRESH_OBJECT_CHANGED:	
-			
+				Debug.d(TAG, "======1");
 				mNameAdapter.clear();
 				for(BaseObject o:objects)
 				{
@@ -346,8 +347,13 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 					else
 						System.out.println("Unknown Object type");
 				}
+				Debug.d(TAG, "======2");
 				mObjList.invalidate();
+				Debug.d(TAG, "======3");
 				OnPropertyChanged(true);
+				Bundle bundle = msg.getData();
+				int position = bundle.getInt("selection");
+				mObjList.setSelection(position);
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
 				OnPropertyChanged(true);
@@ -357,9 +363,10 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 			default:
 				break;
 			}
-			
+
+			Debug.d(TAG, "=====get curobj");
 			BaseObject obj = getCurObj();
-			//Debug.d(TAG, "=====obj:"+obj.mId);
+			Debug.d(TAG, "=====obj:"+obj.mId);
 			mObjView.invalidate();
 			if(obj != null){
 				makeObjToCenter((int)obj.getX());
@@ -379,6 +386,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	
 	public BaseObject getCurObj()
 	{
+		Debug.d(TAG, "--->getcurobj");
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
 		for(BaseObject obj : objects)
 		{
@@ -407,6 +415,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
 		if(i >= objects.size())
 			return;
+		Debug.d(TAG, "--->setCurObj: " + objects.size() + "   i=" + i);
 		BaseObject obj=objects.get(i);
 		if (obj instanceof MessageObject) {
 			return;
@@ -418,6 +427,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	{
 		float x=0;
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
+		
 		for(BaseObject obj : objects)
 		{
 			if(obj instanceof MessageObject)
@@ -1100,9 +1110,13 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	
 	private void onInsertObject(BaseObject object) {
 		mMsgTask.addObject(object);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
+		Bundle bundle = new Bundle();
+		bundle.putInt("selection", mMsgTask.getObjects().size() - 1);
+		msg.setData(bundle);
+		mObjRefreshHandler.sendMessage(msg);
 		clearCurObj();
-		mObjList.setSelection(mMsgTask.getObjects().size() -1);
+		
 	}
 	
 	private boolean onObjectTouch(MotionEvent event) {

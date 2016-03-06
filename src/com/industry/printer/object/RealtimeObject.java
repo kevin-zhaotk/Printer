@@ -2,6 +2,7 @@ package com.industry.printer.object;
 
 import java.util.Vector;
 
+import com.industry.printer.MessageTask;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
@@ -285,6 +286,18 @@ public class RealtimeObject extends BaseObject {
 			}
 			object.generateVarbinFromMatrix(f);
 			
+		}
+	}
+	
+	/**
+	 * 设置当前object所在的Task
+	 * @param task
+	 */
+	@Override
+	public void setTask(MessageTask task) {
+		mTask = task;
+		for (BaseObject obj : mSubObjs) {
+			obj.setTask(task);
 		}
 	}
 	

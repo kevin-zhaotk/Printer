@@ -32,10 +32,8 @@ public class XmlInputStream {
 		try {
 			Debug.d(TAG, "===>file:"+file);
 			mInputStream = new FileInputStream(new File(file));
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			Debug.e(TAG, "file not found:"+file);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		isReady = true;
 	}
