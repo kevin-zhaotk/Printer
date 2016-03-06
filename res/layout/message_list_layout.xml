@@ -98,6 +98,22 @@
 		        android:text="@string/str_page_next" 
 			    />
 	    </RelativeLayout> 
+	    <RelativeLayout
+		    android:id="@+id/search" 
+		    android:layout_width="0dp"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        >
+			<EditText
+			    android:id="@+id/et_search"
+			    android:layout_width="120dp"
+			    android:layout_height="50dp"
+			    android:layout_centerInParent="true"
+			    android:textSize="25sp"
+			    android:inputType="number"
+			    android:hint="@string/str_search"
+			    />
+		</RelativeLayout>
     </LinearLayout>
 	<ListView
 	    android:id="@+id/message_listview"

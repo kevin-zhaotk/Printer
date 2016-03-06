@@ -373,6 +373,9 @@
 	
 	<string name="str_radioUsb1">USB1</string>
 	<string name="str_radioUsb2">USB2</string>
+	
+	<string name="str_search">搜索</string>
+	
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">信息名称：</string>
 	<!-- 

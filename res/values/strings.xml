@@ -368,6 +368,8 @@
 	<string name="str_radioSdcard">SDCard</string>
 	
 	<string name="str_title_infodialog">Object Info</string>
+	
+	<string name="str_search">Search</string>
 
 <!-- 树莓派3 打印界面相关 -->	
 	<string name="str_msg_name">MSG:</string>

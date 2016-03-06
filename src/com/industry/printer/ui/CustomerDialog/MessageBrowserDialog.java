@@ -14,6 +14,7 @@ import com.industry.printer.R.layout;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
 import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
@@ -22,6 +23,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -31,10 +34,11 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener {
+public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener, TextWatcher {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
@@ -42,6 +46,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public RelativeLayout mCancel;
 		public RelativeLayout mPagePrev;
 		public RelativeLayout mPageNext;
+		public EditText		  mSearch;
 		public static String mTitle;
 		
 		public ListView mMessageList;
@@ -52,6 +57,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		public MessageListAdater mFileAdapter;
 		public LinkedList<Map<String, Object>> mContent;
+		public LinkedList<Map<String, Object>> mFilterContent;
 		
 		
 		public MessageBrowserDialog(Context context) {
@@ -59,6 +65,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			
 			mVSelected = null;
 			mContent = new LinkedList<Map<String, Object>>();
+			mFilterContent = new LinkedList<Map<String, Object>>();
 			isTop = false;
 			isBottom = false;
 			mFileAdapter = new MessageListAdater(context, 
@@ -89,7 +96,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mPageNext = (RelativeLayout) findViewById(R.id.btn_page_next);
 			 mPageNext.setOnClickListener(this);
 			 
-			 
+			 mSearch = (EditText) findViewById(R.id.et_search);
+			 mSearch.addTextChangedListener(this);
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
 			 
@@ -204,6 +212,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				map.put("title", t);
 				map.put("abstract", content);
 				mContent.add(map);
+				mFilterContent.add(map);
 			}
 			mMessageList.setAdapter(mFileAdapter);
 			
@@ -256,6 +265,55 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			default:
 				break;
 			}
+		}
+		
+
+		public void filter(String filter) {
+			mContent.clear();
+			mFileAdapter.setSelected(-1);
+			for (int i = 0; i < mFilterContent.size(); i++) {
+				mContent.add(mFilterContent.get(i));
+			}
+			Debug.d(TAG, "mcontent.size=" + mContent.size());
+			
+			if (StringUtil.isEmpty(filter)) {
+				mFileAdapter.notifyDataSetChanged();
+				return;
+			}
+			
+			for (int i = 0; i < mContent.size();) {
+				HashMap<String, Object> item = (HashMap<String, Object>) mContent.get(i);
+				String title = (String) item.get("title");
+				Debug.d(TAG, "title=" + title);
+				if (!title.startsWith(filter)) {
+					Debug.d(TAG, "is match: " + title + ", filter: " + filter);
+					mContent.remove(item);
+				} else {
+					i++;
+				}
+			}
+			Debug.d(TAG, "mcontent.size=" + mContent.size());
+			mMessageList.setAdapter(mFileAdapter);
+			mFileAdapter.notifyDataSetChanged();
+		}
+
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			String text = arg0.toString();
+			Debug.d(TAG, "filter: " + text);
+			filter(text);
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			
+		}
+
+		@Override
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			
 		}
 		
 }
