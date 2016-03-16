@@ -1,29 +1,13 @@
 package com.industry.printer;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StreamCorruptedException;
-import java.io.WriteAbortedException;
-import java.util.ArrayList;
-
 import android.content.Context;
-import android.graphics.Bitmap.Config;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
-
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
-import com.industry.printer.object.BaseObject;
 
 /**
  * class DataTransferThread
@@ -75,7 +59,6 @@ public class DataTransferThread extends Thread {
 		
 		char[] buffer;
 		/*逻辑要求，必须先发数据*/
-		Debug.d(TAG, "--->printbuffer: TreadId=" + Thread.currentThread().getId());
 		buffer = mDataTask.getPrintBuffer();
 		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, mDataTask.getInfo().mCharsPerHFeed*16);
 		Debug.d(TAG, "--->write data");
@@ -98,21 +81,10 @@ public class DataTransferThread extends Thread {
 				
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
-				//在此处发生打印数据，同时
-				//Debug.d(TAG, "===>kernel buffer empty, fill it");
-				// 只有打印数据中有变量时才重新下发数据，否则不需要重新下发
-				//if (mDataTask.isNeedRefresh()) {
 				buffer = mDataTask.getPrintBuffer();
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				//}
 				
-				//mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
-				// 保存打印计数
-				// 墨水量count down计算
-				//if (countDown()) {
-				//	mInkListener.onInkLevelDown();
-				//}
 				mInkListener.onInkLevelDown();
 				mInkListener.onCountChanged();
 			}

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import com.industry.printer.FileFormat.DotMatrixFont;
@@ -17,25 +16,21 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
-import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.LRADCBattery;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.hardware.RFIDDevice;
+import com.industry.printer.hardware.RFIDManager;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BaseObject;
-import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.TlkObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
-import com.industry.printer.widget.SpanableStringFormator;
-
-import android.animation.AnimatorSet.Builder;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -43,12 +38,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Path;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -61,11 +53,8 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -144,6 +133,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public String mSerialdev;
 	
 	private RFIDDevice mRfidDevice;
+	private RFIDManager mRfidManager;
 	/**
 	 * current tlk path opened
 	 */
@@ -340,6 +330,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		FpgaGpioOperation.clean();
 		
 		/****初始化RFID****/
+		/*
 		mRfidDevice = RFIDDevice.getInstance();
 		if (mRfidDevice.init() != 0) {
 			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
@@ -350,6 +341,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 //			refreshInk(ink);
 			RFIDAsyncTask.getInstance(mHandler).execute();
 		}
+		*/
+		mRfidManager = RFIDManager.getInstance();
+		mRfidManager.init(mHandler);
 		//Debug.d(TAG, "===>loadMessage");
 		// 通过监听系统广播加载
 		loadMessage();
@@ -575,8 +569,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mRfidDevice == null) {
 						mRfidDevice = RFIDDevice.getInstance();
 					}
-					float ink = mRfidDevice.updateInkLevel();
-					refreshInk(ink);
+					// float ink = mRfidDevice.updateInkLevel();
+					// refreshInk(ink);
 					break;
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
@@ -588,6 +582,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_REFRESH_POWERSTAT:
 					refreshPower();
+					break;
+				case RFIDManager.MSG_RFID_INIT_SUCCESS:
+					mRfidManager.read(mHandler);
+					break;
+				case RFIDManager.MSG_RFID_READ_SUCCESS:
+					
+					break;
+				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
+					
 					break;
 			}
 		}
