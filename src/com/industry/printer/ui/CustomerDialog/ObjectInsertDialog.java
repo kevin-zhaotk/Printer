@@ -143,7 +143,6 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 			bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_CNT);
 			bundle.putString(OBJECT_FORMAT, formats[arg2]);
 		}
-		
 		mDismissMsg.setData(bundle);
 		dismiss();
 	}
