@@ -23,6 +23,9 @@ import com.industry.printer.object.TextObject;
 
 public class ObjectInsertDialog extends Dialog implements android.view.View.OnClickListener, OnItemClickListener {
 
+	public static final String OBJECT_TYPE = "ObjType";
+	public static final String OBJECT_FORMAT = "ObjFormat";
+	
 	private Context mContext;
 	public RadioButton mText;
 	public RadioButton mRTime;
@@ -76,6 +79,7 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				mTimeLayout.setVisibility(View.GONE);
 				Bundle bundle = new Bundle();
 				bundle.putString("object", "");
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_TEXT);
 				mDismissMsg.setData(bundle);
 				dismiss();
 				break;
@@ -128,11 +132,16 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 			Debug.d("", "--->arg2=" + formats[arg2]);
 			bundle = new Bundle();
 			bundle.putString("object", ObjectsFromString.REALTIME_FLAG + formats[arg2]);
+			bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_RT);
+			bundle.putString(OBJECT_FORMAT, formats[arg2]);
+			
 		} else if (mCounter.isChecked()) {
 			String[] formats = mContext.getResources().getStringArray(R.array.strarrayCounter);
 			Debug.d("", "--->arg2=" + formats[arg2]);
 			bundle = new Bundle();
 			bundle.putString("object", ObjectsFromString.COUNTER_FLAG + BaseObject.intToFormatString(0, arg2 + 3));
+			bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_CNT);
+			bundle.putString(OBJECT_FORMAT, formats[arg2]);
 		}
 		
 		mDismissMsg.setData(bundle);
