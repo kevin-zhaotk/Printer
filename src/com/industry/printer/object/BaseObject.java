@@ -100,7 +100,8 @@ public class BaseObject{
 		mDragable = true;
 		mFont = "Arial";
 		initPaint();
-		setSelected(true);		
+		setSelected(true);	
+		Debug.d(TAG, "--->new baseobject: " + Configs.gDots);
 		setHeight(Configs.gDots);		
 		setLineWidth(5);
 		setContent("text");
@@ -238,6 +239,7 @@ public class BaseObject{
 		if(size<0)
 			size=0;
 		mHeight = size;
+		Debug.d(TAG, "--->height=" + mHeight);
 		mYcor_end = mYcor + mHeight;
 	}
 	

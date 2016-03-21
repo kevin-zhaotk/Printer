@@ -56,8 +56,9 @@ public class PackageInstaller {
 		final String pkName = mContext.getPackageName();
 		final String path = ConfigPath.getUpgradePath();
 		Debug.d(TAG, "path:" + path);
+
 		/*判断升级包是否存在*/
-		if (!new File(path).exists()) {
+		if (path == null || !new File(path).exists()) {
 			return false;
 		}
 		/*判断版本号*/

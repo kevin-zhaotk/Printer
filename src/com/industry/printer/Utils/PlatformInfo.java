@@ -42,6 +42,14 @@ public class PlatformInfo {
 	// smfy
 	public static final String USB_MOUNT_PATH_SMFY = "/mnt/usb";
 	
+	/* 大屏全編輯 */
+	public static final int LARGE_SCREEN = 1;
+	/* 小屏部分編輯 */
+	public static final int SMALL_SCREEN_PART = 2;
+	/* 小屏全編輯 - 按鈕合併 */
+	public static final int SMALL_SCREEN_FULL = 3;
+		
+	
 	
 	/* 通过该常量来区分硬件平台 */
 	private static String mProduct = PRODUCT_SMFY_SUPER3;
@@ -134,5 +142,9 @@ public class PlatformInfo {
 			Debug.d(TAG, "use 4412 as default");
 		}
 		return USB_MOUNT_PATH_4412;
+	}
+	
+	public static int getEditType() {
+		return SMALL_SCREEN_FULL;
 	}
 }

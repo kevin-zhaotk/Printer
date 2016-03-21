@@ -23,6 +23,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -59,6 +61,23 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public LinkedList<Map<String, Object>> mContent;
 		public LinkedList<Map<String, Object>> mFilterContent;
 		
+		private static final int MSG_FILTER_CHANGED = 1;
+		
+		public Handler mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case MSG_FILTER_CHANGED:
+					Bundle bundle = msg.getData();
+					String title = bundle.getString("title");
+					filterAfter(title);
+					break;
+
+				default:
+					break;
+				}
+			}
+		};
 		
 		public MessageBrowserDialog(Context context) {
 			super(context, R.style.Dialog_Fullscreen);
@@ -268,6 +287,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		}
 		
 
+		/**
+		 * 過濾信息名匹配的
+		 * @param filter
+		 */
 		public void filter(String filter) {
 			mContent.clear();
 			mFileAdapter.setSelected(-1);
@@ -296,12 +319,50 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mMessageList.setAdapter(mFileAdapter);
 			mFileAdapter.notifyDataSetChanged();
 		}
+		
+		/**
+		 * 過濾結果爲從第一個開始匹配的信息
+		 * @param filter
+		 */
+		public void filterAfter(String filter) {
+			mContent.clear();
+			mFileAdapter.setSelected(-1);
+			for (int i = 0; i < mFilterContent.size(); i++) {
+				mContent.add(mFilterContent.get(i));
+			}
+			Debug.d(TAG, "mcontent.size=" + mContent.size());
+			
+			if (StringUtil.isEmpty(filter)) {
+				mFileAdapter.notifyDataSetChanged();
+				return;
+			}
+			
+			for (int i = 0; i < mContent.size();) {
+				HashMap<String, Object> item = (HashMap<String, Object>) mContent.get(i);
+				String title = (String) item.get("title");
+				Debug.d(TAG, "title=" + title);
+				if (!title.startsWith(filter)) {
+					Debug.d(TAG, "is match: " + title + ", filter: " + filter);
+					mContent.remove(item);
+				} else {
+					break;
+				}
+			}
+			Debug.d(TAG, "mcontent.size=" + mContent.size());
+			mMessageList.setAdapter(mFileAdapter);
+			mFileAdapter.notifyDataSetChanged();
+		}
 
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			String text = arg0.toString();
 			Debug.d(TAG, "filter: " + text);
-			filter(text);
+			mHandler.removeMessages(MSG_FILTER_CHANGED);
+			Message msg = mHandler.obtainMessage(MSG_FILTER_CHANGED);
+			Bundle bundle = new Bundle();
+			bundle.putString("title", text);
+			msg.setData(bundle);
+			mHandler.sendMessageDelayed(msg, 2000);
 		}
 
 		@Override

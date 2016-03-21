@@ -22,8 +22,8 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public RadioButton 	mText;
 	public RadioButton 	mRTime;
 	public RadioButton 	mCounter;
+	public RadioButton	mBarcode;
 	public Message		mDismissMsg;
-	public TextView 	mBack;
 	
 	public ObjectInsertDialog(Context context) {
 		super(context);
@@ -45,8 +45,8 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		mCounter = (RadioButton) findViewById(R.id.objinsert_counter);
 		mCounter.setOnClickListener(this);
 		
-		mBack = (TextView) findViewById(R.id.dialog_back);
-		mBack.setOnClickListener(this);
+		mBarcode = (RadioButton) findViewById(R.id.objinsert_barcode);
+		mBarcode.setOnClickListener(this);
 	}
 
 	@Override
@@ -57,7 +57,6 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				bundle.putString("object", "");
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_TEXT);
 				mDismissMsg.setData(bundle);
-				dismiss();
 				break;
 			case R.id.objinsert_time:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_RT);
@@ -67,14 +66,14 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_CNT);
 				mDismissMsg.setData(bundle);
 				break;
-			
-			case R.id.dialog_back:
-				dismiss();
+			case R.id.objinsert_barcode:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_BARCODE);
+				mDismissMsg.setData(bundle);
 				break;
 			default:
 				break;
 		}
-		
+		dismiss();
 	}
 	
 	@Override

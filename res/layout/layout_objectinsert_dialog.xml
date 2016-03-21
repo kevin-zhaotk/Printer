@@ -5,23 +5,12 @@
 	android:background="#436EEE"
 	>
     
-    <TextView 
-        android:id="@+id/dialog_back"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:background="@drawable/insertdialog_back_style"
-	    android:text="@string/str_btn_back"
-	    android:gravity="center"
-	    android:textSize="40dp"
-	    android:textColor="#000000"/>
-    
     <RadioGroup 
         android:id="@+id/object_dialog_btns"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:background="#436EEE"
         android:layout_marginBottom="20dp"
-        android:layout_below="@id/dialog_back"
         >
         <RadioButton 
             android:id="@+id/objinsert_text"

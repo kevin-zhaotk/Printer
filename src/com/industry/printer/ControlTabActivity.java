@@ -587,7 +587,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mRfidManager.read(mHandler);
 					break;
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
-					
+					Bundle bd = (Bundle) msg.getData();
+					refreshInk(bd.getFloat("level"));
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					

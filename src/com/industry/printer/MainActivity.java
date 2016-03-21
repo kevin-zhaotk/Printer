@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public ControlTabActivity 	mControlTab;
 	public EditTabActivity		mEditTab;
 	public EditMultiTabActivity mEditFullTab;
+	public EditTabSmallActivity mEditSmallTab;
 	public SettingsTabActivity	mSettingsTab;
 	
 	public TextView mCtrlTitle;
@@ -156,7 +157,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		//FpgaGpioOperation.updateSettings(this.getApplicationContext());
 		
 		initView();
-		
+		Configs.initConfigs(mContext);
 	}
 
 	@Override
@@ -207,6 +208,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		}
 		mControlTab = new ControlTabActivity();
 		mEditTab = new EditTabActivity();
+		mEditSmallTab = new EditTabSmallActivity();
 		mEditFullTab = new EditMultiTabActivity();
 		mSettingsTab = new SettingsTabActivity();
 		Debug.d(TAG, "===>initview");
@@ -215,9 +217,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 //		transaction.replace(R.id.tab_content, mControlTab);
 //		transaction.commit();
 		transaction.add(R.id.tab_content, mControlTab);
-		if (PlatformInfo.isFriendlyProduct()) {
+		if (PlatformInfo.getEditType() == PlatformInfo.LARGE_SCREEN) {
 			transaction.add(R.id.tab_content, mEditFullTab);
-		} else if (PlatformInfo.isSmfyProduct()) {
+		} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_FULL) {
+			transaction.add(R.id.tab_content, mEditSmallTab);
+		} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_PART) {
 			transaction.add(R.id.tab_content, mEditTab);
 		}
 		transaction.add(R.id.tab_content, mSettingsTab);
@@ -226,9 +230,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		// transaction.add(R.id.tv_counter_msg, mEditTitle);
 		// transaction.add(R.id.tv_counter_msg, mSettingTitle);
 		transaction.commit();
-		if (PlatformInfo.isFriendlyProduct()) {
+		if (PlatformInfo.getEditType() == PlatformInfo.LARGE_SCREEN) {
 			transaction.hide(mEditFullTab);
-		} else if (PlatformInfo.isSmfyProduct()) {
+		} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_FULL) {
+			transaction.hide(mEditSmallTab);
+		} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_PART) {
 			transaction.hide(mEditTab);
 		}
 		transaction.hide(mSettingsTab);
@@ -255,9 +261,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			case R.id.btn_edit:
 				Debug.d(TAG, "====>edit checked?"+arg1);
 				if( arg1 == true) {
-					if (PlatformInfo.isFriendlyProduct()) {
+					if (PlatformInfo.getEditType() == PlatformInfo.LARGE_SCREEN) {
 						fts.show(mEditFullTab);
-					} else if (PlatformInfo.isSmfyProduct()) {
+					} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_FULL) {
+						fts.show(mEditSmallTab);
+					} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_PART) {
 						fts.show(mEditTab);
 					}
 					

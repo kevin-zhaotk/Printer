@@ -96,7 +96,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	public RelativeLayout mBtnSaveas;
 	public RelativeLayout mBtnOpen;
 	
-	public ImageButton mDel;
+	public RelativeLayout mDel;
 	public ImageButton mTrans;
 	/************************
 	 * create Object buttons
@@ -195,7 +195,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mShowInfo.setOnClickListener(this);
 		mShowInfo.setOnTouchListener(this);
 		
-		mDel = (ImageButton) getView().findViewById(R.id.btn_delete);
+		mDel = (RelativeLayout) getView().findViewById(R.id.btn_delete);
 		mDel.setOnClickListener(this);
 		mDel.setOnTouchListener(this);
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);

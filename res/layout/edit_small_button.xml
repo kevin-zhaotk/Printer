@@ -89,7 +89,7 @@
 	    </RelativeLayout>
 	    
 	    <RelativeLayout
-		    android:id="@+id/btn_page_up" 
+		    android:id="@+id/btn_delete" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
 	        android:focusable="false"
@@ -105,30 +105,9 @@
 			    android:gravity="center"
 		        android:textSize="@dimen/editButtonsTextsize"
 		        android:textColor="#000000"
-		        android:text="@string/str_page_prev" 
+		        android:text="@string/str_del"
 			    />
 	    </RelativeLayout>
 	    
-	    <RelativeLayout
-		    android:id="@+id/btn_page_down" 
-		    android:layout_width="0dp"
-	        android:layout_height="@dimen/editButtonsHeight"
-	        android:layout_weight="1"
-			android:focusable="false"
-	        >
-	        <ImageView 
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:src="@drawable/style_editbtn"
-			    />
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:gravity="center"
-		        android:textSize="@dimen/editButtonsTextsize"
-		        android:textColor="#000000"
-		        android:text="@string/str_page_next" 
-			    />
-	    </RelativeLayout>
 	    
 </LinearLayout>

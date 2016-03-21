@@ -146,7 +146,7 @@ public class Configs {
 		gCharsPerColumn = context.getResources().getInteger(R.integer.chars_per_column);
 		gFixedRows = context.getResources().getInteger(R.integer.fixed_rows);
 		gParams = context.getResources().getInteger(R.integer.total_params);
-		
+		Debug.d("", "--->gdots=" + gDots);
 		ConfigPath.updateMountedUsb();
 		//如果需要，在u盘根目录创建系统所需的目录，当u盘插入是也需要调用
 		ConfigPath.makeSysDirsIfNeed();
