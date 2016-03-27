@@ -271,9 +271,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					
 					mEditTitle.setVisibility(View.VISIBLE);
 				} else {
-					if (PlatformInfo.isFriendlyProduct()) {
+					if (PlatformInfo.getEditType() == PlatformInfo.LARGE_SCREEN) {
 						fts.hide(mEditFullTab);
-					} else if (PlatformInfo.isSmfyProduct()) {
+					} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_FULL) {
+						fts.hide(mEditSmallTab);
+					} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_PART) {
 						fts.hide(mEditTab);
 					}
 					mEditTitle.setVisibility(View.GONE);
