@@ -16,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons"
+        android:layout_above="@+id/bottom"
+        android:layout_marginTop="10dp"
         />
 
 	
@@ -25,6 +27,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
+	    android:layout_marginTop="10dp"
 	    android:layout_alignParentBottom="true">
 	    
 	    <Button
@@ -32,12 +35,13 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="3"
+	        android:textSize="25sp"
 	        android:background="@drawable/button_style"
 	        android:text="@string/objectInfoName"/>
 
 		<Spinner android:id="@+id/object_list"
 		    android:layout_width="fill_parent"
-		    android:layout_height="50dp"
+		    android:layout_height="60dp"
 		    android:layout_weight="3"
 		    android:spinnerMode="dropdown"
 		 	/>
