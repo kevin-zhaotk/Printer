@@ -3,8 +3,9 @@ package com.industry.printer.hardware;
 public class ExtGpio {
 
 	public static native int open(String dev);
+	public static native int write(int fd, char[] buffer, int count);
 	public static native int ioctl(int fd, int cmd, long arg);
-	
+	public static native int close(int fd);
 	/**
 	 * RFID选择
 	 */

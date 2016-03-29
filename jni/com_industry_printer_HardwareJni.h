@@ -58,7 +58,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_UsbSerial_set_options
 
 
 /*********************************************
- * GPIO操作接口定义
+ * FPGA GPIO操作接口定义
  *********************************************/
 
 /**
@@ -169,6 +169,40 @@ JNIEXPORT void JNICALL Java_com_industry_printer_RTC_read
 JNIEXPORT void JNICALL Java_com_industry_printer_RTC_write
   (JNIEnv *env, jclass arg, jint fd);
 
+/**************************************
+ * GPIO操作接口
+ **************************************/
+/**
+ * Class:     com_industry_printer_ExtGpio
+ * Method:    open
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_open
+	(JNIEnv *env, jclass arg, jstring dev);
+
+/**
+ * Class:     com_industry_printer_ExtGpio
+ * Method:    write
+ * Signature: (I[CI)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_write
+	(JNIEnv *env, jclass arg, jint fd, jcharArray buff, jint count);
+
+/**
+ * Class:     com_industry_printer_ExtGpio
+ * Method:    ioctl
+ * Signature: (IIJ)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_ioctl
+	(JNIEnv *env, jclass arg, jint fd, jint cmd, jlong arg1);
+
+/**
+ * Class:     com_industry_printer_ExtGpio
+ * Method:    close
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_close
+	(JNIEnv *env, jclass arg, jint fd);
 
 #ifdef __cplusplus
 }

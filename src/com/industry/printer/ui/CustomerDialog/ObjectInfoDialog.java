@@ -138,7 +138,7 @@ public class ObjectInfoDialog extends Dialog {
 	     }
 	     else if(mObj instanceof GraphicObject)
 	     {
-	    	 this.setContentView(R.layout.obj_info_barcode);
+	    	 // this.setContentView(R.layout.obj_info_barcode);
 	     }
 	     else if(mObj instanceof RealtimeObject)
 	     {

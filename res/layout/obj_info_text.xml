@@ -5,7 +5,7 @@
     android:orientation="vertical" 
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="#DEDEDE"
+    android:background="@color/background"
     >
     
 	<ScrollView android:id="@+id/viewInfo"
@@ -17,7 +17,7 @@
 	        android:id="@+id/objectInfoTable"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
-	        android:background="#ffffff">
+	        >
 	        
 	        <include android:id="@+id/base_info_text"  layout="@layout/obj_info_base"/>
 	       

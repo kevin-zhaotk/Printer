@@ -52,6 +52,16 @@ static JNINativeMethod gGPIOMethods[] = {
 };
 
 /**
+ * 读写External的GPIO的jni接口
+ */
+static JNINativeMethod gEXTGPIOMethods[] = {
+	{"open",		"(Ljava/lang/String;)I",	(void *)Java_com_industry_printer_EXTGPIO_open},
+	{"write",		"(I[CI)I",					(void *)Java_com_industry_printer_EXTGPIO_write},
+	{"ioctl",		"(IIJ)I",					(void *)Java_com_industry_printer_EXTGPIO_ioctl},
+	{"close",		"(I)I",						(void *)Java_com_industry_printer_EXTGPIO_close},
+};
+
+/**
  * 读写RFID的jni接口
  */
 static JNINativeMethod gRFIDMethods[] = {
@@ -96,6 +106,17 @@ int register_com_industry_printer_GPIOOperation(JNIEnv *env) {
 	return (*env)->RegisterNatives(env, clazz, gGPIOMethods, sizeof(gGPIOMethods) / sizeof(gGPIOMethods[0]));
 }
 
+/**
+ * 注册EXT-GPIO的JNI方法
+ */
+int register_com_industry_printer_EXTGPIO(JNIEnv *env) {
+	const char* kClassPathName = "com/industry/printer/hardware/ExtGpio";
+	jclass clazz = (*env)->FindClass(env, kClassPathName);
+	if(clazz == NULL) {
+		return JNI_FALSE;
+	}
+	return (*env)->RegisterNatives(env, clazz, gEXTGPIOMethods, sizeof(gEXTGPIOMethods) / sizeof(gEXTGPIOMethods[0]));
+}
 
 /**
  * 注册RFID操作的JNI方法
@@ -142,6 +163,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
     if (register_com_industry_printer_RFIDOperation(env) < 0) {
     	goto fail;
+    }
+
+    if (register_com_industry_printer_EXTGPIO(env) < 0) {
+        	goto fail;
     }
 
     if (1 == isSmfyProduct(env)) {

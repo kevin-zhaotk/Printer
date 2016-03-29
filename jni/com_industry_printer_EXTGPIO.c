@@ -17,7 +17,7 @@
 /**
  * Fpga Gpio operation APIs
  **/
-JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_open
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_open
 	(JNIEnv *env, jclass arg, jstring dev)
 {
 	int ret=-1;
@@ -35,7 +35,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_open
 	return ret;
 }
 
-JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_write
 	(JNIEnv *env, jclass arg, jint fd, jcharArray buff, jint count)
 {
 	int i,ret;
@@ -49,7 +49,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
 }
 
 
-JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_ioctl
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_ioctl
 	(JNIEnv *env, jclass arg, jint fd, jint cmd, jlong arg1)
 {
 	int i,ret;
@@ -60,7 +60,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_ioctl
 	return ret;
 }
 
-JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_close
+JNIEXPORT jint JNICALL Java_com_industry_printer_EXTGPIO_close
 	(JNIEnv *env, jclass arg, jint fd)
 {
 	int ret=-1;
