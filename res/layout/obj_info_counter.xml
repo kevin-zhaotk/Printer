@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical" 
     android:background="@color/background">
     
 	<ScrollView android:id="@+id/viewInfo"
-	            android:layout_weight="5"
-	        	android:layout_width="fill_parent"
-	        	android:layout_height="fill_parent">
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_marginTop="10dp"
+	    android:layout_above="@+id/obj_info_button">
 	        	    
 	    <RelativeLayout
 	        android:id="@+id/objectInfoTable"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
-	        android:background="#ffffff">
+	        >
 	        
 	        
 	        <include android:id="@+id/base_info" layout="@layout/obj_info_base" />
@@ -61,5 +61,8 @@
 	       
 	    </RelativeLayout>
 	    </ScrollView>
-	    <include layout="@layout/obj_info_button" />
-</LinearLayout>
+	    <include layout="@layout/obj_info_button"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentBottom="true" />
+</RelativeLayout>

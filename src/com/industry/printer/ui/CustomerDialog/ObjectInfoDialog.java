@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -118,10 +119,12 @@ public class ObjectInfoDialog extends Dialog {
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
 		 super.onCreate(savedInstanceState);
-	     //this.requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		 this.setTitle(R.string.str_title_infodialog);
+	     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	     setHFullScreen();
+		 // this.setTitle(R.string.str_title_infodialog);
 	     if(mObj==null)
 	     {
+	    	 Debug.d(TAG, "--->obj: " + mObj.mIndex);
 	    	 this.setContentView(R.layout.obj_info_msg); 
 	     }
 	     else if(mObj instanceof TextObject)
@@ -166,6 +169,7 @@ public class ObjectInfoDialog extends Dialog {
 	     }
 	     else 
 	     {
+	    	 Debug.d(TAG, "--->obj: " + mObj.mIndex);
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
 	     
@@ -436,5 +440,14 @@ public class ObjectInfoDialog extends Dialog {
 	 public interface OnNagitiveBtnListener
 	 {
 		 void onClick();
+	 }
+	 
+	 private void setHFullScreen() {
+		 Window win = this.getWindow();
+		 win.getDecorView().setPadding(0, 0, 0, 0);
+		 WindowManager.LayoutParams lp = win.getAttributes();
+		 // lp.width = WindowManager.LayoutParams.FILL_PARENT;
+		 lp.height = WindowManager.LayoutParams.FILL_PARENT;
+		 win.setAttributes(lp);
 	 }
 }
