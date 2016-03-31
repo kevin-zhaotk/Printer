@@ -60,6 +60,28 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_ioctl
 	return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_poll
+       (JNIEnv *env, jclass arg, jint fd)
+{
+       int ret=0;
+       int maxfd=0;
+       struct timeval timeout;
+       fd_set fds;
+
+       if (fd <= 0)
+               return -1;
+
+       FD_ZERO(&fds);
+       FD_SET(fd, &fds);
+       maxfd = fd+1;
+       timeout.tv_sec = 0;
+       timeout.tv_usec = 100;
+       ret = select(maxfd, NULL, &fds, NULL, &timeout);
+
+       return ret;
+}
+
+
 JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_close
 	(JNIEnv *env, jclass arg, jint fd)
 {

@@ -2,10 +2,6 @@ package com.industry.printer.hardware;
 
 public class ExtGpio {
 
-	public static native int open(String dev);
-	public static native int write(int fd, char[] buffer, int count);
-	public static native int ioctl(int fd, int cmd, long arg);
-	public static native int close(int fd);
 	/**
 	 * RFID选择
 	 */
@@ -28,25 +24,25 @@ public class ExtGpio {
 	public static void rfidSwitch(int sw) {
 		int fd = open();
 		if (sw == RFID_CARD1) {
-			ioctl(fd, GPIO_RFID_CARD1, 0);
+			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD1, 0);
 		} else if (sw == RFID_CARD2) {
-			ioctl(fd, GPIO_RFID_CARD2, 0);
+			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD2, 0);
 		}
 	}
 	
 	public static void playClick() {
 		int fd = open();
-		ioctl(fd, GPIO_PLAY, 0);
+		FpgaGpioOperation.ioctl(fd, GPIO_PLAY, 0);
 	}
 	
 	public static void playError() {
 		int fd = open();
-		ioctl(fd, GPIO_PLAY_ERR, 0);
+		FpgaGpioOperation.ioctl(fd, GPIO_PLAY_ERR, 0);
 	}
 	
 	public static int open() {
 		if (mFd <= 0) {
-			mFd = open(EXT_GPIO_FILE);
+			mFd = FpgaGpioOperation.open(EXT_GPIO_FILE);
 		}
 		return mFd;
 	}

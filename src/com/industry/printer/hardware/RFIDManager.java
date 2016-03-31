@@ -43,7 +43,7 @@ public class RFIDManager {
 				
 				for (int i = 0; i < TOTAL_RFID_DEVICES; i++) {
 					// 初始化卡
-					HardwareJni.rfidSwitch(i);
+					ExtGpio.rfidSwitch(i);
 					// 等待1s，确保RFID建立稳定链接
 					try {
 						Thread.sleep(1000);
