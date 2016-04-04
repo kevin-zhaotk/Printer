@@ -91,35 +91,46 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	/*************************
 	 * file operation buttons
 	 * ***********************/
-	public RelativeLayout mBtnNew;
-	public RelativeLayout mBtnSave;
-	public RelativeLayout mBtnSaveas;
-	public RelativeLayout mBtnOpen;
+	private RelativeLayout mBtnNew;
+	private RelativeLayout mBtnSave;
+	private RelativeLayout mBtnSaveAs;
+	private RelativeLayout mBtnCursor;
+	private RelativeLayout mBtnInsert;
+	private RelativeLayout mBtnOpen;
 	
-	public RelativeLayout mDel;
-	public ImageButton mTrans;
+	private RelativeLayout mDel;
+	private ImageButton mTrans;
+	
+	private RelativeLayout mBtnUp;
+	private RelativeLayout mBtnDown;
+	private RelativeLayout mBtnLeft;
+	private RelativeLayout mBtnRight;
+	private RelativeLayout mBtnDetail;
+	private RelativeLayout mBtnList;
+	private RelativeLayout mBtnZout;
+	private RelativeLayout mBtnZin;
 	/************************
 	 * create Object buttons
 	 * **********************/
-	public ImageButton 	mBtnText;
-	public ImageButton 	mBtnCnt;
-	public ImageButton 	mBtnBar;
-	public ImageButton	mImage;
-	public ImageButton 	mBtnDay;
-	public ImageButton 	mBtnTime;
-	public ImageButton 	mBtnLine;
-	public ImageButton 	mBtnRect;
-	public ImageButton 	mBtnEllipse;
-	public ImageButton	mShift;
-	public ImageButton	mScnd;
+	private ImageButton 	mBtnText;
+	private ImageButton 	mBtnCnt;
+	private ImageButton 	mBtnBar;
+	private ImageButton	mImage;
+	private ImageButton 	mBtnDay;
+	private ImageButton 	mBtnTime;
+	private ImageButton 	mBtnLine;
+	private ImageButton 	mBtnRect;
+	private ImageButton 	mBtnEllipse;
+	private ImageButton	mShift;
+	private ImageButton	mScnd;
 	/**********************
 	 * Object Information Table
 	 * **********************/
-	public ScrollView mViewInfo;
-	public Spinner mObjList;
-	Button mShowInfo;
+	private ScrollView mViewInfo;
+	private Spinner mObjList;
+	private RelativeLayout mShowInfo;
 	
-	public ArrayAdapter<String> mNameAdapter;
+	private ArrayAdapter<String> mNameAdapter;
 	
 	public EditTabSmallActivity() {
 		
@@ -152,19 +163,29 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnSave = (RelativeLayout) getView().findViewById(R.id.btn_save);
 		mBtnSave.setOnClickListener(this);
 		mBtnSave.setOnTouchListener(this);
+
+		mBtnSaveAs = (RelativeLayout) getView().findViewById(R.id.btn_saveas);
+		mBtnSaveAs.setOnClickListener(this);
+		mBtnSaveAs.setOnTouchListener(this);
 		
-		mBtnSaveas = (RelativeLayout) getView().findViewById(R.id.btn_insert);
-		mBtnSaveas.setOnClickListener(this);
-		mBtnSaveas.setOnTouchListener(this);
+		mBtnInsert = (RelativeLayout) getView().findViewById(R.id.btn_insert);
+		mBtnInsert.setOnClickListener(this);
+		mBtnInsert.setOnTouchListener(this);
 		
 		mBtnOpen = (RelativeLayout) getView().findViewById(R.id.btn_open);
 		mBtnOpen.setOnClickListener(this);
 		mBtnOpen.setOnTouchListener(this);
 		
+		mBtnCursor = (RelativeLayout) getView().findViewById(R.id.btn_cursor);
+		mBtnCursor.setOnClickListener(this);
+		mBtnCursor.setOnTouchListener(this);
+		
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
 		mObjView.setOnTouchListener(this);
 		mObjView.setTask(mMsgTask);
+		
+		/*
 		mObjList = (Spinner) getView().findViewById(R.id.object_list);
 		mNameAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
 		mNameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -190,14 +211,35 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			}
 			
 		});
-
-		mShowInfo = (Button) getView().findViewById(R.id.btn_objinfo);
+*/
+		mShowInfo = (RelativeLayout) getView().findViewById(R.id.btn_detail);
 		mShowInfo.setOnClickListener(this);
 		mShowInfo.setOnTouchListener(this);
 		
-		mDel = (RelativeLayout) getView().findViewById(R.id.btn_delete);
-		mDel.setOnClickListener(this);
-		mDel.setOnTouchListener(this);
+		mBtnUp = (RelativeLayout) getView().findViewById(R.id.btn_up);
+		mBtnUp.setOnClickListener(this);
+		mBtnUp.setOnTouchListener(this);
+		
+		mBtnDown = (RelativeLayout) getView().findViewById(R.id.btn_down);
+		mBtnDown.setOnClickListener(this);
+		mBtnDown.setOnTouchListener(this);
+		
+		mBtnLeft = (RelativeLayout) getView().findViewById(R.id.btn_left);
+		mBtnLeft.setOnClickListener(this);
+		mBtnLeft.setOnTouchListener(this);
+		
+		mBtnRight = (RelativeLayout) getView().findViewById(R.id.btn_right);
+		mBtnRight.setOnClickListener(this);
+		mBtnRight.setOnTouchListener(this);
+		
+		mBtnZout = (RelativeLayout) getView().findViewById(R.id.btn_zoomOut);
+		mBtnZout.setOnClickListener(this);
+		mBtnZout.setOnTouchListener(this);
+		
+		mBtnZin = (RelativeLayout) getView().findViewById(R.id.btn_zoomIn);
+		mBtnZin.setOnClickListener(this);
+		mBtnZin.setOnTouchListener(this);
+		
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
 		
@@ -229,7 +271,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			ArrayList<BaseObject> objects = mMsgTask.getObjects();
 			switch (msg.what) {
 			
-			case REFRESH_OBJECT_CHANGED:	
+			case REFRESH_OBJECT_CHANGED:
+				/*
 				Debug.d(TAG, "======1");
 				mNameAdapter.clear();
 				for(BaseObject o:objects)
@@ -268,11 +311,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				Bundle bundle = msg.getData();
 				int position = bundle.getInt("selection");
 				mObjList.setSelection(position);
+				
+				 */
+				OnPropertyChanged(true);
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
 				OnPropertyChanged(true);
 			case REFRESH_OBJECT_JUST:
-				mNameAdapter.notifyDataSetChanged();
+				// mNameAdapter.notifyDataSetChanged();
 				break;
 			default:
 				break;
@@ -528,17 +574,33 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			case R.id.btn_save:
 				onSave();
 				break;
+			case R.id.btn_saveas:
+				onSaveAs();
+				break;
 			case R.id.btn_insert:
 				onInsert();
 				break;
 			case R.id.btn_open:
 				onOpen();
 				break;
-			case R.id.btn_objinfo:
+			case R.id.btn_detail:
 				onShowInfo();
 				break;
-			case R.id.btn_delete:
-				onDelete();
+			case R.id.btn_up:
+				upKeyPressed();
+				break;
+			case R.id.btn_down:
+				downKeyPressed();
+				break;
+			case R.id.btn_left:
+				leftKeyPressed();
+				break;
+			case R.id.btn_right:
+				rightKeyPressed();
+				break;
+			case R.id.btn_zoomIn:
+				break;
+			case R.id.btn_zoomOut:
 				break;
 			default:
 				break;
@@ -550,6 +612,24 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		switch (v.getId()) {
 		case R.id.editView:
 			onObjectTouch(event);
+			break;
+		case R.id.btn_left:
+			onLeftTouch(event);
+			break;
+		case R.id.btn_right:
+			onRightTouch(event);
+			break;
+		case R.id.btn_up:
+			onUpTouch(event);
+			break;
+		case R.id.btn_down:
+			onDownTouch(event);
+			break;
+		case R.id.btn_zoomOut:
+			// onZoomOutXTouch(event);
+			break;
+		case R.id.btn_zoomIn:
+			// onZoomInXTouch(event);
 			break;
 		default:
 			break;
@@ -666,10 +746,168 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		{
 			clearCurObj();
 			setCurObj(ret);
-			mObjList.setSelection(ret);
+			// mObjList.setSelection(ret);
 			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
 		}
 		return false;
 	}
 	
+	
+	private void leftKeyPressed()
+	{
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		if(obj instanceof RealtimeObject)
+		{
+			((RealtimeObject)obj).setX(obj.getX() - 4);
+		}
+		else
+			obj.setX(obj.getX() - 4);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private boolean onLeftTouch(MotionEvent event) {
+		// TODO Auto-generated method stub
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(LEFT_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======Down button released!!");
+			mKeyRepeatHandler.removeMessages(LEFT_KEY);
+		}
+		return false;
+	}
+	
+	private void rightKeyPressed()
+	{
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		if(obj instanceof RealtimeObject)
+		{
+			((RealtimeObject)obj).setX(obj.getX() + 4);
+		}
+		else
+			obj.setX(obj.getX() + 4);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private boolean onRightTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(RIGHT_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======Down button released!!");
+			mKeyRepeatHandler.removeMessages(RIGHT_KEY);
+		}
+		return false;         
+	}
+	
+	private void upKeyPressed()
+	{
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		if(obj instanceof RealtimeObject)
+		{
+			((RealtimeObject)obj).setY(obj.getY() - 4);
+		}
+		else
+			obj.setY(obj.getY() - 4);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private boolean onUpTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(UP_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======up button released!!");
+			mKeyRepeatHandler.removeMessages(UP_KEY);
+		}
+		return false;
+	}
+	
+	private void downKeyPressed()
+	{
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		if(obj instanceof RealtimeObject)
+		{
+			((RealtimeObject)obj).setY(obj.getY() + 4);
+		}
+		else
+			obj.setY(obj.getY() + 4);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private boolean onDownTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(DOWN_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======Down button released!!");
+			mKeyRepeatHandler.removeMessages(DOWN_KEY);
+		}
+		return false;
+	}
+	
+	
+	public final int LEFT_KEY=1;
+	public final int RIGHT_KEY=2;
+	public final int UP_KEY=3;
+	public final int DOWN_KEY=4;
+	public final int ZOOM_IN_KEY=5;
+	public final int ZOOM_OUT_KEY=6;
+	
+	Handler mKeyRepeatHandler = new Handler(){
+		public void handleMessage(Message msg)
+		{
+			switch(msg.what)
+			{
+				case LEFT_KEY:
+					Debug.d(TAG, "left key pressed");
+					leftKeyPressed();
+					break;
+				case RIGHT_KEY:
+					Debug.d(TAG, "right key pressed");
+					rightKeyPressed();
+					break;
+				case UP_KEY:
+					Debug.d(TAG, "up key pressed");
+					upKeyPressed();
+					break;
+				case	DOWN_KEY:
+					Debug.d(TAG, "down key pressed");
+					downKeyPressed();
+					break;
+				case ZOOM_IN_KEY:
+					Debug.d(TAG, "zoom x  in key pressed");
+					// zoomInXKeyPressed();
+					break;
+				case ZOOM_OUT_KEY:
+					Debug.d(TAG, "zoom x out key pressed");
+					// zoomOutXKeyPressed();
+					break;
+				default:
+					Debug.d(TAG, "unknow key repeat ");
+					break;
+			}
+			mKeyRepeatHandler.sendEmptyMessageDelayed(msg.what, 200);
+		}
+	};
 }

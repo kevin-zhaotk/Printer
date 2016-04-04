@@ -5,23 +5,32 @@
     android:layout_height="wrap_content"
     android:background="#436eee" >
 
-    <include layout="@layout/edit_small_button" 
-        android:id="@+id/buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        />
     
     <include layout="@layout/edit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons"
-        android:layout_above="@+id/bottom"
+        android:layout_above="@+id/buttons_1"
         android:layout_marginTop="10dp"
         />
 
+	<include layout="@layout/edit_small_button" 
+        android:id="@+id/buttons_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttons_2"
+        android:layout_marginTop="10dp"
+        />
 	
-	        
+	<include layout="@layout/edit_small_button2" 
+        android:id="@+id/buttons_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        />
+<!-- 	        
 	<LinearLayout
 	    android:id="@+id/bottom"
 	    android:layout_width="match_parent"
@@ -47,4 +56,5 @@
 		 	/>
 		
 	</LinearLayout>
+-->
 </RelativeLayout>
