@@ -59,7 +59,6 @@ public class ObjectInfoDialog extends Dialog {
 	public TextView mHighView;
 	public TextView mHighUnit;
 	public TextView mCntView;
-	public TextView mDragView;
 	public TextView mFontView;
 	public TextView mRtfmtView;
 	public TextView mBitsView;
@@ -75,7 +74,6 @@ public class ObjectInfoDialog extends Dialog {
 	public EditText mXcorEdit;
 	public EditText mYcorEdit;
 	public EditText mContent;
-	public CheckBox mDragBox;
 	public Spinner mFont;
 	public Spinner mRtFormat;
 	public EditText mDigits;
@@ -109,7 +107,7 @@ public class ObjectInfoDialog extends Dialog {
 	public Context mContext;
 	public BaseObject mObj;
 	public ObjectInfoDialog(Context context, BaseObject obj) {
-		super(context);
+		super(context, R.style.Dialog_Fullscreen);
 		mContext = context;
 		mObj = obj;
 		// TODO Auto-generated constructor stub
@@ -120,7 +118,6 @@ public class ObjectInfoDialog extends Dialog {
 	 protected void onCreate(Bundle savedInstanceState) {
 		 super.onCreate(savedInstanceState);
 	     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	     setHFullScreen();
 		 // this.setTitle(R.string.str_title_infodialog);
 	     if(mObj==null)
 	     {
@@ -182,7 +179,6 @@ public class ObjectInfoDialog extends Dialog {
 	 	mHighView 		= (TextView) findViewById(R.id.highView);
 	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
 	 	mCntView 		= (TextView) findViewById(R.id.cntView);
-	 	mDragView 	= (TextView) findViewById(R.id.dragView);
 	 	mFontView 		= (TextView) findViewById(R.id.fontView);
 	 	mRtfmtView 	= (TextView) findViewById(R.id.rtFmtView);
 	 	mBitsView 		= (TextView) findViewById(R.id.bitsView);
@@ -200,7 +196,6 @@ public class ObjectInfoDialog extends Dialog {
 	     mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 	     mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 	     mContent = (EditText)findViewById(R.id.cntEdit);
-	     mDragBox = (CheckBox) findViewById(R.id.dragBox);
 	     mFont = (Spinner) findViewById(R.id.fontSpin);
 	     mRtFormat = (Spinner) findViewById(R.id.rtFormat);
 	     mDigits = (EditText) findViewById(R.id.cntBits);
@@ -244,7 +239,6 @@ public class ObjectInfoDialog extends Dialog {
 						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString()));
 						Debug.d(TAG, "content="+mContent.getText().toString());
 						mObject.setContent(mContent.getText().toString());
-						mObject.setDragable(mDragBox.isChecked());
 						Resources res = mContext.getResources();
 						
 						String font = res.getStringArray(R.array.strFontFile)[mFont.getSelectedItemPosition()];
@@ -337,7 +331,6 @@ public class ObjectInfoDialog extends Dialog {
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()));
 				mContent.setText(String.valueOf(mObject.getContent()));
-				mDragBox.setChecked(mObject.getSelected());
 				ArrayAdapter adp = (ArrayAdapter)mFont.getAdapter();
 				
 				mFont.setSelection(adp.getPosition(mObject.getFont()));

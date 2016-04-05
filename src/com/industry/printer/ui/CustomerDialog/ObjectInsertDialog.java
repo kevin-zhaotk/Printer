@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public static final String OBJECT_FORMAT = "ObjFormat";
 	
 	private Context 	mContext;
+	private RadioGroup	mGroup;
 	public RadioButton 	mText;
 	public RadioButton 	mRTime;
 	public RadioButton 	mCounter;
@@ -32,7 +34,7 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public Message		mDismissMsg;
 	
 	public ObjectInsertDialog(Context context) {
-		super(context);
+		super(context, R.style.Dialog_Fullscreen);
 		mContext = context;
 	}
 	
@@ -41,6 +43,8 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.setContentView(R.layout.layout_objectinsert_dialog);
+		
+		mGroup = (RadioGroup) findViewById(R.id.object_dialog_btns);
 		
 		mText = (RadioButton)findViewById(R.id.objinsert_text);
 		mText.setOnClickListener(this);
