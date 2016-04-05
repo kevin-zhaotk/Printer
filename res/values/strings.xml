@@ -75,7 +75,7 @@
 	<string name="strShift3">Shift3</string>
 	<string name="strShift4">Shift4</string>
 	<string name="strShift5">Shift5</string>
-	<string name="strInfoname">Subject</string>
+	<string name="strInfoname">Object</string>
 	<string name="strHeadType">PenType</string>
 	<string name="strUpgradeConfirm">Do upgrade?</string>
 	<string name="strUpgradeNoApk">No Upgrade file!!!</string>
@@ -153,13 +153,13 @@
 	<string name="objectInfoName">Show TEXT</string>
 	<string name="object_Msg">TEXT</string>
 	<string name="object_text">Text</string>
-	<string name="object_realtime">Real-Time</string>
+	<string name="object_realtime">Date</string>
 	<string name="object_counter">Counter</string>
 	<string name="object_bar">Barcode</string>
 	<string name="object_pic">Graphic</string>
-	<string name="object_julian">Julian-Date</string>
+	<string name="object_julian">Julian</string>
 	<string name="object_line">Line</string>
-	<string name="object_rect">Rectangle</string>
+	<string name="object_rect">Rect</string>
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">Shift</string>
 	<string name="object_second">Second</string>
@@ -576,7 +576,7 @@
 	<string name="str_filename_no">No file</string>
 	<string name="str_btn_back">Back</string>
 	<string name="str_btn_up">Up</string>
-	<string name="str_btn_detail">Detail</string>
+	<string name="str_btn_detail">Set</string>
 	<string name="cursor">Cursor</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>

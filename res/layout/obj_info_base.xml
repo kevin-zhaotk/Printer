@@ -146,8 +146,6 @@
 	            android:textColor="#000000"
 	            />
 	        
-	        
-	        
 	        <Spinner android:id="@+id/fontSpin"
 	            android:layout_alignLeft="@id/widthEdit"
 	            android:layout_width="wrap_content"
@@ -165,20 +163,4 @@
 	            android:text="@string/strFont"
 	            android:textColor="#000000"
 	            />
-	        
-	        <CheckBox android:id="@+id/dragBox"
-	            android:layout_alignLeft="@id/widthEdit"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/fontSpin"
-	            android:checked="false"/>
-	        
-	        <TextView android:id="@+id/dragView"
-	            android:layout_marginLeft="10dp"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@id/dragBox"
-	            android:textSize="20dp"
-	            android:text="@string/strDragable"
-	            android:textColor="#000000"/>
 </RelativeLayout>
