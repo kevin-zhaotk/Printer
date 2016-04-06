@@ -125,7 +125,7 @@
 	<string name="str_ok">OK</string>
 	<string name="strNativeBtn">Cancel</string>
 	
-	<string name="strRtFmt">Time Format</string>
+	<string name="strRtFmt">Format</string>
 	<string-array name="strTimeFormat">
 	    <item>YYYY-MM-DD</item>
 	    <item>MM-DD-YYYY</item>

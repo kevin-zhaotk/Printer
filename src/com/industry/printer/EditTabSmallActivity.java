@@ -378,9 +378,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			return;
 		Debug.d(TAG, "--->setCurObj: " + objects.size() + "   i=" + i);
 		BaseObject obj=objects.get(i);
-		if (obj instanceof MessageObject) {
-			return;
-		}
+		//if (obj instanceof MessageObject) {
+		//	return;
+		//}
 		obj.setSelected(true);
 	}
 	
@@ -602,6 +602,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			case R.id.btn_zoomIn:
 				break;
 			case R.id.btn_zoomOut:
+				break;
+			case R.id.btn_cursor:
+				/*顯示十字線時選中第一個對象，即MessageObject對象*/
+				clearCurObj();
+				setCurObj(1);
+				// mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 				break;
 			default:
 				break;
