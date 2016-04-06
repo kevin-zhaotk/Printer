@@ -13,6 +13,7 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.onDeleteListener;
 import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
 import com.industry.printer.Utils.Configs;
@@ -713,6 +714,13 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				Debug.d(TAG, "===>onShowinfo  clicked");
 				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_JUST);
 				msg.sendToTarget();
+			}
+		});
+		objDialog.setOnDeleteListener(new onDeleteListener() {
+			
+			@Override
+			public void onClick() {
+				onDelete();
 			}
 		});
 		objDialog.show();

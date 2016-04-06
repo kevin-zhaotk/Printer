@@ -47,6 +47,7 @@ public class ObjectInfoDialog extends Dialog {
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
 	public OnNagitiveBtnListener mNListener;
+	public onDeleteListener mDelListener;
 	
 	public BaseObject mObject;
 	
@@ -103,6 +104,7 @@ public class ObjectInfoDialog extends Dialog {
 	 */
 	public Button mOk;
 	public Button mCancel;
+	public Button mDelete;
 	
 	public Context mContext;
 	public BaseObject mObj;
@@ -307,6 +309,18 @@ public class ObjectInfoDialog extends Dialog {
 				dismiss();
 			}
 		});
+	     
+	     mDelete = (Button) findViewById(R.id.btn_delete);
+	     mDelete.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				dismiss();
+				if(mDelListener != null) {
+					mDelListener.onClick();
+				}
+			}
+		});
 	 }
 	 
 	 public void setObject(BaseObject obj)
@@ -425,6 +439,10 @@ public class ObjectInfoDialog extends Dialog {
 		 mNListener = listener;
 	 }
 	 
+	 public void setOnDeleteListener(onDeleteListener listener) {
+		 mDelListener = listener;
+	 }
+	 
 	 public interface OnPositiveBtnListener
 	 {
 		 void onClick();
@@ -432,6 +450,10 @@ public class ObjectInfoDialog extends Dialog {
 	 
 	 public interface OnNagitiveBtnListener
 	 {
+		 void onClick();
+	 }
+	 
+	 public interface onDeleteListener {
 		 void onClick();
 	 }
 	 

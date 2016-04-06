@@ -8,7 +8,7 @@
 
 	    <Button 
 	        android:id="@+id/btn_confirm"
-	        android:layout_width="80dp"
+	        android:layout_width="0dp"
 	        android:layout_height="60dp"
 	        android:background="@drawable/button_style"
 	        android:textSize="25sp"
@@ -17,12 +17,22 @@
 	        android:text="@string/str_ok"/>
 	    <Button
 	        android:id="@+id/btn_objinfo_cnl"
-	        android:layout_width="80dp"
+	        android:layout_width="0dp"
 	        android:layout_height="60dp"
 	        android:background="@drawable/button_style"
 	        android:textSize="25sp"
 	        android:layout_weight="1"
 	        android:layout_gravity="center"
 	        android:text="@string/strNativeBtn"
+	        />
+	    <Button
+	        android:id="@+id/btn_delete"
+	        android:layout_width="0dp"
+	        android:layout_height="60dp"
+	        android:background="@drawable/button_style"
+	        android:textSize="25sp"
+	        android:layout_weight="1"
+	        android:layout_gravity="center"
+	        android:text="@string/str_del"
 	        />
 </LinearLayout>
