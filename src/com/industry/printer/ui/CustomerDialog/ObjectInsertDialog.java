@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.view.Window;
-import android.widget.RadioButton;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,20 +21,19 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public static final String OBJECT_FORMAT = "ObjFormat";
 	
 	private Context 	mContext;
-	private RadioGroup	mGroup;
-	public RadioButton 	mText;
-	public RadioButton 	mRTime;
-	public RadioButton 	mCounter;
-	public RadioButton	mBarcode;
-	public RadioButton	mJulian;
-	public RadioButton	mGraphic;
-	public RadioButton	mLine;
-	public RadioButton	mRect;
-	public RadioButton	mEllipse;
+	public Button 	mText;
+	public Button 	mRTime;
+	public Button 	mCounter;
+	public Button	mBarcode;
+	public Button	mJulian;
+	public Button	mGraphic;
+	public Button	mLine;
+	public Button	mRect;
+	public Button	mEllipse;
 	public Message		mDismissMsg;
 	
 	public ObjectInsertDialog(Context context) {
-		super(context, R.style.Dialog_Fullscreen);
+		super(context);
 		mContext = context;
 	}
 	
@@ -42,35 +41,34 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.setContentView(R.layout.layout_objectinsert_dialog);
+		this.setContentView(R.layout.layout_objinsert_gridview);
 		
-		mGroup = (RadioGroup) findViewById(R.id.object_dialog_btns);
 		
-		mText = (RadioButton)findViewById(R.id.objinsert_text);
+		mText = (Button)findViewById(R.id.objinsert_text);
 		mText.setOnClickListener(this);
 		
-		mRTime = (RadioButton)findViewById(R.id.objinsert_time);
+		mRTime = (Button)findViewById(R.id.objinsert_time);
 		mRTime.setOnClickListener(this);
 		
-		mCounter = (RadioButton) findViewById(R.id.objinsert_counter);
+		mCounter = (Button) findViewById(R.id.objinsert_counter);
 		mCounter.setOnClickListener(this);
 		
-		mBarcode = (RadioButton) findViewById(R.id.objinsert_barcode);
+		mBarcode = (Button) findViewById(R.id.objinsert_barcode);
 		mBarcode.setOnClickListener(this);
 		
-		mGraphic = (RadioButton) findViewById(R.id.objinsert_graphic);
+		mGraphic = (Button) findViewById(R.id.objinsert_graphic);
 		mGraphic.setOnClickListener(this);
 		
-		mLine = (RadioButton) findViewById(R.id.objinsert_line);
+		mLine = (Button) findViewById(R.id.objinsert_line);
 		mLine.setOnClickListener(this);
 		
-		mRect = (RadioButton) findViewById(R.id.objinsert_rect);
+		mRect = (Button) findViewById(R.id.objinsert_rect);
 		mRect.setOnClickListener(this);
 		
-		mEllipse = (RadioButton) findViewById(R.id.objinsert_ellipse);
+		mEllipse = (Button) findViewById(R.id.objinsert_ellipse);
 		mEllipse.setOnClickListener(this);
 
-		mJulian = (RadioButton) findViewById(R.id.objinsert_julian);
+		mJulian = (Button) findViewById(R.id.objinsert_julian);
 		mJulian.setOnClickListener(this);
 	}
 
