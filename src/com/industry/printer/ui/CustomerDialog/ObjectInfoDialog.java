@@ -116,6 +116,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private PopWindowAdapter mFontAdapter;
 	private PopWindowAdapter mFormatAdapter;
 	private PopWindowAdapter mTypeAdapter;
+	private PopWindowAdapter mLineAdapter;
+	private PopWindowAdapter mDirAdapter;
 	
 	public ObjectInfoDialog(Context context, BaseObject obj) {
 		super(context, R.style.Dialog_Fullscreen);
@@ -221,6 +223,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     mShow = (CheckBox) findViewById(R.id.check_Num_show);
 	     mLineWidth = (EditText) findViewById(R.id.lineWidth);
 	     mLineType = (TextView) findViewById(R.id.spin_line_type);
+	     mLineType.setOnClickListener(this);
+	     
 	     mShift1 = (EditText) findViewById(R.id.edit_shift1);
 	     mShiftVal1 = (EditText) findViewById(R.id.edit_shiftValue1);
 	     mShift2 = (EditText) findViewById(R.id.edit_shift2);
@@ -470,6 +474,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mFontAdapter = new PopWindowAdapter(mContext, null);
 		mFormatAdapter = new PopWindowAdapter(mContext, null);
 		mTypeAdapter = new PopWindowAdapter(mContext, null);
+		mLineAdapter = new PopWindowAdapter(mContext, null);
+		mDirAdapter = new PopWindowAdapter(mContext, null);
 		
 		String[] fonts = mContext.getResources().getStringArray(R.array.strFontArray);
 		for (String font : fonts) {
@@ -485,6 +491,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		for (String type : types) {
 			mTypeAdapter.addItem(type);
 		}
+		
+		String[] lines = mContext.getResources().getStringArray(R.array.strLineArray);
+		for (String line : lines) {
+			mLineAdapter.addItem(line);
+		}
+		
+		String[] directions = mContext.getResources().getStringArray(R.array.strDirectArray);
+		for (String direction : directions) {
+			mTypeAdapter.addItem(direction);
+		}
+		
 	 }
 	 
 	 private void setHFullScreen() {
@@ -503,7 +520,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		}
 		mSpiner.setAttachedView(v);
 		mSpiner.setWidth(v.getWidth());
-		mSpiner.showAsDropDown(v);
+		
 		switch (v.getId()) {
 		case R.id.headTypeSpin:
 			mSpiner.setAdapter(mTypeAdapter);
@@ -514,9 +531,16 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		case R.id.rtFormat:
 			mSpiner.setAdapter(mFormatAdapter);
 			break;
+		case R.id.spin_line_type:
+			mSpiner.setAdapter(mLineAdapter);
+			break;
+		case R.id.spinDirect:
+			mSpiner.setAdapter(mDirAdapter);
+			break;
 		default:
 			break;
 		}
+		mSpiner.showAsDropDown(v);
 	}
 
 	@Override
@@ -528,6 +552,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			view.setText((String)mFontAdapter.getItem(index));
 		} else if (view == mRtFormat) {
 			view.setText((String)mFormatAdapter.getItem(index));
+		} else if (view == mLineType) {
+			view.setText((String)mLineAdapter.getItem(index));
+		} else if (view == mDir) {
+			view.setText((String)mDirAdapter.getItem(index));
 		} else {
 			Debug.d(TAG, "--->unknow view");
 		}
