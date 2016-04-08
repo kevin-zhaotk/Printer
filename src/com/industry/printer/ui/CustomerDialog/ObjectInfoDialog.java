@@ -81,7 +81,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public TextView mFont;
 	public TextView mRtFormat;
 	public EditText mDigits;
-	public Spinner mDir;
+	public TextView mDir;
 	public Spinner mCode;
 	public CheckBox mShow;
 	public EditText mLineWidth;
@@ -97,7 +97,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public EditText mShiftVal5;
 	public Button	mBtnOk;
 	
-	public Spinner mLineType;
+	public TextView mLineType;
 	
 	
 	public EditText mMsg;
@@ -209,14 +209,18 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     mContent = (EditText)findViewById(R.id.cntEdit);
 	     mFont = (TextView) findViewById(R.id.fontSpin);
 	     mFont.setOnClickListener(this);
+	     
 	     mRtFormat = (TextView) findViewById(R.id.rtFormat);
 	     mRtFormat.setOnClickListener(this);
+	     
 	     mDigits = (EditText) findViewById(R.id.cntBits);
-	     mDir = (Spinner) findViewById(R.id.spinDirect); 
+	     mDir = (TextView) findViewById(R.id.spinDirect);
+	     mDir.setOnClickListener(this);
+	     
 	     mCode = (Spinner) findViewById(R.id.spinCode);
 	     mShow = (CheckBox) findViewById(R.id.check_Num_show);
 	     mLineWidth = (EditText) findViewById(R.id.lineWidth);
-	     mLineType = (Spinner) findViewById(R.id.spin_line_type);
+	     mLineType = (TextView) findViewById(R.id.spin_line_type);
 	     mShift1 = (EditText) findViewById(R.id.edit_shift1);
 	     mShiftVal1 = (EditText) findViewById(R.id.edit_shiftValue1);
 	     mShift2 = (EditText) findViewById(R.id.edit_shift2);
@@ -242,7 +246,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						if(mObject instanceof MessageObject)
 						{
 							mObject.setContent(mMsg.getText().toString());
-							((MessageObject) mObject).setPrinter(mPrinter.getSelectedItemPosition());
+							((MessageObject) mObject).setPrinter(mPrinter.getText().toString());
 							return;
 						}
 						
@@ -254,17 +258,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						mObject.setContent(mContent.getText().toString());
 						Resources res = mContext.getResources();
 						
-						String font = res.getStringArray(R.array.strFontFile)[mFont.getSelectedItemPosition()];
+						String font = mFont.getText().toString();
 						mObject.setFont(font);
 						if(mObject instanceof RealtimeObject)
 						{
-							((RealtimeObject) mObject).setFormat((String)mRtFormat.getSelectedItem());
+							((RealtimeObject) mObject).setFormat((String)mRtFormat.getText());
 							((RealtimeObject)mObject).setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
 						}
 						else if(mObject instanceof CounterObject)
 						{
 							((CounterObject) mObject).setBits(Integer.parseInt(mDigits.getText().toString()));
-							((CounterObject) mObject).setDirection("increase".equals(mDir.getSelectedItem().toString())?true:false);
+							((CounterObject) mObject).setDirection("increase".equals(mDir.getText().toString())?true:false);
 						}
 						else if(mObject instanceof BarcodeObject)
 						{
@@ -274,17 +278,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						else if(mObject instanceof RectObject)
 						{
 							mObject.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-							((RectObject) mObject).setLineType(mLineType.getSelectedItemPosition());
+							((RectObject) mObject).setLineType(mLineType.getText().toString());
 						}
 						else if(mObject instanceof LineObject)
 						{
 							mObject.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-							((LineObject) mObject).setLineType(mLineType.getSelectedItemPosition());
+							((LineObject) mObject).setLineType(mLineType.getText().toString());
 						}
 						else if(mObject instanceof EllipseObject)
 						{
 							mObject.setLineWidth(Integer.parseInt(mLineWidth.getText().toString()));
-							((EllipseObject) mObject).setLineType(mLineType.getSelectedItemPosition());
+							((EllipseObject) mObject).setLineType(mLineType.getText().toString());
 						}
 						else if(mObject instanceof ShiftObject)
 						{
@@ -347,7 +351,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		 if(mObject instanceof MessageObject)
 			{	
 				mMsg.setText(mObject.getContent());
-				mPrinter.setSelection(((MessageObject) mObject).getPrinter());
+				mPrinter.setText(((MessageObject) mObject).getPrinterName());
 			}
 			else
 			{
@@ -356,27 +360,16 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()));
 				mContent.setText(String.valueOf(mObject.getContent()));
-				ArrayAdapter adp = (ArrayAdapter)mFont.getAdapter();
 				
-				mFont.setSelection(adp.getPosition(mObject.getFont()));
+				mFont.setText(mObject.getFont());
 				if(mObject instanceof RealtimeObject)
 				{
-					String [] fm = mContext.getResources().getStringArray(R.array.strTimeFormat);
-					for( i = 0; i<fm.length; i++)
-					{
-						if(fm[i].equals(((RealtimeObject) mObject).getFormat()))
-						{
-							mRtFormat.setSelection(i);
-							break;
-						}
-					}
-					if(i==fm.length)
-						mRtFormat.setSelection(0);
+					mRtFormat.setText(((RealtimeObject) mObject).getFormat());
 				}
 				else if(mObject instanceof CounterObject)
 				{
 					mDigits.setText(String.valueOf( ((CounterObject) mObject).getBits()));
-					mDir.setSelection( ((CounterObject) mObject).getDirection()==true? 1: 0);
+					mDir.setText( ((CounterObject) mObject).getDirection());
 				}
 				else if(mObject instanceof BarcodeObject)
 				{
@@ -403,15 +396,15 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 				else if(mObject instanceof RectObject){
 					mLineWidth.setText(String.valueOf(((RectObject)mObject).getLineWidth()));
-					mLineType.setSelection(((RectObject)mObject).getLineType());
+					mLineType.setText(((RectObject)mObject).getLineType());
 				}
 				else if(mObject instanceof LineObject){
 					mLineWidth.setText(String.valueOf(((LineObject)mObject).getLineWidth()));
-					mLineType.setSelection(((LineObject)mObject).getLineType());
+					mLineType.setText(((LineObject)mObject).getLineType());
 				}
 				else if(mObject instanceof EllipseObject){
 					mLineWidth.setText(String.valueOf(((EllipseObject)mObject).getLineWidth()));
-					mLineType.setSelection(((EllipseObject)mObject).getLineType());
+					mLineType.setText(((EllipseObject)mObject).getLineType());
 				}
 			}
 	 }

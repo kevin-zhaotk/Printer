@@ -28,10 +28,25 @@ public class MessageObject extends BaseObject {
 			return ;
 		mPrinter = i;
 	}
+	
+	public void setPrinter(String type) {
+		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
+		for (int i=0; i<printer.length; i++) {
+			if (printer[i].equals(type)) {
+				mPrinter = i;
+				break;
+			}
+		}
+	}
 
 	public int getPrinter()
 	{
 		return mPrinter;
+	}
+	
+	public String getPrinterName() {
+		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
+		return printer[mPrinter];
 	}
 	
 	public void setDotCount(int count) {

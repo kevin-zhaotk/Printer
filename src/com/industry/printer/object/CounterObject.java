@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
@@ -70,9 +71,10 @@ public class CounterObject extends BaseObject {
 		mDirection = dir;
 	}
 	
-	public boolean getDirection()
+	public String getDirection()
 	{
-		return mDirection;
+		String[] directions = mContext.getResources().getStringArray(R.array.strDirectArray);
+		return mDirection ? directions[0] : directions[1];
 	}
 	
 	public void setSteplen(int step)

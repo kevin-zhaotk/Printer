@@ -42,12 +42,17 @@
 	            android:textColor="#000000"
 	            />
 	        
-	        <Spinner android:id="@+id/spinDirect"
+	        <TextView android:id="@+id/spinDirect"
 	            android:layout_alignLeft="@id/cntBits"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/cntBits"
-	            android:entries="@array/strDirectArray"/>
+	            android:gravity="center_vertical"
+	            android:drawableRight="@drawable/spiner_down_btn"
+	            android:textSize="@dimen/settingsEditTextsize"
+	            android:textColor="#000000"
+	            android:background="#ffffff"
+	            />
 	        
 	        <TextView android:id="@+id/viewDirect"
 	            android:layout_alignLeft="@id/bitsView"

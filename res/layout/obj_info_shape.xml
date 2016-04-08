@@ -41,12 +41,16 @@
 	            android:text="@string/strLinewidth"
 	            android:textColor="#000000"
 	            />
-	        <Spinner android:id="@+id/spin_line_type"
+	        <TextView android:id="@+id/spin_line_type"
 	            android:layout_alignLeft="@id/lineWidth"
 	            android:layout_width="300dp"
 	            android:layout_height="wrap_content"
 	            android:layout_below="@id/lineWidth"
-	            android:entries="@array/strLineArray"/>
+	            android:gravity="center_vertical"
+	            android:drawableRight="@drawable/spiner_down_btn"
+	            android:textSize="@dimen/settingsEditTextsize"
+	            android:textColor="#000000"
+	            android:background="#ffffff"/>
 	        
 	        <TextView android:id="@+id/view_line_type"
 	            android:layout_alignLeft="@id/lineView"

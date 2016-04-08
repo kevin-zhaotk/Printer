@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
@@ -25,9 +26,28 @@ public class RectObject extends BaseObject {
 		mLineType=type;
 	}
 	
+	public void setLineType(String type)
+	{
+		String[] lines = mContext.getResources().getStringArray(R.array.strLineArray);
+		for (int i = 0; i < lines.length; i++) {
+			if (lines[i].equals(type)) {
+				mLineType = i;
+				break;
+			}
+		}
+	}
+	
 	public int getLineType()
 	{
 		return mLineType;
+	}
+	
+	public String getLineName() {
+		String[] lines = mContext.getResources().getStringArray(R.array.strLineArray);
+		if (mLineType < 0 || mLineType >= lines.length) {
+			return null;
+		}
+		return lines[mLineType];
 	}
 	
 	@Override
