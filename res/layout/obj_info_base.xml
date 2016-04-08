@@ -151,13 +151,18 @@
 	            android:textColor="#000000"
 	            />
 	        
-	        <Spinner android:id="@+id/fontSpin"
-	            android:layout_alignLeft="@id/widthEdit"
+	        <TextView
+	             android:id="@+id/fontSpin"
+	             android:layout_alignLeft="@id/widthEdit"
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/cntEdit"
-	            android:entries="@array/strFontArray"
-	            />
+	             android:layout_height="wrap_content"
+	             android:layout_below="@id/cntEdit"
+	             android:gravity="center_vertical"
+	             android:drawableRight="@drawable/spiner_down_btn"
+	             android:textSize="@dimen/settingsEditTextsize"
+	             android:textColor="#000000"
+	             android:background="#ffffff"
+	             />
 	        
 	        <TextView android:id="@+id/fontView"
 	            android:layout_alignLeft="@id/widthView"

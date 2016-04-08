@@ -23,6 +23,9 @@ import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.ShiftObject;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.widget.PopWindowSpiner;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -42,7 +45,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class ObjectInfoDialog extends Dialog {
+public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener {
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -75,8 +78,8 @@ public class ObjectInfoDialog extends Dialog {
 	public EditText mXcorEdit;
 	public EditText mYcorEdit;
 	public EditText mContent;
-	public Spinner mFont;
-	public Spinner mRtFormat;
+	public TextView mFont;
+	public TextView mRtFormat;
 	public EditText mDigits;
 	public Spinner mDir;
 	public Spinner mCode;
@@ -98,7 +101,7 @@ public class ObjectInfoDialog extends Dialog {
 	
 	
 	public EditText mMsg;
-	public Spinner mPrinter;
+	public TextView mPrinter;
 	/*
 	 * 
 	 */
@@ -108,12 +111,17 @@ public class ObjectInfoDialog extends Dialog {
 	
 	public Context mContext;
 	public BaseObject mObj;
+	
+	private PopWindowSpiner  mSpiner;
+	private PopWindowAdapter mFontAdapter;
+	private PopWindowAdapter mFormatAdapter;
+	private PopWindowAdapter mTypeAdapter;
+	
 	public ObjectInfoDialog(Context context, BaseObject obj) {
 		super(context, R.style.Dialog_Fullscreen);
 		mContext = context;
 		mObj = obj;
-		// TODO Auto-generated constructor stub
-		//this.setContentView(R.layout.object_info);
+		initAdapter();
 	}
 
 	 @Override
@@ -164,7 +172,8 @@ public class ObjectInfoDialog extends Dialog {
 	     {
 	    	 this.setContentView(R.layout.msg_info);
 	    	 mMsg = (EditText) findViewById(R.id.msgNameEdit);
-	    	 mPrinter = (Spinner) findViewById(R.id.headTypeSpin);
+	    	 mPrinter = (TextView) findViewById(R.id.headTypeSpin);
+	    	 mPrinter.setOnClickListener(this);
 	     }
 	     else 
 	     {
@@ -172,24 +181,24 @@ public class ObjectInfoDialog extends Dialog {
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
 	     
-	    mXCorView 	= (TextView) findViewById(R.id.xCorView);
-	 	mXCorUnit 		= (TextView) findViewById(R.id.xCorUnit);
-	 	mYCorView	= (TextView) findViewById(R.id.yCorView);
-	 	mYCorUnit 		= (TextView) findViewById(R.id.yCorUnit);
-	 	mWidthView 	= (TextView) findViewById(R.id.widthView);
-	 	mWidthUnit 	= (TextView) findViewById(R.id.widthUnitView);
-	 	mHighView 		= (TextView) findViewById(R.id.highView);
-	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
-	 	mCntView 		= (TextView) findViewById(R.id.cntView);
-	 	mFontView 		= (TextView) findViewById(R.id.fontView);
-	 	mRtfmtView 	= (TextView) findViewById(R.id.rtFmtView);
-	 	mBitsView 		= (TextView) findViewById(R.id.bitsView);
-	 	mDirectView 	= (TextView) findViewById(R.id.viewDirect);
-	 	mCodeView 	= (TextView) findViewById(R.id.viewCode);
-	 	mNumshowView = (TextView) findViewById(R.id.view_num_show);
-	 	mLineView 		= (TextView) findViewById(R.id.lineView);
-	 	mLinetypeView = (TextView) findViewById(R.id.view_line_type);
-	 	
+//	    mXCorView 	= (TextView) findViewById(R.id.xCorView);
+//	 	mXCorUnit 		= (TextView) findViewById(R.id.xCorUnit);
+//	 	mYCorView	= (TextView) findViewById(R.id.yCorView);
+//	 	mYCorUnit 		= (TextView) findViewById(R.id.yCorUnit);
+//	 	mWidthView 	= (TextView) findViewById(R.id.widthView);
+//	 	mWidthUnit 	= (TextView) findViewById(R.id.widthUnitView);
+//	 	mHighView 		= (TextView) findViewById(R.id.highView);
+//	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
+//	 	mCntView 		= (TextView) findViewById(R.id.cntView);
+//	 	mFontView 		= (TextView) findViewById(R.id.fontView);
+//	 	mRtfmtView 	= (TextView) findViewById(R.id.rtFmtView);
+//	 	mBitsView 		= (TextView) findViewById(R.id.bitsView);
+//	 	mDirectView 	= (TextView) findViewById(R.id.viewDirect);
+//	 	mCodeView 	= (TextView) findViewById(R.id.viewCode);
+//	 	mNumshowView = (TextView) findViewById(R.id.view_num_show);
+//	 	mLineView 		= (TextView) findViewById(R.id.lineView);
+//	 	mLinetypeView = (TextView) findViewById(R.id.view_line_type);
+//	 	
 	 	//Inflater inflater inflater= new Inflater();
 	 	//View v1 = inflater.inflate(R.id.)
 	 	
@@ -198,8 +207,10 @@ public class ObjectInfoDialog extends Dialog {
 	     mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 	     mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 	     mContent = (EditText)findViewById(R.id.cntEdit);
-	     mFont = (Spinner) findViewById(R.id.fontSpin);
-	     mRtFormat = (Spinner) findViewById(R.id.rtFormat);
+	     mFont = (TextView) findViewById(R.id.fontSpin);
+	     mFont.setOnClickListener(this);
+	     mRtFormat = (TextView) findViewById(R.id.rtFormat);
+	     mRtFormat.setOnClickListener(this);
 	     mDigits = (EditText) findViewById(R.id.cntBits);
 	     mDir = (Spinner) findViewById(R.id.spinDirect); 
 	     mCode = (Spinner) findViewById(R.id.spinCode);
@@ -457,6 +468,32 @@ public class ObjectInfoDialog extends Dialog {
 		 void onClick();
 	 }
 	 
+	 private void initAdapter() {
+		 
+		mSpiner = new PopWindowSpiner(mContext);
+		mSpiner.setFocusable(true);
+		mSpiner.setOnItemClickListener(this);
+		
+		mFontAdapter = new PopWindowAdapter(mContext, null);
+		mFormatAdapter = new PopWindowAdapter(mContext, null);
+		mTypeAdapter = new PopWindowAdapter(mContext, null);
+		
+		String[] fonts = mContext.getResources().getStringArray(R.array.strFontArray);
+		for (String font : fonts) {
+			mFontAdapter.addItem(font);
+		}
+		
+		String[] formats = mContext.getResources().getStringArray(R.array.strTimeFormat);
+		for (String format : formats) {
+			mFormatAdapter.addItem(format);
+		}
+		
+		String[] types = mContext.getResources().getStringArray(R.array.strPrinterArray);
+		for (String type : types) {
+			mTypeAdapter.addItem(type);
+		}
+	 }
+	 
 	 private void setHFullScreen() {
 		 Window win = this.getWindow();
 		 win.getDecorView().setPadding(0, 0, 0, 0);
@@ -465,4 +502,41 @@ public class ObjectInfoDialog extends Dialog {
 		 lp.height = WindowManager.LayoutParams.FILL_PARENT;
 		 win.setAttributes(lp);
 	 }
+
+	@Override
+	public void onClick(View v) {
+		if (v == null) {
+			return;
+		}
+		mSpiner.setAttachedView(v);
+		mSpiner.setWidth(v.getWidth());
+		mSpiner.showAsDropDown(v);
+		switch (v.getId()) {
+		case R.id.headTypeSpin:
+			mSpiner.setAdapter(mTypeAdapter);
+			break;
+		case R.id.fontSpin:
+			mSpiner.setAdapter(mFontAdapter);
+			break;
+		case R.id.rtFormat:
+			mSpiner.setAdapter(mFormatAdapter);
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onItemClick(int index) {
+		TextView view = mSpiner.getAttachedView();
+		if (view == mPrinter) {
+			view.setText((String)mTypeAdapter.getItem(index));
+		} else if (view == mFont) {
+			view.setText((String)mFontAdapter.getItem(index));
+		} else if (view == mRtFormat) {
+			view.setText((String)mFormatAdapter.getItem(index));
+		} else {
+			Debug.d(TAG, "--->unknow view");
+		}
+	}
 }

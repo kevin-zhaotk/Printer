@@ -607,7 +607,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				/*顯示十字線時選中第一個對象，即MessageObject對象*/
 				clearCurObj();
 				setCurObj(1);
-				// mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 				break;
 			default:
 				break;
@@ -750,7 +750,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		msg.setData(bundle);
 		mObjRefreshHandler.sendMessage(msg);
 		clearCurObj();
-		
 	}
 	
 	private boolean onObjectTouch(MotionEvent event) {
