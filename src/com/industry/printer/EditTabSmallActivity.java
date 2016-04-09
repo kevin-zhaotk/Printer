@@ -376,8 +376,13 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
 		if(i >= objects.size())
 			return;
+		for(BaseObject obj : objects)
+		{
+			obj.setSelected(false);
+		}
 		Debug.d(TAG, "--->setCurObj: " + objects.size() + "   i=" + i);
 		BaseObject obj=objects.get(i);
+		Debug.d(TAG, "--->obj: " + obj.getId());
 		//if (obj instanceof MessageObject) {
 		//	return;
 		//}
@@ -605,8 +610,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				break;
 			case R.id.btn_cursor:
 				/*顯示十字線時選中第一個對象，即MessageObject對象*/
-				clearCurObj();
-				setCurObj(1);
+				setCurObj(0);
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 				break;
 			default:

@@ -69,16 +69,17 @@ public class EditScrollView extends View {
 					/* 画水平线 */
 					0, obj.getY(), mScreenW, obj.getY(),
 					/* 画垂直线 */
-					obj.getX(), 0, mScreenH, getHeight()
+					obj.getX(), 0, obj.getX(), mScreenH
 				};
 				
-				if (obj.getSelected()) {
+				if (!obj.getSelected()) {
 					p.setColor(Color.BLACK);
 				} else {
 					p.setColor(Color.RED);
 				}
-				p.setStrokeWidth(3);
+				p.setStrokeWidth(2);
 				canvas.drawLines(points, p);
+				continue;
 			 }
 				 
 			 if(mContext == null)

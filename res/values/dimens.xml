@@ -20,6 +20,7 @@
 <!-- 编辑界面相关尺寸定义 -->
 	<dimen name="editButtonsHeight">80dp</dimen>
 	<dimen name="editButtonsTextsize">30sp</dimen>
+	<dimen name="objinfoTextsize">30sp</dimen>
 	
 <!-- 控制界面相关尺寸定义 -->
 	<dimen name="ctrlButtonHeight">80dp</dimen>

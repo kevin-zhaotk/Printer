@@ -203,27 +203,38 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 //	 	
 	 	//Inflater inflater inflater= new Inflater();
 	 	//View v1 = inflater.inflate(R.id.)
-	 	
-	     mWidthEdit = (EditText)findViewById(R.id.widthEdit);
-	     mHighEdit = (EditText)findViewById(R.id.highEdit);
-	     mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
-	     mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
-	     mContent = (EditText)findViewById(R.id.cntEdit);
-	     mFont = (TextView) findViewById(R.id.fontSpin);
-	     mFont.setOnClickListener(this);
-	     
-	     mRtFormat = (TextView) findViewById(R.id.rtFormat);
-	     mRtFormat.setOnClickListener(this);
-	     
-	     mDigits = (EditText) findViewById(R.id.cntBits);
-	     mDir = (TextView) findViewById(R.id.spinDirect);
-	     mDir.setOnClickListener(this);
-	     
-	     mCode = (Spinner) findViewById(R.id.spinCode);
-	     mShow = (CheckBox) findViewById(R.id.check_Num_show);
-	     mLineWidth = (EditText) findViewById(R.id.lineWidth);
-	     mLineType = (TextView) findViewById(R.id.spin_line_type);
-	     mLineType.setOnClickListener(this);
+	 	if (! (mObj instanceof MessageObject)) {
+		
+		    mWidthEdit = (EditText)findViewById(R.id.widthEdit);
+		    mHighEdit = (EditText)findViewById(R.id.highEdit);
+		    mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
+		    mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
+		    mContent = (EditText)findViewById(R.id.cntEdit);
+		    mFont = (TextView) findViewById(R.id.fontSpin);
+		    mFont.setOnClickListener(this);
+		     
+		    if (mObj instanceof RealtimeObject) {
+		    	mRtFormat = (TextView) findViewById(R.id.rtFormat);
+			    mRtFormat.setOnClickListener(this);
+			}
+		    
+		    if (mObj instanceof CounterObject) {
+		    	mDigits = (EditText) findViewById(R.id.cntBits);
+			    mDir = (TextView) findViewById(R.id.spinDirect);
+			    mDir.setOnClickListener(this);
+			}
+		    
+		    mCode = (Spinner) findViewById(R.id.spinCode);
+		    mShow = (CheckBox) findViewById(R.id.check_Num_show);
+		    mLineWidth = (EditText) findViewById(R.id.lineWidth);
+		    
+		    if (mObj instanceof LineObject 
+		    		|| mObj instanceof RectObject
+		    		|| mObj instanceof EllipseObject) {
+		    	mLineType = (TextView) findViewById(R.id.spin_line_type);
+			    mLineType.setOnClickListener(this);
+			}
+	 	}
 	     
 	     mShift1 = (EditText) findViewById(R.id.edit_shift1);
 	     mShiftVal1 = (EditText) findViewById(R.id.edit_shiftValue1);
@@ -499,7 +510,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		
 		String[] directions = mContext.getResources().getStringArray(R.array.strDirectArray);
 		for (String direction : directions) {
-			mTypeAdapter.addItem(direction);
+			mDirAdapter.addItem(direction);
 		}
 		
 	 }
@@ -540,7 +551,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		default:
 			break;
 		}
-		mSpiner.showAsDropDown(v);
+		mSpiner.showAsDropUp(v);
+		// mSpiner.showAsDropDown(v);
 	}
 
 	@Override
