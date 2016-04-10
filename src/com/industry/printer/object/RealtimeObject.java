@@ -134,11 +134,11 @@ public class RealtimeObject extends BaseObject {
 			}
 			
 			/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-			if (PlatformInfo.isSmfyProduct()) {
+			if (PlatformInfo.isBufferFromDotMatrix()) {
 				x = x + o.getContent().length() * 16;
 			} 
 			/*通过bitmap提取点阵的系统用下面的计算方法*/
-			else if (PlatformInfo.isFriendlyProduct()) {
+			else {
 				x = o.getXEnd();
 			}
 			str = str.substring(i);
@@ -152,7 +152,7 @@ public class RealtimeObject extends BaseObject {
 	@Override
 	public Bitmap getScaledBitmap(Context context)
 	{
-		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
@@ -207,6 +207,13 @@ public class RealtimeObject extends BaseObject {
 		{
 			o.setHeight(size);
 		}
+	}
+	
+	@Override
+	public void setHeight(String size)
+	{
+		int height = mTask.getMsgObject().getPixels(size);
+		setHeight(height);
 	}
 	
 	@Override

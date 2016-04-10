@@ -48,8 +48,9 @@ public class PlatformInfo {
 	public static final int SMALL_SCREEN_PART = 2;
 	/* 小屏全編輯 - 按鈕合併 */
 	public static final int SMALL_SCREEN_FULL = 3;
-		
 	
+	/* 通過點陣字庫獲取buffer */
+	public static final boolean isDotMatrix = false;
 	
 	/* 通过该常量来区分硬件平台 */
 	private static String mProduct = PRODUCT_SMFY_SUPER3;
@@ -65,20 +66,7 @@ public class PlatformInfo {
 	 * @return
 	 */
 	public static boolean isBufferFromDotMatrix() {
-		// String product = SystemProperties.get(PROPERTY_PRODUCT);
-		String product = null;
-		
-		try {
-			Class<?> mClassType = Class.forName("android.os.SystemProperties");
-			Method mGetMethod = mClassType.getDeclaredMethod("get", String.class);
-			product = (String) mGetMethod.invoke(mClassType, PROPERTY_PRODUCT);
-		} catch (Exception e) {
-		}
-		Debug.d(TAG, "--->product=" + product);
-		if (PRODUCT_SMFY_SUPER3.equalsIgnoreCase(product)) {
-			return true;
-		}
-		return false;
+		return isDotMatrix;
 	}
 	
 	public static String getProduct() {

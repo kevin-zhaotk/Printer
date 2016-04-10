@@ -430,12 +430,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			}
 	 }
 	 
-	 public void selfInfoEnable()
+	public void selfInfoEnable()
 	{
-		 if(mObject == null ||(mObject instanceof MessageObject))
-			 return ;
+		if(mObject == null ||(mObject instanceof MessageObject))
+			return ;
 		
-		 if(mObject instanceof RealtimeObject ||
+		if(mObject instanceof RealtimeObject ||
 				 mObject instanceof GraphicObject ||
 				 mObject instanceof RTSecondObject ||
 				 mObject instanceof ShiftObject ||
@@ -443,14 +443,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				 mObject instanceof RectObject ||
 				 mObject instanceof LineObject)
 		{
-			 Debug.d(TAG, ">>>>>disable content");
-			 mContent.setEnabled(false);
-			 mCntView.setTextColor(Color.GRAY);
+			Debug.d(TAG, ">>>>>disable content");
+			mContent.setEnabled(false);
 		}
-		
-		else 
-		{
-			//this.setClickable(false);
+		if (mObject instanceof CounterObject) {
+			mCntView.setTextColor(Color.GRAY);
 		}
 	}
 	 
