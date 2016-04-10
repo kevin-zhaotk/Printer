@@ -148,7 +148,21 @@
 	    <item>9位</item>
 	    <item>10位</item>
 	</string-array>
-	
+	<string-array name="strarrayFontSize">
+	    <item>1 mm</item>
+	    <item>2 mm</item>
+	    <item>3 mm</item>
+	    <item>4 mm</item>
+	    <item>5 mm</item>
+	    <item>6 mm</item>
+	    <item>7 mm</item>
+	    <item>8 mm</item>
+	    <item>9 mm</item>
+	    <item>10 mm</item>
+	    <item>11 mm</item>
+	    <item>12 mm</item>
+	    <item>12.7 mm</item>
+	</string-array>
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
 	<string name="objectInfoName">显示对象信息</string>
@@ -333,6 +347,7 @@
 	<string name="str_format_24">是</string>
 	<string name="str_format_12">否</string>
 	<string name="cor_unit">dp</string>
+	<string name="font_unit">mm</string>
 	
 	<string name="str_trans">==></string>
 	

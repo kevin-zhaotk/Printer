@@ -74,7 +74,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	
 	
 	public EditText mWidthEdit;
-	public EditText mHighEdit;
+	public TextView mHighEdit;
 	public EditText mXcorEdit;
 	public EditText mYcorEdit;
 	public EditText mContent;
@@ -110,7 +110,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public Button mDelete;
 	
 	public Context mContext;
-	public BaseObject mObj;
 	
 	private PopWindowSpiner  mSpiner;
 	private PopWindowAdapter mFontAdapter;
@@ -118,11 +117,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private PopWindowAdapter mTypeAdapter;
 	private PopWindowAdapter mLineAdapter;
 	private PopWindowAdapter mDirAdapter;
+	private PopWindowAdapter mHeightAdapter;
 	
 	public ObjectInfoDialog(Context context, BaseObject obj) {
 		super(context, R.style.Dialog_Fullscreen);
 		mContext = context;
-		mObj = obj;
+		mObject = obj;
 		initAdapter();
 	}
 
@@ -131,46 +131,46 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		 super.onCreate(savedInstanceState);
 	     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		 // this.setTitle(R.string.str_title_infodialog);
-	     if(mObj==null)
+	     if(mObject==null)
 	     {
-	    	 Debug.d(TAG, "--->obj: " + mObj.mIndex);
+	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_msg); 
 	     }
-	     else if(mObj instanceof TextObject)
+	     else if(mObject instanceof TextObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_text); 	 
 	     }
-	     else if(mObj instanceof BarcodeObject)
+	     else if(mObject instanceof BarcodeObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_barcode);
 	     }
-	     else if(mObj instanceof CounterObject)
+	     else if(mObject instanceof CounterObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_counter);
 	     }
-	     else if(mObj instanceof GraphicObject)
+	     else if(mObject instanceof GraphicObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_graphic);
 	     }
-	     else if(mObj instanceof RealtimeObject)
+	     else if(mObject instanceof RealtimeObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_realtime);
 	     }
-	     else if(mObj instanceof JulianDayObject ||
-	    		 mObj instanceof RTSecondObject)
+	     else if(mObject instanceof JulianDayObject ||
+	    		 mObject instanceof RTSecondObject)
 	     {
 	    	 this.setContentView(R.layout.obj_info_julian);
 	     }
-	     else if(mObj instanceof LineObject || mObj instanceof RectObject || mObj instanceof EllipseObject )
+	     else if(mObject instanceof LineObject || mObject instanceof RectObject || mObject instanceof EllipseObject )
 	     {
 	    	 this.setContentView(R.layout.obj_info_shape);
 	     }
-	     else if(mObj instanceof ShiftObject)
+	     else if(mObject instanceof ShiftObject)
 	     {
 	    	 Debug.d(TAG, "ShiftObject");
 	    	 this.setContentView(R.layout.obj_info_shift);
 	     }
-	     else if(mObj instanceof MessageObject)
+	     else if(mObject instanceof MessageObject)
 	     {
 	    	 this.setContentView(R.layout.msg_info);
 	    	 mMsg = (EditText) findViewById(R.id.msgNameEdit);
@@ -179,7 +179,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     }
 	     else 
 	     {
-	    	 Debug.d(TAG, "--->obj: " + mObj.mIndex);
+	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
 	     
@@ -203,22 +203,24 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 //	 	
 	 	//Inflater inflater inflater= new Inflater();
 	 	//View v1 = inflater.inflate(R.id.)
-	 	if (! (mObj instanceof MessageObject)) {
+	 	if (! (mObject instanceof MessageObject)) {
 		
 		    mWidthEdit = (EditText)findViewById(R.id.widthEdit);
-		    mHighEdit = (EditText)findViewById(R.id.highEdit);
+		    mHighEdit = (TextView)findViewById(R.id.highEdit);
+		    mHighEdit.setOnClickListener(this);
+		    
 		    mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 		    mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 		    mContent = (EditText)findViewById(R.id.cntEdit);
 		    mFont = (TextView) findViewById(R.id.fontSpin);
 		    mFont.setOnClickListener(this);
 		     
-		    if (mObj instanceof RealtimeObject) {
+		    if (mObject instanceof RealtimeObject) {
 		    	mRtFormat = (TextView) findViewById(R.id.rtFormat);
 			    mRtFormat.setOnClickListener(this);
 			}
 		    
-		    if (mObj instanceof CounterObject) {
+		    if (mObject instanceof CounterObject) {
 		    	mDigits = (EditText) findViewById(R.id.cntBits);
 			    mDir = (TextView) findViewById(R.id.spinDirect);
 			    mDir.setOnClickListener(this);
@@ -228,9 +230,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    mShow = (CheckBox) findViewById(R.id.check_Num_show);
 		    mLineWidth = (EditText) findViewById(R.id.lineWidth);
 		    
-		    if (mObj instanceof LineObject 
-		    		|| mObj instanceof RectObject
-		    		|| mObj instanceof EllipseObject) {
+		    if (mObject instanceof LineObject 
+		    		|| mObject instanceof RectObject
+		    		|| mObject instanceof EllipseObject) {
 		    	mLineType = (TextView) findViewById(R.id.spin_line_type);
 			    mLineType.setOnClickListener(this);
 			}
@@ -255,18 +257,22 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	    	 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+					if (mObject == null) {
+						dismiss();
+					}
 					try{
 						
 						if(mObject instanceof MessageObject)
 						{
 							mObject.setContent(mMsg.getText().toString());
-							((MessageObject) mObject).setPrinter(mPrinter.getText().toString());
+							((MessageObject) mObject).setType(mPrinter.getText().toString());
 							return;
 						}
 						
-						mObject.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
-						mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
+						// mObject.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
+						// mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
+						Debug.d(TAG, "--->positive click");
+						mObject.setHeight(mHighEdit.getText().toString());
 						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString()));
 						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString()));
 						Debug.d(TAG, "content="+mContent.getText().toString());
@@ -371,7 +377,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			else
 			{
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
-				mHighEdit.setText(String.valueOf((int)mObject.getHeight()));
+				mHighEdit.setText(mObject.getDisplayHeight());
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()));
 				mContent.setText(String.valueOf(mObject.getContent()));
@@ -487,6 +493,18 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mTypeAdapter = new PopWindowAdapter(mContext, null);
 		mLineAdapter = new PopWindowAdapter(mContext, null);
 		mDirAdapter = new PopWindowAdapter(mContext, null);
+		mHeightAdapter = new PopWindowAdapter(mContext, null);
+		
+		// String[] heights = mContext.getResources().getStringArray(R.array.strarrayFontSize);
+		if (mObject != null) {
+			MessageObject msg = mObject.getTask().getMsgObject();
+			String[] heights = msg.getDisplayFSList();
+			for (String height : heights) {
+				Debug.d(TAG, "--->height: " + height);
+				mHeightAdapter.addItem(height);
+			}
+			
+		}
 		
 		String[] fonts = mContext.getResources().getStringArray(R.array.strFontArray);
 		for (String font : fonts) {
@@ -533,6 +551,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mSpiner.setWidth(v.getWidth());
 		
 		switch (v.getId()) {
+		case R.id.highEdit:
+			mSpiner.setAdapter(mHeightAdapter);
+			break;
 		case R.id.headTypeSpin:
 			mSpiner.setAdapter(mTypeAdapter);
 			break;
@@ -568,6 +589,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			view.setText((String)mLineAdapter.getItem(index));
 		} else if (view == mDir) {
 			view.setText((String)mDirAdapter.getItem(index));
+		} else if (view == mHighEdit) {
+			view.setText((String)mHeightAdapter.getItem(index));
 		} else {
 			Debug.d(TAG, "--->unknow view");
 		}

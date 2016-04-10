@@ -717,7 +717,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void onShowInfo() {
 		ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, getCurObj());
-		objDialog.setObject(getCurObj());
+		// objDialog.setObject(getCurObj());
 		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
 			@Override
 			public void onClick() {
