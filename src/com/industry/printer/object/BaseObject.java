@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import com.google.zxing.common.BitMatrix;
 import com.industry.printer.MainActivity;
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
@@ -79,6 +80,15 @@ public class BaseObject{
 	public int mLineWidth;
 	public boolean mIsSelected;
 	public String mContent;
+	
+	/* 
+	 * 是否需要重新绘制bitmap 
+	 * 需要重新绘制bitmap的几种情况：1、宽高变化；2、字体修改； 3，内容变化
+	 */
+	protected boolean isNeedRedraw;
+	protected Bitmap	mBitmap;
+	protected Bitmap	mBitmapSelected;
+	
 	public HashMap<String, byte[]> mVBuffer;
 	public MessageTask mTask;
 	
@@ -99,6 +109,7 @@ public class BaseObject{
 		mXcor_end=0;
 		mYcor_end=0;
 		mDragable = true;
+		isNeedRedraw = true;
 		mFont = "Arial";
 		initPaint();
 		setSelected(true);	
@@ -124,16 +135,46 @@ public class BaseObject{
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
+		/* 使用
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		Bitmap bmp = getBitmap(context);
 		if (mWidth <= 0) {
 			mWidth = bmp.getWidth();
 		}
 		Bitmap scaledBmp = Bitmap.createScaledBitmap(bmp, (int)mWidth, (int)mHeight, true);
-		
 		return scaledBmp;
+		*/
+		if (isNeedRedraw) {
+			drawSelected();
+			drawNormal();
+		}
+		isNeedRedraw = false;
+		if (mIsSelected) {
+			return mBitmapSelected;
+		}
+		return mBitmap;
 	}
 	
+	protected void drawNormal() {
+		mPaint.setColor(Color.BLACK);
+		draw(mBitmap);
+	}
+	
+	protected void drawSelected() {
+		mPaint.setColor(Color.RED);
+		draw(mBitmapSelected);
+	}
+	
+	private void draw(Bitmap bitmap) {
+		mPaint.setTextSize(mHeight);
+		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		int width = (int)mPaint.measureText(getContent());
+		setWidth(width);
+		bitmap = Bitmap.createBitmap((int)mWidth , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		mCan.drawText(mContent, 0, mHeight, mPaint);
+	}
 	protected Bitmap getBitmap(Context context)
 	{
 		//mPaint.setColor(Color.RED);
@@ -242,13 +283,13 @@ public class BaseObject{
 		mHeight = size;
 		Debug.d(TAG, "--->height=" + mHeight);
 		mYcor_end = mYcor + mHeight;
+		isNeedRedraw = true;
 	}
 	
 	public void setHeight(String size)
 	{
-		mHeight = mTask.getMsgObject().getPixels(size);
-		Debug.d(TAG, "--->height=" + mHeight);
-		mYcor_end = mYcor + mHeight;
+		float height = mTask.getMsgObject().getPixels(size);
+		setHeight(height);
 	}
 	
 	public String getDisplayHeight() {
@@ -265,7 +306,8 @@ public class BaseObject{
 		if(size<0)
 			size=0;
 		mWidth = size;
-		mXcor_end = mXcor + mWidth; 
+		mXcor_end = mXcor + mWidth;
+		isNeedRedraw = true;
 	}
 	
 	public float getWidth()
@@ -328,11 +370,12 @@ public class BaseObject{
 		mContent = content;
 		mPaint.setTextSize(mHeight);
 		mWidth = mPaint.measureText(mContent);
-		mPaint.setTextSize(Configs.gDots);
+		// mPaint.setTextSize(Configs.gDots);
 		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
 		mYcor_end = mYcor + mHeight;
+		isNeedRedraw = true;
 	}
 	
 	public String getContent()
@@ -355,6 +398,7 @@ public class BaseObject{
 		if(font== null)
 			return;
 		mFont = font;
+		isNeedRedraw = true;
 	}
 	
 	public String getFont()
@@ -366,6 +410,7 @@ public class BaseObject{
 		mLineWidth=width;
 		if(mPaint != null)
 			mPaint.setStrokeWidth(mLineWidth);
+		isNeedRedraw = true;
 	}
 	
 	public float getLineWidth()
@@ -428,11 +473,11 @@ public class BaseObject{
 		return mIndex;
 	}
 	
-	private String getBinFileName() {
+	protected String getBinFileName() {
 		return "/1.bin";
 	}
 	
-	private String getVarBinFileName() {
+	protected String getVarBinFileName() {
 		return "/v" + mIndex + ".bin";
 	}
 	

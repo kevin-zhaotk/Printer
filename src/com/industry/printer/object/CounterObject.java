@@ -19,20 +19,17 @@ public class CounterObject extends BaseObject {
 	public CounterObject(Context context, float x) {
 		super(context, BaseObject.OBJECT_TYPE_CNT, x);
 		mMin=0;
-		mBits=5;
-		mValue=0;
 		mStepLen=1;
 		mDirection = true;
-		mMax = (int) Math.pow(10, mBits) -1;
-		//Debug.d(TAG, "mMax")
-		setContent("00000");
+		setBits(5);
 	}
 
 	public void setBits(int n)
 	{
 		mBits = n;
-		mValue = 0;
+		mValue = 1;
 		setContent( BaseObject.intToFormatString(mValue, mBits));
+		mMax = (int) Math.pow(10, mBits) -1;
 	}
 	
 //	@Override

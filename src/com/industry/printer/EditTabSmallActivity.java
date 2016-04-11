@@ -605,8 +605,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				rightKeyPressed();
 				break;
 			case R.id.btn_zoomIn:
+				onZoomInPressed();
 				break;
 			case R.id.btn_zoomOut:
+				onZoomOutPressed();
 				break;
 			case R.id.btn_cursor:
 				/*顯示十字線時選中第一個對象，即MessageObject對象*/
@@ -884,6 +886,38 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	
+	private void onZoomInPressed() {
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		float h = obj.getHeight();
+		if (h >= 152) {
+			h = 12 * MessageObject.PIXELS_PER_MM;
+		} else if (h <= MessageObject.PIXELS_PER_MM) {
+			h = MessageObject.PIXELS_PER_MM;
+		} else {
+			h = h - MessageObject.PIXELS_PER_MM;
+		}
+		obj.setHeight(h);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private void onZoomOutPressed() {
+		BaseObject obj = getCurObj();
+		if(obj == null)
+			return;
+		float h = obj.getHeight();
+		if (h >= (12 * MessageObject.PIXELS_PER_MM)) {
+			h = 12.7 * MessageObject.PIXELS_PER_MM;
+		} else if (h < MessageObject.PIXELS_PER_MM) {
+			h = MessageObject.PIXELS_PER_MM;
+		} else {
+			h = h + MessageObject.PIXELS_PER_MM;
+		}
+		obj.setHeight(h);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
 	public final int LEFT_KEY=1;
 	public final int RIGHT_KEY=2;
 	public final int UP_KEY=3;
@@ -924,7 +958,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 					Debug.d(TAG, "unknow key repeat ");
 					break;
 			}
-			mKeyRepeatHandler.sendEmptyMessageDelayed(msg.what, 200);
+			mKeyRepeatHandler.sendEmptyMessageDelayed(msg.what, 100);
 		}
 	};
 }

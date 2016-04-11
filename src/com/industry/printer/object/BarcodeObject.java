@@ -34,6 +34,7 @@ public class BarcodeObject extends BaseObject {
 	public void setCode(String code)
 	{
 		mFormat = code;
+		isNeedRedraw = true;
 	}
 	
 	public String getCode()
@@ -54,12 +55,17 @@ public class BarcodeObject extends BaseObject {
 	public void setContent(String content)
 	{
 		mContent=content;
+		isNeedRedraw = true;
 	}
 	
-	 private static final String CODE = "utf-8"; 
-	 
+	private static final String CODE = "utf-8"; 
+	
 	public Bitmap getScaledBitmap(Context context)
 	{
+		if (!isNeedRedraw) {
+			return mBitmap;
+		}
+		isNeedRedraw = false;
 		BitMatrix matrix=null;
 		try {
 			MultiFormatWriter writer = new MultiFormatWriter();
@@ -67,19 +73,18 @@ public class BarcodeObject extends BaseObject {
 			{
 				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
-	            
+	            /* 条形码的宽度设置为高度的3倍  */
 				matrix = writer.encode(mContent,
-					                BarcodeFormat.CODE_128, (int)mWidth, (int)mHeight, null);
+					                BarcodeFormat.CODE_128, (int)mHeight * 3, (int)mHeight, null);
 			}
 			else if(mFormat.equals("QR"))
 			{
 				matrix = writer.encode(mContent,
-		                BarcodeFormat.QR_CODE, (int)mWidth, (int)mHeight);
+		                BarcodeFormat.QR_CODE, (int)mHeight, (int)mHeight);
 			}
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
 			Debug.d(TAG, "mWidth="+mWidth+", width="+width);
-			int wanted = getBestWidth();
 			
 			mWidth = width;
 			mXcor_end = mXcor + mWidth;
@@ -94,10 +99,10 @@ public class BarcodeObject extends BaseObject {
 					}
 				}
 			}
-			Bitmap bitmap = Bitmap.createBitmap(width, height,
-			Bitmap.Config.ARGB_8888);
+			/* 条码/二维码的四个边缘空出20像素作为白边 */
+			mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			
-			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+			mBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 			
 			/*if content need to show, draw it*/
 			if(mShow && !mFormat.equals("QR"))
@@ -105,12 +110,12 @@ public class BarcodeObject extends BaseObject {
 				Bitmap bmp = Bitmap.createBitmap(width, height+10, Config.ARGB_8888);
 				Canvas can = new Canvas(bmp);
 				mPaint.setTextSize(10);
-				can.drawBitmap(bitmap, 0, 0, mPaint);
+				can.drawBitmap(mBitmap, 0, 0, mPaint);
 				can.drawText(mContent, 0, height+10, mPaint);
-				BinFromBitmap.recyleBitmap(bitmap);
-				bitmap = bmp;
+				BinFromBitmap.recyleBitmap(mBitmap);
+				mBitmap = bmp;
 			}
-			return bitmap;
+			return mBitmap;
 
 		} catch (WriterException e) {
 			// TODO Auto-generated catch block

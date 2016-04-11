@@ -27,8 +27,6 @@ public class RealtimeObject extends BaseObject {
 	public RealtimeObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_RT, x);
 		//Time t = new Time();
-		//Debug.d(TAG, ">>>RealtimeObject");
-		//t.set(System.currentTimeMillis());
 		Debug.d(TAG, ">>>RealtimeObject");
 		mSubObjs = new Vector<BaseObject>();
 		setFormat("YYYY-MM-DD");
@@ -43,6 +41,7 @@ public class RealtimeObject extends BaseObject {
 		mFormat = format;
 		parseFormat();
 		super.setWidth(mXcor_end - mXcor);
+		isNeedRedraw = true;
 	}
 	
 	public String getFormat()
@@ -146,7 +145,6 @@ public class RealtimeObject extends BaseObject {
 			System.out.println("realtime c x_end="+x);
 		}
 		mXcor_end = x;
-		
 	}
 	
 	@Override
@@ -154,7 +152,6 @@ public class RealtimeObject extends BaseObject {
 	{
 		Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
-		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		
 		for(BaseObject o : mSubObjs)
@@ -232,17 +229,9 @@ public class RealtimeObject extends BaseObject {
 	@Override
 	public void setWidth(float size)
 	{
-		if(size<0)
-			size = 0;
+		super.setWidth(size);
 		float x=getX();
-		Debug.d(TAG,">>>setWidth size="+size);
-		//super.setWidth(size);
-		if(size<0)
-			size=0;
-		mWidth = size;
-		mXcor_end = mXcor + mWidth; 
-		//mWidth = size;
-		//mXcor_end = mXcor + mWidth;
+		
 		if(mSubObjs == null)
 			return;
 		for(BaseObject o : mSubObjs)
