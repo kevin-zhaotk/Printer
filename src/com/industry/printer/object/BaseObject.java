@@ -80,7 +80,7 @@ public class BaseObject{
 	public int mLineWidth;
 	public boolean mIsSelected;
 	public String mContent;
-	
+	public String mName;
 	/* 
 	 * 是否需要重新绘制bitmap 
 	 * 需要重新绘制bitmap的几种情况：1、宽高变化；2、字体修改； 3，内容变化
@@ -119,10 +119,40 @@ public class BaseObject{
 		setContent("text");
 		
 		mVBuffer = new HashMap<String, byte[]>();
-		//drawCanvas();
-		//mPaint.setColor(Color.BLACK);
+		initName();
 	}
 
+	private void initName() {
+		if(this instanceof MessageObject)
+			mName = mContext.getString(R.string.object_msg_name);
+		else if(this instanceof TextObject)
+			mName = mContext.getString(R.string.object_text);
+		else if(this instanceof CounterObject)
+			mName = mContext.getString(R.string.object_counter);
+		else if(this instanceof BarcodeObject)
+			mName = mContext.getString(R.string.object_bar);
+		else if(this instanceof GraphicObject)
+			mName = mContext.getString(R.string.object_pic);
+		else if(this instanceof JulianDayObject)
+			mName = mContext.getString(R.string.object_julian);
+		else if(this instanceof RealtimeObject)
+			mName = mContext.getString(R.string.object_realtime);
+		else if(this instanceof LineObject)
+			mName = mContext.getString(R.string.object_line);
+		else if(this instanceof RectObject)
+			mName = mContext.getString(R.string.object_rect);
+		else if(this instanceof EllipseObject)
+			mName = mContext.getString(R.string.object_ellipse);
+		else if(this instanceof ShiftObject)
+			mName = mContext.getString(R.string.object_shift);
+		else if(this instanceof RTSecondObject)
+			mName = mContext.getString(R.string.object_second);
+	}
+	
+	public String getTitle() {
+		return mName;
+	}
+	
 	public String getId()
 	{
 		return mId;

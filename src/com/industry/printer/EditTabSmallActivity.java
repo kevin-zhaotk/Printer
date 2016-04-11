@@ -1,84 +1,47 @@
 package com.industry.printer;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Vector;
 
-import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
-import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
-import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
-import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
-import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
-import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.onDeleteListener;
-import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
-import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
-import com.industry.printer.Utils.Configs;
+import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
-import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
-import com.industry.printer.object.ObjectsFromString;
-import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
-import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
-import android.content.DialogInterface.OnKeyListener;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
+import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.onDeleteListener;
+import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
+import com.industry.printer.widget.PopWindowSpiner;
 
 public class EditTabSmallActivity extends Fragment implements OnClickListener, OnTouchListener {
 	public static final String TAG="EditTabSmallActivity";
@@ -128,10 +91,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 * Object Information Table
 	 * **********************/
 	private ScrollView mViewInfo;
-	private Spinner mObjList;
+	private PopWindowSpiner mObjSpiner;
+	private PopWindowAdapter mNameAdapter;
 	private RelativeLayout mShowInfo;
 	
-	private ArrayAdapter<String> mNameAdapter;
 	
 	public EditTabSmallActivity() {
 		
@@ -180,6 +143,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnCursor = (RelativeLayout) getView().findViewById(R.id.btn_cursor);
 		mBtnCursor.setOnClickListener(this);
 		mBtnCursor.setOnTouchListener(this);
+		
+		mBtnList = (RelativeLayout) getView().findViewById(R.id.btn_list);
+		mBtnList.setOnClickListener(this);
 		
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
@@ -246,8 +212,25 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		
 		/*initialize the object list spinner*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		
+		initAdapter();
 	}
 	
+	private void initAdapter() {
+		mObjSpiner = new PopWindowSpiner(mContext);
+		mObjSpiner.setWidth(300);
+		mNameAdapter = new PopWindowAdapter(mContext, null);
+		
+		mObjSpiner.setAdapter(mNameAdapter);
+		mObjSpiner.setAttachedView(mBtnList);
+		mObjSpiner.setOnItemClickListener(new IOnItemClickListener() {
+			
+			@Override
+			public void onItemClick(int index) {
+				setCurObj(index);
+			}
+		});
+	}
 	/**
 	 * REFRESH_OBJECT_CHANGED
 	 *   some object changes, need to resave the tlk&bin files
@@ -273,47 +256,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			switch (msg.what) {
 			
 			case REFRESH_OBJECT_CHANGED:
-				/*
-				Debug.d(TAG, "======1");
-				mNameAdapter.clear();
-				for(BaseObject o:objects)
-				{
-					if(o instanceof MessageObject)
-						mNameAdapter.add(o.getContent());
-					else if(o instanceof TextObject)
-						mNameAdapter.add(mContext.getString(R.string.object_text));
-					else if(o instanceof CounterObject)
-						mNameAdapter.add(mContext.getString(R.string.object_counter));
-					else if(o instanceof BarcodeObject)
-						mNameAdapter.add(mContext.getString(R.string.object_bar));
-					else if(o instanceof GraphicObject)
-						mNameAdapter.add(mContext.getString(R.string.object_pic));
-					else if(o instanceof JulianDayObject)
-						mNameAdapter.add(mContext.getString(R.string.object_julian));
-					else if(o instanceof RealtimeObject)
-						mNameAdapter.add(mContext.getString(R.string.object_realtime));
-					else if(o instanceof LineObject)
-						mNameAdapter.add(mContext.getString(R.string.object_line));
-					else if(o instanceof RectObject)
-						mNameAdapter.add(mContext.getString(R.string.object_rect));
-					else if(o instanceof EllipseObject)
-						mNameAdapter.add(mContext.getString(R.string.object_ellipse));
-					else if(o instanceof ShiftObject)
-						mNameAdapter.add(mContext.getString(R.string.object_shift));
-					else if(o instanceof RTSecondObject)
-						mNameAdapter.add(mContext.getString(R.string.object_second));
-					else
-						System.out.println("Unknown Object type");
-				}
-				Debug.d(TAG, "======2");
-				mObjList.invalidate();
-				Debug.d(TAG, "======3");
-				OnPropertyChanged(true);
-				Bundle bundle = msg.getData();
-				int position = bundle.getInt("selection");
-				mObjList.setSelection(position);
 				
-				 */
 				OnPropertyChanged(true);
 				break;
 			case REFRESH_OBJECT_PROPERTIES:
@@ -612,8 +555,21 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				break;
 			case R.id.btn_cursor:
 				/*顯示十字線時選中第一個對象，即MessageObject對象*/
+				MessageObject o = mMsgTask.getMsgObject();
+				if (o.getSelected()) {
+					break;
+				}
 				setCurObj(0);
+				/* 光标显示在ScrollView中间  */
+				int x = mHScroll.getWidth()/2 + mObjView.getScrollX();
+				int y = mHScroll.getHeight()/2;
+				Debug.d(TAG, "--->x=" + x + ", y=" + y);
+				o.setX(x);
+				o.setY(y);
 				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+				break;
+			case R.id.btn_list:
+				onListPressed();
 				break;
 			default:
 				break;
@@ -916,6 +872,15 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		obj.setHeight(h);
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private void onListPressed() {
+		ArrayList<BaseObject> list = mMsgTask.getObjects();
+		mNameAdapter.removeAll();
+		for (BaseObject object : list) {
+			mNameAdapter.addItem(object.getTitle());
+		}
+		mObjSpiner.showAsDropUp(mBtnList);
 	}
 	
 	public final int LEFT_KEY=1;
