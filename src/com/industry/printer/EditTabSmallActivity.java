@@ -149,6 +149,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		
 		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
 		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
+		mObjView.setParent(mHScroll);
 		mObjView.setOnTouchListener(this);
 		mObjView.setTask(mMsgTask);
 		
@@ -218,16 +219,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void initAdapter() {
 		mObjSpiner = new PopWindowSpiner(mContext);
+		mObjSpiner.setFocusable(true);
 		mObjSpiner.setWidth(300);
 		mNameAdapter = new PopWindowAdapter(mContext, null);
 		
 		mObjSpiner.setAdapter(mNameAdapter);
-		mObjSpiner.setAttachedView(mBtnList);
+		// mObjSpiner.setAttachedView(mBtnList);
 		mObjSpiner.setOnItemClickListener(new IOnItemClickListener() {
 			
 			@Override
 			public void onItemClick(int index) {
 				setCurObj(index);
+				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 			}
 		});
 	}
@@ -554,19 +557,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				onZoomOutPressed();
 				break;
 			case R.id.btn_cursor:
-				/*顯示十字線時選中第一個對象，即MessageObject對象*/
-				MessageObject o = mMsgTask.getMsgObject();
-				if (o.getSelected()) {
-					break;
-				}
-				setCurObj(0);
-				/* 光标显示在ScrollView中间  */
-				int x = mHScroll.getWidth()/2 + mObjView.getScrollX();
-				int y = mHScroll.getHeight()/2;
-				Debug.d(TAG, "--->x=" + x + ", y=" + y);
-				o.setX(x);
-				o.setY(y);
-				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+				onCursorPressed();
 				break;
 			case R.id.btn_list:
 				onListPressed();
@@ -864,7 +855,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			return;
 		float h = obj.getHeight();
 		if (h >= (12 * MessageObject.PIXELS_PER_MM)) {
-			h = 12.7 * MessageObject.PIXELS_PER_MM;
+			h = (float) (12.7 * MessageObject.PIXELS_PER_MM);
 		} else if (h < MessageObject.PIXELS_PER_MM) {
 			h = MessageObject.PIXELS_PER_MM;
 		} else {
@@ -881,6 +872,23 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			mNameAdapter.addItem(object.getTitle());
 		}
 		mObjSpiner.showAsDropUp(mBtnList);
+	}
+	
+	private void onCursorPressed() {
+		/*顯示十字線時選中第一個對象，即MessageObject對象*/
+		MessageObject o = mMsgTask.getMsgObject();
+		
+		/*如果當前選中的不是cursor或者cursor的座標爲（0,0） 重置座標*/
+		if (!o.getSelected() || o.getX() == 0 || o.getY() == 0) {
+			/* 光标显示在ScrollView中间  */
+			int x = mHScroll.getWidth()/2 + mObjView.getScrollX();
+			int y = mHScroll.getHeight()/2;
+			Debug.d(TAG, "--->x=" + x + ", y=" + y);
+			o.setX(x);
+			o.setY(y);
+		}
+		setCurObj(0);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
 	public final int LEFT_KEY=1;

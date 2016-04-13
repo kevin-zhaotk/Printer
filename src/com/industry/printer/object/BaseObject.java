@@ -27,6 +27,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -97,6 +98,7 @@ public class BaseObject{
 		this(id);
 		setX(x);
 		mContext = context;
+		initName();
 	}
 	
 	public BaseObject(String id)
@@ -114,12 +116,12 @@ public class BaseObject{
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + Configs.gDots);
-		setHeight(Configs.gDots);		
+		setHeight(Configs.gDots);
 		setLineWidth(5);
 		setContent("text");
 		
 		mVBuffer = new HashMap<String, byte[]>();
-		initName();
+		
 	}
 
 	private void initName() {
@@ -186,24 +188,33 @@ public class BaseObject{
 	}
 	
 	protected void drawNormal() {
+		Debug.d(TAG, "--->drawNormal");
 		mPaint.setColor(Color.BLACK);
-		draw(mBitmap);
+		mBitmap = draw();
 	}
 	
 	protected void drawSelected() {
 		mPaint.setColor(Color.RED);
-		draw(mBitmapSelected);
+		Debug.d(TAG, "--->drawNormal");
+		mBitmapSelected = draw();
 	}
 	
-	private void draw(Bitmap bitmap) {
+	private Bitmap draw() {
+		Bitmap bitmap;
 		mPaint.setTextSize(mHeight);
+		mPaint.setAntiAlias(true); //去除锯齿  
+		mPaint.setFilterBitmap(true); //对位图进行滤波处理
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		setWidth(width);
 		bitmap = Bitmap.createBitmap((int)mWidth , (int)mHeight, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
-		mCan.drawText(mContent, 0, mHeight, mPaint);
+		FontMetrics fm = mPaint.getFontMetrics();
+		Debug.d(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: ");
+        // float tY = (y - getFontHeight(p))/2+getFontLeading(p); 
+		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
+		return bitmap;
 	}
 	protected Bitmap getBitmap(Context context)
 	{

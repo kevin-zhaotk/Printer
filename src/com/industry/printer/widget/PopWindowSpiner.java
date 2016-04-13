@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 public class PopWindowSpiner extends PopupWindow implements OnItemClickListener, OnClickListener {
 
+	private final String TAG = PopWindowSpiner.class.getSimpleName();
 	public Context mContext;
 	public ListView mListView;
 	public PopWindowAdapter mAdapter;
@@ -77,6 +78,7 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		Debug.d(TAG, "--->onItemclick");
 		dismiss();
 		if (mItemClickListener != null) {
 			mItemClickListener.onItemClick(position);

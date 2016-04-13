@@ -97,12 +97,14 @@
 	    <item>Arial</item>
 	    <item>Song</item>
 	    <item>Kai</item>
+	    <item>Spec</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
 	    <item>Arial</item>
 	    <item>Songti</item>
 	    <item>Kaiti</item>
+	    <item>Spec</item>
 	</string-array>
 	<string-array name="strDirectArray">
 	    <item>increase</item>
@@ -590,7 +592,7 @@
 	<string name="str_file_hint">file name</string>
 	<string name="str_page_prev">PageUp</string>
 	<string name="str_page_next">PageDown</string>
-	<string name="str_filename_no">No file</string>
+	<string name="str_filename_no">New</string>
 	<string name="str_btn_back">Back</string>
 	<string name="str_btn_up">Up</string>
 	<string name="str_btn_detail">Set</string>

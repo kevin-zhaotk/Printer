@@ -61,7 +61,7 @@ public class EditScrollView extends View {
 	@Override  
 	protected void onDraw(Canvas canvas) {
 		Debug.d(TAG, "====>onDraw");
-		
+		int scrollx = 0;
 		for(BaseObject obj : mTask.getObjects())
 		{
 			/* 只有当cursor选中时才显示十字标线  */
@@ -69,10 +69,13 @@ public class EditScrollView extends View {
 				if (!obj.getSelected()) {
 					continue;
 				}
-				
+				if (mParent != null) {
+					scrollx = mParent.getScrollX();
+				}
+				Debug.d(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
 				float[] points = {
 					/* 画水平线 */
-					0, obj.getY(), mScreenW, obj.getY(),
+					scrollx, obj.getY(), scrollx + mScreenW, obj.getY(),
 					/* 画垂直线 */
 					obj.getX(), 0, obj.getX(), mScreenH
 				};
@@ -82,19 +85,22 @@ public class EditScrollView extends View {
 				continue;
 			}
 			/* 不在显示区域内的对象可以不画，优化效率  */
-			if ((obj.getXEnd() < getScrollX()) || (obj.getX() > getScrollX() + mParent.getWidth())) {
+			if ((obj.getXEnd() < getScrollX()) || (obj.getX() > getScrollX() + mScreenW)) {
 				continue;
 			}
 			if(mContext == null)
 				Debug.d(TAG, "$$$$$$$$$$context=null");
 			Bitmap bitmap = obj.getScaledBitmap(mContext);
 			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
-			BinFromBitmap.recyleBitmap(bitmap);
 			 
 		}
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	} 
+	
+	public void setParent(View view) {
+		mParent = (HorizontalScrollView) view;
+	}
 	
 	public void setTask(MessageTask task) {
 		mTask = task;

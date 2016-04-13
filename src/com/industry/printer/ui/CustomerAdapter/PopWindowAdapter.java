@@ -42,7 +42,9 @@ public class PopWindowAdapter extends BaseAdapter {
 	}
 	
 	public void removeAll() {
-		mItems.clear();
+		if (mItems != null) {
+			mItems.clear();
+		}
 	}
 	
 	public void refreshData(ArrayList<String> list, int index) {

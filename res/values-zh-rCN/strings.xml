@@ -98,12 +98,14 @@
 	    <item>Arial</item>
 	    <item>宋体</item>
 	    <item>楷体</item>
+	    <item>Spec</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
 	    <item>Arial</item>
 	    <item>Songti</item>
 	    <item>Kaiti</item>
+	    <item>Spec</item>
 	</string-array>
 	<string-array name="strDirectArray">
 	    <item>递增</item>
@@ -592,7 +594,7 @@
 	<string name="str_file_hint">保存编号</string>
 	<string name="str_page_prev">上翻</string>
 	<string name="str_page_next">下翻</string>
-	<string name="str_filename_no">未命名</string>
+	<string name="str_filename_no">新建</string>
 	<string name="str_btn_back">返回</string>
 	<string name="str_btn_up"></string>
 	<string name="str_btn_detail">屬性</string>
