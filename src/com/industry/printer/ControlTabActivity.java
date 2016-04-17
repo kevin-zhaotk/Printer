@@ -417,8 +417,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshPower() {
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
 			int power = LRADCBattery.getPower();
-			String pwState = String.format(getString(R.string.str_state_battery), power);
-			mPower.setText(pwState);
+			// String pwState = String.format(getString(R.string.str_state_battery), power);
+			mPower.setText(String.valueOf(power));
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
 		}
 	}

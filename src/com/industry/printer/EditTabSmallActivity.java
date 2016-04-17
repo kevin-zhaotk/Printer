@@ -705,7 +705,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		bundle.putInt("selection", mMsgTask.getObjects().size() - 1);
 		msg.setData(bundle);
 		mObjRefreshHandler.sendMessage(msg);
-		clearCurObj();
+		// clearCurObj();
 	}
 	
 	private boolean onObjectTouch(MotionEvent event) {
