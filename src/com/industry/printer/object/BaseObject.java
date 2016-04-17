@@ -239,8 +239,9 @@ public class BaseObject{
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
+		FontMetrics fm = mPaint.getFontMetrics();
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, Configs.gDots, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
@@ -252,10 +253,9 @@ public class BaseObject{
 		{
 			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
-			can.drawText(String.valueOf(i), 0, height-5, mPaint);
-			Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
-			gCan.drawBitmap(b, i*b.getWidth(), (int)getY(), mPaint);
-			BinFromBitmap.recyleBitmap(b);
+			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
+			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
+			gCan.drawBitmap(bmp, i*bmp.getWidth(), (int)getY(), mPaint);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);

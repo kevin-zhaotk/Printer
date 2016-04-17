@@ -411,8 +411,8 @@
 	<string name="str_page_forward"> 《 </string>
 	<string name="str_page_backward"> 》 </string>
 	<string name="str_message_no_content">can not create preview</string>
-	<string name="str_state_printing">Print Running</string>
-	<string name="str_state_stopped">Print Stopped</string>
+	<string name="str_state_printing">Printing</string>
+	<string name="str_state_stopped">Ready</string>
 	
 <!-- 树莓派3 设置界面相关 -->
 	
