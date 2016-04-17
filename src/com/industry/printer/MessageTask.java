@@ -253,7 +253,7 @@ public class MessageTask {
 			{
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
-				BinFromBitmap.recyleBitmap(t);
+				// BinFromBitmap.recyleBitmap(t);
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
@@ -345,7 +345,6 @@ public class MessageTask {
 			}
 			Bitmap t = o.getScaledBitmap(mContext);
 			can.drawBitmap(t, o.getX(), o.getY(), p);
-			BinFromBitmap.recyleBitmap(t);
 		}
 		// Bitmap.createScaledBitmap();
 		float scale = bmp.getHeight() / 100;

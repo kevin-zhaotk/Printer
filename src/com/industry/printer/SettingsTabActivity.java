@@ -296,7 +296,7 @@ public static final String TAG="SettingsTabActivity";
 				Debug.d(TAG, "===>onclick");
 				mAdapter.checkParams();
 				SystemConfigFile.saveConfig();
-				FpgaGpioOperation.updateSettings(mContext);
+				// FpgaGpioOperation.updateSettings(mContext);
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();

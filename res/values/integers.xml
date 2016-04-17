@@ -13,7 +13,7 @@
     <!--  -->
     <integer name="fixed_rows">64</integer>
     
-    <integer name="total_params">24</integer>
+    <integer name="total_params">32</integer>
     
     <integer name="max_digit_length">5</integer>
 </resources>

@@ -536,7 +536,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
 					Debug.d(TAG, "--->update settings");
-					FpgaGpioOperation.updateSettings(mContext);
+					FpgaGpioOperation.updateSettings(mContext, dt);
 					Debug.d(TAG, "--->launch thread");
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					if (!mDTransThread.launch()) {

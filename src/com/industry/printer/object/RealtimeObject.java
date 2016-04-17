@@ -22,12 +22,11 @@ public class RealtimeObject extends BaseObject {
 
 	public String mFormat; /* yyyy-mm-dd hh:nn for example*/
 	public Vector<BaseObject> mSubObjs;
-	public Context mContext;
 	
 	public RealtimeObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_RT, x);
 		//Time t = new Time();
-		Debug.d(TAG, ">>>RealtimeObject");
+		Debug.d(TAG, ">>>RealtimeObject mcontext: " + mContext);
 		mSubObjs = new Vector<BaseObject>();
 		setFormat("YYYY-MM-DD");
 		//setContent(BaseObject.intToFormatString(t.year, 4) +"/"+BaseObject.intToFormatString(t.month+1, 2)+"/"+BaseObject.intToFormatString(t.monthDay, 2));
@@ -37,7 +36,7 @@ public class RealtimeObject extends BaseObject {
 	{
 		if(format==null || (mFormat!= null &&mFormat.equals(format)))
 			return;
-		Debug.d(TAG, ">>>setFormat");
+		Debug.d(TAG, ">>>setFormat mcontext: " + mContext);
 		mFormat = format;
 		parseFormat();
 		super.setWidth(mXcor_end - mXcor);
@@ -53,7 +52,7 @@ public class RealtimeObject extends BaseObject {
 	{
 		int i=0;
 		float x = getX();
-		System.out.println("parseFormat x="+x);
+		Debug.d(TAG, "parseFormat x="+x);
 		String str = mFormat.toUpperCase();
 		BaseObject o=null;
 		mSubObjs.clear();
@@ -69,9 +68,10 @@ public class RealtimeObject extends BaseObject {
 				i += 1;
 				continue;
 			}
-			System.out.println("str="+str+", i="+i);
+			Debug.d(TAG, "str="+str+", i="+i);
 			if(i>0)
 			{
+				Debug.d(TAG, "--->context: " + mContext);
 				o = new TextObject(mContext, x);
 				o.setContent(str.substring(0, i));
 				mSubObjs.add(o);
@@ -159,7 +159,6 @@ public class RealtimeObject extends BaseObject {
 			//System.out.println(""+o.getContent()+",id="+o.mId);
 			Bitmap b = o.getScaledBitmap(context);
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
-			BinFromBitmap.recyleBitmap(b);
 		}
 		return bmp;
 	}
@@ -179,7 +178,6 @@ public class RealtimeObject extends BaseObject {
 			{
 				Bitmap b = o.getScaledBitmap(context);
 				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
-				BinFromBitmap.recyleBitmap(b);
 			}
 			else	//variable
 			{

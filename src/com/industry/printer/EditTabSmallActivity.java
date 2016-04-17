@@ -288,6 +288,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if(x - mHScroll.getScrollX() > 500)
 		{
 			mHScroll.scrollTo(x-300, 0);
+		} else if (x < mHScroll.getScrollX()) {
+			mHScroll.scrollTo(x, 0);
 		}
 	}
 	
@@ -426,6 +428,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		if (bundle == null) {
 						break;
 					}
+            		Debug.d(TAG, "--->mContext: " + mContext);
             		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
             		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
             		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {

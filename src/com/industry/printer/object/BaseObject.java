@@ -125,6 +125,7 @@ public class BaseObject{
 	}
 
 	private void initName() {
+		Debug.d(TAG, "--->mcontext: " + mContext);
 		if(this instanceof MessageObject)
 			mName = mContext.getString(R.string.object_msg_name);
 		else if(this instanceof TextObject)

@@ -7,10 +7,13 @@ import android.R.integer;
 import android.content.Context;
 import android.os.SystemClock;
 
+import com.industry.printer.BinInfo;
 import com.industry.printer.DataTransferThread;
+import com.industry.printer.MessageTask;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.DataTask;
 
 /**
  * @author kevin
@@ -178,10 +181,12 @@ public class FpgaGpioOperation {
 	/**
 	 * updateSettings 下发系统设置
 	 * 如果要下发设置数据，必须先停止打印
+	 * FPGA驅動接收32個參數，其中前24個參數是下發給FPGA設備的，後8個給驅動備用
+	 * 參數24： 表示列高（經過補償後的字節數），用於加重處理
 	 * @param context
 	 */
 	
-	public static void updateSettings(Context context) {
+	public static void updateSettings(Context context, DataTask task) {
 		
 		if (DataTransferThread.getInstance().isRunning()) {
 			Debug.d(TAG, "===>print Thread is running now, please stop it then update settings");
@@ -221,7 +226,8 @@ public class FpgaGpioOperation {
 		data[21] = (char) SystemConfigFile.mResv22;
 		data[22] = (char) SystemConfigFile.mResv23;
 		data[23] = (char) SystemConfigFile.mResv24;
-		
+		BinInfo info = task.getInfo();
+		data[24] = (char) info.getBytesPerHFeed();
 		//时间参数放在最后3个
 		/*
 		Calendar c = Calendar.getInstance();
