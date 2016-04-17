@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -85,9 +86,11 @@ public class BinInfo {
 		mColumn = 0;
 		mBufferBytes = null;
 		mBufferChars = null;
-		mType = type;
+		if (type <=0 || type > 4) {
+			mType = 1;
+		}
 		/**读取文件头信息**/
-		byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
+		
 		mFile = new File(file);
 		try {
 			mFStream = new FileInputStream(mFile);
@@ -95,55 +98,78 @@ public class BinInfo {
 			mFStream.read(mBuffer);
 			mFStream.close();
 			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
-			/*把bin文件内容读入内存*/
-			mCacheStream = new ByteArrayInputStream(mBuffer);
-			Debug.d(TAG, "--->buffer.size=" + mCacheStream.available());
-			mCacheStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
-			mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
-			
-			//bin文件总长度
-			mLength = mCacheStream.available();
-			Debug.d(TAG, "--->mLength=" + mLength);
-			if (type <=0 || type > 4) {
-				mType = 1;
-			}
-			
-			//文件的总字节数/总列数 = 每列的字节数
-			mBytesPerColumn = mLength/mColumn;
-			Debug.d(TAG, "--->mBytesPerColumn =" + mBytesPerColumn);
-			//文件的总字符数/总列数/2 = 每列的字符数
-			mCharsPerColumn = mBytesPerColumn/2;
-			/*如果mBytesPerColumn不是type的整数倍，说明这个bin文件不是一个合法的bin文件
-			 *那么我们不会保证打印结果是否正确，所以这里不需要容错
-			 */
-			mBytesPerH = mBytesPerColumn/mType;
-			Debug.d(TAG, "--->mBytesPerH =" + mBytesPerH + ", type=" + mType);
-			mCharsPerH = mBytesPerH/2;
-			/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
-			if (mBytesPerH%2 != 0) {
-				mNeedFeed = true;
-			}
-
-			/** 计算补偿后的字节数和双字节数 */
-			if (mNeedFeed) {
-				mBytesPerHFeed = mBytesPerH + 1;
-				mBytesFeed = mBytesPerColumn + mType;
-				Debug.d(TAG, "--->117 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
-			} else {
-				mBytesPerHFeed = mBytesPerH;
-				mBytesFeed = mBytesPerColumn;
-				Debug.d(TAG, "--->120 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
-			}
-			mCharsPerHFeed = mBytesPerHFeed/2;
-			mCharsFeed = mBytesFeed/2;
-			//通过文件后缀是否带有v判断是否为变量的bin文件
-			if (mFile.getName().contains("v")) {
-				mColPerElement = mColumn/10;
-			} else {
-				mColPerElement = 0;
-			}
+			resolve();
 		} catch (Exception e) {
 			Debug.d(TAG, ""+e.getMessage());
+		}
+	}
+	
+	public BinInfo(InputStream stream, int type) {
+		mColumn = 0;
+		mBufferBytes = null;
+		mBufferChars = null;
+		if (type <=0 || type > 4) {
+			mType = 1;
+		}
+		/**读取文件头信息**/
+		try {
+			// mFStream = new FileInputStream(mFile);
+			mBuffer = new byte[stream.available()];
+			stream.read(mBuffer);
+			// mFStream.close();
+			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
+			resolve();
+		} catch (Exception e) {
+			Debug.d(TAG, ""+e.getMessage());
+		}
+	}
+	
+	private void resolve() {
+		byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
+		/*把bin文件内容读入内存*/
+		mCacheStream = new ByteArrayInputStream(mBuffer);
+		Debug.d(TAG, "--->buffer.size=" + mCacheStream.available());
+		mCacheStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
+		mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
+		
+		//bin文件总长度
+		mLength = mCacheStream.available();
+		Debug.d(TAG, "--->mLength=" + mLength);
+		
+		
+		//文件的总字节数/总列数 = 每列的字节数
+		mBytesPerColumn = mLength/mColumn;
+		Debug.d(TAG, "--->mBytesPerColumn =" + mBytesPerColumn);
+		//文件的总字符数/总列数/2 = 每列的字符数
+		mCharsPerColumn = mBytesPerColumn/2;
+		/*如果mBytesPerColumn不是type的整数倍，说明这个bin文件不是一个合法的bin文件
+		 *那么我们不会保证打印结果是否正确，所以这里不需要容错
+		 */
+		mBytesPerH = mBytesPerColumn/mType;
+		Debug.d(TAG, "--->mBytesPerH =" + mBytesPerH + ", type=" + mType);
+		mCharsPerH = mBytesPerH/2;
+		/* 如果每列的字节数为奇数则 +1 变为偶数， 以便于FPGA处理*/
+		if (mBytesPerH%2 != 0) {
+			mNeedFeed = true;
+		}
+
+		/** 计算补偿后的字节数和双字节数 */
+		if (mNeedFeed) {
+			mBytesPerHFeed = mBytesPerH + 1;
+			mBytesFeed = mBytesPerColumn + mType;
+			Debug.d(TAG, "--->117 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
+		} else {
+			mBytesPerHFeed = mBytesPerH;
+			mBytesFeed = mBytesPerColumn;
+			Debug.d(TAG, "--->120 mBytesPerHFeed =" + mBytesPerHFeed + ", mBytesPerFeed=" + mBytesFeed);
+		}
+		mCharsPerHFeed = mBytesPerHFeed/2;
+		mCharsFeed = mBytesFeed/2;
+		//通过文件后缀是否带有v判断是否为变量的bin文件
+		if (mFile != null && mFile.getName().contains("v")) {
+			mColPerElement = mColumn/10;
+		} else {
+			mColPerElement = 0;
 		}
 	}
 	

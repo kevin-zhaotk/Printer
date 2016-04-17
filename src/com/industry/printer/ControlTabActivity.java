@@ -536,7 +536,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
 					Debug.d(TAG, "--->update settings");
-					FpgaGpioOperation.updateSettings(mContext, dt);
+					FpgaGpioOperation.updateSettings(mContext, dt, false);
 					Debug.d(TAG, "--->launch thread");
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					if (!mDTransThread.launch()) {
@@ -897,7 +897,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
 					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 				break;
+			/*清洗打印头（一个特殊的打印任务），需要单独的设置：参数2必须为 4，参数4为200， 参数5为20；*/
 			case R.id.btnFlush:
+				DataTransferThread thread = new DataTransferThread();
+				thread.purge(mContext);
 				break;
 			case R.id.btnBinfile:
 				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext);

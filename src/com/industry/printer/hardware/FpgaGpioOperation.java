@@ -42,6 +42,7 @@ public class FpgaGpioOperation {
 	public static final int FPGA_STATE_SETTING	= 0x01;
 	public static final int FPGA_STATE_RESERVED	= 0x02;
 	public static final int FPGA_STATE_CLEAN	= 0x03;
+	public static final int FPGA_STATE_PURGE	= 0x05;
 
 	
 	public static final String FPGA_DRIVER_FILE = "/dev/fpga-gpio";
@@ -132,7 +133,7 @@ public class FpgaGpioOperation {
 		if(fd <= 0) {
 			return -1;
 		}
-		if (type < FPGA_STATE_OUTPUT || type > FPGA_STATE_CLEAN) {
+		if (type < FPGA_STATE_OUTPUT || type > FPGA_STATE_PURGE) {
 			Debug.d(TAG, "===>wrong data type");
 			return -1;
 		}
@@ -186,7 +187,7 @@ public class FpgaGpioOperation {
 	 * @param context
 	 */
 	
-	public static void updateSettings(Context context, DataTask task) {
+	public static void updateSettings(Context context, DataTask task, boolean isPurge) {
 		
 		if (DataTransferThread.getInstance().isRunning()) {
 			Debug.d(TAG, "===>print Thread is running now, please stop it then update settings");
@@ -202,10 +203,18 @@ public class FpgaGpioOperation {
 			data[i] = 0;
  		}
 		data[0] = (char) SystemConfigFile.mParam1;
-		data[1] = (char) SystemConfigFile.mParam2;
+		if (isPurge) {
+			data[1] = 4;
+			data[3] = 200;
+			data[4] = 20;
+			data[15] = 1;
+		} else {
+			data[1] = (char) SystemConfigFile.mParam2;
+			data[3] = (char) SystemConfigFile.mParam4;
+			data[4] = (char) SystemConfigFile.mParam5;
+			data[15] = (char) SystemConfigFile.mResv16;
+		}
 		data[2] = (char) SystemConfigFile.mParam3;
-		data[3] = (char) SystemConfigFile.mParam4;
-		data[4] = (char) SystemConfigFile.mParam5;
 		data[5] = (char) SystemConfigFile.mParam6;
 		data[6] = (char) SystemConfigFile.mParam7;
 		data[7] = (char) SystemConfigFile.mParam8;
@@ -217,7 +226,7 @@ public class FpgaGpioOperation {
 		data[12] = (char) SystemConfigFile.mResv13;
 		data[13] = (char) SystemConfigFile.mResv14;
 		data[14] = (char) SystemConfigFile.mResv15;
-		data[15] = (char) SystemConfigFile.mResv16;
+		
 		data[16] = (char) SystemConfigFile.mResv17;
 		data[17] = (char) SystemConfigFile.mResv18;
 		data[18] = (char) SystemConfigFile.mResv19;

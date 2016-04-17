@@ -4,6 +4,7 @@ import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -11,6 +12,7 @@ import java.util.Vector;
 import android.R.integer;
 import android.content.Context;
 import android.database.CharArrayBuffer;
+import android.os.Message;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
@@ -69,18 +71,22 @@ public class DataTask {
 	
 	public DataTask(Context context, MessageTask task) {
 		mContext = context;
-		mTask = task;
-		mObjList = task.getObjects();
-		mDots = 0;
-		mVarBinList = new HashMap<BaseObject, BinInfo>();
+		init(task);
 	}
 	
 	public void setTask(MessageTask task) {
 		if (task == null) {
 			return;
 		}
+		init(task);
+	}
+	
+	private void init(MessageTask task) {
 		mTask = task;
-		mObjList = task.getObjects();
+		if (task != null) {
+			mObjList = task.getObjects();
+		}
+		mDots = 0;
 		mVarBinList = new HashMap<BaseObject, BinInfo>();
 	}
 	/**
@@ -332,5 +338,22 @@ public class DataTask {
 	
 	public BinInfo getInfo() {
 		return mBinInfo;
+	}
+	
+	/**
+	 * 用於清洗的buffer
+	 * @return
+	 */
+	public char[] preparePurgeBuffer() {
+		InputStream stream;
+		try {
+			stream = mContext.getAssets().open("purge/single.bin");
+			mBinInfo = new BinInfo(stream, 1);
+			mBgBuffer = mBinInfo.getBgBuffer();
+			stream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mBgBuffer;
 	}
 }

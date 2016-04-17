@@ -60,7 +60,7 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
-		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, mDataTask.getInfo().mCharsPerHFeed*16);
+		// BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, mDataTask.getInfo().mCharsPerHFeed*16);
 		Debug.d(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		Debug.d(TAG, "--->start print");
@@ -107,6 +107,14 @@ public class DataTransferThread extends Thread {
 			//TO-DO list 下面需要把打印数据下发
 		}
 		
+	}
+	
+	public void purge(Context context) {
+		DataTask task = new DataTask(context, null);
+		Debug.d(TAG, "--->task: " + task);
+		char[] buffer = task.preparePurgeBuffer();
+		FpgaGpioOperation.updateSettings(context, task, true);
+		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 	}
 	
 	public boolean isRunning() {
