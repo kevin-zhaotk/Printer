@@ -205,17 +205,18 @@ public class FpgaGpioOperation {
 		data[0] = (char) SystemConfigFile.mParam1;
 		if (isPurge) {
 			data[1] = 4;
-			data[3] = 200;
+			data[3] = 100;
 			data[4] = 20;
+			data[5] = 500;
 			data[15] = 1;
 		} else {
 			data[1] = (char) SystemConfigFile.mParam2;
 			data[3] = (char) SystemConfigFile.mParam4;
 			data[4] = (char) SystemConfigFile.mParam5;
+			data[5] = (char) SystemConfigFile.mParam6;
 			data[15] = (char) SystemConfigFile.mResv16;
 		}
 		data[2] = (char) SystemConfigFile.mParam3;
-		data[5] = (char) SystemConfigFile.mParam6;
 		data[6] = (char) SystemConfigFile.mParam7;
 		data[7] = (char) SystemConfigFile.mParam8;
 		Debug.d(TAG, "===>data7:" + Integer.toHexString(data[7]));

@@ -114,7 +114,7 @@ public class DataTransferThread extends Thread {
 		Debug.d(TAG, "--->task: " + task);
 		char[] buffer = task.preparePurgeBuffer();
 		FpgaGpioOperation.updateSettings(context, task, true);
-		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
 	}
 	
 	public boolean isRunning() {
