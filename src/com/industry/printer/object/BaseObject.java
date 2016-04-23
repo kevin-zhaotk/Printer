@@ -240,13 +240,15 @@ public class BaseObject{
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		FontMetrics fm = mPaint.getFontMetrics();
+		float wDiv = (float) (4.0/mTask.getHeads());
 		/*draw Bitmap of single digit*/
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots, Bitmap.Config.ARGB_8888);
+		singleW = (int) (singleW/wDiv);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots * mTask.getHeads(), Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -255,7 +257,7 @@ public class BaseObject{
 			can.drawColor(Color.WHITE);
 			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
 			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
-			gCan.drawBitmap(bmp, i*bmp.getWidth(), (int)getY(), mPaint);
+			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight * mTask.getHeads()), false), i*singleW, (int)getY() * mTask.getHeads(), mPaint);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);
