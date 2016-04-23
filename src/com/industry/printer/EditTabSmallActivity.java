@@ -337,6 +337,20 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		obj.setSelected(true);
 	}
 	
+	public void setCurObj(BaseObject object)
+	{
+		ArrayList<BaseObject> objects = mMsgTask.getObjects();
+		if(objects.size() <= 1)
+			return;
+		for(BaseObject obj : objects)
+		{
+			obj.setSelected(false);
+		}
+		object.setSelected(true);
+	}
+	
+	
+	
 	public float getNextXcor()
 	{
 		float x=0;
@@ -447,7 +461,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						onInsertObject(new EllipseObject(mContext, getNextXcor()));
 					} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 						onInsertObject(new BarcodeObject(mContext, getNextXcor()));
-					} 
+					}
+            		
             		break;
             }   
             super.handleMessage(msg);   
@@ -668,13 +683,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onShowInfo() {
-		ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, getCurObj());
-		// objDialog.setObject(getCurObj());
+		BaseObject object = getCurObj();
+		onShowInfo(object);
+	}
+	
+	private void onShowInfo(BaseObject object) {
+		
+		ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, object);
 		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
 			@Override
 			public void onClick() {
 				Debug.d(TAG, "===>onShowinfo  clicked");
-				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_JUST);
+				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
 				msg.sendToTarget();
 			}
 		});
@@ -700,12 +720,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void onInsertObject(BaseObject object) {
 		mMsgTask.addObject(object);
-		Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
-		Bundle bundle = new Bundle();
-		bundle.putInt("selection", mMsgTask.getObjects().size() - 1);
-		msg.setData(bundle);
-		mObjRefreshHandler.sendMessage(msg);
+		setCurObj(object);
+		/**
+		 * display object info dialog 
+		 */
+		// Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
+		// mObjRefreshHandler.sendMessage(msg);
 		// clearCurObj();
+		onShowInfo(object);
 	}
 	
 	private boolean onObjectTouch(MotionEvent event) {
