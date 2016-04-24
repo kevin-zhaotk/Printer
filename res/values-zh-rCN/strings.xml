@@ -69,6 +69,7 @@
 	<string name="strFont">字体</string>
 	<string name="strLinewidth">线宽</string>
 	<string name="strBits">位数</string>
+	<string name="strImage">圖片路徑</string>
 	<string name="strDirect">方向</string>
 	<string name="strShift1">班次1</string>
 	<string name="strShift2">班次2</string>

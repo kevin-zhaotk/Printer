@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +26,7 @@ import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
+import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
@@ -461,6 +463,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						onInsertObject(new EllipseObject(mContext, getNextXcor()));
 					} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 						onInsertObject(new BarcodeObject(mContext, getNextXcor()));
+					} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
+						onInsertObject(new GraphicObject(mContext, getNextXcor()));
 					}
             		
             		break;

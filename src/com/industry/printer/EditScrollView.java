@@ -91,6 +91,9 @@ public class EditScrollView extends View {
 			if(mContext == null)
 				Debug.d(TAG, "$$$$$$$$$$context=null");
 			Bitmap bitmap = obj.getScaledBitmap(mContext);
+			if (bitmap == null) {
+				continue;
+			}
 			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
 			 
 		}

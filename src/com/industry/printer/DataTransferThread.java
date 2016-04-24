@@ -109,13 +109,24 @@ public class DataTransferThread extends Thread {
 		
 	}
 	
-	public void purge(Context context) {
-		DataTask task = new DataTask(context, null);
-		Debug.d(TAG, "--->task: " + task);
-		char[] buffer = task.preparePurgeBuffer();
-		FpgaGpioOperation.updateSettings(context, task, true);
-		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
-		FpgaGpioOperation.clean();
+	public void purge(final Context context) {
+		ThreadPoolManager.mThreads.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				DataTask task = new DataTask(context, null);
+				Debug.d(TAG, "--->task: " + task);
+				char[] buffer = task.preparePurgeBuffer();
+				FpgaGpioOperation.updateSettings(context, task, true);
+				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				FpgaGpioOperation.clean();
+			}
+		});
 	}
 	
 	public boolean isRunning() {

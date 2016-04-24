@@ -69,6 +69,7 @@
 	<string name="strFont">Font</string>
 	<string name="strLinewidth">Line Width</string>
 	<string name="strBits">Digits</string>
+	<string name="strImage">Image</string>
 	<string name="strDirect">Direction</string>
 	<string name="strShift1">Shift1</string>
 	<string name="strShift2">Shift2</string>
