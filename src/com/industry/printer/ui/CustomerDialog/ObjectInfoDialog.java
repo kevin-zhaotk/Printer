@@ -25,6 +25,8 @@ import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnNagitiveListener;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.widget.PopWindowSpiner;
 
 import android.app.AlertDialog;
@@ -37,6 +39,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -85,6 +88,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public Spinner mCode;
 	public CheckBox mShow;
 	public EditText mLineWidth;
+	public TextView mPicture; // 圖片路徑
 	public EditText mShift1;
 	public EditText mShiftVal1;
 	public EditText mShift2;
@@ -236,6 +240,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    	mLineType = (TextView) findViewById(R.id.spin_line_type);
 			    mLineType.setOnClickListener(this);
 			}
+		    
+		    mPicture = (TextView) findViewById(R.id.image);
+		    mPicture.setOnClickListener(this);
 	 	}
 	     
 	     mShift1 = (EditText) findViewById(R.id.edit_shift1);
@@ -427,6 +434,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					mLineWidth.setText(String.valueOf(((EllipseObject)mObject).getLineWidth()));
 					mLineType.setText(((EllipseObject)mObject).getLineType());
 				}
+				mPicture.setText(mObject.getContent());
 			}
 	 }
 	 
@@ -550,26 +558,57 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		switch (v.getId()) {
 		case R.id.highEdit:
 			mSpiner.setAdapter(mHeightAdapter);
+			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.headTypeSpin:
 			mSpiner.setAdapter(mTypeAdapter);
+			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.fontSpin:
 			mSpiner.setAdapter(mFontAdapter);
+			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.rtFormat:
 			mSpiner.setAdapter(mFormatAdapter);
+			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.spin_line_type:
 			mSpiner.setAdapter(mLineAdapter);
+			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.spinDirect:
 			mSpiner.setAdapter(mDirAdapter);
+			mSpiner.showAsDropUp(v);
+			break;
+		case R.id.image:
+			final PictureBrowseDialog dialog = new PictureBrowseDialog(mContext);
+			dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+				
+				@Override
+				public void onClick(String content) {
+					dialog.dismiss();
+				}
+				
+				@Override
+				public void onClick() {
+					((GraphicObject)mObject).setImage(dialog.getSelect().getPath());
+					mPicture.setText(mObject.getContent());
+					dialog.dismiss();
+				}
+			});
+			dialog.setOnNagitiveClickedListener(new OnNagitiveListener() {
+				
+				@Override
+				public void onClick() {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
 			break;
 		default:
 			break;
 		}
-		mSpiner.showAsDropUp(v);
+		
 		// mSpiner.showAsDropDown(v);
 	}
 

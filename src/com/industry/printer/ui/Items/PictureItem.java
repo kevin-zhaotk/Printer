@@ -17,5 +17,5 @@ public class PictureItem {
 	public String getTitle() {
 		return mTitle;
 	}
-	
+
 }

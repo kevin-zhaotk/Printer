@@ -10,6 +10,7 @@ import com.industry.printer.ui.Items.PictureItem;
 
 
 import android.content.Context;
+import android.content.ClipData.Item;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.KeyEvent;
@@ -28,7 +29,6 @@ public class PictureBrowseAdapter extends BaseAdapter {
 	public int mChecked;
 	public int mlastChecked;
 	public Context mContext;
-	public boolean mManual;
 	
 	private LayoutInflater mInflater;
 	private List<PictureItem> mItems = new ArrayList<PictureItem>();
@@ -44,7 +44,6 @@ public class PictureBrowseAdapter extends BaseAdapter {
 		mChecked=-1;
 		mlastChecked = -1;
 		mContext = context;
-		mManual = false;
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -59,17 +58,20 @@ public class PictureBrowseAdapter extends BaseAdapter {
 		{
 			convertView = mInflater.inflate(R.layout.grid_item, null);
 			mHolder = new ViewHolder();
-			mHolder.mImg = convertView.findViewById(R.id.image);
-			mHolder.mTitle = convertView.findViewById(R.id.title);
+			mHolder.mImg = (ImageView) convertView.findViewById(R.id.image);
+			mHolder.mTitle = (TextView) convertView.findViewById(R.id.title);
 			convertView.setTag(mHolder);
 		}
+		Debug.d(TAG, "--->checked=" + mChecked + ", pos=" + position);
 		if(mChecked == position)
 		{
-			
+			convertView.setBackgroundColor(Color.YELLOW);
+			convertView.setSelected(true);
 		}
 		else
 		{
-			
+			convertView.setBackgroundColor(Color.WHITE);
+			convertView.setSelected(false);
 		}
 		mHolder.mImg.setImageURI(Uri.parse(mItems.get(position).getPath()));
 		mHolder.mTitle.setText(mItems.get(position).getTitle());
@@ -87,11 +89,7 @@ public class PictureBrowseAdapter extends BaseAdapter {
 	{
 		return mChecked;
 	}
-	
-	public void setMode(boolean manual)
-	{
-		mManual = manual;
-	}
+
 	
 	public void setData(ArrayList<PictureItem> items) {
 		mItems.clear();
@@ -110,7 +108,7 @@ public class PictureBrowseAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return null;
+		return mItems.get(position);
 	}
 
 	@Override

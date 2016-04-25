@@ -16,6 +16,7 @@ public class GraphicObject  extends BaseObject{
 	public static String TAG="GraphicObject";
 	
 	public Bitmap mBitmap;
+	private String mImage;
 	
 	public GraphicObject(Context context) {
 		super(context, BaseObject.OBJECT_TYPE_GRAPHIC, 0);
@@ -36,11 +37,16 @@ public class GraphicObject  extends BaseObject{
 			return;
 		}
 		Debug.d(TAG, "setImage file: "+file);
-		mContent = file;
-		Bitmap b = BitmapFactory.decodeFile(mContent);
+		mContent = f.getName();
+		Bitmap b = BitmapFactory.decodeFile(file);
 		mBitmap = ImageConverter.convertGreyImg(b);
 		BinFromBitmap.recyleBitmap(b);
 	}
+	
+	public String getImage() {
+		return mContent;
+	}
+	
 	
 	public Bitmap getScaledBitmap(Context context)
 	{

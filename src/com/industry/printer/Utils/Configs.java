@@ -134,6 +134,11 @@ public class Configs {
 	 * TLK文件存放路径
 	 */
 	public static final String TLK_FILE_SUB_PATH = SYSTEM_CONFIG_MSG_PATH;
+	
+	/**
+	 * picture path
+	 */
+	public static final String PICTURE_SUB_PATH = "/pictures/";
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 
 	 * @param context

@@ -32,9 +32,10 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 	public EditText		  mSearch;
 	public GridView		  mPicView;	
 	public PictureBrowseAdapter mAdapter;
+	private PictureItem   mItem;
 	
 	public PictureBrowseDialog(Context context) {
-		super(context);
+		super(context, R.style.Dialog_Fullscreen);
 	}
 
 	@Override
@@ -77,12 +78,37 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_ok_message_list:
+			
+			dismiss();
+			if (pListener != null) {
+				pListener.onClick();
+			}
+			break;
+		case R.id.btn_cancel_message_list:
+			dismiss();
+			if (nListener != null) {
+				nListener.onClick();
+			}
+			break;
+		case R.id.btn_page_prev:
+			mPicView.smoothScrollBy(-200, 50);
+			break;
+		case R.id.btn_page_next:
+			mPicView.smoothScrollBy(200, 50);
+			break;
 		
+		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		Debug.d(TAG, "--->onitemclick=" + position);
+		mItem = (PictureItem) mAdapter.getItem(position);
+		mAdapter.setChecked(position);
+		mAdapter.notifyDataSetChanged();
 		
 	}
 	
@@ -93,5 +119,9 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 			PictureItem item = new PictureItem(file.getAbsolutePath(), file.getName());
 			mAdapter.addItem(item);
 		}
+	}
+	
+	public PictureItem getSelect() {
+		return mItem;
 	}
 }
