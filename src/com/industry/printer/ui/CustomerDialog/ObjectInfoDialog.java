@@ -9,6 +9,7 @@ import com.industry.printer.R.id;
 import com.industry.printer.R.layout;
 import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -591,7 +592,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				
 				@Override
 				public void onClick() {
-					((GraphicObject)mObject).setImage(dialog.getSelect().getPath());
+					String path = dialog.getSelect().getPath();
+					String name = dialog.getSelect().getTitle();
+					FileUtil.copyFile(path, mObject.getTask().getPath() + "/" + name);
+					((GraphicObject)mObject).setImage(name);
 					mPicture.setText(mObject.getContent());
 					dialog.dismiss();
 				}

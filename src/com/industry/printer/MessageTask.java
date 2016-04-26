@@ -406,6 +406,10 @@ public class MessageTask {
 		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
 	}
 	
+	public String getPath() {
+		return ConfigPath.getTlkDir(mName);
+	}
+	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_12_7 	= 0;
 		public static final int MESSAGE_TYPE_12_7_S = 1;

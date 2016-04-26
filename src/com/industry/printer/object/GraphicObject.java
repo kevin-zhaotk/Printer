@@ -30,14 +30,14 @@ public class GraphicObject  extends BaseObject{
 
 	public void setImage(String file)
 	{
-		File f = new File(file);
+		File f = new File(mTask.getPath() + "/" + file);
 		if( !f.isFile() || !isPic(file))
 		{
 			Debug.d(TAG, "please select a correct file");
 			return;
 		}
 		Debug.d(TAG, "setImage file: "+file);
-		mContent = f.getName();
+		mContent = file;
 		Bitmap b = BitmapFactory.decodeFile(file);
 		mBitmap = ImageConverter.convertGreyImg(b);
 		BinFromBitmap.recyleBitmap(b);
