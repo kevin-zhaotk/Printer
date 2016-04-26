@@ -15,7 +15,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.Gravity;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class BarcodeObject extends BaseObject {
 
@@ -107,21 +113,42 @@ public class BarcodeObject extends BaseObject {
 			/*if content need to show, draw it*/
 			if(mShow && !mFormat.equals("QR"))
 			{
-				Bitmap bmp = Bitmap.createBitmap(width, height+10, Config.ARGB_8888);
+				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
+				Bitmap code = creatCodeBitmap(mContent, width, 30);
 				Canvas can = new Canvas(bmp);
-				mPaint.setTextSize(10);
 				can.drawBitmap(mBitmap, 0, 0, mPaint);
-				can.drawText(mContent, 0, height+10, mPaint);
+				can.drawBitmap(code, 0, height, mPaint);
 				BinFromBitmap.recyleBitmap(mBitmap);
+				BinFromBitmap.recyleBitmap(code);
 				mBitmap = bmp;
 			}
 			return mBitmap;
 
 		} catch (WriterException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	protected Bitmap creatCodeBitmap(String contents,int width,int height) {
+		TextView tv=new TextView(mContext);
+	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        tv.setLayoutParams(layoutParams);
+        tv.setText(contents);
+        tv.setHeight(height);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setWidth(width);
+        tv.setDrawingCacheEnabled(true);  
+        tv.setTextColor(Color.BLACK);
+        tv.measure(  
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),  
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));  
+        tv.layout(0, 0, tv.getMeasuredWidth(),  
+        		tv.getMeasuredHeight());
+  
+        tv.buildDrawingCache();  
+        Bitmap bitmapCode=tv.getDrawingCache();
+        return bitmapCode;
 	}
 	
 	public int getBestWidth()
