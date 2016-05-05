@@ -30,14 +30,14 @@ public class GraphicObject  extends BaseObject{
 
 	public void setImage(String file)
 	{
-		File f = new File(mTask.getPath() + "/" + file);
+		File f = new File(file);
 		if( !f.isFile() || !isPic(file))
 		{
 			Debug.d(TAG, "please select a correct file");
 			return;
 		}
 		Debug.d(TAG, "setImage file: "+file);
-		mContent = file;
+		mContent = f.getName();
 		Bitmap b = BitmapFactory.decodeFile(file);
 		mBitmap = ImageConverter.convertGreyImg(b);
 		BinFromBitmap.recyleBitmap(b);
@@ -69,5 +69,23 @@ public class GraphicObject  extends BaseObject{
 				return true;
 		}
 		return false;
+	}
+	
+	public String toString()
+	{
+		String str="";
+		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+		str += mId+"^";
+		str += BaseObject.floatToFormatString(getX(), 5)+"^";
+		str += BaseObject.floatToFormatString(getY(), 5)+"^";
+		str += BaseObject.floatToFormatString(getXEnd(), 5)+"^";
+		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
+		str += BaseObject.floatToFormatString(getYEnd(), 5)+"^";
+		str += BaseObject.intToFormatString(0, 1)+"^";
+		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+		str += BaseObject.intToFormatString(mContent.length(), 3)+"^";
+		str += "000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+		System.out.println("file string ["+str+"]");
+		return str;
 	}
 }

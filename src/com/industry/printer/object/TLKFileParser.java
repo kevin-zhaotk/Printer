@@ -209,7 +209,7 @@ public class TLKFileParser  extends TlkFile{
 		else if(BaseObject.OBJECT_TYPE_GRAPHIC.equals(attr[1]))	//graphic
 		{
 			obj = new GraphicObject(mContext, 0);
-			((GraphicObject)obj).setImage(attr[21]);
+			((GraphicObject)obj).setImage(getDirectory()+ "/" +attr[21]);
 		}
 		else if(BaseObject.OBJECT_TYPE_JULIAN.equals(attr[1]))		//julian day
 		{

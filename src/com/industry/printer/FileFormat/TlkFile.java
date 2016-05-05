@@ -13,10 +13,12 @@ public class TlkFile {
 	public Context mContext;
 	public String mPath;
 	public String mFile;
+	private String mDirectory;
 	
 	public TlkFile(Context context, String file) {
 		mContext = context;
 		mFile = file;
+		mDirectory = ConfigPath.getTlkDir(file);
 		setTlk(ConfigPath.getTlkAbsolute(file));
 	}
 	/**
@@ -33,5 +35,7 @@ public class TlkFile {
 		}
 	}
 	
-	
+	public String getDirectory() {
+		return mDirectory;
+	}
 }

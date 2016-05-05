@@ -226,6 +226,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			}
 		    
 		    if (mObject instanceof CounterObject) {
+		    	mCntView = (TextView) findViewById(R.id.cntView);
 		    	mDigits = (EditText) findViewById(R.id.cntBits);
 			    mDir = (TextView) findViewById(R.id.spinDirect);
 			    mDir.setOnClickListener(this);
@@ -242,8 +243,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			    mLineType.setOnClickListener(this);
 			}
 		    
-		    mPicture = (TextView) findViewById(R.id.image);
-		    mPicture.setOnClickListener(this);
+		    if (mObject instanceof GraphicObject) {
+			    mPicture = (TextView) findViewById(R.id.image);
+			    mPicture.setOnClickListener(this);
+			}
 	 	}
 	     
 	     mShift1 = (EditText) findViewById(R.id.edit_shift1);
@@ -284,12 +287,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString()));
 						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString()));
 						Debug.d(TAG, "content="+mContent.getText().toString());
-						mObject.setContent(mContent.getText().toString());
+						
 						Resources res = mContext.getResources();
 						
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
-						if(mObject instanceof RealtimeObject)
+						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
+						if (mObject instanceof TextObject) {
+							mObject.setContent(mContent.getText().toString());
+							Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
+						}
+						else if(mObject instanceof RealtimeObject)
 						{
 							((RealtimeObject) mObject).setFormat((String)mRtFormat.getText());
 							((RealtimeObject)mObject).setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
@@ -301,6 +309,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						}
 						else if(mObject instanceof BarcodeObject)
 						{
+							mObject.setContent(mContent.getText().toString());
 							((BarcodeObject) mObject).setCode(mCode.getSelectedItem().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
 						}
@@ -331,6 +340,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							((ShiftObject) mObject).setValue(3, mShiftVal4.getText().toString());
 							((ShiftObject) mObject).setShift(4, mShift5.getText().toString());
 							((ShiftObject) mObject).setValue(4, mShiftVal5.getText().toString());
+						} else if (mObject instanceof GraphicObject) {
+							
 						}
 							
 						//mObjRefreshHandler.sendEmptyMessage(0);
@@ -434,8 +445,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				else if(mObject instanceof EllipseObject){
 					mLineWidth.setText(String.valueOf(((EllipseObject)mObject).getLineWidth()));
 					mLineType.setText(((EllipseObject)mObject).getLineType());
+				} else if (mObject instanceof GraphicObject) {
+					mPicture.setText(mObject.getContent());
 				}
-				mPicture.setText(mObject.getContent());
 			}
 	 }
 	 
@@ -592,10 +604,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				
 				@Override
 				public void onClick() {
-					String path = dialog.getSelect().getPath();
-					String name = dialog.getSelect().getTitle();
-					FileUtil.copyFile(path, mObject.getTask().getPath() + "/" + name);
-					((GraphicObject)mObject).setImage(name);
+					((GraphicObject)mObject).setImage(dialog.getSelect().getPath());
 					mPicture.setText(mObject.getContent());
 					dialog.dismiss();
 				}

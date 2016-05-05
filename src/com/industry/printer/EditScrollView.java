@@ -64,6 +64,7 @@ public class EditScrollView extends View {
 		int scrollx = 0;
 		for(BaseObject obj : mTask.getObjects())
 		{
+			Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent());
 			/* 只有当cursor选中时才显示十字标线  */
 			if(obj instanceof MessageObject) {
 				if (!obj.getSelected()) {
@@ -85,13 +86,17 @@ public class EditScrollView extends View {
 				continue;
 			}
 			/* 不在显示区域内的对象可以不画，优化效率  */
-			if ((obj.getXEnd() < getScrollX()) || (obj.getX() > getScrollX() + mScreenW)) {
-				continue;
-			}
+//			if ((obj.getXEnd() < getScrollX()) || (obj.getX() > getScrollX() + mScreenW)) {
+//				Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent() + "  x=" + obj.getX() + " end=" + obj.getXEnd());
+//				Debug.d(TAG, "scrollx=" + getScrollX());
+//				continue;
+//			}
 			if(mContext == null)
 				Debug.d(TAG, "$$$$$$$$$$context=null");
+			
 			Bitmap bitmap = obj.getScaledBitmap(mContext);
 			if (bitmap == null) {
+				Debug.d(TAG, "--->obj: " + obj.getContent());
 				continue;
 			}
 			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);

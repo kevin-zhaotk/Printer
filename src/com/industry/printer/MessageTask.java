@@ -13,11 +13,13 @@ import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
+import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.ObjectsFromString;
@@ -97,6 +99,7 @@ public class MessageTask {
 	}
 	
 	public ArrayList<BaseObject> getObjects() {
+		Debug.d(TAG, "--->size:" + mObjects.size());
 		return mObjects;
 	}
 	/**
@@ -109,6 +112,7 @@ public class MessageTask {
 		}
 		object.setTask(this);
 		mObjects.add(object);
+		Debug.d(TAG, "--->size:" + mObjects.size());
 	}
 	
 	/**
@@ -352,14 +356,42 @@ public class MessageTask {
 		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
 		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
 	}
+	
+	/**
+	 * save picture to tlk dir
+	 */
+	private void saveExtras() {
+		for (BaseObject object : getObjects()) {
+			if (object instanceof GraphicObject) {
+				String source = ConfigPath.getPictureDir() + ((GraphicObject)object).getImage();
+				String dst = getPath() + "/" + ((GraphicObject)object).getImage();
+				Debug.d(TAG, "--->source: " + source);
+				Debug.d(TAG, "--->dst: " + dst);
+				// if file is exist, dont copy again
+				File file = new File(dst);
+				if (file.exists()) {
+					continue;
+				} else {
+					FileUtil.copyFile(source, dst);
+					((GraphicObject)object).setImage(dst);
+				}
+			}
+		}
+	}
 
 	public void save() {
 		//保存1.bin文件
 		saveBin();
+		
 		//保存1.TLK文件
 		saveTlk(mContext);
+		
+		//保存其他必要的文件
+		saveExtras();
+		
 		//保存vx.bin文件
 		saveVarBin();
+		
 		//保存1.bmp文件
 		savePreview();
 	}

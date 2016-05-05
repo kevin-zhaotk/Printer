@@ -115,7 +115,7 @@ public class BaseObject{
 		mFont = "Arial";
 		initPaint();
 		setSelected(true);	
-		Debug.d(TAG, "--->new baseobject: " + Configs.gDots);
+		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
 		setHeight(Configs.gDots);
 		setLineWidth(5);
 		setContent("text");
@@ -181,6 +181,7 @@ public class BaseObject{
 			drawSelected();
 			drawNormal();
 		}
+		Debug.d(TAG, "--->redraw?" + isNeedRedraw);
 		isNeedRedraw = false;
 		if (mIsSelected) {
 			return mBitmapSelected;
@@ -262,7 +263,7 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);
 		maker.extract(gBmp);
-		Debug.d(TAG, "--->task; " + mTask);
+		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
@@ -558,4 +559,7 @@ public class BaseObject{
 		return mTask;
 	}
 	
+	public boolean isNeedDraw() {
+		return isNeedRedraw;
+	}
 }
