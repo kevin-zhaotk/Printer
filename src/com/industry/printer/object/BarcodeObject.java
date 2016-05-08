@@ -81,7 +81,7 @@ public class BarcodeObject extends BaseObject {
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
 	            /* 条形码的宽度设置为高度的3倍  */
 				matrix = writer.encode(mContent,
-					                BarcodeFormat.CODE_128, (int)mHeight * 3, (int)mHeight, null);
+					                BarcodeFormat.CODE_128, (int)mHeight * 3, (int)(mHeight - 30), null);
 			}
 			else if(mFormat.equals("QR"))
 			{
@@ -90,7 +90,7 @@ public class BarcodeObject extends BaseObject {
 			}
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
-			Debug.d(TAG, "mWidth="+mWidth+", width="+width);
+			Debug.d(TAG, "mWidth="+mWidth+", width="+width + "   height=" + height);
 			
 			mWidth = width;
 			mXcor_end = mXcor + mWidth;
