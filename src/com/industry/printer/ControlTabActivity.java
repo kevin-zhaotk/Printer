@@ -899,7 +899,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				break;
 			/*清洗打印头（一个特殊的打印任务），需要单独的设置：参数2必须为 4，参数4为200， 参数5为20；*/
 			case R.id.btnFlush:
-				DataTransferThread thread = new DataTransferThread();
+				DataTransferThread thread = DataTransferThread.getInstance();
 				thread.purge(mContext);
 				break;
 			case R.id.btnBinfile:
