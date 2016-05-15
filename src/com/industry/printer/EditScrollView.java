@@ -62,6 +62,7 @@ public class EditScrollView extends View {
 	protected void onDraw(Canvas canvas) {
 		Debug.d(TAG, "====>onDraw");
 		int scrollx = 0;
+		canvas.drawLine(0, 153, mScreenW, 153, p);
 		for(BaseObject obj : mTask.getObjects())
 		{
 			Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent());
