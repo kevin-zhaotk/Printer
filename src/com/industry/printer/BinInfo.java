@@ -88,6 +88,8 @@ public class BinInfo {
 		mBufferChars = null;
 		if (type <=0 || type > 4) {
 			mType = 1;
+		} else {
+			mType = type;
 		}
 		/**读取文件头信息**/
 		
@@ -110,6 +112,8 @@ public class BinInfo {
 		mBufferChars = null;
 		if (type <=0 || type > 4) {
 			mType = 1;
+		} else {
+			mType = type;
 		}
 		/**读取文件头信息**/
 		try {
@@ -261,15 +265,15 @@ public class BinInfo {
    		for(int i=0; i<var.length(); i++)
    		{
    			n = Integer.parseInt(var.substring(i, i+1));
-   			//Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerColumn=" + mBytesPerColumn + ", type=" + mType);
+   			// Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerH=" + mBytesPerH + ", type=" + mType);
    			/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
    			for (int k = 0; k < mColPerElement; k++) {
    				for (int j = 0; j < mType; j++) {
-   	   				ba.append(mBuffer, n*mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn, mBytesPerColumn);
+   	   				ba.append(mBuffer, n*mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn + j * mBytesPerH, mBytesPerH);
    	   	   			if (mNeedFeed) {
    	   					ba.append(feed, 0, 1);
    	   				}
-   	   	   			// Debug.d(TAG, "===>offset:" + (n*mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn) + " ,mBytesPerH=" + mBytesPerColumn);
+   	   	   			// Debug.d(TAG, "===>offset:" + (n*mColPerElement * mBytesPerColumn + 16 + k * mBytesFeed + j * mBytesPerH) + " ,mBytesPerH=" + mBytesPerH);
    				}
 			}
    		}
@@ -313,7 +317,7 @@ public class BinInfo {
     	int len = src.length;
     	if(dst.length < x*high + src.length)
     	{
-    		Debug.d(TAG, "dst buffer no enough space!!!!");
+    		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);
     		len = dst.length - x*high;
     		//return;
     	}

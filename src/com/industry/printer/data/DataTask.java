@@ -357,4 +357,8 @@ public class DataTask {
 		}
 		return mBgBuffer;
 	}
+	
+	public int getHeads() {
+		return mTask.getHeads();
+	}
 }

@@ -277,6 +277,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						{
 							mObject.setContent(mMsg.getText().toString());
 							((MessageObject) mObject).setType(mPrinter.getText().toString());
+							dismiss();
 							return;
 						}
 						

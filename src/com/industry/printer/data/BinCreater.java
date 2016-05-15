@@ -68,7 +68,7 @@ public class BinCreater {
     
     public static void saveBitmap(Bitmap bmp, String picName)
     {
-    	File f = new File(Configs.USB_ROOT_PATH, picName);
+    	File f = new File(Configs.USB_ROOT_PATH2, picName);
     	//File f = new File("/storage/external_storage/sda1", picName);
     	if(f.exists())
     	{

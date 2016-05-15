@@ -206,8 +206,8 @@ public class FpgaGpioOperation {
 		if (isPurge) {
 			data[1] = 4;
 			data[3] = 100;
-			data[4] = 20;
-			data[5] = 500;
+			data[4] = 200;
+			data[5] = 100;
 			data[15] = 1;
 		} else {
 			data[1] = (char) SystemConfigFile.mParam2;

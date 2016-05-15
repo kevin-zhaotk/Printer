@@ -75,15 +75,15 @@ public class RealtimeObject extends BaseObject {
 				o = new TextObject(mContext, x);
 				o.setContent(str.substring(0, i));
 				mSubObjs.add(o);
+				
 				/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-				if (PlatformInfo.isSmfyProduct()) {
+				if (PlatformInfo.isBufferFromDotMatrix()) {
 					x = x + o.getContent().length() * 16;
 				} 
 				/*通过bitmap提取点阵的系统用下面的计算方法*/
-				else if (PlatformInfo.isFriendlyProduct()) {
+				else {
 					x = o.getXEnd();
 				}
-				
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
@@ -156,8 +156,8 @@ public class RealtimeObject extends BaseObject {
 		
 		for(BaseObject o : mSubObjs)
 		{
-			//System.out.println(""+o.getContent()+",id="+o.mId);
 			Bitmap b = o.getScaledBitmap(context);
+			Debug.d(TAG, "--->id:" + o.mId + ",  width=" + b.getWidth());
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
 		return bmp;

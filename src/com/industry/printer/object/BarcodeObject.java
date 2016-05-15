@@ -135,6 +135,7 @@ public class BarcodeObject extends BaseObject {
 	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
         tv.setLayoutParams(layoutParams);
         tv.setText(contents);
+        tv.setTextSize(25);
         tv.setHeight(height);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         tv.setWidth(width);
@@ -148,6 +149,7 @@ public class BarcodeObject extends BaseObject {
   
         tv.buildDrawingCache();  
         Bitmap bitmapCode=tv.getDrawingCache();
+//        BinCreater.saveBitmap(bitmapCode, "barcode.png");
         return bitmapCode;
 	}
 	

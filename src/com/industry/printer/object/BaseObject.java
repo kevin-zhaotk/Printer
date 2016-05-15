@@ -112,7 +112,7 @@ public class BaseObject{
 		mYcor_end=0;
 		mDragable = true;
 		isNeedRedraw = true;
-		mFont = "Arial";
+		mFont = "Welldraw0";
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
@@ -560,6 +560,6 @@ public class BaseObject{
 	}
 	
 	public boolean isNeedDraw() {
-		return isNeedRedraw;
+        return isNeedRedraw;
 	}
 }

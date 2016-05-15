@@ -412,6 +412,7 @@ public class MessageTask {
 		if (obj == null) {
 			return height;
 		}
+		Debug.d(TAG, "--->head type: " + obj.getType());
 		switch (obj.getType()) {
 			case MessageType.MESSAGE_TYPE_12_7:
 			case MessageType.MESSAGE_TYPE_12_7_S:
