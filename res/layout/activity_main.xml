@@ -75,18 +75,73 @@
          android:gravity="center"
         />
      
-     <TextView
-         android:id="@+id/edit_message_view"
+     <LinearLayout 
+         android:id="@+id/edit_extra"
          android:layout_width="320dp"
-         android:layout_height="40dp"
+         android:layout_height="@dimen/top_btn_height"
+         android:orientation="vertical"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
-         android:text="@string/str_filename_no"
-         android:textColor="#000000"
-         android:textSize="25sp"
-         android:gravity="center"
          android:visibility="gone"
-        />
+         >
+         <TextView
+	         android:id="@+id/edit_message_view"
+	         android:layout_width="320dp"
+	         android:layout_height="40dp"
+	         android:text="@string/str_filename_no"
+	         android:textColor="#000000"
+	         android:textSize="25sp"
+	         android:gravity="center"
+	         
+        	/>
+         <RelativeLayout 
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             >
+	         <RelativeLayout
+			    android:id="@+id/btn_page_forward" 
+			    android:layout_width="120dp"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentRight="true"
+		        >
+				<ImageView 
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:src="@drawable/style_ctrlbtn_bg_small"
+				    />
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+				    android:gravity="center"
+			        android:textSize="@dimen/ctrlButtonsTextsize_min"
+			        android:textColor="#000000"
+			        android:text="@string/str_page_backward" 
+				    />
+			</RelativeLayout>
+		    
+		    <RelativeLayout
+			    android:id="@+id/btn_page_backward" 
+			    android:layout_width="120dp"
+		        android:layout_height="fill_parent"
+		        android:layout_toLeftOf="@id/btn_page_backward"
+		        >
+				<ImageView 
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:src="@drawable/style_ctrlbtn_bg_small"
+				    />
+				<TextView
+				    android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+				    android:gravity="center"
+			        android:textSize="@dimen/ctrlButtonsTextsize_min"
+			        android:textColor="#000000"
+			        android:text="@string/str_page_forward" 
+				    />
+			</RelativeLayout>
+		</RelativeLayout>
+     </LinearLayout>
+     
      <LinearLayout 
          android:id="@+id/settings_view"
          android:layout_width="320dp"

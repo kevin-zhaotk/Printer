@@ -17,6 +17,7 @@ import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
+import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.GraphicObject;
@@ -252,6 +253,9 @@ public class MessageTask {
 			else if(o instanceof ShiftObject)
 			{
 				// o.drawVarBitmap();
+			} else if (o instanceof BarcodeObject) {
+				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext, true);
+				can.drawBitmap(t, o.getX(), o.getY(), p);
 			}
 			else
 			{

@@ -62,7 +62,10 @@ public class EditScrollView extends View {
 	protected void onDraw(Canvas canvas) {
 		Debug.d(TAG, "====>onDraw");
 		int scrollx = 0;
-		canvas.drawLine(0, 153, mScreenW, 153, p);
+		if (mParent != null) {
+			scrollx = mParent.getScrollX();
+		}
+		Debug.d(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
 		for(BaseObject obj : mTask.getObjects())
 		{
 			Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent());
@@ -71,10 +74,7 @@ public class EditScrollView extends View {
 				if (!obj.getSelected()) {
 					continue;
 				}
-				if (mParent != null) {
-					scrollx = mParent.getScrollX();
-				}
-				Debug.d(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
+				
 				float[] points = {
 					/* 画水平线 */
 					scrollx, obj.getY(), scrollx + mScreenW, obj.getY(),
@@ -103,6 +103,7 @@ public class EditScrollView extends View {
 			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
 			 
 		}
+		canvas.drawLine(scrollx, 153, scrollx + mScreenW, 153, p);
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	} 

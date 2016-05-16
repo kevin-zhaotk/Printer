@@ -66,7 +66,10 @@ public class BarcodeObject extends BaseObject {
 	
 	private static final String CODE = "utf-8"; 
 	
-	public Bitmap getScaledBitmap(Context context)
+	public Bitmap getScaledBitmap(Context context) {
+		return getScaledBitmap(context, false);
+	}
+	public Bitmap getScaledBitmap(Context context, boolean isBin)
 	{
 		if (!isNeedRedraw) {
 			return mBitmap;
@@ -80,8 +83,9 @@ public class BarcodeObject extends BaseObject {
 				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
 	            /* 条形码的宽度设置为高度的3倍  */
-				matrix = writer.encode(mContent,
-					                BarcodeFormat.CODE_128, (int)mHeight * 3, (int)(mHeight - 30), null);
+	            
+	            matrix = writer.encode(mContent,
+					        BarcodeFormat.CODE_128, (int)mHeight * 3, (int)(mHeight - 30), null);
 			}
 			else if(mFormat.equals("QR"))
 			{
@@ -114,7 +118,7 @@ public class BarcodeObject extends BaseObject {
 			if(mShow && !mFormat.equals("QR"))
 			{
 				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
-				Bitmap code = creatCodeBitmap(mContent, width, 30);
+				Bitmap code = creatCodeBitmap(mContent, width, 30, isBin);
 				Canvas can = new Canvas(bmp);
 				can.drawBitmap(mBitmap, 0, 0, mPaint);
 				can.drawBitmap(code, 0, height, mPaint);
@@ -130,7 +134,8 @@ public class BarcodeObject extends BaseObject {
 		return null;
 	}
 	
-	protected Bitmap creatCodeBitmap(String contents,int width,int height) {
+	protected Bitmap creatCodeBitmap(String contents,int width,int height, boolean isBin) {
+		float div = (float) (4.0/mTask.getHeads());
 		TextView tv=new TextView(mContext);
 	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
         tv.setLayoutParams(layoutParams);
@@ -150,7 +155,7 @@ public class BarcodeObject extends BaseObject {
         tv.buildDrawingCache();  
         Bitmap bitmapCode=tv.getDrawingCache();
 //        BinCreater.saveBitmap(bitmapCode, "barcode.png");
-        return bitmapCode;
+        return isBin?Bitmap.createScaledBitmap(bitmapCode, (int) (bitmapCode.getWidth()*div), bitmapCode.getHeight(), true) : bitmapCode;
 	}
 	
 	public int getBestWidth()

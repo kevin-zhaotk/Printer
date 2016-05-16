@@ -22,6 +22,7 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodInfo;
@@ -30,6 +31,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -42,7 +44,7 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
 //import android.app.TabActivity;
 
-public class MainActivity extends Activity implements OnCheckedChangeListener, OnTouchListener {
+public class MainActivity extends Activity implements OnCheckedChangeListener, OnTouchListener, OnClickListener {
 
 	public static final String TAG="MainActivity";
 	public static final String ACTION_USB_PERMISSION="com.industry.printer.USB_PERMISSION";
@@ -66,7 +68,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public TextView mEditTitle;
 	public LinearLayout mSettings;
 	public TextView mSettingTitle;
+	public LinearLayout mEditExtra;
 	public TextView mVersion;
+	
+	private RelativeLayout mPgBack;
+	private RelativeLayout mPgFore;
 	
 	static {
 		System.loadLibrary("Hardware_jni");
@@ -195,6 +201,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private void initView() {
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
+		mEditExtra = (LinearLayout) findViewById(R.id.edit_extra);
+		
 		mSettings = (LinearLayout) findViewById(R.id.settings_view);
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
@@ -212,6 +220,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mEditFullTab = new EditMultiTabActivity();
 		mSettingsTab = new SettingsTabActivity();
 		Debug.d(TAG, "===>initview");
+		
+		mPgBack = (RelativeLayout) findViewById(R.id.btn_page_backward);
+		mPgBack.setOnClickListener(this);
+		mPgFore = (RelativeLayout) findViewById(R.id.btn_page_forward);
+		mPgFore.setOnClickListener(this);
 		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //		transaction.replace(R.id.tab_content, mControlTab);
@@ -269,7 +282,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 						fts.show(mEditTab);
 					}
 					
-					mEditTitle.setVisibility(View.VISIBLE);
+					mEditExtra.setVisibility(View.VISIBLE);
 				} else {
 					if (PlatformInfo.getEditType() == PlatformInfo.LARGE_SCREEN) {
 						fts.hide(mEditFullTab);
@@ -278,7 +291,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					} else if (PlatformInfo.getEditType() == PlatformInfo.SMALL_SCREEN_PART) {
 						fts.hide(mEditTab);
 					}
-					mEditTitle.setVisibility(View.GONE);
+					mEditExtra.setVisibility(View.GONE);
 				}
 				break;
 			case R.id.btn_setting:
@@ -352,5 +365,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		}
 		return false;
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.btn_page_backward:
+			mEditSmallTab.scrollPageBack();
+			break;
+		case R.id.btn_page_forward:
+			mEditSmallTab.scrollPageFore();
+			break;
+		default:
+			break;
+		}
 	}
 }

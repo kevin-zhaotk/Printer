@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.YuvImage;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -278,7 +279,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			Debug.d(TAG, "=====obj:"+obj.mId + "  draw:" + obj.isNeedDraw());
 			mObjView.setTask(mMsgTask);
 			mObjView.invalidate();
-			if(obj != null){
+			if(obj != null && !(obj instanceof MessageObject)){
 				makeObjToCenter((int)obj.getX());
 			}
 			Debug.d(TAG, "=========");
@@ -760,6 +761,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		else
 			obj.setX(obj.getX() - 4);
+		if (obj instanceof MessageObject) {
+			cursorMove((MessageObject)obj);
+		}
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
@@ -789,7 +793,31 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		else
 			obj.setX(obj.getX() + 4);
+		if (obj instanceof MessageObject) {
+			cursorMove((MessageObject)obj);
+		}
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private void cursorMove(MessageObject object) {
+		float x = object.getX();
+		float y = object.getY();
+		if (x + 20 > mHScroll.getScrollX() + mHScroll.getWidth()) {
+			Debug.d(TAG, "--->x=" + x + ", scrollx=" + mHScroll.getScrollX() + ",  width=" + mHScroll.getWidth());
+			mHScroll.scrollBy(200, 0);
+		} else if (x-20 < mHScroll.getScrollX()) {
+			mHScroll.scrollBy(-200, 0);
+			if (x <= 20) {
+				object.setX(20f);
+			}
+		}
+		
+		if (y + 10 > mHScroll.getHeight()) {
+			object.setY(mHScroll.getHeight() -10);
+		} else if (y < 10) {
+			object.setY(10f);
+		}
+		mObjView.invalidate();
 	}
 	
 	private boolean onRightTouch(MotionEvent event) {
@@ -817,6 +845,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		else
 			obj.setY(obj.getY() - 4);
+		if (obj instanceof MessageObject) {
+			cursorMove((MessageObject)obj);
+		}
+		
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
@@ -845,6 +877,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		else
 			obj.setY(obj.getY() + 4);
+		if (obj instanceof MessageObject) {
+			cursorMove((MessageObject)obj);
+		}
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
@@ -919,6 +954,16 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		setCurObj(0);
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	public void scrollPageFore() {
+		mHScroll.scrollBy(300, 0);
+		mObjView.invalidate();
+	}
+	
+	public void scrollPageBack() {
+		mHScroll.scrollBy(-300, 0);
+		mObjView.invalidate();
 	}
 	
 	public final int LEFT_KEY=1;
