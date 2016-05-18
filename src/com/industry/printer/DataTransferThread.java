@@ -1,10 +1,15 @@
 package com.industry.printer;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -60,7 +65,13 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
-		BinCreater.saveBin("/mnt/usbhost1/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		if (usbs != null && usbs.size() > 0) {
+			String path = usbs.get(0);
+			path = path + "/print.bin";
+			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		}
+		
 		Debug.d(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		Debug.d(TAG, "--->start print");
