@@ -28,6 +28,8 @@ public class BarcodeObject extends BaseObject {
 	public String mFormat;
 	public boolean mShow;
 	
+	public Bitmap mBinmap;
+	
 	public BarcodeObject(Context context, float x) {
 		super(context, BaseObject.OBJECT_TYPE_BARCODE, x);
 		// TODO Auto-generated constructor stub
@@ -72,7 +74,12 @@ public class BarcodeObject extends BaseObject {
 	public Bitmap getScaledBitmap(Context context, boolean isBin)
 	{
 		if (!isNeedRedraw) {
-			return mBitmap;
+			if (!isBin || mFormat.equals("QR")) {
+				return mBitmap; 
+			} else {
+				return mBinmap;
+			}
+			
 		}
 		isNeedRedraw = false;
 		BitMatrix matrix=null;
@@ -113,18 +120,35 @@ public class BarcodeObject extends BaseObject {
 			mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			
 			mBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-			
+			// mBinmap = Bitmap.createBitmap(mBitmap);
 			/*if content need to show, draw it*/
 			if(mShow && !mFormat.equals("QR"))
 			{
+				// 用於顯示的bitmap
 				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
-				Bitmap code = creatCodeBitmap(mContent, width, 30, isBin);
+				Bitmap code = creatCodeBitmap(mContent, width, 30, false);
+				Debug.d(TAG, "===>code width=" + code.getWidth());
+				BinCreater.saveBitmap(code, "barcode1.png");
 				Canvas can = new Canvas(bmp);
 				can.drawBitmap(mBitmap, 0, 0, mPaint);
 				can.drawBitmap(code, 0, height, mPaint);
-				BinFromBitmap.recyleBitmap(mBitmap);
 				BinFromBitmap.recyleBitmap(code);
+				Bitmap b = Bitmap.createBitmap(mBitmap);
+				BinFromBitmap.recyleBitmap(mBitmap);
 				mBitmap = bmp;
+				
+				// 用於生成bin的bitmap
+				Bitmap bmp1 = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
+				code = creatCodeBitmap(mContent, width, 30, true);
+				Debug.d(TAG, "===>code width=" + code.getWidth());
+				BinCreater.saveBitmap(code, "barcode.png");
+				can = new Canvas(bmp1);
+				can.drawBitmap(b, 0, 0, mPaint);
+				can.drawBitmap(code, 0, height, mPaint);
+				BinFromBitmap.recyleBitmap(b);
+				BinFromBitmap.recyleBitmap(code);
+				mBinmap = bmp1;
+				return isBin?mBinmap : mBitmap;
 			}
 			return mBitmap;
 
@@ -136,6 +160,8 @@ public class BarcodeObject extends BaseObject {
 	
 	protected Bitmap creatCodeBitmap(String contents,int width,int height, boolean isBin) {
 		float div = (float) (4.0/mTask.getHeads());
+		Debug.d(TAG, "===>width=" + width);
+		width = (int) (width/div);
 		TextView tv=new TextView(mContext);
 	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
         tv.setLayoutParams(layoutParams);
@@ -154,7 +180,7 @@ public class BarcodeObject extends BaseObject {
   
         tv.buildDrawingCache();  
         Bitmap bitmapCode=tv.getDrawingCache();
-//        BinCreater.saveBitmap(bitmapCode, "barcode.png");
+        Debug.d(TAG, "===>width=" + width + ", bmp width=" + bitmapCode.getWidth());
         return isBin?Bitmap.createScaledBitmap(bitmapCode, (int) (bitmapCode.getWidth()*div), bitmapCode.getHeight(), true) : bitmapCode;
 	}
 	
