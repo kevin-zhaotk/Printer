@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.view.Gravity;
 import android.view.View.MeasureSpec;
@@ -89,10 +90,10 @@ public class BarcodeObject extends BaseObject {
 			{
 				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
-	            /* 条形码的宽度设置为高度的3倍  */
 	            
+	            /* 条形码的宽度设置:每个数字占40pix列  */
 	            matrix = writer.encode(mContent,
-					        BarcodeFormat.CODE_128, (int)mHeight * 3, (int)(mHeight - 30), null);
+					        BarcodeFormat.CODE_128, mContent.length() * 40, (int)(mHeight - 30), null);
 			}
 			else if(mFormat.equals("QR"))
 			{
@@ -182,6 +183,29 @@ public class BarcodeObject extends BaseObject {
         Bitmap bitmapCode=tv.getDrawingCache();
         Debug.d(TAG, "===>width=" + width + ", bmp width=" + bitmapCode.getWidth());
         return isBin?Bitmap.createScaledBitmap(bitmapCode, (int) (bitmapCode.getWidth()*div), bitmapCode.getHeight(), true) : bitmapCode;
+	}
+	
+	protected Bitmap createCodeBitmap(String content, int width, int height, boolean isBin) {
+		float div = (float) (4.0/mTask.getHeads());
+		Debug.d(TAG, "===>width=" + width);
+		if (isBin) {
+			width = (int) (width/div);
+		}
+		Paint paint = new Paint();
+		paint.setTextSize(20);
+		paint.setColor(Color.BLACK);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		//每个字符占的宽度
+		int perPix = width/content.length();
+		//字符本身的宽度
+		float numWid = paint.measureText("0");
+		int left = (int) ((perPix - numWid)/2);
+		for (int i = 0; i < content.length()-1; i++) {
+			String n = content.substring(i, i+1);
+			canvas.drawText(n, i*perPix + left, 0, paint);
+		}
+		return isBin?Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth()*div), bitmap.getHeight(), true) : bitmap;
 	}
 	
 	public int getBestWidth()
