@@ -70,20 +70,14 @@ public class BarcodeObject extends BaseObject {
 	private static final String CODE = "utf-8"; 
 	
 	public Bitmap getScaledBitmap(Context context) {
-		return getScaledBitmap(context, false);
-	}
-	public Bitmap getScaledBitmap(Context context, boolean isBin)
-	{
 		if (!isNeedRedraw) {
-			if (!isBin || mFormat.equals("QR")) {
-				return mBitmap; 
-			} else {
-				return mBinmap;
-			}
-			
+			return mBitmap; 			
 		}
+		
+		Bitmap bitmap;
 		isNeedRedraw = false;
 		BitMatrix matrix=null;
+		
 		try {
 			MultiFormatWriter writer = new MultiFormatWriter();
 			if(mFormat.equals("ENA128"))
@@ -91,9 +85,9 @@ public class BarcodeObject extends BaseObject {
 				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
 	            
-	            /* 条形码的宽度设置:每个数字占40pix列  */
+	            /* 条形码的宽度设置:每个数字占70pix列  */
 	            matrix = writer.encode(mContent,
-					        BarcodeFormat.CODE_128, mContent.length() * 40, (int)(mHeight - 30), null);
+					        BarcodeFormat.CODE_128, (int) ((mContent.length() * 70)/div), (int)(mHeight - 30), null);
 			}
 			else if(mFormat.equals("QR"))
 			{
@@ -108,8 +102,6 @@ public class BarcodeObject extends BaseObject {
 			int height = matrix.getHeight();
 			Debug.d(TAG, "mWidth="+mWidth+", width="+width + "   height=" + height);
 			
-			mWidth = width;
-			mXcor_end = mXcor + mWidth;
 			int[] pixels = new int[width * height];
 			for (int y = 0; y < height; y++) 
 			{
@@ -129,31 +121,17 @@ public class BarcodeObject extends BaseObject {
 			/*if content need to show, draw it*/
 			if(mShow && !mFormat.equals("QR"))
 			{
-				// 用於顯示的bitmap
+				// 用於生成bin的bitmap
 				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
-				Bitmap code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 30, false);
+				Bitmap code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 30);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
-				BinCreater.saveBitmap(code, "barcode1.png");
+				BinCreater.saveBitmap(code, "barcode.png");
 				Canvas can = new Canvas(bmp);
 				can.drawBitmap(mBitmap, 0, 0, mPaint);
 				can.drawBitmap(code, tl[0], height, mPaint);
-				BinFromBitmap.recyleBitmap(code);
-				Bitmap b = Bitmap.createBitmap(mBitmap);
 				BinFromBitmap.recyleBitmap(mBitmap);
-				mBitmap = bmp;
-				
-				// 用於生成bin的bitmap
-				Bitmap bmp1 = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
-				code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 30, true);
-				Debug.d(TAG, "===>code width=" + code.getWidth());
-				BinCreater.saveBitmap(code, "barcode.png");
-				can = new Canvas(bmp1);
-				can.drawBitmap(b, 0, 0, mPaint);
-				can.drawBitmap(code, tl[0], height, mPaint);
-				BinFromBitmap.recyleBitmap(b);
 				BinFromBitmap.recyleBitmap(code);
-				mBinmap = bmp1;
-				return isBin?mBinmap : mBitmap;
+				mBitmap = bmp;
 			}
 			return mBitmap;
 
@@ -189,36 +167,24 @@ public class BarcodeObject extends BaseObject {
         return isBin?Bitmap.createScaledBitmap(bitmapCode, (int) (bitmapCode.getWidth()*div), bitmapCode.getHeight(), true) : bitmapCode;
 	}
 	
-	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height, boolean isBin) {
-		float div = (float) (4.0/mTask.getHeads());
-		int w=width;
-		int h=height;
-		Debug.d(TAG, "===>width=" + width);
-		if (isBin) {
-			w = (int) (width/div);
-			h = (int) (height/div);
-		}
+	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
 		Paint paint = new Paint(); 
 		
-		if (isBin) {
-			paint.setTextSize(20/div);
-		} else {
-			paint.setTextSize(20);
-		}
+		paint.setTextSize(20);
+		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
-		Bitmap bitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		//每个字符占的宽度
-		int perPix = w/content.length();
+		int perPix = width/content.length();
 		//字符本身的宽度
 		float numWid = paint.measureText("0");
 		int left = (int) ((perPix - numWid)/2);
 		for (int i = 0; i < content.length(); i++) {
 			String n = content.substring(i, i+1);
-			Debug.d(TAG, "--->n=" + n);
-			canvas.drawText(n, i*perPix + left, isBin?25/div:25, paint);
+			canvas.drawText(n, i*perPix + left, 25, paint);
 		}
-		return isBin?Bitmap.createScaledBitmap(bitmap, width, height, true) : bitmap;
+		return bitmap;
 	}
 	
 	public int getBestWidth()
