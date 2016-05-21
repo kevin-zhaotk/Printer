@@ -74,7 +74,6 @@ public class BarcodeObject extends BaseObject {
 			return mBitmap; 			
 		}
 		
-		Bitmap bitmap;
 		isNeedRedraw = false;
 		BitMatrix matrix=null;
 		
@@ -87,12 +86,14 @@ public class BarcodeObject extends BaseObject {
 	            
 	            /* 条形码的宽度设置:每个数字占70pix列  */
 	            matrix = writer.encode(mContent,
-					        BarcodeFormat.CODE_128, (int) ((mContent.length() * 70)/div), (int)(mHeight - 30), null);
+					        BarcodeFormat.CODE_128, mContent.length() * 70, (int)(mHeight - 30), null);
 			}
 			else if(mFormat.equals("QR"))
 			{
 				matrix = writer.encode(mContent,
 		                BarcodeFormat.QR_CODE, (int)mHeight, (int)mHeight);
+			} else {
+				return null;
 			}
 			int tl[] = matrix.getTopLeftOnBit();
 			for (int i = 0; i < tl.length; i++) {

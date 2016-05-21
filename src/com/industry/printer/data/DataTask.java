@@ -163,7 +163,7 @@ public class DataTask {
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
-				Debug.d(TAG, "--->object x=" + o.getX());
+				// Debug.d(TAG, "--->object x=" + o.getX()/div);
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsPerHFeed());
 			}
 			else if(o instanceof RealtimeObject)
@@ -203,9 +203,11 @@ public class DataTask {
 						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
-					BinCreater.saveBin("/mnt/usbhost1/v" + o.getIndex() + ".bin", var, info.mBytesPerHFeed*8);
+					//BinCreater.saveBin("/mnt/usbhost1/v" + o.getIndex() + ".bin", var, info.mBytesPerHFeed*8);
 					BinInfo.overlap(mPrintBuffer, var, (int)(rtSub.getX()/div), info.getCharsPerHFeed());
-				}				
+					// Debug.d(TAG, "--->real x=" + rtSub.getX()+ ", div-x=" + rtSub.getX()/div );
+				}
+				
 			}
 			else if(o instanceof JulianDayObject)
 			{
@@ -215,6 +217,7 @@ public class DataTask {
 					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
 					mVarBinList.put(o, varbin);
 				}
+				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
 				var = varbin.getVarBuffer(vString);
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
 			}

@@ -20,6 +20,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.StringUtil;
 
+import android.R.integer;
 import android.content.Context;
 import android.util.Log;
 
@@ -130,22 +131,12 @@ public class TLKFileParser  extends TlkFile{
                      if(pObj instanceof RealtimeObject)
                      {
                     	 i = ((RealtimeObject) pObj).mSubObjs.size();
-                    	 
                     	 for(int j=0; j<i ; j++)
                     	 {
                     		 line = buffreader.readLine();
                     		 Debug.d(TAG, "line="+line);
-                    		 for(int k=0; k<i; k++)
-                    		 {
-                    			 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(k);
-                    			 if(obj.getId().equals(line.substring(4, 7)))
-                    			 {
-                    				 ((RealtimeObject) pObj).mSubObjs.get(j).setIndex(Integer.parseInt(line.substring(0, 3)));
-                    				 Debug.d(TAG, "pObj "+((RealtimeObject) pObj).mSubObjs.get(j).getId()+",index="+((RealtimeObject) pObj).mSubObjs.get(j).getIndex()); 
-                            		 break;
-                    			 }
-                    		 }
-                    		 
+                    		 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(j);
+                    		 parseSubObject(obj, line);
                     	 }
                      }
                  }
@@ -155,6 +146,19 @@ public class TLKFileParser  extends TlkFile{
 		{
 			Debug.d(TAG, "parse error: "+e.getMessage());
 		}
+	}
+	
+	private void parseSubObject(BaseObject object, String str) {
+		if (StringUtil.isEmpty(str)) {
+			return;
+		}
+		String [] attr = str.split("\\^",0);
+		if (attr == null || attr.length != 22) {
+			return ;
+		}
+		object.setIndex(Integer.parseInt(attr[0]));
+		object.setX(Integer.parseInt(attr[2])*2);
+		object.setWidth(Integer.parseInt(attr[4])*2-Integer.parseInt(attr[2])*2);
 	}
 	
 	public BaseObject parseLine(MessageTask task, String str)
