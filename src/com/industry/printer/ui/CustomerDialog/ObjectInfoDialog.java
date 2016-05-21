@@ -436,16 +436,19 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					mShiftVal5.setText(((ShiftObject)mObject).getValue(4));
 				}
 				else if(mObject instanceof RectObject){
+					String lines[] = mContext.getResources().getStringArray(R.array.strLineArray);
 					mLineWidth.setText(String.valueOf(((RectObject)mObject).getLineWidth()));
-					mLineType.setText(((RectObject)mObject).getLineType());
+					mLineType.setText(lines[((RectObject)mObject).getLineType()]);
 				}
 				else if(mObject instanceof LineObject){
+					String lines[] = mContext.getResources().getStringArray(R.array.strLineArray);
 					mLineWidth.setText(String.valueOf(((LineObject)mObject).getLineWidth()));
-					mLineType.setText(((LineObject)mObject).getLineType());
+					mLineType.setText(lines[((LineObject)mObject).getLineType()]);
 				}
 				else if(mObject instanceof EllipseObject){
+					String lines[] = mContext.getResources().getStringArray(R.array.strLineArray);
 					mLineWidth.setText(String.valueOf(((EllipseObject)mObject).getLineWidth()));
-					mLineType.setText(((EllipseObject)mObject).getLineType());
+					mLineType.setText(lines[((EllipseObject)mObject).getLineType()]);
 				} else if (mObject instanceof GraphicObject) {
 					mPicture.setText(mObject.getContent());
 				}
