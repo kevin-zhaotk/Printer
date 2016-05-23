@@ -45,6 +45,7 @@ public class MessageTask {
 	private ArrayList<BaseObject> mObjects;
 
 	public int mType;
+	private int mIndex;
 	
 	public MessageTask(Context context) {
 		mName="";
@@ -384,11 +385,12 @@ public class MessageTask {
 	}
 
 	public void save() {
-		//保存1.bin文件
-		saveBin();
 		
 		//保存1.TLK文件
 		saveTlk(mContext);
+		
+		//保存1.bin文件
+		saveBin();
 		
 		//保存其他必要的文件
 		saveExtras();

@@ -237,7 +237,7 @@ public class FpgaGpioOperation {
 		data[22] = (char) SystemConfigFile.mResv23;
 		data[23] = (char) SystemConfigFile.mResv24;
 		BinInfo info = task.getInfo();
-		data[24] = (char) info.getBytesPerHFeed();
+		data[24] = (char) info.getBytesFeed();
 		//时间参数放在最后3个
 		/*
 		Calendar c = Calendar.getInstance();

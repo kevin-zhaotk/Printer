@@ -134,6 +134,9 @@ public class TLKFileParser  extends TlkFile{
                     	 for(int j=0; j<i ; j++)
                     	 {
                     		 line = buffreader.readLine();
+                    		 while(StringUtil.isEmpty(line)) {
+								line = buffreader.readLine();
+							}
                     		 Debug.d(TAG, "line="+line);
                     		 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(j);
                     		 parseSubObject(obj, line);
@@ -281,6 +284,7 @@ public class TLKFileParser  extends TlkFile{
 		
 		if(obj != null && !(obj instanceof MessageObject) )
 		{
+			try {
 			obj.setIndex(Integer.parseInt(attr[0]));
 			if((obj instanceof CounterObject)||
 					obj instanceof JulianDayObject)
@@ -298,6 +302,9 @@ public class TLKFileParser  extends TlkFile{
 			
 			obj.setHeight(Integer.parseInt(attr[5])-Integer.parseInt(attr[3]));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
+			} catch (Exception e) {
+				Debug.d(TAG, "e: " + e.getCause());
+			}
 		}
 //		Log.d(TAG, "index = "+obj.getIndex());
 //		Log.d(TAG, "x = "+obj.getX());

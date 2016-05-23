@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industry.printer"
-    android:versionCode="2016051409"
-    android:versionName="20160501409">
+    android:versionCode="2016052211"
+    android:versionName="2016052211">
 	
     <!-- 
     <uses-feature android:name="android.hardware.usb.host" />
