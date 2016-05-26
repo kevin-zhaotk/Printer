@@ -272,6 +272,16 @@ public class TLKFileParser  extends TlkFile{
 		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
 		{
 			obj = new RTSecondObject(mContext, 0);
+		} else if (BaseObject.OBJECT_TYPE_SHIFT.equals(attr[1])) {
+			obj = new ShiftObject(mContext, 0);
+			((ShiftObject)obj).setShift(0, attr[13]);
+			
+			for (int i = 0; i < 4; i++) {
+				int time = Integer.parseInt(attr[13 + i]);
+				if (time > 0 || i == 0) {
+					((ShiftObject)obj).setShift(0, attr[13 + i]);
+				}
+			}
 		}
 		else
 		{
@@ -287,7 +297,8 @@ public class TLKFileParser  extends TlkFile{
 			try {
 			obj.setIndex(Integer.parseInt(attr[0]));
 			if((obj instanceof CounterObject)||
-					obj instanceof JulianDayObject)
+					obj instanceof JulianDayObject ||
+					obj instanceof ShiftObject)
 			{
 				obj.setX(Integer.parseInt(attr[2])*2);
 				obj.setWidth(Integer.parseInt(attr[4])*2-Integer.parseInt(attr[2])*2);

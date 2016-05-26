@@ -30,6 +30,7 @@ import com.industry.printer.object.RealtimeMinute;
 import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
+import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.data.SegmentBuffer;
 
@@ -212,6 +213,17 @@ public class DataTask {
 			else if(o instanceof JulianDayObject)
 			{
 				String vString = ((JulianDayObject)o).getContent();
+				BinInfo varbin= mVarBinList.get(o);
+				if (varbin == null) {
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
+					mVarBinList.put(o, varbin);
+				}
+				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
+				var = varbin.getVarBuffer(vString);
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
+				
+			} else if (o instanceof ShiftObject) {
+				String vString = ((ShiftObject)o).getContent();
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
 					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));

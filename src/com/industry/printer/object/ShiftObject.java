@@ -1,6 +1,7 @@
 package com.industry.printer.object;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -25,11 +26,11 @@ public class ShiftObject extends BaseObject {
 		mShifts[3]=1800;
 		mShifts[4]=2400;
 		mValues = new String[5];
-		mValues[0] = "1";
-		mValues[1] = "2";
-		mValues[2] = "3";
-		mValues[3] = "4";
-		mValues[4] = "5";
+		mValues[0] = "01";
+		mValues[1] = "02";
+		mValues[2] = "03";
+		mValues[3] = "04";
+		mValues[4] = "05";
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -56,6 +57,7 @@ public class ShiftObject extends BaseObject {
 		return mShifts[shift];
 	}
 	
+	
 	public void setValue(int shift, String val)
 	{
 		if(shift >4 || shift<0 || val==null || val.length()!=mBits|| !checkNumandLetter(val))
@@ -69,6 +71,19 @@ public class ShiftObject extends BaseObject {
 		if(shift>4 || shift<0)
 			return null;
 		return mValues[shift];
+	}
+	
+	@Override
+	public String getContent() {
+		int i=0;
+		Calendar c = Calendar.getInstance();
+		int hour = c.get(Calendar.HOUR_OF_DAY) * 100;
+		for (i = 0; i < 4; i++) {
+			if (hour >= mShifts[i] && (hour < mShifts[i+1] || mShifts[i+1] == 0)) {
+				break;
+			}
+		}
+		return getValue(i);
 	}
 	
 	@Override

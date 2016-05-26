@@ -102,7 +102,7 @@ public class BarcodeObject extends BaseObject {
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
 			Debug.d(TAG, "mWidth="+mWidth+", width="+width + "   height=" + height);
-			
+			setWidth(width);
 			int[] pixels = new int[width * height];
 			for (int y = 0; y < height; y++) 
 			{

@@ -258,8 +258,7 @@ public class MessageTask {
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY()/div, p);
-			}
-			else {
+			} else {
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				// BinFromBitmap.recyleBitmap(t);
