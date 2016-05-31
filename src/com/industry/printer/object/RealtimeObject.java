@@ -41,6 +41,7 @@ public class RealtimeObject extends BaseObject {
 		parseFormat();
 		super.setWidth(mXcor_end - mXcor);
 		isNeedRedraw = true;
+		setTask(mTask);
 	}
 	
 	public String getFormat()
@@ -145,6 +146,7 @@ public class RealtimeObject extends BaseObject {
 			System.out.println("realtime c x_end="+x);
 		}
 		mXcor_end = x;
+		setWidth(mXcor_end - getX());
 	}
 	
 	@Override

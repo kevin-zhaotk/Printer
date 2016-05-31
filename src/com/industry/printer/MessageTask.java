@@ -193,7 +193,8 @@ public class MessageTask {
 			return;
 		}
 		for (BaseObject object : mObjects) {
-			if((object instanceof CounterObject) || (object instanceof RealtimeObject))
+			if((object instanceof CounterObject) || (object instanceof RealtimeObject) ||
+					(object instanceof JulianDayObject) || (object instanceof ShiftObject)	)
 			{
 				if(PlatformInfo.isBufferFromDotMatrix()) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));

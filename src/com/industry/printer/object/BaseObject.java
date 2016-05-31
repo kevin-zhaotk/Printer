@@ -246,9 +246,12 @@ public class BaseObject{
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
+		Debug.d(TAG, "--->Width=" + mWidth);
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
+		Debug.d(TAG, "--->singleW=" + singleW);
 		singleW = (int) (singleW/wDiv);
+		Debug.d(TAG, "--->singleW/div=" + singleW);
 		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots * mTask.getHeads(), Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/

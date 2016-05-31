@@ -40,6 +40,11 @@ public class JulianDayObject extends BaseObject {
 	@Override
 	public String getContent()
 	{
+		int day = Time.getJulianDay(System.currentTimeMillis(), 0);
+		Time t = new Time();
+		 t.set(System.currentTimeMillis());
+		 day = t.yearDay+1;
+		setContent(BaseObject.intToFormatString(day, 3));
 		return mContent;
 	}
 }
