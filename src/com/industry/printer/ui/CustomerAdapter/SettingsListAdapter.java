@@ -43,6 +43,24 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	public PopWindowSpiner mSpiner;
 	public PopWindowAdapter mEncoderAdapter;
 	public PopWindowAdapter mTrigerMode;
+	private PopWindowAdapter mDirection;
+	private PopWindowAdapter mResolution;
+	private PopWindowAdapter mPhotocell;
+	private PopWindowAdapter mRepeat;
+	private PopWindowAdapter mNozzle;
+	private PopWindowAdapter mPen1Mirror;
+	private PopWindowAdapter mPen2Mirror;
+	private PopWindowAdapter mPen3Mirror;
+	private PopWindowAdapter mPen4Mirror;
+
+	private PopWindowAdapter mPen1Invert;
+	private PopWindowAdapter mPen2Invert;
+	private PopWindowAdapter mPen3Invert;
+	private PopWindowAdapter mPen4Invert;
+	
+	private PopWindowAdapter mPens;
+	private PopWindowAdapter mAutoVol;
+	private PopWindowAdapter mAutoPulse;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -93,6 +111,25 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		
 		mEncoderAdapter = new PopWindowAdapter(mContext, null);
 		mTrigerMode = new PopWindowAdapter(mContext, null);
+		mDirection = new PopWindowAdapter(mContext, null);
+		mResolution = new PopWindowAdapter(mContext, null);
+		mPhotocell = new PopWindowAdapter(mContext, null);
+		mRepeat = new PopWindowAdapter(mContext, null);
+		mNozzle = new PopWindowAdapter(mContext, null);
+		mPen1Mirror = new PopWindowAdapter(mContext, null);
+		mPen2Mirror = new PopWindowAdapter(mContext, null);
+		mPen3Mirror = new PopWindowAdapter(mContext, null);
+		mPen4Mirror = new PopWindowAdapter(mContext, null);
+		
+		mPen1Invert = new PopWindowAdapter(mContext, null);
+		mPen2Invert = new PopWindowAdapter(mContext, null);
+		mPen3Invert = new PopWindowAdapter(mContext, null);
+		mPen4Invert = new PopWindowAdapter(mContext, null);
+		
+		mPens = new PopWindowAdapter(mContext, null);
+		
+		mAutoVol = new PopWindowAdapter(mContext, null);
+		mAutoPulse = new PopWindowAdapter(mContext, null);
 		initAdapters();
 	}
 	
@@ -163,23 +200,26 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mHolder.mTitleR.setText(mContext.getString(mSettingItems[2*position+1].mTitle));
 		Debug.d(TAG, "===>getView position=" + position);
 		
-		if (position == 0) {
+		if (mSettingItems[2*position].isSWitch) {
 			mHolder.mValueLTv.setVisibility(View.VISIBLE);
 			mHolder.mValueLEt.setVisibility(View.GONE);
-			mHolder.mValueRTv.setVisibility(View.VISIBLE);
-			mHolder.mValueREt.setVisibility(View.GONE);
 			mHolder.mValueLTv.setText(mSettingItems[2*position].mValue);
-			mHolder.mValueRTv.setText(mSettingItems[2*position+1].mValue);
 			mHolder.mValueLTv.setOnClickListener(this);
-			mHolder.mValueRTv.setOnClickListener(this);
 		} else {
-
 			mHolder.mValueLTv.setVisibility(View.GONE);
 			mHolder.mValueLEt.setVisibility(View.VISIBLE);
-			mHolder.mValueRTv.setVisibility(View.GONE);
-			mHolder.mValueREt.setVisibility(View.VISIBLE);
 			Debug.d(TAG, "--->getView:left=" + mSettingItems[2*position].mValue + "---right=" + mSettingItems[2*position+1].mValue);
 			mHolder.mValueLEt.setText(mSettingItems[2*position].mValue);
+		}
+		
+		if (mSettingItems[2*position + 1].isSWitch) {
+			mHolder.mValueRTv.setVisibility(View.VISIBLE);
+			mHolder.mValueREt.setVisibility(View.GONE);
+			mHolder.mValueRTv.setText(mSettingItems[2*position+1].mValue);
+			mHolder.mValueRTv.setOnClickListener(this);
+		} else {
+			mHolder.mValueRTv.setVisibility(View.GONE);
+			mHolder.mValueREt.setVisibility(View.VISIBLE);
 			mHolder.mValueREt.setText(mSettingItems[2*position+1].mValue);
 		}
 		
@@ -191,35 +231,59 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		String param = String.valueOf(SystemConfigFile.mParam1);
 		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, 	param, R.string.str_time_unit_mm_s);
 		param = getEntry(R.array.direction_item_entries, SystemConfigFile.mParam2);
-		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, 	param, 0);
+		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, 	param, 0, true);
 		param = getEntry(R.array.resolution_item_entries, SystemConfigFile.mParam3);
-		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, 	param, R.string.strResunit);
+		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, 	param, R.string.strResunit, true);
 		param = String.valueOf(SystemConfigFile.mParam4);
 		mSettingItems[3] = new ItemOneLine(R.string.str_textview_param4, 	param, R.string.str_time_unit_ms);
-		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mParam5), 		R.string.str_time_unit_100us);
-		mSettingItems[5] = new ItemOneLine(R.string.str_textview_param6, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mParam6), 		0);
-		mSettingItems[6] = new ItemOneLine(R.string.str_textview_param7, 	getEntry(R.array.direction_item_entries, SystemConfigFile.mParam7), 	R.string.str_time_unit_mm);
-		mSettingItems[7] = new ItemOneLine(R.string.str_textview_param8, 	getEntry(R.array.direction_item_entries, SystemConfigFile.mParam8), 	0);
-		mSettingItems[8] = new ItemOneLine(R.string.str_textview_param9, 	String.valueOf(SystemConfigFile.mParam9), 								R.string.str_time_unit_mm);
-		mSettingItems[9] = new ItemOneLine(R.string.str_textview_param10, 	String.valueOf(SystemConfigFile.mParam10),								0);
-		mSettingItems[10] = new ItemOneLine(R.string.str_textview_param11, 	String.valueOf(SystemConfigFile.mResv11), 								R.string.str_time_unit_mm);
-		mSettingItems[11] = new ItemOneLine(R.string.str_textview_param12, 	String.valueOf(SystemConfigFile.mResv12), 								R.string.str_time_unit_mm);
-		mSettingItems[12] = new ItemOneLine(R.string.str_textview_param13, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv13), 		0);
-		mSettingItems[13] = new ItemOneLine(R.string.str_textview_param14, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv14), 		0);
-		mSettingItems[14] = new ItemOneLine(R.string.str_textview_param15, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv15), 		0);
-		mSettingItems[15] = new ItemOneLine(R.string.str_textview_param16, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv16),	 	0);
-		mSettingItems[16] = new ItemOneLine(R.string.str_textview_param17, 	getEntry(R.array.pens_item_entries, SystemConfigFile.mResv17), 			0);
-		mSettingItems[17] = new ItemOneLine(R.string.str_textview_param18, 	String.valueOf(SystemConfigFile.mResv18), 								0);
-		mSettingItems[18] = new ItemOneLine(R.string.str_textview_param19, 	String.valueOf(SystemConfigFile.mResv19), 								R.string.str_time_unit_mm);
-		mSettingItems[19] = new ItemOneLine(R.string.str_textview_param20, 	String.valueOf(SystemConfigFile.mResv20), 								R.string.str_time_unit_mm);
-		mSettingItems[20] = new ItemOneLine(R.string.str_textview_param21, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv21), 		0);
-		mSettingItems[21] = new ItemOneLine(R.string.str_textview_param22, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv22), 		0);
-		mSettingItems[22] = new ItemOneLine(R.string.str_textview_param23, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv23),        0);
-		mSettingItems[23] = new ItemOneLine(R.string.str_textview_param24, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv24), 		0);
-		mSettingItems[24] = new ItemOneLine(R.string.str_textview_param25, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv25), 		0);
-		mSettingItems[25] = new ItemOneLine(R.string.str_textview_param26, 	String.valueOf(SystemConfigFile.mResv26), 								R.string.str_time_unit_0_1v);
-		mSettingItems[26] = new ItemOneLine(R.string.str_textview_param27, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv27), 		0);
-		mSettingItems[27] = new ItemOneLine(R.string.str_textview_param28, 	String.valueOf(SystemConfigFile.mResv28), 								R.string.str_time_unit_0_1us);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mParam5);
+		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, 	param, R.string.str_time_unit_100us, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mParam6);
+		mSettingItems[5] = new ItemOneLine(R.string.str_textview_param6, 	param, 0, true);
+		param = getEntry(R.array.direction_item_entries, SystemConfigFile.mParam7);
+		mSettingItems[6] = new ItemOneLine(R.string.str_textview_param7, 	param, 	R.string.str_time_unit_mm, true);
+		param = getEntry(R.array.direction_item_entries, SystemConfigFile.mParam8);
+		mSettingItems[7] = new ItemOneLine(R.string.str_textview_param8, 	param, 0, true);
+		param = String.valueOf(SystemConfigFile.mParam9);
+		mSettingItems[8] = new ItemOneLine(R.string.str_textview_param9, 	param, R.string.str_time_unit_mm);
+		param = String.valueOf(SystemConfigFile.mParam10);
+		mSettingItems[9] = new ItemOneLine(R.string.str_textview_param10, 	param, 0);
+		param = String.valueOf(SystemConfigFile.mResv11);
+		mSettingItems[10] = new ItemOneLine(R.string.str_textview_param11, 	param, R.string.str_time_unit_mm);
+		param = String.valueOf(SystemConfigFile.mResv12);
+		mSettingItems[11] = new ItemOneLine(R.string.str_textview_param12, 	param, R.string.str_time_unit_mm);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv13);
+		mSettingItems[12] = new ItemOneLine(R.string.str_textview_param13, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv14);
+		mSettingItems[13] = new ItemOneLine(R.string.str_textview_param14, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv15);
+		mSettingItems[14] = new ItemOneLine(R.string.str_textview_param15, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv16);
+		mSettingItems[15] = new ItemOneLine(R.string.str_textview_param16, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv17);
+		mSettingItems[16] = new ItemOneLine(R.string.str_textview_param17, 	param, 0, true);
+		param = String.valueOf(SystemConfigFile.mResv18);
+		mSettingItems[17] = new ItemOneLine(R.string.str_textview_param18, 	param, 0);
+		param = String.valueOf(SystemConfigFile.mResv19);
+		mSettingItems[18] = new ItemOneLine(R.string.str_textview_param19, 	param, R.string.str_time_unit_mm);
+		param = String.valueOf(SystemConfigFile.mResv20);
+		mSettingItems[19] = new ItemOneLine(R.string.str_textview_param20, 	param, R.string.str_time_unit_mm);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv21);
+		mSettingItems[20] = new ItemOneLine(R.string.str_textview_param21, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv22);
+		mSettingItems[21] = new ItemOneLine(R.string.str_textview_param22, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv23);
+		mSettingItems[22] = new ItemOneLine(R.string.str_textview_param23, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv24);
+		mSettingItems[23] = new ItemOneLine(R.string.str_textview_param24, 	param, 0, true);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv25);
+		mSettingItems[24] = new ItemOneLine(R.string.str_textview_param25, 	param, 0, true);
+		param = String.valueOf(SystemConfigFile.mResv26);
+		mSettingItems[25] = new ItemOneLine(R.string.str_textview_param26, 	param, R.string.str_time_unit_0_1v);
+		param = getEntry(R.array.switch_item_entries, SystemConfigFile.mResv27);
+		mSettingItems[26] = new ItemOneLine(R.string.str_textview_param27, 	param, 0, true);
+		param = String.valueOf(SystemConfigFile.mResv28);
+		mSettingItems[27] = new ItemOneLine(R.string.str_textview_param28, 	param, R.string.str_time_unit_0_1us);
 		mSettingItems[28] = new ItemOneLine(R.string.str_textview_param29, 	String.valueOf(SystemConfigFile.mResv29), 								R.string.str_time_unit_ms);
 		mSettingItems[29] = new ItemOneLine(R.string.str_textview_param30, 	String.valueOf(SystemConfigFile.mResv30), 								R.string.str_time_unit_ms);
 		mSettingItems[30] = new ItemOneLine(R.string.str_textview_param31, 	String.valueOf(SystemConfigFile.mResv31), 0);
@@ -265,7 +329,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSpiner.setFocusable(true);
 		mSpiner.setOnItemClickListener(this);
 		
-		String[] items = mContext.getResources().getStringArray(R.array.encoder_item_entries); 
+		String[] items = mContext.getResources().getStringArray(R.array.switch_item_entries); 
 		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
 		for (int i = 0; i < items.length; i++) {
 			mEncoderAdapter.addItem(items[i]);
@@ -275,6 +339,66 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		// ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, R.layout.spinner_item, R.id.textView_id, items);
 		for (int i = 0; i < items.length; i++) {
 			mTrigerMode.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.direction_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mDirection.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.resolution_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mResolution.addItem(items[i]);
+		}
+
+		items = mContext.getResources().getStringArray(R.array.photo_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mPhotocell.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.direction_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mRepeat.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mNozzle.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.switch_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mPen1Mirror.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen2Mirror.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen3Mirror.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen4Mirror.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen1Invert.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen2Invert.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen3Invert.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mPen4Invert.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mAutoVol.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mAutoPulse.addItem(items[i]);
+		}
+		
+		items = mContext.getResources().getStringArray(R.array.pens_item_entries);
+		for (int i = 0; i < items.length; i++) {
+			mPens.addItem(items[i]);
 		}
 	}
 	private String getEntry(int id,int index) {
@@ -313,35 +437,110 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		} else {
 			return;
 		}
-		
-		if (position == 0) {
-			mSpiner.setAttachedView(view);
+		boolean s = mSettingItems[position].isSWitch;
+		if (!s) {
+			return;
+		}
+		mSpiner.setAttachedView(view);
+		if (position == 1) { //參數2
+			mSpiner.setAdapter(mDirection);
+		} else if (position == 2) { //參數3
+			mSpiner.setAdapter(mResolution);
+		} else if (position == 4) { //參數5
+			mSpiner.setAdapter(mPhotocell);
+		} else if (position == 5) { //參數6
 			mSpiner.setAdapter(mEncoderAdapter);
-			mSpiner.setWidth(view.getWidth());
-			mSpiner.showAsDropDown(view);
-		} else if (position == 1) {
-			mSpiner.setAttachedView(view);
-			mSpiner.setAdapter(mTrigerMode);
-			mSpiner.setWidth(view.getWidth());
-			mSpiner.showAsDropDown(view);
-		}	
+		} else if (position == 6) { //參數7
+			mSpiner.setAdapter(mRepeat);
+		} else if (position == 7) { //參數8
+			mSpiner.setAdapter(mNozzle);
+		} else if (position == 12) { //參數13
+			mSpiner.setAdapter(mPen1Mirror);
+		} else if (position == 13) { //參數14
+			mSpiner.setAdapter(mPen2Mirror);
+		} else if (position == 14) { //參數15
+			mSpiner.setAdapter(mPen1Invert);
+		} else if (position == 15) { //參數16
+			mSpiner.setAdapter(mPen2Invert);
+		} else if (position == 16) { //參數17
+			mSpiner.setAdapter(mPens);
+		} else if (position == 20) { //參數21
+			mSpiner.setAdapter(mPen3Mirror);
+		} else if (position == 21) { //參數22
+			mSpiner.setAdapter(mPen4Mirror);
+		} else if (position == 22) { //參數23
+			mSpiner.setAdapter(mPen3Invert);
+		} else if (position == 23) { //參數24
+			mSpiner.setAdapter(mPen4Invert);
+		} else if (position == 24) { //參數25
+			mSpiner.setAdapter(mAutoVol);
+		} else if (position == 26) { //參數27
+			mSpiner.setAdapter(mAutoPulse);
+		}
+		mSpiner.setWidth(view.getWidth());
+		mSpiner.showAsDropDown(view);
 	}
 
 	@Override
 	public void onItemClick(int index) {
 		TextView view = mSpiner.getAttachedView();
 		int position = (Integer) view.getTag();
-		if (position == 0) {
-			view.setText(getEntry(R.array.array_triger_mode, index));
-			SystemConfigFile.mParam1 = index;
-			mSettingItems[0].mValue = view.getText().toString();
-		} else if (position == 1) {
-			String trigger = (String)mTrigerMode.getItem(index);
-			view.setText(trigger);
-			SystemConfigFile.mParam2 = Integer.parseInt(trigger);
-			mSettingItems[1].mValue = trigger;
+		String value = null;
+		if (position == 1) {
+			value = (String)mDirection.getItem(index);
+			SystemConfigFile.mParam2 = getDirectionvalue(index);
+		} else if (position == 2) { //參數3
+			value = (String)mResolution.getItem(index);
+			SystemConfigFile.mParam3 = getValue(mResolution, index);
+		} else if (position == 4) { //參數5
+			value = (String)mPhotocell.getItem(index);
+			SystemConfigFile.mParam5 = getSwitchvalue(index);
+		} else if (position == 5) { //參數6
+			value = (String)mEncoderAdapter.getItem(index);
+			SystemConfigFile.mParam6 = getSwitchvalue(index);
+		} else if (position == 6) { //參數7
+			value = (String)mRepeat.getItem(index);
+			SystemConfigFile.mParam7 = getSwitchvalue(index);
+		} else if (position == 7) { //參數8
+			value = (String)mNozzle.getItem(index);
+			SystemConfigFile.mParam8 = getValue(mNozzle, index);
+		} else if (position == 12) { //參數13
+			value = (String)mPen1Mirror.getItem(index);
+			SystemConfigFile.mResv13 = getSwitchvalue(index);
+		} else if (position == 13) { //參數14
+			value = (String)mPen2Mirror.getItem(index);
+			SystemConfigFile.mResv14 = getSwitchvalue(index);
+		} else if (position == 14) { //參數15
+			value = (String)mPen1Invert.getItem(index);
+			SystemConfigFile.mResv15 = getSwitchvalue(index);
+		} else if (position == 15) { //參數16
+			value = (String)mPen2Invert.getItem(index);
+			SystemConfigFile.mResv16 = getSwitchvalue(index);
+		} else if (position == 16) { //參數17
+			value = (String)mPens.getItem(index);
+			SystemConfigFile.mResv17 = getValue(mPens, index);
+		} else if (position == 20) { //參數21
+			value = (String)mPen3Mirror.getItem(index);
+			SystemConfigFile.mResv21 = getSwitchvalue(index);
+		} else if (position == 21) { //參數22
+			value = (String)mPen4Mirror.getItem(index);
+			SystemConfigFile.mResv22 = getSwitchvalue(index);
+		} else if (position == 22) { //參數23
+			value = (String)mPen3Invert.getItem(index);
+			SystemConfigFile.mResv23 = getSwitchvalue(index);
+		} else if (position == 23) { //參數24
+			value = (String)mPen4Invert.getItem(index);
+			SystemConfigFile.mResv24 = getSwitchvalue(index);
+		} else if (position == 24) { //參數25
+			value = (String)mAutoVol.getItem(index);
+			SystemConfigFile.mResv25 = getSwitchvalue(index);
+		} else if (position == 26) { //參數27
+			mSpiner.setAdapter(mAutoPulse);
+			value = (String)mAutoPulse.getItem(index);
+			SystemConfigFile.mResv27 = getSwitchvalue(index);
 		}
-		
+		view.setText(value);
+		mSettingItems[position].mValue = value;
 	}
 	
 	/**
@@ -637,4 +836,17 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		return iv;
 	}
 
+	private int getSwitchvalue(int index) {
+		return index;
+	}
+	
+	private int getDirectionvalue(int index) {
+		return index;
+	}
+	
+	private int getValue(PopWindowAdapter adapter, int index) {
+		int v = Integer.parseInt((String) adapter.getItem(index));
+		return v;
+	}
+	
 }

@@ -84,35 +84,35 @@ public class SystemConfigFile{
 	
 	public static final String LAST_MESSAGE = "message";
 	
-	public static int mParam1 = 0;
+	public static int mParam1 = 1;
 	public static int mParam2 = 0;
-	public static int mParam3 = 400;
-	public static int mParam4 = 100;
+	public static int mParam3 = 0;
+	public static int mParam4 = 0;
 	public static int mParam5 = 0;
-	public static int mParam6 = 400;
+	public static int mParam6 = 0;
 	public static int mParam7 = 0;
 	public static int mParam8 = 0;
-	public static int mParam9 = 0;
-	public static int mParam10 = 800;
-	public static int mResv11 = 0;
-	public static int mResv12 = 0;
+	public static int mParam9 = 1;
+	public static int mParam10 = 100;
+	public static int mResv11 = 1;
+	public static int mResv12 = 1;
 	public static int mResv13 = 0;
 	public static int mResv14 = 0;
 	public static int mResv15 = 0;
 	public static int mResv16 = 0;
-	public static int mResv17 = 0;
+	public static int mResv17 = 1;
 	public static int mResv18 = 0;
-	public static int mResv19 = 0;
-	public static int mResv20 = 0;
+	public static int mResv19 = 1;
+	public static int mResv20 = 1;
 	public static int mResv21 = 0;
 	public static int mResv22 = 0;
 	public static int mResv23 = 0;
 	public static int mResv24 = 0;
 	public static int mResv25 = 0;
-	public static int mResv26 = 0;
+	public static int mResv26 = 80;
 	public static int mResv27 = 0;
-	public static int mResv28 = 0;
-	public static int mResv29 = 0;
+	public static int mResv28 = 17;
+	public static int mResv29 = 200;
 	public static int mResv30 = 0;
 	public static int mResv31 = 0;
 	public static int mResv32 = 0;
@@ -148,6 +148,9 @@ public class SystemConfigFile{
 	public static int mResv62 = 0;
 	public static int mResv63 = 0;
 	public static int mResv64 = 0;
+	
+	public static int mFPGAParam[] = new int[24];
+	
 
 	public static HashMap<Integer, HashMap<String,Integer>> mParamRange = new HashMap<Integer, HashMap<String,Integer>>();
 	
@@ -717,107 +720,210 @@ public class SystemConfigFile{
 		Debug.d(TAG, "====>initParamRange");
 		/*编码器,有效值0,1*/
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+		/*参数1*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 65535);
+		map.put("default", 0);
+		mParamRange.put(1, map);
+
+		/*参数2*/
+		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
 		map.put("default", 0);
-		mParamRange.put(1, map);
-		/*触发模式,有效值1,2,3,4*/
-		map = new HashMap<String, Integer>();
-		map.put("min", 1);
-		map.put("max", 4);
-		map.put("default", 1);
 		mParamRange.put(2, map);
-		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
+
+		/*参数3*/
 		map = new HashMap<String, Integer>();
-		map.put("min", 0);
-		map.put("max", 600);
-		map.put("default", 20);
+		map.put("min", 150);
+		map.put("max", 750);
+		map.put("default", 150);
 		mParamRange.put(3, map);
-		
-		/*光电延时(毫秒）下发FPGA-S4	有效值0-65535*/
-		map = new HashMap<String, Integer>();
-		map.put("min", 0);
-		map.put("max", 65535);
-		map.put("default", 100);
-		mParamRange.put(4, map);
-		
-		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
+
+		/*参数4*/
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 65535);
 		map.put("default", 0);
-		mParamRange.put(5, map);
-		
-		/*定时打印(毫秒) 下发FPGA- S6	0-65535*/
+		mParamRange.put(4, map);
+
+		/*参数5*/
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
-		map.put("max", 65535);
-		map.put("default", 1000);
+		map.put("max", 2);
+		map.put("default", 0);
+		mParamRange.put(5, map);
+
+		/*参数6*/
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
 		mParamRange.put(6, map);
 
-		/*列间脉冲 下发FPGA- S7	1-50*/
+		/*参数7 */
 		map = new HashMap<String, Integer>();
-		map.put("min", 1);
-		map.put("max", 50);
-		map.put("default", 1);
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
 		mParamRange.put(7, map);
 
-		/*定长脉冲 下发FPGA-S8 	1-65535*/
+		/*6.参数8 */
 		map = new HashMap<String, Integer>();
-		map.put("min", 1);
-		map.put("max", 65535);
-		map.put("default", 1);
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
 		mParamRange.put(8, map);
 
-		/*脉冲延时 下发FPGA-S9 	1-65535*/
+		
+		// param9
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 500);
+		map.put("default", 1);
+		mParamRange.put(9, map);
+		
+		// param10
+		map = new HashMap<String, Integer>();
+		map.put("min", 100);
+		map.put("max", 20000);
+		map.put("default", 100);
+		mParamRange.put(10, map);
+		
+		// param11
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 65535);
-		map.put("default", 1);
-		mParamRange.put(9, map);
-
-		/*墨点大小(微秒)	下发FPGA-S10	有效值200-2000, */
-		map = new HashMap<String, Integer>();
-		map.put("min", 200);
-		map.put("max", 2000);
-		map.put("default", 800);
-		mParamRange.put(10, map);
-
-		/*参数12 设置， （默认值为1 ， 1-1000次）, */
+		map.put("default", 0);
+		mParamRange.put(11, map);
+		
+		// param12
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 1000);
 		map.put("default", 1);
 		mParamRange.put(12, map);
-
-		/*参数13 重复延时， 单位，毫秒（默认值为0 ， 0-65535）, */
-		map = new HashMap<String, Integer>();
-		map.put("min", 0);
-		map.put("max", 65535);
-		map.put("default", 0);
-		mParamRange.put(13, map);
-
-		/*参数14 重复脉冲， 无。  （0-65535） */
-		map = new HashMap<String, Integer>();
-		map.put("min", 0);
-		map.put("max", 65535);
-		map.put("default", 0);
-		mParamRange.put(14, map);
-
-		/*6.参数15 ， 光电模式,  0,1   (默认值是1)*/
+		
+		// param13
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
-		map.put("default", 1);
-		mParamRange.put(15, map);
-
+		map.put("default", 0);
+		mParamRange.put(13, map);
 		
+		// param14
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(14, map);
+				
+		// param15
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(15, map);
+				
 		// param16
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
-		map.put("max", 9);
+		map.put("max", 1);
 		map.put("default", 0);
 		mParamRange.put(16, map);
+		
+		// param17
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 4);
+		map.put("default", 1);
+		mParamRange.put(17, map);
+		
+		// param19
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 65535);
+		map.put("default", 0);
+		mParamRange.put(19, map);
+				
+		// param20
+		map = new HashMap<String, Integer>();
+		map.put("min", 1);
+		map.put("max", 1000);
+		map.put("default", 0);
+		mParamRange.put(20, map);
+				
+		// param21
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(21, map);
+				
+		// param22
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(22, map);
+				
+		// param23
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(23, map);
+		
+		// param24
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(24, map);
+		
+		// param25
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(25, map);
+		
+		// param26
+		map = new HashMap<String, Integer>();
+		map.put("min", 80);
+		map.put("max", 120);
+		map.put("default", 80);
+		mParamRange.put(26, map);
+		
+		// param27
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 1);
+		map.put("default", 0);
+		mParamRange.put(27, map);
+		// param28
+		map = new HashMap<String, Integer>();
+		map.put("min", 17);
+		map.put("max", 24);
+		map.put("default", 17);
+		mParamRange.put(28, map);
+				
+		// param29
+		map = new HashMap<String, Integer>();
+		map.put("min", 200);
+		map.put("max", 60000);
+		map.put("default", 0);
+		mParamRange.put(29, map);
+		
+		// param30
+		map = new HashMap<String, Integer>();
+		map.put("min", 0);
+		map.put("max", 2000);
+		map.put("default", 0);
+		mParamRange.put(30, map);
+		
 		
 	}
 	
@@ -842,4 +948,50 @@ public class SystemConfigFile{
 		return value;
 	}
 	
+	public static void paramTrans() {
+		// 參數1
+		if (mParam5 == 0 || mParam5 == 1) {
+			mFPGAParam[0] = 0;
+		} else if (mParam5 == 2) {
+			mFPGAParam[0] = 1;
+		}
+		// 參數2
+		if (mParam5 == 0 && mParam6 == 0) {
+			mFPGAParam[1] = 4;
+		} else if (mParam5 == 0 && mParam6 == 1) {
+			mFPGAParam[1] = 3;
+		} else if (mParam5 != 0 && mParam6 == 0) {
+			mFPGAParam[1] = 2;
+		} else if (mParam5 != 0 && mParam6 == 1) {
+			mFPGAParam[1] = 1;
+		} 
+		
+		// 參數5
+		mFPGAParam[4] = 170000/(mParam1*mFPGAParam[16]);
+		if (mFPGAParam[4] > 65535) {
+			mFPGAParam[4] = 65535;
+		} else if (mFPGAParam[4] < 65) {
+			mFPGAParam[4] = 65;
+		}
+		
+		// 參數16
+		mFPGAParam[15] = mParam3/150;
+		
+		// 參數4
+		mFPGAParam[3] = mParam4 * mFPGAParam[15] * 6 * mFPGAParam[4];
+		if (mFPGAParam[3] <= 2) {
+			mFPGAParam[3] = 3;
+		} else if (mFPGAParam[3] >= 65535) {
+			mFPGAParam[3] = 65534;
+		}
+		// 參數9
+		mFPGAParam[8] = (int) (mParam4/((mParam10*25.4/(mParam9*3.14))));
+		if (mFPGAParam[8] <= 10) {
+			mFPGAParam[8] = 11;
+		} else if (mFPGAParam[8] >= 65535) {
+			mFPGAParam[8] = 65534;
+		}
+		
+		
+	}
 }

@@ -583,6 +583,12 @@
 	    <item>On</item>
 	</string-array>
 	
+	<string-array name="photo_item_entries">
+	    <item>Off</item>
+	    <item>PenPho</item>
+	    <item>PortPho</item>
+	</string-array>
+	
 	<string name="str_time_unit_0_1v">0.1V</string>
 	<string name="str_time_unit_mm">ms</string>
 	<string name="str_time_unit_ms">ms</string>
