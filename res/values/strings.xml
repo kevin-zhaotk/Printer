@@ -412,36 +412,36 @@
 	
 <!-- 树莓派3 设置界面相关 -->
 	
-	<string name="str_textview_param1">01. Photocell</string>
-	<string name="str_textview_param2">02. Trigger</string>
-	<string name="str_textview_param3">03. Fitler</string> 
+	<string name="str_textview_param1">01. Speed</string>
+	<string name="str_textview_param2">02. Direction</string>
+	<string name="str_textview_param3">03. Resolution</string> 
 	<string name="str_textview_param4">04. Delay</string>
-	<string name="str_textview_param5">05. Speed</string>
-	<string name="str_textview_param6">06. Repeat Time</string>
-	<string name="str_textview_param7">07. Encoder width</string>
-	<string name="str_textview_param8">08. Repeat pulse</string>
-	<string name="str_textview_param9">09. Delay Pulse</string>
-	<string name="str_textview_param10">10. Dot Size</string>
-	<string name="str_textview_param11">11.Reserved</string>
-	<string name="str_textview_param12">12.Settings</string>
-	<string name="str_textview_param13">13.Repeat Delay</string>
-	<string name="str_textview_param14">14.Repeat Pulse</string>
-	<string name="str_textview_param15">15.Mode</string>
-	<string name="str_textview_param16">16.Bold</string>
-	<string name="str_textview_param17">17.Reserved</string>
+	<string name="str_textview_param5">05. Photocell</string>
+	<string name="str_textview_param6">06. Encoder</string>
+	<string name="str_textview_param7">07. Repeat print</string>
+	<string name="str_textview_param8">08. Nozzle select</string>
+	<string name="str_textview_param9">09. Wheel Diameter</string>
+	<string name="str_textview_param10">10. Encoder PPR</string>
+	<string name="str_textview_param11">11.Pen1 offset</string>
+	<string name="str_textview_param12">12.Pen2 offset</string>
+	<string name="str_textview_param13">13.Pen1 Mirrored</string>
+	<string name="str_textview_param14">14.Pen2 Mirrored</string>
+	<string name="str_textview_param15">15.Pen1 Invert</string>
+	<string name="str_textview_param16">16.Pen2 Invert</string>
+	<string name="str_textview_param17">17.Pens</string>
 	<string name="str_textview_param18">18.Reserved</string>
-	<string name="str_textview_param19">19.Reserved</string>
-	<string name="str_textview_param20">20.Reserved</string>
-	<string name="str_textview_param21">21.Reserved</string>
-	<string name="str_textview_param22">22.Reserved</string>
-	<string name="str_textview_param23">23.Reserved</string>
-	<string name="str_textview_param24">24.Reserved</string>
-	<string name="str_textview_param25">25.Reserved</string>
-	<string name="str_textview_param26">26.Reserved</string>
-	<string name="str_textview_param27">27.Reserved</string>
-	<string name="str_textview_param28">28.Reserved</string>
-	<string name="str_textview_param29">29.Reserved</string>
-	<string name="str_textview_param30">30.Reserved</string>
+	<string name="str_textview_param19">19.Pen3 offset</string>
+	<string name="str_textview_param20">20.Pen4 offset</string>
+	<string name="str_textview_param21">21.Pen3 Mirrored</string>
+	<string name="str_textview_param22">22.Pen4 Mirrored</string>
+	<string name="str_textview_param23">23.Pen3 Invert</string>
+	<string name="str_textview_param24">24.Pen4 Invert</string>
+	<string name="str_textview_param25">25.Auto Voltage</string>
+	<string name="str_textview_param26">26.Voltage Set</string>
+	<string name="str_textview_param27">27.Auto Pulse</string>
+	<string name="str_textview_param28">28.Pulse Set</string>
+	<string name="str_textview_param29">29.Keep Wet</string>
+	<string name="str_textview_param30">30.Pho Filter</string>
 	<string name="str_textview_param31">31.Reserved</string>
 	<string name="str_textview_param32">32.Reserved</string>
 	<string name="str_textview_param33">33.Reserved</string>
@@ -557,7 +557,37 @@
 	    <item>PHO2</item>
 	</string-array>
 	
+	<string-array name="direction_item_entries">
+	    <item>Left</item>
+	    <item>Right</item>
+	</string-array>
+	
+	<string-array name="resolution_item_entries">
+	    <item>150</item>
+	    <item>300</item>
+	    <item>450</item>
+	    <item>600</item>
+	    <item>750</item>
+	</string-array>
+	
+	<string-array name="pens_item_entries">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	    <item>4</item>
+	</string-array>
+	
+	
+	<string-array name="switch_item_entries">
+	    <item>Off</item>
+	    <item>On</item>
+	</string-array>
+	
+	<string name="str_time_unit_0_1v">0.1V</string>
+	<string name="str_time_unit_mm">ms</string>
 	<string name="str_time_unit_ms">ms</string>
+	<string name="str_time_unit_mm_s">mm/s</string>
+	<string name="str_time_unit_0_1us">0.1us</string>
 	<string name="str_time_unit_us">us</string>
 	<string name="str_time_unit_100us">100us</string>
 	<string name="str_setting_time">Clock</string>

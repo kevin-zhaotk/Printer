@@ -415,36 +415,36 @@
 	
 
 <!-- 树莓派3 设置界面相关 -->
-	<string name="str_textview_param1">01.光电选择</string>
-	<string name="str_textview_param2">02.触发模式</string>
-	<string name="str_textview_param3">03.光电防抖</string> 
-	<string name="str_textview_param4">04.光电延时</string>
-	<string name="str_textview_param5">05.字宽</string>
-	<string name="str_textview_param6">06.定时打印</string>
-	<string name="str_textview_param7">07.列间脉冲</string>
-	<string name="str_textview_param8">08.定长脉冲</string>
-	<string name="str_textview_param9">09.脉冲延时</string>
-	<string name="str_textview_param10">10.墨点大小</string>
-	<string name="str_textview_param11">11.保留</string>
-	<string name="str_textview_param12">12.设置</string>
-	<string name="str_textview_param13">13.重复延时</string>
-	<string name="str_textview_param14">14.重复脉冲</string>
-	<string name="str_textview_param15">15.光电模式</string>
-	<string name="str_textview_param16">16.加重</string>
-	<string name="str_textview_param17">17.保留</string>
+	<string name="str_textview_param1">01.速度</string>
+	<string name="str_textview_param2">02.打印方向</string>
+	<string name="str_textview_param3">03.打印密度</string> 
+	<string name="str_textview_param4">04.打印延时</string>
+	<string name="str_textview_param5">05.光电选择</string>
+	<string name="str_textview_param6">06.同步器</string>
+	<string name="str_textview_param7">07.重复打印</string>
+	<string name="str_textview_param8">08.喷嘴选择</string>
+	<string name="str_textview_param9">09.滚轮直径</string>
+	<string name="str_textview_param10">10.编码器脉冲</string>
+	<string name="str_textview_param11">11.1 头偏移</string>
+	<string name="str_textview_param12">12.2 头偏移</string>
+	<string name="str_textview_param13">13.1 头镜像</string>
+	<string name="str_textview_param14">14.2 头镜像</string>
+	<string name="str_textview_param15">15.1 头倒置</string>
+	<string name="str_textview_param16">16.2 头倒置</string>
+	<string name="str_textview_param17">17.喷头个数</string>
 	<string name="str_textview_param18">18.保留</string>
-	<string name="str_textview_param19">19.保留</string>
-	<string name="str_textview_param20">20.保留</string>
-	<string name="str_textview_param21">21.保留</string>
-	<string name="str_textview_param22">22.保留</string>
-	<string name="str_textview_param23">23.保留</string>
-	<string name="str_textview_param24">24.保留</string>
-	<string name="str_textview_param25">25.保留</string>
-	<string name="str_textview_param26">26.保留</string>
-	<string name="str_textview_param27">27.保留</string>
-	<string name="str_textview_param28">28.保留</string>
-	<string name="str_textview_param29">29.保留</string>
-	<string name="str_textview_param30">30.保留</string>
+	<string name="str_textview_param19">19.3 头偏移</string>
+	<string name="str_textview_param20">20.4 头偏移</string>
+	<string name="str_textview_param21">21.3 头镜像</string>
+	<string name="str_textview_param22">22.4 头镜像</string>
+	<string name="str_textview_param23">23.3 头倒置</string>
+	<string name="str_textview_param24">24.4 头倒置</string>
+	<string name="str_textview_param25">25.自动电压</string>
+	<string name="str_textview_param26">26.打印电压</string>
+	<string name="str_textview_param27">27.脉宽读取</string>
+	<string name="str_textview_param28">28.脉宽设定</string>
+	<string name="str_textview_param29">29.放干脉冲</string>
+	<string name="str_textview_param30">30.光电滤波</string>
 	<string name="str_textview_param31">31.保留</string>
 	<string name="str_textview_param32">32.保留</string>
 	<string name="str_textview_param33">33.保留</string>
@@ -561,7 +561,23 @@
 	    <item>PHO2</item>
 	</string-array>
 	
+	<string-array name="direction_item_entries">
+	    <item>左</item>
+	    <item>右</item>
+	</string-array>
+	
+	<string-array name="resolution_item_entries">
+	    <item>150</item>
+	    <item>300</item>
+	    <item>450</item>
+	    <item>600</item>
+	    <item>750</item>
+	</string-array>
+	
+	<string name="str_time_unit_0_1v">0.1伏</string>
+	<string name="str_time_unit_mm">毫米</string>
 	<string name="str_time_unit_ms">毫秒</string>
+	<string name="str_time_unit_mm_s">毫米/秒</string>
 	<string name="str_time_unit_us">微秒</string>
 	<string name="str_time_unit_100us">100微秒</string>
 	<string name="str_setting_time">时间设置</string>

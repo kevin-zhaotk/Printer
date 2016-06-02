@@ -69,12 +69,18 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		public int mTitle;
 		public String mValue;
 		public int mUnit;
+		private boolean isSWitch;
 		
 		public ItemOneLine(int id, String value, int unit) {
 			mTitle = id;
 			mValue = value;
 			mUnit = unit;
-			
+			isSWitch = false;
+		}
+		
+		public ItemOneLine(int id, String value, int unit, boolean spinner) {
+			this(id, value, unit);
+			isSWitch = spinner;
 		}
 	}
 	
@@ -182,38 +188,42 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	
 	public void loadSettings() {
 		Debug.d(TAG, "--->loadSettings");
-		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, getEntry(R.array.encoder_item_entries, SystemConfigFile.mParam1), 0);
-		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, String.valueOf(SystemConfigFile.mParam2), 0);
-		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, String.valueOf(SystemConfigFile.mParam3), R.string.str_time_unit_ms);
-		mSettingItems[3] = new ItemOneLine(R.string.str_textview_param4, String.valueOf(SystemConfigFile.mParam4), R.string.str_time_unit_ms);
-		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, String.valueOf(SystemConfigFile.mParam5), R.string.str_time_unit_100us);
-		mSettingItems[5] = new ItemOneLine(R.string.str_textview_param6, String.valueOf(SystemConfigFile.mParam6),	R.string.str_time_unit_ms);
-		mSettingItems[6] = new ItemOneLine(R.string.str_textview_param7, String.valueOf(SystemConfigFile.mParam7), 0);
-		mSettingItems[7] = new ItemOneLine(R.string.str_textview_param8, String.valueOf(SystemConfigFile.mParam8), 0);
-		mSettingItems[8] = new ItemOneLine(R.string.str_textview_param9, String.valueOf(SystemConfigFile.mParam9), 0);
-		mSettingItems[9] = new ItemOneLine(R.string.str_textview_param10, String.valueOf(SystemConfigFile.mParam10),R.string.str_time_unit_us);
-		mSettingItems[10] = new ItemOneLine(R.string.str_textview_param11, String.valueOf(SystemConfigFile.mResv11), 0);
-		mSettingItems[11] = new ItemOneLine(R.string.str_textview_param12, String.valueOf(SystemConfigFile.mResv12), 0);
-		mSettingItems[12] = new ItemOneLine(R.string.str_textview_param13, String.valueOf(SystemConfigFile.mResv13), R.string.str_time_unit_ms);
-		mSettingItems[13] = new ItemOneLine(R.string.str_textview_param14, String.valueOf(SystemConfigFile.mResv14), 0);
-		mSettingItems[14] = new ItemOneLine(R.string.str_textview_param15, String.valueOf(SystemConfigFile.mResv15), 0);
-		mSettingItems[15] = new ItemOneLine(R.string.str_textview_param16, String.valueOf(SystemConfigFile.mResv16), 0);
-		mSettingItems[16] = new ItemOneLine(R.string.str_textview_param17, String.valueOf(SystemConfigFile.mResv17), 0);
-		mSettingItems[17] = new ItemOneLine(R.string.str_textview_param18, String.valueOf(SystemConfigFile.mResv18), 0);
-		mSettingItems[18] = new ItemOneLine(R.string.str_textview_param19, String.valueOf(SystemConfigFile.mResv19), 0);
-		mSettingItems[19] = new ItemOneLine(R.string.str_textview_param20, String.valueOf(SystemConfigFile.mResv20), 0);
-		mSettingItems[20] = new ItemOneLine(R.string.str_textview_param21, String.valueOf(SystemConfigFile.mResv21), 0);
-		mSettingItems[21] = new ItemOneLine(R.string.str_textview_param22, String.valueOf(SystemConfigFile.mResv22), 0);
-		mSettingItems[22] = new ItemOneLine(R.string.str_textview_param23, String.valueOf(SystemConfigFile.mResv23), 0);
-		mSettingItems[23] = new ItemOneLine(R.string.str_textview_param24, String.valueOf(SystemConfigFile.mResv24), 0);
-		mSettingItems[24] = new ItemOneLine(R.string.str_textview_param25, String.valueOf(SystemConfigFile.mResv25), 0);
-		mSettingItems[25] = new ItemOneLine(R.string.str_textview_param26, String.valueOf(SystemConfigFile.mResv26), 0);
-		mSettingItems[26] = new ItemOneLine(R.string.str_textview_param27, String.valueOf(SystemConfigFile.mResv27), 0);
-		mSettingItems[27] = new ItemOneLine(R.string.str_textview_param28, String.valueOf(SystemConfigFile.mResv28), 0);
-		mSettingItems[28] = new ItemOneLine(R.string.str_textview_param29, String.valueOf(SystemConfigFile.mResv29), 0);
-		mSettingItems[29] = new ItemOneLine(R.string.str_textview_param30, String.valueOf(SystemConfigFile.mResv30), 0);
-		mSettingItems[30] = new ItemOneLine(R.string.str_textview_param31, String.valueOf(SystemConfigFile.mResv31), 0);
-		mSettingItems[31] = new ItemOneLine(R.string.str_textview_param32, String.valueOf(SystemConfigFile.mResv32), 0);
+		String param = String.valueOf(SystemConfigFile.mParam1);
+		mSettingItems[0] = new ItemOneLine(R.string.str_textview_param1, 	param, R.string.str_time_unit_mm_s);
+		param = getEntry(R.array.direction_item_entries, SystemConfigFile.mParam2);
+		mSettingItems[1] = new ItemOneLine(R.string.str_textview_param2, 	param, 0);
+		param = getEntry(R.array.resolution_item_entries, SystemConfigFile.mParam3);
+		mSettingItems[2] = new ItemOneLine(R.string.str_textview_param3, 	param, R.string.strResunit);
+		param = String.valueOf(SystemConfigFile.mParam4);
+		mSettingItems[3] = new ItemOneLine(R.string.str_textview_param4, 	param, R.string.str_time_unit_ms);
+		mSettingItems[4] = new ItemOneLine(R.string.str_textview_param5, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mParam5), 		R.string.str_time_unit_100us);
+		mSettingItems[5] = new ItemOneLine(R.string.str_textview_param6, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mParam6), 		0);
+		mSettingItems[6] = new ItemOneLine(R.string.str_textview_param7, 	getEntry(R.array.direction_item_entries, SystemConfigFile.mParam7), 	R.string.str_time_unit_mm);
+		mSettingItems[7] = new ItemOneLine(R.string.str_textview_param8, 	getEntry(R.array.direction_item_entries, SystemConfigFile.mParam8), 	0);
+		mSettingItems[8] = new ItemOneLine(R.string.str_textview_param9, 	String.valueOf(SystemConfigFile.mParam9), 								R.string.str_time_unit_mm);
+		mSettingItems[9] = new ItemOneLine(R.string.str_textview_param10, 	String.valueOf(SystemConfigFile.mParam10),								0);
+		mSettingItems[10] = new ItemOneLine(R.string.str_textview_param11, 	String.valueOf(SystemConfigFile.mResv11), 								R.string.str_time_unit_mm);
+		mSettingItems[11] = new ItemOneLine(R.string.str_textview_param12, 	String.valueOf(SystemConfigFile.mResv12), 								R.string.str_time_unit_mm);
+		mSettingItems[12] = new ItemOneLine(R.string.str_textview_param13, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv13), 		0);
+		mSettingItems[13] = new ItemOneLine(R.string.str_textview_param14, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv14), 		0);
+		mSettingItems[14] = new ItemOneLine(R.string.str_textview_param15, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv15), 		0);
+		mSettingItems[15] = new ItemOneLine(R.string.str_textview_param16, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv16),	 	0);
+		mSettingItems[16] = new ItemOneLine(R.string.str_textview_param17, 	getEntry(R.array.pens_item_entries, SystemConfigFile.mResv17), 			0);
+		mSettingItems[17] = new ItemOneLine(R.string.str_textview_param18, 	String.valueOf(SystemConfigFile.mResv18), 								0);
+		mSettingItems[18] = new ItemOneLine(R.string.str_textview_param19, 	String.valueOf(SystemConfigFile.mResv19), 								R.string.str_time_unit_mm);
+		mSettingItems[19] = new ItemOneLine(R.string.str_textview_param20, 	String.valueOf(SystemConfigFile.mResv20), 								R.string.str_time_unit_mm);
+		mSettingItems[20] = new ItemOneLine(R.string.str_textview_param21, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv21), 		0);
+		mSettingItems[21] = new ItemOneLine(R.string.str_textview_param22, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv22), 		0);
+		mSettingItems[22] = new ItemOneLine(R.string.str_textview_param23, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv23),        0);
+		mSettingItems[23] = new ItemOneLine(R.string.str_textview_param24, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv24), 		0);
+		mSettingItems[24] = new ItemOneLine(R.string.str_textview_param25, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv25), 		0);
+		mSettingItems[25] = new ItemOneLine(R.string.str_textview_param26, 	String.valueOf(SystemConfigFile.mResv26), 								R.string.str_time_unit_0_1v);
+		mSettingItems[26] = new ItemOneLine(R.string.str_textview_param27, 	getEntry(R.array.switch_item_entries, SystemConfigFile.mResv27), 		0);
+		mSettingItems[27] = new ItemOneLine(R.string.str_textview_param28, 	String.valueOf(SystemConfigFile.mResv28), 								R.string.str_time_unit_0_1us);
+		mSettingItems[28] = new ItemOneLine(R.string.str_textview_param29, 	String.valueOf(SystemConfigFile.mResv29), 								R.string.str_time_unit_ms);
+		mSettingItems[29] = new ItemOneLine(R.string.str_textview_param30, 	String.valueOf(SystemConfigFile.mResv30), 								R.string.str_time_unit_ms);
+		mSettingItems[30] = new ItemOneLine(R.string.str_textview_param31, 	String.valueOf(SystemConfigFile.mResv31), 0);
+		mSettingItems[31] = new ItemOneLine(R.string.str_textview_param32, 	String.valueOf(SystemConfigFile.mResv32), 0);
 		mSettingItems[32] = new ItemOneLine(R.string.str_textview_param33, String.valueOf(SystemConfigFile.mResv33), 0);
 		mSettingItems[33] = new ItemOneLine(R.string.str_textview_param34, String.valueOf(SystemConfigFile.mResv34), 0);
 		mSettingItems[34] = new ItemOneLine(R.string.str_textview_param35, String.valueOf(SystemConfigFile.mResv35), 0);
