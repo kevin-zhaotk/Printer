@@ -949,25 +949,9 @@ public class SystemConfigFile{
 	}
 	
 	public static void paramTrans() {
-		// 參數1
-		if (mParam5 == 0 || mParam5 == 1) {
-			mFPGAParam[0] = 0;
-		} else if (mParam5 == 2) {
-			mFPGAParam[0] = 1;
-		}
-		// 參數2
-		if (mParam5 == 0 && mParam6 == 0) {
-			mFPGAParam[1] = 4;
-		} else if (mParam5 == 0 && mParam6 == 1) {
-			mFPGAParam[1] = 3;
-		} else if (mParam5 != 0 && mParam6 == 0) {
-			mFPGAParam[1] = 2;
-		} else if (mParam5 != 0 && mParam6 == 1) {
-			mFPGAParam[1] = 1;
-		} 
 		
-		// 參數5
-		mFPGAParam[4] = 170000/(mParam1*mFPGAParam[16]);
+		// 參數1
+		mFPGAParam[4] = 170000/(mParam1*mFPGAParam[15]);
 		if (mFPGAParam[4] > 65535) {
 			mFPGAParam[4] = 65535;
 		} else if (mFPGAParam[4] < 65) {
@@ -976,6 +960,8 @@ public class SystemConfigFile{
 		
 		// 參數16
 		mFPGAParam[15] = mParam3/150;
+				
+		
 		
 		// 參數4
 		mFPGAParam[3] = mParam4 * mFPGAParam[15] * 6 * mFPGAParam[4];
@@ -984,14 +970,110 @@ public class SystemConfigFile{
 		} else if (mFPGAParam[3] >= 65535) {
 			mFPGAParam[3] = 65534;
 		}
-		// 參數9
 		mFPGAParam[8] = (int) (mParam4/((mParam10*25.4/(mParam9*3.14))));
 		if (mFPGAParam[8] <= 10) {
 			mFPGAParam[8] = 11;
 		} else if (mFPGAParam[8] >= 65535) {
 			mFPGAParam[8] = 65534;
 		}
+		// 參數5
+		if (mParam5 == 0 || mParam5 == 1) {
+			mFPGAParam[0] = 0;
+		} else if (mParam5 == 2) {
+			mFPGAParam[0] = 1;
+		}
 		
+		// 參數6
+		if (mParam5 == 0 && mParam6 == 0) {
+			mFPGAParam[1] = 4;
+		} else if (mParam5 == 0 && mParam6 == 1) {
+			mFPGAParam[1] = 3;
+		} else if (mParam5 != 0 && mParam6 == 0) {
+			mFPGAParam[1] = 2;
+		} else if (mParam5 != 0 && mParam6 == 1) {
+			mFPGAParam[1] = 1;
+		}
+		// 參數7
+		mFPGAParam[5] = mParam5 * mFPGAParam[15] * 6 * mFPGAParam[4];
+		if (mFPGAParam[5] < 3) {
+			mFPGAParam[5] = 3;
+		} else if (mFPGAParam[5] > 65534) {
+			mFPGAParam[5] = 65534;
+		}
+		mFPGAParam[7] = (int) (mParam5/((mParam10*25.4/(mParam9*3.14))));
+		if (mFPGAParam[7] < 11) {
+			mFPGAParam[7] = 11;
+		} else if (mFPGAParam[7] > 65534) {
+			mFPGAParam[7] = 65534;
+		}
 		
+		// 參數8
+		if (mParam8 == 0) {
+			mFPGAParam[17] = mFPGAParam[17]&0xef;
+		} else if (mParam8 == 1) {
+			mFPGAParam[17] = mFPGAParam[17] | 0x10;
+		}
+		
+		if (mResv15 == 0) {
+			mFPGAParam[17] = mFPGAParam[17] & 0xfe;
+		} else if (mParam8 == 1) {
+			mFPGAParam[17] = mFPGAParam[17] | 0x01;
+		}
+
+		if (mResv16 == 0) {
+			mFPGAParam[17] = mFPGAParam[17] & 0xfd;
+		} else if (mResv16 == 1) {
+			mFPGAParam[17] = mFPGAParam[17] | 0x02;
+		}
+
+		
+		if (mResv17 == 1) {
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
+		} else if (mResv17 == 2) {
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
+			mFPGAParam[16] = mFPGAParam[16] | 0x08;
+		} else if (mResv17 == 3) {
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
+			mFPGAParam[16] = mFPGAParam[16] | 0x10;
+		} else if (mResv17 == 4) {
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
+			mFPGAParam[16] = mFPGAParam[16] | 0x18;
+		}
+		
+		// 参数23
+		if (mResv23 == 0) {
+			mFPGAParam[17] = mFPGAParam[17] & 0xfb;
+		} else if (mResv23 == 1) {
+			mFPGAParam[17] = mFPGAParam[17] | 0x04;
+		}
+		// 参数24
+	    if (mResv24 == 0) {
+			mFPGAParam[17] = mFPGAParam[17] & 0xf7;
+		} else if (mResv24 == 1) {
+			mFPGAParam[17] = mFPGAParam[17] | 0x08;
+		}
+	    // 参数25
+	    if (mResv25 == 0) {
+			mFPGAParam[18] = mResv26;
+		} else if (mResv25 == 1) {
+			mFPGAParam[18] = 0;
+		}
+	    
+	    //RFID特征值6
+	    int info = 17;
+	    // 参数27
+	    if (mResv27 == 0) {
+	    	mFPGAParam[16] = mFPGAParam[16] & 0x8f;
+			mFPGAParam[16] = mFPGAParam[16] | ((mResv28-17) << 4);
+		} else if (mResv27 == 1) {
+			mFPGAParam[16] = mFPGAParam[16] & 0x8f;
+			mFPGAParam[16] = mFPGAParam[16] | ((info-17) << 4);
+		}
+	    
+	    // 参数29
+	    mFPGAParam[19] = mResv29;
+	    // 参数29
+	    mFPGAParam[2] = mResv30;
+	    
 	}
 }
