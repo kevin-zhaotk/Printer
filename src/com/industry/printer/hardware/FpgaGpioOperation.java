@@ -198,18 +198,18 @@ public class FpgaGpioOperation {
 			return;
 		}
 		char data[] = new char[Configs.gParams];
-		
+		SystemConfigFile.paramTrans();
 		for (int i = 0; i < data.length; i++) {
-			data[i] = 0;
+			data[i] = (char) SystemConfigFile.mFPGAParam[i];
  		}
-		data[0] = (char) SystemConfigFile.mParam1;
+		/*
 		if (isPurge) {
 			data[1] = 4;
 			data[3] = 100;
 			data[4] = 200;
 			data[5] = 100;
 			data[15] = 1;
-		} else {
+		}*//* else {
 			data[1] = (char) SystemConfigFile.mParam2;
 			data[3] = (char) SystemConfigFile.mParam4;
 			data[4] = (char) SystemConfigFile.mParam5;
@@ -236,6 +236,7 @@ public class FpgaGpioOperation {
 		data[21] = (char) SystemConfigFile.mResv22;
 		data[22] = (char) SystemConfigFile.mResv23;
 		data[23] = (char) SystemConfigFile.mResv24;
+		*/
 		BinInfo info = task.getInfo();
 		data[24] = (char) info.getBytesFeed();
 		//时间参数放在最后3个

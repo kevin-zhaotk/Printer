@@ -277,16 +277,16 @@ public class Configs {
 		int dir=0;
 		switch (index) {
 		case 0:
-			dir = SystemConfigFile.mResv25;
+			dir = SystemConfigFile.mParam[24];
 			break;
 		case 1:
-			dir = SystemConfigFile.mResv27;
+			dir = SystemConfigFile.mParam[26];
 			break;
 		case 2:
-			dir = SystemConfigFile.mResv29;
+			dir = SystemConfigFile.mParam[28];
 			break;
 		case 3:
-			dir = SystemConfigFile.mResv31;
+			dir = SystemConfigFile.mParam[30];
 			break;
 		default:
 			break;
@@ -301,16 +301,16 @@ public class Configs {
 		int shift=0;
 		switch (index) {
 		case 0:
-			shift = SystemConfigFile.mResv26;
+			shift = SystemConfigFile.mParam[25];
 			break;
 		case 1:
-			shift = SystemConfigFile.mResv28;
+			shift = SystemConfigFile.mParam[27];
 			break;
 		case 2:
-			shift = SystemConfigFile.mResv30;
+			shift = SystemConfigFile.mParam[29];
 			break;
 		case 3:
-			shift = SystemConfigFile.mResv32;
+			shift = SystemConfigFile.mParam[31];
 			break;
 		default:
 			break;
@@ -323,6 +323,6 @@ public class Configs {
 	 * @return
 	 */
 	public static int getEvenShift() {
-		return SystemConfigFile.mResv33;
+		return SystemConfigFile.mParam[32];
 	}
 }
