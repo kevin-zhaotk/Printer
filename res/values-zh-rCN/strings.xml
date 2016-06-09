@@ -593,7 +593,7 @@
 	</string-array>
 	
 	<string name="str_time_unit_0_1v">0.1伏</string>
-	<string name="str_time_unit_mm">毫米</string>
+	<string name="str_length_unit_mm">毫米</string>
 	<string name="str_time_unit_ms">毫秒</string>
 	<string name="str_time_unit_mm_s">毫米/秒</string>
 	<string name="str_time_unit_us">微秒</string>

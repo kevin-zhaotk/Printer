@@ -117,7 +117,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mTitle = title;
 			mUnit = unit;
 			mType = type;
-			mValue = getEntry(entry, SystemConfigFile.mParam[param -1]);
+			mEntry = entry;
+			if (mType == ItemType.TYPE_SWITCH || mType == ItemType.TYPE_DIRECTION) {
+				mValue = getEntry(entry, SystemConfigFile.mParam[param -1]);
+			} else if (mType == ItemType.TYPE_VALUE) {
+				mValue = String.valueOf(SystemConfigFile.mParam[param-1]);
+			}
+			
 		}
 		
 		public void setValue(int value) {
@@ -282,23 +288,23 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[0] = new ItemOneLine(1, R.string.str_textview_param1, R.string.str_time_unit_mm_s);
 		mSettingItems[1] = new ItemOneLine(2, R.string.str_textview_param2, R.array.direction_item_entries, 0, ItemType.TYPE_DIRECTION);
 		mSettingItems[2] = new ItemOneLine(3, R.string.str_textview_param3, R.array.resolution_item_entries, R.string.strResunit, ItemType.TYPE_VALUE);
-		mSettingItems[3] = new ItemOneLine(4, R.string.str_textview_param4, R.string.str_time_unit_ms);
-		mSettingItems[4] = new ItemOneLine(5, R.string.str_textview_param5, R.array.switch_item_entries, 	R.string.str_time_unit_100us, ItemType.TYPE_SWITCH);
+		mSettingItems[3] = new ItemOneLine(4, R.string.str_textview_param4, R.string.str_length_unit_mm);
+		mSettingItems[4] = new ItemOneLine(5, R.string.str_textview_param5, R.array.photo_item_entries, 	0, ItemType.TYPE_SWITCH);
 		mSettingItems[5] = new ItemOneLine(6, R.string.str_textview_param6, R.array.switch_item_entries, 	0, ItemType.TYPE_SWITCH);
-		mSettingItems[6] = new ItemOneLine(7, R.string.str_textview_param7, R.array.direction_item_entries,	R.string.str_time_unit_mm, ItemType.TYPE_DIRECTION);
+		mSettingItems[6] = new ItemOneLine(7, R.string.str_textview_param7, R.string.str_length_unit_mm);
 		mSettingItems[7] = new ItemOneLine(8, R.string.str_textview_param8, R.array.direction_item_entries, 0, ItemType.TYPE_DIRECTION);
-		mSettingItems[8] = new ItemOneLine(9, R.string.str_textview_param9, R.string.str_time_unit_mm);
+		mSettingItems[8] = new ItemOneLine(9, R.string.str_textview_param9, R.string.str_length_unit_mm);
 		mSettingItems[9] = new ItemOneLine(10,R.string.str_textview_param10,0);
-		mSettingItems[10] = new ItemOneLine(11, R.string.str_textview_param11, R.string.str_time_unit_mm);
-		mSettingItems[11] = new ItemOneLine(12, R.string.str_textview_param12, R.string.str_time_unit_mm);
+		mSettingItems[10] = new ItemOneLine(11, R.string.str_textview_param11, R.string.str_length_unit_mm);
+		mSettingItems[11] = new ItemOneLine(12, R.string.str_textview_param12, R.string.str_length_unit_mm);
 		mSettingItems[12] = new ItemOneLine(13, R.string.str_textview_param13, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[13] = new ItemOneLine(14, R.string.str_textview_param14, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[14] = new ItemOneLine(15, R.string.str_textview_param15, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[15] = new ItemOneLine(16, R.string.str_textview_param16, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
+		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.pens_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[17] = new ItemOneLine(18, R.string.str_textview_param18, 0);
-		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_time_unit_mm);
-		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_time_unit_mm);
+		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_length_unit_mm);
+		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_length_unit_mm);
 		mSettingItems[20] = new ItemOneLine(21, R.string.str_textview_param21, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[21] = new ItemOneLine(22, R.string.str_textview_param22, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[22] = new ItemOneLine(23, R.string.str_textview_param23, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
@@ -500,7 +506,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mSpiner.setAdapter(mAutoPulse);
 		}
 		mSpiner.setWidth(view.getWidth());
-		mSpiner.showAsDropDown(view);
+		//mSpiner.showAsDropDown(view);
+		mSpiner.showAsDropUp(view);
 	}
 
 	@Override
@@ -560,6 +567,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		}*/
 		mSettingItems[position].setValue(index);
 		SystemConfigFile.mParam[position] = mSettingItems[position].getValue();
+		value = mSettingItems[position].getDisplayValue();
 		view.setText(value);
 	}
 	

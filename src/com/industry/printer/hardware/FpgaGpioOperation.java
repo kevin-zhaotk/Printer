@@ -199,7 +199,7 @@ public class FpgaGpioOperation {
 		}
 		char data[] = new char[Configs.gParams];
 		SystemConfigFile.paramTrans();
-		for (int i = 0; i < data.length; i++) {
+		for (int i = 0; i < 24; i++) {
 			data[i] = (char) SystemConfigFile.mFPGAParam[i];
  		}
 		/*

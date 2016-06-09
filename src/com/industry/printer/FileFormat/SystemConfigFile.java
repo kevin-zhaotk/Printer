@@ -118,6 +118,7 @@ public class SystemConfigFile{
 			tag = t.getKey();
 			if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
 				mParam[0] = Integer.parseInt(t.getValue());
+				mParam[0] = checkParam(1, mParam[0]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
 				mParam[1] = Integer.parseInt(t.getValue());
 				mParam[1] = checkParam(2, mParam[1]);
@@ -151,10 +152,6 @@ public class SystemConfigFile{
 				mParam[9] = Integer.parseInt(t.getValue());
 				/*墨点大小 200-2000 默认值800*/
 				mParam[9] = checkParam(10, mParam[9]);
-				/*墨点大小（参数10）不能小于字宽（参数05）*/
-				if (mParam[9] < mParam[4]) {
-					mParam[9] = mParam[4];
-				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
 				mParam[10] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
@@ -175,32 +172,46 @@ public class SystemConfigFile{
 				mParam[15] = checkParam(16, mParam[15]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
 				mParam[16] = Integer.parseInt(t.getValue());
+				mParam[16] = checkParam(17, mParam[16]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
 				mParam[17] = Integer.parseInt(t.getValue());
+				mParam[17] = checkParam(18, mParam[17]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_19)) {
 				mParam[18] = Integer.parseInt(t.getValue());
+				mParam[18] = checkParam(19, mParam[18]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_20)) {
 				mParam[19] = Integer.parseInt(t.getValue());
+				mParam[19] = checkParam(20, mParam[19]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_21)) {
 				mParam[20] = Integer.parseInt(t.getValue());
+				mParam[20] = checkParam(21, mParam[20]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_22)) {
 				mParam[21] = Integer.parseInt(t.getValue());
+				mParam[21] = checkParam(22, mParam[21]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_23)) {
 				mParam[22] = Integer.parseInt(t.getValue());
+				mParam[23] = checkParam(23, mParam[22]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_24)) {
 				mParam[23] = Integer.parseInt(t.getValue());
+				mParam[23] = checkParam(24, mParam[23]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_25)) {
 				mParam[24] = Integer.parseInt(t.getValue());
+				mParam[24] = checkParam(25, mParam[24]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_26)) {
 				mParam[25] = Integer.parseInt(t.getValue());
+				mParam[25] = checkParam(26, mParam[25]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_27)) {
 				mParam[26] = Integer.parseInt(t.getValue());
+				mParam[26] = checkParam(27, mParam[26]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_28)) {
 				mParam[27] = Integer.parseInt(t.getValue());
+				mParam[27] = checkParam(28, mParam[27]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_29)) {
 				mParam[28] = Integer.parseInt(t.getValue());
+				mParam[28] = checkParam(29, mParam[28]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_30)) {
 				mParam[29] = Integer.parseInt(t.getValue());
+				mParam[29] = checkParam(30, mParam[29]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_31)) {
 				mParam[30] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_32)) {
@@ -659,9 +670,9 @@ public class SystemConfigFile{
 
 		/*参数1*/
 		map = new HashMap<String, Integer>();
-		map.put("min", 0);
+		map.put("min", 1);
 		map.put("max", 65535);
-		map.put("default", 0);
+		map.put("default", 1);
 		mParamRange.put(1, map);
 
 		/*参数2*/
@@ -701,12 +712,12 @@ public class SystemConfigFile{
 
 		/*参数7 */
 		map = new HashMap<String, Integer>();
-		map.put("min", 0);
-		map.put("max", 1);
+		map.put("min", 1);
+		map.put("max", 65535);
 		map.put("default", 0);
 		mParamRange.put(7, map);
 
-		/*6.参数8 */
+		/*参数8 */
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
@@ -732,7 +743,7 @@ public class SystemConfigFile{
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 65535);
-		map.put("default", 0);
+		map.put("default", 1);
 		mParamRange.put(11, map);
 		
 		// param12
@@ -781,14 +792,14 @@ public class SystemConfigFile{
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 65535);
-		map.put("default", 0);
+		map.put("default", 1);
 		mParamRange.put(19, map);
 				
 		// param20
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 1000);
-		map.put("default", 0);
+		map.put("default", 1);
 		mParamRange.put(20, map);
 				
 		// param21
@@ -850,7 +861,7 @@ public class SystemConfigFile{
 		map = new HashMap<String, Integer>();
 		map.put("min", 200);
 		map.put("max", 60000);
-		map.put("default", 0);
+		map.put("default", 200);
 		mParamRange.put(29, map);
 		
 		// param30
@@ -885,7 +896,9 @@ public class SystemConfigFile{
 	}
 	
 	public static void paramTrans() {
-		
+		// 參數16
+		mFPGAParam[15] = mParam[2]/150;
+				
 		// 參數1
 		mFPGAParam[4] = 170000/(mParam[0]*mFPGAParam[15]);
 		if (mFPGAParam[4] > 65535) {
@@ -894,8 +907,6 @@ public class SystemConfigFile{
 			mFPGAParam[4] = 65;
 		}
 		
-		// 參數16
-		mFPGAParam[15] = mParam[2]/150;
 				
 		
 		

@@ -85,15 +85,12 @@ public class DataTransferThread extends Thread {
 			// Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
 			if (writable == 0) { //timeout
-				// Debug.d(TAG, "===>select timeout");
 			} else if (writable == -1) {
-				
 			} else {
-				
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
 				buffer = mDataTask.getPrintBuffer();
-				Debug.d(TAG, "===>buffer size="+buffer.length);
+				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				
 				mInkListener.onInkLevelDown();
