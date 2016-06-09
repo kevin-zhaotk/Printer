@@ -107,6 +107,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	
 	InputMethodManager mImm;
 	public Context mContext;
+	public SystemConfigFile mSysconfig;
 	
 	public PHSettingFragment(Context context) {
 		mContext = context;
@@ -128,10 +129,11 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Debug.d(TAG, "--->onActivityCreated");
-		SystemConfigFile.parseSystemCofig();
+		mSysconfig = SystemConfigFile.getInstance(mContext);
+		mSysconfig.parseSystemCofig();
 		// mEncoder = (Spinner) getView().findViewById(R.id.ph_set_encoder_value);
 		mEncoder = (TextView) getView().findViewById(R.id.ph_set_encoder_value);
-		mEncoder.setText(getEncoder(SystemConfigFile.mParam[0]));
+		mEncoder.setText(getEncoder(mSysconfig.getParam(0)));
 		//mEncoder.setSelection(SystemConfigFile.mParam[0]);
 		//mEncoder.setOnItemSelectedListener(this);
 		
@@ -149,257 +151,257 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		//mEncoder.setAdapter(adapter);
 		
 		mTrigermode = (EditText) getView().findViewById(R.id.ph_set_trigerMode_value);
-		mTrigermode.setText(String.valueOf(SystemConfigFile.mParam[1]));
+		mTrigermode.setText(String.valueOf(mSysconfig.getParam(1)));
 		mTrigermode.addTextChangedListener(new SelfTextWatcher(mTrigermode));
 
 		mPHO_H = (EditText) getView().findViewById(R.id.ph_set_PHODelayHigh_value);
-		mPHO_H.setText(String.valueOf(SystemConfigFile.mParam[2]));
+		mPHO_H.setText(String.valueOf(mSysconfig.getParam(2)));
 		mPHO_H.addTextChangedListener(new SelfTextWatcher(mPHO_H));
 
 		mPHO_L = (EditText) getView().findViewById(R.id.ph_set_PHODelayLow_value);
-		mPHO_L.setText(String.valueOf(SystemConfigFile.mParam[3]));
+		mPHO_L.setText(String.valueOf(mSysconfig.getParam(3)));
 		mPHO_L.addTextChangedListener(new SelfTextWatcher(mPHO_L));
 
 		mOutPeriod = (EditText) getView().findViewById(R.id.ph_set_PHOOutput_period_value);
-		mOutPeriod.setText(String.valueOf(SystemConfigFile.mParam[4]));
+		mOutPeriod.setText(String.valueOf(mSysconfig.getParam(4)));
 		mOutPeriod.addTextChangedListener(new SelfTextWatcher(mOutPeriod));
 
 		mTimedPeriod = (EditText) getView().findViewById(R.id.ph_set_TimeFixed_period_value);
-		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mParam[5]));
+		mTimedPeriod.setText(String.valueOf(mSysconfig.getParam(5)));
 		mTimedPeriod.addTextChangedListener(new SelfTextWatcher(mTimedPeriod));
 
 		mTimedPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderTriger_pulse_value);
-		mTimedPulse.setText(String.valueOf(SystemConfigFile.mParam[6]));
+		mTimedPulse.setText(String.valueOf(mSysconfig.getParam(6)));
 		mTimedPulse.addTextChangedListener(new SelfTextWatcher(mTimedPulse));
 
 
 		mLenPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderLenFixed_pulse_value);
-		mLenPulse.setText(String.valueOf(SystemConfigFile.mParam[7]));
+		mLenPulse.setText(String.valueOf(mSysconfig.getParam(7)));
 		mLenPulse.addTextChangedListener(new SelfTextWatcher(mLenPulse));
 
 		mDelayPulse = (EditText) getView().findViewById(R.id.ph_set_EncoderDelay_pulse_value);
-		mDelayPulse.setText(String.valueOf(SystemConfigFile.mParam[8]));
+		mDelayPulse.setText(String.valueOf(mSysconfig.getParam(8)));
 		mDelayPulse.addTextChangedListener(new SelfTextWatcher(mDelayPulse));
 
 		mHighLen = (EditText) getView().findViewById(R.id.ph_set_OutputHight_length_value);
-		mHighLen.setText(String.valueOf(SystemConfigFile.mParam[9]));
+		mHighLen.setText(String.valueOf(mSysconfig.getParam(9)));
 		mHighLen.addTextChangedListener(new SelfTextWatcher(mHighLen));
 		
 		mResv11 = (EditText) getView().findViewById(R.id.ph_set_resolved_value11);
 		mResv11.addTextChangedListener(new SelfTextWatcher(mResv11));
-		mResv11.setText(String.valueOf(SystemConfigFile.mParam[10]));
+		mResv11.setText(String.valueOf(mSysconfig.getParam(10)));
 
 		mResv12 = (EditText) getView().findViewById(R.id.ph_set_resolved_value12);
 		mResv12.addTextChangedListener(new SelfTextWatcher(mResv12));
-		mResv12.setText(String.valueOf(SystemConfigFile.mParam[11]));
+		mResv12.setText(String.valueOf(mSysconfig.getParam(11)));
 
 		mResv13 = (EditText) getView().findViewById(R.id.ph_set_resolved_value13);
 		mResv13.addTextChangedListener(new SelfTextWatcher(mResv13));
-		mResv13.setText(String.valueOf(SystemConfigFile.mParam[12]));
+		mResv13.setText(String.valueOf(mSysconfig.getParam(12)));
 
 		mResv14 = (EditText) getView().findViewById(R.id.ph_set_resolved_value14);
 		mResv14.addTextChangedListener(new SelfTextWatcher(mResv14));
-		mResv14.setText(String.valueOf(SystemConfigFile.mParam[13]));
+		mResv14.setText(String.valueOf(mSysconfig.getParam(13)));
 
 		mResv15 = (EditText) getView().findViewById(R.id.ph_set_resolved_value15);
 		mResv15.addTextChangedListener(new SelfTextWatcher(mResv15));
-		mResv15.setText(String.valueOf(SystemConfigFile.mParam[14]));
+		mResv15.setText(String.valueOf(mSysconfig.getParam(14)));
 
 		mResv16 = (EditText) getView().findViewById(R.id.ph_set_resolved_value16);
 		mResv16.addTextChangedListener(new SelfTextWatcher(mResv16));
-		mResv16.setText(String.valueOf(SystemConfigFile.mParam[15]));
+		mResv16.setText(String.valueOf(mSysconfig.getParam(15)));
 
 		mResv17 = (EditText) getView().findViewById(R.id.ph_set_resolved_value17);
 		mResv17.addTextChangedListener(new SelfTextWatcher(mResv17));
-		mResv17.setText(String.valueOf(SystemConfigFile.mParam[16]));
+		mResv17.setText(String.valueOf(mSysconfig.getParam(16)));
 
 		mResv18 = (EditText) getView().findViewById(R.id.ph_set_resolved_value18);
 		mResv18.addTextChangedListener(new SelfTextWatcher(mResv18));
-		mResv18.setText(String.valueOf(SystemConfigFile.mParam[17]));
+		mResv18.setText(String.valueOf(mSysconfig.getParam(17)));
 
 		mResv19 = (EditText) getView().findViewById(R.id.ph_set_resolved_value19);
 		mResv19.addTextChangedListener(new SelfTextWatcher(mResv19));
-		mResv19.setText(String.valueOf(SystemConfigFile.mParam[18]));
+		mResv19.setText(String.valueOf(mSysconfig.getParam(18)));
 
 		mResv20 = (EditText) getView().findViewById(R.id.ph_set_resolved_value20);
 		mResv20.addTextChangedListener(new SelfTextWatcher(mResv20));
-		mResv20.setText(String.valueOf(SystemConfigFile.mParam[19]));
+		mResv20.setText(String.valueOf(mSysconfig.getParam(19)));
 
 		mResv21 = (EditText) getView().findViewById(R.id.ph_set_resolved_value21);
 		mResv21.addTextChangedListener(new SelfTextWatcher(mResv21));
-		mResv21.setText(String.valueOf(SystemConfigFile.mParam[20]));
+		mResv21.setText(String.valueOf(mSysconfig.getParam(20)));
 
 		mResv22 = (EditText) getView().findViewById(R.id.ph_set_resolved_value22);
 		mResv22.addTextChangedListener(new SelfTextWatcher(mResv22));
-		mResv22.setText(String.valueOf(SystemConfigFile.mParam[21]));
+		mResv22.setText(String.valueOf(mSysconfig.getParam(21)));
 
 		mResv23 = (EditText) getView().findViewById(R.id.ph_set_resolved_value23);
 		mResv23.addTextChangedListener(new SelfTextWatcher(mResv23));
-		mResv23.setText(String.valueOf(SystemConfigFile.mParam[22]));
+		mResv23.setText(String.valueOf(mSysconfig.getParam(22)));
 
 		mResv24 = (EditText) getView().findViewById(R.id.ph_set_resolved_value24);
 		mResv24.addTextChangedListener(new SelfTextWatcher(mResv24));
-		mResv24.setText(String.valueOf(SystemConfigFile.mParam[23]));
+		mResv24.setText(String.valueOf(mSysconfig.getParam(23)));
 		
 		mResv25 = (EditText) getView().findViewById(R.id.ph_set_resolved_value25);
 		mResv25.addTextChangedListener(new SelfTextWatcher(mResv25));
-		mResv25.setText(String.valueOf(SystemConfigFile.mParam[24]));
+		mResv25.setText(String.valueOf(mSysconfig.getParam(24)));
 		
 		mResv26 = (EditText) getView().findViewById(R.id.ph_set_resolved_value26);
 		mResv26.addTextChangedListener(new SelfTextWatcher(mResv26));
-		mResv26.setText(String.valueOf(SystemConfigFile.mParam[25]));
+		mResv26.setText(String.valueOf(mSysconfig.getParam(25)));
 		
 		mResv27 = (EditText) getView().findViewById(R.id.ph_set_resolved_value27);
 		mResv27.addTextChangedListener(new SelfTextWatcher(mResv27));
-		mResv27.setText(String.valueOf(SystemConfigFile.mParam[28]));
+		mResv27.setText(String.valueOf(mSysconfig.getParam(26)));
 		
 		mResv28 = (EditText) getView().findViewById(R.id.ph_set_resolved_value28);
 		mResv28.addTextChangedListener(new SelfTextWatcher(mResv28));
-		mResv28.setText(String.valueOf(SystemConfigFile.mParam[27]));
+		mResv28.setText(String.valueOf(mSysconfig.getParam(27)));
 		
 		mResv29 = (EditText) getView().findViewById(R.id.ph_set_resolved_value29);
 		mResv29.addTextChangedListener(new SelfTextWatcher(mResv29));
-		mResv29.setText(String.valueOf(SystemConfigFile.mParam[28]));
+		mResv29.setText(String.valueOf(mSysconfig.getParam(28)));
 		
 		mResv30 = (EditText) getView().findViewById(R.id.ph_set_resolved_value30);
 		mResv30.addTextChangedListener(new SelfTextWatcher(mResv30));
-		mResv30.setText(String.valueOf(SystemConfigFile.mParam[29]));
+		mResv30.setText(String.valueOf(mSysconfig.getParam(29)));
 		
 		mResv31 = (EditText) getView().findViewById(R.id.ph_set_resolved_value31);
 		mResv31.addTextChangedListener(new SelfTextWatcher(mResv31));
-		mResv31.setText(String.valueOf(SystemConfigFile.mParam[30]));
+		mResv31.setText(String.valueOf(mSysconfig.getParam(30)));
 
 		mResv32 = (EditText) getView().findViewById(R.id.ph_set_resolved_value32);
 		mResv32.addTextChangedListener(new SelfTextWatcher(mResv32));
-		mResv32.setText(String.valueOf(SystemConfigFile.mParam[31]));
+		mResv32.setText(String.valueOf(mSysconfig.getParam(31)));
 
 		mResv33 = (EditText) getView().findViewById(R.id.ph_set_resolved_value33);
 		mResv33.addTextChangedListener(new SelfTextWatcher(mResv33));
-		mResv33.setText(String.valueOf(SystemConfigFile.mParam[32]));
+		mResv33.setText(String.valueOf(mSysconfig.getParam(32)));
 
 		mResv34 = (EditText) getView().findViewById(R.id.ph_set_resolved_value34);
 		mResv34.addTextChangedListener(new SelfTextWatcher(mResv34));
-		mResv34.setText(String.valueOf(SystemConfigFile.mParam[33]));
+		mResv34.setText(String.valueOf(mSysconfig.getParam(33)));
 		
 		mResv35 = (EditText) getView().findViewById(R.id.ph_set_resolved_value35);
 		mResv35.addTextChangedListener(new SelfTextWatcher(mResv35));
-		mResv35.setText(String.valueOf(SystemConfigFile.mParam[34]));
+		mResv35.setText(String.valueOf(mSysconfig.getParam(34)));
 		
 		mResv36 = (EditText) getView().findViewById(R.id.ph_set_resolved_value36);
 		mResv36.addTextChangedListener(new SelfTextWatcher(mResv36));
-		mResv36.setText(String.valueOf(SystemConfigFile.mParam[35]));
+		mResv36.setText(String.valueOf(mSysconfig.getParam(35)));
 		
 		mResv37 = (EditText) getView().findViewById(R.id.ph_set_resolved_value37);
 		mResv37.addTextChangedListener(new SelfTextWatcher(mResv37));
-		mResv37.setText(String.valueOf(SystemConfigFile.mParam[36]));
+		mResv37.setText(String.valueOf(mSysconfig.getParam(36)));
 		
 		mResv38 = (EditText) getView().findViewById(R.id.ph_set_resolved_value38);
 		mResv38.addTextChangedListener(new SelfTextWatcher(mResv38));
-		mResv38.setText(String.valueOf(SystemConfigFile.mParam[37]));
+		mResv38.setText(String.valueOf(mSysconfig.getParam(37)));
 		
 		mResv39 = (EditText) getView().findViewById(R.id.ph_set_resolved_value39);
 		mResv39.addTextChangedListener(new SelfTextWatcher(mResv39));
-		mResv39.setText(String.valueOf(SystemConfigFile.mParam[38]));
+		mResv39.setText(String.valueOf(mSysconfig.getParam(38)));
 		
 		mResv40 = (EditText) getView().findViewById(R.id.ph_set_resolved_value40);
 		mResv40.addTextChangedListener(new SelfTextWatcher(mResv40));
-		mResv40.setText(String.valueOf(SystemConfigFile.mParam[39]));
+		mResv40.setText(String.valueOf(mSysconfig.getParam(39)));
 		
 		mResv41 = (EditText) getView().findViewById(R.id.ph_set_resolved_value41);
 		mResv41.addTextChangedListener(new SelfTextWatcher(mResv41));
-		mResv41.setText(String.valueOf(SystemConfigFile.mParam[40]));
+		mResv41.setText(String.valueOf(mSysconfig.getParam(40)));
 
 		mResv42 = (EditText) getView().findViewById(R.id.ph_set_resolved_value42);
 		mResv42.addTextChangedListener(new SelfTextWatcher(mResv42));
-		mResv42.setText(String.valueOf(SystemConfigFile.mParam[41]));
+		mResv42.setText(String.valueOf(mSysconfig.getParam(41)));
 
 		mResv43 = (EditText) getView().findViewById(R.id.ph_set_resolved_value43);
 		mResv43.addTextChangedListener(new SelfTextWatcher(mResv43));
-		mResv43.setText(String.valueOf(SystemConfigFile.mParam[42]));
+		mResv43.setText(String.valueOf(mSysconfig.getParam(42)));
 
 		mResv44 = (EditText) getView().findViewById(R.id.ph_set_resolved_value44);
 		mResv44.addTextChangedListener(new SelfTextWatcher(mResv44));
-		mResv44.setText(String.valueOf(SystemConfigFile.mParam[43]));
+		mResv44.setText(String.valueOf(mSysconfig.getParam(43)));
 	
 		mResv45 = (EditText) getView().findViewById(R.id.ph_set_resolved_value45);
 		mResv45.addTextChangedListener(new SelfTextWatcher(mResv45));
-		mResv45.setText(String.valueOf(SystemConfigFile.mParam[44]));
+		mResv45.setText(String.valueOf(mSysconfig.getParam(44)));
 		
 		mResv46 = (EditText) getView().findViewById(R.id.ph_set_resolved_value46);
 		mResv46.addTextChangedListener(new SelfTextWatcher(mResv46));
-		mResv46.setText(String.valueOf(SystemConfigFile.mParam[45]));
+		mResv46.setText(String.valueOf(mSysconfig.getParam(45)));
 		
 		mResv47 = (EditText) getView().findViewById(R.id.ph_set_resolved_value47);
 		mResv47.addTextChangedListener(new SelfTextWatcher(mResv47));
-		mResv47.setText(String.valueOf(SystemConfigFile.mParam[46]));
+		mResv47.setText(String.valueOf(mSysconfig.getParam(46)));
 		
 		mResv48 = (EditText) getView().findViewById(R.id.ph_set_resolved_value48);
 		mResv48.addTextChangedListener(new SelfTextWatcher(mResv48));
-		mResv48.setText(String.valueOf(SystemConfigFile.mParam[47]));
+		mResv48.setText(String.valueOf(mSysconfig.getParam(47)));
 		
 		mResv49 = (EditText) getView().findViewById(R.id.ph_set_resolved_value49);
 		mResv49.addTextChangedListener(new SelfTextWatcher(mResv49));
-		mResv49.setText(String.valueOf(SystemConfigFile.mParam[48]));
+		mResv49.setText(String.valueOf(mSysconfig.getParam(48)));
 		
 		mResv50 = (EditText) getView().findViewById(R.id.ph_set_resolved_value50);
 		mResv50.addTextChangedListener(new SelfTextWatcher(mResv50));
-		mResv50.setText(String.valueOf(SystemConfigFile.mParam[49]));
+		mResv50.setText(String.valueOf(mSysconfig.getParam(49)));
 		
 		mResv51 = (EditText) getView().findViewById(R.id.ph_set_resolved_value51);
 		mResv51.addTextChangedListener(new SelfTextWatcher(mResv51));
-		mResv51.setText(String.valueOf(SystemConfigFile.mParam[50]));
+		mResv51.setText(String.valueOf(mSysconfig.getParam(50)));
 
 		mResv52 = (EditText) getView().findViewById(R.id.ph_set_resolved_value52);
 		mResv52.addTextChangedListener(new SelfTextWatcher(mResv52));
-		mResv52.setText(String.valueOf(SystemConfigFile.mParam[51]));
+		mResv52.setText(String.valueOf(mSysconfig.getParam(51)));
 
 		mResv53 = (EditText) getView().findViewById(R.id.ph_set_resolved_value53);
 		mResv53.addTextChangedListener(new SelfTextWatcher(mResv53));
-		mResv53.setText(String.valueOf(SystemConfigFile.mParam[52]));
+		mResv53.setText(String.valueOf(mSysconfig.getParam(52)));
 
 		mResv54 = (EditText) getView().findViewById(R.id.ph_set_resolved_value54);
 		mResv54.addTextChangedListener(new SelfTextWatcher(mResv54));
-		mResv54.setText(String.valueOf(SystemConfigFile.mParam[53]));
+		mResv54.setText(String.valueOf(mSysconfig.getParam(53)));
 		
 		mResv55 = (EditText) getView().findViewById(R.id.ph_set_resolved_value55);
 		mResv55.addTextChangedListener(new SelfTextWatcher(mResv55));
-		mResv55.setText(String.valueOf(SystemConfigFile.mParam[54]));
+		mResv55.setText(String.valueOf(mSysconfig.getParam(54)));
 		
 		mResv56 = (EditText) getView().findViewById(R.id.ph_set_resolved_value56);
 		mResv56.addTextChangedListener(new SelfTextWatcher(mResv56));
-		mResv56.setText(String.valueOf(SystemConfigFile.mParam[55]));
+		mResv56.setText(String.valueOf(mSysconfig.getParam(55)));
 		
 		mResv57 = (EditText) getView().findViewById(R.id.ph_set_resolved_value57);
 		mResv57.addTextChangedListener(new SelfTextWatcher(mResv57));
-		mResv57.setText(String.valueOf(SystemConfigFile.mParam[56]));
+		mResv57.setText(String.valueOf(mSysconfig.getParam(56)));
 		
 		mResv58 = (EditText) getView().findViewById(R.id.ph_set_resolved_value58);
 		mResv58.addTextChangedListener(new SelfTextWatcher(mResv58));
-		mResv58.setText(String.valueOf(SystemConfigFile.mParam[57]));
+		mResv58.setText(String.valueOf(mSysconfig.getParam(57)));
 		
 		mResv59 = (EditText) getView().findViewById(R.id.ph_set_resolved_value59);
 		mResv59.addTextChangedListener(new SelfTextWatcher(mResv59));
-		mResv59.setText(String.valueOf(SystemConfigFile.mParam[58]));
+		mResv59.setText(String.valueOf(mSysconfig.getParam(58)));
 		
 		mResv60 = (EditText) getView().findViewById(R.id.ph_set_resolved_value60);
 		mResv60.addTextChangedListener(new SelfTextWatcher(mResv60));
-		mResv60.setText(String.valueOf(SystemConfigFile.mParam[59]));
+		mResv60.setText(String.valueOf(mSysconfig.getParam(59)));
 		
 		mResv61 = (EditText) getView().findViewById(R.id.ph_set_resolved_value61);
 		mResv61.addTextChangedListener(new SelfTextWatcher(mResv61));
-		mResv61.setText(String.valueOf(SystemConfigFile.mParam[60]));
+		mResv61.setText(String.valueOf(mSysconfig.getParam(60)));
 		
 		mResv62 = (EditText) getView().findViewById(R.id.ph_set_resolved_value62);
 		mResv62.addTextChangedListener(new SelfTextWatcher(mResv62));
-		mResv62.setText(String.valueOf(SystemConfigFile.mParam[61]));
+		mResv62.setText(String.valueOf(mSysconfig.getParam(61)));
 		
 		mResv63 = (EditText) getView().findViewById(R.id.ph_set_resolved_value63);
 		mResv63.addTextChangedListener(new SelfTextWatcher(mResv63));
-		mResv63.setText(String.valueOf(SystemConfigFile.mParam[62]));
+		mResv63.setText(String.valueOf(mSysconfig.getParam(62)));
 		
 		mResv64 = (EditText) getView().findViewById(R.id.ph_set_resolved_value64);
 		mResv64.addTextChangedListener(new SelfTextWatcher(mResv64));
-		mResv64.setText(String.valueOf(SystemConfigFile.mParam[63]));
+		mResv64.setText(String.valueOf(mSysconfig.getParam(63)));
 		
 		Debug.d(TAG, "--->onActivityCreated 384");
 		
@@ -423,7 +425,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 			long id) {
 		switch (view.getId()) {
 			case R.id.ph_set_encoder_value:
-				SystemConfigFile.mParam[0] = getEncoderIndex(mEncoder.getText().toString());
+				mSysconfig.setParam(0, getEncoderIndex(mEncoder.getText().toString()));
 				break;
 		}
 	}
@@ -447,20 +449,20 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	}
 	
 	public void reloadSettings() {
-		SystemConfigFile.parseSystemCofig();
-		// mEncoder.setSelection(SystemConfigFile.mParam[0]);
+		mSysconfig.parseSystemCofig();
+		// mEncoder.setSelectmSysconfig.getParam(ram[0]);
 		
-		mEncoder.setText(getEncoder(SystemConfigFile.mParam[0]));
-		mTrigermode.setText(String.valueOf(SystemConfigFile.mParam[1]));
-		mPHO_H.setText(String.valueOf(SystemConfigFile.mParam[2]));
-		mPHO_L.setText(String.valueOf(SystemConfigFile.mParam[3]));
-		mOutPeriod.setText(String.valueOf(SystemConfigFile.mParam[4]));
-		mTimedPeriod.setText(String.valueOf(SystemConfigFile.mParam[5]));
-		mTimedPulse.setText(String.valueOf(SystemConfigFile.mParam[6]));
-		mLenPulse.setText(String.valueOf(SystemConfigFile.mParam[7]));
-		mDelayPulse.setText(String.valueOf(SystemConfigFile.mParam[8]));
-		mHighLen.setText(String.valueOf(SystemConfigFile.mParam[9]));
-		mResv15.setText(String.valueOf(SystemConfigFile.mParam[15]));
+		mEncoder.setText(getEncoder(mSysconfig.getParam(0)));
+		mTrigermode.setText(String.valueOf(mSysconfig.getParam(1)));
+		mPHO_H.setText(String.valueOf(mSysconfig.getParam(2)));
+		mPHO_L.setText(String.valueOf(mSysconfig.getParam(3)));
+		mOutPeriod.setText(String.valueOf(mSysconfig.getParam(4)));
+		mTimedPeriod.setText(String.valueOf(mSysconfig.getParam(5)));
+		mTimedPulse.setText(String.valueOf(mSysconfig.getParam(6)));
+		mLenPulse.setText(String.valueOf(mSysconfig.getParam(7)));
+		mDelayPulse.setText(String.valueOf(mSysconfig.getParam(8)));
+		mHighLen.setText(String.valueOf(mSysconfig.getParam(9)));
+		mResv15.setText(String.valueOf(mSysconfig.getParam(15)));
 	}
 	
 	private static final int PRINTER_SETTINGS_CHANGED = 1;
@@ -469,7 +471,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		public void handleMessage(Message msg) { 
 			switch (msg.what) {
 			case PRINTER_SETTINGS_CHANGED:
-				SystemConfigFile.saveConfig();
+				mSysconfig.saveConfig();
 				break;
 
 			default:
@@ -490,131 +492,131 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			if (mEditText == mTrigermode) {
-				SystemConfigFile.mParam[1] = getValueFromEditText(arg0);
+				mSysconfig.setParam(1, getValueFromEditText(arg0));
 			} else if (mEditText == mDelayPulse) {
-				SystemConfigFile.mParam[8] = getValueFromEditText(arg0);
+				mSysconfig.setParam(8, getValueFromEditText(arg0));
 			} else if (mEditText == mTimedPulse){
-				SystemConfigFile.mParam[6] = getValueFromEditText(arg0);
+				mSysconfig.setParam(6, getValueFromEditText(arg0));
 			} else if (mEditText == mTimedPeriod) {
-				SystemConfigFile.mParam[5] = getValueFromEditText(arg0);
+				mSysconfig.setParam(5, getValueFromEditText(arg0));
 			} else if (mEditText == mOutPeriod) {
-				SystemConfigFile.mParam[4] = getValueFromEditText(arg0);
+				mSysconfig.setParam(4, getValueFromEditText(arg0));
 			} else if (mEditText == mPHO_H) {
-				SystemConfigFile.mParam[2] = getValueFromEditText(arg0);
+				mSysconfig.setParam(2, getValueFromEditText(arg0));
 			} else if (mEditText == mPHO_L) {
-				SystemConfigFile.mParam[3] = getValueFromEditText(arg0);
+				mSysconfig.setParam(3, getValueFromEditText(arg0));
 			} else if (mEditText == mLenPulse){
-				SystemConfigFile.mParam[7] = getValueFromEditText(arg0);
+				mSysconfig.setParam(7, getValueFromEditText(arg0));
 			} else if (mEditText == mHighLen) {
-				SystemConfigFile.mParam[9] = getValueFromEditText(arg0);
+				mSysconfig.setParam(9, getValueFromEditText(arg0));
 			} else if (mEditText == mResv11) {
-				SystemConfigFile.mParam[10] = getValueFromEditText(arg0);
+				mSysconfig.setParam(10, getValueFromEditText(arg0));
 			} else if (mEditText == mResv12) {
-				SystemConfigFile.mParam[11] = getValueFromEditText(arg0);
+				mSysconfig.setParam(11, getValueFromEditText(arg0));
 			} else if (mEditText == mResv13) {
-				SystemConfigFile.mParam[12] = getValueFromEditText(arg0);
+				mSysconfig.setParam(12, getValueFromEditText(arg0));
 			} else if (mEditText == mResv14) {
-				SystemConfigFile.mParam[13] = getValueFromEditText(arg0);
+				mSysconfig.setParam(13, getValueFromEditText(arg0));
 			} else if (mEditText == mResv15) {
-				SystemConfigFile.mParam[14] = getValueFromEditText(arg0);
+				mSysconfig.setParam(14, getValueFromEditText(arg0));
 			} else if (mEditText == mResv16) {
-				SystemConfigFile.mParam[15] = getValueFromEditText(arg0);
+				mSysconfig.setParam(15, getValueFromEditText(arg0));
 			} else if (mEditText == mResv17) {
-				SystemConfigFile.mParam[16] = getValueFromEditText(arg0);
+				mSysconfig.setParam(16, getValueFromEditText(arg0));
 			} else if (mEditText == mResv18) {
-				SystemConfigFile.mParam[17] = getValueFromEditText(arg0);
+				mSysconfig.setParam(17, getValueFromEditText(arg0));
 			} else if (mEditText == mResv19) {
-				SystemConfigFile.mParam[18] = getValueFromEditText(arg0);
+				mSysconfig.setParam(18, getValueFromEditText(arg0));
 			} else if (mEditText == mResv20) {
-				SystemConfigFile.mParam[19] = getValueFromEditText(arg0);
+				mSysconfig.setParam(19, getValueFromEditText(arg0));
 			} else if (mEditText == mResv21) {
-				SystemConfigFile.mParam[20] = getValueFromEditText(arg0);
+				mSysconfig.setParam(20, getValueFromEditText(arg0));
 			} else if (mEditText == mResv22) {
-				SystemConfigFile.mParam[21] = getValueFromEditText(arg0);
+				mSysconfig.setParam(21, getValueFromEditText(arg0));
 			} else if (mEditText == mResv23) {
-				SystemConfigFile.mParam[22] = getValueFromEditText(arg0);
+				mSysconfig.setParam(22, getValueFromEditText(arg0));
 			} else if (mEditText == mResv24) {
-				SystemConfigFile.mParam[23] = getValueFromEditText(arg0);
+				mSysconfig.setParam(23, getValueFromEditText(arg0));
 			} else if (mEditText == mResv25) {
-				SystemConfigFile.mParam[24] = getValueFromEditText(arg0);
+				mSysconfig.setParam(24, getValueFromEditText(arg0));
 			} else if (mEditText == mResv26) {
-				SystemConfigFile.mParam[25] = getValueFromEditText(arg0);
+				mSysconfig.setParam(25, getValueFromEditText(arg0));
 			} else if (mEditText == mResv27) {
-				SystemConfigFile.mParam[26] = getValueFromEditText(arg0);
+				mSysconfig.setParam(26, getValueFromEditText(arg0));
 			} else if (mEditText == mResv28) {
-				SystemConfigFile.mParam[27] = getValueFromEditText(arg0);
+				mSysconfig.setParam(27, getValueFromEditText(arg0));
 			} else if (mEditText == mResv29) {
-				SystemConfigFile.mParam[28] = getValueFromEditText(arg0);
+				mSysconfig.setParam(28, getValueFromEditText(arg0));
 			} else if (mEditText == mResv30) {
-				SystemConfigFile.mParam[29] = getValueFromEditText(arg0);
+				mSysconfig.setParam(29, getValueFromEditText(arg0));
 			} else if (mEditText == mResv31) {
-				SystemConfigFile.mParam[30] = getValueFromEditText(arg0);
+				mSysconfig.setParam(30, getValueFromEditText(arg0));
 			} else if (mEditText == mResv32) {
-				SystemConfigFile.mParam[31] = getValueFromEditText(arg0);
+				mSysconfig.setParam(31, getValueFromEditText(arg0));
 			} else if (mEditText == mResv32) {
-				SystemConfigFile.mParam[32] = getValueFromEditText(arg0);
+				mSysconfig.setParam(32, getValueFromEditText(arg0));
 			} else if (mEditText == mResv34) {
-				SystemConfigFile.mParam[33] = getValueFromEditText(arg0);
+				mSysconfig.setParam(33, getValueFromEditText(arg0));
 			} else if (mEditText == mResv35) {
-				SystemConfigFile.mParam[34] = getValueFromEditText(arg0);
+				mSysconfig.setParam(34, getValueFromEditText(arg0));
 			} else if (mEditText == mResv36) {
-				SystemConfigFile.mParam[35] = getValueFromEditText(arg0);
+				mSysconfig.setParam(35, getValueFromEditText(arg0));
 			} else if (mEditText == mResv37) {
-				SystemConfigFile.mParam[36] = getValueFromEditText(arg0);
+				mSysconfig.setParam(36, getValueFromEditText(arg0));
 			} else if (mEditText == mResv38) {
-				SystemConfigFile.mParam[37] = getValueFromEditText(arg0);
+				mSysconfig.setParam(37, getValueFromEditText(arg0));
 			} else if (mEditText == mResv39) {
-				SystemConfigFile.mParam[38] = getValueFromEditText(arg0);
+				mSysconfig.setParam(38, getValueFromEditText(arg0));
 			} else if (mEditText == mResv40) {
-				SystemConfigFile.mParam[39] = getValueFromEditText(arg0);
+				mSysconfig.setParam(39, getValueFromEditText(arg0));
 			} else if (mEditText == mResv41) {
-				SystemConfigFile.mParam[40] = getValueFromEditText(arg0);
+				mSysconfig.setParam(40, getValueFromEditText(arg0));
 			} else if (mEditText == mResv42) {
-				SystemConfigFile.mParam[41] = getValueFromEditText(arg0);
+				mSysconfig.setParam(41, getValueFromEditText(arg0));
 			} else if (mEditText == mResv43) {
-				SystemConfigFile.mParam[42] = getValueFromEditText(arg0);
+				mSysconfig.setParam(42, getValueFromEditText(arg0));
 			} else if (mEditText == mResv44) {
-				SystemConfigFile.mParam[43] = getValueFromEditText(arg0);
+				mSysconfig.setParam(43, getValueFromEditText(arg0));
 			} else if (mEditText == mResv45) {
-				SystemConfigFile.mParam[44] = getValueFromEditText(arg0);
+				mSysconfig.setParam(44, getValueFromEditText(arg0));
 			} else if (mEditText == mResv46) {
-				SystemConfigFile.mParam[45] = getValueFromEditText(arg0);
+				mSysconfig.setParam(45, getValueFromEditText(arg0));
 			} else if (mEditText == mResv47) {
-				SystemConfigFile.mParam[46] = getValueFromEditText(arg0);
+				mSysconfig.setParam(46, getValueFromEditText(arg0));
 			} else if (mEditText == mResv48) {
-				SystemConfigFile.mParam[47] = getValueFromEditText(arg0);
+				mSysconfig.setParam(47, getValueFromEditText(arg0));
 			} else if (mEditText == mResv49) {
-				SystemConfigFile.mParam[48] = getValueFromEditText(arg0);
+				mSysconfig.setParam(48, getValueFromEditText(arg0));
 			} else if (mEditText == mResv50) {
-				SystemConfigFile.mParam[49] = getValueFromEditText(arg0);
+				mSysconfig.setParam(49, getValueFromEditText(arg0));
 			} else if (mEditText == mResv51) {
-				SystemConfigFile.mParam[50] = getValueFromEditText(arg0);
+				mSysconfig.setParam(50, getValueFromEditText(arg0));
 			} else if (mEditText == mResv52) {
-				SystemConfigFile.mParam[51] = getValueFromEditText(arg0);
+				mSysconfig.setParam(51, getValueFromEditText(arg0));
 			} else if (mEditText == mResv53) {
-				SystemConfigFile.mParam[52] = getValueFromEditText(arg0);
+				mSysconfig.setParam(52, getValueFromEditText(arg0));
 			} else if (mEditText == mResv54) {
-				SystemConfigFile.mParam[53] = getValueFromEditText(arg0);
+				mSysconfig.setParam(53, getValueFromEditText(arg0));
 			} else if (mEditText == mResv55) {
-				SystemConfigFile.mParam[54] = getValueFromEditText(arg0);
+				mSysconfig.setParam(54, getValueFromEditText(arg0));
 			} else if (mEditText == mResv56) {
-				SystemConfigFile.mParam[55] = getValueFromEditText(arg0);
+				mSysconfig.setParam(55, getValueFromEditText(arg0));
 			} else if (mEditText == mResv57) {
-				SystemConfigFile.mParam[56] = getValueFromEditText(arg0);
+				mSysconfig.setParam(56, getValueFromEditText(arg0));
 			} else if (mEditText == mResv58) {
-				SystemConfigFile.mParam[57] = getValueFromEditText(arg0);
+				mSysconfig.setParam(57, getValueFromEditText(arg0));
 			} else if (mEditText == mResv59) {
-				SystemConfigFile.mParam[58] = getValueFromEditText(arg0);
+				mSysconfig.setParam(58, getValueFromEditText(arg0));
 			} else if (mEditText == mResv60) {
-				SystemConfigFile.mParam[59] = getValueFromEditText(arg0);
+				mSysconfig.setParam(59, getValueFromEditText(arg0));
 			} else if (mEditText == mResv61) {
-				SystemConfigFile.mParam[60] = getValueFromEditText(arg0);
+				mSysconfig.setParam(60, getValueFromEditText(arg0));
 			} else if (mEditText == mResv62) {
-				SystemConfigFile.mParam[61] = getValueFromEditText(arg0);
+				mSysconfig.setParam(61, getValueFromEditText(arg0));
 			} else if (mEditText == mResv63) {
-				SystemConfigFile.mParam[62] = getValueFromEditText(arg0);
+				mSysconfig.setParam(62, getValueFromEditText(arg0));
 			} else if (mEditText == mResv64) {
-				SystemConfigFile.mParam[63] = getValueFromEditText(arg0);
+				mSysconfig.setParam(63, getValueFromEditText(arg0));
 			}
 			
 		}
@@ -670,76 +672,8 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	@Override
 	public void onItemClick(int index) {
 		mEncoder.setText(getEncoder(index));
-		SystemConfigFile.mParam[0] = index;
+		mSysconfig.setParam(0, index);
 	}
 	
-	public void checkParams() {
-		/*触发模式,有效值1,2,3,4*/
-		if (SystemConfigFile.mParam[1] < 1 || SystemConfigFile.mParam[1] > 4) {
-			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
-			mTrigermode.setText("1");
-			SystemConfigFile.mParam[1] = 1;
-		}
-		
-		/*光电防抖(毫秒)	下发FPGA-S3	有效值0-600, */
-		if (SystemConfigFile.mParam[2] < 0 || SystemConfigFile.mParam[2] > 600) {
-			Toast.makeText(mContext, R.string.str_toast_photoelectricity_delay, Toast.LENGTH_LONG);
-			mPHO_H.setText("20");
-			SystemConfigFile.mParam[2] = 20;
-		}
-		
-		/*光电延时(毫秒）下发FPGA-S4	有效值0-65535*/
-		if (SystemConfigFile.mParam[3] < 0 || SystemConfigFile.mParam[3] > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_photoelectricity_antishake, Toast.LENGTH_LONG);
-			mPHO_L.setText("0");
-			SystemConfigFile.mParam[3] = 0;
-		}
-		
-		/*字宽(毫秒） 下发FPGA-S5 0-65535*/
-		if (SystemConfigFile.mParam[4] < 0 || SystemConfigFile.mParam[4] > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			mOutPeriod.setText("0");
-			SystemConfigFile.mParam[5] = 0;
-		}
-		
-		/*定时打印(毫秒) 下发FPGA- S6	0-65535*/
-		if (SystemConfigFile.mParam[5] < 0 || SystemConfigFile.mParam[5] > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			mTimedPeriod.setText("1000");
-			SystemConfigFile.mParam[5] = 1000;
-		}
-		
-		/*列间脉冲 下发FPGA- S7	1-50*/
-		if (SystemConfigFile.mParam[6] < 1 || SystemConfigFile.mParam[6] > 50) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			mTimedPulse.setText("0");
-			SystemConfigFile.mParam[6] = 0;
-		}
-		
-		/*定长脉冲 下发FPGA-S8 	1-65535*/
-		if (SystemConfigFile.mParam[7] < 1 || SystemConfigFile.mParam[7] > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			mLenPulse.setText("0");
-			SystemConfigFile.mParam[7] = 0;
-		}
-		
-		/*脉冲延时 下发FPGA-S9 	1-65535*/
-		if (SystemConfigFile.mParam[8] < 1 || SystemConfigFile.mParam[8] > 65535) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			mDelayPulse.setText("0");
-			SystemConfigFile.mParam[8] = 0;
-		}
-		/*墨点大小(微秒)	下发FPGA-S10	有效值200-2000, */
-		if (SystemConfigFile.mParam[9] < 200 || SystemConfigFile.mParam[9] > 2000) {
-			Toast.makeText(mContext, R.string.str_toast_ink_unvalid, Toast.LENGTH_LONG);
-			mHighLen.setText("800");
-			SystemConfigFile.mParam[9] = 800;
-		}
-		
-		if (SystemConfigFile.mParam[15] < 0 || SystemConfigFile.mParam[15] > 9) {
-			Toast.makeText(mContext, R.string.str_toast_timingprint, Toast.LENGTH_LONG);
-			// mResv16.setText("0");
-			SystemConfigFile.mParam[15] = 0;
-		}
-	}
+	
 }

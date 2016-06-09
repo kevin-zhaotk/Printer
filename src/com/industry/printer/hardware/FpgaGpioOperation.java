@@ -198,9 +198,10 @@ public class FpgaGpioOperation {
 			return;
 		}
 		char data[] = new char[Configs.gParams];
-		SystemConfigFile.paramTrans();
+		SystemConfigFile config = SystemConfigFile.getInstance(context);
+		config.paramTrans();
 		for (int i = 0; i < 24; i++) {
-			data[i] = (char) SystemConfigFile.mFPGAParam[i];
+			data[i] = (char) config.getFPGAParam(i);
  		}
 		/*
 		if (isPurge) {

@@ -127,6 +127,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mPrintState;
 	public TextView mPower;
 	
+	public SystemConfigFile mSysconfig;
 	/**
 	 * UsbSerial device name
 	 */
@@ -248,6 +249,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mBinBuffer = new HashMap<Vector<TlkObject>, byte[]>();
 		mObjList = new ArrayList<BaseObject>();
 		mContext = this.getActivity();
+		mSysconfig = SystemConfigFile.getInstance(mContext);
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
@@ -366,8 +368,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	public void loadMessage() {
-			
-		String f = SystemConfigFile.getLastMsg();
+		String f = mSysconfig.getLastMsg();
 		Debug.d(TAG, "===>load message: " + f);
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
@@ -457,7 +458,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mMsgPreImg.setImageBitmap(mPreBitmap);
 					mMsgFile.setText(mMsgTask.getName());
-					SystemConfigFile.saveLastMsg(mObjPath);
+					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
 					//方案1：从bin文件生成buffer
 					initDTThread();

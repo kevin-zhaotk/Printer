@@ -31,6 +31,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private final static String TAG = SettingsListAdapter.class.getSimpleName();
 	
 	private Context mContext;
+	public SystemConfigFile mSysconfig;
 	private ItemViewHolder mHolder;
 	
 	/**
@@ -102,7 +103,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		public ItemOneLine(int param, int title, int unit) {
 			mParamId = param;
 			mTitle = title;
-			mValue = String.valueOf(SystemConfigFile.mParam[param - 1]);
+			mValue = String.valueOf(mSysconfig.getParam(param - 1));
 			mUnit = unit;
 			mType = ItemType.TYPE_NONE;
 		}
@@ -119,9 +120,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mType = type;
 			mEntry = entry;
 			if (mType == ItemType.TYPE_SWITCH || mType == ItemType.TYPE_DIRECTION) {
-				mValue = getEntry(entry, SystemConfigFile.mParam[param -1]);
+				mValue = getEntry(entry, mSysconfig.getParam(param -1));
 			} else if (mType == ItemType.TYPE_VALUE) {
-				mValue = String.valueOf(SystemConfigFile.mParam[param-1]);
+				mValue = String.valueOf(mSysconfig.getParam(param-1));
 			}
 			
 		}
@@ -133,12 +134,12 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				break;
 			case ItemType.TYPE_SWITCH:
 			case ItemType.TYPE_DIRECTION:
-				SystemConfigFile.mParam[mParamId-1] = value;
+				mSysconfig.setParam(mParamId-1, value);
 				mValue = getEntry(mEntry, value);
 				break;
 			case ItemType.TYPE_VALUE:
 				mValue = getEntry(mEntry, value);
-				SystemConfigFile.mParam[mParamId-1] = Integer.parseInt(mValue);
+				mSysconfig.setParam(mParamId-1, Integer.parseInt(mValue));
 				break;
 			default:
 				break;
@@ -154,12 +155,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		}
 		
 		public int getValue() {
-			return SystemConfigFile.mParam[mParamId - 1];
+			return mSysconfig.getParam(mParamId - 1);
 		}
 	}
 	
 	public SettingsListAdapter(Context context) {
 		mContext = context;
+		mSysconfig = SystemConfigFile.getInstance(mContext);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		// mTitles = mContext.getResources().getStringArray(R.array.str_settings_params);
 		loadSettings();
@@ -566,7 +568,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			SystemConfigFile.mResv27 = getSwitchvalue(index);
 		}*/
 		mSettingItems[position].setValue(index);
-		SystemConfigFile.mParam[position] = mSettingItems[position].getValue();
+		mSysconfig.setParam(position, mSettingItems[position].getValue());
 		value = mSettingItems[position].getDisplayValue();
 		view.setText(value);
 	}
@@ -577,10 +579,11 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	public void checkParams() {
 		Debug.d(TAG, "===>checkParams");
 		int value = 0;
-		for (int i = 1; i < SystemConfigFile.mParam.length; i++) {
-			 value = SystemConfigFile.checkParam(i, SystemConfigFile.mParam[i-1]);
-			 if (value != SystemConfigFile.mParam[i-1]) {
-				 SystemConfigFile.mParam[i-1] = value;
+		
+		for (int i = 1; i < mSysconfig.getParams().length; i++) {
+			 value = mSysconfig.checkParam(i, mSysconfig.getParam(i-1));
+			 if (value != mSysconfig.getParam(i-1)) {
+				 mSysconfig.setParam(i-1, value);
 			 }
 		}
 		/*

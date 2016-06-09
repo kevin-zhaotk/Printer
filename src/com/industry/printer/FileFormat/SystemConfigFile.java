@@ -3,11 +3,21 @@ package com.industry.printer.FileFormat;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.xml.sax.InputSource;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import android.R.integer;
+import android.R.xml;
+import android.app.Application;
+import android.content.Context;
+import android.util.Xml;
 
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -84,18 +94,30 @@ public class SystemConfigFile{
 	
 	public static final String LAST_MESSAGE = "message";
 	
-	public static int mParam[] = new int[64]; 
-	public static int mFPGAParam[] = new int[24];
+	public int mParam[] = new int[64]; 
+	public int mFPGAParam[] = new int[24];
 	
-
+	public Context mContext;
+	public static SystemConfigFile mInstance;
+	
 	public static HashMap<Integer, HashMap<String,Integer>> mParamRange = new HashMap<Integer, HashMap<String,Integer>>();
 	
+	public static SystemConfigFile getInstance(Context context) {
+		if (mInstance == null) {
+			mInstance = new SystemConfigFile(context);
+		}
+		return mInstance;
+	}
 	
-	public static void init() {
+	public SystemConfigFile(Context context) {
+		mContext = context;
+		init();
+	}
+	public void init() {
 		initParamRange();
 		parseSystemCofig();
 	}
-	public static void parseSystemCofig() {
+	public void parseSystemCofig() {
 		FileReader reader=null;
 		BufferedReader br = null;
 		String tag;
@@ -387,7 +409,7 @@ public class SystemConfigFile{
 	}
 	
 	
-	public static void saveConfig() {
+	public void saveConfig() {
 		
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.isEmpty()) {
@@ -607,7 +629,7 @@ public class SystemConfigFile{
 	}
 	*/
 	
-	public static String getLastMsg() {
+	public String getLastMsg() {
 		
 		String tag;
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
@@ -633,7 +655,7 @@ public class SystemConfigFile{
 		return null;
 	}
 	
-	public static void saveLastMsg(String name) {
+	public void saveLastMsg(String name) {
 		
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.isEmpty() || name == null) {
@@ -659,65 +681,113 @@ public class SystemConfigFile{
 		
 	}
 	
+	public static final String TAG_PARAMS = "params";
+	public static final String TAG_PARAM = "param";
+	public static final String TAG_ID = "id";
+	public static final String TAG_MIN = "min";
+	public static final String TAG_MAX = "max";
+	public static final String TAG_DEFAULT = "default";
+	
 	/**
 	 * 初始化已知参数的取值范围和默认值
 	 * TODO:后期做成通过xml进行配置
 	 */
-	public static void initParamRange() {
+	public void initParamRange() {
 		Debug.d(TAG, "====>initParamRange");
+		int id=1;
+		HashMap<String, Integer> map = null;
+		try {
+			InputStream inputStream = mContext.getAssets().open("params.xml");
+			XmlPullParser parser = Xml.newPullParser();
+			parser.setInput(inputStream, "utf-8");
+			int event = parser.getEventType();
+			while (event != XmlPullParser.END_DOCUMENT) {
+				switch (event) {
+				case XmlPullParser.START_DOCUMENT:
+					
+					break;
+				case XmlPullParser.START_TAG:
+					if (TAG_PARAMS.equals(parser.getName())) {
+						
+					} else if (TAG_PARAM.equals(parser.getName())) {
+						map = new HashMap<String, Integer>();
+					} else if (TAG_ID.equals(parser.getName())) {
+						id = Integer.parseInt(parser.getText());
+					} else if (TAG_MIN.equals(parser.getName())) {
+						map.put("min", Integer.parseInt(parser.getText()));
+					} else if (TAG_MAX.equals(parser.getName())) {
+						map.put("max", Integer.parseInt(parser.getText()));
+					} else if (TAG_DEFAULT.equals(parser.getName())) {
+						map.put("default", Integer.parseInt(parser.getText()));
+					}
+					
+					break;
+				case XmlPullParser.END_TAG:
+					if (TAG_PARAM.equals(parser.getName())) {
+						mParamRange.put(id, map);
+					}
+					break;
+				default:
+					break;
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		/*编码器,有效值0,1*/
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-		/*参数1*/
+		
+/*
+		//参数1
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 65535);
 		map.put("default", 1);
 		mParamRange.put(1, map);
 
-		/*参数2*/
+		//参数2
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
 		map.put("default", 0);
 		mParamRange.put(2, map);
 
-		/*参数3*/
+		//参数3
 		map = new HashMap<String, Integer>();
 		map.put("min", 150);
 		map.put("max", 750);
 		map.put("default", 150);
 		mParamRange.put(3, map);
 
-		/*参数4*/
+		//参数4
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 65535);
 		map.put("default", 0);
 		mParamRange.put(4, map);
 
-		/*参数5*/
+		//参数5
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 2);
 		map.put("default", 0);
 		mParamRange.put(5, map);
 
-		/*参数6*/
+		//参数6
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
 		map.put("default", 0);
 		mParamRange.put(6, map);
 
-		/*参数7 */
+		//参数7 
 		map = new HashMap<String, Integer>();
 		map.put("min", 1);
 		map.put("max", 65535);
 		map.put("default", 0);
 		mParamRange.put(7, map);
 
-		/*参数8 */
+		//参数8
 		map = new HashMap<String, Integer>();
 		map.put("min", 0);
 		map.put("max", 1);
@@ -870,11 +940,11 @@ public class SystemConfigFile{
 		map.put("max", 2000);
 		map.put("default", 0);
 		mParamRange.put(30, map);
-		
+*/		
 		
 	}
 	
-	public static int checkParam(int param, int value) {
+	public int checkParam(int param, int value) {
 		if (mParamRange == null) {
 			return value;
 		}
@@ -895,7 +965,7 @@ public class SystemConfigFile{
 		return value;
 	}
 	
-	public static void paramTrans() {
+	public void paramTrans() {
 		// 參數16
 		mFPGAParam[15] = mParam[2]/150;
 				
@@ -941,13 +1011,13 @@ public class SystemConfigFile{
 			mFPGAParam[1] = 1;
 		}
 		// 參數7
-		mFPGAParam[5] = mParam[4] * mFPGAParam[15] * 6 * mFPGAParam[4];
+		mFPGAParam[5] = mParam[6] * mFPGAParam[15] * 6 * mFPGAParam[4]/1000;
 		if (mFPGAParam[5] < 3) {
 			mFPGAParam[5] = 3;
 		} else if (mFPGAParam[5] > 65534) {
 			mFPGAParam[5] = 65534;
 		}
-		mFPGAParam[7] = (int) (mParam[4]/((mParam[9]*25.4/(mParam[8]*3.14))));
+		mFPGAParam[7] = (int) (mParam[7]/((mParam[9]*25.4/(mParam[8]*3.14))));
 		if (mFPGAParam[7] < 11) {
 			mFPGAParam[7] = 11;
 		} else if (mFPGAParam[7] > 65534) {
@@ -1023,4 +1093,29 @@ public class SystemConfigFile{
 	    mFPGAParam[2] = mParam[29];
 	    
 	}
+	
+	public int getFPGAParam(int index) {
+		if (index >= mFPGAParam.length) {
+			return 0;
+		}
+		return mFPGAParam[index];
+	}
+	
+	public int[] getParams() {
+		return mParam;
+	}
+	public int getParam(int index) {
+		if (index >= mParam.length) {
+			return 0;
+		}
+		return mParam[index];
+	}
+	
+	public void setParam(int index, int value) {
+		if (index >= mParam.length) {
+			return ;
+		}
+		mParam[index] = value;
+	}
+	
 }

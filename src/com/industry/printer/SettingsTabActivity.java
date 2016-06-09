@@ -117,6 +117,8 @@ public static final String TAG="SettingsTabActivity";
 	
 	public ExtendMessageTitleFragment mMsgTitle;
 	
+	public SystemConfigFile mSysconfig;
+	
 	public SettingsTabActivity() {
 //		mMsgTitle = (ExtendMessageTitleFragment)fragment;
 	}
@@ -238,7 +240,7 @@ public static final String TAG="SettingsTabActivity";
 	
 	private void loadSettings() {
 		/*从U盘中读取系统设置，解析*/
-		SystemConfigFile.init();
+		mSysconfig = SystemConfigFile.getInstance(mContext);
 		mAdapter.loadSettings();
 	}
 	
@@ -295,7 +297,7 @@ public static final String TAG="SettingsTabActivity";
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
 				mAdapter.checkParams();
-				SystemConfigFile.saveConfig();
+				mSysconfig.saveConfig();
 				// FpgaGpioOperation.updateSettings(mContext);
 				break;
 			case R.id.btn_setting_cancel:

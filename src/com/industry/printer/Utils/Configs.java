@@ -139,6 +139,8 @@ public class Configs {
 	 * picture path
 	 */
 	public static final String PICTURE_SUB_PATH = "/pictures/";
+	
+	public static SystemConfigFile mSysconfig;
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 
 	 * @param context
@@ -156,7 +158,7 @@ public class Configs {
 		//如果需要，在u盘根目录创建系统所需的目录，当u盘插入是也需要调用
 		ConfigPath.makeSysDirsIfNeed();
 		/*从U盘中读取系统设置，解析*/
-		SystemConfigFile.init();
+		mSysconfig = SystemConfigFile.getInstance(context);
 		
 		/*读设备号*/
 		PlatformInfo.init();
@@ -277,16 +279,16 @@ public class Configs {
 		int dir=0;
 		switch (index) {
 		case 0:
-			dir = SystemConfigFile.mParam[24];
+			dir = mSysconfig.getParam(24);
 			break;
 		case 1:
-			dir = SystemConfigFile.mParam[26];
+			dir = mSysconfig.getParam(26);
 			break;
 		case 2:
-			dir = SystemConfigFile.mParam[28];
+			dir = mSysconfig.getParam(28);
 			break;
 		case 3:
-			dir = SystemConfigFile.mParam[30];
+			dir = mSysconfig.getParam(30);
 			break;
 		default:
 			break;
@@ -301,16 +303,16 @@ public class Configs {
 		int shift=0;
 		switch (index) {
 		case 0:
-			shift = SystemConfigFile.mParam[25];
+			shift = mSysconfig.getParam(25);
 			break;
 		case 1:
-			shift = SystemConfigFile.mParam[27];
+			shift = mSysconfig.getParam(27);
 			break;
 		case 2:
-			shift = SystemConfigFile.mParam[29];
+			shift = mSysconfig.getParam(29);
 			break;
 		case 3:
-			shift = SystemConfigFile.mParam[31];
+			shift = mSysconfig.getParam(31);
 			break;
 		default:
 			break;
@@ -323,6 +325,6 @@ public class Configs {
 	 * @return
 	 */
 	public static int getEvenShift() {
-		return SystemConfigFile.mParam[32];
+		return mSysconfig.getParam(32);
 	}
 }
