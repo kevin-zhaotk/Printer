@@ -57,6 +57,10 @@ public class RFIDDevice {
 	//串口节点
 	// public static final String SERIAL_INTERFACE = "/dev/ttyS3";
 	
+	/*校驗特徵值*/
+	public static final int FEATURE_HIGH = 100;
+	public static final int FEATURE_LOW = 1;
+	
 	/*墨水量上下限*/
 	public static final int INK_LEVEL_MAX = 100000;
 	public static final int INK_LEVEL_MIN = 0;
@@ -473,6 +477,11 @@ public class RFIDDevice {
 		
 		mInkMax = getInkMax();
 		Debug.d(TAG, "===>max ink: " + mInkMax);
+		readFeatureCode();
+		for (int i = 0; i < mFeature.length; i++) {
+			Debug.d(TAG, "===>feature[" + i + "]: " + mFeature[i]);
+		}
+		
 		return 0;
 	}
 	
@@ -553,6 +562,11 @@ public class RFIDDevice {
 		} else {
 			return (mCurInkLevel * 100)/mInkMax;
 		}*/
+	}
+	
+	public float getLocalInk() {
+		Debug.d(TAG, "===>curInk=" + mCurInkLevel);
+		return mCurInkLevel;
 	}
 	/**
 	 * 寿命值写入
@@ -651,6 +665,20 @@ public class RFIDDevice {
 		setInkLevel(mCurInkLevel, true);
 	}
 	
+	public byte[] mFeature;
+	
+	/**
+	 * 特征码读取
+	 */
+	public void readFeatureCode() {
+		int errno = 0;
+		Debug.d(TAG, "--->RFID getFeatureCode");
+		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
+		{
+			return ;
+		}
+		mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
+	}
 	/**
 	 * 特征码读取
 	 */
@@ -661,12 +689,12 @@ public class RFIDDevice {
 		{
 			return false;
 		}
-		byte[] feature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
-		if (feature == null ) {
+		mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
+		if (mFeature == null ) {
 			return false;
 		}
-		Debug.d(TAG, "===>feature:" + feature[1] + ", " +feature[2]);
-		if (feature[1] == 100 && feature[2] == 1) {
+		Debug.d(TAG, "===>feature:" + mFeature[1] + ", " +mFeature[2]);
+		if (mFeature[1] == FEATURE_HIGH && mFeature[2] == FEATURE_LOW) {
 			return true;
 		}
 		return false;
@@ -678,6 +706,18 @@ public class RFIDDevice {
 		}
 		mRFIDKeyA = key;
 		return;
+	}
+	
+	/*
+	 * 通過判斷特恆指來確定RFID卡是否準備就緒
+	 */
+	public boolean isReady() {
+		if (mFeature == null) {
+			return false;
+		} else if (mFeature[1] != FEATURE_HIGH || mFeature[2] != FEATURE_LOW) {
+			return false;
+		}
+		return true;
 	}
 	
 	public void makeCard() {
@@ -727,6 +767,7 @@ public class RFIDDevice {
 		}
 		return true;
 	}
+	
 	
 	private int openDevice() {
 		if (mFd <= 0) {

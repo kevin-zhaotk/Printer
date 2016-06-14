@@ -403,6 +403,7 @@
 	<string name="str_toast_no_bin">No bin file found !!!</string>
 	<string name="str_toast_emptycontent">The message you selected is empty!!!</string>
 	<string name="str_toast_no_message">Please select a message file first!!!</string>
+	<string name="str_toast_no_ink">Ink low!!!</string>
 	<string name="str_rfid_initfail_notify">RFID initiallize fail！</string>
 	<string name="str_page_forward"> 《 </string>
 	<string name="str_page_backward"> 》 </string>

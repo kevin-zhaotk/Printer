@@ -426,6 +426,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	public float getNextXcor()
 	{
 		float x=0;
+		
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
 		
 		for(BaseObject obj : objects)

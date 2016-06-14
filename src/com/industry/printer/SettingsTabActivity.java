@@ -175,7 +175,8 @@ public static final String TAG="SettingsTabActivity";
 		mPHSettings = new PHSettingFragment(mContext);
 		transaction.replace(R.id.phsetting_fragment, mPHSettings);
 		*/
-		
+		/*从U盘中读取系统设置，解析*/
+		mSysconfig = SystemConfigFile.getInstance(mContext);
 		
 		//mSettingsFragment = new SettingsFragment(mContext);
 		//transaction.replace(R.id.phsetting_fragment, mSettingsFragment);
@@ -239,9 +240,9 @@ public static final String TAG="SettingsTabActivity";
 //	}
 	
 	private void loadSettings() {
-		/*从U盘中读取系统设置，解析*/
-		mSysconfig = SystemConfigFile.getInstance(mContext);
+		
 		mAdapter.loadSettings();
+		mAdapter.notifyDataSetChanged();
 	}
 	
 	public void setLocale()
@@ -262,6 +263,7 @@ public static final String TAG="SettingsTabActivity";
 		Configs.initConfigs(mContext);
 		loadSettings();
 		// mPHSettings.reloadSettings();
+		
 	}
 	
 	

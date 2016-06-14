@@ -99,4 +99,18 @@ public class RFIDManager {
 		});
 	}
 	
+	
+	public float getLocalInk(int dev) {
+		RFIDDevice device = mRfidDevices.get(dev);
+		return device.getLocalInk();
+	}
+	
+	public boolean isReady(int dev) {
+		RFIDDevice device = mRfidDevices.get(dev);
+		return device.isReady();
+	}
+	
+	public RFIDDevice getDevice(int index) {
+		return mRfidDevices.get(index);
+	}
 }

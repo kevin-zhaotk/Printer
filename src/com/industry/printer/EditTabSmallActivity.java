@@ -355,16 +355,23 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	
 	
-	public float getNextXcor()
+	public float[] getNextXcor()
 	{
-		float x=0;
+		float[] x = new float[2];
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
-		
+		MessageObject msgobj = mMsgTask.getMsgObject();
+		// 如果使用了光標，就以光標的座標爲基準
+		if(msgobj.getSelected()) {
+			x[0] = msgobj.getX();
+			x[1] = msgobj.getY();
+			return x;
+		}
 		for(BaseObject obj : objects)
 		{
 			if(obj instanceof MessageObject)
 				continue;
-			x = obj.getXEnd()>x ? obj.getXEnd() : x;
+			x[0] = obj.getXEnd()>x[0] ? obj.getXEnd() : x[0];
+			x[1] = 0;
 		}
 		return x;
 	}
@@ -449,24 +456,43 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		Debug.d(TAG, "--->mContext: " + mContext);
             		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
             		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
+            		float[] cur = getNextXcor();
             		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
-						onInsertObject(new TextObject(mContext, getNextXcor()));
+            			TextObject text = new TextObject(mContext, cur[0]);
+            			text.setY(cur[1]);
+						onInsertObject(text);
 					} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
-						onInsertObject(new CounterObject(mContext, getNextXcor()));
+						CounterObject counter = new CounterObject(mContext, cur[0]);
+						counter.setY(cur[1]);
+						onInsertObject(counter);
 					} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
-						onInsertObject(new RealtimeObject(mContext, getNextXcor()));
+						RealtimeObject time = new RealtimeObject(mContext, cur[0]);
+						time.setY(cur[1]);
+						onInsertObject(time);
 					} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
-						onInsertObject(new JulianDayObject(mContext, getNextXcor()));
+						JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
+						julian.setY(cur[1]);
+						onInsertObject(julian);
 					} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
-						onInsertObject(new RectObject(mContext, getNextXcor()));
+						RectObject rect = new RectObject(mContext, cur[0]);
+						rect.setY(cur[1]);
+						onInsertObject(rect);
 					} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
-						onInsertObject(new LineObject(mContext, getNextXcor()));
+						LineObject line = new LineObject(mContext, cur[0]);
+						line.setY(cur[1]);
+						onInsertObject(line);
 					} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
-						onInsertObject(new EllipseObject(mContext, getNextXcor()));
+						EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
+						ellipse.setY(cur[1]);
+						onInsertObject(ellipse);
 					} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
-						onInsertObject(new BarcodeObject(mContext, getNextXcor()));
+						BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+						bar.setY(cur[1]);
+						onInsertObject(bar);
 					} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
-						onInsertObject(new GraphicObject(mContext, getNextXcor()));
+						GraphicObject image = new GraphicObject(mContext, cur[0]);
+						image.setY(cur[1]);
+						onInsertObject(image);
 					}
             		
             		break;

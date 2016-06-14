@@ -405,6 +405,7 @@
 	<string name="str_print_stopok">打印任务已停止</string>
 	<string name="str_toast_emptycontent">打印对象内容不能为空!!!</string>
 	<string name="str_toast_no_message">请先选择一个打印对象!!!</string>
+	<string name="str_toast_no_ink">墨水量低</string>
 	<string name="str_toast_no_bin">没有可供打印的bin文件</string>
 	<string name="str_message_no_content">无法生成预览</string>
 	<string name="str_page_forward">前翻</string>

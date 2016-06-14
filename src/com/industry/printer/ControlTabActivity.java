@@ -390,6 +390,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			ink = (ink * 100)/mRfidDevice.mInkMax;
 		}
 		*/
+		if (ink == 0) {
+			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
+			return;
+		}
 		Debug.d(TAG, "--->refreshInk:" + ink);
 		String level = String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
@@ -495,6 +499,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_START:
+					
+					/*if (mRfidManager.getLocalInk(0) <= 0 || !mRfidManager.isReady(0)) {
+						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
+						return;
+					}*/
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
 						break;
@@ -572,6 +581,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					// float ink = mRfidDevice.updateInkLevel();
 					// refreshInk(ink);
+					mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
@@ -592,7 +602,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					refreshInk(bd.getFloat("level"));
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
-					
+					float ink = mRfidManager.getLocalInk(0);
+					refreshInk(ink);
 					break;
 			}
 		}

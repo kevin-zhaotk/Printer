@@ -22,6 +22,8 @@ import android.util.Xml;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.hardware.RFIDDevice;
+import com.industry.printer.hardware.RFIDManager;
 
 public class SystemConfigFile{
 	private static final String TAG = SystemConfigFile.class.getSimpleName();
@@ -115,16 +117,21 @@ public class SystemConfigFile{
 	}
 	public void init() {
 		initParamRange();
-		parseSystemCofig();
+		if(parseSystemCofig())
+			return;
+		//default param
+		for (int i = 0; i < mParam.length; i++) {
+			mParam[i] = checkParam(i+1, mParam[i]);
+		}
 	}
-	public void parseSystemCofig() {
+	public boolean parseSystemCofig() {
 		FileReader reader=null;
 		BufferedReader br = null;
 		String tag;
 		ArrayList<String> paths = ConfigPath.getMountedUsb();
 		if (paths == null || paths.isEmpty()) {
 			Debug.d(TAG, "--->no usb storage mounted");
-			return;
+			return false;
 		}
 		/*
 		 * use this first usb as default 
@@ -134,7 +141,7 @@ public class SystemConfigFile{
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
 			Debug.d(TAG, "--->read system_config file fail");
-			return;
+			return false;
 		}
 		for (XmlTag t : list) {
 			tag = t.getKey();
@@ -306,6 +313,7 @@ public class SystemConfigFile{
 			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
 		}
 		inStream.close();
+		return true;
 		/*
 		try {
 			reader = new FileReader(file);
@@ -707,17 +715,23 @@ public class SystemConfigFile{
 					
 					break;
 				case XmlPullParser.START_TAG:
+					Debug.d(TAG, "--->tag: " + parser.getName());
 					if (TAG_PARAMS.equals(parser.getName())) {
 						
 					} else if (TAG_PARAM.equals(parser.getName())) {
 						map = new HashMap<String, Integer>();
 					} else if (TAG_ID.equals(parser.getName())) {
+						parser.next();
+						Debug.d(TAG, "--->id: " + parser.getText());
 						id = Integer.parseInt(parser.getText());
 					} else if (TAG_MIN.equals(parser.getName())) {
+						parser.next();
 						map.put("min", Integer.parseInt(parser.getText()));
 					} else if (TAG_MAX.equals(parser.getName())) {
+						parser.next();
 						map.put("max", Integer.parseInt(parser.getText()));
 					} else if (TAG_DEFAULT.equals(parser.getName())) {
+						parser.next();
 						map.put("default", Integer.parseInt(parser.getText()));
 					}
 					
@@ -725,12 +739,13 @@ public class SystemConfigFile{
 				case XmlPullParser.END_TAG:
 					if (TAG_PARAM.equals(parser.getName())) {
 						mParamRange.put(id, map);
+						Debug.d(TAG, "--->id=" + id + ", map=" + map);
 					}
 					break;
 				default:
 					break;
 				}
-				
+				event = parser.next();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -977,17 +992,14 @@ public class SystemConfigFile{
 			mFPGAParam[4] = 65;
 		}
 		
-				
-		
-		
 		// 參數4
-		mFPGAParam[3] = mParam[3] * mFPGAParam[15] * 6 * mFPGAParam[4];
+		mFPGAParam[3] = mParam[3] * mFPGAParam[15] * 6 * mFPGAParam[4]/1000;
 		if (mFPGAParam[3] <= 2) {
 			mFPGAParam[3] = 3;
 		} else if (mFPGAParam[3] >= 65535) {
 			mFPGAParam[3] = 65534;
 		}
-		mFPGAParam[8] = (int) (mParam[3]/((mParam[9]*25.4/(mParam[8]*3.14))));
+		mFPGAParam[8] = (int) (mParam[3]*mParam[9]/(mParam[8]*3.14));
 		if (mFPGAParam[8] <= 10) {
 			mFPGAParam[8] = 11;
 		} else if (mFPGAParam[8] >= 65535) {
@@ -1017,7 +1029,7 @@ public class SystemConfigFile{
 		} else if (mFPGAParam[5] > 65534) {
 			mFPGAParam[5] = 65534;
 		}
-		mFPGAParam[7] = (int) (mParam[7]/((mParam[9]*25.4/(mParam[8]*3.14))));
+		mFPGAParam[7] = (int) (mParam[6]*mParam[9]/(mParam[8]*3.14));
 		if (mFPGAParam[7] < 11) {
 			mFPGAParam[7] = 11;
 		} else if (mFPGAParam[7] > 65534) {
@@ -1026,9 +1038,9 @@ public class SystemConfigFile{
 		
 		// 參數8
 		if (mParam[7] == 0) {
-			mFPGAParam[17] = mFPGAParam[17]&0xef;
-		} else if (mParam[7] == 1) {
 			mFPGAParam[17] = mFPGAParam[17] | 0x10;
+		} else if (mParam[7] == 1) {
+			mFPGAParam[17] = mFPGAParam[17] & 0xef;
 		}
 		
 		if (mParam[14] == 0) {
@@ -1043,20 +1055,20 @@ public class SystemConfigFile{
 			mFPGAParam[17] = mFPGAParam[17] | 0x02;
 		}
 
-		
+		Debug.d(TAG, "--->param[16]=" + mParam[16] + ", " + (mFPGAParam[16] & 0xe7f));
 		if (mParam[16] == 1) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
 		} else if (mParam[16] == 2) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
-			mFPGAParam[16] = mFPGAParam[16] | 0x08;
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
+			mFPGAParam[16] = mFPGAParam[16] | 0x080;
 		} else if (mParam[16] == 3) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
-			mFPGAParam[16] = mFPGAParam[16] | 0x10;
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
+			mFPGAParam[16] = mFPGAParam[16] | 0x100;
 		} else if (mParam[16] == 4) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7;
-			mFPGAParam[16] = mFPGAParam[16] | 0x18;
+			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
+			mFPGAParam[16] = mFPGAParam[16] | 0x180;
 		}
-		
+		Debug.d(TAG, "--->param[16]=" + mFPGAParam[16]);
 		// 参数23
 		if (mParam[22] == 0) {
 			mFPGAParam[17] = mFPGAParam[17] & 0xfb;
@@ -1070,27 +1082,55 @@ public class SystemConfigFile{
 			mFPGAParam[17] = mFPGAParam[17] | 0x08;
 		}
 	    // 参数25
+	    int feature = 0;
 	    if (mParam[24] == 0) {
 			mFPGAParam[18] = mParam[25];
 		} else if (mParam[24] == 1) {
-			mFPGAParam[18] = 0;
+			RFIDManager manager = RFIDManager.getInstance();
+			RFIDDevice device = manager.getDevice(0);
+			if (device == null || !device.isReady()) {
+				feature = 50;	//如果參數不合法就按默認值
+			} else {
+				feature = device.mFeature[4];
+				if (feature < 50 || feature > 112) {
+					feature = 50;
+				}
+			}
+			mFPGAParam[18] = feature;
 		}
+	    
+	    // 参数27
 	    
 	    //RFID特征值6
 	    int info = 17;
-	    // 参数27
+	    // 参数28
 	    if (mParam[26] == 0) {
-	    	mFPGAParam[16] = mFPGAParam[16] & 0x8f;
+	    	mFPGAParam[16] = mFPGAParam[16] & 0xff8f;
 			mFPGAParam[16] = mFPGAParam[16] | ((mParam[27]-17) << 4);
+			Debug.d(TAG, "--->param=" + ((mParam[27]-17) << 4));
+			Debug.d(TAG, "--->fpgaparam=" + mFPGAParam[16]);
 		} else if (mParam[26] == 1) {
-			mFPGAParam[16] = mFPGAParam[16] & 0x8f;
+			RFIDManager manager = RFIDManager.getInstance();
+			RFIDDevice device = manager.getDevice(0);
+			if (device == null || !device.isReady()) {
+				info = 17;	//如果參數不合法就按默認值
+			} else {
+				info = device.mFeature[5];
+				if (info > 24 || info < 17) {
+					info = 17;
+				}
+			}
+			mFPGAParam[16] = mFPGAParam[16] & 0xff8f;
 			mFPGAParam[16] = mFPGAParam[16] | ((info-17) << 4);
 		}
 	    
 	    // 参数29
 	    mFPGAParam[19] = mParam[28];
-	    // 参数29
+	    // 参数30
 	    mFPGAParam[2] = mParam[29];
+	    for (int i = 0; i < mFPGAParam.length; i++) {
+			Debug.d(TAG, "--->mFPGAParam[" + i + "]=" + mFPGAParam[i]);
+		}
 	    
 	}
 	

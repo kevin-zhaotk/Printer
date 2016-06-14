@@ -303,7 +303,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[13] = new ItemOneLine(14, R.string.str_textview_param14, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[14] = new ItemOneLine(15, R.string.str_textview_param15, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[15] = new ItemOneLine(16, R.string.str_textview_param16, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.pens_item_entries, 0, ItemType.TYPE_SWITCH);
+		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.pens_item_entries, 0, ItemType.TYPE_VALUE);
 		mSettingItems[17] = new ItemOneLine(18, R.string.str_textview_param18, 0);
 		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_length_unit_mm);
 		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_length_unit_mm);
@@ -657,6 +657,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				return;
 			}
 			mSettingItems[pos].mValue = arg0.toString();
+			Debug.d(TAG, "--->param=" + mSettingItems[pos].getDisplayValue());
+			mSysconfig.setParam(pos, getValueFromEditText(arg0));
 			/*
 			switch (pos) {
 			case 2:
