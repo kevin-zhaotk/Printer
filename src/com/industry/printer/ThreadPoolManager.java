@@ -7,4 +7,5 @@ public class ThreadPoolManager {
 	
 	public static ExecutorService mThreads = Executors.newFixedThreadPool(5);
 	
+	public static ExecutorService mSerialControlThread = Executors.newFixedThreadPool(1);
 }

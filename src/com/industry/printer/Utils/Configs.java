@@ -279,22 +279,29 @@ public class Configs {
 		int dir=0;
 		switch (index) {
 		case 0:
-			dir = mSysconfig.getParam(24);
+			dir = mSysconfig.getParam(12);
 			break;
 		case 1:
-			dir = mSysconfig.getParam(26);
+			dir = mSysconfig.getParam(13);
 			break;
 		case 2:
-			dir = mSysconfig.getParam(28);
+			dir = mSysconfig.getParam(20);
 			break;
 		case 3:
-			dir = mSysconfig.getParam(30);
+			dir = mSysconfig.getParam(21);
 			break;
 		default:
 			break;
 		}
 		if (dir != SegmentBuffer.DIRECTION_NORMAL && dir != SegmentBuffer.DIRECTION_REVERS) {
 			dir = SegmentBuffer.DIRECTION_NORMAL;
+		}
+		if (mSysconfig.getParam(1) == 1) {
+			if (dir == SegmentBuffer.DIRECTION_NORMAL) {
+				dir = SegmentBuffer.DIRECTION_REVERS;
+			} else {
+				dir = SegmentBuffer.DIRECTION_NORMAL;
+			}
 		}
 		return dir;
 	}
@@ -303,20 +310,21 @@ public class Configs {
 		int shift=0;
 		switch (index) {
 		case 0:
-			shift = mSysconfig.getParam(25);
+			shift = mSysconfig.getParam(10);
 			break;
 		case 1:
-			shift = mSysconfig.getParam(27);
+			shift = mSysconfig.getParam(11);
 			break;
 		case 2:
-			shift = mSysconfig.getParam(29);
+			shift = mSysconfig.getParam(18);
 			break;
 		case 3:
-			shift = mSysconfig.getParam(31);
+			shift = mSysconfig.getParam(19);
 			break;
 		default:
 			break;
 		}
+		
 		return shift;
 	}
 	

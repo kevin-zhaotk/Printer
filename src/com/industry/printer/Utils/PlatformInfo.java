@@ -34,6 +34,9 @@ public class PlatformInfo {
 	private static final String RFID_SERIAL_4412 = "/dev/ttySAC3";
 	private static final String RFID_SERIAL_SMFY = "/dev/ttyS3";
 	
+	private static final String GRAFT_SERIAL_4412 = "/dev/ttySAC2";
+	private static final String GRAFT_SERIAL_SMFY = "/dev/ttyS2";
+	
 	/**
 	 * usb mount paths
 	 */
@@ -110,6 +113,20 @@ public class PlatformInfo {
 			return RFID_SERIAL_4412;
 		} else if (isSmfyProduct()) {
 			return RFID_SERIAL_SMFY;
+		} else {
+			Debug.d(TAG, "unsupported platform right now");
+		}
+		return null;
+	}
+	
+	/**
+	 * Graft device connected Serial Port
+	 */
+	public static String getGraftDevice() {
+		if (isFriendlyProduct()) {
+			return GRAFT_SERIAL_4412;
+		} else if (isSmfyProduct()) {
+			return GRAFT_SERIAL_SMFY;
 		} else {
 			Debug.d(TAG, "unsupported platform right now");
 		}

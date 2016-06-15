@@ -39,8 +39,8 @@
 	</param>
 	<param>
 	    <id>7</id>
-		<min>0</min>
-		<max>1</max>
+		<min>1</min>
+		<max>65535</max>
 		<default>0</default>
 	</param>
 	<param>

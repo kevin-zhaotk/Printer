@@ -203,14 +203,14 @@ public class FpgaGpioOperation {
 		for (int i = 0; i < 24; i++) {
 			data[i] = (char) config.getFPGAParam(i);
  		}
-		/*
+		
 		if (isPurge) {
 			data[1] = 4;
 			data[3] = 100;
 			data[4] = 200;
 			data[5] = 100;
 			data[15] = 1;
-		}*//* else {
+		}/* else {
 			data[1] = (char) SystemConfigFile.mParam2;
 			data[3] = (char) SystemConfigFile.mParam4;
 			data[4] = (char) SystemConfigFile.mParam5;

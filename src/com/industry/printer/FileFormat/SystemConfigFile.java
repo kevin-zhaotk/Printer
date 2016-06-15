@@ -1152,6 +1152,7 @@ public class SystemConfigFile{
 	}
 	
 	public void setParam(int index, int value) {
+		Debug.d(TAG, "--->index=" + index + ", value=" + value);
 		if (index >= mParam.length) {
 			return ;
 		}
