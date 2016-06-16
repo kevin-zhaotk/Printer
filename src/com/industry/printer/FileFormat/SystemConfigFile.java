@@ -992,6 +992,11 @@ public class SystemConfigFile{
 			mFPGAParam[4] = 65;
 		}
 		
+		// 參數3
+		mFPGAParam[6] = (int) (mParam[9]*25.4/(mParam[8] *3.14)/mParam[2]);
+		if (mFPGAParam[6] < 1 || mFPGAParam[6] > 20) {
+			mFPGAParam[6] = 1;
+		}
 		// 參數4
 		mFPGAParam[3] = mParam[3] * mFPGAParam[15] * 6 * mFPGAParam[4]/1000;
 		if (mFPGAParam[3] <= 2) {

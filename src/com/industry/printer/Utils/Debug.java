@@ -3,6 +3,7 @@ package com.industry.printer.Utils;
 import android.util.Log;
 
 public class Debug {
+	
 	public static final String TAG="Printer";
 	
 	public Debug()
@@ -11,34 +12,52 @@ public class Debug {
 	
 	public static int d(String tag, String log)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.d(TAG, tag+":"+log);
 		return 0;
 	}
 	
 	public static int d(String tag, String log, Throwable tr)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.d(TAG, tag+":"+log, tr);
 		return 0;
 	}
 	public static int i(String tag, String log)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.i(TAG, tag+":"+log);
 		return 0;
 	}
 	
 	public static int i(String tag, String log, Throwable tr)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.i(TAG, tag+":"+log, tr);
 		return 0;
 	}
 	
 	public static int v(String tag, String log)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.v(TAG, tag+":"+log);
 		return 0;
 	}
 	public static int v(String tag, String log, Throwable tr)
 	{
+		if (!Configs.DEBUG) {
+			return 0;
+		}
 		Log.v(TAG, tag+":"+log, tr);
 		return 0;
 	}
