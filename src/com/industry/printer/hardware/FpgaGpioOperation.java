@@ -178,6 +178,9 @@ public class FpgaGpioOperation {
 		// close(fd);
 	}
 	
+	public static final int SETTING_TYPE_NORMAL = 1;
+	public static final int SETTING_TYPE_PURGE1 = 2;
+	public static final int SETTING_TYPE_PURGE2 = 3;
 	
 	/**
 	 * updateSettings 下发系统设置
@@ -187,7 +190,7 @@ public class FpgaGpioOperation {
 	 * @param context
 	 */
 	
-	public static void updateSettings(Context context, DataTask task, boolean isPurge) {
+	public static void updateSettings(Context context, DataTask task, int type ) {
 		
 		if (DataTransferThread.getInstance().isRunning()) {
 			Debug.d(TAG, "===>print Thread is running now, please stop it then update settings");
@@ -203,14 +206,20 @@ public class FpgaGpioOperation {
 		for (int i = 0; i < 24; i++) {
 			data[i] = (char) config.getFPGAParam(i);
  		}
-		/*
-		if (isPurge) {
+		
+		if (type != SETTING_TYPE_NORMAL) {
 			data[1] = 4;
 			data[3] = 100;
 			data[4] = 200;
 			data[5] = 100;
 			data[15] = 1;
-		}*//* else {
+		}
+		if (type == SETTING_TYPE_PURGE1) {
+			data[17] = (char) (data[17] | 0x010);
+		} else if (type == SETTING_TYPE_PURGE2) {
+			data[17] = (char) (data[17] & 0xffef);
+		}
+		/* else {
 			data[1] = (char) SystemConfigFile.mParam2;
 			data[3] = (char) SystemConfigFile.mParam4;
 			data[4] = (char) SystemConfigFile.mParam5;

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.industry.printer.DataTransferThread;
 import com.industry.printer.ThreadPoolManager;
 
 public class RFIDManager {
@@ -90,11 +91,23 @@ public class RFIDManager {
 				if (mRfidDevices == null || mRfidDevices.size() <= 0) {
 					return;
 				}
-				for (RFIDDevice device : mRfidDevices) {
-					device.updateInkLevel();
+				DataTransferThread mThread = DataTransferThread.getInstance();
+				for(;mThread.isRunning();) {
+					
+					for (RFIDDevice device : mRfidDevices) {
+						if (!device.mReady) {
+							continue;
+						}
+						device.updateToDevice();
+					}
+					try {
+						Thread.sleep(10000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				Message msg = callback.obtainMessage(MSG_RFID_WRITE_SUCCESS);
-				callback.sendMessage(msg);
+				// Message msg = callback.obtainMessage(MSG_RFID_WRITE_SUCCESS);
+				// callback.sendMessage(msg);
 			}
 		});
 	}
@@ -103,6 +116,11 @@ public class RFIDManager {
 	public float getLocalInk(int dev) {
 		RFIDDevice device = mRfidDevices.get(dev);
 		return device.getLocalInk();
+	}
+	
+	public void downLocal(int dev) {
+		RFIDDevice device = mRfidDevices.get(dev);
+		device.down();
 	}
 	
 	public boolean isReady(int dev) {

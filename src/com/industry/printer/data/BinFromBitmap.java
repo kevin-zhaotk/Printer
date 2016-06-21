@@ -91,9 +91,36 @@ public class BinFromBitmap extends BinCreater {
     	Debug.d(TAG, "===============000000");
     	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
     	Debug.d(TAG, "===============111111");
-    	return bmp.createScaledBitmap(bmp, columns, 150, true);
+    	return Bitmap.createScaledBitmap(bmp, columns, 150, true);
     }
     
+	public static Bitmap Bin2Bitmap(char []map, int columns, int row)
+    {
+    	int k=0;
+    	Bitmap bmp;
+
+    	int grey =0;
+    	int pixels[] = new int[columns*row];
+    	Debug.d(TAG, "columns = "+columns+", row="+row);
+    	/*110 bytes per Row*/
+    	for(int i=0; i< columns; i++)
+    	{
+    		for(int j=0; j<row; j++)
+    		{
+    			if( (map[i*(row/16) + j/16]&(0x01 <<(j%16))) != 0)
+    				grey = 0x0;
+    			else 
+    				grey = 0xff;
+    			pixels[j*columns+i] = 0xff<<24 | grey <<16 | grey<<8 | grey;
+    		}
+    	}
+    	Debug.d(TAG, "===============");
+    	bmp = Bitmap.createBitmap(pixels, columns, row, Config.ARGB_8888);
+    	Debug.d(TAG, "===============000000");
+    	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
+    	Debug.d(TAG, "===============111111");
+    	return Bitmap.createScaledBitmap(bmp, columns, 150, true);
+    }
 
     public static void recyleBitmap(Bitmap bmp)
     {

@@ -12,6 +12,7 @@ import java.util.Vector;
 import android.R.integer;
 import android.content.Context;
 import android.database.CharArrayBuffer;
+import android.graphics.Bitmap;
 import android.os.Message;
 
 import com.industry.printer.BinInfo;
@@ -111,8 +112,11 @@ public class DataTask {
 		return true;
 	}
 	
-	
 	public char[] getPrintBuffer() {
+		return getPrintBuffer(false);
+	}
+	
+	public char[] getPrintBuffer(boolean isPreview) {
 		CharArrayReader cReader = new CharArrayReader(mBgBuffer);
 		try {
 			cReader.read(mPrintBuffer);
@@ -121,6 +125,9 @@ public class DataTask {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		if (isPreview) {
+			return mPrintBuffer;
 		}
 		if (mBinInfo.mBytesPerColumn == 4) {
 			evenBitShift();
@@ -375,5 +382,10 @@ public class DataTask {
 	
 	public int getHeads() {
 		return mTask.getHeads();
+	}
+	
+	public Bitmap getPreview() {
+		char[] preview = getPrintBuffer(true);
+		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsPerHFeed*16);
 	}
 }

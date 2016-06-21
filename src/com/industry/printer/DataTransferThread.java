@@ -74,15 +74,14 @@ public class DataTransferThread extends Thread {
 		
 		Debug.d(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-		Debug.d(TAG, "--->start print");
+		Debug.d(TAG, "--->start print " + mRunning);
 		FpgaGpioOperation.init();
 		while(mRunning == true) {
 			
-			// Debug.d(TAG, "===>buffer size="+buffer.length);
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			
 			int writable = FpgaGpioOperation.pollState();
-			// Debug.d(TAG, "--->writeable=" + writable);
+			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
 			if (writable == 0) { //timeout
 			} else if (writable == -1) {
@@ -125,7 +124,14 @@ public class DataTransferThread extends Thread {
 				DataTask task = new DataTask(context, null);
 				Debug.d(TAG, "--->task: " + task);
 				char[] buffer = task.preparePurgeBuffer();
-				FpgaGpioOperation.updateSettings(context, task, true);
+				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
+				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE2);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
 				try {
 					Thread.sleep(1000);
@@ -189,7 +195,6 @@ public class DataTransferThread extends Thread {
 			mDataTask.setTask(task);
 		}
 		isBufferReady = mDataTask.prepareBackgroudBuffer();
-		
 	}
 	
 	public DataTask getData() {

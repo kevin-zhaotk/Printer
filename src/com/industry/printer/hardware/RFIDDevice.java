@@ -144,6 +144,7 @@ public class RFIDDevice {
 	private int mCurInkLevel = 0;
 	private int mLastLevel = 0;
 	public 	int mInkMax = 0;
+	public boolean mReady = false;
 	// 错误码定义
 	public static final int RFID_ERRNO_NOERROR = 0;
 	public static final int RFID_ERRNO_NOCARD = 1;
@@ -391,7 +392,7 @@ public class RFIDDevice {
 		}
 		RFIDData rfidData = new RFIDData(value, true);
 		byte[] rfid = rfidData.getData();
-		if (rfid == null || rfid[0] != 0) {
+		if (rfid == null || rfid.length <= 0 || rfid[0] != 0) {
 			Debug.d(TAG, "===>rfid data error");
 			// 如果操作失败就关闭串口文件
 			close(mFd);
@@ -474,7 +475,7 @@ public class RFIDDevice {
 		byte [] key = method.getKeyA(mSN);
 		setKeyA(key);
 		Debug.print(RFID_DATA_RSLT, key);
-		
+		mReady = true;
 		mInkMax = getInkMax();
 		Debug.d(TAG, "===>max ink: " + mInkMax);
 		readFeatureCode();
@@ -636,6 +637,15 @@ public class RFIDDevice {
 		*/
 	}
 	
+	
+	public void down() {
+		if (mCurInkLevel > 0) {
+			mCurInkLevel = mCurInkLevel -1;
+		} else if (mCurInkLevel <= 0) {
+			mCurInkLevel = 0;
+		}
+		Debug.e(TAG, "--->ink=" + mCurInkLevel);
+	}
 	/**
 	 *更新墨水值，即当前墨水值减1 
 	 */
@@ -654,10 +664,11 @@ public class RFIDDevice {
 		if (mLastLevel == mCurInkLevel) {
 			return;
 		}
+		mLastLevel = mCurInkLevel;
 		if (mCurInkLevel <= 0) {
 			mCurInkLevel = 0;
 		}
-		Debug.d(TAG, "--->updateInkLevel level = " + mCurInkLevel);
+		Debug.i(TAG, "--->updateInkLevel level = " + mCurInkLevel);
 		
 		// 将新的墨水量写回主block
 		setInkLevel(mCurInkLevel, false);

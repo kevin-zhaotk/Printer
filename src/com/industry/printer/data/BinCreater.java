@@ -148,6 +148,7 @@ public class BinCreater {
     	return true;
     }
     
+    
     public boolean saveBin(String f, int width)
     {
     	byte head[]=new byte[16];

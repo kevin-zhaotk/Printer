@@ -390,11 +390,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			ink = (ink * 100)/mRfidDevice.mInkMax;
 		}
 		*/
-		if (ink == 0) {
-			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
-			return;
-		}
-		Debug.d(TAG, "--->refreshInk:" + ink);
+		Debug.e(TAG, "--->refreshInk:" + ink);
+		
 		String level = String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
@@ -416,6 +413,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshCount() {
 		// String cFormat = getResources().getString(R.string.str_print_count);
 		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
+		Debug.e(TAG, "--->refreshCount:" + mCounter);
 		((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
 	}
 	
@@ -459,13 +457,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mPreBitmap != null) {
 						BinFromBitmap.recyleBitmap(mPreBitmap);
 					}
-					mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
+					//方案1：从bin文件生成buffer
+					initDTThread();
+					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
+					mPreBitmap = mDTransThread.mDataTask.getPreview();
 					mMsgPreImg.setImageBitmap(mPreBitmap);
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
-					//方案1：从bin文件生成buffer
-					initDTThread();
+					
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
 					String text = msg.getData().getString("text");
@@ -546,7 +546,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
 					Debug.d(TAG, "--->update settings");
-					FpgaGpioOperation.updateSettings(mContext, dt, false);
+					FpgaGpioOperation.updateSettings(mContext, dt, FpgaGpioOperation.SETTING_TYPE_NORMAL);
 					Debug.d(TAG, "--->launch thread");
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
 					if (!mDTransThread.launch()) {
@@ -556,7 +556,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
-					
+					// 啓動rfid鎖值更新線程
+					mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -576,12 +577,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.clean();
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
-					if (mRfidDevice == null) {
-						mRfidDevice = RFIDDevice.getInstance();
-					}
-					// float ink = mRfidDevice.updateInkLevel();
-					// refreshInk(ink);
-					mRfidManager.write(mHandler);
+					mRfidManager.downLocal(0);
+					refreshInk(mRfidManager.getLocalInk(0));
+					// mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
@@ -599,7 +597,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
 					Bundle bd = (Bundle) msg.getData();
-					refreshInk(bd.getFloat("level"));
+					float il = bd.getFloat("level");
+					if (il > 0) {
+						refreshInk(il);
+					}
+					else {
+						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
+					}
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);
@@ -622,6 +626,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mDTransThread.setDotCount(mMsgTask.getDots());
 		// 设置UI回调
 		mDTransThread.setOnInkChangeListener(this);
+		
 	}
 	
 	private final int STATE_PRINTING = 0;
