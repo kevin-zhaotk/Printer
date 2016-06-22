@@ -13,6 +13,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.ReflectCaller;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
@@ -30,7 +31,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -329,12 +330,7 @@ public static final String TAG="SettingsTabActivity";
 					// System.setProperty("ctl.start", "Upgrade");
 					// SystemProperties.set("ctl.start","Upgrade");
 					Toast.makeText(mContext, R.string.str_upgrade_progress, Toast.LENGTH_LONG);
-					try {
-						Class<?> mClassType = Class.forName("android.os.SystemProperties");
-						Method mSetMethod = mClassType.getDeclaredMethod("set", String.class, String.class);
-						mSetMethod.invoke(mClassType, "ctl.start", "Upgrade");
-					} catch (Exception e) {
-					}
+					ReflectCaller.SysPropUpgrade();
 				}
 				break;
 			case R.id.btn_setting_timeset:

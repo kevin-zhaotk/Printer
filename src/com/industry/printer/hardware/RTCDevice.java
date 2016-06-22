@@ -8,6 +8,7 @@ import android.graphics.Bitmap.Config;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.ReflectCaller;
 import com.industry.printer.Utils.SystemFs;
 
 public class RTCDevice {
@@ -42,27 +43,15 @@ public class RTCDevice {
 	}
 	
 	public void initSystemTime(Context context) {
-		AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		aManager.HwToSystemClock();
-//		Class<?> cls = aManager.getClass();
-//		try {
-//			Method sync = cls.getMethod("HwToSystemClock", new Class[0]);
-//			sync.invoke(cls, new Object[0]);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		// AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		// aManager.HwToSystemClock();
+		ReflectCaller.AlarmManagerHwToSystemClock(context);
 	}
 	
 	public void syncSystemTimeToRTC(Context context) {
-		AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		aManager.SystemClockToHw();
-//		Class<?> cls = aManager.getClass();
-//		try {
-//			Method sync = cls.getMethod("SystemClockToHw", new Class[0]);
-//			sync.invoke(cls, new Object[0]);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		// AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		// aManager.SystemClockToHw();
+		ReflectCaller.AlarmManagerSystemClockToHw(context);
 	}
 	
 	/**
