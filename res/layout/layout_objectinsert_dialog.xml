@@ -79,6 +79,7 @@
 	        android:textSize="40sp"
 	        android:textColor="#000000"
             />
+        <!-- 
         <RadioButton
             android:id="@+id/objinsert_graphic"
             android:layout_width="100dp"
@@ -131,7 +132,7 @@
 	        android:textSize="40sp"
 	        android:textColor="#000000"
             />
-        
+         -->
     </RadioGroup>
     
 </RelativeLayout>

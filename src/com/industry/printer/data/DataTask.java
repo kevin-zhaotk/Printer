@@ -101,6 +101,7 @@ public class DataTask {
 		/**记录当前打印的信息路径**/
 		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask.getHeads());
 		if (mBinInfo == null) {
+			Debug.e(TAG, "--->binInfo null");
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();

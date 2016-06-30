@@ -459,6 +459,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					//方案1：从bin文件生成buffer
 					initDTThread();
+					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
 					mMsgPreImg.setImageBitmap(mPreBitmap);
@@ -512,8 +513,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
 					}
-					Debug.d(TAG, "--->initDTThread");
-					initDTThread();
+					//Debug.d(TAG, "--->initDTThread");
+					if (mDTransThread == null) {
+						initDTThread();
+					}
 					Debug.d(TAG, "--->prepare buffer");
 					DataTask dt = mDTransThread.getData();
 					
@@ -598,12 +601,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
 					Bundle bd = (Bundle) msg.getData();
 					float il = bd.getFloat("level");
-					if (il > 0) {
-						refreshInk(il);
-					}
-					else {
+					if (il <= 0) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
 					}
+					refreshInk(il);
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);
@@ -615,10 +616,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public void initDTThread() {
 		
-		if (mDTransThread != null) {
-			return; 
+		if (mDTransThread == null) {
+			Debug.d(TAG, "--->Print thread ready");
+			mDTransThread = DataTransferThread.getInstance();	
 		}
-		mDTransThread = DataTransferThread.getInstance();	
+		Debug.d(TAG, "--->init");
+		
 		// 初始化buffer
 		mDTransThread.initDataBuffer(mContext, mMsgTask);
 		// TLKFileParser parser = new TLKFileParser(mContext, mObjPath);

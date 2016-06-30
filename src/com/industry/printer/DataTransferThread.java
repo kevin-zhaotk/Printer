@@ -194,6 +194,7 @@ public class DataTransferThread extends Thread {
 		} else {
 			mDataTask.setTask(task);
 		}
+		Debug.d(TAG, "--->prepare buffer");
 		isBufferReady = mDataTask.prepareBackgroudBuffer();
 	}
 	

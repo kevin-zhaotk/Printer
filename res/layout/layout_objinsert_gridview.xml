@@ -58,6 +58,7 @@
             android:button="@null"
 	        android:layout_gravity="center"
             />
+    <!-- 
     <Button
             android:id="@+id/objinsert_graphic"
             android:layout_width="130dp"
@@ -95,5 +96,6 @@
             android:button="@null"
 	        android:layout_gravity="center"
             />
-
+	 -->
+	 
 </GridLayout>
