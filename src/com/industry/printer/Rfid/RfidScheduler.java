@@ -1,0 +1,67 @@
+package com.industry.printer.Rfid;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.AlarmManager;
+import android.os.SystemClock;
+import android.provider.AlarmClock;
+
+public class RfidScheduler {
+	
+	private String TAG = RfidScheduler.class.getSimpleName();
+	
+	public static RfidScheduler mInstance = null;
+	// 5S间隔
+	public static final long TASK_SCHEDULE_INTERVAL = 5000;
+	
+	private List<RfidTask> mRfidTasks = null;
+	private int mCurrent = 0;
+	
+	public static RfidScheduler getInstance() {
+		if (mInstance == null) {
+			mInstance = new RfidScheduler();
+		}
+		return mInstance;
+	}
+	
+	public RfidScheduler() {
+		mRfidTasks = new ArrayList<RfidTask>();
+	}
+	
+	public void add(RfidTask task) {
+		if (mRfidTasks == null) {
+			mRfidTasks = new ArrayList<RfidTask>();
+		}
+		mRfidTasks.add(task);
+	}
+	
+	/**
+	 * 
+	 */
+	public void schedule() {
+		long time = SystemClock.elapsedRealtime();
+		RfidTask task = null;
+		if (mRfidTasks.size() <= 0) {
+			return;
+		}
+		if (mRfidTasks.size() <= mCurrent) {
+			 mCurrent = 0;
+		}
+		task = mRfidTasks.get(mCurrent);
+	}
+	
+	/**
+	 * 装入下一个要处理的任务
+	 */
+	private void load(RfidTask task) {
+		
+	}
+	
+	/**
+	 * 已经处理完的任务
+	 */
+	private void unload(RfidTask task) {
+		
+	}
+}
