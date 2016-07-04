@@ -9,6 +9,8 @@ import org.apache.http.util.CharArrayBuffer;
 import com.industry.printer.BinInfo;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.hardware.RFIDDevice;
+import com.industry.printer.hardware.RFIDManager;
 
 public class SegmentBuffer {
 	
@@ -25,6 +27,8 @@ public class SegmentBuffer {
 	public int mHight;
 	public int mType;
 	public CharArrayBuffer mBuffer;
+	
+	private RFIDDevice mRfid;
 	/**
 	 * 从BinInfo中提取指定打印头的buffer数据，比如该TLK支持3头打印，从中取出第二个打印头的buffer数据
 	 * @param info 从bin文件生成的BinInfo对象
@@ -77,9 +81,18 @@ public class SegmentBuffer {
 		}
 		/*原始列数+偏移列数=该buffer的总列数*/
 		mColumns += shift;
+		
+		mRfid = RFIDManager.getInstance().getDevice(mType);
 	}
 	
 	public void readColumn(char[] buffer, int col, int offset) {
+		//如果當前打印頭的鎖無效，則直接返回全零buffer（即該頭無輸出）
+		if (mRfid == null || mRfid.getLocalInk() > 0) {
+			for (int i = 0; i < mHight; i++) {
+				buffer[offset+i] = 0;
+			}
+			return;
+		}
 		CharArrayReader reader = new CharArrayReader(mBuffer.buffer());
 		// Debug.d(TAG, "--->col=" + col + ", mColumns=" + mColumns);
 		if (col < mColumns) {

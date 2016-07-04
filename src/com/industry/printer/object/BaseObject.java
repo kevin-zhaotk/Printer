@@ -241,7 +241,7 @@ public class BaseObject{
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		FontMetrics fm = mPaint.getFontMetrics();
-		float wDiv = (float) (4.0/mTask.getHeads());
+		float wDiv = (float) (2.0/mTask.getHeads());
 		/*draw Bitmap of single digit*/
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);

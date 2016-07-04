@@ -285,8 +285,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						// mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
 						Debug.d(TAG, "--->positive click");
 						mObject.setHeight(mHighEdit.getText().toString());
-						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString()));
-						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString()));
+						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString())/2);
+						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString())/2);
 						Debug.d(TAG, "content="+mContent.getText().toString());
 						
 						Resources res = mContext.getResources();

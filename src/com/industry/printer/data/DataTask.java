@@ -157,7 +157,7 @@ public class DataTask {
 		char[] var;
 		if(mObjList==null || mObjList.isEmpty())
 			return;
-		float div = (float) (4.0/mTask.getHeads());
+		float div = (float) (2.0/mTask.getHeads());
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)

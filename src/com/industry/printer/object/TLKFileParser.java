@@ -140,6 +140,7 @@ public class TLKFileParser  extends TlkFile{
                     		 Debug.d(TAG, "line="+line);
                     		 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(j);
                     		 parseSubObject(obj, line);
+                    		 Debug.d(TAG, "--->line143:" + obj.toString());
                     	 }
                      }
                  }
@@ -160,8 +161,15 @@ public class TLKFileParser  extends TlkFile{
 			return ;
 		}
 		object.setIndex(Integer.parseInt(attr[0]));
-		object.setX(Integer.parseInt(attr[2])*2);
-		object.setWidth(Integer.parseInt(attr[4])*2-Integer.parseInt(attr[2])*2);
+		if (object instanceof TextObject) {
+			object.setX(Integer.parseInt(attr[2])/2);
+			object.setWidth(Integer.parseInt(attr[4])/2-Integer.parseInt(attr[2])/2);
+		} else {
+			object.setX(Integer.parseInt(attr[2]));
+			object.setWidth(Integer.parseInt(attr[4])-Integer.parseInt(attr[2]));
+			
+		}
+		
 	}
 	
 	public BaseObject parseLine(MessageTask task, String str)
@@ -172,13 +180,8 @@ public class TLKFileParser  extends TlkFile{
 		if (attr == null || attr.length != 22) {
 			return null;
 		}
-		Debug.d(TAG,"index="+str.indexOf("^"));
-		/*
-		for(int i=0; i< attr.length; i++)
-		{
-			Log.d(TAG, "attr["+i+"]="+attr[i]);
-		}
-		*/
+		
+		
 		Debug.d(TAG, "attr[1]="+attr[1]);
 		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
 		{
@@ -186,10 +189,6 @@ public class TLKFileParser  extends TlkFile{
 			((BarcodeObject) obj).setCode(attr[9]);
 			((BarcodeObject) obj).setShow(Boolean.parseBoolean(attr[11])); 
 			((BarcodeObject) obj).setContent(attr[12]);
-			Debug.d(TAG, "Barcode object: ");
-			//Log.d(TAG, ""+((BarcodeObject) obj).getCode());
-			//Log.d(TAG, ""+((BarcodeObject) obj).getShow());
-			//Log.d(TAG, ""+((BarcodeObject) obj).getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
 		{
@@ -197,21 +196,12 @@ public class TLKFileParser  extends TlkFile{
 			((CounterObject) obj).setBits(Integer.parseInt(attr[8]));
 			((CounterObject) obj).setMax(Integer.parseInt(attr[13]));
 			((CounterObject) obj).setMin(Integer.parseInt(attr[14]));
-			//((CounterObject) obj).setContent(attr[8]);
-			Debug.d(TAG, "Counter object");
-			//Log.d(TAG, ""+((CounterObject) obj).getBits());
-			//Log.d(TAG, ""+((CounterObject) obj).getMax());
-			//Log.d(TAG, ""+((CounterObject) obj).getMin());
-			//Log.d(TAG, ""+((CounterObject) obj).getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))	//ellipse
 		{
 			obj = new EllipseObject(mContext, 0);
 			((EllipseObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((EllipseObject) obj).setLineType(Integer.parseInt(attr[9]));
-			Debug.d(TAG, "Ellipse object");
-			//Log.d(TAG, "line type="+((EllipseObject) obj).getLineType());
-			//Log.d(TAG, "line width="+((EllipseObject) obj).getLineWidth());
 		}
 		else if(BaseObject.OBJECT_TYPE_GRAPHIC.equals(attr[1]))	//graphic
 		{
@@ -221,20 +211,15 @@ public class TLKFileParser  extends TlkFile{
 		else if(BaseObject.OBJECT_TYPE_JULIAN.equals(attr[1]))		//julian day
 		{
 			obj = new JulianDayObject(mContext, 0);
-			Debug.d(TAG, "Julian day");
 		}
 		else if(BaseObject.OBJECT_TYPE_LINE.equals(attr[1]))			//line
 		{
 			obj = new LineObject(mContext, 0);
 			((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
-			Debug.d(TAG, "line object");
-			//Log.d(TAG, "line type="+((LineObject) obj).getLineType());
-			//Log.d(TAG, "line width="+((LineObject) obj).getLineWidth());
 		}
 		else if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
 		{
-			Debug.d(TAG, "--->msgObject " + mContext);
 			obj = new MessageObject(mContext, 0);
 			/*参数8表示打印头类型*/
 			int type = Integer.parseInt(attr[8]);
@@ -248,9 +233,7 @@ public class TLKFileParser  extends TlkFile{
 			obj = new RectObject(mContext, 0);
 			((RectObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((RectObject) obj).setLineType(Integer.parseInt(attr[9]));
-			Log.d(TAG, "Rect object");
-			Log.d(TAG, "line type="+((RectObject) obj).getLineType());
-			Log.d(TAG, "line width="+((RectObject) obj).getLineWidth());
+			
 		}
 		else if(BaseObject.OBJECT_TYPE_RT.equals(attr[1]))				//realtime
 		{
@@ -266,8 +249,6 @@ public class TLKFileParser  extends TlkFile{
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			Debug.d(TAG, "Txt object");
-			Debug.d(TAG, "content="+obj.getContent());
 		}
 		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
 		{
@@ -300,23 +281,24 @@ public class TLKFileParser  extends TlkFile{
 					obj instanceof JulianDayObject ||
 					obj instanceof ShiftObject)
 			{
-				obj.setX(Integer.parseInt(attr[2])*2);
-				obj.setWidth(Integer.parseInt(attr[4])*2-Integer.parseInt(attr[2])*2);
-			}
-			else
-			{
 				obj.setX(Integer.parseInt(attr[2]));
 				obj.setWidth(Integer.parseInt(attr[4])-Integer.parseInt(attr[2]));
 			}
+			else
+			{
+				obj.setX(Integer.parseInt(attr[2])/2);
+				obj.setWidth(Integer.parseInt(attr[4])/2-Integer.parseInt(attr[2])/2);
+			}
 			
-			obj.setY(Integer.parseInt(attr[3]));
+			obj.setY(Integer.parseInt(attr[3])/2);
 			
-			obj.setHeight(Integer.parseInt(attr[5])-Integer.parseInt(attr[3]));
+			obj.setHeight(Integer.parseInt(attr[5])/2-Integer.parseInt(attr[3])/2);
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 			} catch (Exception e) {
 				Debug.d(TAG, "e: " + e.getCause());
 			}
 		}
+		Debug.d(TAG, "--->line295:" + obj.toString());
 //		Log.d(TAG, "index = "+obj.getIndex());
 //		Log.d(TAG, "x = "+obj.getX());
 //		Log.d(TAG, "y = "+obj.getY());

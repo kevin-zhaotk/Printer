@@ -15,7 +15,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.d(TAG, tag+":"+log);
+		Log.d(TAG, getLineNumber()+ "  " + tag + ":" + log);
 		return 0;
 	}
 	
@@ -24,7 +24,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.d(TAG, tag+":"+log, tr);
+		Log.d(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
 		return 0;
 	}
 	public static int i(String tag, String log)
@@ -32,7 +32,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.i(TAG, tag+":"+log);
+		Log.i(TAG, getLineNumber()+ "  " + tag+":"+log);
 		return 0;
 	}
 	
@@ -41,7 +41,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.i(TAG, tag+":"+log, tr);
+		Log.i(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
 		return 0;
 	}
 	
@@ -50,7 +50,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.v(TAG, tag+":"+log);
+		Log.v(TAG, getLineNumber()+ "  " + tag+":"+log);
 		return 0;
 	}
 	public static int v(String tag, String log, Throwable tr)
@@ -58,19 +58,19 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.v(TAG, tag+":"+log, tr);
+		Log.v(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
 		return 0;
 	}
 
 	public static int e(String tag, String log)
 	{
-		Log.e(TAG, tag+":"+log);
+		Log.e(TAG, getLineNumber()+ "  " + tag+":"+log);
 		return 0;
 	}
 	
 	public static int e(String tag, String log, Throwable tr)
 	{
-		Log.e(TAG, tag+":"+log, tr);
+		Log.e(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
 		return 0;
 	}
 	
@@ -82,7 +82,17 @@ public class Debug {
 		for (int i = 0; i < value.length; i++) {
 			log += "0x"+Integer.toHexString(value[i]&0x0ff)+" " ;
 		}
-		Debug.d(TAG, tag + " [ " + log + " ]");
+		Debug.d(TAG, getLineNumber()+ "  " + tag + " [ " + log + " ]");
+	}
+	
+	private static String getLineNumber() {
+		Exception e = new Exception();
+		StackTraceElement[] trace =e.getStackTrace();
+		if(trace==null||trace.length==0) 
+			return "";
+		int line = trace[2].getLineNumber();
+		String file = trace[2].getFileName();
+		return file + ":" + line;
 	}
 	
 }

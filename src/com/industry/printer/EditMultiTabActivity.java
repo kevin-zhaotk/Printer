@@ -470,6 +470,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 			boolean createfile=false;
             switch (msg.what) {   
             	case HANDLER_MESSAGE_OPEN:		//open
+            		progressDialog();
             		Debug.d(TAG, "open file="+ MessageBrowserDialog.getSelected());
             		mObjName = MessageBrowserDialog.getSelected();
             		if (mObjName == null || mObjName.isEmpty()) {
@@ -479,6 +480,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
             		clearCurObj();
             		mObjView.setTask(mMsgTask);
 	    			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+	    			dismissProgressDialog();
             		break;
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());

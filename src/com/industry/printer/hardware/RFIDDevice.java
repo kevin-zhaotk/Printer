@@ -541,6 +541,9 @@ public class RFIDDevice {
 	
 	public float getInkLevel() {
 		Debug.d(TAG, "--->getInkLevel");
+		if (!mReady) {
+			return 0;
+		}
 		// 先从主block读取墨水值
 		int current = getInkLevel(false);
 		if (!isLevelValid(current)) {
@@ -575,6 +578,9 @@ public class RFIDDevice {
 	private void setInkLevel(int level, boolean isBack) {
 		byte sector = 0;
 		byte block = 0;
+		if (!mReady) {
+			return;
+		}
 		if (isBack) {
 			sector = SECTOR_INKLEVEL;
 			block = BLOCK_INKLEVEL;
@@ -601,6 +607,9 @@ public class RFIDDevice {
 	 */
 	public float updateInkLevel() {
 		Debug.d(TAG, "--->updateInkLevel");
+		if (!mReady) {
+			return 0;
+		}
 		/* 为了提高效率，更新墨水量时不再从RFID读取，而是使用上次读出的墨水量
 		int level = getInkLevel(false);
 		if (!isLevelValid(level)) {
@@ -651,6 +660,9 @@ public class RFIDDevice {
 	 */
 	public void updateToDevice() {
 		Debug.d(TAG, "--->updateInkLevel");
+		if (!mReady) {
+			return;
+		}
 		/* 为了提高效率，更新墨水量时不再从RFID读取，而是使用上次读出的墨水量
 		int level = getInkLevel(false);
 		if (!isLevelValid(level)) {
@@ -770,6 +782,50 @@ public class RFIDDevice {
 		
 		//byte[] feature = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,0x0A, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 		//writeBlock(SECTOR_FEATURE, BLOCK_FEATURE, feature);
+	}
+	
+	/**
+	 * 拆分成4個接口，給最新的rfid寫入方案
+	 */
+	public void keyVerify(boolean isBack) {
+		byte sector = 0;
+		byte block = 0;
+		if (!mReady) {
+			return;
+		}
+		if (isBack) {
+			sector = SECTOR_INKLEVEL;
+			block = BLOCK_INKLEVEL;
+		} else {
+			sector = SECTOR_COPY_INKLEVEL;
+			block = BLOCK_COPY_INKLEVEL;
+		}
+		
+		if ( !keyVerfication(sector, block, mRFIDKeyA))
+		{
+			return ;
+		}
+	}
+	
+	public void writeInk(int ink, boolean isBack) {
+		byte sector = 0;
+		byte block = 0;
+		if (!mReady) {
+			return;
+		}
+		if (isBack) {
+			sector = SECTOR_INKLEVEL;
+			block = BLOCK_INKLEVEL;
+		} else {
+			sector = SECTOR_COPY_INKLEVEL;
+			block = BLOCK_COPY_INKLEVEL;
+		}
+		EncryptionMethod encryte = EncryptionMethod.getInstance();
+		byte[] content = encryte.encryptInkLevel(mCurInkLevel);
+		if (content == null) {
+			return ;
+		}
+		writeBlock(sector, block, content);
 	}
 	
 	private boolean isLevelValid(int value) {

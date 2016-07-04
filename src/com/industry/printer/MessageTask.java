@@ -228,7 +228,7 @@ public class MessageTask {
 		{
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		float div = (float) (4.0/getHeads());
+		float div = (float) (2.0/getHeads());
 		
 		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
