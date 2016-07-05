@@ -16,6 +16,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -462,6 +463,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
+					BinCreater.saveBitmap(mPreBitmap, "prev.bmp");
 					mMsgPreImg.setImageBitmap(mPreBitmap);
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);

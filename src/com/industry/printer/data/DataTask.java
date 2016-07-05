@@ -387,6 +387,9 @@ public class DataTask {
 	
 	public Bitmap getPreview() {
 		char[] preview = getPrintBuffer(true);
-		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsPerHFeed*16);
+		// String path = "/mnt/usbhost1/prev.bin";
+		// BinCreater.saveBin(path, preview, getInfo().mBytesPerHFeed*8*getHeads());
+		Debug.d(TAG, "--->column=" + mBinInfo.mColumn + ", charperh=" + mBinInfo.mCharsPerHFeed);
+		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsFeed*16);
 	}
 }

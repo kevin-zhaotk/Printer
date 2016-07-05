@@ -398,8 +398,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			{
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
 				mHighEdit.setText(mObject.getDisplayHeight());
-				mXcorEdit.setText(String.valueOf((int)mObject.getX()));
-				mYcorEdit.setText(String.valueOf((int)mObject.getY()));
+				mXcorEdit.setText(String.valueOf((int)mObject.getX()*2));
+				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
 				
 				mFont.setText(mObject.getFont());
