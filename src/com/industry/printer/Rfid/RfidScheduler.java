@@ -49,13 +49,33 @@ public class RfidScheduler {
 			 mCurrent = 0;
 		}
 		task = mRfidTasks.get(mCurrent);
+		
+		// 
+		if (task.isIdle() && (time - task.getLast()) < TASK_SCHEDULE_INTERVAL) {
+			return;
+		}
+		task.execute();
+		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+			loadNext();
+		}
 	}
 	
 	/**
 	 * 装入下一个要处理的任务
 	 */
-	private void load(RfidTask task) {
-		
+	private void loadNext() {
+		RfidTask task = mRfidTasks.get(mCurrent);
+		if (task != null) {
+			task.clearStat();
+		}
+		if (mRfidTasks.size() <= 0) {
+			return;
+		}
+		if (mRfidTasks.size() <= mCurrent || mCurrent < 0) {
+			 mCurrent = 0;
+		} else {
+			mCurrent++;
+		}
 	}
 	
 	/**

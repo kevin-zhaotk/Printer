@@ -787,11 +787,11 @@ public class RFIDDevice {
 	/**
 	 * 拆分成4個接口，給最新的rfid寫入方案
 	 */
-	public void keyVerify(boolean isBack) {
+	public boolean keyVerify(boolean isBack) {
 		byte sector = 0;
 		byte block = 0;
 		if (!mReady) {
-			return;
+			return false;
 		}
 		if (isBack) {
 			sector = SECTOR_INKLEVEL;
@@ -803,11 +803,12 @@ public class RFIDDevice {
 		
 		if ( !keyVerfication(sector, block, mRFIDKeyA))
 		{
-			return ;
+			return false;
 		}
+		return true;
 	}
 	
-	public void writeInk(int ink, boolean isBack) {
+	public void writeInk(boolean isBack) {
 		byte sector = 0;
 		byte block = 0;
 		if (!mReady) {
