@@ -10,9 +10,11 @@ import com.industry.printer.R;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.DataTask;
 
 import android.R.integer;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -73,6 +75,8 @@ public class MessageListAdater extends BaseAdapter {
 	 * 
 	 */
 	private int mSelected;
+	
+	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
 	/**
 	 * Construct
@@ -143,14 +147,33 @@ public class MessageListAdater extends BaseAdapter {
 		//fill the elements into the empty view created early 
 		mHolder.mTitle.setText(title);
 		// mHolder.mAbstract.setText(abstrace);
+		/*
+		 * 最早的方案，使用編輯時生成的1.bmp
+		 * 優點：效率高
+		 * 缺點：非實時
+		 */
+		/*
 		String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
 		File img = new File(path);
 		if (img.exists()) {
 			mHolder.mImage.setImageURI(Uri.parse("file://" + path));
 		} else {
 			mHolder.mImage.setImageResource(R.drawable.preview_null);
+		}*/
+		/*
+		 * 通過bin生成預覽圖
+		 * 優點：實時
+		 * 缺點：效率低
+		 */
+		Bitmap bmp = mPreviews.get(title);
+		if (bmp == null) {
+			MessageTask task = new MessageTask(mContext, title);
+			DataTask dTask = new DataTask(mContext, task);
+			dTask.prepareBackgroudBuffer();
+			bmp = dTask.getPreview();
+			mPreviews.put(title, bmp);
 		}
-		
+		mHolder.mImage.setImageBitmap(bmp);
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
 		{
