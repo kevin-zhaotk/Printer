@@ -168,12 +168,13 @@ public class DataTask {
 				BinInfo info = mVarBinList.get(o);
 				Debug.d(TAG, "--->object index=" + o.getIndex());
 				if (info == null) {
-					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
+					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
+				BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
 				// Debug.d(TAG, "--->object x=" + o.getX()/div);
-				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsPerHFeed());
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed());
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -208,12 +209,12 @@ public class DataTask {
 						continue;
 					BinInfo info = mVarBinList.get(rtSub);
 					if (info == null) {
-						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()));
+						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask.getHeads());
 						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
 					//BinCreater.saveBin("/mnt/usbhost1/v" + o.getIndex() + ".bin", var, info.mBytesPerHFeed*8);
-					BinInfo.overlap(mPrintBuffer, var, (int)(rtSub.getX()/div), info.getCharsPerHFeed());
+					BinInfo.overlap(mPrintBuffer, var, (int)(rtSub.getX()/div), info.getCharsFeed());
 					// Debug.d(TAG, "--->real x=" + rtSub.getX()+ ", div-x=" + rtSub.getX()/div );
 				}
 				
@@ -223,7 +224,7 @@ public class DataTask {
 				String vString = ((JulianDayObject)o).getContent();
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
 					mVarBinList.put(o, varbin);
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
@@ -234,7 +235,7 @@ public class DataTask {
 				String vString = ((ShiftObject)o).getContent();
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()));
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
 					mVarBinList.put(o, varbin);
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
