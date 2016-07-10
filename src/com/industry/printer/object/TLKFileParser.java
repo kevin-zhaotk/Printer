@@ -160,13 +160,13 @@ public class TLKFileParser  extends TlkFile{
 		if (attr == null || attr.length != 22) {
 			return ;
 		}
-		object.setIndex(Integer.parseInt(attr[0]));
+		object.setIndex(StringUtil.parseInt(attr[0]));
 		if (object instanceof TextObject) {
-			object.setX(Integer.parseInt(attr[2])/2);
-			object.setWidth(Integer.parseInt(attr[4])/2-Integer.parseInt(attr[2])/2);
+			object.setX(StringUtil.parseInt(attr[2])/2);
+			object.setWidth(StringUtil.parseInt(attr[4])/2-StringUtil.parseInt(attr[2])/2);
 		} else {
-			object.setX(Integer.parseInt(attr[2]));
-			object.setWidth(Integer.parseInt(attr[4])-Integer.parseInt(attr[2]));
+			object.setX(StringUtil.parseInt(attr[2]));
+			object.setWidth(StringUtil.parseInt(attr[4])-StringUtil.parseInt(attr[2]));
 			
 		}
 		
@@ -281,18 +281,18 @@ public class TLKFileParser  extends TlkFile{
 					obj instanceof JulianDayObject ||
 					obj instanceof ShiftObject)
 			{
-				obj.setX(Integer.parseInt(attr[2]));
-				obj.setWidth(Integer.parseInt(attr[4])-Integer.parseInt(attr[2]));
+				obj.setX(StringUtil.parseInt(attr[2]));
+				obj.setWidth(StringUtil.parseInt(attr[4])-StringUtil.parseInt(attr[2]));
 			}
 			else
 			{
-				obj.setX(Integer.parseInt(attr[2])/2);
-				obj.setWidth(Integer.parseInt(attr[4])/2-Integer.parseInt(attr[2])/2);
+				obj.setX(StringUtil.parseInt(attr[2])/2);
+				obj.setWidth(StringUtil.parseInt(attr[4])/2-StringUtil.parseInt(attr[2])/2);
 			}
 			
-			obj.setY(Integer.parseInt(attr[3])/2);
+			obj.setY(StringUtil.parseInt(attr[3])/2);
 			
-			obj.setHeight(Integer.parseInt(attr[5])/2-Integer.parseInt(attr[3])/2);
+			obj.setHeight(StringUtil.parseInt(attr[5])/2-StringUtil.parseInt(attr[3])/2);
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 			} catch (Exception e) {
 				Debug.d(TAG, "e: " + e.getCause());

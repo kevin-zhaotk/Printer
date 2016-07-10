@@ -332,12 +332,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		{
 			obj.setSelected(false);
 		}
-		Debug.d(TAG, "--->setCurObj: " + objects.size() + "   i=" + i);
 		BaseObject obj=objects.get(i);
-		Debug.d(TAG, "--->obj: " + obj.getId());
-		//if (obj instanceof MessageObject) {
-		//	return;
-		//}
 		obj.setSelected(true);
 	}
 	
@@ -977,8 +972,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			Debug.d(TAG, "--->x=" + x + ", y=" + y);
 			o.setX(x);
 			o.setY(y);
+
+			setCurObj(0);
+		} else {
+			o.setSelected(false);
 		}
-		setCurObj(0);
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	

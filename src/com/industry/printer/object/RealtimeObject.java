@@ -72,7 +72,6 @@ public class RealtimeObject extends BaseObject {
 			Debug.d(TAG, "str="+str+", i="+i);
 			if(i>0)
 			{
-				Debug.d(TAG, "--->context: " + mContext);
 				o = new TextObject(mContext, x);
 				o.setContent(str.substring(0, i));
 				mSubObjs.add(o);
@@ -225,6 +224,7 @@ public class RealtimeObject extends BaseObject {
 		{
 			o.setX(x);
 			x = o.getXEnd();
+			Debug.d(TAG, "===>x=" + o.getX() + ",  end=" + x);
 		}
 	}
 	@Override

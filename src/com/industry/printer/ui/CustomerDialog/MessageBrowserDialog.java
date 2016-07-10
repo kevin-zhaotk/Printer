@@ -218,18 +218,19 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			
 			
 			for (String t:Tlks) {
-				
+				/*
 				String path = rootpath.getAbsolutePath() + "/" + t;
 				if (!new File(path).isDirectory()) {
 					continue;
 				}
 				
-				Map<String, Object> map = new HashMap<String, Object>();
+				
 				Debug.d(TAG, "--->loadMessage:" + path);
 				parser.setTlk(path);
 				String content = parser.getContentAbatract();
+				*/
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("title", t);
-				map.put("abstract", content);
 				mContent.add(map);
 				mFilterContent.add(map);
 			}

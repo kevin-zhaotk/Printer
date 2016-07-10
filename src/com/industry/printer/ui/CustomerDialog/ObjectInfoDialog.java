@@ -301,7 +301,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						else if(mObject instanceof RealtimeObject)
 						{
 							((RealtimeObject) mObject).setFormat((String)mRtFormat.getText());
-							((RealtimeObject)mObject).setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
+							// ((RealtimeObject)mObject).setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
 						}
 						else if(mObject instanceof CounterObject)
 						{
