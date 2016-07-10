@@ -17,7 +17,7 @@ public class RFIDManager {
 	private static RFIDManager	mInstance=null;
 	private List<RFIDDevice> mRfidDevices = new ArrayList<RFIDDevice>();
 	
-	private static final int TOTAL_RFID_DEVICES = 1;
+	private static final int TOTAL_RFID_DEVICES = 4;
 	
 	public static final int MSG_RFID_INIT_SUCCESS = 101;
 	public static final int MSG_RFID_INIT_FAIL = 102;
