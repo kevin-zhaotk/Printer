@@ -522,7 +522,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			MessageObject msg = mObject.getTask().getMsgObject();
 			String[] heights = msg.getDisplayFSList();
 			for (String height : heights) {
-				Debug.d(TAG, "--->height: " + height);
+				// Debug.d(TAG, "--->height: " + height);
 				mHeightAdapter.addItem(height);
 			}
 			

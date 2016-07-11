@@ -1,5 +1,7 @@
 package com.industry.printer.object;
 
+import com.industry.printer.Utils.Debug;
+
 import android.content.Context;
 import android.text.format.Time;
 import android.util.Log;
@@ -37,7 +39,7 @@ public class RealtimeYear extends BaseObject {
 			setContent(BaseObject.intToFormatString(t.year%100, 2));
 		else if(mFormat.length()==4)
 			setContent(BaseObject.intToFormatString(t.year, 4));
-		Log.d(TAG, ">>getContent, "+mContent);
+		Debug.d(TAG, ">>getContent, "+mContent);
 		return mContent;
 	}
 	
@@ -55,7 +57,7 @@ public class RealtimeYear extends BaseObject {
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		//str += BaseObject.intToFormatString(mContent.length(), 3)+"^";
 		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
-		System.out.println("file string ["+str+"]");
+		Debug.d(TAG, "file string ["+str+"]");
 		return str;
 	}
 }

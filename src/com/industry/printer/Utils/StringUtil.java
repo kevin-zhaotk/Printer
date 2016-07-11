@@ -14,7 +14,8 @@ public class StringUtil {
 			return 0;
 		} else if (string.contains("-")) {  //處理負數
 			String sub = string.substring(string.indexOf("-") + 1);
-			return Integer.parseInt(sub);
+			int i = 0-Integer.parseInt(sub);
+			return i;
 		} else {
 			return Integer.parseInt(string);
 		}

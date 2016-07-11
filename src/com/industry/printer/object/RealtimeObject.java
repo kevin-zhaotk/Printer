@@ -227,30 +227,6 @@ public class RealtimeObject extends BaseObject {
 			Debug.d(TAG, "===>x=" + o.getX() + ",  end=" + x);
 		}
 	}
-	@Override
-	public void setWidth(float size)
-	{
-		super.setWidth(size);
-		float x=getX();
-		
-		if(mSubObjs == null)
-			return;
-		for(BaseObject o : mSubObjs)
-		{
-			o.setX(x);
-			System.out.println("o.content="+o.getContent() +", subWidth="+getSubWidth(o));
-			o.setWidth(getSubWidth(o));
-			Log.d(TAG, "o.xEnd="+o.getXEnd());
-			x = o.getXEnd();
-		}
-		Debug.d(TAG, "<<<<setWidth");
-	}
-	
-	public float getSubWidth(BaseObject o)
-	{
-		System.out.println("width="+getWidth()+", content len="+ o.getContent().length()+", len="+mFormat.length());
-		return (getWidth() * o.getContent().length())/mFormat.length();
-	}
 	
 	@Override
 	public void setSelected(boolean s)

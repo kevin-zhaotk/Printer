@@ -33,7 +33,7 @@ public class PopWindowAdapter extends BaseAdapter {
 		if (mItems == null) {
 			mItems = new ArrayList<String>();
 		}
-		Debug.d(TAG, "--->addItem: " + item);
+		// Debug.d(TAG, "--->addItem: " + item);
 		mItems.add(item);
 	}
 	

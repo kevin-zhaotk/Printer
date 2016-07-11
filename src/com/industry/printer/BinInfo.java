@@ -327,6 +327,9 @@ public class BinInfo {
     		if (matrix) {
     			dst[x*high + i] = src[i];
     		} else {
+    			if (x < 0) {
+					continue;
+				}
     			dst[x*high + i] |= src[i];
     		}
     	}

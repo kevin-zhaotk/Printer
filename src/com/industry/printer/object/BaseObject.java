@@ -356,6 +356,7 @@ public class BaseObject{
 		mWidth = size;
 		mXcor_end = mXcor + mWidth;
 		isNeedRedraw = true;
+		Debug.d(TAG, "===>x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getWidth()
@@ -366,8 +367,8 @@ public class BaseObject{
 	public void setX(float x)
 	{
 		mXcor=x;
-		//float width = mPaint.measureText(mContent);
 		mXcor_end = mXcor + mWidth; 
+		Debug.d(TAG, "===>x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getX()
