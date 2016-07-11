@@ -249,18 +249,7 @@ public class BinInfo {
     {
     	int n;
     	byte[] feed = {0};
-//    	if (mCacheStream == null) {
-//			return null;
-//		}
-    	// mCacheStream.mark(BinCreater.RESERVED_FOR_HEADER);
-    	// byte[] buffer = new byte[mLength];
-    	
-//    	try {
-//    		mCacheStream.reset();
-//    		mCacheStream.read(buffer, 0, mLength);
-//		} catch (Exception e) {
-//			Debug.d(TAG, "$$$$$$$$$$$$$$$$$$err:" + e.getMessage());
-//		}
+
     	ByteArrayBuffer ba = new ByteArrayBuffer(0);
    		for(int i=0; i<var.length(); i++)
    		{
@@ -324,12 +313,12 @@ public class BinInfo {
     	boolean matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
+    		if (x*high + i < 0) {
+				continue;
+			}
     		if (matrix) {
     			dst[x*high + i] = src[i];
     		} else {
-    			if (x < 0) {
-					continue;
-				}
     			dst[x*high + i] |= src[i];
     		}
     	}

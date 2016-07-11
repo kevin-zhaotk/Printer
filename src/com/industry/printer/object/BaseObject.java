@@ -334,6 +334,16 @@ public class BaseObject{
 		isNeedRedraw = true;
 	}
 	
+	public void resizeByHeight() {
+		mPaint.setTextSize(mHeight);
+		String s = getContent();
+		if (s == null) {
+			return;
+		}
+		int width = (int)mPaint.measureText(s);
+		setWidth(width);
+	}
+	
 	public void setHeight(String size)
 	{
 		float height = mTask.getMsgObject().getPixels(size);

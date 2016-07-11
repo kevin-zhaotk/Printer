@@ -198,11 +198,15 @@ public class RealtimeObject extends BaseObject {
 		super.setHeight(size);
 		//mHeight = size;
 		//mYcor_end = mYcor + mHeight;
+		float x = getX();
 		if(mSubObjs == null)
 			return;
 		for(BaseObject o : mSubObjs)
 		{
 			o.setHeight(size);
+			o.resizeByHeight();
+			o.setX(x);
+			x = o.getXEnd();
 		}
 	}
 	
