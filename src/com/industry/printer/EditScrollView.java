@@ -6,13 +6,16 @@ import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
 
+import android.R.color;
 import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Paint.Style;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -85,7 +88,7 @@ public class EditScrollView extends View {
 				p.setStrokeWidth(2);
 				canvas.drawLines(points, p);
 				continue;
-			}
+			} 
 			/* 不在显示区域内的对象可以不画，优化效率  */
 //			if ((obj.getXEnd() < getScrollX()) || (obj.getX() > getScrollX() + mScreenW)) {
 //				Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent() + "  x=" + obj.getX() + " end=" + obj.getXEnd());
@@ -101,7 +104,11 @@ public class EditScrollView extends View {
 				continue;
 			}
 			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
-			 
+			if (obj.getSelected()) {
+				p.setStyle(Style.STROKE);
+				canvas.drawRect(new RectF(obj.getX(), obj.getY(), obj.getXEnd(), obj.getYEnd()), p);
+			}
+			
 		}
 		canvas.drawLine(scrollx, 153, scrollx + mScreenW, 153, p);
 		Debug.d(TAG, "<<<==onDraw");

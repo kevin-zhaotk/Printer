@@ -226,6 +226,9 @@ public class MessageTask {
 			return ;
 		for(BaseObject o:mObjects)
 		{
+			if (o instanceof MessageObject) {
+				continue;
+			}
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 		float div = (float) (2.0/getHeads());

@@ -95,11 +95,11 @@
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>Welldraw0</item>
+	    <item>Arial</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
-	    <item>Welldraw0</item>
+	    <item>Arial</item>
 	</string-array>
 	
 	<string-array name="strDirectArray">

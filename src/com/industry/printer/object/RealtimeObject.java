@@ -208,6 +208,7 @@ public class RealtimeObject extends BaseObject {
 			o.setX(x);
 			x = o.getXEnd();
 		}
+		setWidth(x - getX());
 	}
 	
 	@Override

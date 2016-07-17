@@ -178,14 +178,14 @@ public class BaseObject{
 		return scaledBmp;
 		*/
 		if (isNeedRedraw) {
-			drawSelected();
+			// drawSelected();
 			drawNormal();
 		}
 		Debug.d(TAG, "--->redraw?" + isNeedRedraw);
 		isNeedRedraw = false;
-		if (mIsSelected) {
-			return mBitmapSelected;
-		}
+//		if (mIsSelected) {
+//			return mBitmapSelected;
+//		}
 		return mBitmap;
 	}
 	
@@ -197,7 +197,7 @@ public class BaseObject{
 	
 	protected void drawSelected() {
 		mPaint.setColor(Color.RED);
-		Debug.d(TAG, "--->drawNormal");
+		Debug.d(TAG, "--->drawSelected");
 		mBitmapSelected = draw();
 	}
 	
@@ -216,7 +216,10 @@ public class BaseObject{
 		Debug.d(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: ");
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p); 
 		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
-		return bitmap;
+		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+			setWidth(width * 1.25f);
+		}
+		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	protected Bitmap getBitmap(Context context)
 	{
