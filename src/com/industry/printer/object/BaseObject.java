@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
@@ -21,6 +22,7 @@ import com.industry.printer.data.InternalCodeCalculater;
 
 import android.R.color;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -206,6 +208,17 @@ public class BaseObject{
 		mPaint.setTextSize(mHeight);
 		mPaint.setAntiAlias(true); //去除锯齿  
 		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+		try {
+			AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
+			if (fd != null) {
+				fd.close();
+			} else {
+				mFont = "WelldrawH000";
+			}
+		} catch (Exception e) {
+			mFont = "WelldrawH000";
+		}
+		
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		setWidth(width);
