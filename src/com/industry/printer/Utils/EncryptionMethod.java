@@ -80,19 +80,50 @@ public class EncryptionMethod {
 		if (level == null || level.length < 3) {
 			return 0;
 		}
+		if (false) {
+			byte checkSum = (byte) (level[1] + level[2] + level[3] + level[4]);
+			if (checkSum != level[0]) {
+				return 0;
+			}
+			byte l=0;
+			l = level[3];
+			level[3] = (byte) (~level[1] & 0x0ff);
+			level[1] = (byte) (~l & 0x0ff);
+			l = level[2];
+			level[2] = (byte) (~level[4] & 0x0ff);
+			level[4] = (byte) (~l & 0x0ff);
+		}
 		return (int) ((level[1] & 0x0ff) + (level[2] & 0x0ff)* 256 + (level[3] & 0x0ff)* Math.pow(256, 2) + (level[4] & 0x0ff)* Math.pow(256, 3));
 		
 	}
 	
+	/**
+	 * 墨水量的加密算法:
+	 * 		1, 按位取反
+	 * 		2. 錯序：Byte3 （bit0~7） Byte4(bit8~15) Byte1(bit16~23) Byte2(bit24~31)
+	 * 		3. 校驗和： Byte0
+	 */
 	public byte[] encryptInkLevel(int level) {
 		if (level < RFIDDevice.INK_LEVEL_MIN || level > RFIDDevice.INK_LEVEL_MAX) {
 			return null;
 		}
 		byte[] ink = new byte[16];
-		ink[0] = (byte) (level & 0x0ff); 
-		ink[1] = (byte) ((level>>8) & 0x0ff);
-		ink[2] = (byte) ((level>>(8*2)) & 0x0ff);
-		ink[3] = (byte) ((level>>(8*3)) & 0x0ff);
+		if(true) {
+			ink[0] = (byte) (level & 0x0ff); 
+			ink[1] = (byte) ((level>>8) & 0x0ff);
+			ink[2] = (byte) ((level>>(8*2)) & 0x0ff);
+			ink[3] = (byte) ((level>>(8*3)) & 0x0ff);
+		} else {
+			ink[3] = (byte) (level & 0x0ff); 
+			ink[3] = (byte) (~ink[3] & 0x0ff);
+			ink[4] = (byte) ((level>>8) & 0x0ff);
+			ink[4] = (byte) (~ink[4] & 0x0ff);
+			ink[1] = (byte) ((level>>(8*2)) & 0x0ff);
+			ink[1] = (byte) (~ink[1] & 0x0ff);
+			ink[2] = (byte) ((level>>(8*3)) & 0x0ff);
+			ink[2] = (byte) (~ink[2] & 0x0ff);
+			ink[0] = (byte) (ink[1] + ink[2] + ink[3] + ink[4]);
+		}
 		return ink;
 	}
 	
@@ -101,7 +132,11 @@ public class EncryptionMethod {
 		if (level == null || level.length < 6) {
 			return 0;
 		}
+		
 		return (int) ((level[1] & 0x0ff) + (level[2] & 0x0ff)* 256 + (level[3] & 0x0ff)* Math.pow(256, 2) + (level[4] & 0x0ff)* Math.pow(256, 3) + (level[5] & 0x0ff)* Math.pow(256, 4));
 		
 	}
+	
+	
+	
 }
