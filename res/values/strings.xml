@@ -95,11 +95,11 @@
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>Arial</item>
+	    <item>WelldrawH000</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
-	    <item>Arial</item>
+	    <item>WelldrawH000</item>
 	</string-array>
 	
 	<string-array name="strDirectArray">
@@ -643,4 +643,7 @@
 	</string-array>
 	
 	<string name="str_no_upgrade">Already the last Version right now</string>
+	
+	<string name="str_cnt_min">Min</string>
+	<string name="str_cnt_max">Max</string>
 </resources>

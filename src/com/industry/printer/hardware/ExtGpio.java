@@ -11,6 +11,8 @@ public class ExtGpio {
 	private static final int GPIO_PLAY_ERR = 0x02;
 	private static final int GPIO_RFID_CARD1 = 0x03;
 	private static final int GPIO_RFID_CARD2 = 0x04;
+	private static final int GPIO_RFID_CARD3 = 0x05;
+	private static final int GPIO_RFID_CARD4 = 0x06;
 	
 	// RFID卡1對應的3-8譯碼器編碼
 	private static final int RFID_CARD1_CODE = 3;

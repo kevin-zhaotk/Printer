@@ -3,6 +3,7 @@ package com.industry.printer.ui.CustomerDialog;
 import java.util.zip.Inflater;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.StringUtils;
 import com.industry.printer.R;
 import com.industry.printer.R.array;
 import com.industry.printer.R.id;
@@ -10,6 +11,7 @@ import com.industry.printer.R.layout;
 import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
+import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -46,6 +48,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -100,8 +103,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public EditText mShiftVal4;
 	public EditText mShift5;
 	public EditText mShiftVal5;
+	private EditText mMin;
+	private EditText mMax;
 	public Button	mBtnOk;
-	
+	private Button  mPageup;
+	private Button  mPagedown;
+	private ScrollView mScroll;
 	public TextView mLineType;
 	
 	
@@ -188,6 +195,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
 	     
+	     mScroll = (ScrollView) findViewById(R.id.viewInfo);
 //	    mXCorView 	= (TextView) findViewById(R.id.xCorView);
 //	 	mXCorUnit 		= (TextView) findViewById(R.id.xCorUnit);
 //	 	mYCorView	= (TextView) findViewById(R.id.yCorView);
@@ -230,6 +238,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    	mDigits = (EditText) findViewById(R.id.cntBits);
 			    mDir = (TextView) findViewById(R.id.spinDirect);
 			    mDir.setOnClickListener(this);
+			    mMin = (EditText) findViewById(R.id.et_min);
+			    mMax = (EditText) findViewById(R.id.et_max);
+			    
 			}
 		    
 		    mCode = (Spinner) findViewById(R.id.spinCode);
@@ -307,6 +318,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						{
 							((CounterObject) mObject).setBits(Integer.parseInt(mDigits.getText().toString()));
 							((CounterObject) mObject).setDirection("increase".equals(mDir.getText().toString())?true:false);
+							((CounterObject) mObject).setMin(StringUtil.parseInt(mMin.getText().toString()));
+							((CounterObject) mObject).setMax(StringUtil.parseInt(mMax.getText().toString()));
 						}
 						else if(mObject instanceof BarcodeObject)
 						{
@@ -377,6 +390,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 			}
 		});
+	     
+	     mPageup = (Button) findViewById(R.id.btn_page_up);
+	     mPageup.setOnClickListener(this);
+	     mPagedown = (Button) findViewById(R.id.btn_page_down);
+	     mPagedown.setOnClickListener(this);
 	 }
 	 
 	 public void setObject(BaseObject obj)
@@ -411,6 +429,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				{
 					mDigits.setText(String.valueOf( ((CounterObject) mObject).getBits()));
 					mDir.setText( ((CounterObject) mObject).getDirection());
+					mMin.setText(String.valueOf(((CounterObject) mObject).getMin()));
+					mMax.setText(String.valueOf(((CounterObject) mObject).getMax()));
 				}
 				else if(mObject instanceof BarcodeObject)
 				{
@@ -471,9 +491,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			Debug.d(TAG, ">>>>>disable content");
 			mContent.setEnabled(false);
 		}
-		if (mObject instanceof CounterObject) {
-			mCntView.setTextColor(Color.GRAY);
-		}
+		
 	}
 	 
 	 public void setOnPositiveBtnListener(OnPositiveBtnListener listener)
@@ -621,6 +639,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 			});
 			dialog.show();
+			break;
+		case R.id.btn_page_up:
+			mScroll.smoothScrollBy(0, -300);
+			break;
+		case R.id.btn_page_down:
+			mScroll.smoothScrollBy(0, 300);
 			break;
 		default:
 			break;

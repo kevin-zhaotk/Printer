@@ -96,11 +96,11 @@
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>Arial</item>
+	    <item>WelldrawH000</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
-	    <item>Arial</item>
+	    <item>WelldrawH000</item>
 	</string-array>
 	
 	<string-array name="strDirectArray">
@@ -642,4 +642,7 @@
 	</string-array>
 	
 	<string name="str_no_upgrade">已经是最新版本</string>
+	
+	<string name="str_cnt_min">最小值</string>
+	<string name="str_cnt_max">最大值</string>
 </resources>

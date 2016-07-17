@@ -112,7 +112,7 @@ public class BaseObject{
 		mYcor_end=0;
 		mDragable = true;
 		isNeedRedraw = true;
-		mFont = "Welldraw0";
+		mFont = "WelldrawH000";
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
