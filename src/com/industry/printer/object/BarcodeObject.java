@@ -235,7 +235,7 @@ public class BarcodeObject extends BaseObject {
 		str += "000^";
 		str += BaseObject.boolToFormatString(mShow, 3)+"^";
 		str += mContent+"^";
-		str += "00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
+		str += "00000000^00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

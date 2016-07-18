@@ -35,7 +35,7 @@ public class RTSecondObject extends BaseObject {
 		str += BaseObject.floatToFormatString(getYEnd()*2, 5)+"^";
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
+		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
 		Debug.d(TAG,"file string ["+str+"]");
 		return str;
 	}

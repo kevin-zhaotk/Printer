@@ -34,7 +34,7 @@ public class RealtimeMinute extends BaseObject {
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		//str += BaseObject.intToFormatString(mContent.length(), 3)+"^";
-		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
+		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("file string ["+str+"]");
 		return str;
 	}
