@@ -32,6 +32,7 @@ import java.util.IllegalFormatCodePointException;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
+import android.os.SystemClock;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -46,6 +47,7 @@ public class RFIDDevice {
 	public static native int close(int fd);
 	public static native int write(int fd, short[] buf, int len);
 	public static native byte[] read(int fd, int len);
+	public static native int setBaudrate(int fd, int rate);
 	
 
 	/************************
@@ -116,7 +118,7 @@ public class RFIDDevice {
 	public static byte RFID_CMD_MIFARE_WALLET_DEBIT = 0x4F;
 	
 	//Data
-	public static byte[] RFID_DATA_CONNECT = {0x03};
+	public static byte[] RFID_DATA_CONNECT = {0x07};
 	public static byte[] RFID_DATA_TYPEA = {0x41};
 	public static byte[] RFID_DATA_SEARCHCARD_WAKE = {0x26};
 	public static byte[] RFID_DATA_SEARCHCARD_ALL = {0x52};
@@ -164,15 +166,13 @@ public class RFIDDevice {
 		if (mRfidDevice == null) {
 			mRfidDevice = new RFIDDevice();
 		}
-		if (mFd <= 0) {
-			mFd = open(PlatformInfo.getRfidDevice());
-		}
 		return mRfidDevice;
 	}
 	
 	public RFIDDevice() {
 		mCurInkLevel = 0;
 		mLastLevel = mCurInkLevel;
+		openDevice();
 	}
 	/*
 	 * 端口连接
@@ -743,6 +743,10 @@ public class RFIDDevice {
 		return true;
 	}
 	
+	
+	public void setBaudrate(int rate) {
+		
+	}
 	public void makeCard() {
 		//修改秘钥
 		/*
@@ -840,7 +844,12 @@ public class RFIDDevice {
 	private int openDevice() {
 		if (mFd <= 0) {
 			mFd = open(PlatformInfo.getRfidDevice());
-			//init();
+			if (!mReady && SystemClock.uptimeMillis() < 30*1000) { // 上電後
+				//1.先修改模塊的baudrate
+				connect();
+			}
+			//2.修改本地串口的baudrate
+			setBaudrate(mFd, 115200);
 		}
 		Debug.d(TAG, "===>mFd=" + mFd);
 		return mFd;
@@ -855,6 +864,7 @@ public class RFIDDevice {
 	private void reopen() {
 		close(mFd);
 		mFd = 0;
-		openDevice();
+		mFd = open(PlatformInfo.getRfidDevice());
+		setBaudrate(mFd, 115200);
 	}
 }

@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	
 	public TextView mCtrlTitle;
 	public TextView mEditTitle;
-	public LinearLayout mSettings;
+	public RelativeLayout mSettings;
 	public TextView mSettingTitle;
 	public LinearLayout mEditExtra;
 	public TextView mVersion;
@@ -203,7 +203,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
 		mEditExtra = (LinearLayout) findViewById(R.id.edit_extra);
 		
-		mSettings = (LinearLayout) findViewById(R.id.settings_view);
+		mSettings = (RelativeLayout) findViewById(R.id.settings_view);
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
 		try {

@@ -138,7 +138,8 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
 JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_close
   (JNIEnv *env, jclass arg, jint fd);
 
-
+JNIEXPORT jint Java_com_industry_printer_RFID_setBaudrate
+	(JNIEnv *env, jclass arg, jint fd, jint speed);
 /**************************************
  * RTC操作接口
  **************************************/

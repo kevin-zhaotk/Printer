@@ -59,6 +59,7 @@ static JNINativeMethod gRFIDMethods[] = {
 	{"write",		"(I[SI)I",					(void *)Java_com_industry_printer_RFID_write},
 	{"read",		"(II)[B",					(void *)Java_com_industry_printer_RFID_read},
 	{"close",		"(I)I",						(void *)Java_com_industry_printer_RFID_close},
+	{"setBaudrate",	"(II)I",					(void *)Java_com_industry_printer_RFID_setBaudrate},
 };
 
 /**

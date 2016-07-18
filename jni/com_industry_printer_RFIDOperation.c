@@ -104,7 +104,7 @@ int set_options(int fd, int databits, int stopbits, int parity)
  * Method:    setBaudrate
  * Signature: ()I
  */
-int setBaudrate(int fd, int speed)
+JNIEXPORT jint Java_com_industry_printer_RFID_setBaudrate(JNIEnv *env, jclass arg, int fd, int speed)
 {
 	int i;
 	int status;
@@ -154,7 +154,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_open
 	/*
 	 * RFID串口波特率 19200
 	 */
-	setBaudrate(ret, 19200);
+	Java_com_industry_printer_RFID_setBaudrate(env, arg, ret, 19200);
 	(*env)->ReleaseStringUTFChars(env, dev, dev_utf);
 	return ret;
 }
