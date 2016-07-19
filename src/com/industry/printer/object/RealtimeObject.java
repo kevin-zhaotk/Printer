@@ -234,6 +234,18 @@ public class RealtimeObject extends BaseObject {
 	}
 	
 	@Override
+	public void setY(float y)
+	{
+		super.setY(y);
+		if(mSubObjs == null)
+			return;
+		for(BaseObject o : mSubObjs)
+		{
+			o.setY(y);
+		}
+	}
+	
+	@Override
 	public void setSelected(boolean s)
 	{
 		super.setSelected(s);
