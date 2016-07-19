@@ -926,8 +926,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		float h = obj.getHeight();
 		if (h >= 152) {
 			h = 12 * MessageObject.PIXELS_PER_MM;
-		} else if (h <= MessageObject.PIXELS_PER_MM) {
-			h = MessageObject.PIXELS_PER_MM;
+		} else if (h <= 2 * MessageObject.PIXELS_PER_MM) {
+			h = 2 * MessageObject.PIXELS_PER_MM;
 		} else {
 			h = h - MessageObject.PIXELS_PER_MM;
 		}
