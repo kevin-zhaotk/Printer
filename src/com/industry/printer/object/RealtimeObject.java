@@ -203,9 +203,10 @@ public class RealtimeObject extends BaseObject {
 			return;
 		for(BaseObject o : mSubObjs)
 		{
+			o.setX(x);
 			o.setHeight(size);
 			o.resizeByHeight();
-			o.setX(x);
+			
 			x = o.getXEnd();
 		}
 		setWidth(x - getX());

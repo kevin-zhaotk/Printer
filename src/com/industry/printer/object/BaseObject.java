@@ -342,8 +342,11 @@ public class BaseObject{
 	
 	public void setHeight(float size)
 	{
-		if(size<0)
-			size=0;
+		if (this instanceof BarcodeObject && size < 4.0*MessageObject.PIXELS_PER_MM) {
+			size = 4.0f * MessageObject.PIXELS_PER_MM;
+		} else if (size < 2.0 * MessageObject.PIXELS_PER_MM) {
+			size = 2.0f * MessageObject.PIXELS_PER_MM;
+		}
 		mHeight = size;
 		Debug.d(TAG, "--->height=" + mHeight);
 		mYcor_end = mYcor + mHeight;
@@ -356,7 +359,10 @@ public class BaseObject{
 		if (s == null) {
 			return;
 		}
-		int width = (int)mPaint.measureText(s);
+		float width = mPaint.measureText(s);
+		if (getHeight() <= 4 * MessageObject.PIXELS_PER_MM) {
+			width = width * 1.25f;
+		}
 		setWidth(width);
 	}
 	
