@@ -193,11 +193,8 @@ public class RealtimeObject extends BaseObject {
 	@Override
 	public void setHeight(float size)
 	{
-		if(size <0)
-			size = 0;
 		super.setHeight(size);
-		//mHeight = size;
-		//mYcor_end = mYcor + mHeight;
+		size = getHeight();
 		float x = getX();
 		if(mSubObjs == null)
 			return;

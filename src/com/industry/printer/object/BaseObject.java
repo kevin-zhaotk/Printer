@@ -344,9 +344,12 @@ public class BaseObject{
 	{
 		if (this instanceof BarcodeObject && size < 4.0*MessageObject.PIXELS_PER_MM) {
 			size = 4.0f * MessageObject.PIXELS_PER_MM;
-		} else if (size < 2.0 * MessageObject.PIXELS_PER_MM) {
-			size = 2.0f * MessageObject.PIXELS_PER_MM;
+		} else if (size < MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM) {
+			size = MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM;
+		} else if (size > 152) {
+			size = 152;
 		}
+		
 		mHeight = size;
 		Debug.d(TAG, "--->height=" + mHeight);
 		mYcor_end = mYcor + mHeight;

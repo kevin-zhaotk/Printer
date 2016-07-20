@@ -12,7 +12,7 @@ public class MessageObject extends BaseObject {
 	public int mType;
 	
 	public static final int PIXELS_PER_MM = 12;
-	public static final float[] mBaseList = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
+	public static final float[] mBaseList = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
