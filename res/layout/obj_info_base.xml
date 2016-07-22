@@ -10,7 +10,7 @@
     	android:layout_weight="1">
 		<EditText android:id="@+id/xCorEdit"
 	        android:layout_marginLeft="150dp"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:imeOptions="flagNoExtractUi|actionDone"
 	        android:textSize="30sp"
@@ -44,7 +44,7 @@
     	android:layout_height="match_parent"
     	android:layout_weight="1">
 	    <EditText android:id="@+id/yCorEdit"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="150dp"
 	        android:imeOptions="flagNoExtractUi|actionDone"
@@ -80,7 +80,7 @@
     	android:layout_weight="1"
     	android:visibility="gone">
 	    <EditText android:id="@+id/widthEdit"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="150dp"
 	        android:imeOptions="flagNoExtractUi|actionDone"
@@ -118,7 +118,7 @@
     	android:layout_height="match_parent"
     	android:layout_weight="1">        
 	    <TextView android:id="@+id/highEdit"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="150dp"
 	        android:gravity="center_vertical"
@@ -154,7 +154,7 @@
     	android:layout_height="match_parent"
     	android:layout_weight="1">        
 	    <EditText android:id="@+id/cntEdit"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="150dp"
 	        android:imeOptions="flagNoExtractUi|actionDone"
@@ -180,7 +180,7 @@
     	android:layout_weight="1">        
 	    <TextView
 	    	android:id="@+id/fontSpin"
-	        android:layout_width="200dp"
+	        android:layout_width="@dimen/settingsItemLength"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="150dp"
 	        android:gravity="center_vertical"

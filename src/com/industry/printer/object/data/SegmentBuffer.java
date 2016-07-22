@@ -87,12 +87,13 @@ public class SegmentBuffer {
 	
 	public void readColumn(char[] buffer, int col, int offset) {
 		//如果當前打印頭的鎖無效，則直接返回全零buffer（即該頭無輸出）
+		/*
 		if (mRfid == null || mRfid.getLocalInk() > 0) {
 			for (int i = 0; i < mHight; i++) {
 				buffer[offset+i] = 0;
 			}
 			return;
-		}
+		}*/
 		CharArrayReader reader = new CharArrayReader(mBuffer.buffer());
 		// Debug.d(TAG, "--->col=" + col + ", mColumns=" + mColumns);
 		if (col < mColumns) {

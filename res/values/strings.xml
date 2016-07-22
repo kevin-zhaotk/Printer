@@ -162,6 +162,8 @@
 	    <item>12.7 mm</item>
 	</string-array>
 	
+	<string name="strOffset">Offset</string>
+	
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
 	<string name="objectInfoName">Show TEXT</string>
@@ -644,6 +646,6 @@
 	
 	<string name="str_no_upgrade">Already the last Version right now</string>
 	
-	<string name="str_cnt_min">Min</string>
-	<string name="str_cnt_max">Max</string>
+	<string name="str_cnt_min">Start</string>
+	<string name="str_cnt_max">End</string>
 </resources>

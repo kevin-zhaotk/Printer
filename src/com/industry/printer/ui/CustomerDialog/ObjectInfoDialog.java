@@ -93,6 +93,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public CheckBox mShow;
 	public EditText mLineWidth;
 	public TextView mPicture; // 圖片路徑
+	public EditText mOffset;
 	public EditText mShift1;
 	public EditText mShiftVal1;
 	public EditText mShift2;
@@ -231,15 +232,16 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    if (mObject instanceof RealtimeObject) {
 		    	mRtFormat = (TextView) findViewById(R.id.rtFormat);
 			    mRtFormat.setOnClickListener(this);
+			    mOffset = (EditText) findViewById(R.id.et_offset);
 			}
 		    
 		    if (mObject instanceof CounterObject) {
 		    	mCntView = (TextView) findViewById(R.id.cntView);
 		    	mDigits = (EditText) findViewById(R.id.cntBits);
-			    mDir = (TextView) findViewById(R.id.spinDirect);
-			    mDir.setOnClickListener(this);
-			    mMin = (EditText) findViewById(R.id.et_min);
-			    mMax = (EditText) findViewById(R.id.et_max);
+			    // mDir = (TextView) findViewById(R.id.spinDirect);
+			    // mDir.setOnClickListener(this);
+			    mMin = (EditText) findViewById(R.id.et_start);
+			    mMax = (EditText) findViewById(R.id.et_end);
 			    
 			}
 		    
@@ -292,19 +294,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							return;
 						}
 						
-						// mObject.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
-						// mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
-						Debug.d(TAG, "--->positive click");
-						mObject.setHeight(mHighEdit.getText().toString());
-						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString())/2);
-						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString())/2);
-						Debug.d(TAG, "content="+mContent.getText().toString());
 						
-						Resources res = mContext.getResources();
-						
-						String font = mFont.getText().toString();
-						mObject.setFont(font);
-						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						if (mObject instanceof TextObject) {
 							mObject.setContent(mContent.getText().toString());
 							Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
@@ -312,14 +302,18 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						else if(mObject instanceof RealtimeObject)
 						{
 							((RealtimeObject) mObject).setFormat((String)mRtFormat.getText());
+							((RealtimeObject) mObject).setOffset(Integer.parseInt(mOffset.getText().toString()));
 							// ((RealtimeObject)mObject).setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
 						}
 						else if(mObject instanceof CounterObject)
 						{
 							((CounterObject) mObject).setBits(Integer.parseInt(mDigits.getText().toString()));
-							((CounterObject) mObject).setDirection("increase".equals(mDir.getText().toString())?true:false);
-							((CounterObject) mObject).setMin(StringUtil.parseInt(mMin.getText().toString()));
-							((CounterObject) mObject).setMax(StringUtil.parseInt(mMax.getText().toString()));
+							// ((CounterObject) mObject).setDirection("increase".equals(mDir.getText().toString())?true:false);
+							((CounterObject) mObject).setRange(StringUtil.parseInt(mMin.getText().toString()), 
+									StringUtil.parseInt(mMax.getText().toString()));
+							((CounterObject) mObject).setContent(mContent.getText().toString());
+							// ((CounterObject) mObject).setMin(StringUtil.parseInt(mMin.getText().toString()));
+							// ((CounterObject) mObject).setMax(StringUtil.parseInt(mMax.getText().toString()));
 						}
 						else if(mObject instanceof BarcodeObject)
 						{
@@ -357,7 +351,19 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						} else if (mObject instanceof GraphicObject) {
 							
 						}
-							
+						// mObject.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
+						// mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
+						Debug.d(TAG, "--->positive click");
+						mObject.setHeight(mHighEdit.getText().toString());
+						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString())/2);
+						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString())/2);
+						Debug.d(TAG, "content="+mContent.getText().toString());
+						
+						Resources res = mContext.getResources();
+						
+						String font = mFont.getText().toString();
+						mObject.setFont(font);
+						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)
 					{
@@ -424,11 +430,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				if(mObject instanceof RealtimeObject)
 				{
 					mRtFormat.setText(((RealtimeObject) mObject).getFormat());
+					mOffset.setText(String.valueOf(((RealtimeObject) mObject).getOffset()));
 				}
 				else if(mObject instanceof CounterObject)
 				{
 					mDigits.setText(String.valueOf( ((CounterObject) mObject).getBits()));
-					mDir.setText( ((CounterObject) mObject).getDirection());
+					// mDir.setText( ((CounterObject) mObject).getDirection());
 					mMin.setText(String.valueOf(((CounterObject) mObject).getMin()));
 					mMax.setText(String.valueOf(((CounterObject) mObject).getMax()));
 				}
@@ -532,7 +539,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mFormatAdapter = new PopWindowAdapter(mContext, null);
 		mTypeAdapter = new PopWindowAdapter(mContext, null);
 		mLineAdapter = new PopWindowAdapter(mContext, null);
-		mDirAdapter = new PopWindowAdapter(mContext, null);
+		// mDirAdapter = new PopWindowAdapter(mContext, null);
 		mHeightAdapter = new PopWindowAdapter(mContext, null);
 		
 		// String[] heights = mContext.getResources().getStringArray(R.array.strarrayFontSize);
@@ -565,12 +572,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		for (String line : lines) {
 			mLineAdapter.addItem(line);
 		}
-		
+		/*
 		String[] directions = mContext.getResources().getStringArray(R.array.strDirectArray);
 		for (String direction : directions) {
 			mDirAdapter.addItem(direction);
 		}
-		
+		*/
 	 }
 	 
 	 private void setHFullScreen() {
@@ -611,10 +618,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			mSpiner.setAdapter(mLineAdapter);
 			mSpiner.showAsDropUp(v);
 			break;
+		/*
 		case R.id.spinDirect:
 			mSpiner.setAdapter(mDirAdapter);
 			mSpiner.showAsDropUp(v);
-			break;
+			break;*/
 		case R.id.image:
 			final PictureBrowseDialog dialog = new PictureBrowseDialog(mContext);
 			dialog.setOnPositiveClickedListener(new OnPositiveListener() {

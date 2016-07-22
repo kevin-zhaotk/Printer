@@ -41,7 +41,7 @@
 	            android:text="@string/strBits"
 	            android:textColor="#000000"
 	            />
-	        
+	      <!-- 
 	        <TextView android:id="@+id/spinDirect"
 	            android:layout_alignLeft="@id/cntBits"
 	            android:layout_width="200dp"
@@ -63,42 +63,42 @@
 	            android:text="@string/strDirect"
 	            android:textColor="#000000"
 	            />
-	       
-	        <EditText android:id="@+id/et_min"
+	       -->
+	        <EditText android:id="@+id/et_start"
 	            android:layout_marginLeft="150dp"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
-	            android:layout_below="@id/spinDirect"
+	            android:layout_below="@id/cntBits"
 	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:textSize="30sp"
 	            android:inputType="number"
 	            android:hint="@string/strDefault"/>
 	        
-	        <TextView android:id="@+id/tv_min"
+	        <TextView android:id="@+id/tv_start"
 	            android:layout_marginLeft="10dp"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@id/et_min"
+	            android:layout_alignBaseline="@id/et_start"
 	            android:textSize="30sp"
 	            android:text="@string/str_cnt_min"
 	            android:textColor="#000000"
 	            />
 	        
-	        <EditText android:id="@+id/et_max"
+	        <EditText android:id="@+id/et_end"
 	            android:layout_marginLeft="150dp"
 	            android:layout_width="200dp"
 	            android:layout_height="wrap_content"
-	            android:layout_below="@id/et_min"
+	            android:layout_below="@id/et_start"
 	            android:imeOptions="flagNoExtractUi|actionDone"
 	            android:textSize="30sp"
 	            android:inputType="number"
 	            android:hint="@string/strDefault"/>
 	        
-	        <TextView android:id="@+id/tv_max"
+	        <TextView android:id="@+id/tv_end"
 	            android:layout_marginLeft="10dp"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@id/et_max"
+	            android:layout_alignBaseline="@id/et_end"
 	            android:textSize="30sp"
 	            android:text="@string/str_cnt_max"
 	            android:textColor="#000000"

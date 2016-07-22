@@ -1,9 +1,11 @@
 package com.industry.printer.object;
 
+import com.industry.printer.MainActivity;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
+import android.renderscript.Sampler.Value;
 import android.util.Log;
 
 public class CounterObject extends BaseObject {
@@ -63,6 +65,18 @@ public class CounterObject extends BaseObject {
 		return mMin;
 	}
 	
+	public void setRange(int start, int end) {
+		if (start <= end) {
+			mDirection = true;
+			mMin = start;
+			mMax = end;
+		} else {
+			mDirection = false;
+			mMin = end;
+			mMax = start;
+		}
+	}
+	
 	public void setDirection(boolean dir)
 	{
 		mDirection = dir;
@@ -96,21 +110,48 @@ public class CounterObject extends BaseObject {
 		mValue = value;
 	}
 	
+	@Override
+	public void setContent(String content) {
+		try{
+			int value = Integer.parseInt(content);
+			if( mMin < mMax) {
+				if(value < mMin || value> mMax) {
+					mValue = mMin;
+				}
+				else {
+					mValue = value;
+				}
+			} else {
+				if (value > mMin || value < mMax) {
+					mValue = mMin;
+				} else {
+					mValue = value;
+				}
+			}
+			
+		} catch (Exception e) {
+			mValue = mMin;
+		}
+		mContent = BaseObject.intToFormatString(mValue, mBits);
+		Debug.d(TAG, "setContent content="+content+", value="+mValue+", mMax="+mMax);
+	}
+	
+	
 	public String getNext()
 	{
 		if(mDirection)	//increase
 		{
-			if(mValue+mStepLen > mMax)
+			if(mValue+mStepLen > mMax || mValue < mMin)
 				mValue=mMin;
 			else
-				mValue++;
+				mValue += mStepLen;
 		}
 		else	//decrease
 		{
-			if(mValue-mStepLen < mMin)
-				mValue=mMax;
+			if(mValue-mStepLen < mMax || mValue > mMin)
+				mValue=mMin;
 			else
-				mValue--;
+				mValue -= mStepLen;
 		}
 		setContent( BaseObject.intToFormatString(mValue, mBits));
 		Debug.d(TAG, "getNext mContent="+mContent+", mValue="+mValue+", mMax="+mMax);

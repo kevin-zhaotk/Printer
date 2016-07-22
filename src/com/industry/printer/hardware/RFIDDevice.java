@@ -861,6 +861,10 @@ public class RFIDDevice {
 		}
 		mFd = -1;
 	}
+	
+	/**
+	 * reopen時表示RFID的波特率已經修改過，不需要在修改
+	 */
 	private void reopen() {
 		close(mFd);
 		mFd = 0;

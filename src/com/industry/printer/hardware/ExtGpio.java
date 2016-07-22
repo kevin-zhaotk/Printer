@@ -21,6 +21,8 @@ public class ExtGpio {
 	
 	public static final int RFID_CARD1 = 0;
 	public static final int RFID_CARD2 = 1;
+	public static final int RFID_CARD3 = 2;
+	public static final int RFID_CARD4 = 3;
 	
 	public static int mFd = 0;
 	public static void rfidSwitch(int sw) {
@@ -29,6 +31,10 @@ public class ExtGpio {
 			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD1, 0);
 		} else if (sw == RFID_CARD2) {
 			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD2, 0);
+		} else if (sw == RFID_CARD3) {
+			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD3, 0);
+		} else if (sw == RFID_CARD4) {
+			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD4, 0);
 		}
 	}
 	

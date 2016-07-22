@@ -261,7 +261,7 @@ public class MessageTask {
 				// o.drawVarBitmap();
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
-				can.drawBitmap(t, o.getX(), o.getY()/div, p);
+				can.drawBitmap(t, o.getX(), o.getY(), p);
 			} else {
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);

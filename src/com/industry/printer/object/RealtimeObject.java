@@ -20,14 +20,17 @@ import android.util.Log;
 
 public class RealtimeObject extends BaseObject {
 
+	public final static long MS_DAY = 24*60*60*1000;
 	public String mFormat; /* yyyy-mm-dd hh:nn for example*/
 	public Vector<BaseObject> mSubObjs;
+	public int mOffset;
 	
 	public RealtimeObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_RT, x);
 		//Time t = new Time();
 		Debug.d(TAG, ">>>RealtimeObject mcontext: " + mContext);
 		mSubObjs = new Vector<BaseObject>();
+		mOffset = 0;
 		setFormat("YYYY-MM-DD");
 		//setContent(BaseObject.intToFormatString(t.year, 4) +"/"+BaseObject.intToFormatString(t.month+1, 2)+"/"+BaseObject.intToFormatString(t.monthDay, 2));
 	}
@@ -90,28 +93,28 @@ public class RealtimeObject extends BaseObject {
 			if(str.startsWith("YYYY", i))
 			{
 				System.out.println("YYYY detected");
-				o = new RealtimeYear(mContext, x,true);
+				o = new RealtimeYear(mContext, this, x,true);
 				mSubObjs.add(o);
 				i += 4;
 			}
 			else if(str.startsWith("YY", i))
 			{
 				System.out.println("YY detected");
-				o = new RealtimeYear(mContext, x,false);
+				o = new RealtimeYear(mContext, this, x,false);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("MM", i))
 			{
 				System.out.println("MM detected");
-				o = new RealtimeMonth(mContext, x);
+				o = new RealtimeMonth(mContext, this, x);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("DD", i))
 			{
 				System.out.println("DD detected");
-				o = new RealtimeDate(mContext, x);
+				o = new RealtimeDate(mContext, this, x);
 				mSubObjs.add(o);
 				i += 2;
 			}
@@ -148,6 +151,14 @@ public class RealtimeObject extends BaseObject {
 		setWidth(mXcor_end - getX());
 	}
 	
+	public void setOffset(int offset) {
+		mOffset = offset;
+	}
+	
+	public int getOffset() {
+		return mOffset;
+	}
+	 
 	@Override
 	public Bitmap getScaledBitmap(Context context)
 	{
@@ -302,7 +313,8 @@ public class RealtimeObject extends BaseObject {
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		//str += BaseObject.intToFormatString(mContent.length(), 3)+"^";
-		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^" + mFont + "^000^"+mFormat;
+		str += "000^000^000^000^000^";
+		str += BaseObject.intToFormatString(mOffset, 5) + "^00000000^00000000^00000000^0000^0000^" + mFont + "^000^"+mFormat;
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

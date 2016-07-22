@@ -67,6 +67,12 @@ public class FpgaGpioOperation {
 	static public native int write(int fd, char[] buffer, int count);
 	
 	/**
+	 * 讀取FPGA數據
+	 * @param fd
+	 * @return
+	 */
+	static public native int read(int fd);
+	/**
 	 * 向GPIO写入数据
 	 * @param fd	设备句柄
 	 * @param buffer	要写到GPIO的数据buffer
@@ -118,6 +124,11 @@ public class FpgaGpioOperation {
 		if(mFd > 0) {
 			close(mFd);
 		}
+	}
+	
+	public int read() {
+		open();
+		return read(mFd);
 	}
 	/**
 	 * writeData 下发打印数据接口

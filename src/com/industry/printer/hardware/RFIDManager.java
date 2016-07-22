@@ -9,6 +9,7 @@ import android.os.Message;
 
 import com.industry.printer.DataTransferThread;
 import com.industry.printer.ThreadPoolManager;
+import com.industry.printer.Utils.Debug;
 
 public class RFIDManager {
 	
@@ -56,6 +57,9 @@ public class RFIDManager {
 					mRfidDevices.add(device);
 					
 				}
+				for (int i = 0; i < TOTAL_RFID_DEVICES; i++) {
+					Debug.d(TAG, "--->rfid=" + i + "  isReady? " + mRfidDevices.get(i).getLocalInk());
+				}
 				callback.sendEmptyMessage(MSG_RFID_INIT_SUCCESS);
 			}
 		});		
@@ -71,11 +75,15 @@ public class RFIDManager {
 					return;
 				}
 				Message msg = callback.obtainMessage(MSG_RFID_READ_SUCCESS);
-				for (RFIDDevice device : mRfidDevices) {
+				for (int i=0; i < mRfidDevices.size(); i++) {
 					// device.getInkLevel();
+					RFIDDevice device = mRfidDevices.get(i);
+					ExtGpio.rfidSwitch(i);
 					Bundle bundle = new Bundle();
+					bundle.putInt("index", i);
 					bundle.putFloat("level", device.getInkLevel());
 					msg.setData(bundle);
+					Debug.d(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
 				}
 				callback.sendMessage(msg);
 			}
@@ -114,21 +122,33 @@ public class RFIDManager {
 	
 	
 	public float getLocalInk(int dev) {
+		if (dev >= mRfidDevices.size()) {
+			return 0;
+		}
 		RFIDDevice device = mRfidDevices.get(dev);
 		return device.getLocalInk();
 	}
 	
 	public void downLocal(int dev) {
+		if (dev >= mRfidDevices.size()) {
+			return ;
+		}
 		RFIDDevice device = mRfidDevices.get(dev);
 		device.down();
 	}
 	
 	public boolean isReady(int dev) {
+		if (dev >= mRfidDevices.size()) {
+			return false;
+		}
 		RFIDDevice device = mRfidDevices.get(dev);
 		return device.isReady();
 	}
 	
 	public RFIDDevice getDevice(int index) {
+		if (index >= mRfidDevices.size()) {
+			return null;
+		}
 		return mRfidDevices.get(index);
 	}
 }

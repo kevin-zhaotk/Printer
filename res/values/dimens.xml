@@ -10,7 +10,7 @@
 	<dimen name="settingsBtnsize">30sp</dimen>
 	<dimen name="settingsUnitTextsize">20sp</dimen>
 	<dimen name="settingsMarginLeft">5dp</dimen>
-	<dimen name="settingsItemLength">200dp</dimen>
+	<dimen name="settingsItemLength">240dp</dimen>
 	<dimen name="settingsValueLength">110dp</dimen>
 	<dimen name="settingsUnitLength">80dp</dimen>
 	<dimen name="settingsSPinnerSize">60dp</dimen>

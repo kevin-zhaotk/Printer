@@ -161,6 +161,9 @@
 	    <item>12 mm</item>
 	    <item>12.7 mm</item>
 	</string-array>
+	
+	<string name="strOffset">偏移</string>
+	
 	<!-- object list -->
 	<string name="objectListName">Show List</string>
 	<string name="objectInfoName">显示对象信息</string>
@@ -643,6 +646,6 @@
 	
 	<string name="str_no_upgrade">已经是最新版本</string>
 	
-	<string name="str_cnt_min">最小值</string>
-	<string name="str_cnt_max">最大值</string>
+	<string name="str_cnt_min">起始值</string>
+	<string name="str_cnt_max">結束值</string>
 </resources>

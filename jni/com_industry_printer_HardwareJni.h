@@ -79,6 +79,13 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_write
 
 /**
  * Class:     com_industry_printer_GPIO
+ * Method:    read
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_com_industry_printer_GPIO_read
+       (JNIEnv *env, jclass arg, jint fd);
+/**
+ * Class:     com_industry_printer_GPIO
  * Method:    ioctl
  * Signature: (IIJ)I
  */

@@ -276,6 +276,7 @@ public static final String TAG="SettingsTabActivity";
 					 long sysTime = System.currentTimeMillis();
 					 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 //					 mTime.setText(dateFormat.format(new Date()));
+					 
 					break;
 			}
 			mTimeRefreshHandler.sendEmptyMessageDelayed(0, 500);
@@ -302,6 +303,8 @@ public static final String TAG="SettingsTabActivity";
 				mAdapter.checkParams();
 				mSysconfig.saveConfig();
 				// FpgaGpioOperation.updateSettings(mContext);
+				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
+				// device.read();
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();

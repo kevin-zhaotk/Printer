@@ -187,15 +187,16 @@ public class TLKFileParser  extends TlkFile{
 		{
 			obj = new BarcodeObject(mContext, 0);
 			((BarcodeObject) obj).setCode(attr[9]);
-			((BarcodeObject) obj).setShow(Boolean.parseBoolean(attr[11])); 
+			int isShow = Integer.parseInt(attr[11]);
+			((BarcodeObject) obj).setShow(isShow==0?false:true); 
 			((BarcodeObject) obj).setContent(attr[12]);
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
 		{
 			obj = new CounterObject(mContext, 0);
 			((CounterObject) obj).setBits(Integer.parseInt(attr[8]));
-			((CounterObject) obj).setMax(Integer.parseInt(attr[13]));
-			((CounterObject) obj).setMin(Integer.parseInt(attr[14]));
+			((CounterObject) obj).setRange(Integer.parseInt(attr[13]),Integer.parseInt(attr[14]));
+			((CounterObject) obj).setContent(attr[15]);
 		}
 		else if(BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))	//ellipse
 		{
@@ -240,6 +241,7 @@ public class TLKFileParser  extends TlkFile{
 			Debug.d(TAG, "Real time object");
 			obj = new RealtimeObject(mContext, 0);
 			((RealtimeObject) obj).setFormat(attr[21]);
+			((RealtimeObject)obj).setOffset(Integer.parseInt(attr[13]));
 		}
 		else if(BaseObject.OBJECT_TYPE_TEXT.equals(attr[1]))			//text
 		{
