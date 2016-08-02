@@ -75,6 +75,7 @@ public class CounterObject extends BaseObject {
 			mMin = end;
 			mMax = start;
 		}
+		Debug.d(TAG, "setRange mMax="+mMax + ",  mMin=" + mMin);
 	}
 	
 	public void setDirection(boolean dir)
@@ -113,7 +114,9 @@ public class CounterObject extends BaseObject {
 	@Override
 	public void setContent(String content) {
 		try{
+			Debug.d(TAG, "--->setContent content="+content);
 			int value = Integer.parseInt(content);
+			Debug.d(TAG, "setContent value="+value);
 			if( mMin < mMax) {
 				if(value < mMin || value> mMax) {
 					mValue = mMin;
@@ -131,6 +134,7 @@ public class CounterObject extends BaseObject {
 			
 		} catch (Exception e) {
 			mValue = mMin;
+			Debug.d(TAG, "--->setContent exception: " + e.getMessage());
 		}
 		mContent = BaseObject.intToFormatString(mValue, mBits);
 		Debug.d(TAG, "setContent content="+content+", value="+mValue+", mMax="+mMax);
@@ -139,6 +143,7 @@ public class CounterObject extends BaseObject {
 	
 	public String getNext()
 	{
+		Debug.d(TAG, "--->getNext mContent="+mContent+", mValue="+mValue+", mSteplen=" + mStepLen + " direction=" + mDirection);
 		if(mDirection)	//increase
 		{
 			if(mValue+mStepLen > mMax || mValue < mMin)
@@ -149,7 +154,7 @@ public class CounterObject extends BaseObject {
 		else	//decrease
 		{
 			if(mValue-mStepLen < mMax || mValue > mMin)
-				mValue=mMin;
+				mValue=mMax;
 			else
 				mValue -= mStepLen;
 		}
