@@ -20,6 +20,7 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.SettingsListAdapter;
 import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 
+import android.R.integer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -267,6 +268,9 @@ public static final String TAG="SettingsTabActivity";
 		
 	}
 	
+	public void setParam(int param, int value) {
+		mAdapter.setParam(param, value);
+	}
 	
 	public Handler mTimeRefreshHandler = new Handler(){
 		public void handleMessage(Message msg) { 

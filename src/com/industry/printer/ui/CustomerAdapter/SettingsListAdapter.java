@@ -159,6 +159,12 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		}
 	}
 	
+	public void setParam(int param, int value) {
+		mSettingItems[param].setValue(value);
+		mSysconfig.setParam(param, value);
+		notifyDataSetChanged();
+	}
+	
 	public SettingsListAdapter(Context context) {
 		mContext = context;
 		mSysconfig = SystemConfigFile.getInstance(mContext);

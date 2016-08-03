@@ -219,7 +219,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mEditSmallTab = new EditTabSmallActivity();
 		mEditFullTab = new EditMultiTabActivity();
 		mSettingsTab = new SettingsTabActivity();
-		Debug.d(TAG, "===>initview");
+
+		mControlTab.setCallback(mHander);
 		
 		mPgBack = (RelativeLayout) findViewById(R.id.btn_page_backward);
 		mPgBack.setOnClickListener(this);
@@ -322,6 +323,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	
 	public static final int USB_STORAGE_ATTACHED = 0;
 	public static final int REFRESH_TIME_DISPLAY = 1;
+	public static final int UPDATE_COUNTER = 2;
 	
 	public Handler mHander = new Handler(){
 		
@@ -340,6 +342,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				String time = String.format(getResources().getString(R.string.str_time_format), hour, min, second);
 				mSettingTitle.setText(time);
 				mHander.sendEmptyMessageDelayed(REFRESH_TIME_DISPLAY, 1000);
+				break;
+			case UPDATE_COUNTER:
+				mSettingsTab.setParam(17, msg.arg1);
 				break;
 			default:
 				break;

@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -455,6 +456,7 @@ public class MessageTask {
 	public float getDiv() {
 		return 4f/getHeads();
 	}
+	
 	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_12_7 	= 0;

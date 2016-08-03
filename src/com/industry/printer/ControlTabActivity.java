@@ -27,6 +27,7 @@ import com.industry.printer.hardware.RFIDManager;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
 import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TlkObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
@@ -105,6 +106,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public BinInfo mBg;
 	BroadcastReceiver mReceiver;
+	public Handler mCallback;
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
@@ -579,6 +581,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
 					FpgaGpioOperation.clean();
+					/* 如果當前打印信息中有計數器，需要記錄當前值到TLK文件中*/
+					updateCntIfNeed();
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					mRfidManager.downLocal(0);
@@ -614,6 +618,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 		}
 	};
+	
+	private void updateCntIfNeed() {
+		for (BaseObject object : mMsgTask.getObjects()) {
+			if (object instanceof CounterObject) {
+				Message msg = new Message();
+				msg.what = MainActivity.UPDATE_COUNTER;
+				msg.arg1 = 17;
+				mCallback.sendMessage(msg);
+				break;
+			}
+		}
+	}
 	
 	public void initDTThread() {
 		
@@ -995,4 +1011,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		return false;
 	}
 	
+	
+	public void setCallback(Handler callback) {
+		mCallback = callback;
+	}
 }
