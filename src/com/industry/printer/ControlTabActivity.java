@@ -123,6 +123,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public int mIndex;
 	public TextView mPrintStatus;
 	public TextView mInkLevel;
+	public TextView mInkLevel2;
 	public TextView mTVPrinting;
 	public TextView mTVStopped;
 	public TextView mPhotocellState;
@@ -309,6 +310,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
+		mInkLevel2 = (TextView) getView().findViewById(R.id.ink_value2);
+		
 		mPower = (TextView) getView().findViewById(R.id.power_state);
 //		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
 //		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
@@ -383,7 +386,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
 	
-	private void refreshInk(float ink) {
+	private void refreshInk(int dev, float ink) {
 		/*
 		if (mRfidDevice.mInkMax <= 0) {
 			ink = 0;
@@ -399,7 +402,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
 			// level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
-			mInkLevel.setText(level);
+			if (dev == 1) {
+				mInkLevel.setText(level);
+			} else {
+				mInkLevel2.setText(level);
+			}
+			
 		} else if (ink <= 0) {
 			mInkLevel.setBackgroundColor(Color.RED);
 			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.ink_alarm_animation);
@@ -479,7 +487,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Bundle bundle = msg.getData();
 					int level = bundle.getInt("ink_level");
 					mFeatureCorrect = bundle.getBoolean("feature", true);
-					refreshInk(level);
+					refreshInk(1, level);
 					break;
 				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
@@ -562,8 +570,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
-					// 啓動rfid鎖值更新線程
-					mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -583,10 +589,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.clean();
 					/* 如果當前打印信息中有計數器，需要記錄當前值到TLK文件中*/
 					updateCntIfNeed();
+					
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					mRfidManager.downLocal(0);
-					refreshInk(mRfidManager.getLocalInk(0));
+					refreshInk(1, mRfidManager.getLocalInk(0));
 					// mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_COUNT_CHANGE:
@@ -609,11 +616,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (il <= 0) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
 					}
-					refreshInk(il);
+					refreshInk(bd.getInt("device", 1),il);
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);
-					refreshInk(ink);
+					refreshInk(1, ink);
 					break;
 			}
 		}

@@ -80,17 +80,29 @@ public class RFIDManager {
 					RFIDDevice device = mRfidDevices.get(i);
 					ExtGpio.rfidSwitch(i);
 					Bundle bundle = new Bundle();
-					bundle.putInt("index", i);
+					bundle.putInt("device", i);
 					bundle.putFloat("level", device.getInkLevel());
 					msg.setData(bundle);
 					Debug.d(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
+					
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						Debug.d(TAG, "--->exception: " + e.getMessage());
+					}
 				}
 				callback.sendMessage(msg);
+				
 			}
 		});
 	}
 	
 	
+	/**
+	 * 墨水量同步線程，當打印開始後運行這個線程每隔10s自動同步
+	 * 
+	 * @param callback
+	 */
 	public void write(final Handler callback) {
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			

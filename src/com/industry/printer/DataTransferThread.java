@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.industry.printer.Rfid.RfidScheduler;
+import com.industry.printer.Rfid.RfidTask;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -39,6 +41,7 @@ public class DataTransferThread extends Thread {
 	private int mcountdown = 0;
 	/**打印数据buffer**/
 	public DataTask mDataTask;
+	RfidScheduler	mScheduler;
 	
 	private InkLevelListener mInkListener = null;
 	
@@ -94,6 +97,8 @@ public class DataTransferThread extends Thread {
 				
 				mInkListener.onInkLevelDown();
 				mInkListener.onCountChanged();
+				
+				mScheduler.schedule();
 			}
 			
 			if(mNeedUpdate == true) {
@@ -150,9 +155,18 @@ public class DataTransferThread extends Thread {
 	public boolean launch() {
 		mRunning = true;
 		DataTransferThread thread = getInstance();
-		if (!isBufferReady) {
+		if (!isBufferReady || mDataTask == null) {
 			return false;
 		}
+		
+		if (mScheduler == null) {
+			mScheduler = new RfidScheduler();
+		}
+		mScheduler.init();
+		for (int i = 0; i < mDataTask.getHeads(); i++) {
+			mScheduler.add(new RfidTask(i + 1));
+		}
+		
 		thread.start();
 		return true;
 	}
@@ -167,6 +181,7 @@ public class DataTransferThread extends Thread {
 		if (t != null) {
 			t.interrupt();
 		}
+		mScheduler.doAfterPrint();
 	}
 	
 	public void setOnInkChangeListener(InkLevelListener listener) {

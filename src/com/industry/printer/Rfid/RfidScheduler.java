@@ -3,6 +3,9 @@ package com.industry.printer.Rfid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.industry.printer.ThreadPoolManager;
+import com.industry.printer.hardware.ExtGpio;
+
 import android.app.AlarmManager;
 import android.os.SystemClock;
 import android.provider.AlarmClock;
@@ -14,9 +17,11 @@ public class RfidScheduler {
 	public static RfidScheduler mInstance = null;
 	// 5S间隔
 	public static final long TASK_SCHEDULE_INTERVAL = 5000;
+	public static final long RFID_SWITCH_INTERVAL = 1000;
 	
 	private List<RfidTask> mRfidTasks = null;
 	private int mCurrent = 0;
+	private long mSwitchTimeStemp=0;
 	
 	public static RfidScheduler getInstance() {
 		if (mInstance == null) {
@@ -29,6 +34,12 @@ public class RfidScheduler {
 		mRfidTasks = new ArrayList<RfidTask>();
 	}
 	
+	public void init() {
+		ThreadPoolManager.mSerialControlThread.shutdownNow();
+		removeAll();
+		mCurrent = 0;
+	}
+	
 	public void add(RfidTask task) {
 		if (mRfidTasks == null) {
 			mRfidTasks = new ArrayList<RfidTask>();
@@ -37,12 +48,12 @@ public class RfidScheduler {
 	}
 	
 	/**
-	 * 
+	 * Rfid調度函數
 	 */
 	public void schedule() {
 		long time = SystemClock.elapsedRealtime();
 		RfidTask task = null;
-		if (mRfidTasks.size() <= 0) {
+		if (mRfidTasks.size() <= 0 || time - mSwitchTimeStemp < RFID_SWITCH_INTERVAL) {
 			return;
 		}
 		if (mRfidTasks.size() <= mCurrent) {
@@ -61,6 +72,30 @@ public class RfidScheduler {
 	}
 	
 	/**
+	 * 停止打印後需要把所有的鎖值同步一遍
+	 */
+	public void doAfterPrint() {
+		ThreadPoolManager.mSerialControlThread.execute(new Runnable() {
+			@Override
+			public void run() {
+				mCurrent = 0;
+				int last = mCurrent;
+				while(mCurrent < mRfidTasks.size()) {
+					try {
+						if (last != mCurrent) {
+							Thread.sleep(1000);
+						} else {
+							Thread.sleep(100);
+						}
+					} catch (Exception e) {
+					}
+					schedule();
+				}
+			}
+		});
+	}
+	
+	/**
 	 * 装入下一个要处理的任务
 	 */
 	private void loadNext() {
@@ -76,6 +111,9 @@ public class RfidScheduler {
 		} else {
 			mCurrent++;
 		}
+		ExtGpio.rfidSwitch(mCurrent);
+		/*切換鎖之後需要等待1s才能進行讀寫操作*/
+		mSwitchTimeStemp = SystemClock.elapsedRealtime();
 	}
 	
 	/**
@@ -83,5 +121,12 @@ public class RfidScheduler {
 	 */
 	private void unload(RfidTask task) {
 		
+	}
+	
+	public void removeAll() {
+		if (mRfidTasks == null) {
+			return;
+		}
+		mRfidTasks.clear();
 	}
 }

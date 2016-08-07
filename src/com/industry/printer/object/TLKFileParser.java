@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import com.industry.printer.EditTabActivity;
 import com.industry.printer.MessageTask;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -196,7 +197,8 @@ public class TLKFileParser  extends TlkFile{
 			obj = new CounterObject(mContext, 0);
 			((CounterObject) obj).setBits(Integer.parseInt(attr[8]));
 			((CounterObject) obj).setRange(Integer.parseInt(attr[14]),Integer.parseInt(attr[13]));
-			((CounterObject) obj).setContent(attr[15]);
+			SystemConfigFile conf = SystemConfigFile.getInstance(mContext);
+			((CounterObject) obj).setValue(conf.getParam(17));
 		}
 		else if(BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))	//ellipse
 		{
