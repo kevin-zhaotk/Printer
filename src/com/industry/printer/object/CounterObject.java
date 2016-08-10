@@ -158,9 +158,10 @@ public class CounterObject extends BaseObject {
 			else
 				mValue -= mStepLen;
 		}
+		String value =mContent;
 		setContent( BaseObject.intToFormatString(mValue, mBits));
 		Debug.d(TAG, "getNext mContent="+mContent+", mValue="+mValue+", mMax="+mMax);
-		return mContent;
+		return value;
 	}
 	
 	public String toString()

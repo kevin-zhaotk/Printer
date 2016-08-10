@@ -128,54 +128,12 @@
             android:textSize="@dimen/ctrlButtonsTextsize"
             android:textColor="#000000"
             />
-	    <RelativeLayout
-		    android:id="@+id/btn_page_backward" 
-		    android:layout_width="120dp"
-	        android:layout_height="fill_parent"
-	        android:layout_alignParentRight="true"
-	        >
-			<ImageView 
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:src="@drawable/style_ctrlbtn_bg_small"
-			    />
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:gravity="center"
-		        android:textSize="@dimen/ctrlButtonsTextsize_min"
-		        android:textColor="#000000"
-		        android:text="@string/str_page_backward" 
-			    />
-		</RelativeLayout>
-	    
-	    <RelativeLayout
-		    android:id="@+id/btn_page_forward" 
-		    android:layout_width="120dp"
-	        android:layout_height="fill_parent"
-	        android:layout_toLeftOf="@id/btn_page_backward"
-	        >
-			<ImageView 
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:src="@drawable/style_ctrlbtn_bg_small"
-			    />
-			<TextView
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:gravity="center"
-		        android:textSize="@dimen/ctrlButtonsTextsize_min"
-		        android:textColor="#000000"
-		        android:text="@string/str_page_forward" 
-			    />
-		</RelativeLayout>
 	    
 	    <TextView
 	        android:id="@+id/opened_msg_name"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/tv_msg_name"
-	        android:layout_toLeftOf="@id/btn_page_backward"
 	        android:textSize="@dimen/ctrlButtonsTextsize"
             android:textColor="#000000"
             />

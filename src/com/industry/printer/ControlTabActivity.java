@@ -290,13 +290,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mBtnOpenfile.setOnTouchListener(this);
 		mTvOpen = (TextView) getView().findViewById(R.id.tv_binfile);
 		
-		mForward = (RelativeLayout) getView().findViewById(R.id.btn_page_forward);
-		mForward.setOnClickListener(this);
-		mForward.setOnTouchListener(this);
-		
-		mBackward = (RelativeLayout) getView().findViewById(R.id.btn_page_backward);
-		mBackward.setOnClickListener(this);
-		mBackward.setOnTouchListener(this);
 		setupViews();
 		
 		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);

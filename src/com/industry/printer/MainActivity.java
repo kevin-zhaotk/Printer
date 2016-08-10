@@ -345,6 +345,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				break;
 			case UPDATE_COUNTER:
 				mSettingsTab.setParam(17, msg.arg1);
+				mSettingsTab.mSysconfig.saveConfig();
 				break;
 			default:
 				break;
