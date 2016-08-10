@@ -186,7 +186,7 @@ public static final String TAG="SettingsTabActivity";
 		mAdapter = new SettingsListAdapter(mContext);
 		mListView.setAdapter(mAdapter);
 		//transaction.commit();
-		setupViews();
+		// setupViews();
 	}
 	
 	private void setupViews() {

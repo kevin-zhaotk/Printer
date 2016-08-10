@@ -2,6 +2,7 @@ package com.industry.printer.Rfid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.industry.printer.ThreadPoolManager;
 import com.industry.printer.hardware.ExtGpio;
@@ -22,6 +23,8 @@ public class RfidScheduler {
 	private List<RfidTask> mRfidTasks = null;
 	private int mCurrent = 0;
 	private long mSwitchTimeStemp=0;
+	private Thread mAfter;
+	private boolean running=false;
 	
 	public static RfidScheduler getInstance() {
 		if (mInstance == null) {
@@ -35,7 +38,11 @@ public class RfidScheduler {
 	}
 	
 	public void init() {
-		ThreadPoolManager.mSerialControlThread.shutdownNow();
+		running = false;
+		if (mAfter != null) {
+			mAfter.interrupt();
+			mAfter = null;
+		}
 		removeAll();
 		mCurrent = 0;
 	}
@@ -75,12 +82,13 @@ public class RfidScheduler {
 	 * 停止打印後需要把所有的鎖值同步一遍
 	 */
 	public void doAfterPrint() {
-		ThreadPoolManager.mSerialControlThread.execute(new Runnable() {
+		running = true;
+		mAfter = new Thread(){
 			@Override
 			public void run() {
 				mCurrent = 0;
 				int last = mCurrent;
-				while(mCurrent < mRfidTasks.size()) {
+				while(running && mCurrent < mRfidTasks.size()) {
 					try {
 						if (last != mCurrent) {
 							Thread.sleep(1000);
@@ -92,7 +100,9 @@ public class RfidScheduler {
 					schedule();
 				}
 			}
-		});
+
+		};
+		mAfter.start();
 	}
 	
 	/**
