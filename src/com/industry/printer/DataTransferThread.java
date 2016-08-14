@@ -69,22 +69,21 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		if (usbs != null && usbs.size() > 0) {
+		if (Configs.DEBUG && usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 		}
 		
-		Debug.d(TAG, "--->write data");
+		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-		Debug.d(TAG, "--->start print " + mRunning);
+		Debug.e(TAG, "--->start print " + mRunning);
 		FpgaGpioOperation.init();
 		while(mRunning == true) {
 			
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			
 			int writable = FpgaGpioOperation.pollState();
-			Debug.d(TAG, "--->writeable=" + writable);
 			// writable = 1;
 			if (writable == 0) { //timeout
 			} else if (writable == -1) {
@@ -127,7 +126,7 @@ public class DataTransferThread extends Thread {
 			@Override
 			public void run() {
 				DataTask task = new DataTask(context, null);
-				Debug.d(TAG, "--->task: " + task);
+				Debug.e(TAG, "--->task: " + task);
 				char[] buffer = task.preparePurgeBuffer();
 				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
@@ -164,7 +163,7 @@ public class DataTransferThread extends Thread {
 		}
 		mScheduler.init();
 		for (int i = 0; i < mDataTask.getHeads(); i++) {
-			mScheduler.add(new RfidTask(i + 1));
+			mScheduler.add(new RfidTask(i));
 		}
 		
 		thread.start();

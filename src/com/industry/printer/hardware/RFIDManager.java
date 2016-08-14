@@ -29,6 +29,7 @@ public class RFIDManager {
 	
 	public static RFIDManager getInstance() {
 		if (mInstance == null) {
+			Debug.d(TAG, "--->new RfidManager");
 			mInstance = new RFIDManager();
 		}
 		return mInstance;

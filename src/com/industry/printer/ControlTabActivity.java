@@ -389,7 +389,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			ink = (ink * 100)/mRfidDevice.mInkMax;
 		}
 		*/
-		Debug.e(TAG, "--->refreshInk:" + ink);
 		
 		String level = String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
@@ -417,7 +416,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshCount() {
 		// String cFormat = getResources().getString(R.string.str_print_count);
 		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
-		Debug.e(TAG, "--->refreshCount:" + mCounter);
 		((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
 	}
 	

@@ -61,7 +61,7 @@ public class RfidTask {
 	}
 	
 	public void execute() {
-		
+		Debug.d(TAG, "--->execute index=" + mIndex);
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
 		if (dev == null) {

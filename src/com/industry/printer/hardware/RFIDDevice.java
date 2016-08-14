@@ -826,6 +826,7 @@ public class RFIDDevice {
 			block = BLOCK_COPY_INKLEVEL;
 		}
 		EncryptionMethod encryte = EncryptionMethod.getInstance();
+		Debug.d(TAG, "--->cur= " + mCurInkLevel);
 		byte[] content = encryte.encryptInkLevel(mCurInkLevel);
 		if (content == null) {
 			return ;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.industry.printer.ThreadPoolManager;
+import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.ExtGpio;
 
 import android.app.AlarmManager;
@@ -88,6 +89,7 @@ public class RfidScheduler {
 			public void run() {
 				mCurrent = 0;
 				int last = mCurrent;
+				Debug.e(TAG, "--->sync inklevel after print finish...");
 				while(running && mCurrent < mRfidTasks.size()) {
 					try {
 						if (last != mCurrent) {
@@ -99,6 +101,7 @@ public class RfidScheduler {
 					}
 					schedule();
 				}
+				Debug.e(TAG, "--->sync inklevel after print finish ok");
 			}
 
 		};
