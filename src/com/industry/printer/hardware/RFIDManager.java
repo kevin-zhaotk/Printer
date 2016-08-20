@@ -2,7 +2,9 @@ package com.industry.printer.hardware;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 
+import android.R.integer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,7 +20,7 @@ public class RFIDManager {
 	private static RFIDManager	mInstance=null;
 	private List<RFIDDevice> mRfidDevices = new ArrayList<RFIDDevice>();
 	
-	private static final int TOTAL_RFID_DEVICES = 4;
+	public static final int TOTAL_RFID_DEVICES = 4;
 	
 	public static final int MSG_RFID_INIT_SUCCESS = 101;
 	public static final int MSG_RFID_INIT_FAIL = 102;
@@ -79,18 +81,21 @@ public class RFIDManager {
 				for (int i=0; i < mRfidDevices.size(); i++) {
 					// device.getInkLevel();
 					RFIDDevice device = mRfidDevices.get(i);
+					
 					ExtGpio.rfidSwitch(i);
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+					}
+					
+					device.cardInit();
 					Bundle bundle = new Bundle();
 					bundle.putInt("device", i);
 					bundle.putFloat("level", device.getInkLevel());
 					msg.setData(bundle);
-					Debug.d(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
+					Debug.e(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
 					
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						Debug.d(TAG, "--->exception: " + e.getMessage());
-					}
+					
 				}
 				callback.sendMessage(msg);
 				
@@ -98,6 +103,16 @@ public class RFIDManager {
 		});
 	}
 	
+	public float readOne(int id) {
+		RFIDDevice device = mRfidDevices.get(id);
+		switchRfid(id);
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			Debug.d(TAG, "--->exception: " + e.getMessage());
+		}
+		return device.getInkLevel();
+	}
 	
 	/**
 	 * 墨水量同步線程，當打印開始後運行這個線程每隔10s自動同步
@@ -133,12 +148,34 @@ public class RFIDManager {
 		});
 	}
 	
+	public void switchRfid(final int i) {
+		final RFIDDevice device = mRfidDevices.get(i);
+		device.setReady(false);
+		ThreadPoolManager.mThreads.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				ExtGpio.rfidSwitch(i);
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
+				
+				device.cardInitBlind();
+				// device.cardInit();
+				device.setReady(true);
+			}
+		});
+	}
 	
 	public float getLocalInk(int dev) {
 		if (dev >= mRfidDevices.size()) {
 			return 0;
 		}
 		RFIDDevice device = mRfidDevices.get(dev);
+		if (device == null) {
+			return 0;
+		}
 		return device.getLocalInk();
 	}
 	
@@ -147,6 +184,9 @@ public class RFIDManager {
 			return ;
 		}
 		RFIDDevice device = mRfidDevices.get(dev);
+		if (device == null) {
+			return ;
+		}
 		device.down();
 	}
 	

@@ -105,10 +105,24 @@ public class CounterObject extends BaseObject {
 		return mValue;
 	}
 	
+		
 	public void setValue(int value)
 	{
-		if(mValue >= 0)
-		mValue = value;
+		if( mMin < mMax) {
+			if(value < mMin || value> mMax) {
+				mValue = mMin;
+			}
+			else {
+				mValue = value;
+			}
+		} else {
+			if (value > mMin || value < mMax) {
+				mValue = mMin;
+			} else {
+				mValue = value;
+			}
+		}
+		mContent = BaseObject.intToFormatString(mValue, mBits);
 	}
 	
 	@Override

@@ -82,7 +82,7 @@ public class Debug {
 		for (int i = 0; i < value.length; i++) {
 			log += "0x"+Integer.toHexString(value[i]&0x0ff)+" " ;
 		}
-		Debug.d(TAG, getLineNumber()+ "  " + tag + " [ " + log + " ]");
+		Debug.e(TAG, getLineNumber()+ "  " + tag + " [ " + log + " ]");
 	}
 	
 	private static String getLineNumber() {

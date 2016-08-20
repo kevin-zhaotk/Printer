@@ -7,6 +7,8 @@ import java.util.concurrent.Future;
 import com.industry.printer.ThreadPoolManager;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.ExtGpio;
+import com.industry.printer.hardware.RFIDDevice;
+import com.industry.printer.hardware.RFIDManager;
 
 import android.app.AlarmManager;
 import android.os.SystemClock;
@@ -26,6 +28,7 @@ public class RfidScheduler {
 	private long mSwitchTimeStemp=0;
 	private Thread mAfter;
 	private boolean running=false;
+	private RFIDManager mManager;
 	
 	public static RfidScheduler getInstance() {
 		if (mInstance == null) {
@@ -36,6 +39,7 @@ public class RfidScheduler {
 	
 	public RfidScheduler() {
 		mRfidTasks = new ArrayList<RfidTask>();
+		mManager = RFIDManager.getInstance();
 	}
 	
 	public void init() {
@@ -46,6 +50,7 @@ public class RfidScheduler {
 		}
 		removeAll();
 		mCurrent = 0;
+		mManager.switchRfid(mCurrent);
 	}
 	
 	public void add(RfidTask task) {
@@ -74,7 +79,7 @@ public class RfidScheduler {
 			return;
 		}
 		task.execute();
-		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED && mRfidTasks.size() > 1) {
 			loadNext();
 		}
 	}
@@ -89,15 +94,22 @@ public class RfidScheduler {
 			public void run() {
 				mCurrent = 0;
 				int last = mCurrent;
+				mManager.switchRfid(mCurrent);
 				Debug.e(TAG, "--->sync inklevel after print finish...");
 				while(running && mCurrent < mRfidTasks.size()) {
 					try {
 						if (last != mCurrent) {
+							last = mCurrent;
 							Thread.sleep(1000);
 						} else {
 							Thread.sleep(100);
 						}
+						
 					} catch (Exception e) {
+					}
+					RfidTask task = mRfidTasks.get(mCurrent);
+					if ((mCurrent == mRfidTasks.size() -1) && task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+						break;
 					}
 					schedule();
 				}
@@ -124,7 +136,8 @@ public class RfidScheduler {
 		} else {
 			mCurrent++;
 		}
-		ExtGpio.rfidSwitch(mCurrent);
+		// ExtGpio.rfidSwitch(mCurrent);
+		mManager.switchRfid(mCurrent);
 		/*切換鎖之後需要等待1s才能進行讀寫操作*/
 		mSwitchTimeStemp = SystemClock.elapsedRealtime();
 	}

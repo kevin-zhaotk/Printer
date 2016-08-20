@@ -180,8 +180,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-	  // TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
+		Debug.d(TAG, "--->onConfigurationChanged");
 	}
 	
 	@Override
@@ -356,7 +356,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Debug.d(TAG, "--->onDestroy");
+		FragmentTransaction fts = getFragmentManager().beginTransaction();
+		fts.remove(mControlTab);
+		fts.remove(mSettingsTab);
 		FpgaGpioOperation.close();
+		android.os.Process.killProcess(android.os.Process.myPid());  
 	}
 
 	@Override

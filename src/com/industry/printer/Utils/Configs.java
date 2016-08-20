@@ -21,7 +21,7 @@ import com.industry.printer.object.data.SegmentBuffer;
 
 public class Configs {
 	
-	public static final boolean DEBUG=true;
+	public static final boolean DEBUG=false;
 	/** 每列的有效点阵数 **/
 	public static int gDots;
 	/** 每列的总字节数 **/

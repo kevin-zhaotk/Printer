@@ -14,12 +14,15 @@ public class RfidTask {
 	
 	
 	public static final int STATE_IDLE = 0;
-	public static final int STATE_BLOCK_CERTIFIED = 1;
-	public static final int STATE_BLOCK_SYNCED = 2;
-	public static final int STATE_BACKUP_CERTIFIED = 3;
-	public static final int STATE_BACKUP_SYNCED = 4;
-	public static final int STATE_CERTIFY_FAIL = 5;
-	public static final int STATE_BACKUP_CERTIFY_FAIL = 6;
+	public static final int STATE_SEARCH_OK = 1;
+	public static final int STATE_AVOID_CONFLICT = 2;
+	public static final int STATE_SELECT_OK = 3;
+	public static final int STATE_BLOCK_CERTIFIED = 4;
+	public static final int STATE_BLOCK_SYNCED = 5;
+	public static final int STATE_BACKUP_CERTIFIED = 6;
+	public static final int STATE_BACKUP_SYNCED = 7;
+	public static final int STATE_CERTIFY_FAIL = 8;
+	public static final int STATE_BACKUP_CERTIFY_FAIL = 9;
 	
 	
 	
@@ -64,12 +67,28 @@ public class RfidTask {
 		Debug.d(TAG, "--->execute index=" + mIndex);
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
-		if (dev == null) {
+		if (!dev.getReady()) {
+			return;
+		}
+		if (dev == null || dev.getReady() != true) {
 			return;
 		}
 		switch (mState) {
 			case STATE_IDLE:
-				boolean res = dev.keyVerify(false);
+				/*
+				dev.lookForCards(false);
+				mState = STATE_SEARCH_OK;
+				break;
+			case STATE_SEARCH_OK:
+				dev.avoidConflict(false);
+				mState = STATE_AVOID_CONFLICT;
+				break;
+			case STATE_AVOID_CONFLICT:
+				dev.selectCard(dev.mSN, false);
+				mState = STATE_SELECT_OK;
+			case STATE_SELECT_OK:
+			*/
+				boolean res = dev.keyVerify(false, true);
 				mState = STATE_BLOCK_CERTIFIED;
 				break;
 			case STATE_BLOCK_CERTIFIED:
@@ -77,7 +96,7 @@ public class RfidTask {
 				mState = STATE_BLOCK_SYNCED;
 				break;
 			case STATE_BLOCK_SYNCED:
-				dev.keyVerify(true);
+				dev.keyVerify(true, true);
 				mState = STATE_BACKUP_CERTIFIED;
 				break;
 			case STATE_BACKUP_CERTIFIED:

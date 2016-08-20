@@ -1,11 +1,13 @@
 package com.industry.printer;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Rfid.RfidScheduler;
 import com.industry.printer.Rfid.RfidTask;
 import com.industry.printer.Utils.ConfigPath;
@@ -15,6 +17,8 @@ import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.CounterObject;
 
 /**
  * class DataTransferThread
@@ -35,6 +39,8 @@ public class DataTransferThread extends Thread {
 	
 	public static DataTransferThread mInstance;
 	
+	private Context mContext;
+	
 	public boolean mNeedUpdate=false;
 	private boolean isBufferReady = false;
 	
@@ -52,6 +58,9 @@ public class DataTransferThread extends Thread {
 			
 		}
 		return mInstance;
+	}
+	
+	public DataTransferThread() {
 	}
 	
 	/**
@@ -73,6 +82,12 @@ public class DataTransferThread extends Thread {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+			for (BaseObject object : mDataTask.getObjList()) {
+				if (object instanceof CounterObject) {
+					Debug.e(TAG, "--->counter: " + object.getContent());
+				}
+			}
+			
 		}
 		
 		Debug.e(TAG, "--->write data");
@@ -151,7 +166,7 @@ public class DataTransferThread extends Thread {
 		return mRunning;
 	}
 	
-	public boolean launch() {
+	public boolean launch(Context ctx) {
 		mRunning = true;
 		DataTransferThread thread = getInstance();
 		if (!isBufferReady || mDataTask == null) {
@@ -161,8 +176,10 @@ public class DataTransferThread extends Thread {
 		if (mScheduler == null) {
 			mScheduler = new RfidScheduler();
 		}
+		
+		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
 		mScheduler.init();
-		for (int i = 0; i < mDataTask.getHeads(); i++) {
+		for (int i = 0; i < configFile.getParam(16); i++) {
 			mScheduler.add(new RfidTask(i));
 		}
 		
@@ -251,6 +268,10 @@ public class DataTransferThread extends Thread {
 	 */
 	private int getInkThreshold() {
 		return Configs.DOTS_PER_PRINT;
+	}
+	
+	public int getHeads() {
+		return mDataTask.getHeads();
 	}
 
 }

@@ -131,6 +131,7 @@ public static final String TAG="SettingsTabActivity";
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Debug.d(TAG, "-->onCreateView");
 		return inflater.inflate(R.layout.setting_layout, container, false);
 	}
 	
@@ -215,6 +216,18 @@ public static final String TAG="SettingsTabActivity";
 	public void onResume() {
 		super.onResume();
 		Debug.d(TAG, "--->onResume");
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Debug.d(TAG, "--->onDestroyView");
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Debug.d(TAG, "--->onDestroy");
 	}
 //	@Override
 //	public boolean  onKeyDown(int keyCode, KeyEvent event)  

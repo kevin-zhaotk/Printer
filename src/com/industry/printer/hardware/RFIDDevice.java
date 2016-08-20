@@ -31,6 +31,7 @@ import java.util.IllegalFormatCodePointException;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.R.bool;
 import android.R.integer;
 import android.os.SystemClock;
 
@@ -196,10 +197,15 @@ public class RFIDDevice {
 	/*
 	 * 寻卡
 	 */
-	public boolean lookForCards() {
+	public boolean lookForCards(boolean blind) {
 		Debug.d(TAG, "--->RFID lookForCards");
 		RFIDData data = new RFIDData(RFID_CMD_SEARCHCARD, RFID_DATA_SEARCHCARD_ALL);
+		if (blind) {
+			writeCmd(data, true);
+			return true;
+		}
 		byte[] readin = writeCmd(data);
+		
 		if (readin == null) {
 			return false;
 		}
@@ -226,10 +232,14 @@ public class RFIDDevice {
 	/*
 	 * 防冲突
 	 */
-	public byte[] avoidConflict() {
+	public byte[] avoidConflict(boolean blind) {
 		int limit = 0; 
 		Debug.d(TAG, "--->RFID avoidConflict");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
+		if (blind) {
+			writeCmd(data, true);
+			return null;
+		}
 		byte[] readin = null;
 		for (; readin == null && limit < 3; ) {
 			readin = writeCmd(data);
@@ -252,7 +262,7 @@ public class RFIDDevice {
 	/*
 	 * 选卡
 	 */ 
-	public boolean selectCard(byte[] cardNo) {
+	public boolean selectCard(byte[] cardNo, boolean blind) {
 		int limit = 0;
 		if (cardNo == null || cardNo.length != 4) {
 			Debug.e(TAG, "===>select card No is null");
@@ -260,6 +270,10 @@ public class RFIDDevice {
 		}
 		Debug.d(TAG, "--->RFID selectCard");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
+		if (blind) {
+			writeCmd(data, true);
+			return true;
+		}
 		byte[] readin = null;
 		for (;!isCorrect(readin) && limit < 3;) {
 			readin = writeCmd(data);
@@ -268,12 +282,15 @@ public class RFIDDevice {
 		return isCorrect(readin);
 	}
 	
+	public boolean keyVerfication(byte sector, byte block, byte[] key) {
+		return keyVerfication(sector, block, key, false);
+	}
 	/**
 	 * 密钥验证
 	 * @param data
 	 * @return
 	 */
-	public boolean keyVerfication(byte sector, byte block, byte[] key) {
+	public boolean keyVerfication(byte sector, byte block, byte[] key, boolean blink) {
 		boolean certify = false;
 		Debug.d(TAG, "--->keyVerfication sector:" + sector + ", block:" +block);
 		if (sector >= 16 || block >= 4) {
@@ -286,16 +303,19 @@ public class RFIDDevice {
 			// init();
 			return false;
 		}
-		for(int i = 0; i < 3; i++) {
+		// for(int i = 0; i < 3; i++) {
 			byte[] keyA = {0x60,blk, key[0], key[1], key[2], key[3], key[4], key[5]};
 			RFIDData data = new RFIDData(RFID_CMD_MIFARE_KEY_VERIFICATION, keyA);
-			
-			byte[] readin = writeCmd(data);
-			certify = isCorrect(readin);
-			if (certify) {
-				break;
-			}
+		if (blink) {
+			writeCmd(data, blink);
+			return true;
 		}
+		byte[] readin = writeCmd(data, blink);
+		certify = isCorrect(readin);
+		//	if (certify) {
+		//		break;
+		//	}
+		// }
 		return certify;
 	}
 	
@@ -346,6 +366,18 @@ public class RFIDDevice {
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] blockData = rfidData.getData();
 		return blockData;
+	}
+	
+	private byte[] writeCmd(RFIDData data, boolean blind) {
+		openDevice();
+		Debug.print(RFID_DATA_SEND, data.mTransData);
+		if (blind) {
+			int writed = write(mFd, data.transferData(), data.getLength());
+			return null;
+		} else {
+			return writeCmd(data);
+		}
+		
 	}
 	/*
 	 * write command to RFID model
@@ -409,9 +441,9 @@ public class RFIDDevice {
 	}
 	
 	
-	private int cardInit() {
+	public int cardInit() {
 		//寻卡
-		if (!lookForCards()) {
+		if (!lookForCards(false)) {
 			return RFID_ERRNO_NOCARD;
 		}
 		try {
@@ -419,7 +451,7 @@ public class RFIDDevice {
 		} catch (Exception e) {
 		}
 		//防冲突
-		mSN = avoidConflict();
+		mSN = avoidConflict(false);
 		if (mSN == null || mSN.length == 0) {
 			return RFID_ERRNO_SERIALNO_UNAVILABLE;
 		}
@@ -428,11 +460,37 @@ public class RFIDDevice {
 		} catch (Exception e) {
 		}
 		//选卡
-		if (!selectCard(mSN)) {
+		if (!selectCard(mSN, false)) {
 			return RFID_ERRNO_SELECT_FAIL;
 		}
 		return RFID_ERRNO_NOERROR;
 	}
+	
+	public int cardInitBlind() {
+		//寻卡
+		if (!lookForCards(true)) {
+			return RFID_ERRNO_NOCARD;
+		}
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+		}
+		//防冲突
+		mSN = avoidConflict(true);
+		if (mSN == null || mSN.length == 0) {
+			return RFID_ERRNO_SERIALNO_UNAVILABLE;
+		}
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) {
+		}
+		//选卡
+		if (!selectCard(mSN, true)) {
+			return RFID_ERRNO_SELECT_FAIL;
+		}
+		return RFID_ERRNO_NOERROR;
+	}
+	
 	/**
 	 * read serial No. using default key
 	 * @return 4bytes serial No.
@@ -477,11 +535,9 @@ public class RFIDDevice {
 		Debug.print(RFID_DATA_RSLT, key);
 		mReady = true;
 		mInkMax = getInkMax();
-		Debug.d(TAG, "===>max ink: " + mInkMax);
+		Debug.e(TAG, "===>max ink: " + mInkMax);
 		readFeatureCode();
-		for (int i = 0; i < mFeature.length; i++) {
-			Debug.d(TAG, "===>feature[" + i + "]: " + mFeature[i]);
-		}
+		
 		
 		return 0;
 	}
@@ -557,7 +613,7 @@ public class RFIDDevice {
 			}
 		}
 		mCurInkLevel = current;
-		Debug.d(TAG, "===>curInk=" + mCurInkLevel + ", max=" + mInkMax);
+		Debug.e(TAG, "===>curInk=" + mCurInkLevel + ", max=" + mInkMax);
 		return mCurInkLevel;
 		/*if (mInkMax <= 0) {
 			return 0;
@@ -743,6 +799,13 @@ public class RFIDDevice {
 		return true;
 	}
 	
+	public void setReady(boolean ready) {
+		mReady = ready;
+	}
+	
+	public boolean getReady() {
+		return mReady;
+	}
 	
 	public void setBaudrate(int rate) {
 		
@@ -791,7 +854,7 @@ public class RFIDDevice {
 	/**
 	 * 拆分成4個接口，給最新的rfid寫入方案
 	 */
-	public boolean keyVerify(boolean isBack) {
+	public boolean keyVerify(boolean isBack, boolean blind) {
 		byte sector = 0;
 		byte block = 0;
 		if (!mReady) {
@@ -805,7 +868,7 @@ public class RFIDDevice {
 			block = BLOCK_COPY_INKLEVEL;
 		}
 		
-		if ( !keyVerfication(sector, block, mRFIDKeyA))
+		if ( !keyVerfication(sector, block, mRFIDKeyA, blind))
 		{
 			return false;
 		}

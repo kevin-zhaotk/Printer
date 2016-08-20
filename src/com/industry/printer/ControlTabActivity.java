@@ -19,6 +19,7 @@ import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
+import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.LRADCBattery;
 import com.industry.printer.hardware.PWMAudio;
@@ -40,9 +41,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ConfigurationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -143,7 +146,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 * current tlk path opened
 	 */
 	public String mObjPath=null;
-	
+
+	private int mRfid = 100;
 	/**
 	 * MESSAGE_OPEN_TLKFILE
 	 *   message tobe sent when open tlk file
@@ -197,6 +201,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public static final int MESSAGE_REFRESH_POWERSTAT = 9;
 	
+	public static final int MESSAGE_SWITCH_RFID = 10;
 	/**
 	 * the bitmap for preview
 	 */
@@ -379,7 +384,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
 	
-	private void refreshInk(int dev, float ink) {
+	
+	private void switchRfid() {
+		mRfid += 1;
+		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getParam(16)) {
+			mRfid = 0;
+		}
+		refreshInk();
+		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
+	}
+	
+	private void refreshInk() {
 		/*
 		if (mRfidDevice.mInkMax <= 0) {
 			ink = 0;
@@ -389,16 +404,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			ink = (ink * 100)/mRfidDevice.mInkMax;
 		}
 		*/
-		
-		String level = String.valueOf((int)ink);// + "%");
+		float ink = mRfidManager.getLocalInk(mRfid);
+		String level = String.valueOf(mRfid + 1) + "-" + String.valueOf((int)ink);// + "%");
 		mInkLevel.setText(level);
 		if (!mFeatureCorrect) {
-			// level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
-			if (dev == 1) {
-				mInkLevel.setText(level);
-			} else {
-				mInkLevel2.setText(level);
-			}
+			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
+			// mInkLevel.setText(level);
 			
 		} else if (ink <= 0) {
 			mInkLevel.setBackgroundColor(Color.RED);
@@ -478,7 +489,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Bundle bundle = msg.getData();
 					int level = bundle.getInt("ink_level");
 					mFeatureCorrect = bundle.getBoolean("feature", true);
-					refreshInk(1, level);
+					refreshInk();
 					break;
 				case MESSAGE_DISMISS_DIALOG:
 					mLoadingDialog.dismiss();
@@ -554,7 +565,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.updateSettings(mContext, dt, FpgaGpioOperation.SETTING_TYPE_NORMAL);
 					Debug.d(TAG, "--->launch thread");
 					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
-					if (!mDTransThread.launch()) {
+					if (!mDTransThread.launch(mContext)) {
 						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
 						break;
 					}
@@ -583,8 +594,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
-					mRfidManager.downLocal(0);
-					refreshInk(1, mRfidManager.getLocalInk(0));
+					
+					for (int i = 0; i < mSysconfig.getParam(16); i++) {
+						mRfidManager.downLocal(i);
+					}
+					/*打印時不再實時更新墨水量*/
+					// refreshInk();
 					// mRfidManager.write(mHandler);
 					break;
 				case MESSAGE_COUNT_CHANGE:
@@ -598,6 +613,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_REFRESH_POWERSTAT:
 					refreshPower();
 					break;
+				case MESSAGE_SWITCH_RFID:
+					switchRfid();
+					break;
 				case RFIDManager.MSG_RFID_INIT_SUCCESS:
 					mRfidManager.read(mHandler);
 					break;
@@ -605,13 +623,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Bundle bd = (Bundle) msg.getData();
 					float il = bd.getFloat("level");
 					if (il <= 0) {
-						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 3000);
+						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 5000);
 					}
-					refreshInk(bd.getInt("device", 1),il);
+					switchRfid();
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);
-					refreshInk(1, ink);
+					refreshInk();
 					break;
 			}
 		}
@@ -622,7 +640,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			if (object instanceof CounterObject) {
 				Message msg = new Message();
 				msg.what = MainActivity.UPDATE_COUNTER;
-				msg.arg1 = 17;
+				msg.arg1 = Integer.valueOf(((CounterObject) object).getContent());
 				mCallback.sendMessage(msg);
 				break;
 			}
@@ -919,7 +937,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mProgressShowing=false;
 	}
 	
-	int mdata=0;
 	@Override
 	public void onClick(View v) {
 		

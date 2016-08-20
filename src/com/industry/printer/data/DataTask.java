@@ -122,7 +122,7 @@ public class DataTask {
 		try {
 			cReader.read(mPrintBuffer);
 			if (isNeedRefresh()) {
-				refreshVariables();
+				refreshVariables(isPreview);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -151,7 +151,7 @@ public class DataTask {
 		return mBuffer;
 	}
 	
-	public void refreshVariables()
+	public void refreshVariables(boolean prev)
 	{
 		String substr=null;
 		char[] var;
@@ -164,7 +164,7 @@ public class DataTask {
 		{
 			if(o instanceof CounterObject)
 			{
-				String str = ((CounterObject) o).getNext();
+				String str = prev? ((CounterObject) o).getContent() : ((CounterObject) o).getNext();
 				BinInfo info = mVarBinList.get(o);
 				Debug.d(TAG, "--->object index=" + o.getIndex());
 				if (info == null) {

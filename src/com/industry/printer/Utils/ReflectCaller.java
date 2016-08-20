@@ -54,8 +54,10 @@ public class ReflectCaller {
 			hw.setAccessible(true);
 			AlarmManager aManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			IAlarmManager iManager = (IAlarmManager) hw.invoke(aManager, (Object[])null);
+			if (iManager != null) {
+				iManager.HwToSystemClock();
+			}
 			
-			iManager.HwToSystemClock();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
