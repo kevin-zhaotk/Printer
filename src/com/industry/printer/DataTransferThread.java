@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Rfid.RfidScheduler;
@@ -48,6 +49,7 @@ public class DataTransferThread extends Thread {
 	/**打印数据buffer**/
 	public DataTask mDataTask;
 	RfidScheduler	mScheduler;
+	private static long mInterval = 0;
 	
 	private InkLevelListener mInkListener = null;
 	
@@ -75,6 +77,7 @@ public class DataTransferThread extends Thread {
 	public void run() {
 		
 		char[] buffer;
+		long last = 0;
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
@@ -92,6 +95,7 @@ public class DataTransferThread extends Thread {
 		
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+		last = SystemClock.currentThreadTimeMillis();
 		Debug.e(TAG, "--->start print " + mRunning);
 		FpgaGpioOperation.init();
 		while(mRunning == true) {
@@ -103,12 +107,13 @@ public class DataTransferThread extends Thread {
 			if (writable == 0) { //timeout
 			} else if (writable == -1) {
 			} else {
+				mInterval = SystemClock.currentThreadTimeMillis() - last;
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
 				buffer = mDataTask.getPrintBuffer();
 				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				
+				last = SystemClock.currentThreadTimeMillis();
 				mInkListener.onInkLevelDown();
 				mInkListener.onCountChanged();
 				
@@ -272,6 +277,24 @@ public class DataTransferThread extends Thread {
 	
 	public int getHeads() {
 		return mDataTask.getHeads();
+	}
+	/**
+	 * 打印間隔0~100ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行1步操作
+	 * 打印間隔100~200ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行2步操作
+	 * 打印間隔200~500ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行4步操作
+	 * 打印間隔500~1000ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行8步操作
+	 * @return
+	 */
+	public static long getInterval() {
+		if (mInterval >= 1000) {
+			return 8;
+		} else if (mInterval >= 500) {
+			return 4;
+		} else if (mInterval >= 200) {
+			return 2;
+		} else {
+			return 1;
+		}
 	}
 
 }

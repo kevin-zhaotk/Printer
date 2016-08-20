@@ -86,6 +86,7 @@ public class RfidTask {
 			case STATE_AVOID_CONFLICT:
 				dev.selectCard(dev.mSN, false);
 				mState = STATE_SELECT_OK;
+				break;
 			case STATE_SELECT_OK:
 			
 				boolean res = dev.keyVerify(false, true);

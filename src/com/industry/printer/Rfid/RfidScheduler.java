@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import com.industry.printer.DataTransferThread;
 import com.industry.printer.ThreadPoolManager;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.ExtGpio;
@@ -62,6 +63,10 @@ public class RfidScheduler {
 	
 	/**
 	 * Rfid調度函數
+	 * 	打印間隔0~100ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行1步操作
+	 *  打印間隔100~200ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行2步操作
+	 *  打印間隔200~500ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行4步操作
+	 *  打印間隔500~1000ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行8步操作
 	 */
 	public void schedule() {
 		long time = SystemClock.elapsedRealtime();
@@ -78,8 +83,18 @@ public class RfidScheduler {
 		if (task.isIdle() && (time - task.getLast()) < TASK_SCHEDULE_INTERVAL) {
 			return;
 		}
-		task.execute();
-		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED && mRfidTasks.size() > 1) {
+		for (int i = 0; i < DataTransferThread.getInterval(); i++) {
+			task.execute();
+			try {
+				Thread.sleep(30);
+			} catch (Exception e) {
+			}
+			if(task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+				break;
+			}
+			
+		}
+		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
 			loadNext();
 		}
 	}
@@ -102,7 +117,7 @@ public class RfidScheduler {
 							last = mCurrent;
 							Thread.sleep(1000);
 						} else {
-							Thread.sleep(100);
+							Thread.sleep(50);
 						}
 						
 					} catch (Exception e) {
@@ -137,7 +152,10 @@ public class RfidScheduler {
 			mCurrent++;
 		}
 		// ExtGpio.rfidSwitch(mCurrent);
-		mManager.switchRfid(mCurrent);
+		if (mRfidTasks.size() > 1) {
+			mManager.switchRfid(mCurrent);
+		}
+		
 		/*切換鎖之後需要等待1s才能進行讀寫操作*/
 		mSwitchTimeStemp = SystemClock.elapsedRealtime();
 	}
