@@ -75,7 +75,7 @@ public class RfidTask {
 		}
 		switch (mState) {
 			case STATE_IDLE:
-				/*
+				
 				dev.lookForCards(false);
 				mState = STATE_SEARCH_OK;
 				break;
@@ -87,7 +87,7 @@ public class RfidTask {
 				dev.selectCard(dev.mSN, false);
 				mState = STATE_SELECT_OK;
 			case STATE_SELECT_OK:
-			*/
+			
 				boolean res = dev.keyVerify(false, true);
 				mState = STATE_BLOCK_CERTIFIED;
 				break;

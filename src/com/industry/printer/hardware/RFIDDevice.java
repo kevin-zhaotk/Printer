@@ -339,7 +339,9 @@ public class RFIDDevice {
 		buffer.append(blk);
 		buffer.append(content, 0, content.length);
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_WRITE_BLOCK, buffer.toByteArray());
+		
 		byte[] readin = writeCmd(data);
+		// return true;
 		return isCorrect(readin);
 		
 	}

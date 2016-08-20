@@ -161,7 +161,7 @@ public class RFIDManager {
 				} catch (Exception e) {
 				}
 				
-				device.cardInitBlind();
+				// device.cardInitBlind();
 				// device.cardInit();
 				device.setReady(true);
 			}
