@@ -151,6 +151,7 @@ public class RfidScheduler {
 		} else {
 			mCurrent++;
 		}
+		Debug.e(TAG, "--->loadNext");
 		// ExtGpio.rfidSwitch(mCurrent);
 		if (mRfidTasks.size() > 1) {
 			mManager.switchRfid(mCurrent);

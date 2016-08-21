@@ -238,7 +238,7 @@ public class RFIDDevice {
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
 		if (blind) {
 			writeCmd(data, true);
-			return null;
+			return mSN;
 		}
 		byte[] readin = null;
 		for (; readin == null && limit < 3; ) {
@@ -268,7 +268,7 @@ public class RFIDDevice {
 			Debug.e(TAG, "===>select card No is null");
 			return false;
 		}
-		Debug.d(TAG, "--->RFID selectCard");
+		Debug.e(TAG, "--->RFID selectCard");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CARD_SELECT, cardNo);
 		if (blind) {
 			writeCmd(data, true);
@@ -340,9 +340,11 @@ public class RFIDDevice {
 		buffer.append(content, 0, content.length);
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_WRITE_BLOCK, buffer.toByteArray());
 		
-		byte[] readin = writeCmd(data);
-		// return true;
-		return isCorrect(readin);
+		// byte[] readin = writeCmd(data);
+		// return isCorrect(readin);
+		writeCmd(data, true);
+		return true;
+		
 		
 	}
 	
@@ -403,11 +405,12 @@ public class RFIDDevice {
 			}
 			readin = read(mFd, 64);
 			if (readin == null) {
-				reopen();
+				// reopen();
+				break;
 			} else {
 				break;
 			}
-			Debug.e(TAG, "===>writeCmd 349: readin=" + readin);
+			// Debug.e(TAG, "===>writeCmd 349: readin=" + readin);
 		}
 		Debug.print(RFID_DATA_RECV, readin);
 		if (readin == null || readin.length == 0) {
@@ -474,7 +477,7 @@ public class RFIDDevice {
 			return RFID_ERRNO_NOCARD;
 		}
 		try {
-			Thread.sleep(100);
+			Thread.sleep(50);
 		} catch (Exception e) {
 		}
 		//防冲突
@@ -483,12 +486,18 @@ public class RFIDDevice {
 			return RFID_ERRNO_SERIALNO_UNAVILABLE;
 		}
 		try {
-			Thread.sleep(100);
+			Thread.sleep(50);
 		} catch (Exception e) {
+			
 		}
+		Debug.e(TAG, "--->selectCard");
 		//选卡
 		if (!selectCard(mSN, true)) {
 			return RFID_ERRNO_SELECT_FAIL;
+		}
+		try {
+			Thread.sleep(50);
+		} catch (Exception e) {
 		}
 		return RFID_ERRNO_NOERROR;
 	}
@@ -711,7 +720,7 @@ public class RFIDDevice {
 		} else if (mCurInkLevel <= 0) {
 			mCurInkLevel = 0;
 		}
-		Debug.e(TAG, "--->ink=" + mCurInkLevel);
+		// Debug.e(TAG, "--->ink=" + mCurInkLevel);
 	}
 	/**
 	 *更新墨水值，即当前墨水值减1 

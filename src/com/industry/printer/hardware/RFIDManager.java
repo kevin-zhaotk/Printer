@@ -155,13 +155,15 @@ public class RFIDManager {
 			
 			@Override
 			public void run() {
+				Debug.e(TAG, "--->switch");
 				ExtGpio.rfidSwitch(i);
 				try {
 					Thread.sleep(1000);
 				} catch (Exception e) {
 				}
-				
+				Debug.e(TAG, "--->init blind");
 				// device.cardInitBlind();
+				
 				// device.cardInit();
 				device.setReady(true);
 			}
