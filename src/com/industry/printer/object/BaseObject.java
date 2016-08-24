@@ -250,8 +250,9 @@ public class BaseObject{
 		return bmp;
 	}
 	
-	public void drawVarBitmap()
+	public int drawVarBitmap()
 	{
+		int dots = 0;
 		//mPaint.setTextSize(mHeight);
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
@@ -281,11 +282,14 @@ public class BaseObject{
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract(gBmp);
+		dots = maker.extract(gBmp);
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
+		/*根據變量內容的實際長度計算點數*/
+		dots = (dots* getContent().length()/10) + 1;
+		return dots;
 	}
 	/**
 	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap

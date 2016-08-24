@@ -175,6 +175,13 @@ public class MessageTask {
 	}
 	
 	public void saveTlk(Context context) {
+		for(BaseObject o:mObjects)
+		{
+			if((o instanceof MessageObject)	) {
+				((MessageObject) o).setDotCount(mDots);
+				break;
+			}
+		}
 		TlkFileWriter tlkFile = new TlkFileWriter(context, this);
 		tlkFile.write();
 	}
@@ -200,7 +207,7 @@ public class MessageTask {
 				if(PlatformInfo.isBufferFromDotMatrix()) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
 				} else {
-					object.drawVarBitmap();
+					mDots += object.drawVarBitmap();
 				}
 			}
 		}
@@ -277,7 +284,7 @@ public class MessageTask {
 		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div), bmp.getHeight() * getHeads(), true);
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract(bitmap);
+		mDots = maker.extract(bitmap);
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
@@ -390,9 +397,9 @@ public class MessageTask {
 
 	public void save() {
 		
+
 		//保存1.TLK文件
 		saveTlk(mContext);
-		
 		//保存1.bin文件
 		saveBin();
 		
@@ -402,6 +409,9 @@ public class MessageTask {
 		//保存vx.bin文件
 		saveVarBin();
 		
+		//保存1.TLK文件
+		saveTlk(mContext);
+				
 		//保存1.bmp文件
 		savePreview();
 	}

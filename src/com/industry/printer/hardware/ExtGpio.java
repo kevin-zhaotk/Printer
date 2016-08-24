@@ -1,5 +1,12 @@
 package com.industry.printer.hardware;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import com.industry.printer.Utils.Debug;
+
 public class ExtGpio {
 
 	/**
@@ -54,4 +61,27 @@ public class ExtGpio {
 		}
 		return mFd;
 	}
+	
+	public static boolean writeSysfs() {
+        String path = "/sys/devices/platform/ext-gpio/playClick";
+        if (!new File(path).exists()) {
+            Debug.e("", "File not found: " + path);
+            return false;
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path), 2);
+            try {
+                writer.write("1");
+            } finally {
+                writer.close();
+            }
+            return true;
+
+        } catch (IOException e) {
+            Debug.e("", "IO Exception when write: " + path, e);
+            return false;
+        }
+    }
+
 }

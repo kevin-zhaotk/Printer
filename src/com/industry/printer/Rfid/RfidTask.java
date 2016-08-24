@@ -76,15 +76,15 @@ public class RfidTask {
 		switch (mState) {
 			case STATE_IDLE:
 				
-				dev.lookForCards(false);
+				dev.lookForCards(true);
 				mState = STATE_SEARCH_OK;
 				break;
 			case STATE_SEARCH_OK:
-				dev.avoidConflict(false);
+				dev.avoidConflict(true);
 				mState = STATE_AVOID_CONFLICT;
 				break;
 			case STATE_AVOID_CONFLICT:
-				dev.selectCard(dev.mSN, false);
+				dev.selectCard(dev.mSN, true);
 				mState = STATE_SELECT_OK;
 				break;
 			case STATE_SELECT_OK:

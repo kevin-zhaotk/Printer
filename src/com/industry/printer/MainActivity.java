@@ -64,7 +64,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public EditTabSmallActivity mEditSmallTab;
 	public SettingsTabActivity	mSettingsTab;
 	
+	public LinearLayout mCtrlExtra;
 	public TextView mCtrlTitle;
+	public TextView mCountdown;
 	public TextView mEditTitle;
 	public RelativeLayout mSettings;
 	public TextView mSettingTitle;
@@ -199,7 +201,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 //	}
 	
 	private void initView() {
+		mCtrlExtra = (LinearLayout) findViewById(R.id.ctrl_extra);
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
+		mCountdown = (TextView) findViewById(R.id.count_down);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
 		mEditExtra = (LinearLayout) findViewById(R.id.edit_extra);
 		
@@ -264,10 +268,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			case R.id.btn_control:
 				if(arg1 == true) {
 					fts.show(mControlTab);
-					mCtrlTitle.setVisibility(View.VISIBLE);
+					mCtrlExtra.setVisibility(View.VISIBLE);
 				} else {
 					fts.hide(mControlTab);
-					mCtrlTitle.setVisibility(View.GONE);
+					mCtrlExtra.setVisibility(View.GONE);
 				}
 				
 				Debug.d(TAG, "====>control checked?"+arg1);
@@ -391,5 +395,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		default:
 			break;
 		}
+	}
+	
+	public void setCtrlExtra(int count, int down) {
+		mCtrlTitle.setText(String.valueOf(count));
+		mCountdown.setText(String.valueOf(down));
 	}
 }

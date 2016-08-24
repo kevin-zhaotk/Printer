@@ -62,7 +62,7 @@ public class Configs {
 	/**
 	 * 一个单位的墨水量对应的打点数
 	 */
-	public static final int DOTS_PER_PRINT = 1;
+	public static final int DOTS_PER_PRINT = 6018000;
 	
 	/**
 	 * 墨盒总墨水量

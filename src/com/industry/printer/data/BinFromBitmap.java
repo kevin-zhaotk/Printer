@@ -18,6 +18,8 @@ import android.graphics.Bitmap.Config;
  *
  */
 public class BinFromBitmap extends BinCreater {
+	
+	public int mDots=0;
 
 	/**
 	 * 这个函数没有对bmp原图进行高度缩放，所以，得到的buffer列高与原图高度一致
@@ -26,6 +28,7 @@ public class BinFromBitmap extends BinCreater {
 	 */
 	@Override
 	public int extract(Bitmap bmp) {
+		mDots = 0;
     	mWidth = bmp.getWidth();         
         mHeight = bmp.getHeight(); 
         
@@ -53,13 +56,15 @@ public class BinFromBitmap extends BinCreater {
                 pixels[mWidth * i + j] = grey>128? 0x0:0xffffff;
                 if(grey>128)
                 	mBinBits[j*colEach+i/8] &= ~(0x01<<(i%8));
-                else
-                	mBinBits[j*colEach+i/8] |= 0x01<<(i%8); 
+                else {
+                	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
+                	mDots++;
+                }
                 //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
             }
         }
         
-        return mBinBits.length; 
+        return mDots; 
     }
 	
 	public static Bitmap Bin2Bitmap(byte []map)

@@ -146,7 +146,7 @@ public class RfidScheduler {
 		if (mRfidTasks.size() <= 0) {
 			return;
 		}
-		if (mRfidTasks.size() <= mCurrent || mCurrent < 0) {
+		if (mRfidTasks.size() - 1 <= mCurrent || mCurrent < 0) {
 			 mCurrent = 0;
 		} else {
 			mCurrent++;

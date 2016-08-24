@@ -158,7 +158,7 @@ public class RFIDManager {
 				Debug.e(TAG, "--->switch");
 				ExtGpio.rfidSwitch(i);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (Exception e) {
 				}
 				Debug.e(TAG, "--->init blind");
@@ -198,6 +198,14 @@ public class RFIDManager {
 		}
 		RFIDDevice device = mRfidDevices.get(dev);
 		return device.isReady();
+	}
+	
+	public boolean isValid(int dev) {
+		if (dev >= mRfidDevices.size()) {
+			return false;
+		}
+		RFIDDevice device = mRfidDevices.get(dev);
+		return device.isValid();
 	}
 	
 	public RFIDDevice getDevice(int index) {

@@ -148,6 +148,7 @@ public class RFIDDevice {
 	private int mLastLevel = 0;
 	public 	int mInkMax = 0;
 	public boolean mReady = false;
+	public boolean mValid = false;
 	// 错误码定义
 	public static final int RFID_ERRNO_NOERROR = 0;
 	public static final int RFID_ERRNO_NOCARD = 1;
@@ -548,7 +549,7 @@ public class RFIDDevice {
 		mInkMax = getInkMax();
 		Debug.e(TAG, "===>max ink: " + mInkMax);
 		readFeatureCode();
-		
+		mValid = checkFeatureCode();
 		
 		return 0;
 	}
@@ -906,6 +907,14 @@ public class RFIDDevice {
 			return ;
 		}
 		writeBlock(sector, block, content);
+	}
+	
+	/**
+	 * 檢查特徵值是否正確
+	 * @return
+	 */
+	public boolean isValid() {
+		return mValid;
 	}
 	
 	private boolean isLevelValid(int value) {

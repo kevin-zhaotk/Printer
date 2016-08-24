@@ -50,6 +50,7 @@ public class DataTransferThread extends Thread {
 	public DataTask mDataTask;
 	RfidScheduler	mScheduler;
 	private static long mInterval = 0;
+	private int mThreshold;
 	
 	private InkLevelListener mInkListener = null;
 	
@@ -114,7 +115,8 @@ public class DataTransferThread extends Thread {
 				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				last = SystemClock.currentThreadTimeMillis();
-				mInkListener.onInkLevelDown();
+				countDown();
+				
 				mInkListener.onCountChanged();
 				
 				mScheduler.schedule();
@@ -231,6 +233,7 @@ public class DataTransferThread extends Thread {
 			mDataTask.setTask(task);
 		}
 		Debug.d(TAG, "--->prepare buffer");
+		
 		isBufferReady = mDataTask.prepareBackgroudBuffer();
 	}
 	
@@ -243,11 +246,12 @@ public class DataTransferThread extends Thread {
 			return;
 		}
 		mDataTask.setDots(count);
+		mcountdown = getInkThreshold();
 	}
 	
 	public int getDotCount() {
 		if (mDataTask == null) {
-			return 0;
+			return 1;
 		}
 			
 		return mDataTask.getDots();
@@ -262,9 +266,14 @@ public class DataTransferThread extends Thread {
 		if (mcountdown <= 0) {
 			// 赋初值
 			mcountdown = getInkThreshold();
+			mInkListener.onInkLevelDown();
 			return true;
 		}
 		return false;
+	}
+	
+	public int getCount() {
+		return mcountdown;
 	}
 	
 	/**
@@ -272,7 +281,17 @@ public class DataTransferThread extends Thread {
 	 * @return
 	 */
 	private int getInkThreshold() {
-		return Configs.DOTS_PER_PRINT;
+		int bold = 1;
+		if (getDotCount() <= 0) {
+			return 1;
+		}
+		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+		if (config.getParam(2) <= 0) {
+			bold = 1;
+		} else {
+			bold = config.getParam(2)/150;
+		}
+		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount() * bold);
 	}
 	
 	public int getHeads() {

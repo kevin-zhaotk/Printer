@@ -406,20 +406,21 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		*/
 		float ink = mRfidManager.getLocalInk(mRfid);
 		String level = String.valueOf(mRfid + 1) + "-" + String.valueOf((int)ink);// + "%");
-		mInkLevel.setText(level);
-		if (!mFeatureCorrect) {
-			level = String.format(getResources().getString(R.string.str_state_inklevel), "--");
-			// mInkLevel.setText(level);
+		
+		if (!mRfidManager.isValid(mRfid)) {
+			mInkLevel.setText(String.valueOf(mRfid + 1) + "--");
 			
-		} else if (ink <= 0) {
-			mInkLevel.setBackgroundColor(Color.RED);
-			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.ink_alarm_animation);
-			if (mInkLevel.getAnimation() == null) {
-				mInkLevel.setAnimation(animation);
-				//mInkLevel.startAnimation(animation);
-			}
+		} else if (ink >= 0){
+			//mInkLevel.clearAnimation();
+			mInkLevel.setBackgroundColor(0x436EEE);
+			mInkLevel.setText(level);
 		} else {
-			mInkLevel.clearAnimation();
+			mInkLevel.setBackgroundColor(Color.RED);
+//			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.ink_alarm_animation);
+//			if (mInkLevel.getAnimation() == null) {
+//				mInkLevel.setAnimation(animation);
+//				//mInkLevel.startAnimation(animation);
+//			}
 		}
 		
 	}
@@ -427,7 +428,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshCount() {
 		// String cFormat = getResources().getString(R.string.str_print_count);
 		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
-		((MainActivity)getActivity()).mCtrlTitle.setText(String.valueOf(mCounter));
+		if (mDTransThread != null) {
+			((MainActivity) getActivity()).setCtrlExtra(mCounter, mDTransThread.getCount());
+		} else {
+			((MainActivity) getActivity()).setCtrlExtra(mCounter, 0);
+		}
 	}
 	
 	private void refreshPower() {
@@ -476,6 +481,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
 					mMsgPreImg.setImageBitmap(mPreBitmap);
+					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
@@ -622,9 +628,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
 					Bundle bd = (Bundle) msg.getData();
 					float il = bd.getFloat("level");
-					if (il <= 0) {
+					/*if (il <= 0) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 5000);
-					}
+					}*/
 					switchRfid();
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
@@ -939,7 +945,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	@Override
 	public void onClick(View v) {
-		
+		// ExtGpio.writeSysfs();
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
