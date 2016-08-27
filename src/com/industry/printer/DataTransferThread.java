@@ -82,7 +82,7 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		if (Configs.DEBUG && usbs != null && usbs.size() > 0) {
+		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());

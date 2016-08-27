@@ -14,6 +14,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ReflectCaller;
+import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
@@ -304,6 +305,7 @@ public static final String TAG="SettingsTabActivity";
 		if (arg0 == null) {
 			return;
 		}
+		ExtGpio.playClick();
 		switch (arg0.getId()) {
 			case R.id.btn_prev:
 				// mScrollView.arrowScroll(View.FOCUS_UP);

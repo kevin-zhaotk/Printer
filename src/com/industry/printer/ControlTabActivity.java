@@ -941,7 +941,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	@Override
 	public void onClick(View v) {
-		// ExtGpio.writeSysfs();
+		
+		ExtGpio.playClick();
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);

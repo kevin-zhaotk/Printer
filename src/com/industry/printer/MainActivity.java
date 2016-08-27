@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
@@ -263,6 +264,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	@Override
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+		ExtGpio.playClick();
 		FragmentTransaction fts = getFragmentManager().beginTransaction();
 		switch (arg0.getId()) {
 			case R.id.btn_control:
