@@ -640,6 +640,10 @@ public class RFIDDevice {
 		Debug.d(TAG, "===>curInk=" + mCurInkLevel);
 		return mCurInkLevel;
 	}
+	
+	public int getMax() {
+		return mInkMax;
+	}
 	/**
 	 * 寿命值写入
 	 */

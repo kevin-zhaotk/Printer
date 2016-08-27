@@ -329,27 +329,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				db.setFirstBoot(mContext, false);
 			}
 		}
+		/****初始化RFID****/
+		mRfidManager = RFIDManager.getInstance();
+		mRfidManager.init(mHandler);
 		
 		refreshCount();
 		
 		/***PG1 PG2输出状态为 0x11，清零模式**/
 		FpgaGpioOperation.clean();
 		
-		/****初始化RFID****/
-		/*
-		mRfidDevice = RFIDDevice.getInstance();
-		if (mRfidDevice.init() != 0) {
-			Toast.makeText(mContext, R.string.str_rfid_initfail_notify, Toast.LENGTH_LONG);
-			refreshInk(0);
-		} else {
-//			float ink = mRfidDevice.getInkLevel();
-//			mFeatureCorrect = mRfidDevice.checkFeatureCode();
-//			refreshInk(ink);
-			RFIDAsyncTask.getInstance(mHandler).execute();
-		}
-		*/
-		mRfidManager = RFIDManager.getInstance();
-		mRfidManager.init(mHandler);
 		//Debug.d(TAG, "===>loadMessage");
 		// 通过监听系统广播加载
 		loadMessage();
@@ -391,6 +379,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mRfid = 0;
 		}
 		refreshInk();
+		refreshCount();
 		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
 	}
 	
@@ -405,34 +394,41 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		*/
 		float ink = mRfidManager.getLocalInk(mRfid);
-		String level = String.valueOf(mRfid + 1) + "-" + String.valueOf((int)ink);// + "%");
+		String level = String.valueOf(mRfid + 1) + "-" + (String.format("%.1f", ink) + "%");
 		
 		if (!mRfidManager.isValid(mRfid)) {
+			mInkLevel.setBackgroundColor(Color.RED);
 			mInkLevel.setText(String.valueOf(mRfid + 1) + "--");
 			
-		} else if (ink >= 0){
+		} else if (ink > 0){
 			//mInkLevel.clearAnimation();
 			mInkLevel.setBackgroundColor(0x436EEE);
 			mInkLevel.setText(level);
 		} else {
 			mInkLevel.setBackgroundColor(Color.RED);
-//			Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.ink_alarm_animation);
-//			if (mInkLevel.getAnimation() == null) {
-//				mInkLevel.setAnimation(animation);
-//				//mInkLevel.startAnimation(animation);
-//			}
+			mInkLevel.setText(level);
+			//鎖值爲0停止打印
+			if (mDTransThread != null && mDTransThread.isRunning()) {
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+			}
+			
 		}
 		
 	}
 	
 	private void refreshCount() {
+		float count = 0;
 		// String cFormat = getResources().getString(R.string.str_print_count);
 		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
-		if (mDTransThread != null) {
-			((MainActivity) getActivity()).setCtrlExtra(mCounter, mDTransThread.getCount());
-		} else {
-			((MainActivity) getActivity()).setCtrlExtra(mCounter, 0);
+		RFIDDevice device = mRfidManager.getDevice(mRfid);
+		if (device != null && mDTransThread != null) {
+			count = device.getLocalInk() - 1;
+			count = count * mDTransThread.getInkThreshold() + mDTransThread.getCount();
 		}
+		if (count < 0) {
+			count = 0;
+		}
+		((MainActivity) getActivity()).setCtrlExtra(mCounter, (int) count);
 	}
 	
 	private void refreshPower() {
@@ -520,10 +516,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_PRINT_START:
 					
-					/*if (mRfidManager.getLocalInk(0) <= 0 || !mRfidManager.isReady(0)) {
+					if (mRfidManager.getLocalInk(0) <= 0) {
 						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
 						return;
-					}*/
+					}
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
 						break;
@@ -610,7 +606,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
-					refreshCount();
+					// refreshCount();
 					//PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
 					//db.updateCount(mContext, (int) mCounter);
 					RTCDevice device = RTCDevice.getInstance(mContext);
@@ -1035,5 +1031,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public void setCallback(Handler callback) {
 		mCallback = callback;
+	}
+	
+	public void onConfigChange() {
+		if (mDTransThread == null) {
+			return;
+		}
+		mDTransThread.refreshCount();
+		refreshCount();
 	}
 }

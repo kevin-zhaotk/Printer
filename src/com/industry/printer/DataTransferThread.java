@@ -273,6 +273,7 @@ public class DataTransferThread extends Thread {
 	}
 	
 	public int getCount() {
+		
 		return mcountdown;
 	}
 	
@@ -280,7 +281,7 @@ public class DataTransferThread extends Thread {
 	 * 通过dot count计算RFID减1的阀值
 	 * @return
 	 */
-	private int getInkThreshold() {
+	public int getInkThreshold() {
 		int bold = 1;
 		if (getDotCount() <= 0) {
 			return 1;
@@ -316,4 +317,7 @@ public class DataTransferThread extends Thread {
 		}
 	}
 
+	public void refreshCount() {
+		mcountdown = getInkThreshold();
+	}
 }

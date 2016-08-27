@@ -401,4 +401,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mCtrlTitle.setText(String.valueOf(count));
 		mCountdown.setText(String.valueOf(down));
 	}
+	
+	public void onConfigChange() {
+		mControlTab.onConfigChange();
+		
+	}
 }

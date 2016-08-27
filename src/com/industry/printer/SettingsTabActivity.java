@@ -319,6 +319,7 @@ public static final String TAG="SettingsTabActivity";
 				Debug.d(TAG, "===>onclick");
 				mAdapter.checkParams();
 				mSysconfig.saveConfig();
+				((MainActivity) getActivity()).onConfigChange();
 				// FpgaGpioOperation.updateSettings(mContext);
 				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
 				// device.read();

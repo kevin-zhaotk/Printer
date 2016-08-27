@@ -178,7 +178,14 @@ public class RFIDManager {
 		if (device == null) {
 			return 0;
 		}
-		return device.getLocalInk();
+		int max = device.getMax();
+		float ink = device.getLocalInk();
+		if (max <= 0) {
+			return 0;
+		} else if (max < ink) {
+			return 100;
+		}
+		return (ink*100/max);
 	}
 	
 	public void downLocal(int dev) {
