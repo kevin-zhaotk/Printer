@@ -597,7 +597,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
-						// mDTransThread = null;
+						mDTransThread = null;
+						initDTThread();
 					}
 					/*打印任务停止后允许切换打印对象*/
 					switchState(STATE_STOPPED);

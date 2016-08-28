@@ -122,6 +122,9 @@ public class RfidScheduler {
 						
 					} catch (Exception e) {
 					}
+					if (mCurrent >= mRfidTasks.size()) {
+						break;
+					}
 					RfidTask task = mRfidTasks.get(mCurrent);
 					if ((mCurrent == mRfidTasks.size() -1) && task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
 						break;

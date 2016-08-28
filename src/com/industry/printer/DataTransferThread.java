@@ -198,8 +198,7 @@ public class DataTransferThread extends Thread {
 		mRunning = false;
 		
 		DataTransferThread t = mInstance;
-		
-		//mInstance = null;
+		mInstance = null;
 		mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 		if (t != null) {
 			t.interrupt();
