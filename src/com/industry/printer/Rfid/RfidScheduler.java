@@ -21,7 +21,7 @@ public class RfidScheduler {
 	
 	public static RfidScheduler mInstance = null;
 	// 5S间隔
-	public static final long TASK_SCHEDULE_INTERVAL = 5000;
+	public static final long TASK_SCHEDULE_INTERVAL = 3000;
 	public static final long RFID_SWITCH_INTERVAL = 1000;
 	
 	private List<RfidTask> mRfidTasks = null;

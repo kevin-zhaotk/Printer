@@ -202,6 +202,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_REFRESH_POWERSTAT = 9;
 	
 	public static final int MESSAGE_SWITCH_RFID = 10;
+	
+	
+	public static final int MESSAGE_RFID_LOW = 11;
+	
+	public static final int MESSAGE_RFID_ZERO = 12;
+	
+	public static final int MESSAGE_RFID_ALARM = 13;
+	
 	/**
 	 * the bitmap for preview
 	 */
@@ -383,16 +391,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
 	}
 	
+	boolean mInkLow = false;
+	boolean mInkZero = false;
+	
 	private void refreshInk() {
-		/*
-		if (mRfidDevice.mInkMax <= 0) {
-			ink = 0;
-		} else if (ink > mRfidDevice.mInkMax) {
-			ink = 100;
-		} else {
-			ink = (ink * 100)/mRfidDevice.mInkMax;
-		}
-		*/
+		
 		float ink = mRfidManager.getLocalInk(mRfid);
 		String level = String.valueOf(mRfid + 1) + "-" + (String.format("%.1f", ink) + "%");
 		
@@ -412,6 +415,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 			}
 			
+		}
+		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 1.0f) + ", " + (ink > 0f));
+		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 0f));
+		if (ink <= 1.0f && ink > 0f && mInkLow == false) {
+			mInkLow = true;
+			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_LOW, 5000);
+		} else if (ink <= 0f && mInkZero == false) {
+			mInkZero = true;
+			mHandler.removeMessages(MESSAGE_RFID_LOW);
+			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 		}
 		
 	}
@@ -584,7 +597,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
-						mDTransThread = null;
+						// mDTransThread = null;
 					}
 					/*打印任务停止后允许切换打印对象*/
 					switchState(STATE_STOPPED);
@@ -633,9 +646,34 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					float ink = mRfidManager.getLocalInk(0);
 					refreshInk();
 					break;
+				case MESSAGE_RFID_LOW:
+					Debug.e(TAG, "--->low: play error");
+					// ExtGpio.playError();
+					mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
+					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_LOW, 5000);
+					break;
+				case MESSAGE_RFID_ZERO:
+					Debug.e(TAG, "--->zero: play error");
+					// ExtGpio.playError();
+					mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
+					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
+					break;
+				case MESSAGE_RFID_ALARM:
+					ExtGpio.playClick();
+					if (mRfiAlarmTimes++ < 3) {
+						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 200);						
+					} else {
+						mRfiAlarmTimes = 0;
+					}
+					
+					break;
+				default:
+					break;
 			}
 		}
 	};
+	
+	private int mRfiAlarmTimes = 0;
 	
 	private void updateCntIfNeed() {
 		for (BaseObject object : mMsgTask.getObjects()) {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industry.printer"
-    android:versionCode="2016082623"
-    android:versionName="2016082623">
+    android:versionCode="2016082823"
+    android:versionName="2016082823">
 	
     <!-- 
     <uses-feature android:name="android.hardware.usb.host" />
      -->
-    <uses-sdk android:minSdkVersion="14" 
+    <uses-sdk android:minSdkVersion="14"
         android:targetSdkVersion="17"/>
 
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN"/>
