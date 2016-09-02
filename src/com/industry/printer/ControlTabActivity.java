@@ -387,7 +387,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mRfid = 0;
 		}
 		refreshInk();
-		refreshCount();
+		// refreshCount();
 		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
 	}
 	
@@ -620,7 +620,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_COUNT_CHANGE:
 					mCounter++;
-					// refreshCount();
+					refreshCount();
 					//PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
 					//db.updateCount(mContext, (int) mCounter);
 					RTCDevice device = RTCDevice.getInstance(mContext);
@@ -642,6 +642,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 5000);
 					}*/
 					switchRfid();
+					refreshCount();
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);

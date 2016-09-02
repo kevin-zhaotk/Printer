@@ -205,7 +205,7 @@ public class BaseObject{
 	
 	private Bitmap draw() {
 		Bitmap bitmap;
-		mPaint.setTextSize(mHeight);
+		mPaint.setTextSize(getfeed());
 		mPaint.setAntiAlias(true); //去除锯齿  
 		mPaint.setFilterBitmap(true); //对位图进行滤波处理
 		try {
@@ -226,14 +226,22 @@ public class BaseObject{
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
-		Debug.d(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: ");
+		Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p); 
-		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
+		mCan.drawText(mContent, 0, mHeight-fm.descent+ getfeedsent(), mPaint);
 		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
 			setWidth(width * 1.25f);
 		}
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
+	
+	private int getfeed() {
+		return (int)(mHeight/10 * 11);
+	}
+	private int getfeedsent() {
+		return (int)(mHeight/10 * 11/20);
+	}
+	
 	protected Bitmap getBitmap(Context context)
 	{
 		//mPaint.setColor(Color.RED);
