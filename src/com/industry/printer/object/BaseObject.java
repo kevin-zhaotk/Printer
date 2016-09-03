@@ -239,7 +239,7 @@ public class BaseObject{
 		return (int)(mHeight/10 * 11);
 	}
 	private int getfeedsent() {
-		return (int)(mHeight/10 * 11/20);
+		return (int)(mHeight/10 * 11/20 + 1);
 	}
 	
 	protected Bitmap getBitmap(Context context)
@@ -284,7 +284,7 @@ public class BaseObject{
 		{
 			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
-			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
+			can.drawText(String.valueOf(i), 0, mHeight-fm.descent + getfeedsent(), mPaint);
 			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight * mTask.getHeads()), false), i*singleW, (int)getY() * mTask.getHeads(), mPaint);
 		}
