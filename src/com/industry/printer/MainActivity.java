@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -185,6 +186,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		Debug.d(TAG, "--->onConfigurationChanged");
+		finish();
+		Intent intent = new Intent(this, MainActivity.class);
+		this.startActivity(intent);
+
 	}
 	
 	@Override
@@ -371,8 +376,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		FragmentTransaction fts = getFragmentManager().beginTransaction();
 		fts.remove(mControlTab);
 		fts.remove(mSettingsTab);
+		fts.remove(mEditSmallTab);
+		fts.remove(mEditFullTab);
 		FpgaGpioOperation.close();
-		android.os.Process.killProcess(android.os.Process.myPid());  
+
 	}
 
 	@Override

@@ -166,7 +166,7 @@ public class BaseObject{
 	public void initPaint()
 	{
 		mPaint = new Paint();
-		mPaint.setTextSize(Configs.gDots);
+		mPaint.setTextSize(getfeed());
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
@@ -369,7 +369,7 @@ public class BaseObject{
 	}
 	
 	public void resizeByHeight() {
-		mPaint.setTextSize(mHeight);
+		mPaint.setTextSize(getfeed());
 		String s = getContent();
 		if (s == null) {
 			return;
@@ -464,7 +464,7 @@ public class BaseObject{
 		if(mContent!=null && mContent.equals(content))
 			return;
 		mContent = content;
-		mPaint.setTextSize(mHeight);
+		mPaint.setTextSize(getfeed());
 		mWidth = mPaint.measureText(mContent);
 		// mPaint.setTextSize(Configs.gDots);
 		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);

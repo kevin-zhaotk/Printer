@@ -169,7 +169,7 @@ public class RealtimeObject extends BaseObject {
 		for(BaseObject o : mSubObjs)
 		{
 			Bitmap b = o.getScaledBitmap(context);
-			Debug.d(TAG, "--->id:" + o.mId + ",  width=" + b.getWidth());
+			Debug.d(TAG, "--->id:" + o.mId + ", width=" + (o.getXEnd() - getX()));
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
 		return bmp;
