@@ -172,7 +172,7 @@ public class DataTask {
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
-				BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
+				// BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
 				// Debug.d(TAG, "--->object x=" + o.getX()/div);
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed());
 			}
@@ -227,9 +227,9 @@ public class DataTask {
 					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
 					mVarBinList.put(o, varbin);
 				}
-				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
+				Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
 				var = varbin.getVarBuffer(vString);
-				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
 				
 			} else if (o instanceof ShiftObject) {
 				
@@ -242,7 +242,7 @@ public class DataTask {
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
 				var = varbin.getVarBuffer(shift, ((ShiftObject)o).getBits());
-				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
 			}
 			else
 			{
