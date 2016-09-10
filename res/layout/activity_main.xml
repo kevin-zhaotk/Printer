@@ -66,7 +66,7 @@
      -->
      <LinearLayout 
          android:id="@+id/ctrl_extra"
-         android:layout_width="320dp"
+         android:layout_width="match_parent"
          android:layout_height="@dimen/top_btn_height"
          android:layout_toRightOf="@id/tab_group"
          android:orientation="vertical"
@@ -79,7 +79,7 @@
             android:layout_weight="1"
             android:textColor="#000000"
             android:textSize="25sp"
-	    android:gravity="center"
+	    	android:gravity="center"
         />
         <TextView
 	        android:id="@+id/ctrl_counter_view"
@@ -97,7 +97,7 @@
      
      <LinearLayout 
          android:id="@+id/edit_extra"
-         android:layout_width="320dp"
+         android:layout_width="match_parent"
          android:layout_height="@dimen/top_btn_height"
          android:orientation="vertical"
          android:layout_toRightOf="@id/tab_group"
@@ -106,7 +106,7 @@
          >
          <TextView
 	         android:id="@+id/edit_message_view"
-	         android:layout_width="320dp"
+	         android:layout_width="match_parent"
 	         android:layout_height="40dp"
 	         android:text="@string/str_filename_no"
 	         android:textColor="#000000"
@@ -166,7 +166,7 @@
      
      <RelativeLayout 
          android:id="@+id/settings_view"
-         android:layout_width="320dp"
+         android:layout_width="match_parent"
          android:layout_height="@dimen/top_btn_height"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
@@ -186,6 +186,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
             android:layout_toLeftOf="@id/link_state"
             >
             <TextView
@@ -221,6 +222,7 @@
                 android:text="@string/system_time"
                 android:textColor="#000000"
                 android:textSize="25sp"
+                android:visibility="gone"
                 />
 	        <TextView
 		         android:id="@+id/setting_ext_view"

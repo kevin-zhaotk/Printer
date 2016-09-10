@@ -175,7 +175,7 @@ JNIEXPORT jint JNICALL Java_com_industry_printer_RFID_write
 	if(fd <= 0)
 		return 0;
 
-	//tcflush(fd, TCIOFLUSH);
+	tcflush(fd, TCIFLUSH);
 	ret = write(fd, buf_utf, len);
 
 	/**/

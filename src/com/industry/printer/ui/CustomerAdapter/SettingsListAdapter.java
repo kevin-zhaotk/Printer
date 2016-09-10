@@ -590,6 +590,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			 value = mSysconfig.checkParam(i, mSysconfig.getParam(i-1));
 			 if (value != mSysconfig.getParam(i-1)) {
 				 mSysconfig.setParam(i-1, value);
+				 mSettingItems[i-1].mValue = String.valueOf(value);
 			 }
 		}
 		/*

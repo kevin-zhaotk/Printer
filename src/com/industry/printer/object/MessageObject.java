@@ -70,13 +70,21 @@ public class MessageObject extends BaseObject {
 	
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
-		if (mType == 0 || mType == 1) {
+		if (mType == 0 || mType == 1) { //single
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i]); 
 			}
-		} else if (mType == 2) {
+		} else if (mType == 2 || mType == 4 ) { //dual
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 2); 
+			}
+		} else if (mType == 5) {// triple
+			for (int i = 0; i < size.length; i++) {
+				size[i] = String.valueOf(mBaseList[i] * 3);
+			}
+		} else if (mType == 6) { // four
+			for (int i = 0; i < size.length; i++) {
+				size[i] = String.valueOf(mBaseList[i] * 4);
 			}
 		}
 		return size;
@@ -91,11 +99,15 @@ public class MessageObject extends BaseObject {
 		} catch(Exception e) {
 			Debug.d(TAG, "--->exception: " + e.getMessage());
 		}
-		Debug.d(TAG, "--->h: " + h);
+		Debug.d(TAG, "--->h: " + h + ", type=" + mType);
 		if (mType == 0 || mType == 1) {
 			return h;
-		} else if (mType == 2) {
+		} else if (mType == 2 || mType == 4) {
 			return h/2;
+		} else if (mType == 5) {
+			return h/3;
+		} else if (mType == 6) {
+			return h/4;
 		}
 		return h;
 	}
@@ -107,16 +119,24 @@ public class MessageObject extends BaseObject {
 	
 	public String getDisplayFs(float size) {
 		float h = 0;
+		int type = 1;
 		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			h = size/PIXELS_PER_MM;
 		} else if (mType == MessageType.MESSAGE_TYPE_25_4) {
-			h = size/(2 * PIXELS_PER_MM);
+			h = 2 * (size/PIXELS_PER_MM);
+			type = 2;
+		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {
+			h = 3 * (size/PIXELS_PER_MM);
+			type = 3;
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8) {
+			h = 4 * (size/PIXELS_PER_MM);
+			type = 4;
 		} else {
 			h = size/PIXELS_PER_MM;
 		}
 		for (int i = 0; i < mBaseList.length; i++) {
-			if ((h > mBaseList[i] - 0.3) && (h < mBaseList[i] + 0.3)) {
-				h = mBaseList[i];
+			if ((h > type * mBaseList[i] - 0.3) && (h < type * mBaseList[i] + 0.3)) {
+				h = mBaseList[i] * type;
 				break;
 			}
 		}

@@ -320,6 +320,7 @@ public static final String TAG="SettingsTabActivity";
 			case R.id.btn_setting_ok:
 				Debug.d(TAG, "===>onclick");
 				mAdapter.checkParams();
+				mAdapter.notifyDataSetChanged();
 				mSysconfig.saveConfig();
 				((MainActivity) getActivity()).onConfigChange();
 				// FpgaGpioOperation.updateSettings(mContext);

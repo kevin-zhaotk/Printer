@@ -13,46 +13,43 @@ import android.graphics.Bitmap;
 public class ShiftObject extends BaseObject {
 	public final String TAG="ShiftObject";
 	
+	private static final int SHIFT_MAX = 4;
+	
 	public int mBits;
 	public int mShifts[];
 	public String mValues[];
 	public ShiftObject(Context context, float x) {
 		super( context, BaseObject.OBJECT_TYPE_SHIFT, x);
 		mBits = 1;
-		mShifts = new int[5];
+		mShifts = new int[SHIFT_MAX];
 		mShifts[0]=800;
 		mShifts[1]=1400;
 		mShifts[2]=2200;
 		mShifts[3]=1800;
-		mShifts[4]=2400;
-		mValues = new String[5];
-		mValues[0] = "01";
-		mValues[1] = "02";
-		mValues[2] = "03";
-		mValues[3] = "04";
-		mValues[4] = "05";
-		
-		// TODO Auto-generated constructor stub
+		mValues = new String[SHIFT_MAX];
+		mValues[0] = "1";
+		mValues[1] = "2";
+		mValues[2] = "3";
+		mValues[3] = "4";		
 	}
 	
 	public void setShift(int shift, String time)
 	{
-		if(shift >4 || 
+		if(shift >=SHIFT_MAX || 
 				shift<0 || 
 				time==null || 
-				time.length()>4 || 
-				time.length() < 1 || 
 				!checkNum(time) )
 			return;
 		 int i = Integer.parseInt(time);
 		 if(i <0 || i > 2400)
 			 return;
 		mShifts[shift] = Integer.parseInt(time);
+		Debug.d(TAG, "--->shift: " + shift + "---time: " + time);
 	}
 	
 	public int getShift(int shift)
 	{
-		if(shift<0 || shift>=5)
+		if(shift < 0 || shift >= SHIFT_MAX)
 			return 0;
 		return mShifts[shift];
 	}
@@ -60,17 +57,48 @@ public class ShiftObject extends BaseObject {
 	
 	public void setValue(int shift, String val)
 	{
-		if(shift >4 || shift<0 || val==null || val.length()!=mBits|| !checkNumandLetter(val))
+		if(shift >= SHIFT_MAX || shift<0 || val==null || !checkNumandLetter(val))
 			return;
 		
-		mValues[shift] = val;
+		if (val.length() > mBits) {
+			mValues[shift]  = val.substring(val.length() - mBits);
+		} else if (val.length() < mBits) {
+			mValues[shift] = "";
+			for (int i = 0; i < mBits - val.length(); i++) {
+				mValues[shift] += "0";
+			}
+			mValues[shift] += val;
+		} else {
+			mValues[shift] = val;
+		}
+	}
+	
+	public void setBits(int bits ) {
+		mBits = bits;
+	}
+	
+	public int getBits() {
+		return mBits;
 	}
 	
 	public String getValue(int shift)
 	{
-		if(shift>4 || shift<0)
+		if(shift >= SHIFT_MAX || shift<0)
 			return null;
 		return mValues[shift];
+	}
+	
+	public int getShiftIndex() {
+		int shift = 0;
+		Calendar c = Calendar.getInstance();
+		int hour = c.get(Calendar.HOUR_OF_DAY) * 100;
+		for (int i = 0; i < SHIFT_MAX-1; i++) {
+			if (hour >= mShifts[i] && hour < mShifts[i+1]) {
+				break;
+			}
+			shift++;
+		}
+		return shift;
 	}
 	
 	@Override
@@ -79,10 +107,11 @@ public class ShiftObject extends BaseObject {
 		Calendar c = Calendar.getInstance();
 		int hour = c.get(Calendar.HOUR_OF_DAY) * 100;
 		for (i = 0; i < 4; i++) {
-			if (hour >= mShifts[i] && (hour < mShifts[i+1] || mShifts[i+1] == 0)) {
+			if (hour >= mShifts[i] && hour < mShifts[i+1]) {
 				break;
 			}
 		}
+		Debug.d(TAG, "--->shift Value: " + getValue(i));
 		return getValue(i);
 	}
 	
@@ -130,11 +159,9 @@ public class ShiftObject extends BaseObject {
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += BaseObject.intToFormatString(mBits, 3)+"^";
-		str += "000^000^000^000^";
-		str += mShifts[0]+"^"+mShifts[1]+"^"+mShifts[2]+"^"+mShifts[3]+"^"+mShifts[4]+"^";
-		str += mValues[0]+"^"+mValues[1]+"^"+mValues[2]+"^"+mValues[3]+"^"+mValues[4]+"^";
-		str += mFont+"^";
-		str += mShifts[4];
+		str += mValues[0]+"^"+mValues[1]+"^"+mValues[2]+"^"+mValues[3]+"^";
+		str += mShifts[0]+"^"+mShifts[1]+"^"+mShifts[2]+"^"+mShifts[3]+"^"+"00000^150" + "^";
+		str += mFont+"^" + "000" + "^" + "1";
 		Debug.d(TAG,"counter string ["+str+"]");
 		return str;
 	}
@@ -161,7 +188,7 @@ public class ShiftObject extends BaseObject {
 	
 	public boolean isValidShift(int i)
 	{
-		if(i<0 || i > 4)
+		if(i<0 || i >= SHIFT_MAX)
 		{
 			Debug.d(TAG, "invalide i="+i);
 			return false;
@@ -171,7 +198,7 @@ public class ShiftObject extends BaseObject {
 			Debug.d(TAG, "valide i="+i);
 			return true;
 		}
-		else if(i<=4 && mShifts[i]>=0 && mShifts[i] <= 2400 && (mShifts[i] > mShifts[i-1]))
+		else if(i < SHIFT_MAX && mShifts[i]>=0 && mShifts[i] <= 2400 && (mShifts[i] > mShifts[i-1]))
 		{
 			Debug.d(TAG, "valide i="+i);
 			return true;

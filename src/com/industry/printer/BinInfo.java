@@ -285,6 +285,35 @@ public class BinInfo {
     	return mBufferChars;
     }
     
+    public char[] getVarBuffer(int shift, int bits)
+    {
+    	int n;
+    	byte[] feed = {0};
+    	if (shift * bits > 9) {
+			return null;
+		}
+    	ByteArrayBuffer ba = new ByteArrayBuffer(0);
+		/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
+		for (int k = 0; k < bits * mColPerElement; k++) {
+			for (int j = 0; j < mType; j++) {
+   				ba.append(mBuffer, bits * shift * mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn + j * mBytesPerH, mBytesPerH);
+   	   			if (mNeedFeed) {
+   					ba.append(feed, 0, 1);
+   				}
+   	   			// Debug.d(TAG, "===>offset:" + (n*mColPerElement * mBytesPerColumn + 16 + k * mBytesFeed + j * mBytesPerH) + " ,mBytesPerH=" + mBytesPerH);
+			}
+		}
+   		mBufferBytes = ba.toByteArray();
+   		//把byte[]存为char[]
+   		if (mBufferChars == null) {
+   			mBufferChars = new char[mBufferBytes.length/2];
+   		}
+    	for(int i = 0; i < mBufferChars.length; i++) {
+    		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
+    	}
+    	return mBufferChars;
+    }
+    
     
     public static void overlap(byte[] dst, byte[] src, int x, int high)
     {

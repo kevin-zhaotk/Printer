@@ -974,6 +974,16 @@ public class SystemConfigFile{
 		Debug.d(TAG, "min=" + min + ", max=" + max +", default=" + def);
 		if (value < min || value > max) {
 			Debug.d(TAG, "resetTo:" + def);
+			if (param == 29) {
+				if ( value == 0) {
+					return value;
+				} else if (value > max) {
+					return max;
+				} else if (value < min) {
+					return min;
+				}
+			}
+			
 			return def;
 		}
 		

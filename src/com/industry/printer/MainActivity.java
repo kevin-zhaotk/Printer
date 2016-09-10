@@ -264,7 +264,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 	@Override
 	public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-		ExtGpio.playClick();
+		if(arg1 == true) {
+			ExtGpio.playClick();
+		}
 		FragmentTransaction fts = getFragmentManager().beginTransaction();
 		switch (arg0.getId()) {
 			case R.id.btn_control:
@@ -342,10 +344,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				break;
 			case REFRESH_TIME_DISPLAY:
 				Calendar calendar = Calendar.getInstance();
+				int year = calendar.get(Calendar.YEAR);
+				int month = calendar.get(Calendar.MONTH) + 1;
+				int day = calendar.get(Calendar.DAY_OF_MONTH);
 				int hour = calendar.get(Calendar.HOUR_OF_DAY);
 				int min = calendar.get(Calendar.MINUTE);
 				int second = calendar.get(Calendar.SECOND);
-				String time = String.format(getResources().getString(R.string.str_time_format), hour, min, second);
+				String time = String.format(getResources().getString(R.string.str_time_format), year, month, day, hour, min, second);
 				mSettingTitle.setText(time);
 				mHander.sendEmptyMessageDelayed(REFRESH_TIME_DISPLAY, 1000);
 				break;

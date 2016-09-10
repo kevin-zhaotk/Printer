@@ -650,19 +650,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_RFID_LOW:
 					Debug.e(TAG, "--->low: play error");
-					// ExtGpio.playError();
+					ExtGpio.playError();
 					mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_LOW, 5000);
 					break;
 				case MESSAGE_RFID_ZERO:
 					Debug.e(TAG, "--->zero: play error");
-					// ExtGpio.playError();
+					ExtGpio.playError();
 					mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					ExtGpio.playClick();
+					
 					if (mRfiAlarmTimes++ < 3) {
+						//ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 200);						
 					} else {
 						mRfiAlarmTimes = 0;

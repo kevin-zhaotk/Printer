@@ -258,14 +258,15 @@ public class TLKFileParser  extends TlkFile{
 		{
 			obj = new RTSecondObject(mContext, 0);
 		} else if (BaseObject.OBJECT_TYPE_SHIFT.equals(attr[1])) {
+			Debug.d(TAG, "--->shift object");
 			obj = new ShiftObject(mContext, 0);
+			((ShiftObject)obj).setBits(Integer.parseInt(attr[8]));
 			((ShiftObject)obj).setShift(0, attr[13]);
 			
 			for (int i = 0; i < 4; i++) {
-				int time = Integer.parseInt(attr[13 + i]);
-				if (time > 0 || i == 0) {
-					((ShiftObject)obj).setShift(0, attr[13 + i]);
-				}
+				// int time = Integer.parseInt(attr[13 + i]);
+				((ShiftObject)obj).setShift(i, attr[13 + i]);
+				((ShiftObject)obj).setValue(i, attr[9 + i]);
 			}
 		}
 		else

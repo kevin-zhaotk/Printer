@@ -68,6 +68,33 @@ public class EditScrollView extends View {
 		if (mParent != null) {
 			scrollx = mParent.getScrollX();
 		}
+		MessageObject msgObject = mTask.getMsgObject();
+		if (msgObject != null) {
+			p.setColor(Color.GRAY);
+			int type = msgObject.getType();
+			switch (type) {
+			case 0:
+			case 1:
+				break;
+			case 2:
+			case 4:
+				canvas.drawLine(scrollx, 76, scrollx + mScreenW, 76, p);
+				break;
+			case 5:
+				canvas.drawLine(scrollx, 50, scrollx + mScreenW, 50, p);
+				canvas.drawLine(scrollx, 101, scrollx + mScreenW, 101, p);
+				break;
+			case 6:
+				canvas.drawLine(scrollx, 38, scrollx + mScreenW, 38, p);
+				canvas.drawLine(scrollx, 76, scrollx + mScreenW, 76, p);
+				canvas.drawLine(scrollx, 114, scrollx + mScreenW, 114, p);
+				break;
+			default:
+				break;
+			}
+		}
+		// p.setColor(0x000000);
+		
 		Debug.d(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
 		for(BaseObject obj : mTask.getObjects())
 		{
@@ -84,8 +111,8 @@ public class EditScrollView extends View {
 					/* 画垂直线 */
 					obj.getX(), 0, obj.getX(), mScreenH
 				};
-				p.setColor(Color.BLACK);
-				p.setStrokeWidth(2);
+				p.setColor(Color.BLUE);
+				p.setStrokeWidth(1);
 				canvas.drawLines(points, p);
 				continue;
 			} 
@@ -110,6 +137,7 @@ public class EditScrollView extends View {
 			}
 			
 		}
+		p.setColor(Color.BLACK);
 		canvas.drawLine(scrollx, 153, scrollx + mScreenW, 153, p);
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);

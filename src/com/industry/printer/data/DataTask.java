@@ -232,14 +232,16 @@ public class DataTask {
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
 				
 			} else if (o instanceof ShiftObject) {
-				String vString = ((ShiftObject)o).getContent();
+				
+				int shift = ((ShiftObject)o).getShiftIndex();
+				Debug.d(TAG, "--->shift ******: " + shift);
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
 					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
 					mVarBinList.put(o, varbin);
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
-				var = varbin.getVarBuffer(vString);
+				var = varbin.getVarBuffer(shift, ((ShiftObject)o).getBits());
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsPerHFeed());
 			}
 			else
@@ -272,7 +274,8 @@ public class DataTask {
 		{
 			if((o instanceof CounterObject)
 					|| (o instanceof RealtimeObject)
-					|| (o instanceof JulianDayObject))
+					|| (o instanceof JulianDayObject)
+					|| (o instanceof ShiftObject))
 			{
 				return true;
 			}
