@@ -287,16 +287,21 @@ public class BinInfo {
     
     public char[] getVarBuffer(int shift, int bits)
     {
-    	int n;
+    	int n, offset=0;
     	byte[] feed = {0};
     	if (shift * bits > 9) {
 			return null;
 		}
+    	if (bits == 1) {
+    		offset = bits * shift +1;
+    	} else {
+    		offset = bits * shift;
+    	}
     	ByteArrayBuffer ba = new ByteArrayBuffer(0);
 		/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
 		for (int k = 0; k < bits * mColPerElement; k++) {
 			for (int j = 0; j < mType; j++) {
-   				ba.append(mBuffer, bits * shift * mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn + j * mBytesPerH, mBytesPerH);
+   				ba.append(mBuffer, offset * mColPerElement * mBytesPerColumn + 16 + k * mBytesPerColumn + j * mBytesPerH, mBytesPerH);
    	   			if (mNeedFeed) {
    					ba.append(feed, 0, 1);
    				}
