@@ -1060,7 +1060,7 @@ public class SystemConfigFile{
 		
 		if (mParam[14] == 0) {
 			mFPGAParam[17] = mFPGAParam[17] & 0xfe;
-		} else if (mParam[7] == 1) {
+		} else if (mParam[14] == 1) {
 			mFPGAParam[17] = mFPGAParam[17] | 0x01;
 		}
 
