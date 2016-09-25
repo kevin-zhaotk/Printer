@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.industry.printer.ImageConverter;
+import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
@@ -73,14 +75,15 @@ public class GraphicObject  extends BaseObject{
 	
 	public String toString()
 	{
+		float prop = getProportion();
 		String str="";
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
 		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd()*2, 5)+"^";
+		str += BaseObject.floatToFormatString(getX()*2 * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getXEnd()*2 * prop, 5)+"^";
 		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2, 5)+"^";
+		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += BaseObject.intToFormatString(mContent.length(), 3)+"^";

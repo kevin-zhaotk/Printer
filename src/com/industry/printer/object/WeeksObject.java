@@ -12,12 +12,13 @@ public class WeeksObject extends BaseObject {
 
 	public String toString()
 	{
+		float prop = getProportion();
 		String str="";
 		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX(), 5)+"^";
-		str += BaseObject.floatToFormatString(getY(), 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd(), 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd(), 5)+"^";
+		str += BaseObject.floatToFormatString(getX() * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getY() * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getXEnd() * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getYEnd() * prop, 5)+"^";
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";

@@ -64,14 +64,15 @@ public class RectObject extends BaseObject {
 	
 	public String toString()
 	{
+		float prop = getProportion();
 		String str="";
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
 		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd()*2, 5)+"^";
+		str += BaseObject.floatToFormatString(getX()*2 * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
+		str += BaseObject.floatToFormatString(getXEnd()*2 * prop, 5)+"^";
 		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2, 5)+"^";
+		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += BaseObject.floatToFormatString(getLineWidth(), 3)+"^";

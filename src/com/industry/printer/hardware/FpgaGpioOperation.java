@@ -260,6 +260,11 @@ public class FpgaGpioOperation {
 		*/
 		BinInfo info = task.getInfo();
 		data[24] = (char) info.getBytesFeed();
+		
+		//是否雙列打印
+		data[25] = (char)config.getParam(31-1);
+		//雙列偏移量
+		data[26] = (char) config.getParam(32-1);
 		//时间参数放在最后3个
 		/*
 		Calendar c = Calendar.getInstance();

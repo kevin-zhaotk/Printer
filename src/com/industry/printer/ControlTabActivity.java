@@ -636,11 +636,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mRfidManager.read(mHandler);
 					break;
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
+					boolean ready = true;
 					Bundle bd = (Bundle) msg.getData();
-					float il = bd.getFloat("level");
-					/*if (il <= 0) {
+					for (int i=0; i < mSysconfig.getParam(16); i++) {
+						RFIDDevice dev = mRfidManager.getDevice(i);
+						if (dev.getLocalInk() <= 0) {
+							ready = false;
+							break;
+						}
+					}
+					if (!ready) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 5000);
-					}*/
+					}
 					switchRfid();
 					refreshCount();
 					break;
@@ -661,7 +668,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_RFID_ALARM:
 					
 					if (mRfiAlarmTimes++ < 3) {
-						// ExtGpio.playClick();
+						ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 200);						
 					} else {
 						mRfiAlarmTimes = 0;

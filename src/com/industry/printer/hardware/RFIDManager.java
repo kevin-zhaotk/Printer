@@ -81,6 +81,9 @@ public class RFIDManager {
 				for (int i=0; i < mRfidDevices.size(); i++) {
 					// device.getInkLevel();
 					RFIDDevice device = mRfidDevices.get(i);
+					if (device.getLocalInk() > 0) {
+						continue;
+					}
 					
 					ExtGpio.rfidSwitch(i);
 					try {
@@ -89,12 +92,8 @@ public class RFIDManager {
 					}
 					
 					device.cardInit();
-					Bundle bundle = new Bundle();
-					bundle.putInt("device", i);
-					bundle.putFloat("level", device.getInkLevel());
-					msg.setData(bundle);
+					device.getInkLevel();
 					Debug.e(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
-					
 					
 				}
 				callback.sendMessage(msg);

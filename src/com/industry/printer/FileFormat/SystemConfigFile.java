@@ -25,6 +25,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 
+
 public class SystemConfigFile{
 	private static final String TAG = SystemConfigFile.class.getSimpleName();
 	
@@ -96,6 +97,13 @@ public class SystemConfigFile{
 	
 	public static final String LAST_MESSAGE = "message";
 	
+	/*
+	 * 目前參數使用情況：
+	 * 1、參數1~24：分配給FPGA
+	 * 2、參數25：每列列高
+	 * 3、參數31：是否双列
+	 * 4、參數32：双列偏移量
+	 */
 	public int mParam[] = new int[64]; 
 	public int mFPGAParam[] = new int[24];
 	
@@ -261,6 +269,7 @@ public class SystemConfigFile{
 				mParam[38] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_40)) {
 				mParam[39] = Integer.parseInt(t.getValue());
+				mParam[39] = checkParam(40, mParam[39]);
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_41)) {
 				mParam[40] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_42)) {

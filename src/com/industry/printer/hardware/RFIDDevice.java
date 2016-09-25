@@ -106,6 +106,9 @@ public class RFIDDevice {
 	
 	//Command
 	public static byte RFID_CMD_CONNECT = 0x15;
+	public static byte RFID_CMD_AUTO_SEARCH = 0x20;
+	public static byte RFID_CMD_READ_VERIFY = 0x21;
+	public static byte RFID_CMD_WRITE_VERIFY = 0x23;
 	public static byte RFID_CMD_TYPEA = 0x3A;
 	public static byte RFID_CMD_SEARCHCARD = 0x46;
 	public static byte RFID_CMD_MIFARE_CONFLICT_PREVENTION = 0x47;
@@ -121,6 +124,7 @@ public class RFIDDevice {
 	//Data
 	public static byte[] RFID_DATA_CONNECT = {0x07};
 	public static byte[] RFID_DATA_TYPEA = {0x41};
+	public static byte[] RFID_DATA_SEARCH_MODE = {0x02};
 	public static byte[] RFID_DATA_SEARCHCARD_WAKE = {0x26};
 	public static byte[] RFID_DATA_SEARCHCARD_ALL = {0x52};
 	public static byte[] RFID_DATA_MIFARE_CONFLICT_PREVENTION = {0x04};
@@ -142,6 +146,9 @@ public class RFIDDevice {
 	
 	// UID
 	public byte[] mSN = null;
+	
+	// 是否支持符合命令的新模塊
+	public boolean isNewModel = false;
 
 	// 当前墨水量
 	private int mCurInkLevel = 0;
@@ -212,8 +219,13 @@ public class RFIDDevice {
 		}
 		RFIDData rfidData = new RFIDData(readin, true);
 		byte[] rfid = rfidData.getData();
-		if (rfid == null || rfid[0] != 0 || rfid.length < 3) {
-			Debug.e(TAG, "===>rfid data error");
+		if (rfid == null) {
+			return false;
+		}
+		if (rfid[0] == 0xA9) {	// 新模塊
+			isNewModel = true;
+			return true;
+		} else if (rfid[0] != 0 || rfid.length < 3) { // 老模塊
 			return false;
 		}
 		if (rfid[1] == 0x04 && rfid[2] == 0x00) {
@@ -229,6 +241,33 @@ public class RFIDDevice {
 			Debug.e(TAG, "===>unknow rfid type");
 			return false;
 		}
+	}
+	
+	/**
+	 * 自動尋卡
+	 * @param blind
+	 * @return
+	 */
+	public byte[] autoSearch(boolean blind) { 
+		RFIDData data = new RFIDData(RFID_CMD_AUTO_SEARCH, RFID_DATA_SEARCH_MODE);
+		if (blind) {
+			writeCmd(data, true);
+			return mSN;
+		}
+		byte[] in = null;
+		in = writeCmd(data);
+		RFIDData inData = new RFIDData(in, true);
+		byte[] rfid = inData.getData();
+		if (rfid == null || rfid[0] != 0 || rfid.length != 5) {
+			Debug.e(TAG, "===>rfid data error");
+			return null;
+		}
+		ByteBuffer buffer = ByteBuffer.wrap(rfid);
+		buffer.position(1);
+		byte[] serialNo = new byte[4]; 
+		buffer.get(serialNo, 0, serialNo.length);
+		Debug.print(RFID_DATA_RSLT, serialNo);
+		return serialNo;
 	}
 	/*
 	 * 防冲突
@@ -348,6 +387,37 @@ public class RFIDDevice {
 		
 		
 	}
+
+	/**
+	 * 複合指令：寫卡
+	 * @param sector
+	 * @param block
+	 * @param key
+	 * @param content
+	 * @return
+	 */
+	public boolean writeBlock(byte sector, byte block, byte key[], byte[] content) {
+		Debug.d(TAG, "--->writeBlock sector:" + sector + ", block:" +block);
+		if (sector >= 16 || block >= 4) {
+			Debug.e(TAG, "===>block over");
+			return false;
+		}
+		byte blk = (byte) (sector*4 + block);
+		
+		if (content == null || content.length != 16 || key == null || key.length != 6) {
+			Debug.d(TAG, "block no large than 0x3f");
+		}
+		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
+		buffer.append(0x00);
+		buffer.append(blk);
+		buffer.append(key, 0, key.length);
+		buffer.append(content, 0, content.length);
+		RFIDData data = new RFIDData(RFID_CMD_WRITE_VERIFY, buffer.toByteArray());
+		
+		writeCmd(data, true);
+		return true;
+		
+	}
 	
 	/**
 	 * Mifare one 卡读块
@@ -364,6 +434,31 @@ public class RFIDDevice {
 		byte blk = (byte) (sector*4 + block); 
 		byte[] b = {blk};
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_READ_BLOCK, b);
+		byte[] readin = writeCmd(data);
+		if (!isCorrect(readin)) {
+			return null;
+		}
+		RFIDData rfidData = new RFIDData(readin, true);
+		byte[] blockData = rfidData.getData();
+		return blockData;
+	}
+	
+	/**
+	 * 複合指令：讀卡
+	 * @param sector
+	 * @param block
+	 * @param key
+	 * @return
+	 */
+	public byte[] readBlock(byte sector, byte block, byte[] key) {
+		if (sector >= 16 || block >= 4) {
+			Debug.d(TAG, "===>block over");
+			return null;
+		}
+		Debug.d(TAG, "--->readBlock sector:" + sector + ", block:" +block);
+		byte blk = (byte) (sector*4 + block); 
+		byte[] b = {0x00, blk, key[0], key[1], key[2], key[3], key[4], key[5]};
+		RFIDData data = new RFIDData(RFID_CMD_READ_VERIFY, b);
 		byte[] readin = writeCmd(data);
 		if (!isCorrect(readin)) {
 			return null;
@@ -456,6 +551,13 @@ public class RFIDDevice {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
+		if (isNewModel) { 
+			autoSearch(false);
+			if (mSN != null && mSN.length == 4) {
+				return RFID_ERRNO_NOERROR;
+			}
+			return RFID_ERRNO_SERIALNO_UNAVILABLE;
+		}
 		//防冲突
 		mSN = avoidConflict(false);
 		if (mSN == null || mSN.length == 0) {
@@ -480,6 +582,13 @@ public class RFIDDevice {
 		try {
 			Thread.sleep(50);
 		} catch (Exception e) {
+		}
+		if (isNewModel) {
+			autoSearch(true);
+			if (mSN != null && mSN.length == 4) {
+				return RFID_ERRNO_NOERROR;
+			}
+			return RFID_ERRNO_SERIALNO_UNAVILABLE;
 		}
 		//防冲突
 		mSN = avoidConflict(true);

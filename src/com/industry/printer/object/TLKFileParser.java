@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import com.industry.printer.EditTabActivity;
 import com.industry.printer.MessageTask;
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFile;
 import com.industry.printer.Utils.ConfigPath;
@@ -30,6 +31,7 @@ public class TLKFileParser  extends TlkFile{
 	public static final String TAG="TLKFileParser";
 	
 	private int mDots = 0;
+	private float mProportion = 1;
 	
 	public TLKFileParser(Context context, String file) {
 		super(context, file);
@@ -163,11 +165,11 @@ public class TLKFileParser  extends TlkFile{
 		}
 		object.setIndex(StringUtil.parseInt(attr[0]));
 		if (object instanceof TextObject) {
-			object.setX(StringUtil.parseInt(attr[2])/2);
-			object.setWidth(StringUtil.parseInt(attr[4])/2-StringUtil.parseInt(attr[2])/2);
+			object.setX(StringUtil.parseInt(attr[2])/(2*mProportion));
+			object.setWidth(StringUtil.parseInt(attr[4])/(2 * mProportion)-StringUtil.parseInt(attr[2])/(2 * mProportion));
 		} else {
-			object.setX(StringUtil.parseInt(attr[2]));
-			object.setWidth(StringUtil.parseInt(attr[4])-StringUtil.parseInt(attr[2]));
+			object.setX(StringUtil.parseInt(attr[2]) / mProportion);
+			object.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);
 			
 		}
 		
@@ -181,7 +183,6 @@ public class TLKFileParser  extends TlkFile{
 		if (attr == null || attr.length != 22) {
 			return null;
 		}
-		
 		
 		Debug.d(TAG, "attr[1]="+attr[1]);
 		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
@@ -230,6 +231,8 @@ public class TLKFileParser  extends TlkFile{
 
 			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
 			mDots = Integer.parseInt(attr[13]);
+			
+			setDotsPerClm(type);
 		}
 		else if(BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))			//rect
 		{
@@ -286,18 +289,18 @@ public class TLKFileParser  extends TlkFile{
 					obj instanceof JulianDayObject ||
 					obj instanceof ShiftObject)
 			{
-				obj.setX(StringUtil.parseInt(attr[2]));
-				obj.setWidth(StringUtil.parseInt(attr[4])-StringUtil.parseInt(attr[2]));
+				obj.setX(StringUtil.parseInt(attr[2])/mProportion);
+				obj.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);
 			}
 			else
 			{
-				obj.setX(StringUtil.parseInt(attr[2])/2);
-				obj.setWidth(StringUtil.parseInt(attr[4])/2-StringUtil.parseInt(attr[2])/2);
+				obj.setX(StringUtil.parseInt(attr[2])/(2*mProportion));
+				obj.setWidth(StringUtil.parseInt(attr[4])/(2*mProportion)-StringUtil.parseInt(attr[2])/(2*mProportion));
 			}
 			
-			obj.setY(StringUtil.parseInt(attr[3])/2);
+			obj.setY(StringUtil.parseInt(attr[3])/(2*mProportion));
 			
-			obj.setHeight(StringUtil.parseInt(attr[5])/2-StringUtil.parseInt(attr[3])/2);
+			obj.setHeight(StringUtil.parseInt(attr[5])/(2*mProportion)-StringUtil.parseInt(attr[3])/(2*mProportion));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
 			} catch (Exception e) {
 				Debug.d(TAG, "e: " + e.getCause());
@@ -375,5 +378,27 @@ public class TLKFileParser  extends TlkFile{
 	
 	public int getDots() {
 		return mDots;
+	}
+	
+	private float setDotsPerClm(int type) {
+		int dots = 0;
+		switch (type) {
+			case MessageType.MESSAGE_TYPE_12_7:
+			case MessageType.MESSAGE_TYPE_12_7_S:
+			case MessageType.MESSAGE_TYPE_25_4:
+			case MessageType.MESSAGE_TYPE_33:
+			case MessageType.MESSAGE_TYPE_38_1:
+			case MessageType.MESSAGE_TYPE_50_8:
+				dots = 152;
+				break;
+			case MessageType.MESSAGE_TYPE_16_3:
+				dots = 128;
+				break;
+			default:
+				dots = 152;
+				break;
+		}
+		mProportion = dots/Configs.gDots;
+		return mProportion;
 	}
 }

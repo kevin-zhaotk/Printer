@@ -11,6 +11,7 @@ import com.google.zxing.common.BitMatrix;
 import com.industry.printer.MainActivity;
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -84,6 +85,7 @@ public class BaseObject{
 	public boolean mIsSelected;
 	public String mContent;
 	public String mName;
+	public int mDotsPerClm;
 	/* 
 	 * 是否需要重新绘制bitmap 
 	 * 需要重新绘制bitmap的几种情况：1、宽高变化；2、字体修改； 3，内容变化
@@ -114,6 +116,8 @@ public class BaseObject{
 		mYcor_end=0;
 		mDragable = true;
 		isNeedRedraw = true;
+		// 參數40：列高
+		mDotsPerClm = SystemConfigFile.getInstance(mContext).getParam(39);
 		mFont = "WelldrawH000";
 		initPaint();
 		setSelected(true);	
@@ -514,6 +518,14 @@ public class BaseObject{
 		return mLineWidth;
 	}
 	
+	public void setDotsPerClm(int dots) {
+		mDotsPerClm = dots;
+	}
+	
+	public int getDotsPerClm() {
+		return mDotsPerClm;
+	}
+	
 	public static String floatToFormatString(float f, int n)
 	{
 		String str = "";
@@ -612,5 +624,10 @@ public class BaseObject{
 	
 	public boolean isNeedDraw() {
         return isNeedRedraw;
+	}
+	
+	public float getProportion() {
+		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		return dots/Configs.gDots;
 	}
 }

@@ -62,6 +62,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private PopWindowAdapter mPens;
 	private PopWindowAdapter mAutoVol;
 	private PopWindowAdapter mAutoPulse;
+	private PopWindowAdapter mDots;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -194,6 +195,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		
 		mAutoVol = new PopWindowAdapter(mContext, null);
 		mAutoPulse = new PopWindowAdapter(mContext, null);
+		mDots = new PopWindowAdapter(mContext, null);
 		initAdapters();
 	}
 	
@@ -332,7 +334,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[36] = new ItemOneLine(37, R.string.str_textview_param37, 0);
 		mSettingItems[37] = new ItemOneLine(38, R.string.str_textview_param38, 0);
 		mSettingItems[38] = new ItemOneLine(39, R.string.str_textview_param39, 0);
-		mSettingItems[39] = new ItemOneLine(40, R.string.str_textview_param40, 0);
+		mSettingItems[39] = new ItemOneLine(40, R.string.str_textview_param40, R.array.message_dots,	0,	ItemType.TYPE_VALUE);
 		mSettingItems[40] = new ItemOneLine(41, R.string.str_textview_param41, 0);
 		mSettingItems[41] = new ItemOneLine(42, R.string.str_textview_param42, 0);
 		mSettingItems[42] = new ItemOneLine(43, R.string.str_textview_param43, 0);
@@ -437,6 +439,11 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		for (int i = 0; i < items.length; i++) {
 			mPens.addItem(items[i]);
 		}
+		
+		items = mContext.getResources().getStringArray(R.array.message_dots);
+		for (int i = 0; i < items.length; i++) {
+			mDots.addItem(items[i]);
+		}
 	}
 	private String getEntry(int id,int index) {
 		String entries[] = mContext.getResources().getStringArray(id);
@@ -512,6 +519,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mSpiner.setAdapter(mAutoVol);
 		} else if (position == 26) { //參數27
 			mSpiner.setAdapter(mAutoPulse);
+		} else if (position == 39) { //參數40
+			mSpiner.setAdapter(mDots);
 		}
 		mSpiner.setWidth(view.getWidth());
 		//mSpiner.showAsDropDown(view);

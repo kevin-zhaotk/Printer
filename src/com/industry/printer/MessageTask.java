@@ -277,11 +277,17 @@ public class MessageTask {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		/* 生成bin的bitmap要进行处理，高度根据message的类型调整
+		/**
+		 * 爲了兼容128點，152點和384點高的三種列高信息，需要計算等比例縮放比例
+		 */
+		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		float prop = dots/Configs.gDots;
+		
+		/** 生成bin的bitmap要进行处理，高度根据message的类型调整
 		 * 注： 为了跟PC端保持一致，生成的bin文件宽度为1.tlk中坐标的四分之一，在提取点阵之前先对原始Bitmap进行X坐标缩放（为原图的1/4）
 		 * 	  然后进行灰度和二值化处理；
 		 */
-		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div), bmp.getHeight() * getHeads(), true);
+		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div * prop), (int) (bmp.getHeight() * getHeads() * prop), true);
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		mDots = maker.extract(bitmap);

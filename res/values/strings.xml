@@ -592,6 +592,12 @@
 	    <item>Port</item>
 	</string-array>
 	
+	<string-array name="message_dots">
+	    <item>128</item>
+	    <item>152</item>
+	    <item>384</item>
+	</string-array>
+	
 	<string name="str_time_unit_0_1v">0.1V</string>
 	<string name="str_length_unit_mm">mm</string>
 	<string name="str_time_unit_mm">ms</string>
