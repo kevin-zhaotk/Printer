@@ -91,7 +91,11 @@ public class RFIDManager {
 					} catch (Exception e) {
 					}
 					
-					device.cardInit();
+					Debug.e(TAG, "===>isnew: " + device.isNewModel);
+					if (!device.isNewModel) {
+						device.cardInit();
+					}
+					
 					device.getInkLevel();
 					Debug.e(TAG, "===>index=" + i + "  level=" + device.getLocalInk());
 					

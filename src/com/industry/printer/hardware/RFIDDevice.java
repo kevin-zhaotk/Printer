@@ -222,7 +222,8 @@ public class RFIDDevice {
 		if (rfid == null) {
 			return false;
 		}
-		if (rfid[0] == 0xA9) {	// 新模塊
+		Debug.d(TAG, "--->RFID type: 0x" + Integer.toHexString(rfid[0]));
+		if ((rfid[0]&0x0FF) == 0xA9) {	// 新模塊
 			isNewModel = true;
 			return true;
 		} else if (rfid[0] != 0 || rfid.length < 3) { // 老模塊
@@ -249,6 +250,7 @@ public class RFIDDevice {
 	 * @return
 	 */
 	public byte[] autoSearch(boolean blind) { 
+		Debug.d(TAG, "--->autoSearch");
 		RFIDData data = new RFIDData(RFID_CMD_AUTO_SEARCH, RFID_DATA_SEARCH_MODE);
 		if (blind) {
 			writeCmd(data, true);
@@ -551,8 +553,10 @@ public class RFIDDevice {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
+		Debug.d(TAG, "--->newModel: " + isNewModel);
 		if (isNewModel) { 
-			autoSearch(false);
+			mSN = autoSearch(false);
+			Debug.print(TAG, mSN);
 			if (mSN != null && mSN.length == 4) {
 				return RFID_ERRNO_NOERROR;
 			}
@@ -669,6 +673,11 @@ public class RFIDDevice {
 	 * @return
 	 */
 	private int getInkMax() {
+		if (isNewModel) {
+			byte[] ink = readBlock(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA);
+			EncryptionMethod encrypt = EncryptionMethod.getInstance();
+			return encrypt.decryptInkMAX(ink);
+		}
 		if ( !keyVerfication(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA))
 		{
 			Debug.d(TAG, "--->key verfy fail,init and try once");
@@ -699,6 +708,12 @@ public class RFIDDevice {
 			block = BLOCK_COPY_INKLEVEL;
 		}
 		Debug.d(TAG, "--->getInkLevel sector:" + sector + ", block:" + block);
+		if (isNewModel) {
+			byte[] ink = readBlock(sector, block, mRFIDKeyA);
+			EncryptionMethod encryt = EncryptionMethod.getInstance();
+			Debug.e(TAG, "--->ink level:" + encryt.decryptInkLevel(ink));
+			return encryt.decryptInkLevel(ink);
+		}
 		// 只使用唯一密钥验证
 		if ( !keyVerfication(sector, block, mRFIDKeyA))
 		{
@@ -769,17 +784,20 @@ public class RFIDDevice {
 			sector = SECTOR_COPY_INKLEVEL;
 			block = BLOCK_COPY_INKLEVEL;
 		}
-		
-		if ( !keyVerfication(sector, block, mRFIDKeyA))
-		{
-			return ;
-		}
-		Debug.d(TAG, "--->setInkLevel sector:" + sector + ", block:" + block);
 		EncryptionMethod encryte = EncryptionMethod.getInstance();
 		byte[] content = encryte.encryptInkLevel(level);
 		if (content == null) {
 			return ;
 		}
+		if (isNewModel) {
+			writeBlock(sector, block, mRFIDKeyA, content);
+			return;
+		}
+		if ( !keyVerfication(sector, block, mRFIDKeyA))
+		{
+			return ;
+		}
+		Debug.d(TAG, "--->setInkLevel sector:" + sector + ", block:" + block);
 		writeBlock(sector, block, content);
 	}
 
@@ -877,6 +895,10 @@ public class RFIDDevice {
 	public void readFeatureCode() {
 		int errno = 0;
 		Debug.d(TAG, "--->RFID getFeatureCode");
+		if (isNewModel) {
+			mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA);
+			return;
+		}
 		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
 		{
 			return ;
@@ -889,13 +911,17 @@ public class RFIDDevice {
 	public boolean checkFeatureCode() {
 		int errno = 0;
 		Debug.d(TAG, "--->RFID getFeatureCode");
-		if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
-		{
-			return false;
-		}
-		mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
-		if (mFeature == null ) {
-			return false;
+		if (isNewModel) {
+			mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA);
+		} else {
+			if ( !keyVerfication(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA))
+			{
+				return false;
+			}
+			mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE);
+			if (mFeature == null ) {
+				return false;
+			}
 		}
 		Debug.d(TAG, "===>feature:" + mFeature[1] + ", " +mFeature[2]);
 		if (mFeature[1] == FEATURE_HIGH && mFeature[2] == FEATURE_LOW) {
