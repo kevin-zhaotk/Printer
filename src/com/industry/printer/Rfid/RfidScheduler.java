@@ -89,12 +89,12 @@ public class RfidScheduler {
 				Thread.sleep(30);
 			} catch (Exception e) {
 			}
-			if(task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+			if(task.getStat() >= RfidTask.STATE_SYNCED) {
 				break;
 			}
 			
 		}
-		if (task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+		if (task.getStat() >= RfidTask.STATE_SYNCED) {
 			loadNext();
 		}
 	}
@@ -126,7 +126,7 @@ public class RfidScheduler {
 						break;
 					}
 					RfidTask task = mRfidTasks.get(mCurrent);
-					if ((mCurrent == mRfidTasks.size() -1) && task.getStat() >= RfidTask.STATE_BACKUP_SYNCED) {
+					if ((mCurrent == mRfidTasks.size() -1) && task.getStat() >= RfidTask.STATE_SYNCED) {
 						break;
 					}
 					schedule();

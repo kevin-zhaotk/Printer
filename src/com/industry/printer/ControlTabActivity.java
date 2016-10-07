@@ -337,18 +337,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				db.setFirstBoot(mContext, false);
 			}
 		}
-		/****初始化RFID****/
-		mRfidManager = RFIDManager.getInstance();
-		mRfidManager.init(mHandler);
-		
-		refreshCount();
-		
 		/***PG1 PG2输出状态为 0x11，清零模式**/
 		FpgaGpioOperation.clean();
 		
 		//Debug.d(TAG, "===>loadMessage");
 		// 通过监听系统广播加载
 		loadMessage();
+		
+		/****初始化RFID****/
+		mRfidManager = RFIDManager.getInstance();
+		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
+		
+		refreshCount();
+		
+		
 		
 	}
 	
@@ -632,6 +634,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_SWITCH_RFID:
 					switchRfid();
 					break;
+				case RFIDManager.MSG_RFID_INIT:
+					mRfidManager.init(mHandler);
+					break;
 				case RFIDManager.MSG_RFID_INIT_SUCCESS:
 					mRfidManager.read(mHandler);
 					break;
@@ -646,7 +651,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						}
 					}
 					if (!ready) {
-						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT_SUCCESS, 5000);
+						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
 					}
 					if (mRfidInit == false) {
 						switchRfid();
@@ -671,7 +676,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_RFID_ALARM:
 					
 					if (mRfiAlarmTimes++ < 3) {
-						ExtGpio.playClick();
+						// ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 200);						
 					} else {
 						mRfiAlarmTimes = 0;

@@ -1,6 +1,8 @@
 package com.industry.printer.Rfid;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.RFIDAsyncTask.RfidCallback;
+import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 
@@ -8,22 +10,14 @@ import android.R.bool;
 import android.R.integer;
 import android.os.SystemClock;
 
-public class RfidTask {
+public class RfidTask implements RfidCallback{
 	
 	private String TAG = RfidTask.class.getSimpleName();
 	
 	
 	public static final int STATE_IDLE = 0;
-	public static final int STATE_SEARCH_OK = 1;
-	public static final int STATE_AVOID_CONFLICT = 2;
-	public static final int STATE_SELECT_OK = 3;
-	public static final int STATE_BLOCK_CERTIFIED = 4;
-	public static final int STATE_BLOCK_SYNCED = 5;
-	public static final int STATE_BACKUP_CERTIFIED = 6;
-	public static final int STATE_BACKUP_SYNCED = 7;
-	public static final int STATE_CERTIFY_FAIL = 8;
-	public static final int STATE_BACKUP_CERTIFY_FAIL = 9;
-	
+	public static final int STATE_PROCESSING = 1;
+	public static final int STATE_SYNCED = 2;
 	
 	
 	private int mIndex=0;
@@ -67,52 +61,72 @@ public class RfidTask {
 		Debug.d(TAG, "--->execute index=" + mIndex);
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
-		if (!dev.getReady()) {
+		if (dev == null || !dev.getReady() || mState != STATE_IDLE) {
 			return;
 		}
-		if (dev == null || dev.getReady() != true) {
-			return;
-		}
-		switch (mState) {
-			case STATE_IDLE:
-				
-				dev.lookForCards(true);
-				mState = STATE_SEARCH_OK;
-				break;
-			case STATE_SEARCH_OK:
-				dev.avoidConflict(true);
-				mState = STATE_AVOID_CONFLICT;
-				break;
-			case STATE_AVOID_CONFLICT:
-				dev.selectCard(dev.mSN, true);
-				mState = STATE_SELECT_OK;
-				break;
-			case STATE_SELECT_OK:
+		mState = STATE_PROCESSING;
 		
+		switch (dev.getState()) {
+			case RFIDDevice.STATE_RFID_CONNECTED:
+				if(RFIDDevice.isNewModel) {
+					dev.writeInk(false);
+				} else {
+					dev.lookForCards(true);
+				}
+				break;
+			case RFIDDevice.STATE_RFID_SERACH_OK:
+				dev.avoidConflict(true);
+				break;
+			case RFIDDevice.STATE_RFID_AVOIDCONFLICT:
+				dev.selectCard(dev.mSN, true);
+				break;
+			case RFIDDevice.STATE_RFID_SELECTED:
 				boolean res = dev.keyVerify(false, true);
-				mState = STATE_BLOCK_CERTIFIED;
 				break;
-			case STATE_BLOCK_CERTIFIED:
+			case RFIDDevice.STATE_RFID_VALUE_KEY_VERFYED:
 				dev.writeInk(false);
-				mState = STATE_BLOCK_SYNCED;
 				break;
-			case STATE_BLOCK_SYNCED:
+			case RFIDDevice.STATE_RFID_VALUE_SYNCED:
 				dev.keyVerify(true, true);
-				mState = STATE_BACKUP_CERTIFIED;
 				break;
-			case STATE_BACKUP_CERTIFIED:
+			case RFIDDevice.STATE_RFID_BACKUP_KEY_VERFYED:
 				dev.writeInk(true);
 				mTimeStamp = SystemClock.elapsedRealtime();
-				mState = STATE_BACKUP_SYNCED;
-				break;
-			case STATE_BACKUP_SYNCED:
-				break;
-			case STATE_CERTIFY_FAIL:
-			case STATE_BACKUP_CERTIFY_FAIL:
-				Debug.e(TAG, "key certify failue");
 				break;
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void onFinish(RFIDData data) {
+		byte[] rfid;
+		if (data == null) {
+			return;
+		}
+		RFIDManager manager = RFIDManager.getInstance();
+		RFIDDevice dev = manager.getDevice(mIndex);
+		Debug.d(TAG, "--->onFinish: 0x" + Integer.toHexString(data.getCommand()));
+		switch (data.getCommand()) {
+			case RFIDDevice.RFID_CMD_CONNECT:
+			case RFIDDevice.RFID_CMD_SEARCHCARD:
+			case RFIDDevice.RFID_CMD_AUTO_SEARCH:
+			case RFIDDevice.RFID_CMD_MIFARE_CONFLICT_PREVENTION:
+			case RFIDDevice.RFID_CMD_MIFARE_CARD_SELECT:
+			case RFIDDevice.RFID_CMD_READ_VERIFY:
+			case RFIDDevice.RFID_CMD_MIFARE_KEY_VERIFICATION:
+			case RFIDDevice.RFID_CMD_WRITE_VERIFY:
+				mState = STATE_IDLE;
+				break;
+			case RFIDDevice.RFID_CMD_MIFARE_WRITE_BLOCK:
+				if (dev.getState() == RFIDDevice.STATE_RFID_BACKUP_SYNCED) {
+					mState = STATE_SYNCED;
+				}
+				
+				break;
+			default:
+				break;
+		}
+		
 	}
 }

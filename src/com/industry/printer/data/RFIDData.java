@@ -190,7 +190,7 @@ public class RFIDData {
 	
 	public byte getCommand() {
 		if (mRealData != null && mRealData.length > 4) {
-			return mRealData[4];
+			return (byte) (mRealData[4] & 0x0ff);
 		}
 		return 0x00;
 	}
