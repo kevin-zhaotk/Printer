@@ -1219,6 +1219,10 @@ public class RFIDDevice implements RfidCallback{
 		return mState;
 	}
 	
+	public void setState(int state) {
+		mState = state;
+	}
+	
 	@Override
 	public void onFinish(RFIDData data) {
 		byte[] rfid;

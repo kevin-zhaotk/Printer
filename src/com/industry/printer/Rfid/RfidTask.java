@@ -43,6 +43,9 @@ public class RfidTask implements RfidCallback{
 	public void clearStat() {
 		mTimeStamp = SystemClock.elapsedRealtime();
 		mState = STATE_IDLE;
+		RFIDManager manager = RFIDManager.getInstance();
+		RFIDDevice dev = manager.getDevice(mIndex);
+		dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
 	}
 	
 	public int getStat() {
@@ -101,11 +104,13 @@ public class RfidTask implements RfidCallback{
 	@Override
 	public void onFinish(RFIDData data) {
 		byte[] rfid;
-		if (data == null) {
-			return;
-		}
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
+		if (data == null) {
+			mState = STATE_SYNCED;
+			dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+			return;
+		}
 		Debug.d(TAG, "--->onFinish: 0x" + Integer.toHexString(data.getCommand()));
 		switch (data.getCommand()) {
 			case RFIDDevice.RFID_CMD_CONNECT:
@@ -121,6 +126,7 @@ public class RfidTask implements RfidCallback{
 			case RFIDDevice.RFID_CMD_MIFARE_WRITE_BLOCK:
 				if (dev.getState() == RFIDDevice.STATE_RFID_BACKUP_SYNCED) {
 					mState = STATE_SYNCED;
+					dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
 				}
 				
 				break;
