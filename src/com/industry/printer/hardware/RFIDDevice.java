@@ -980,7 +980,9 @@ public class RFIDDevice implements RfidCallback{
 	public boolean checkFeatureCode() {
 		int errno = 0;
 		Debug.d(TAG, "--->RFID getFeatureCode: " + mFeature[1] + ", " +mFeature[2]);
-		
+		if (mFeature== null || mFeature.length<2) {
+			return false;
+		}
 		if (mFeature[1] == FEATURE_HIGH && mFeature[2] == FEATURE_LOW) {
 			return true;
 		}
@@ -1252,7 +1254,8 @@ public class RFIDDevice implements RfidCallback{
 			break;
 		case RFID_CMD_MIFARE_CARD_SELECT:
 			break;
-		case RFIDDevice.RFID_CMD_READ_VERIFY:
+		case RFID_CMD_MIFARE_READ_BLOCK:
+		case RFID_CMD_READ_VERIFY:
 			int value = parseRead(data);
 			if (mState == STATE_RFID_MAX_READING) {
 				mInkMax = value;
@@ -1282,6 +1285,7 @@ public class RFIDDevice implements RfidCallback{
 				mState = STATE_RFID_BACKUP_KEY_VERFYED;
 			}
 			break;
+		case RFID_CMD_MIFARE_WRITE_BLOCK:
 		case RFID_CMD_WRITE_VERIFY:
 			if (mState == STATE_RFID_BACKUP_WRITING) {
 				mState = STATE_RFID_BACKUP_SYNCED;

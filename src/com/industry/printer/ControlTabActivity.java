@@ -652,6 +652,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					if (!ready) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
+					} else {
+						mHandler.removeMessages(MESSAGE_RFID_ZERO);
 					}
 					if (mRfidInit == false) {
 						switchRfid();
