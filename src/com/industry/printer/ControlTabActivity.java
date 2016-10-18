@@ -46,6 +46,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Bitmap.Config;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -492,6 +493,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
 					mMsgPreImg.setImageBitmap(mPreBitmap);
+					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
