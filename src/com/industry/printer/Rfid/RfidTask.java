@@ -127,6 +127,8 @@ public class RfidTask implements RfidCallback{
 				if (dev.getState() == RFIDDevice.STATE_RFID_BACKUP_SYNCED) {
 					mState = STATE_SYNCED;
 					dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+				} else if (dev.getState() == RFIDDevice.STATE_RFID_VALUE_SYNCED) {
+					
 				}
 				
 				break;

@@ -1217,6 +1217,16 @@ public class RFIDDevice implements RfidCallback{
 		return encrypt.decryptInkMAX(ink);
 	}
 	
+	private int mWriteFailTimes = 0;
+	private void parseWrite(RFIDData data) {
+		byte[] rfid = data.getData();
+		if (isCorrect(rfid)) {
+			mWriteFailTimes = 0;
+		} else {
+			mWriteFailTimes++;
+		}
+	}
+	
 	public int getState() {
 		return mState;
 	}
@@ -1292,6 +1302,7 @@ public class RFIDDevice implements RfidCallback{
 			} else if (mState == STATE_RFID_VALUE_WRITING) {
 				mState = STATE_RFID_VALUE_SYNCED;
 			}
+			
 			break;
 		default:
 			break;

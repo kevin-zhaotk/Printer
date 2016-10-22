@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -34,6 +35,8 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+
+import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -61,6 +64,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -492,7 +496,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
+					/*如果圖片尺寸過大就無法顯示*/
+					if (mPreBitmap.getWidth() > 1500) {
+						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1500, mPreBitmap.getHeight());
+						BinFromBitmap.recyleBitmap(mPreBitmap);
+						mPreBitmap = b;
+					}
 					mMsgPreImg.setImageBitmap(mPreBitmap);
+					// dispPreview(mPreBitmap);
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
@@ -640,7 +651,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mRfidManager.init(mHandler);
 					break;
 				case RFIDManager.MSG_RFID_INIT_SUCCESS:
-					mRfidManager.read(mHandler);
+					// mRfidManager.read(mHandler);
 					break;
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
 					boolean ready = true;
@@ -692,6 +703,27 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 		}
 	};
+	
+	private void dispPreview(Bitmap bmp) {
+		int x=0,y=0;
+		int cutWidth = 0;
+		mScrollView.removeAllViews();
+			for (int i = 0;x < bmp.getWidth(); i++) {
+				if (x + 800 > bmp.getWidth()) {
+					cutWidth = 80;
+				} else {
+					cutWidth = bmp.getWidth() - x;
+				}
+				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
+				x += cutWidth;
+				ImageView imgView = new ImageView(mContext);
+				imgView.setScaleType(ScaleType.FIT_START);
+				imgView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT));
+				imgView.setBackgroundColor(Color.WHITE);
+				imgView.setImageBitmap(child);
+				mScrollView.addView(imgView, i);
+			}
+	}
 	
 	private int mRfiAlarmTimes = 0;
 	private boolean mRfidInit = false;
