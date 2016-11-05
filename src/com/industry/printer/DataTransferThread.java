@@ -189,6 +189,7 @@ public class DataTransferThread extends Thread {
 		for (int i = 0; i < configFile.getParam(16); i++) {
 			mScheduler.add(new RfidTask(i));
 		}
+		mScheduler.load();
 		
 		thread.start();
 		return true;

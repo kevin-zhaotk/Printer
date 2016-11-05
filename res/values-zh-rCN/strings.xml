@@ -648,4 +648,6 @@
 	
 	<string name="str_cnt_min">起始值</string>
 	<string name="str_cnt_max">結束值</string>
+	
+	<string name="str_loading">正在加載...</string>
 </resources>

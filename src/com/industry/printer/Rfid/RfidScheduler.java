@@ -50,8 +50,8 @@ public class RfidScheduler {
 			mAfter = null;
 		}
 		removeAll();
-		mCurrent = 0;
-		mManager.switchRfid(mCurrent);
+		mCurrent = -1;
+		// mManager.switchRfid(mCurrent);
 	}
 	
 	public void add(RfidTask task) {
@@ -59,6 +59,17 @@ public class RfidScheduler {
 			mRfidTasks = new ArrayList<RfidTask>();
 		}
 		mRfidTasks.add(task);
+	}
+	
+	public void load() {
+		mCurrent = 0;
+		if (mRfidTasks.size() <= 0) {
+			return;
+		}
+		RfidTask task = mRfidTasks.get(mCurrent);
+		task.onLoad();
+		/*切換鎖之後需要等待1s才能進行讀寫操作*/
+		mSwitchTimeStemp = SystemClock.elapsedRealtime();
 	}
 	
 	/**
@@ -71,6 +82,7 @@ public class RfidScheduler {
 	public void schedule() {
 		long time = SystemClock.elapsedRealtime();
 		RfidTask task = null;
+		
 		if (mRfidTasks.size() <= 0 || time - mSwitchTimeStemp < RFID_SWITCH_INTERVAL) {
 			return;
 		}
@@ -84,11 +96,12 @@ public class RfidScheduler {
 			return;
 		}
 		for (int i = 0; i < DataTransferThread.getInterval(); i++) {
-			task.execute();
+			task.execute(); 
 			try {
 				Thread.sleep(30);
 			} catch (Exception e) {
 			}
+			Debug.d(TAG, "--->stat=" + task.getStat());
 			if(task.getStat() >= RfidTask.STATE_SYNCED) {
 				break;
 			}
@@ -130,6 +143,11 @@ public class RfidScheduler {
 						break;
 					}
 					schedule();
+					Debug.d(TAG, "--->last=" + last + "  current=" + mCurrent + "  state=" + task.getStat());
+					//如果是單頭信息，需要加上這個條件來判斷是否同步完成
+					if (last == mCurrent && task.getStat() == RfidTask.STATE_IDLE) {
+						break;
+					}
 				}
 				Debug.e(TAG, "--->sync inklevel after print finish ok");
 			}
@@ -142,24 +160,31 @@ public class RfidScheduler {
 	 * 装入下一个要处理的任务
 	 */
 	private void loadNext() {
-		RfidTask task = mRfidTasks.get(mCurrent);
-		if (task != null) {
-			task.clearStat();
-		}
-		if (mRfidTasks.size() <= 0) {
-			return;
-		}
-		if (mRfidTasks.size() - 1 <= mCurrent || mCurrent < 0) {
-			 mCurrent = 0;
+		RfidTask task;
+		if (mCurrent < 0) {
+			mCurrent = 0;
+			mManager.switchRfid(mCurrent);
 		} else {
-			mCurrent++;
+			task = mRfidTasks.get(mCurrent);
+			if (task != null) {
+				task.onUnload();
+			}
+			if (mRfidTasks.size() <= 0) {
+				return;
+			}
+			if (mRfidTasks.size() - 1 <= mCurrent || mCurrent < 0) {
+				 mCurrent = 0;
+			} else {
+				mCurrent++;
+			}
+			Debug.e(TAG, "--->loadNext");
 		}
-		Debug.e(TAG, "--->loadNext");
 		// ExtGpio.rfidSwitch(mCurrent);
 		if (mRfidTasks.size() > 1) {
 			mManager.switchRfid(mCurrent);
 		}
-		
+		task = mRfidTasks.get(mCurrent);
+		task.onLoad();
 		/*切換鎖之後需要等待1s才能進行讀寫操作*/
 		mSwitchTimeStemp = SystemClock.elapsedRealtime();
 	}

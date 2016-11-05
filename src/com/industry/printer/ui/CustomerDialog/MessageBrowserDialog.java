@@ -229,6 +229,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				parser.setTlk(path);
 				String content = parser.getContentAbatract();
 				*/
+				File file = new File(tlkPath, t);
+				if (!file.isDirectory()) {
+					continue;
+				}
+				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("title", t);
 				mContent.add(map);

@@ -270,6 +270,11 @@ public class MessageTask {
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if (o instanceof GraphicObject) {
+				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
+				if (t != null) {
+					can.drawBitmap(t, o.getX(), o.getY(), p);
+				}
 			} else {
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
@@ -370,6 +375,9 @@ public class MessageTask {
 				continue;
 			}
 			Bitmap t = o.getScaledBitmap(mContext);
+			if (t== null) {
+				continue;
+			}
 			can.drawBitmap(t, o.getX(), o.getY(), p);
 		}
 		// Bitmap.createScaledBitmap();

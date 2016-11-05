@@ -2,6 +2,7 @@ package com.industry.printer.object;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -604,6 +605,21 @@ public class BaseObject{
 		}
 		Debug.d(TAG, "--->Arraybuffer len="+buffer.length());
 		return buffer.buffer();
+	}
+	
+	/**
+	 * 根據系統設置參數36，確定每天的幾點開始才是新的一天
+	 * @return
+	 */
+	protected long timeDelay() {
+		long delay=0;
+		int hold = SystemConfigFile.getInstance(mContext).getParam(SystemConfigFile.INDEX_DAY_START);
+		Calendar c = Calendar.getInstance();
+		if ( c.get(Calendar.HOUR)*100 + c.get(Calendar.MINUTE) < hold) {
+			delay = RealtimeObject.MS_DAY;
+		}
+		Debug.d(TAG, "--->delay:" + delay);
+		return delay;
 	}
 	
 	/**

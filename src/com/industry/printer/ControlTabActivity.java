@@ -440,6 +440,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		float count = 0;
 		// String cFormat = getResources().getString(R.string.str_print_count);
 		// ((MainActivity)getActivity()).mCtrlTitle.setText(String.format(cFormat, mCounter));
+		
 		RFIDDevice device = mRfidManager.getDevice(mRfid);
 		if (device != null && mDTransThread != null) {
 			count = device.getLocalInk() - 1;
@@ -448,6 +449,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (count < 0) {
 			count = 0;
 		}
+		Debug.d(TAG, "--->refreshCount: " + count);
 		((MainActivity) getActivity()).setCtrlExtra(mCounter, (int) count);
 	}
 	
@@ -544,7 +546,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_PRINT_START:
 					
-					if (mRfidManager.getLocalInk(0) <= 0) {
+					if (!checkRfid()) {
 						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
 						return;
 					}
@@ -703,6 +705,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 		}
 	};
+	private boolean checkRfid() {
+		boolean ready = true;
+		DataTask task = mDTransThread.getData();
+		int heads = task.getHeads();
+		for (int i = 0; i < heads; i++) {
+			float ink = mRfidManager.getLocalInk(i);
+			if (ink <= 0) {
+				ready = false;
+			}
+		}
+		return ready;
+	}
 	
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
@@ -1030,10 +1044,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mProgressShowing=false;
 	}
 	
+	public int currentRfid = 0;
 	@Override
 	public void onClick(View v) {
 		
-		ExtGpio.playClick();
+		// ExtGpio.playClick();
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);

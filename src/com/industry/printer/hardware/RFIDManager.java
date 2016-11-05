@@ -44,6 +44,7 @@ public class RFIDManager implements RfidCallback{
 			switch(msg.what) {
 			case MSG_RFID_SWITCH_DEVICE:
 				mDevice.removeListener(RFIDManager.this);
+				Debug.d(TAG, "--->dev: " + mCurrent + "  ink:" + mDevice.getLocalInk());
 				mCurrent++;
 				if (mCurrent >= TOTAL_RFID_DEVICES) {
 					Debug.d(TAG, "--->rfid init success");

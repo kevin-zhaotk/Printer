@@ -32,10 +32,24 @@ public class RfidTask implements RfidCallback{
 	public RfidTask(int index) {
 		this();
 		mIndex = index;
+		clearStat();
 	}
 	
 	public void setIndex(int index) {
 		mIndex = index;
+	}
+	
+	public void onLoad() {
+		clearStat();
+		RFIDManager manager = RFIDManager.getInstance();
+		RFIDDevice dev = manager.getDevice(mIndex);
+		dev.addLisetener(this);
+	}
+	
+	public void onUnload() {
+		RFIDManager manager = RFIDManager.getInstance();
+		RFIDDevice dev = manager.getDevice(mIndex);
+		dev.removeListener(this);
 	}
 	/**
 	 * 清除状态，为下次写入做准备
@@ -46,6 +60,7 @@ public class RfidTask implements RfidCallback{
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
 		dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+		
 	}
 	
 	public int getStat() {
@@ -61,14 +76,12 @@ public class RfidTask implements RfidCallback{
 	}
 	
 	public void execute() {
-		Debug.d(TAG, "--->execute index=" + mIndex);
+		Debug.d(TAG, "--->execute index=" + mIndex + "  state=" + mState);
 		RFIDManager manager = RFIDManager.getInstance();
 		RFIDDevice dev = manager.getDevice(mIndex);
-		if (dev == null || !dev.getReady() || mState != STATE_IDLE) {
-			return;
-		}
-		mState = STATE_PROCESSING;
 		
+		mState = STATE_PROCESSING;
+		Debug.d(TAG, "--->dev.state= " + dev.getState());
 		switch (dev.getState()) {
 			case RFIDDevice.STATE_RFID_CONNECTED:
 				if(RFIDDevice.isNewModel) {
@@ -90,7 +103,12 @@ public class RfidTask implements RfidCallback{
 				dev.writeInk(false);
 				break;
 			case RFIDDevice.STATE_RFID_VALUE_SYNCED:
-				dev.keyVerify(true, true);
+				Debug.d(TAG, "--->isNew: " + RFIDDevice.isNewModel);
+				if (RFIDDevice.isNewModel) {
+					dev.writeInk(true);
+				} else {
+					dev.keyVerify(true, true);
+				}
 				break;
 			case RFIDDevice.STATE_RFID_BACKUP_KEY_VERFYED:
 				dev.writeInk(true);
@@ -121,11 +139,15 @@ public class RfidTask implements RfidCallback{
 			case RFIDDevice.RFID_CMD_READ_VERIFY:
 			case RFIDDevice.RFID_CMD_MIFARE_KEY_VERIFICATION:
 			case RFIDDevice.RFID_CMD_WRITE_VERIFY:
-				mState = STATE_IDLE;
+				if (dev.getState() == RFIDDevice.STATE_RFID_BACKUP_SYNCED) {
+					mState = STATE_SYNCED;
+					Debug.d(TAG, "--->state=" + mState);
+				}
 				break;
 			case RFIDDevice.RFID_CMD_MIFARE_WRITE_BLOCK:
 				if (dev.getState() == RFIDDevice.STATE_RFID_BACKUP_SYNCED) {
 					mState = STATE_SYNCED;
+					Debug.d(TAG, "--->state=" + mState);
 					dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
 				} else if (dev.getState() == RFIDDevice.STATE_RFID_VALUE_SYNCED) {
 					

@@ -979,10 +979,10 @@ public class RFIDDevice implements RfidCallback{
 	 */
 	public boolean checkFeatureCode() {
 		int errno = 0;
-		Debug.d(TAG, "--->RFID getFeatureCode: " + mFeature[1] + ", " +mFeature[2]);
 		if (mFeature== null || mFeature.length<2) {
 			return false;
 		}
+		Debug.d(TAG, "--->RFID getFeatureCode: " + mFeature[1] + ", " +mFeature[2]);
 		if (mFeature[1] == FEATURE_HIGH && mFeature[2] == FEATURE_LOW) {
 			return true;
 		}
@@ -1014,6 +1014,7 @@ public class RFIDDevice implements RfidCallback{
 	}
 	
 	public boolean getReady() {
+		Debug.d(TAG, "--->mReady: " + mReady);
 		return mReady;
 	}
 	
@@ -1088,7 +1089,9 @@ public class RFIDDevice implements RfidCallback{
 	public void writeInk(boolean isBack) {
 		byte sector = 0;
 		byte block = 0;
-		if (!mReady) {
+		Debug.d(TAG, "--->writeInk: " + isBack);
+		if (mSN == null || mSN.length != 4) {
+			onFinish(null);
 			return;
 		}
 		if (isBack) {
@@ -1109,7 +1112,11 @@ public class RFIDDevice implements RfidCallback{
 		if (content == null) {
 			return ;
 		}
-		writeBlock(sector, block, content);
+		if (isNewModel) {
+			writeBlock(sector, block, mRFIDKeyA, content);
+		} else {
+			writeBlock(sector, block, content);
+		}
 	}
 	
 	/**
@@ -1239,6 +1246,7 @@ public class RFIDDevice implements RfidCallback{
 	public void onFinish(RFIDData data) {
 		byte[] rfid;
 		if (data == null) {
+			Debug.d(TAG, "--->onFinish: data null");
 			for (RfidCallback callback : mCallbacks) {
 				callback.onFinish(data);
 			}

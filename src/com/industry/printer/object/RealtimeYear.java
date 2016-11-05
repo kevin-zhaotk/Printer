@@ -1,5 +1,8 @@
 package com.industry.printer.object;
 
+import java.util.Calendar;
+
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
@@ -45,7 +48,8 @@ public class RealtimeYear extends BaseObject {
 		}
 		Time t = new Time();
 		
-		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY);
+		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY - timeDelay());
+		
 		if(mFormat.length()==2)
 			setContent(BaseObject.intToFormatString(t.year%100, 2));
 		else if(mFormat.length()==4)

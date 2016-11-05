@@ -23,6 +23,8 @@ import android.util.Log;
 public class RealtimeObject extends BaseObject {
 
 	public final static long MS_DAY = 24*60*60*1000;
+	public static final long MS_PER_HOUR = 60*60*1000;
+	public static final long MS_PER_MINUTE = 60*1000;
 	public String mFormat; /* yyyy-mm-dd hh:nn for example*/
 	public Vector<BaseObject> mSubObjs;
 	public int mOffset;

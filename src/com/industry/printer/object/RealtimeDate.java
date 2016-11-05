@@ -1,7 +1,10 @@
 package com.industry.printer.object;
 
+import java.util.Calendar;
+
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
+import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -33,8 +36,11 @@ public class RealtimeDate extends BaseObject {
 			mOffset = mParent.getOffset();
 		}
 		Time t = new Time();
-		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY);
+		
+		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY - timeDelay());
+		Debug.d(TAG, "--->Date: " + t.monthDay);
 		setContent(BaseObject.intToFormatString(t.monthDay, 2));
+		Debug.d(TAG, "--->Date: " + mContent);
 		return mContent;
 	}
 	
@@ -62,4 +68,6 @@ public class RealtimeDate extends BaseObject {
 	public void getBgBitmap()
 	{ 
 	}
+	
+	
 }

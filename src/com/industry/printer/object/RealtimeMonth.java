@@ -1,9 +1,12 @@
 package com.industry.printer.object;
 
+import java.util.Calendar;
+
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -34,7 +37,8 @@ public class RealtimeMonth extends BaseObject {
 			mOffset = mParent.getOffset();
 		}
 		Time t = new Time();
-		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY);
+		
+		t.set(System.currentTimeMillis() + mOffset * RealtimeObject.MS_DAY - timeDelay());
 		setContent(BaseObject.intToFormatString(t.month+1, 2));
 		Log.d(TAG, ">>getContent, "+mContent);
 		return mContent;

@@ -55,7 +55,7 @@ public class GraphicObject  extends BaseObject{
 		return mBitmap;
 	}
 	
-	public static String[] pic_formats={".png", ".jpg", ".jpeg"};
+	public static String[] pic_formats={".png", ".jpg", ".jpeg", ".bmp"};
 	
 	public static boolean isPic(String f)
 	{
@@ -87,7 +87,8 @@ public class GraphicObject  extends BaseObject{
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += BaseObject.intToFormatString(mContent.length(), 3)+"^";
-		str += "000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+		str += "000^000^000^";
+		str += mContent + "^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
 		System.out.println("file string ["+str+"]");
 		return str;
 	}
