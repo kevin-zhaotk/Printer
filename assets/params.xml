@@ -100,7 +100,7 @@
 	<param>
 	    <id>17</id>
 		<min>1</min>
-		<max>4</max>
+		<max>8</max>
 		<default>1</default>
 	</param>
 	<param>

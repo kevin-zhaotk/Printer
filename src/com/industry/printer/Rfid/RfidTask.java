@@ -114,6 +114,10 @@ public class RfidTask implements RfidCallback{
 				dev.writeInk(true);
 				mTimeStamp = SystemClock.elapsedRealtime();
 				break;
+			case RFIDDevice.STATE_RFID_BACKUP_SYNCED:
+				mState = STATE_SYNCED;
+				dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+				break;
 			default:
 				break;
 		}

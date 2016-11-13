@@ -17,6 +17,7 @@ import android.os.Message;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -158,6 +159,11 @@ public class DataTask {
 		if(mObjList==null || mObjList.isEmpty())
 			return;
 		float div = (float) (2.0/mTask.getHeads());
+		MessageObject msg = mTask.getMsgObject();
+		Debug.d(TAG, "+++++type:" + msg.getType());
+		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+			div = 1;
+		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)

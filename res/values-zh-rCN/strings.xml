@@ -93,6 +93,12 @@
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>1 Inch standard</item>
+	    <item>1 Inch fast</item>
+	    <item>1 Inch Dual standard</item>
+	    <item>1 Inch Dual fast</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
@@ -583,15 +589,19 @@
 	    <item>2</item>
 	    <item>3</item>
 	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>7</item>
+	    <item>8</item>
 	</string-array>
 	
 	<string-array name="switch_item_entries">
-	    <item>开</item>
 	    <item>关</item>
+	    <item>开</item>
 	</string-array>
 	
 	<string-array name="photo_item_entries">
-	    <item>Off</item>
+	    <item>关</item>
 	    <item>内部光电</item>
 	    <item>外部光电</item>
 	</string-array>

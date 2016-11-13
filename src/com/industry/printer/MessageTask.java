@@ -451,6 +451,7 @@ public class MessageTask {
 			case MessageType.MESSAGE_TYPE_12_7:
 			case MessageType.MESSAGE_TYPE_12_7_S:
 			case MessageType.MESSAGE_TYPE_16_3:
+			case MessageType.MESSAGE_TYPE_1_INCH:
 				height = 1;
 				break;
 			case MessageType.MESSAGE_TYPE_25_4:
@@ -490,6 +491,7 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
+		public static final int MESSAGE_TYPE_1_INCH = 10; //320點每列的噴頭
 	}
 	
 }

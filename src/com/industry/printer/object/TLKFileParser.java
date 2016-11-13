@@ -280,7 +280,7 @@ public class TLKFileParser  extends TlkFile{
 		
 		// 设置object的task
 		obj.setTask(task);
-		
+		Debug.d(TAG, "--->proportion = " + mProportion);
 		if(obj != null && !(obj instanceof MessageObject) )
 		{
 			try {
@@ -307,13 +307,13 @@ public class TLKFileParser  extends TlkFile{
 			}
 		}
 		Debug.d(TAG, "--->line295:" + obj.toString());
-//		Log.d(TAG, "index = "+obj.getIndex());
-//		Log.d(TAG, "x = "+obj.getX());
-//		Log.d(TAG, "y = "+obj.getY());
-//		Log.d(TAG, "x end = "+obj.getXEnd());
-//		Log.d(TAG, "y end = "+obj.getYEnd());
-//		Log.d(TAG, "dragable = "+obj.getDragable());
-//		Log.d(TAG, "*************************");
+		Debug.d(TAG, "index = "+obj.getIndex());
+		Debug.d(TAG, "x = "+obj.getX());
+		Debug.d(TAG, "y = "+obj.getY());
+		Debug.d(TAG, "x end = "+obj.getXEnd());
+		Debug.d(TAG, "y end = "+obj.getYEnd());
+		Debug.d(TAG, "dragable = "+obj.getDragable());
+		Debug.d(TAG, "*************************");
 		return obj;
 	}
 	
@@ -399,6 +399,9 @@ public class TLKFileParser  extends TlkFile{
 				break;
 		}
 		mProportion = dots/Configs.gDots;
+		if (type == MessageType.MESSAGE_TYPE_1_INCH) {
+			mProportion = 1;
+		}
 		return mProportion;
 	}
 }

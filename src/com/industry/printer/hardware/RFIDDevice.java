@@ -921,7 +921,7 @@ public class RFIDDevice implements RfidCallback{
 		} else if (mCurInkLevel <= 0) {
 			mCurInkLevel = 0;
 		}
-		// Debug.e(TAG, "--->ink=" + mCurInkLevel);
+		Debug.e(TAG, "--->ink=" + mCurInkLevel);
 	}
 	/**
 	 *更新墨水值，即当前墨水值减1 
@@ -1071,7 +1071,7 @@ public class RFIDDevice implements RfidCallback{
 		if (!mReady) {
 			return false;
 		}
-		if (isBack) {
+		if (!isBack) {
 			sector = SECTOR_INKLEVEL;
 			block = BLOCK_INKLEVEL;
 		} else {
@@ -1094,7 +1094,7 @@ public class RFIDDevice implements RfidCallback{
 			onFinish(null);
 			return;
 		}
-		if (isBack) {
+		if (!isBack) {
 			sector = SECTOR_INKLEVEL;
 			block = BLOCK_INKLEVEL;
 		} else {
@@ -1195,6 +1195,7 @@ public class RFIDDevice implements RfidCallback{
 		} else {
 			Debug.e(TAG, "===>unknow rfid type");
 		}
+		
 	}
 	
 	private void parseAutosearch(RFIDData data) {
@@ -1262,6 +1263,7 @@ public class RFIDDevice implements RfidCallback{
 		case RFID_CMD_SEARCHCARD:
 			Debug.d(TAG, "--->look card finish");
 			parseSearch(data);
+			mState = STATE_RFID_SERACH_OK;
 			break;
 		case RFID_CMD_AUTO_SEARCH:
 			mState = STATE_RFID_CONNECTED;
@@ -1269,8 +1271,10 @@ public class RFIDDevice implements RfidCallback{
 			break;
 		case RFID_CMD_MIFARE_CONFLICT_PREVENTION:
 			parseAutosearch(data);
+			mState = STATE_RFID_AVOIDCONFLICT;
 			break;
 		case RFID_CMD_MIFARE_CARD_SELECT:
+			mState = STATE_RFID_SELECTED;
 			break;
 		case RFID_CMD_MIFARE_READ_BLOCK:
 		case RFID_CMD_READ_VERIFY:

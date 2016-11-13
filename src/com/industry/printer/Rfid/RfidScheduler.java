@@ -63,6 +63,7 @@ public class RfidScheduler {
 	
 	public void load() {
 		mCurrent = 0;
+		mManager.switchRfid(mCurrent);
 		if (mRfidTasks.size() <= 0) {
 			return;
 		}

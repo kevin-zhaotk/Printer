@@ -70,7 +70,7 @@ public class MessageObject extends BaseObject {
 	
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
-		if (mType == 0 || mType == 1) { //single
+		if (mType == 0 || mType == 1 || mType == 10) { //single
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i]); 
 			}
