@@ -30,6 +30,7 @@ public class WelcomeActivity extends Activity {
 			Intent intent = new Intent();
 			intent.setClass(this, MainActivity.class);
 			startActivity(intent);
+			finish();
 		}
 	}
 

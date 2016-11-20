@@ -186,9 +186,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		Debug.d(TAG, "--->onConfigurationChanged");
-		finish();
-		Intent intent = new Intent(this, MainActivity.class);
-		this.startActivity(intent);
+//		finish();
+//		Intent intent = new Intent(this, MainActivity.class);
+//		this.startActivity(intent);
 
 	}
 	
