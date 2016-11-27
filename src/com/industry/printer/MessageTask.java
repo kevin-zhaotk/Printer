@@ -3,11 +3,14 @@ package com.industry.printer;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFileWriter;
@@ -285,14 +288,42 @@ public class MessageTask {
 		/**
 		 * 爲了兼容128點，152點和384點高的三種列高信息，需要計算等比例縮放比例
 		 */
-		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		float dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
+		MessageObject msg = getMsgObject();
+		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH
+				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL)) {
+			dots = 308;
+		}
+		Debug.d(TAG, "+++dots=" + dots);
 		float prop = dots/Configs.gDots;
-		
+		Debug.d(TAG, "+++prop=" + prop);
 		/** 生成bin的bitmap要进行处理，高度根据message的类型调整
 		 * 注： 为了跟PC端保持一致，生成的bin文件宽度为1.tlk中坐标的四分之一，在提取点阵之前先对原始Bitmap进行X坐标缩放（为原图的1/4）
 		 * 	  然后进行灰度和二值化处理；
 		 */
 		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div * prop), (int) (bmp.getHeight() * getHeads() * prop), true);
+		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
+		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 320, Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			can.drawBitmap(bitmap, 0, 0, p);
+			bitmap.recycle();
+			bitmap = b;
+		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 640, Bitmap.Config.ARGB_8888);
+			// can.setBitmap(b);
+			Canvas c = new Canvas(b);
+			c.drawColor(Color.WHITE);
+			int h = bitmap.getHeight()/2;
+			c.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), h), new Rect(0, 0, b.getWidth(), h), p);
+			c.drawBitmap(bitmap, new Rect(0, h, bitmap.getWidth(), h*2), new Rect(0, 320, b.getWidth(), 320 + h), p);
+			// c.drawBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight()/2), new Matrix(), null);
+			// c.drawBitmap(Bitmap.createBitmap(bitmap, 0, bitmap.getHeight()/2, bitmap.getWidth(), bitmap.getHeight()/2), 0, 320, null);
+			bitmap.recycle();
+			bitmap = b;
+		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		mDots = maker.extract(bitmap);
@@ -456,6 +487,7 @@ public class MessageTask {
 				break;
 			case MessageType.MESSAGE_TYPE_25_4:
 			case MessageType.MESSAGE_TYPE_33:
+			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
 				height = 2;
 				break;
 			case MessageType.MESSAGE_TYPE_38_1:
@@ -492,6 +524,7 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
 		public static final int MESSAGE_TYPE_1_INCH = 10; //320點每列的噴頭
+		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
 	}
 	
 }

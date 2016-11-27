@@ -53,6 +53,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -320,7 +321,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mScrollView = (HorizontalScrollView) getView().findViewById(R.id.preview_scroll);
 		mllPreview = (LinearLayout) getView().findViewById(R.id.ll_preview);
 		// mMsgPreview = (TextView) getView().findViewById(R.id.message_preview);
-		mMsgPreImg = (ImageView) getView().findViewById(R.id.message_prev_img);
+		// mMsgPreImg = (ImageView) getView().findViewById(R.id.message_prev_img);
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
 		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
@@ -510,6 +511,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 //					}
 					//mMsgPreImg.setImageBitmap(mPreBitmap);
 					dispPreview(mPreBitmap);
+					BinCreater.saveBitmap(mPreBitmap, "prev.png");
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
@@ -728,6 +730,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
+		float scale = (float)mllPreview.getHeight()/bmp.getHeight();
 		mllPreview.removeAllViews();
 			for (int i = 0;x < bmp.getWidth(); i++) {
 				if (x + 1200 > bmp.getWidth()) {
@@ -737,13 +740,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 				}
 				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
-				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight());
+				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
+				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
+				child.recycle();
 				x += cutWidth;
 				ImageView imgView = new ImageView(mContext);
 				imgView.setScaleType(ScaleType.FIT_START);
-				imgView.setLayoutParams(new LayoutParams(1200,LayoutParams.MATCH_PARENT));
+//				if (density == 1) {
+					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
+//				} else {
+//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
+//				}
+				
 				imgView.setBackgroundColor(Color.WHITE);
-				imgView.setImageBitmap(child);
+				imgView.setImageBitmap(scaledChild);
 				mllPreview.addView(imgView);
 			}
 	}

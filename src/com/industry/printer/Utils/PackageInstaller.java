@@ -74,7 +74,7 @@ public class PackageInstaller {
 		PackageInfo pInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
 		int newVersion = pInfo.versionCode;
 		Debug.d(TAG, "===>curVer:" + curVersion + ",  newVer:" + newVersion);
-		if (curVersion >= newVersion) {
+		if (curVersion == newVersion) {
 			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
 			return false;
 		}

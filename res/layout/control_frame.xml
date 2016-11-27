@@ -245,22 +245,16 @@
         android:layout_above="@id/ctrl_stateview"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:background="#ffffff"
         >
 		<LinearLayout
 		    android:id="@+id/ll_preview"
-		    android:layout_width="wrap_content"
+		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:minWidth="1024dp"
 		    android:orientation="horizontal"
+		    android:background="#ffffff"
 		    >
-			<ImageView
-				android:id="@+id/message_prev_img"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:minWidth="1280dp"
-				android:background="#ffffff"
-				android:scaleType="fitStart"
-				/>
+			
 		</LinearLayout>
     </HorizontalScrollView>
 </RelativeLayout>

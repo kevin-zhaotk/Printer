@@ -11,6 +11,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import com.google.zxing.common.BitMatrix;
 import com.industry.printer.MainActivity;
 import com.industry.printer.MessageTask;
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
@@ -31,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -272,6 +274,11 @@ public class BaseObject{
 		int width = (int)mPaint.measureText("8");
 		FontMetrics fm = mPaint.getFontMetrics();
 		float wDiv = (float) (2.0/mTask.getHeads());
+		MessageObject msg = mTask.getMsgObject();
+		/*對320高的buffer進行單獨處理*/
+		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+			wDiv = 1;
+		}
 		/*draw Bitmap of single digit*/
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
@@ -294,6 +301,30 @@ public class BaseObject{
 			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight * mTask.getHeads()), false), i*singleW, (int)getY() * mTask.getHeads(), mPaint);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
+		/*對320高的buffer進行單獨處理*/
+		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308, true);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320, Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			can.drawBitmap(gBmp, 0, 0, mPaint);
+			gBmp.recycle();
+			gBmp = b;
+		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308*2, true);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320*2, Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			int h = gBmp.getHeight()/2;
+			/*先把gBmp的上半部分0~307高貼到620高的上半部分（0~319）*/
+			can.drawBitmap(gBmp, new Rect(0, 0, gBmp.getWidth(), h), new Rect(0, 0, b.getWidth(), h), null);
+			
+			/*先把gBmp的下半部分308~615高貼到620高的下半部分（320~619）*/
+			// can.drawBitmap(Bitmap.createBitmap(gBmp, 0, 308, gBmp.getWidth(), 308), 0, 320, mPaint);
+			can.drawBitmap(gBmp, new Rect(0, h, gBmp.getWidth(), h*2), new Rect(0, 320, b.getWidth(), 320 + h), null);
+			gBmp.recycle();
+			gBmp = b;
+		}
 		BinFileMaker maker = new BinFileMaker(mContext);
 		dots = maker.extract(gBmp);
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
