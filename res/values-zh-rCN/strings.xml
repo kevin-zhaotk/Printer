@@ -453,7 +453,7 @@
 	<string name="str_textview_param26">26.打印电压</string>
 	<string name="str_textview_param27">27.脉宽读取</string>
 	<string name="str_textview_param28">28.脉宽设定</string>
-	<string name="str_textview_param29">29.放干脉冲</string>
+	<string name="str_textview_param29">29.防干脉冲</string>
 	<string name="str_textview_param30">30.光电滤波</string>
 	<string name="str_textview_param31">31.保留</string>
 	<string name="str_textview_param32">32.保留</string>
@@ -608,6 +608,7 @@
 	
 	<string name="str_time_unit_0_1v">0.1伏</string>
 	<string name="str_length_unit_mm">毫米</string>
+	<string name="str_length_unit_6_1mm">1/6毫米</string>
 	<string name="str_time_unit_ms">毫秒</string>
 	<string name="str_time_unit_mm_s">毫米/秒</string>
 	<string name="str_time_unit_us">微秒</string>
