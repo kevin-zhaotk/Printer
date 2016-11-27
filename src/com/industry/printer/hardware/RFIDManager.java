@@ -248,10 +248,9 @@ public class RFIDManager implements RfidCallback{
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_FEATURE_READY) {
 					mDevice.readBlock(RFIDDevice.SECTOR_INKLEVEL, RFIDDevice.BLOCK_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_VALUE_READY) {
-					// mDevice.readBlock(RFIDDevice.SECTOR_INKLEVEL, RFIDDevice.BLOCK_INKLEVEL, mDevice.mRFIDKeyA);
-					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
+					mDevice.readBlock(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_READY) {
-					
+					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
 				}
 				break;
 			case RFIDDevice.RFID_CMD_MIFARE_KEY_VERIFICATION:
@@ -264,6 +263,7 @@ public class RFIDManager implements RfidCallback{
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_VALUE_KEY_VERFYED) {
 					mDevice.readBlock(RFIDDevice.SECTOR_INKLEVEL, RFIDDevice.BLOCK_INKLEVEL);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_KEY_VERFYED) {
+					mDevice.readBlock(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL);
 				}
 				break;
 			case RFIDDevice.RFID_CMD_MIFARE_READ_BLOCK:
@@ -272,9 +272,9 @@ public class RFIDManager implements RfidCallback{
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_FEATURE_READY) {
 					mDevice.keyVerfication(RFIDDevice.SECTOR_INKLEVEL, RFIDDevice.BLOCK_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_VALUE_READY) {
-					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
+					mDevice.keyVerfication(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_READY) {
-					
+					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
 				}
 				break;
 			default:

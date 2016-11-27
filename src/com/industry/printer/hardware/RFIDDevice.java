@@ -1290,7 +1290,9 @@ public class RFIDDevice implements RfidCallback{
 				mCurInkLevel = value;
 				mState = STATE_RFID_VALUE_READY;
 			} else if (mState == STATE_RFID_BACKUP_READING) {
-				mCurInkLevel = value;
+				if (mCurInkLevel <= 0) {
+					mCurInkLevel = value;
+				}
 				mState = STATE_RFID_BACKUP_READY;
 			}
 			break;
