@@ -155,39 +155,6 @@
 	            android:textColor="#000000"
 	            />
 	        
-	        <EditText
-	            android:id="@+id/edit_shift5"
-	            android:layout_width="100dp"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/edit_shift4"
-	            android:layout_alignLeft="@id/edit_shift1"
-	            android:imeOptions="flagNoExtractUi|actionDone"
-	            android:clickable="false"
-	           android:hint="@string/strDefault"
-	            />
-	        
-	       <EditText
-	           android:id="@+id/edit_shiftValue5"
-	           android:layout_width="100dp"
-	           android:layout_height="wrap_content"
-	           android:layout_below="@id/edit_shift4"
-	           android:layout_toRightOf="@id/edit_shift5"
-	           android:layout_marginLeft="10dp"
-	           android:imeOptions="flagNoExtractUi|actionDone"
-	           android:clickable="false"
-	           android:hint="@string/strDefault"
-	           />
-	        
-	        <TextView
-	            android:id="@+id/view_shift5"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignLeft="@id/view_shift1"
-	            android:layout_alignBaseline="@id/edit_shift5"
-	            android:textSize="20dp"
-	            android:text="@string/strShift5"
-	            android:textColor="#000000"
-	            />
 	    </RelativeLayout>
 	</ScrollView>
 	<include layout="@layout/obj_info_button"

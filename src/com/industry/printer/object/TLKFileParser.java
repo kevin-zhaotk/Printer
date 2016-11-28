@@ -394,12 +394,18 @@ public class TLKFileParser  extends TlkFile{
 			case MessageType.MESSAGE_TYPE_16_3:
 				dots = 128;
 				break;
+			case MessageType.MESSAGE_TYPE_1_INCH:
+			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+				
+				dots = 320;
+				break;
 			default:
 				dots = 152;
 				break;
 		}
 		mProportion = dots/Configs.gDots;
-		if (type == MessageType.MESSAGE_TYPE_1_INCH) {
+		if (type == MessageType.MESSAGE_TYPE_1_INCH 
+				|| type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
 			mProportion = 1;
 		}
 		return mProportion;

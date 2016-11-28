@@ -285,6 +285,8 @@ public class BinInfo {
     	return mBufferChars;
     }
     
+    /*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
+	 *所以，shift變量的v.bin固定爲8位，如果bit=1，需要跳過前面的0*/
     public char[] getVarBuffer(int shift, int bits)
     {
     	int n, offset=0;
@@ -293,7 +295,7 @@ public class BinInfo {
 			return null;
 		}
     	if (bits == 1) {
-    		offset = bits * shift +1;
+    		offset = 2 * shift +1;
     	} else {
     		offset = bits * shift;
     	}

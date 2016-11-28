@@ -238,7 +238,8 @@ public class DataTask {
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
 				
 			} else if (o instanceof ShiftObject) {
-				
+				/*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
+				 *所以，shift變量的v.bin固定爲8位，如果bit=1，需要跳過前面的0*/
 				int shift = ((ShiftObject)o).getShiftIndex();
 				Debug.d(TAG, "--->shift ******: " + shift);
 				BinInfo varbin= mVarBinList.get(o);

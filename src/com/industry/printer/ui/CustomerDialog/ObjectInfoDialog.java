@@ -102,8 +102,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public EditText mShiftVal3;
 	public EditText mShift4;
 	public EditText mShiftVal4;
-	public EditText mShift5;
-	public EditText mShiftVal5;
 	private EditText mMin;
 	private EditText mMax;
 	public Button	mBtnOk;
@@ -270,8 +268,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     mShiftVal3 = (EditText) findViewById(R.id.edit_shiftValue3);
 	     mShift4 = (EditText) findViewById(R.id.edit_shift4);
 	     mShiftVal4 = (EditText) findViewById(R.id.edit_shiftValue4);
-	     mShift5 = (EditText) findViewById(R.id.edit_shift5);
-	     mShiftVal5 = (EditText) findViewById(R.id.edit_shiftValue5);
 	     mOk = (Button) findViewById(R.id.btn_confirm);
 	     mCancel = (Button) findViewById(R.id.btn_objinfo_cnl);
 	     fillObjInfo();
@@ -346,8 +342,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							((ShiftObject) mObject).setValue(2, mShiftVal3.getText().toString());
 							((ShiftObject) mObject).setShift(3, mShift4.getText().toString());
 							((ShiftObject) mObject).setValue(3, mShiftVal4.getText().toString());
-							((ShiftObject) mObject).setShift(4, mShift5.getText().toString());
-							((ShiftObject) mObject).setValue(4, mShiftVal5.getText().toString());
 						} else if (mObject instanceof GraphicObject) {
 							
 						}
@@ -459,8 +453,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					mShiftVal3.setText(((ShiftObject)mObject).getValue(2));
 					mShift4.setText(String.valueOf(((ShiftObject)mObject).getShift(3)));
 					mShiftVal4.setText(((ShiftObject)mObject).getValue(3));
-					mShift5.setText(String.valueOf(((ShiftObject)mObject).getShift(4)));
-					mShiftVal5.setText(((ShiftObject)mObject).getValue(4));
 				}
 				else if(mObject instanceof RectObject){
 					String lines[] = mContext.getResources().getStringArray(R.array.strLineArray);

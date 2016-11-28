@@ -57,6 +57,7 @@ public class ShiftObject extends BaseObject {
 	
 	public void setValue(int shift, String val)
 	{
+		Debug.d(TAG, "===>setValue shift: " + shift + "  val: " + val + "  bit: " + mBits);
 		if(shift >= SHIFT_MAX || shift<0 || val==null || !checkNumandLetter(val))
 			return;
 		
@@ -71,6 +72,7 @@ public class ShiftObject extends BaseObject {
 		} else {
 			mValues[shift] = val;
 		}
+		Debug.d(TAG, "===>shift: " + shift + "  value: " + mValues[shift]);
 	}
 	
 	public void setBits(int bits ) {
@@ -85,20 +87,22 @@ public class ShiftObject extends BaseObject {
 	{
 		if(shift >= SHIFT_MAX || shift<0)
 			return null;
+		Debug.d(TAG, "===>value: " + mValues[shift]);
 		return mValues[shift];
 	}
 	
 	public int getShiftIndex() {
-		int shift = 0;
+		int i = 0;
 		Calendar c = Calendar.getInstance();
 		int hour = c.get(Calendar.HOUR_OF_DAY) * 100;
-		for (int i = 0; i < SHIFT_MAX-1; i++) {
+		
+		for (i = 0; i < SHIFT_MAX-1; i++) {
 			if (hour >= mShifts[i] && hour < mShifts[i+1]) {
 				break;
 			}
-			shift++;
 		}
-		return shift;
+		Debug.d(TAG, "===>index: " + i);
+		return i;
 	}
 	
 	@Override
@@ -179,7 +183,7 @@ public class ShiftObject extends BaseObject {
 	
 	public boolean checkNumandLetter(String args)
 	{
-		Pattern p = Pattern.compile("^([0-9]|[a-z])*");
+		Pattern p = Pattern.compile("^([0-9]|[a-z]|[A-Z])*");
 		Matcher m = p.matcher(args);
 		if(m.matches())
 			return true;
