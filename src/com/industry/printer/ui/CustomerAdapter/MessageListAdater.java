@@ -11,27 +11,22 @@ import com.industry.printer.R;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.DimenssionConvertion;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
 
 import android.R.integer;
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 public class MessageListAdater extends BaseAdapter {
 	
@@ -44,7 +39,7 @@ public class MessageListAdater extends BaseAdapter {
 	private class ItemViewHolder{
 		TextView	mTitle;		//message title
 		TextView	mAbstract;	//message abstract
-		LinearLayout mImage;
+		ImageView	mImage;
 		ImageView	mMark;
 	}
 	
@@ -143,10 +138,11 @@ public class MessageListAdater extends BaseAdapter {
 			// mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
 			// mHolder.mAbstract = (TextView) convertView.findViewById(mViewIDs[1]);
 			mHolder.mTitle = (TextView) convertView.findViewById(mViewIDs[0]);
-			mHolder.mImage = (LinearLayout) convertView.findViewById(mViewIDs[1]);
+			mHolder.mImage = (ImageView) convertView.findViewById(mViewIDs[1]);
 			mHolder.mMark = (ImageView) convertView.findViewById(mViewIDs[2]);
 			convertView.setTag(mHolder);
 		}
+		
 		HashMap<String, Object> item = (HashMap<String, Object>) mCntList.get(position);
 		
 		String title = (String) item.get(mKeys[0]);
@@ -178,10 +174,14 @@ public class MessageListAdater extends BaseAdapter {
 			DataTask dTask = new DataTask(mContext, task);
 			dTask.prepareBackgroudBuffer();
 			bmp = dTask.getPreview();
+			if (bmp.getWidth() > 1500) {
+				Bitmap b = Bitmap.createBitmap(bmp, 0, 0, 1500, bmp.getHeight());
+				BinFromBitmap.recyleBitmap(bmp);
+				bmp = b;
+			}
 			mPreviews.put(title, bmp);
 		}
-		// mHolder.mImage.setImageBitmap(bmp);
-		dispPreview(bmp);
+		mHolder.mImage.setImageBitmap(bmp);
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
 		{
@@ -195,38 +195,5 @@ public class MessageListAdater extends BaseAdapter {
 		
 		return convertView;
 	}
-	
-	private void dispPreview(Bitmap bmp) {
-		int x=0,y=0;
-		int cutWidth = 0;
-		
-		float scale = (float)DimenssionConvertion.dip2px(mContext, 100)/bmp.getHeight();
-		mHolder.mImage.removeAllViews();
-			for (int i = 0;x < bmp.getWidth(); i++) {
-				if (x + 1200 > bmp.getWidth()) {
-					cutWidth = bmp.getWidth() - x;
-				} else {
-					cutWidth =1200;
-					
-				}
-				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
-				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mHolder.mImage.getHeight());
-				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
-				child.recycle();
-				x += cutWidth;
-				ImageView imgView = new ImageView(mContext);
-				imgView.setScaleType(ScaleType.FIT_START);
-//				if (density == 1) {
-					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
-//				} else {
-//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
-//				}
-				
-				imgView.setBackgroundColor(Color.WHITE);
-				imgView.setImageBitmap(scaledChild);
-				mHolder.mImage.addView(imgView);
-			}
-	}
-	
 
 }

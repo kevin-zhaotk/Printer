@@ -24,7 +24,6 @@ import com.industry.printer.Utils.StringUtil;
 
 import android.R.integer;
 import android.content.Context;
-import android.graphics.Bitmap.Config;
 import android.util.Log;
 
 public class TLKFileParser  extends TlkFile{
@@ -407,7 +406,7 @@ public class TLKFileParser  extends TlkFile{
 		mProportion = dots/Configs.gDots;
 		if (type == MessageType.MESSAGE_TYPE_1_INCH 
 				|| type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
-			mProportion = dots/Configs.gDots;
+			mProportion = 1;
 		}
 		return mProportion;
 	}
