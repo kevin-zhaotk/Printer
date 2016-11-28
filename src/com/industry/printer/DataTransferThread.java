@@ -1,5 +1,6 @@
 package com.industry.printer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -85,6 +86,10 @@ public class DataTransferThread extends Thread {
 		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
+			File f = new File(path);
+			if (f.exists()) {
+				f.delete();
+			}
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 			for (BaseObject object : mDataTask.getObjList()) {
 				if (object instanceof CounterObject) {
