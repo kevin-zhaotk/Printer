@@ -20,6 +20,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.ExtGpio;
@@ -91,6 +92,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private ImageButton 	mBtnEllipse;
 	private ImageButton	mShift;
 	private ImageButton	mScnd;
+	
+	/********************************
+	 * when configure changed
+	 *******************************/
+	private TextView tv_btnNew;
+	private TextView tv_btnOpen;
+	private TextView tv_btnSave;
+	private TextView tv_btnSaveas;
+	private TextView tv_btnInsert;
+	private TextView tv_btnCursor;
+	private TextView tv_btnDetail;
+	private TextView tv_btnList;
 	/**********************
 	 * Object Information Table
 	 * **********************/
@@ -219,6 +232,34 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 		
 		initAdapter();
+	}
+	
+	
+	
+	public void onConfigureChanged() {
+		tv_btnNew = (TextView) getView().findViewById(R.id.btn_new_tv);
+		tv_btnNew.setText(R.string.str_btn_new);
+
+		tv_btnOpen = (TextView) getView().findViewById(R.id.btn_open_tv);
+		tv_btnOpen.setText(R.string.str_btn_open);
+		
+		tv_btnSave = (TextView) getView().findViewById(R.id.btn_save_tv);
+		tv_btnSave.setText(R.string.str_btn_save);
+		
+		tv_btnSaveas = (TextView) getView().findViewById(R.id.btn_saveas_tv);
+		tv_btnSaveas.setText(R.string.str_btn_saveas);
+		
+		tv_btnInsert = (TextView) getView().findViewById(R.id.btn_insert_tv);
+		tv_btnInsert.setText(R.string.str_edit_btn_insert);
+		
+		tv_btnCursor = (TextView) getView().findViewById(R.id.btn_cursor_tv);
+		tv_btnCursor.setText(R.string.cursor);
+		
+		tv_btnDetail = (TextView) getView().findViewById(R.id.btn_detail_tv);
+		tv_btnDetail.setText(R.string.str_btn_detail);
+		
+		tv_btnList = (TextView) getView().findViewById(R.id.btn_list_tv);
+		tv_btnList.setText(R.string.strInfoname);
 	}
 	
 	private void initAdapter() {

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -16,10 +17,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,6 +55,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public static final String ACTION_USB_PERMISSION="com.industry.printer.USB_PERMISSION";
 	
 	public Context mContext;
+	private String mLanguage;
 	
 	TabHost mTab;
 	
@@ -74,6 +78,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public TextView mSettingTitle;
 	public LinearLayout mEditExtra;
 	public TextView mVersion;
+	private TextView mVerTitle;
 	
 	private RelativeLayout mPgBack;
 	private RelativeLayout mPgFore;
@@ -91,6 +96,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		setContentView(R.layout.activity_main);
 		boolean isroot=false;
 		mContext = getApplicationContext();
+		mLanguage = getResources().getConfiguration().locale.getLanguage();
 		
 		
 		/*get write permission of ttyACM0*/
@@ -185,12 +191,18 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Debug.d(TAG, "--->onConfigurationChanged");
+		Debug.d(TAG, "--->onConfigurationChanged: " + newConfig.locale.getLanguage());
+		
+		if (!newConfig.locale.getLanguage().equals(mLanguage)) {
+			onConfigChange();
+		}
+		
 //		finish();
 //		Intent intent = new Intent(this, MainActivity.class);
 //		this.startActivity(intent);
 
 	}
+	
 	
 	@Override
 	public void onBackPressed() {
@@ -216,6 +228,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mSettings = (RelativeLayout) findViewById(R.id.settings_view);
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
+		mVerTitle = (TextView) findViewById(R.id.setting_version_key);
 		try {
 			// InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
 			// BufferedReader reader = new BufferedReader(sReader);
@@ -417,7 +430,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	}
 	
 	public void onConfigChange() {
-		mControlTab.onConfigChange();
+		mControlTab.onConfigureChanged();
+		mEditSmallTab.onConfigureChanged();
+		mSettingsTab.onConfigureChanged();
 		
+		mVerTitle.setText(R.string.app_version);
 	}
 }

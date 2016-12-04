@@ -133,6 +133,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public int mIndex;
 	public TextView mPrintStatus;
+	public TextView mtvInk;
 	public TextView mInkLevel;
 	public TextView mInkLevel2;
 	public TextView mTVPrinting;
@@ -324,6 +325,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		// mMsgPreImg = (ImageView) getView().findViewById(R.id.message_prev_img);
 		//
 //		mPrintState = (TextView) findViewById(R.id.tvprintState);
+		mtvInk = (TextView) getView().findViewById(R.id.tv_inkValue);
 		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
 		mInkLevel2 = (TextView) getView().findViewById(R.id.ink_value2);
 		
@@ -361,6 +363,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		
 		
+	}
+	
+	public void onConfigureChanged() {
+		if (mMsgTask != null) {
+			mMsgFile.setText(mMsgTask.getName());
+		}
+		mTvStart.setText(R.string.str_btn_print);
+		mTvStop.setText(R.string.str_btn_stop);
+		mTvOpen.setText(R.string.str_btn_open);
+		mTvClean.setText(R.string.str_btn_clean);
+		mTVPrinting.setText(R.string.str_state_printing);
+		mTVStopped.setText(R.string.str_state_stopped);
+		mtvInk.setText(R.string.str_state_inklevel);
 	}
 	
 	private void setupViews() {

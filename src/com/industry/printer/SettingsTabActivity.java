@@ -230,6 +230,23 @@ public static final String TAG="SettingsTabActivity";
 		super.onDestroy();
 		Debug.d(TAG, "--->onDestroy");
 	}
+	
+	private TextView tv_btnOk; 
+	private TextView tv_btnCancel;
+	private TextView tv_btnTime;
+	private TextView tv_btnSetting; 
+	
+	public void onConfigureChanged() {
+		mAdapter.notifyDataSetChanged();
+		tv_btnOk = (TextView) getView().findViewById(R.id.btn_ok_tv);
+		tv_btnOk.setText(R.string.str_btn_settings_sync);
+		
+		tv_btnTime = (TextView) getView().findViewById(R.id.btn_time_tv);
+		tv_btnTime.setText(R.string.str_setting_time);
+		
+		tv_btnSetting = (TextView) getView().findViewById(R.id.btn_setting_tv);
+		tv_btnSetting.setText(R.string.str_system_setting);
+    }
 //	@Override
 //	public boolean  onKeyDown(int keyCode, KeyEvent event)  
 //	{

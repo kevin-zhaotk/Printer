@@ -405,8 +405,10 @@ public class TLKFileParser  extends TlkFile{
 		}
 		mProportion = dots/Configs.gDots;
 		if (type == MessageType.MESSAGE_TYPE_1_INCH 
-				|| type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+				) {
 			mProportion = 1;
+		} else if (type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+			mProportion = 0.5f;
 		}
 		return mProportion;
 	}

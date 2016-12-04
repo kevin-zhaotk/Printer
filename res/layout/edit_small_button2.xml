@@ -16,6 +16,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_detail_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -37,6 +38,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_list_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"

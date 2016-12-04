@@ -16,6 +16,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_new_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -37,6 +38,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_open_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -58,6 +60,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_save_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -79,6 +82,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_saveas_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -100,6 +104,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_insert_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"
@@ -135,6 +140,7 @@
 		        android:src="@drawable/style_editbtn"
 			    />
 			<TextView
+			    android:id="@+id/btn_cursor_tv"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
 			    android:gravity="center"

@@ -42,5 +42,9 @@ public class SettingsFragment extends Fragment {
 		mAdapter = new SettingsListAdapter(mContext);
 		mList.setAdapter(mAdapter);
 	}
+	
+	public void onConfigureChanged() {
+		mAdapter.notifyDataSetChanged();
+	}
 
 }
