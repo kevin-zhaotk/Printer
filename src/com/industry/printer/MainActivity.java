@@ -196,7 +196,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		if (!newConfig.locale.getLanguage().equals(mLanguage)) {
 			onConfigChange();
 		}
-		
+		mLanguage = newConfig.locale.getLanguage();
 //		finish();
 //		Intent intent = new Intent(this, MainActivity.class);
 //		this.startActivity(intent);
@@ -433,7 +433,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mControlTab.onConfigureChanged();
 		mEditSmallTab.onConfigureChanged();
 		mSettingsTab.onConfigureChanged();
-		
+		String title = mEditTitle.getText().toString();
+		if (title != null && (title.equals("New") || title.equals("新建"))) {
+			mEditTitle.setText(R.string.str_filename_no);
+		}
 		mVerTitle.setText(R.string.app_version);
 	}
 }

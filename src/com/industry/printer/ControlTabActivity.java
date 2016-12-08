@@ -97,6 +97,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public LinearLayout mllPreview;
 	public HorizontalScrollView mScrollView;
 	public TextView mMsgFile;
+	private TextView tvMsg;
 	// public EditText mMsgPreview;
 	public TextView mMsgPreview;
 	public ImageView mMsgPreImg;
@@ -284,6 +285,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mContext.registerReceiver(mReceiver, filter);
 		
 		mMsgFile = (TextView) getView().findViewById(R.id.opened_msg_name);
+		tvMsg = (TextView) getView().findViewById(R.id.tv_msg_name);
 		
 		mPreview = (PreviewScrollView ) getView().findViewById(R.id.sv_preview);
 		
@@ -369,6 +371,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mMsgTask != null) {
 			mMsgFile.setText(mMsgTask.getName());
 		}
+		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
 		mTvStop.setText(R.string.str_btn_stop);
 		mTvOpen.setText(R.string.str_btn_open);
