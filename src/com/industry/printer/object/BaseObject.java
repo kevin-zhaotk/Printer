@@ -228,8 +228,10 @@ public class BaseObject{
 		
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
-		setWidth(width);
-		bitmap = Bitmap.createBitmap((int)mWidth , (int)mHeight, Bitmap.Config.ARGB_8888);
+		if (mWidth == 0) {
+			setWidth(width);
+		}
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
