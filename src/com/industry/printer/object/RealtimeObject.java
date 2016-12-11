@@ -35,7 +35,7 @@ public class RealtimeObject extends BaseObject {
 		Debug.d(TAG, ">>>RealtimeObject mcontext: " + mContext);
 		mSubObjs = new Vector<BaseObject>();
 		mOffset = 0;
-		setFormat("YYYY-MM-DD");
+		setFormat("YY-MM-DD");
 		//setContent(BaseObject.intToFormatString(t.year, 4) +"/"+BaseObject.intToFormatString(t.month+1, 2)+"/"+BaseObject.intToFormatString(t.monthDay, 2));
 	}
 
@@ -66,8 +66,7 @@ public class RealtimeObject extends BaseObject {
 		mSubObjs.clear();
 		for(;str != null && str.length()>0;)
 		{
-			if(!str.startsWith("YYYY", i) &&
-					!str.startsWith("YY", i) &&
+			if(	!str.startsWith("YY", i) &&
 					!str.startsWith("MM", i) &&
 					!str.startsWith("DD", i) &&
 					!str.startsWith("HH", i) &&
@@ -94,14 +93,7 @@ public class RealtimeObject extends BaseObject {
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
-			if(str.startsWith("YYYY", i))
-			{
-				System.out.println("YYYY detected");
-				o = new RealtimeYear(mContext, this, x,true);
-				mSubObjs.add(o);
-				i += 4;
-			}
-			else if(str.startsWith("YY", i))
+			if(str.startsWith("YY", i))
 			{
 				System.out.println("YY detected");
 				o = new RealtimeYear(mContext, this, x,false);
