@@ -34,6 +34,7 @@ import com.industry.printer.object.TlkObject;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 
 import android.app.ActionBar.LayoutParams;
@@ -476,11 +477,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		((MainActivity) getActivity()).setCtrlExtra(mCounter, (int) count);
 	}
 	
+	/**
+	 * 測試實際情況爲power值在35-44之間，對實際值進行對應
+	 */
 	private void refreshPower() {
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
-			int power = LRADCBattery.getPower();
-			// String pwState = String.format(getString(R.string.str_state_battery), power);
-			mPower.setText(String.valueOf(power));
+			int power = LRADCBattery.getPower() - 34;
+			
+			//String pwState = String.format(getString(R.string.str_state_battery), power);
+			if (power > 10) {
+				power = 10;
+			} else if (power < 0) {
+				power = 0;
+			}
+			mPower.setText(String.valueOf(power*10));
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
 		}
 	}

@@ -92,7 +92,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					R.layout.message_item_layout, 
 					new String[]{"title", "abstract", ""}, 
 					// new int[]{R.id.tv_message_title, R.id.tv_message_abstract
-					new int[]{R.id.tv_msg_title, R.id.message_image, R.id.image_selected});
+					new int[]{R.id.tv_msg_title, R.id.ll_preview, R.id.image_selected});
 		}
 		
 		@Override

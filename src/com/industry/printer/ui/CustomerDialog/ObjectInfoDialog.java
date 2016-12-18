@@ -39,6 +39,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -129,6 +131,19 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private PopWindowAdapter mLineAdapter;
 	private PopWindowAdapter mDirAdapter;
 	private PopWindowAdapter mHeightAdapter;
+
+	public final static int MSG_SELECTED_FONT = 1;
+	
+	public Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+			case MSG_SELECTED_FONT:
+				Bundle data = msg.getData();
+				String font = data.getString("font");
+				mFont.setText(font);
+			}
+		}
+	};
 	
 	public ObjectInfoDialog(Context context, BaseObject obj) {
 		super(context, R.style.Dialog_Fullscreen);
@@ -599,8 +614,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.fontSpin:
-			mSpiner.setAdapter(mFontAdapter);
-			mSpiner.showAsDropUp(v);
+			// mSpiner.setAdapter(mFontAdapter);
+			// mSpiner.showAsDropUp(v);
+			FontSelectDialog dialog1 = new FontSelectDialog(mContext, mHandler);
+			dialog1.show();
 			break;
 		case R.id.rtFormat:
 			mSpiner.setAdapter(mFormatAdapter);

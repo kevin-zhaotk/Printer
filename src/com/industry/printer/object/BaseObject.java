@@ -121,7 +121,7 @@ public class BaseObject{
 		isNeedRedraw = true;
 		// 參數40：列高
 		mDotsPerClm = SystemConfigFile.getInstance(mContext).getParam(39);
-		mFont = "WelldrawH000";
+		mFont = "Welldraw";
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
@@ -220,10 +220,10 @@ public class BaseObject{
 			if (fd != null) {
 				fd.close();
 			} else {
-				mFont = "WelldrawH000";
+				mFont = "Welldraw";
 			}
 		} catch (Exception e) {
-			mFont = "WelldrawH000";
+			mFont = "Welldraw";
 		}
 		
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));

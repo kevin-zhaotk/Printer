@@ -30,7 +30,7 @@
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="@dimen/settingsTextViewHeight"
             android:textSize="@dimen/settingsEditTextsize"
-            android:layout_toRightOf="@id/setting_title_left"
+            android:layout_toLeftOf="@+id/setting_unit_left"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             >
 	         <TextView
@@ -63,7 +63,7 @@
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@id/setting_value_left"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize"
             android:textColor="@color/UnitText"
@@ -94,7 +94,7 @@
             android:layout_width="@dimen/settingsValueLength"
             android:layout_height="@dimen/settingsTextViewHeight"
             android:textSize="@dimen/settingsEditTextsize"
-            android:layout_toRightOf="@id/setting_title_right"
+            android:layout_toLeftOf="@+id/setting_unit_right"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             >
 	        <TextView
@@ -126,7 +126,7 @@
             android:layout_width="@dimen/settingsUnitLength"
             android:layout_height="@dimen/settingsTextViewHeight"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@id/setting_value_right"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/settingsMarginLeft"
             android:textSize="@dimen/settingsUnitTextsize"
             android:textColor="@color/UnitText"
