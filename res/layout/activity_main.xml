@@ -95,11 +95,10 @@
      </LinearLayout>
      
      
-     <LinearLayout 
+     <RelativeLayout 
          android:id="@+id/edit_extra"
          android:layout_width="match_parent"
          android:layout_height="@dimen/top_btn_height"
-         android:orientation="vertical"
          android:layout_toRightOf="@id/tab_group"
          android:layout_alignParentTop="true"
          android:visibility="gone"
@@ -114,6 +113,18 @@
 	         android:gravity="center"
 	         
         	/>
+         
+         <TextView
+             android:id="@+id/delete"
+             android:layout_width="60dp"
+             android:layout_height="50dp"
+             android:src="@drawable/style_editbtn"
+             android:layout_alignParentRight="true"
+             android:text="@string/str_del" 
+             android:textSize="25sp"
+             android:textColor="#000000"
+             android:gravity="center"
+             />
          <RelativeLayout 
              android:layout_width="match_parent"
              android:layout_height="match_parent"
@@ -162,7 +173,7 @@
 				    />
 			</RelativeLayout>
 		</RelativeLayout>
-     </LinearLayout>
+     </RelativeLayout>
      
      <RelativeLayout 
          android:id="@+id/settings_view"

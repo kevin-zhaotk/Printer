@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener, TextWatcher {
 
@@ -48,6 +49,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public RelativeLayout mCancel;
 		public RelativeLayout mPagePrev;
 		public RelativeLayout mPageNext;
+		public TextView 	mDelete;
+		
 		public EditText		  mSearch;
 		public static String mTitle;
 		
@@ -109,6 +112,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mCancel = (RelativeLayout) findViewById(R.id.btn_cancel_message_list);
 			 mCancel.setOnClickListener(this);
 			 
+			 mDelete = (TextView) findViewById(R.id.btn_delete);
+			 mDelete.setOnClickListener(this);
+			 
 			 mPagePrev = (RelativeLayout) findViewById(R.id.btn_page_prev);
 			 mPagePrev.setOnClickListener(this);
 			 
@@ -157,7 +163,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				case R.id.btn_page_next:
 					mMessageList.smoothScrollBy(200, 50);
 					break;
-				
+				case R.id.btn_delete:
+					mFileAdapter.delete();
+					break;
 			}
 		}
 

@@ -92,6 +92,13 @@
 	    <item>"33 mm Xaar dual"</item>
 	    <item>"38.1 mm HP Triple"</item>
 	    <item>"50.8 mm HP quadruple"</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>1 Inch standard</item>
+	    <item>1 Inch fast</item>
+	    <item>1 Inch Dual standard</item>
+	    <item>1 Inch Dual fast</item>
 	</string-array>
 	
 	<string-array name="strFontArray">

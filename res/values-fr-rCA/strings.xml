@@ -85,13 +85,20 @@
 	<string name="strInsertSerial">"Merci de connecter le produit"</string>
 	<string name="strReinsertSerial">"Erreur, reconnecter le produit"</string>
 	<string-array name="strPrinterArray">
-	    <item>"12.7 mm HP head"</item>
-	    <item>"12.7 mm HP standard"</item>
-	    <item>"25.4 mm HP dual"</item>
-	    <item>"16.3 mm Xaar head"</item>
-	    <item>"33 mm Xaar dual"</item>
-	    <item>"38.1 mm HP Triple"</item>
-	    <item>"50.8 mm HP quadruple"</item>
+	    <item>12.7 mm HP head</item>
+	    <item>12.7 mm HP standard</item>
+	    <item>25.4 mm HP dual</item>
+	    <item>16.3 mm Xaar head</item>
+	    <item>33 mm Xaar dual"</item>
+	    <item>38.1 mm HP Triple</item>
+	    <item>50.8 mm HP quadruple</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>1 Inch standard</item>
+	    <item>1 Inch fast</item>
+	    <item>1 Inch Dual standard</item>
+	    <item>1 Inch Dual fast</item>
 	</string-array>
 	
 	<string-array name="strFontArray">

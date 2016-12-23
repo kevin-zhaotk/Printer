@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <string name="app_version">软件版本:</string>
+    <string name="app_version">版本:</string>
     <string name="system_time">系统时间:</string>
     <string name="app_name">打印机</string>
     <string name="action_settings">设置</string>
@@ -93,6 +93,7 @@
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>Unknown</item>
 	    <item>Unknown</item>
 	    <item>Unknown</item>
 	    <item>1 Inch standard</item>

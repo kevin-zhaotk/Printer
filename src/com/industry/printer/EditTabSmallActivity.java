@@ -412,6 +412,15 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		return x;
 	}
+	
+	public void deleteSelected() {
+		BaseObject object = getCurObj();
+		if (object == null || object instanceof MessageObject) {
+			return;
+		}
+		mMsgTask.removeObject(object);
+		mHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+	}
 
 	/**
 	 * HANDLER_MESSAGE_OPEN

@@ -100,6 +100,8 @@ public class BaseObject{
 	public HashMap<String, byte[]> mVBuffer;
 	public MessageTask mTask;
 	
+	public static final String DEFAULT_FONT = "1";
+	
 	public BaseObject(Context context, String id, float x)
 	{
 		this(id);
@@ -121,7 +123,7 @@ public class BaseObject{
 		isNeedRedraw = true;
 		// 參數40：列高
 		mDotsPerClm = SystemConfigFile.getInstance(mContext).getParam(39);
-		mFont = "Welldraw";
+		mFont = DEFAULT_FONT;
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
@@ -220,10 +222,10 @@ public class BaseObject{
 			if (fd != null) {
 				fd.close();
 			} else {
-				mFont = "Welldraw";
+				mFont = DEFAULT_FONT;
 			}
 		} catch (Exception e) {
-			mFont = "Welldraw";
+			mFont = DEFAULT_FONT;
 		}
 		
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));

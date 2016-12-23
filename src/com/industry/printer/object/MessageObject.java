@@ -74,15 +74,15 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i]); 
 			}
-		} else if (mType == 2 || mType == 4 ) { //dual
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL) { //dual
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 2); 
 			}
-		} else if (mType == 5) {// triple
+		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {// triple
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 3);
 			}
-		} else if (mType == 6) { // four
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8) { // four
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 4);
 			}
@@ -100,13 +100,13 @@ public class MessageObject extends BaseObject {
 			Debug.d(TAG, "--->exception: " + e.getMessage());
 		}
 		Debug.d(TAG, "--->h: " + h + ", type=" + mType);
-		if (mType == 0 || mType == 1) {
+		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			return h;
-		} else if (mType == 2 || mType == 4) {
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
 			return h/2;
-		} else if (mType == 5) {
+		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {
 			return h/3;
-		} else if (mType == 6) {
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8) {
 			return h/4;
 		}
 		return h;
@@ -122,7 +122,7 @@ public class MessageObject extends BaseObject {
 		int type = 1;
 		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			h = size/PIXELS_PER_MM;
-		} else if (mType == MessageType.MESSAGE_TYPE_25_4) {
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL ) {
 			h = 2 * (size/PIXELS_PER_MM);
 			type = 2;
 		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {

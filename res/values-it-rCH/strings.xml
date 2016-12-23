@@ -85,13 +85,20 @@
 	<string name="strInsertSerial">"Per favore connettere dispositivo..."</string>
 	<string name="strReinsertSerial">"Errore, riconnetere dispositivo"</string>
 	<string-array name="strPrinterArray">
-     <item>"Testa HP 12.7 mm "</item>
+     	<item>"Testa HP 12.7 mm "</item>
 	    <item>"12.7 mm HP standard"</item>
-     <item>"25.4 mm HP doppia"</item>
+     	<item>"25.4 mm HP doppia"</item>
 	    <item>"16.3 mm Testa Xaar "</item>
 	    <item>"33 mm Xaar doppia"</item>
-     <item>"38.1 mm HP Tripla"</item>
-     <item>"50.8 mm HP quadrupla"</item>
+     	<item>"38.1 mm HP Tripla"</item>
+     	<item>"50.8 mm HP quadrupla"</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>Unknown</item>
+	    <item>1 Inch standard</item>
+	    <item>1 Inch fast</item>
+	    <item>1 Inch Dual standard</item>
+	    <item>1 Inch Dual fast</item>
 	</string-array>
 
 	<string-array name="strFontArray">

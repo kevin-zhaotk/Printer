@@ -1,57 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_gravity="center"
     android:gravity="center"
     >
 
-    <Button
-        android:id="@+id/btn_page_up"
-        android:layout_width="200dp"
+	<Button 
+	    android:id="@+id/btn_confirm"
+	    android:layout_width="0dp"
         android:layout_height="80dp"
+        android:layout_weight="1"
         android:background="@drawable/button_style"
 	    android:textSize="25sp"
-        android:text="@string/str_page_prev"
-        android:visibility="gone"
-        />
-	    <Button 
-	        android:id="@+id/btn_confirm"
-	        android:layout_width="200dp"
-	        android:layout_height="80dp"
-	        android:background="@drawable/button_style"
-	        android:layout_below="@id/btn_page_up"
-	        android:layout_marginTop="20dp"
-	        android:textSize="25sp"
-	        android:text="@string/str_ok"/>
-	    <Button
-	        android:id="@+id/btn_objinfo_cnl"
-	        android:layout_width="200dp"
-	        android:layout_height="80dp"
-	        android:layout_below="@id/btn_confirm"
-	        android:layout_marginTop="20dp"
-	        android:background="@drawable/button_style"
-	        android:textSize="25sp"
-	        android:text="@string/strNativeBtn"
-	        />
-	    <Button
-	        android:id="@+id/btn_delete"
-	        android:layout_width="200dp"
-	        android:layout_height="80dp"
-	        android:layout_below="@id/btn_objinfo_cnl"
-	        android:layout_marginTop="20dp"
-	        android:background="@drawable/button_style"
-	        android:textSize="25sp"
-	        android:text="@string/str_del"
-	        />
-	<Button 
-	    android:id="@+id/btn_page_down"
-	    android:layout_width="200dp"
-	    android:layout_height="80dp"
-	    android:layout_below="@id/btn_delete"
-	    android:background="@drawable/button_style"
-	    android:layout_marginTop="20dp"
-	    android:textSize="25sp"
-	    android:text="@string/str_page_next"
-	    android:visibility="gone"
+	    android:text="@string/str_ok"
 	    />
-</RelativeLayout>
+	<Button
+	    android:id="@+id/btn_objinfo_cnl"
+	    android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+	    android:background="@drawable/button_style"
+	    android:textSize="25sp"
+	    android:text="@string/strNativeBtn"
+	    />
+	<Button
+	    android:id="@+id/btn_delete"
+	    android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+	    android:background="@drawable/button_style"
+	    android:textSize="25sp"
+	    android:text="@string/str_del"
+	    />
+	
+</LinearLayout>

@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
@@ -76,7 +77,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public TextView mEditTitle;
 	public RelativeLayout mSettings;
 	public TextView mSettingTitle;
-	public LinearLayout mEditExtra;
+	public RelativeLayout mEditExtra;
+	public TextView mDelete;
 	public TextView mVersion;
 	private TextView mVerTitle;
 	
@@ -223,7 +225,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
 		mCountdown = (TextView) findViewById(R.id.count_down);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
-		mEditExtra = (LinearLayout) findViewById(R.id.edit_extra);
+		mEditExtra = (RelativeLayout) findViewById(R.id.edit_extra);
+		mDelete = (TextView) findViewById(R.id.delete);
+		mDelete.setOnClickListener(this);
 		
 		mSettings = (RelativeLayout) findViewById(R.id.settings_view);
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
@@ -232,8 +236,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		try {
 			// InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
 			// BufferedReader reader = new BufferedReader(sReader);
+			String ver = SystemPropertiesProxy.get(this, "ro.build.version.incremental", "1970");
 			PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
-			mVersion.setText(packageInfo.versionName);
+			mVersion.setText(ver + "-"+ packageInfo.versionName);
 		} catch (Exception e) {
 			
 		}
@@ -419,6 +424,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		case R.id.btn_page_forward:
 			mEditSmallTab.scrollPageFore();
 			break;
+		case R.id.delete:
+			mEditSmallTab.deleteSelected();
 		default:
 			break;
 		}

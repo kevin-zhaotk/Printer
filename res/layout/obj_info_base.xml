@@ -154,12 +154,13 @@
     	android:layout_height="match_parent"
     	android:layout_weight="1">        
 	    <EditText android:id="@+id/cntEdit"
-	        android:layout_width="@dimen/settingsItemLength"
-	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
 	        android:layout_marginLeft="150dp"
 	        android:imeOptions="flagNoExtractUi|actionDone"
 	        android:textSize="30sp"
-	        android:singleLine="true"
+	        android:gravity="top|left"
+	        android:scrollHorizontally="false"
 	        android:hint="@string/txtDefault"
 	        />
 	        

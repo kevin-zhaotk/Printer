@@ -138,7 +138,7 @@ public class EditScrollView extends View {
 			
 		}
 		p.setColor(Color.BLACK);
-		canvas.drawLine(scrollx, 153, scrollx + mScreenW, 153, p);
+		canvas.drawLine(scrollx, 153, getW(), 153, p);
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	} 
@@ -151,6 +151,12 @@ public class EditScrollView extends View {
 		mTask = task;
 	}
 
+	private int getW() {
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		float density = metrics.density;
+		return (int) (5000 * density);
+	}
+	
 	public void getWindowPixels() {
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		float density = metrics.density;

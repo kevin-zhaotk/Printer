@@ -1,6 +1,7 @@
 package com.industry.printer.ui.CustomerAdapter;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -234,5 +235,27 @@ public class MessageListAdater extends BaseAdapter {
 				imgView.setImageBitmap(scaledChild);
 				mHolder.mllPreview.addView(imgView);
 			}
+	}
+	
+	/**
+	 * delete the selected message
+	 */
+	public void delete() {
+		if (mSelected < 0 || mSelected >= mCntList.size()) {
+			return;
+		}
+		HashMap<String, Object> item = (HashMap<String, Object>)mCntList.get(mSelected);
+		String title = (String) item.get(mKeys[0]);
+		File file = new File(ConfigPath.getTlkDir(title));
+		if (file.exists()) {
+			File[] list = file.listFiles();
+			for (int i = 0; i < list.length; i++) {
+				File f = list[i];
+				f.delete();
+			}
+		}
+		file.delete();
+		mCntList.remove(mSelected);
+		notifyDataSetChanged();
 	}
 }
