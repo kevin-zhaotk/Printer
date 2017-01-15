@@ -1,18 +1,26 @@
 package com.industry.printer.object;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.EAN13Writer;
+import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 
+import com.industry.printer.BinInfo;
+import com.industry.printer.R;																																																																								
+					
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -29,22 +37,70 @@ import android.widget.TextView;
 public class BarcodeObject extends BaseObject {
 
 	public String mFormat;
+	public int mCode;
 	public boolean mShow;
+	/*内容来源 是否U盤*/
+	public boolean mSource;
 	
 	public Bitmap mBinmap;
+	
+	private Map<String, Integer> code_format;
+	private Map<Integer, String> format_code;
 	
 	public BarcodeObject(Context context, float x) {
 		super(context, BaseObject.OBJECT_TYPE_BARCODE, x);
 		// TODO Auto-generated constructor stub
 		mShow = true;
-		mFormat="ENA128";
+		mSource = false;
+		mCode = 3;
+		mFormat="CODE_128";
 		setContent("1234567890");
-		mWidth=100;
+		mWidth=0;
+		
 	}
-	
+
 	public void setCode(String code)
 	{
+		mId = BaseObject.OBJECT_TYPE_BARCODE;
+		if ("EAN8".equals(code)) {
+			mCode = 0;
+		} else if ("EAN13".equals(code)) {
+			mCode = 1;
+		} else if ("EAN128".equals(code)) {
+			mCode = 2;
+		} else if ("CODE_128".equals(code)) {
+			mCode = 3;
+		} else if ("CODE_39".equals(code)) {
+			mCode = 5;
+		} else if ("QR".equals(code)) {
+			mCode = 0;
+			mId = BaseObject.OBJECT_TYPE_QR;
+		} else {
+			return;
+		}
 		mFormat = code;
+		isNeedRedraw = true;
+	}
+	
+	public void setCode(int code)
+	{
+		if (code == 0) {
+			mCode = 0;
+			mFormat = "EAN8";
+		} else if (code == 1) {
+			mCode = 1;
+			mFormat = "EAN13";
+		} else if (code == 2) {
+			mCode = 2;
+			mFormat = "EAN128";
+		} else if (code == 3) {
+			mCode = 3;
+			mFormat = "CODE_128";
+		} else if (code == 5) {
+			mCode = 5;
+			mFormat = "CODE_39";
+		}
+		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		isNeedRedraw = true;
 	}
 	
@@ -78,24 +134,41 @@ public class BarcodeObject extends BaseObject {
 		
 		isNeedRedraw = false;
 		BitMatrix matrix=null;
-		
+		int margin = 0;
 		try {
 			MultiFormatWriter writer = new MultiFormatWriter();
-			if(mFormat.equals("ENA128"))
+			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
+            hints.put(EncodeHintType.CHARACTER_SET, CODE);
+            // hints.put(EncodeHintType.MARGIN, margin);
+            BarcodeFormat format = getBarcodeFormat(mFormat);
+            
+			if(!is2D())
 			{
-				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
-	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
-	            
+				if (mWidth <= 0) {
+					mWidth = mContent.length() * 70;
+				}
+
 	            /* 条形码的宽度设置:每个数字占70pix列  */
-	            matrix = writer.encode(mContent,
-					        BarcodeFormat.CODE_128, mContent.length() * 70, (int)(mHeight - 30), null);
-			}
-			else if(mFormat.equals("QR"))
-			{
-				matrix = writer.encode(mContent,
-		                BarcodeFormat.QR_CODE, (int)mHeight, (int)mHeight);
+				if ("EAN13".equals(mFormat)) {
+					matrix = writer.encode(checkSum(),
+					        format, (int)mWidth, (int)(mHeight - 30), null);
+	            
+				} else if ("EAN8".equals(mFormat)) {
+					matrix = writer.encode(checkLen(),
+					        format, (int)mWidth, (int)(mHeight - 30), null);
+	            
+				} else {
+					matrix = writer.encode(mContent,
+					        format, (int)mWidth, (int)(mHeight - 30), null);
+				}
+	            
 			} else {
-				return null;
+				if (mWidth <= 0) {
+					mWidth = mHeight;
+				}
+				matrix = writer.encode(mContent,
+						format, (int)mWidth, (int)mHeight, hints);
+				matrix = deleteWhite(matrix);
 			}
 			int tl[] = matrix.getTopLeftOnBit();
 			for (int i = 0; i < tl.length; i++) {
@@ -120,9 +193,13 @@ public class BarcodeObject extends BaseObject {
 			mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			
 			mBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+			if (is2D()) {
+				mBitmap = Bitmap.createScaledBitmap(mBitmap, (int)mHeight, (int)mHeight, false);
+				setWidth(mHeight);
+			}
 			// mBinmap = Bitmap.createBitmap(mBitmap);
 			/*if content need to show, draw it*/
-			if(mShow && !mFormat.equals("QR"))
+			if(mShow && !is2D())
 			{
 				// 用於生成bin的bitmap
 				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
@@ -138,12 +215,12 @@ public class BarcodeObject extends BaseObject {
 			}
 			return mBitmap;
 
-		} catch (WriterException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	protected Bitmap createCodeBitmapFromTextView(String contents,int width,int height, boolean isBin) {
 		float div = (float) (4.0/mTask.getHeads());
 		Debug.d(TAG, "===>width=" + width);
@@ -196,18 +273,17 @@ public class BarcodeObject extends BaseObject {
 		BitMatrix matrix=null;
 		try{
 			MultiFormatWriter writer = new MultiFormatWriter();
-			if(mFormat.equals("ENA128"))
+			BarcodeFormat format = getBarcodeFormat(mFormat);
+			if(is2D())
 			{
 				Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
 	            hints.put(EncodeHintType.CHARACTER_SET, CODE);
 	            
 				matrix = writer.encode(mContent,
-					                BarcodeFormat.CODE_128, (int)mWidth, (int)mHeight, null);
-			}
-			else if(mFormat.equals("QR"))
-			{
+					                format, (int)mWidth, (int)mHeight, null);
+			} else {
 				matrix = writer.encode(mContent,
-		                BarcodeFormat.QR_CODE, (int)mWidth, (int)mHeight);
+		                format, (int)mWidth, (int)mHeight);
 			}
 			width = matrix.getWidth();
 			int height = matrix.getHeight();
@@ -218,6 +294,130 @@ public class BarcodeObject extends BaseObject {
 			Debug.d(TAG, "exception:"+e.getMessage());
 		}
 		return width;
+	}
+	
+	private boolean is2D() {
+		if (mFormat.equalsIgnoreCase("QR")
+				|| mFormat.equalsIgnoreCase("DATA_MATRIX")
+				|| mFormat.equalsIgnoreCase("AZTEC")
+				|| mFormat.equalsIgnoreCase("PDF_417")) {
+			return true;
+		}
+		return false;
+	}
+	
+	private BarcodeFormat getBarcodeFormat(String format) {
+		int i;
+		if ("CODE_128".equals(format)) {
+			return BarcodeFormat.CODE_128;
+		} else if ("CODE_39".equals(format)) {
+			return BarcodeFormat.CODE_39;
+		} else if ("CODE_93".equals(format)) {
+			return BarcodeFormat.CODE_93;
+		} else if ("CODABAR".equals(format)) {
+			return BarcodeFormat.CODABAR;
+		} else if ("EAN8".equals(format)) {
+			return BarcodeFormat.EAN_8;
+		} else if ("EAN13".equals(format)) {
+			return BarcodeFormat.EAN_13;
+		} else if ("UPC_E".equals(format)) {
+			return BarcodeFormat.UPC_E;
+		} else if ("UPC_A".equals(format)) {
+			return BarcodeFormat.UPC_A;
+		} else if ("ITF".equals(format)) {
+			return BarcodeFormat.ITF;
+		} else if ("RSS14".equals(format)) {
+			return BarcodeFormat.RSS_14;
+		} else if ("RSS_EXPANDED".equals(format)) {
+			return BarcodeFormat.RSS_EXPANDED;
+		} else if ("QR".equals(format)) {
+			return BarcodeFormat.QR_CODE;
+		} else if ("DATA_MATRIX".equals(format)) {
+			return BarcodeFormat.DATA_MATRIX;
+		} else if ("AZTEC".equals(format)) {
+			return BarcodeFormat.AZTEC;
+		} else if ("PDF_417".equals(format)) {
+			return BarcodeFormat.PDF_417;
+		} else {
+			return BarcodeFormat.CODE_128;
+		}
+		
+	}
+	
+	
+	private static BitMatrix deleteWhite(BitMatrix matrix) {
+        int[] rec = matrix.getEnclosingRectangle();
+        int resWidth = rec[2] + 1;
+        int resHeight = rec[3] + 1;
+
+        BitMatrix resMatrix = new BitMatrix(resWidth, resHeight);
+        resMatrix.clear();
+        for (int i = 0; i < resWidth; i++) {
+            for (int j = 0; j < resHeight; j++) {
+                if (matrix.get(i + rec[0], j + rec[1]))
+                    resMatrix.set(i, j);
+            }
+        }
+        return resMatrix;
+    }
+	
+	/**
+	 * 計算EAN13的校驗和
+	 * 奇数位和：6 + 0 + 2 + 4 + 6 + 8 = 26
+	 * 偶数位和：9 + 1 + 3 + 5 + 7 + 9 = 34
+	 * 将奇数位和与偶数位和的三倍相加：26 + 34 * 3 = 128
+	 * 取结果的个位数：128的个位数为8
+	 * 用10减去这个个位数：10 - 8 = 2
+	 * @return
+	 */
+	private String checkSum() {
+		String code = "";
+		int odd = 0, even = 0;
+		if (mContent.length() < 12) {
+			String add = "";
+			for (int i = 0; i < 12-mContent.length(); i++) {
+				add += "0";
+			}
+			code = mContent + add;
+		} else if (mContent.length() > 12) {
+			code = mContent.substring(0, 12);
+		} else {
+			code = mContent; 
+		}
+		
+		for (int i = 0; i < code.length(); i++) {
+			if (i%2 == 0) {
+				odd += Integer.parseInt(code.substring(i, i+1));
+			} else {
+				even += Integer.parseInt(code.substring(i, i+1));
+			}
+			
+		}
+		int temp = odd + even * 3;
+		int sum = 10 - temp%10;
+		if (sum >= 10) {
+			sum = 0;
+		}
+		
+		code += sum;
+		
+		return code;
+	}
+	
+	/**
+	 * EAN8只支持8位長度
+	 * @return
+	 */
+	private String checkLen() {
+		int len = mContent.length();
+		if (len < 8) {
+			for (int i = 0; i < 8 - len; i++) {
+				mContent += "0";
+			}
+		} else if (mContent.length() > 8) {
+			return mContent.substring(0, 8);
+		}
+		return mContent;
 	}
 	
 	public String toString()
@@ -235,7 +435,7 @@ public class BarcodeObject extends BaseObject {
 		str += BaseObject.intToFormatString(0, 1)+"^";
 		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
 		str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
-		str += getCode()+"^";
+		str += mCode +"^";
 		str += "000^";
 		str += BaseObject.boolToFormatString(mShow, 3)+"^";
 		str += mContent+"^";

@@ -6,11 +6,19 @@
     android:focusableInTouchMode="true"
     android:background="@color/background" >
     
+    <include layout="@layout/obj_info_button"
+        android:id="@+id/buttons"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_alignParentBottom="true"
+	    	android:layout_marginTop="10dp"
+	    	/>
+    
 	<ScrollView android:id="@+id/viewInfo"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:layout_marginTop="10dp"
-	    android:layout_above="@+id/obj_info_button">
+	    android:layout_above="@+id/buttons">
 	        	    
 	    <RelativeLayout
 	        android:id="@+id/objectInfoTable"
@@ -58,12 +66,6 @@
 	            android:textColor="#000000"/> 
 	            
 	    </RelativeLayout>
-	    "
-	    </ScrollView>
-	    <include layout="@layout/obj_info_button" 
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="fill_parent"
-	    	android:layout_alignParentRight="true"
-	    	android:layout_marginRight="20dp"
-	    	/>"
+
+	 </ScrollView>
 </RelativeLayout>

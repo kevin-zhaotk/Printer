@@ -148,6 +148,33 @@
 	        android:textColor="#000000"
 	        />
 	</RelativeLayout>
+	<RelativeLayout 
+	    android:id="@+id/data_source"
+	    android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:layout_weight="1"
+    	android:visibility="gone">
+	    <TextView
+	        android:id="@+id/tv_source"
+	        android:layout_width="wrap_content"
+	   		android:layout_height="wrap_content"
+	   		android:layout_below="@id/base_info_bar"
+	   		android:layout_marginTop="10dp"
+	   		android:layout_marginLeft="10dp"
+	   		android:text="@string/strBarsource"
+	   		android:textSize="30sp"
+	   		android:textColor="#000000"
+	        />
+	        
+	   	<CheckBox
+	   		android:id="@+id/source"
+	   		android:layout_width="wrap_content"
+	   		android:layout_height="wrap_content"
+	   		android:layout_centerVertical="true"
+	   		android:layout_marginLeft="150dp"
+	   		android:checked="false"
+	   		/>
+	</RelativeLayout>
 	
 	<RelativeLayout 
         android:layout_width="match_parent"

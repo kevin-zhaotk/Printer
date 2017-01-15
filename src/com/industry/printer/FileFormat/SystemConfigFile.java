@@ -1024,7 +1024,7 @@ public class SystemConfigFile{
 		} else if (mFPGAParam[3] >= 65535) {
 			mFPGAParam[3] = 65534;
 		}
-		mFPGAParam[8] = (int) (mParam[3]*mParam[9]/(mParam[8]*3.14));
+		mFPGAParam[8] = (int) (mParam[3]*mParam[9]/(mParam[8]*3.14) * mFPGAParam[15]);
 		if (mFPGAParam[8] <= 10) {
 			mFPGAParam[8] = 11;
 		} else if (mFPGAParam[8] >= 65535) {

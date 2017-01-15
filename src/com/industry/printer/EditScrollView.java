@@ -130,7 +130,8 @@ public class EditScrollView extends View {
 				Debug.d(TAG, "--->obj: " + obj.getContent());
 				continue;
 			}
-			canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
+			// canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
+			dispImg(canvas, bitmap, obj.getX(), obj.getY());
 			if (obj.getSelected()) {
 				p.setStyle(Style.STROKE);
 				canvas.drawRect(new RectF(obj.getX(), obj.getY(), obj.getXEnd(), obj.getYEnd()), p);
@@ -142,6 +143,24 @@ public class EditScrollView extends View {
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	} 
+	
+	private void dispImg(Canvas canvas, Bitmap bmp, float x, float y) {
+		int end = 0, cutWidth = 0;
+		for (;;) {
+			if (end + 2000 > bmp.getWidth()) {
+				cutWidth = bmp.getWidth() - end;
+			} else {
+				cutWidth =1200;
+			}
+			Bitmap child = Bitmap.createBitmap(bmp, end, 0, cutWidth, bmp.getHeight());
+			canvas.drawBitmap(child, x+end, y, p);
+			end += cutWidth;
+			if (end >= bmp.getWidth() - 1) {
+				break;
+			}
+		}
+		
+	}
 	
 	public void setParent(View view) {
 		mParent = (HorizontalScrollView) view;

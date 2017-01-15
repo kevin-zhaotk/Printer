@@ -153,7 +153,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             >
 		    <TextView
 		        android:id="@+id/tv_inkValue"
@@ -209,7 +209,7 @@
 	    <RelativeLayout
 	        android:layout_width="0dp"
 	        android:layout_height="fill_parent"
-	        android:layout_weight="1"
+	        android:layout_weight="2"
 	        >
         <TextView
             android:id="@+id/tv_printState"

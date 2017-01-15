@@ -185,10 +185,23 @@ public class TLKFileParser  extends TlkFile{
 		}
 		
 		Debug.d(TAG, "attr[1]="+attr[1]);
-		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1]))	//barcode
+		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
+				||BaseObject.OBJECT_TYPE_QR.equals(attr[1]))	//barcode
 		{
 			obj = new BarcodeObject(mContext, 0);
-			((BarcodeObject) obj).setCode(attr[9]);
+			if (BaseObject.OBJECT_TYPE_QR.equals(attr[1])) {
+				int code = Integer.parseInt(attr[9]);
+				if (code == 0) {
+					((BarcodeObject) obj).setCode("QR");
+				} else if(code == 1) {
+					((BarcodeObject) obj).setCode("DM");
+				} else {
+					((BarcodeObject) obj).setCode("QR");
+				}
+				
+			} else {
+				((BarcodeObject) obj).setCode(Integer.parseInt(attr[9]));
+			}
 			int isShow = Integer.parseInt(attr[11]);
 			((BarcodeObject) obj).setShow(isShow==0?false:true); 
 			((BarcodeObject) obj).setContent(attr[12]);
@@ -395,6 +408,7 @@ public class TLKFileParser  extends TlkFile{
 				dots = 128;
 				break;
 			case MessageType.MESSAGE_TYPE_1_INCH:
+			case MessageType.MESSAGE_TYPE_1_INCH_FAST:
 			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
 				
 				dots = 320;
@@ -404,8 +418,7 @@ public class TLKFileParser  extends TlkFile{
 				break;
 		}
 		mProportion = dots/Configs.gDots;
-		if (type == MessageType.MESSAGE_TYPE_1_INCH 
-				) {
+		if (type == MessageType.MESSAGE_TYPE_1_INCH || type == MessageType.MESSAGE_TYPE_1_INCH_FAST ) {
 			mProportion = 1;
 		} else if (type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
 			mProportion = 0.5f;

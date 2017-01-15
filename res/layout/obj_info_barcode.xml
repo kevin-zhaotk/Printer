@@ -29,20 +29,27 @@
 	        
 	        <include android:id="@+id/base_info_bar" layout="@layout/obj_info_base"/>
 	        
-	   
-	        <Spinner android:id="@+id/spinCode"
-	            android:layout_marginLeft="150dp"
-	            android:layout_width="200dp"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@id/base_info_bar"
-	            android:entries="@array/strCodeArray"/>
+	        
+	        <TextView
+		    	android:id="@+id/spinCode"
+		        android:layout_width="@dimen/settingsItemLength"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="150dp"
+		        android:layout_below="@id/base_info_bar"
+		        android:layout_marginTop="10dp"
+		        android:gravity="center_vertical"
+		        android:drawableRight="@drawable/spiner_down_btn"
+		        android:textSize="@dimen/objinfoTextsize"
+		        android:textColor="#000000"
+		        android:background="#ffffff"
+		        />
 	        
 	        <TextView android:id="@+id/viewCode"
 	            android:layout_marginLeft="10dp"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignBaseline="@id/spinCode"
-	            android:textSize="20dp"
+	            android:textSize="30sp"
 	            android:text="@string/strCode"
 	            android:textColor="#000000"
 	            />
@@ -59,7 +66,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignBaseline="@id/check_Num_show"
-	            android:textSize="20dp"
+	            android:textSize="30sp"
 	            android:text="@string/strShow"
 	            android:textColor="#000000"/>
 	        

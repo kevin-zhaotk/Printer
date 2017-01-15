@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.PWMAudio;
@@ -135,7 +136,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mContext = getActivity();
 		
 		mMsgTask = new MessageTask(mContext);
-		mMsgTask.addObject(new MessageObject(mContext, 0));  //
+		
+		MessageObject msgObject = new MessageObject(mContext, 0);
+		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
+		mMsgTask.addObject(msgObject);  //
 		
 		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
@@ -418,8 +422,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (object == null || object instanceof MessageObject) {
 			return;
 		}
+		Debug.d(TAG, "--->delete: " + object.getId());
 		mMsgTask.removeObject(object);
-		mHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 	}
 
 	/**
@@ -694,16 +699,15 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (v.getId() == R.id.scrollView1) {
 			return false;
 		}
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			PWMAudio.Play();
-		}
 		return false;
 	}
 	
 	private void onNew() {
 		mObjName = null;
 		mMsgTask.removeAll();
-		mMsgTask.addObject(new MessageObject(mContext, 0));
+		MessageObject msgObject = new MessageObject(mContext, 0);
+		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
+		mMsgTask.addObject(msgObject);
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
 		mHScroll.scrollTo(0, 0);
 	}
@@ -814,6 +818,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		int ret = getTouchedObj(event.getX(), event.getY());
 		if(ret != -1)
 		{
+			ExtGpio.playClick();
 			clearCurObj();
 			setCurObj(ret);
 			// mObjList.setSelection(ret);

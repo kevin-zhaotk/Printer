@@ -107,6 +107,7 @@
 	         android:id="@+id/edit_message_view"
 	         android:layout_width="match_parent"
 	         android:layout_height="40dp"
+	         android:layout_toLeftOf="@+id/delete"
 	         android:text="@string/str_filename_no"
 	         android:textColor="#000000"
 	         android:textSize="25sp"
@@ -116,14 +117,15 @@
          
          <TextView
              android:id="@+id/delete"
-             android:layout_width="60dp"
-             android:layout_height="50dp"
-             android:src="@drawable/style_editbtn"
+             android:layout_width="80dp"
+             android:layout_height="60dp"
+             android:background="@drawable/style_ctrlbtn_big"
              android:layout_alignParentRight="true"
              android:text="@string/str_del" 
              android:textSize="25sp"
              android:textColor="#000000"
              android:gravity="center"
+             android:layout_centerVertical="true"
              />
          <RelativeLayout 
              android:layout_width="match_parent"

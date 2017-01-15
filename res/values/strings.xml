@@ -102,7 +102,26 @@
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>WelldrawH000</item>
+	    <item>0T+</item>
+	    <item>1+</item>
+	    <item>1B+</item>
+	    <item>1B2</item>
+	    <item>1BS</item>
+	    <item>1T</item>
+	    <item>2+</item>
+	    <item>2B</item>
+	    <item>2i</item>
+	    <item>3+</item>
+	    <item>3B</item>
+	    <item>3i</item>
+	    <item>3T</item>
+	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>6B</item>
+	    <item>7</item>
+	    <item>8</item>
+	    <item>9</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
@@ -114,10 +133,18 @@
 	    <item>decrease</item>
 	</string-array>
 	<string name="strCode">Code Type</string>
+	
 	<string-array name="strCodeArray">
-	    <item>ENA128</item>
+	    <item>EAN8</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
 	    <item>QR</item>
 	</string-array>
+	
+	<string name="strBarsource">Data</string>
 	
 	<string-array name="strLineArray">
 	    <item>Solid Line</item>
@@ -350,7 +377,7 @@
 	<string name="str_format">24-Format</string>
 	<string name="str_format_24">Yes</string>
 	<string name="str_format_12">No</string>
-	<string name="cor_unit">dp</string>
+	<string name="cor_unit">pixel</string>
 	<string name="font_unit">mm</string>
 	
 	<string name="str_trans">toRight</string>
@@ -448,7 +475,7 @@
 	<string name="str_textview_param28">28.Pulse Set</string>
 	<string name="str_textview_param29">29.Keep Wet</string>
 	<string name="str_textview_param30">30.Pho Filter</string>
-	<string name="str_textview_param31">31.Reserved</string>
+	<string name="str_textview_param31">31.Type</string>
 	<string name="str_textview_param32">32.Reserved</string>
 	<string name="str_textview_param33">33.Reserved</string>
 	<string name="str_textview_param34">34.Reserved</string>
@@ -458,7 +485,7 @@
 	<string name="str_textview_param38">38.Reserved</string>
 	<string name="str_textview_param39">39.Reserved</string>
 	<string name="str_textview_param40">40.Reserved</string>
-	<string name="str_textview_param41">41.Reserved</string>
+	<string name="str_textview_param41">41.Handle</string>
 	<string name="str_textview_param42">42.Reserved</string>
 	<string name="str_textview_param43">43.Reserved</string>
 	<string name="str_textview_param44">44.Reserved</string>

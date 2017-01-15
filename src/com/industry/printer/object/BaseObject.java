@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -100,7 +101,7 @@ public class BaseObject{
 	public HashMap<String, byte[]> mVBuffer;
 	public MessageTask mTask;
 	
-	public static final String DEFAULT_FONT = "1";
+	public static final String DEFAULT_FONT = "0T+";
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -217,7 +218,7 @@ public class BaseObject{
 		mPaint.setTextSize(getfeed());
 		mPaint.setAntiAlias(true); //去除锯齿  
 		mPaint.setFilterBitmap(true); //对位图进行滤波处理
-		try {
+		/*try {
 			AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
 			if (fd != null) {
 				fd.close();
@@ -226,8 +227,12 @@ public class BaseObject{
 			}
 		} catch (Exception e) {
 			mFont = DEFAULT_FONT;
-		}
-		
+		}*/
+		/*String f = "fonts/"+mFont+".ttf";
+		if (!new File("file://android_assets/" + f).exists()) {
+			mFont = DEFAULT_FONT;
+		}*/
+		Debug.d(TAG,"--->getBitmap font = " + mFont);
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		if (mWidth == 0) {
@@ -238,8 +243,8 @@ public class BaseObject{
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
-        // float tY = (y - getFontHeight(p))/2+getFontLeading(p); 
-		mCan.drawText(mContent, 0, mHeight-fm.descent+ getfeedsent(), mPaint);
+        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
+		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
 		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
 			setWidth(width * 1.25f);
 		}
@@ -280,7 +285,7 @@ public class BaseObject{
 		float wDiv = (float) (2.0/mTask.getHeads());
 		MessageObject msg = mTask.getMsgObject();
 		/*對320高的buffer進行單獨處理*/
-		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			wDiv = 1;
 		}
 		/*draw Bitmap of single digit*/
@@ -300,13 +305,13 @@ public class BaseObject{
 		{
 			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
-			can.drawText(String.valueOf(i), 0, mHeight-fm.descent + getfeedsent(), mPaint);
+			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
 			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
 			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight * mTask.getHeads()), false), i*singleW, (int)getY() * mTask.getHeads(), mPaint);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
 		/*對320高的buffer進行單獨處理*/
-		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308, true);
 			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320, Bitmap.Config.ARGB_8888);
 			can.setBitmap(b);
@@ -535,6 +540,7 @@ public class BaseObject{
 			return;
 		mFont = font;
 		isNeedRedraw = true;
+		Debug.d(TAG, "--->setFont: " + mFont);
 	}
 	
 	public String getFont()

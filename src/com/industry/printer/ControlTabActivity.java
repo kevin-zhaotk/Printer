@@ -482,15 +482,21 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 */
 	private void refreshPower() {
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
-			int power = LRADCBattery.getPower() - 34;
-			
-			//String pwState = String.format(getString(R.string.str_state_battery), power);
-			if (power > 10) {
-				power = 10;
-			} else if (power < 0) {
-				power = 0;
+			int power = LRADCBattery.getPower();
+			if (power >= 43) {
+				mPower.setText(String.valueOf(100));
+			} else if (power >= 40) {
+				mPower.setText(String.valueOf(75));
+			} else if (power >= 38) {
+				mPower.setText(String.valueOf(50));
+			} else if (power >= 36) {
+				mPower.setText(String.valueOf(25));
+			} else if (power >= 35) {
+				mPower.setText(String.valueOf(0));
+			} else {
+				mPower.setText("");
 			}
-			mPower.setText(String.valueOf(power*10));
+			
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
 		}
 	}
@@ -745,7 +751,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			return true;
 		}
 		DataTask task = mDTransThread.getData();
-		int heads = task.getHeads();
+		int heads = SystemConfigFile.getInstance(mContext).getParam(16);// task.getHeads();
 		for (int i = 0; i < heads; i++) {
 			float ink = mRfidManager.getLocalInk(i);
 			if (ink <= 0) {

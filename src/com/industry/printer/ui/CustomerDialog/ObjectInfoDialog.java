@@ -49,12 +49,15 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener {
+public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener {
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -91,7 +94,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public TextView mRtFormat;
 	public EditText mDigits;
 	public TextView mDir;
-	public Spinner mCode;
+	public TextView mCode;
 	public CheckBox mShow;
 	public EditText mLineWidth;
 	public TextView mPicture; // 圖片路徑
@@ -112,6 +115,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private ScrollView mScroll;
 	public TextView mLineType;
 	
+	private RelativeLayout mSource;
+	private CheckBox mSourceCB;
+	
 	
 	public EditText mMsg;
 	public TextView mPrinter;
@@ -131,8 +137,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private PopWindowAdapter mLineAdapter;
 	private PopWindowAdapter mDirAdapter;
 	private PopWindowAdapter mHeightAdapter;
+	private PopWindowAdapter mBarFormatAdapter;
 
 	public final static int MSG_SELECTED_FONT = 1;
+	public final static int MSG_SELECTED_SIZE = 2;
+	public final static int MSG_SELECTED_HEADER = 3;
 	
 	public Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -141,6 +150,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				Bundle data = msg.getData();
 				String font = data.getString("font");
 				mFont.setText(font);
+				break;
+			case MSG_SELECTED_SIZE:
+				Bundle d = msg.getData();
+				String size = d.getString("height");
+				mHighEdit.setText(size);
+				break;
 			}
 		}
 	};
@@ -257,9 +272,18 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			    mMax = (EditText) findViewById(R.id.et_end);
 			    
 			}
+		    if (mObject instanceof BarcodeObject) {
+			    mCode = (TextView) findViewById(R.id.spinCode);
+			    mCode.setOnClickListener(this);
+			    mShow = (CheckBox) findViewById(R.id.check_Num_show);
+		    	mSource = (RelativeLayout) findViewById(R.id.data_source);
+		    	mSource.setVisibility(View.VISIBLE);
+		    	mSourceCB = (CheckBox) findViewById(R.id.source);
+		    	mSourceCB.setOnCheckedChangeListener(this);
+		    	mSourceCB.setChecked(((BarcodeObject) mObject).mSource);
+		    	//mContent.setEnabled(false);
+			}
 		    
-		    mCode = (Spinner) findViewById(R.id.spinCode);
-		    mShow = (CheckBox) findViewById(R.id.check_Num_show);
 		    mLineWidth = (EditText) findViewById(R.id.lineWidth);
 		    
 		    if (mObject instanceof LineObject 
@@ -329,7 +353,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						else if(mObject instanceof BarcodeObject)
 						{
 							mObject.setContent(mContent.getText().toString());
-							((BarcodeObject) mObject).setCode(mCode.getSelectedItem().toString());
+							((BarcodeObject) mObject).setCode(mCode.getText().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
 						}
 						else if(mObject instanceof RectObject)
@@ -450,12 +474,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 				else if(mObject instanceof BarcodeObject)
 				{
-					if("ENA128".equals(((BarcodeObject) mObject).getCode()))
-					{
-						mCode.setSelection(0);
-					}
-					else if("QR".equals(((BarcodeObject) mObject).getCode()))
-						mCode.setSelection(1);
+					mCode.setText(((BarcodeObject) mObject).getCode());
 					mShow.setChecked(((BarcodeObject) mObject).getShow());
 				}
 				else if(mObject instanceof ShiftObject)
@@ -548,6 +567,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mLineAdapter = new PopWindowAdapter(mContext, null);
 		// mDirAdapter = new PopWindowAdapter(mContext, null);
 		mHeightAdapter = new PopWindowAdapter(mContext, null);
+		mBarFormatAdapter = new PopWindowAdapter(mContext, null);
 		
 		// String[] heights = mContext.getResources().getStringArray(R.array.strarrayFontSize);
 		if (mObject != null) {
@@ -579,6 +599,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		for (String line : lines) {
 			mLineAdapter.addItem(line);
 		}
+		
+		String[] barFormats = mContext.getResources().getStringArray(R.array.strCodeArray);
+		for (String format : barFormats) {
+			mBarFormatAdapter.addItem(format);
+		}
 		/*
 		String[] directions = mContext.getResources().getStringArray(R.array.strDirectArray);
 		for (String direction : directions) {
@@ -606,8 +631,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		
 		switch (v.getId()) {
 		case R.id.highEdit:
-			mSpiner.setAdapter(mHeightAdapter);
-			mSpiner.showAsDropUp(v);
+			// mSpiner.setAdapter(mHeightAdapter);
+			// mSpiner.showAsDropUp(v);
+			HeightSelectDialog d = new HeightSelectDialog(mContext, mHandler, mObject);
+			d.show();
 			break;
 		case R.id.headTypeSpin:
 			mSpiner.setAdapter(mTypeAdapter);
@@ -625,6 +652,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			break;
 		case R.id.spin_line_type:
 			mSpiner.setAdapter(mLineAdapter);
+			mSpiner.showAsDropUp(v);
+			break;
+		case R.id.spinCode:
+			mSpiner.setAdapter(mBarFormatAdapter);
 			mSpiner.showAsDropUp(v);
 			break;
 		/*
@@ -685,8 +716,18 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			view.setText((String)mDirAdapter.getItem(index));
 		} else if (view == mHighEdit) {
 			view.setText((String)mHeightAdapter.getItem(index));
+		} else if (view == mCode) {
+			view.setText((String)mBarFormatAdapter.getItem(index));
 		} else {
 			Debug.d(TAG, "--->unknow view");
+		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton view, boolean checked) {
+		if (view == mSourceCB) {
+			mContent.setEnabled(!checked);
+			((BarcodeObject)mObject).mSource = checked;
 		}
 	}
 }

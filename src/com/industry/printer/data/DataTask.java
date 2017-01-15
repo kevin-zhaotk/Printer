@@ -18,10 +18,12 @@ import android.os.Message;
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
 import com.industry.printer.MessageTask.MessageType;
+import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.JulianDayObject;
@@ -161,14 +163,26 @@ public class DataTask {
 		float div = (float) (2.0/mTask.getHeads());
 		MessageObject msg = mTask.getMsgObject();
 		Debug.d(TAG, "+++++type:" + msg.getType());
-		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
 		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)
 		{
-			if(o instanceof CounterObject)
+			if (o instanceof BarcodeObject) {
+				/* 如果二維碼從QR文件中讀 */
+				if (!((BarcodeObject)o).mSource) {
+					continue;
+				}
+				QRReader reader = QRReader.getInstance(mContext);
+				String content = reader.read();
+				o.setContent(content);
+				Bitmap bmp = o.getScaledBitmap(mContext);
+				
+				BinInfo info = new BinInfo(mContext, bmp);
+				BinInfo.cover(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
+			} else if(o instanceof CounterObject)
 			{
 				String str = prev? ((CounterObject) o).getContent() : ((CounterObject) o).getNext();
 				BinInfo info = mVarBinList.get(o);

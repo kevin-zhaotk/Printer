@@ -292,8 +292,10 @@ public class MessageTask {
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
 		MessageObject msg = getMsgObject();
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH
-				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL)) {
+				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			dots = 308;
+		} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+			dots = 308 * 2;
 		}
 		Debug.d(TAG, "+++dots=" + dots);
 		float prop = dots/Configs.gDots;
@@ -304,7 +306,7 @@ public class MessageTask {
 		 */
 		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div * prop), (int) (bmp.getHeight() * getHeads() * prop), true);
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
-		if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH) {
+		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 320, Bitmap.Config.ARGB_8888);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
@@ -483,6 +485,7 @@ public class MessageTask {
 			case MessageType.MESSAGE_TYPE_12_7_S:
 			case MessageType.MESSAGE_TYPE_16_3:
 			case MessageType.MESSAGE_TYPE_1_INCH:
+			case MessageType.MESSAGE_TYPE_1_INCH_FAST:
 				height = 1;
 				break;
 			case MessageType.MESSAGE_TYPE_25_4:
@@ -524,7 +527,9 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
 		public static final int MESSAGE_TYPE_1_INCH = 10; //320點每列的噴頭
-		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_1_INCH_FAST = 11; //320點每列的噴頭
+		public static final int MESSAGE_TYPE_1_INCH_DUAL = 12; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 13; //320點每列的噴頭,雙頭
 	}
 	
 }

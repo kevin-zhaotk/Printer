@@ -19,6 +19,7 @@ import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.usb.UsbManager;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -176,6 +177,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		
 		initView();
 		Configs.initConfigs(mContext);
+		
+		/*App 启动以后，扬声器响两声*/
+		new Thread() {
+			@Override
+			public void run() {
+				ExtGpio.playClick();
+				try{
+					Thread.sleep(500);
+				} catch (Exception e) {
+				}
+				ExtGpio.playClick();
+			}
+		}.start();
 	}
 
 	@Override
@@ -238,7 +252,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			// BufferedReader reader = new BufferedReader(sReader);
 			String ver = SystemPropertiesProxy.get(this, "ro.build.version.incremental", "1970");
 			PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
-			mVersion.setText(ver + "-"+ packageInfo.versionName);
+			mVersion.setText(packageInfo.versionName);
 		} catch (Exception e) {
 			
 		}

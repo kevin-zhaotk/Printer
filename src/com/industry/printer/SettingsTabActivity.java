@@ -142,7 +142,7 @@ public static final String TAG="SettingsTabActivity";
 		super.onActivityCreated(savedInstanceState);
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//this.addPreferencesFromResource(R.xml.settings_layout);
-		mContext = getActivity().getApplicationContext();
+		mContext = getActivity();
 		Debug.d(TAG, "--->onActivityCreated");
 		
 //		mTime = (TextView) findViewById(R.id.tv_systemTime);

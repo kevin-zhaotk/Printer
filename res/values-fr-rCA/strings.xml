@@ -101,10 +101,6 @@
 	    <item>1 Inch Dual fast</item>
 	</string-array>
 	
-	<string-array name="strFontArray">
-	    <item>"WelldrawH000"</item>
-	</string-array>
-	
 	<string-array name="strFontFile">
 	    <item>"WelldrawH000"</item>
 	</string-array>
@@ -456,7 +452,7 @@
 	<string name="str_textview_param38">"38.Reserved"</string>
 	<string name="str_textview_param39">"39.Reserved"</string>
 	<string name="str_textview_param40">"40.Reserved"</string>
-	<string name="str_textview_param41">"41.Reserved"</string>
+	<string name="str_textview_param41">"41.Handle"</string>
 	<string name="str_textview_param42">"42.Reserved"</string>
 	<string name="str_textview_param43">"43.Reserved"</string>
 	<string name="str_textview_param44">"44.Reserved"</string>

@@ -11,11 +11,14 @@ import java.util.logging.Logger;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
+import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFileMaker;
 
 /**
  * @author zhaotongkai
@@ -126,6 +129,23 @@ public class BinInfo {
 		} catch (Exception e) {
 			Debug.d(TAG, ""+e.getMessage());
 		}
+	}
+	
+	public BinInfo(Context ctx, Bitmap bmp) {
+		BinFileMaker m = new BinFileMaker(ctx);
+		m.extract(bmp);
+		mBuffer = m.getBuffer();
+		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
+		byte[] header = new byte[BinCreater.RESERVED_FOR_HEADER];
+		int width = bmp.getWidth();
+		header[2] = (byte) (width & 0x0ff);
+    	header[1] = (byte) ((width>>8) & 0x0ff);
+    	header[0] = (byte) ((width>>16) & 0x0ff);
+    	
+    	buffer.append(header, 0, header.length);
+    	buffer.append(mBuffer, 0, mBuffer.length);
+    	
+    	resolve();
 	}
 	
 	private void resolve() {
@@ -336,7 +356,13 @@ public class BinInfo {
     		dst[x*high+i] |= src[i];
     	}
     }
-    
+    /**
+     * 疊加方式
+     * @param dst
+     * @param src
+     * @param x
+     * @param high
+     */
     public static void overlap(char[] dst, char[] src, int x, int high)
     {
     	int len = src.length;
@@ -357,6 +383,30 @@ public class BinInfo {
     		} else {
     			dst[x*high + i] |= src[i];
     		}
+    	}
+    }
+    
+    /**
+     * 覆蓋方式
+     * @param dst
+     * @param src
+     * @param x
+     * @param high
+     */
+    public static void cover(char[] dst, char[] src, int x, int high) {
+    	int len = src.length;
+    	if(dst.length < x*high + src.length)
+    	{
+    		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);
+    		len = dst.length - x*high;
+    		//return;
+    	}
+    	for(int i=0; i< len; i++)
+    	{
+    		if (x*high + i < 0) {
+				continue;
+			}
+    		dst[x*high + i] = src[i];
     	}
     }
     /**

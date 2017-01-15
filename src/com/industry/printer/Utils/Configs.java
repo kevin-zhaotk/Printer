@@ -125,6 +125,15 @@ public class Configs {
 	public static final String LAST_MESSAGE_XML = SYSTEM_CONFIG_DIR+"/last_message.xml";
 	public static final String FONT_METRIC_PATH = SYSTEM_CONFIG_DIR + "/ZK";
 	
+	/**
+	 * 
+	 */
+	public static final String QR_DATA = SYSTEM_CONFIG_DIR + "/QRdata/QR.txt";
+	/**
+	 * 
+	 */
+	public static final String QR_LAST = SYSTEM_CONFIG_DIR + "/QRdata/QRlast.txt";
+	
 	public static final String SYSTEM_CONFIG_MSG_PATH = "/MSG1";
 	/**
 	 * 用户pc端编辑的文本存放路径，编辑打印对象的内容时可以从这个目录加载，而不需要手动输入 

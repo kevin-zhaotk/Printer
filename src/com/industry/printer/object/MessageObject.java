@@ -1,6 +1,7 @@
 package com.industry.printer.object;
 
 import com.industry.printer.MessageTask.MessageType;
+import com.industry.printer.MessageTask;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 
@@ -13,6 +14,8 @@ public class MessageObject extends BaseObject {
 	
 	public static final int PIXELS_PER_MM = 12;
 	public static final float[] mBaseList = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
+	public static final float[] mBaseList_16 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16.3f};
+	
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -74,7 +77,9 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i]); 
 			}
-		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL) { //dual
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 
+				|| mType == MessageType.MESSAGE_TYPE_1_INCH
+				|| mType == MessageType.MESSAGE_TYPE_1_INCH_FAST) { //dual
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 2); 
 			}
@@ -82,9 +87,14 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 3);
 			}
-		} else if (mType == MessageType.MESSAGE_TYPE_50_8) { // four
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8  || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) { // four
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i] * 4);
+			}
+		} else if (mType == MessageType.MESSAGE_TYPE_16_3) { // four
+			size = new String[mBaseList_16.length];
+			for (int i = 0; i < size.length; i++) {
+				size[i] = String.valueOf(mBaseList_16[i]);
 			}
 		}
 		return size;
@@ -102,12 +112,14 @@ public class MessageObject extends BaseObject {
 		Debug.d(TAG, "--->h: " + h + ", type=" + mType);
 		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			return h;
-		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_FAST) {
 			return h/2;
 		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {
 			return h/3;
-		} else if (mType == MessageType.MESSAGE_TYPE_50_8) {
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8 || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) {
 			return h/4;
+		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
+			return h*12.7f/16.3f;
 		}
 		return h;
 	}
@@ -120,6 +132,12 @@ public class MessageObject extends BaseObject {
 	public String getDisplayFs(float size) {
 		float h = 0;
 		int type = 1;
+		float[] sizelist;
+		if (mType == MessageType.MESSAGE_TYPE_16_3) {
+			sizelist= mBaseList_16;
+		} else {
+			sizelist= mBaseList;
+		}
 		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			h = size/PIXELS_PER_MM;
 		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL ) {
@@ -128,15 +146,18 @@ public class MessageObject extends BaseObject {
 		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {
 			h = 3 * (size/PIXELS_PER_MM);
 			type = 3;
-		} else if (mType == MessageType.MESSAGE_TYPE_50_8) {
+		} else if (mType == MessageType.MESSAGE_TYPE_50_8 || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) {
 			h = 4 * (size/PIXELS_PER_MM);
 			type = 4;
+		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
+			h = size/PIXELS_PER_MM * 1.3f;
+			
 		} else {
 			h = size/PIXELS_PER_MM;
 		}
-		for (int i = 0; i < mBaseList.length; i++) {
-			if ((h > type * mBaseList[i] - 0.3) && (h < type * mBaseList[i] + 0.3)) {
-				h = mBaseList[i] * type;
+		for (int i = 0; i < sizelist.length; i++) {
+			if ((h > type * sizelist[i] - 0.3) && (h < type * sizelist[i] + 0.3)) {
+				h = sizelist[i] * type;
 				break;
 			}
 		}

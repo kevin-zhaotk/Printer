@@ -53,6 +53,8 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener,
 		mUp = (Button) view.findViewById(R.id.up);
 		mUp.setOnClickListener(this);
 	}
+	
+	
 
 	public void setAdapter(PopWindowAdapter adapter) {
 		mAdapter = adapter;
@@ -74,6 +76,8 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener,
 		v.getLocationOnScreen(location);
 		showAtLocation(v, Gravity.NO_GRAVITY, location[0], location[1] - getHeight());
 	}
+	
+	
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,

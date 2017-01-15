@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_version">版本:</string>
@@ -65,11 +65,11 @@
 	<string name="strDefault">0</string>
 	<string name="txtDefault">text</string>
 	<string name="strDragable">是否拖动</string>
-	<string name="strShow">显示条码内容</string>
+	<string name="strShow">显示内容</string>
 	<string name="strFont">字体</string>
 	<string name="strLinewidth">线宽</string>
 	<string name="strBits">位数</string>
-	<string name="strImage">圖片路徑</string>
+	<string name="strImage">图片路径</string>
 	<string name="strDirect">方向</string>
 	<string name="strShift1">班次1</string>
 	<string name="strShift2">班次2</string>
@@ -102,10 +102,6 @@
 	    <item>1 Inch Dual fast</item>
 	</string-array>
 	
-	<string-array name="strFontArray">
-	    <item>WelldrawH000</item>
-	</string-array>
-	
 	<string-array name="strFontFile">
 	    <item>WelldrawH000</item>
 	</string-array>
@@ -115,10 +111,8 @@
 	    <item>递减</item>
 	</string-array>
 	<string name="strCode">编码类型</string>
-	<string-array name="strCodeArray">
-	    <item>ENA128</item>
-	    <item>QR</item>
-	</string-array>
+
+	<string name="strBarsource">内容来源</string>
 	
 	<string-array name="strLineArray">
 	    <item>Solid Line</item>
@@ -350,7 +344,7 @@
 	<string name="str_format">24小时制</string>
 	<string name="str_format_24">是</string>
 	<string name="str_format_12">否</string>
-	<string name="cor_unit">dp</string>
+	<string name="cor_unit">像素</string>
 	<string name="font_unit">mm</string>
 	
 	<string name="str_trans">==></string>
@@ -439,7 +433,7 @@
 	<string name="str_textview_param15">15.1 头倒置</string>
 	<string name="str_textview_param16">16.2 头倒置</string>
 	<string name="str_textview_param17">17.喷头个数</string>
-	<string name="str_textview_param18">18.計數器</string>
+	<string name="str_textview_param18">18.计数器</string>
 	<string name="str_textview_param19">19.3 头偏移</string>
 	<string name="str_textview_param20">20.4 头偏移</string>
 	<string name="str_textview_param21">21.3 头镜像</string>
@@ -452,7 +446,7 @@
 	<string name="str_textview_param28">28.脉宽设定</string>
 	<string name="str_textview_param29">29.防干脉冲</string>
 	<string name="str_textview_param30">30.光电滤波</string>
-	<string name="str_textview_param31">31.保留</string>
+	<string name="str_textview_param31">31.喷头类型</string>
 	<string name="str_textview_param32">32.保留</string>
 	<string name="str_textview_param33">33.保留</string>
 	<string name="str_textview_param34">34.保留</string>
@@ -613,7 +607,7 @@
 	<string name="str_setting_time">时间设置</string>
 	<string name="str_system_setting">系统设置</string>
 	<string name="str_upgrade_progress">系统升级中....</string>
-	<string name="str_time_format">%1$02d:%2$02d:%3$02d</string>
+	<string name="str_time_format">%1$02d:%2$02d:%3$02d %4$02d:%5$02d:%6$02d</string>
 	<string name="str_toast_ink_unvalid">墨点大小超出范围,设为默认值：800</string>
 	<string name="str_toast_photoelectricity_delay">光电延时超出范围，设为默认值:100</string>
 	<string name="str_toast_photoelectricity_antishake">光电防抖超出范围，设为默认值:20</string>
@@ -639,8 +633,8 @@
 	<string name="str_filename_no">新建</string>
 	<string name="str_btn_back">返回</string>
 	<string name="str_btn_up"></string>
-	<string name="str_btn_detail">屬性</string>
-	<string name="cursor">光標</string>
+	<string name="str_btn_detail">属性</string>
+	<string name="cursor">光标</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
 	<string-array name="msglines_item_entries">
@@ -657,5 +651,5 @@
 	<string name="str_cnt_min">起始值</string>
 	<string name="str_cnt_max">結束值</string>
 	
-	<string name="str_loading">正在加載...</string>
+	<string name="str_loading">正在加载...</string>
 </resources>

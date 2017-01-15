@@ -10,10 +10,14 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.ui.CustomerDialog.HeaderSelectDialog;
 import com.industry.printer.ui.CustomerDialog.NewMessageDialog;
+import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
 import com.industry.printer.widget.PopWindowSpiner;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -63,6 +67,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private PopWindowAdapter mAutoVol;
 	private PopWindowAdapter mAutoPulse;
 	private PopWindowAdapter mDots;
+	private PopWindowAdapter mHandle;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -92,6 +97,22 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		public static final int TYPE_VALUE = 3;
 		
 	}
+	
+	public Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+			case ObjectInfoDialog.MSG_SELECTED_HEADER:
+				int index = msg.arg1;
+				mSettingItems[30].setValue(index);
+				mSysconfig.setParam(30, mSettingItems[30].getValue());
+				String value = mSettingItems[30].getDisplayValue();
+				
+				notifyDataSetChanged();
+				break;
+			}
+		}
+	};
 	
 	private class ItemOneLine {
 		public int mParamId;
@@ -140,7 +161,12 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				break;
 			case ItemType.TYPE_VALUE:
 				mValue = getEntry(mEntry, value);
-				mSysconfig.setParam(mParamId-1, Integer.parseInt(mValue));
+				try {
+					mSysconfig.setParam(mParamId-1, Integer.parseInt(mValue));
+				} catch (Exception e) {
+					mSysconfig.setParam(mParamId-1, value);
+				}
+				
 				break;
 			default:
 				break;
@@ -325,7 +351,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[27] = new ItemOneLine(28, R.string.str_textview_param28, R.string.str_time_unit_0_1us);
 		mSettingItems[28] = new ItemOneLine(29, R.string.str_textview_param29, R.string.str_time_unit_ms);
 		mSettingItems[29] = new ItemOneLine(30, R.string.str_textview_param30, R.string.str_time_unit_ms);
-		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, 0);
+		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, R.array.strPrinterArray, 0, ItemType.TYPE_VALUE);
 		mSettingItems[31] = new ItemOneLine(32, R.string.str_textview_param32, 0);
 		mSettingItems[32] = new ItemOneLine(33, R.string.str_textview_param33, 0);
 		mSettingItems[33] = new ItemOneLine(34, R.string.str_textview_param34, 0);
@@ -335,7 +361,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[37] = new ItemOneLine(38, R.string.str_textview_param38, 0);
 		mSettingItems[38] = new ItemOneLine(39, R.string.str_textview_param39, 0);
 		mSettingItems[39] = new ItemOneLine(40, R.string.str_textview_param40, R.array.message_dots,	0,	ItemType.TYPE_VALUE);
-		mSettingItems[40] = new ItemOneLine(41, R.string.str_textview_param41, 0);
+		mSettingItems[40] = new ItemOneLine(41, R.string.str_textview_param41, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[41] = new ItemOneLine(42, R.string.str_textview_param42, 0);
 		mSettingItems[42] = new ItemOneLine(43, R.string.str_textview_param43, 0);
 		mSettingItems[43] = new ItemOneLine(44, R.string.str_textview_param44, 0);
@@ -519,8 +545,14 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mSpiner.setAdapter(mAutoVol);
 		} else if (position == 26) { //參數27
 			mSpiner.setAdapter(mAutoPulse);
+		} else if (position == 30) { //參數31
+			HeaderSelectDialog dialog = new HeaderSelectDialog(mContext, handler);
+			dialog.show();
+			return;
 		} else if (position == 39) { //參數40
 			mSpiner.setAdapter(mDots);
+		}  else if (position == 40) { //鍙冩暩40
+			mSpiner.setAdapter(mHandle);
 		}
 		mSpiner.setWidth(view.getWidth());
 		//mSpiner.showAsDropDown(view);

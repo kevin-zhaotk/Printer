@@ -63,9 +63,7 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		private int position=0;
 		private Holder mHolder;
 		private LayoutInflater mInflater;
-		private String[] mFonts = {"Welldraw", "1B", "1BS", "1i", "1T", "2", "3", "3B",
-				"3i", "3T", "4", "6","7", "Font14", "Font15", "Font16"
-				,"Font17", "Font18", "Font19", "Font20"};
+		private String[] mFonts = mContext.getResources().getStringArray(R.array.strFontArray);
 		
 		public FontItemAdapter() {
 			mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
