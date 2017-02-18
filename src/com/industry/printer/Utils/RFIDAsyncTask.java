@@ -1,7 +1,7 @@
 package com.industry.printer.Utils;
 
 import com.industry.printer.ThreadPoolManager;
-import com.industry.printer.data.RFIDData;
+import com.printer.corelib.RFIDData;
 import com.industry.printer.hardware.RFIDDevice;
 
 

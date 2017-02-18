@@ -12,6 +12,7 @@ import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 
 import android.app.AlarmManager;
+import android.content.Context;
 import android.os.SystemClock;
 import android.provider.AlarmClock;
 
@@ -24,6 +25,7 @@ public class RfidScheduler {
 	public static final long TASK_SCHEDULE_INTERVAL = 3000;
 	public static final long RFID_SWITCH_INTERVAL = 1000;
 	
+	private Context mContext;
 	private List<RfidTask> mRfidTasks = null;
 	private int mCurrent = 0;
 	private long mSwitchTimeStemp=0;
@@ -31,16 +33,17 @@ public class RfidScheduler {
 	private boolean running=false;
 	private RFIDManager mManager;
 	
-	public static RfidScheduler getInstance() {
+	public static RfidScheduler getInstance(Context ctx) {
 		if (mInstance == null) {
-			mInstance = new RfidScheduler();
+			mInstance = new RfidScheduler(ctx);
 		}
 		return mInstance;
 	}
 	
-	public RfidScheduler() {
+	public RfidScheduler(Context ctx) {
+		mContext = ctx;
 		mRfidTasks = new ArrayList<RfidTask>();
-		mManager = RFIDManager.getInstance();
+		mManager = RFIDManager.getInstance(mContext);
 	}
 	
 	public void init() {

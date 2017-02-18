@@ -73,7 +73,8 @@ public class MessageObject extends BaseObject {
 	
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
-		if (mType == 0 || mType == 1 || mType == 10) { //single
+		Debug.d(TAG, "--->getDisplayFSList mType = " + mType);
+		if (mType == 0 || mType == 1) { //single
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList[i]); 
 			}
@@ -140,7 +141,7 @@ public class MessageObject extends BaseObject {
 		}
 		if (mType == MessageType.MESSAGE_TYPE_12_7 || mType == MessageType.MESSAGE_TYPE_12_7_S) {
 			h = size/PIXELS_PER_MM;
-		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_DUAL ) {
+		} else if (mType == MessageType.MESSAGE_TYPE_25_4 || mType == MessageType.MESSAGE_TYPE_33 || mType == MessageType.MESSAGE_TYPE_1_INCH || mType == MessageType.MESSAGE_TYPE_1_INCH_FAST ) {
 			h = 2 * (size/PIXELS_PER_MM);
 			type = 2;
 		} else if (mType == MessageType.MESSAGE_TYPE_38_1) {

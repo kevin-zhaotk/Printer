@@ -16,13 +16,14 @@ LOCAL_JNI_SHARED_LIBRARIES := libHardware_jni
 #LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_MODULE_TAGS := optional
-LOCAL_STATIC_JAVA_LIBRARIES := zxingcore
+LOCAL_STATIC_JAVA_LIBRARIES := zxingcore corelib
 
 include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
 
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := zxingcore:libs/zxingcore.jar
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := zxingcore:libs/zxingcore.jar \
+		corelib:libs/corelibrary.jar
 
 include $(BUILD_MULTI_PREBUILT)
 

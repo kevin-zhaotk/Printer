@@ -5,15 +5,17 @@ import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import android.R.integer;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
 import com.industry.printer.DataTransferThread;
 import com.industry.printer.ThreadPoolManager;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.RFIDAsyncTask.RfidCallback;
-import com.industry.printer.data.RFIDData;
+import com.printer.corelib.RFIDData;
 
 public class RFIDManager implements RfidCallback{
 	
@@ -25,7 +27,7 @@ public class RFIDManager implements RfidCallback{
 	private RFIDDevice mDevice;
 	private Handler mCallback;
 	
-	public static final int TOTAL_RFID_DEVICES = 8;
+	public static int TOTAL_RFID_DEVICES = 8;
 	
 	public static final int MSG_RFID_INIT_SUCCESS = 101;
 	public static final int MSG_RFID_INIT_FAIL = 102;
@@ -75,12 +77,17 @@ public class RFIDManager implements RfidCallback{
 			}
 		}
 	};
-	public static RFIDManager getInstance() {
+	public static RFIDManager getInstance(Context ctx) {
 		if (mInstance == null) {
 			Debug.d(TAG, "--->new RfidManager");
-			mInstance = new RFIDManager();
+			mInstance = new RFIDManager(ctx);
 		}
 		return mInstance;
+	}
+	
+	public RFIDManager(Context ctx) {
+		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
+		TOTAL_RFID_DEVICES = configFile.getHeads();
 	}
 	
 	

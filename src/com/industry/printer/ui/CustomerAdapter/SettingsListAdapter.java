@@ -68,6 +68,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private PopWindowAdapter mAutoPulse;
 	private PopWindowAdapter mDots;
 	private PopWindowAdapter mHandle;
+	private PopWindowAdapter mCntReset;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -222,6 +223,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mAutoVol = new PopWindowAdapter(mContext, null);
 		mAutoPulse = new PopWindowAdapter(mContext, null);
 		mDots = new PopWindowAdapter(mContext, null);
+		mCntReset = new PopWindowAdapter(mContext, null);
 		initAdapters();
 	}
 	
@@ -337,7 +339,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[13] = new ItemOneLine(14, R.string.str_textview_param14, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[14] = new ItemOneLine(15, R.string.str_textview_param15, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[15] = new ItemOneLine(16, R.string.str_textview_param16, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.pens_item_entries, 0, ItemType.TYPE_VALUE);
+		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, 0);
 		mSettingItems[17] = new ItemOneLine(18, R.string.str_textview_param18, 0);
 		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_length_unit_6_1mm);
 		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_length_unit_6_1mm);
@@ -352,7 +354,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[28] = new ItemOneLine(29, R.string.str_textview_param29, R.string.str_time_unit_ms);
 		mSettingItems[29] = new ItemOneLine(30, R.string.str_textview_param30, R.string.str_time_unit_ms);
 		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, R.array.strPrinterArray, 0, ItemType.TYPE_VALUE);
-		mSettingItems[31] = new ItemOneLine(32, R.string.str_textview_param32, 0);
+		mSettingItems[31] = new ItemOneLine(32, R.string.str_textview_param32, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[32] = new ItemOneLine(33, R.string.str_textview_param33, 0);
 		mSettingItems[33] = new ItemOneLine(34, R.string.str_textview_param34, 0);
 		mSettingItems[34] = new ItemOneLine(35, R.string.str_textview_param35, 0);
@@ -460,6 +462,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		for (int i = 0; i < items.length; i++) {
 			mAutoPulse.addItem(items[i]);
 		}
+		for (int i = 0; i < items.length; i++) {
+			mCntReset.addItem(items[i]);
+		}
 		
 		items = mContext.getResources().getStringArray(R.array.pens_item_entries);
 		for (int i = 0; i < items.length; i++) {
@@ -549,6 +554,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			HeaderSelectDialog dialog = new HeaderSelectDialog(mContext, handler);
 			dialog.show();
 			return;
+		} else if (position == 31) {
+			mSpiner.setAdapter(mCntReset);
 		} else if (position == 39) { //參數40
 			mSpiner.setAdapter(mDots);
 		}  else if (position == 40) { //鍙冩暩40

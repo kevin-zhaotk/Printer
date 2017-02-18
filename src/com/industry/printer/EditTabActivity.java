@@ -19,7 +19,6 @@ import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
-import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.HardwareJni;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.hardware.RFIDDevice;

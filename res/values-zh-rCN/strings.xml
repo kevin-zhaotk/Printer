@@ -432,7 +432,7 @@
 	<string name="str_textview_param14">14.2 头镜像</string>
 	<string name="str_textview_param15">15.1 头倒置</string>
 	<string name="str_textview_param16">16.2 头倒置</string>
-	<string name="str_textview_param17">17.喷头个数</string>
+	<string name="str_textview_param17">17.保留</string>
 	<string name="str_textview_param18">18.计数器</string>
 	<string name="str_textview_param19">19.3 头偏移</string>
 	<string name="str_textview_param20">20.4 头偏移</string>
@@ -447,7 +447,7 @@
 	<string name="str_textview_param29">29.防干脉冲</string>
 	<string name="str_textview_param30">30.光电滤波</string>
 	<string name="str_textview_param31">31.喷头类型</string>
-	<string name="str_textview_param32">32.保留</string>
+	<string name="str_textview_param32">32.计数重置</string>
 	<string name="str_textview_param33">33.保留</string>
 	<string name="str_textview_param34">34.保留</string>
 	<string name="str_textview_param35">35.保留</string>

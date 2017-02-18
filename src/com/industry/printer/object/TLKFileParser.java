@@ -315,6 +315,7 @@ public class TLKFileParser  extends TlkFile{
 			
 			obj.setHeight(StringUtil.parseInt(attr[5])/(2*mProportion)-StringUtil.parseInt(attr[3])/(2*mProportion));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
+			obj.setFont(attr[19]);
 			} catch (Exception e) {
 				Debug.d(TAG, "e: " + e.getCause());
 			}
@@ -409,9 +410,11 @@ public class TLKFileParser  extends TlkFile{
 				break;
 			case MessageType.MESSAGE_TYPE_1_INCH:
 			case MessageType.MESSAGE_TYPE_1_INCH_FAST:
-			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
-				
 				dots = 320;
+				break;
+			case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+				dots = 640;
 				break;
 			default:
 				dots = 152;
@@ -419,9 +422,9 @@ public class TLKFileParser  extends TlkFile{
 		}
 		mProportion = dots/Configs.gDots;
 		if (type == MessageType.MESSAGE_TYPE_1_INCH || type == MessageType.MESSAGE_TYPE_1_INCH_FAST ) {
-			mProportion = 1;
-		} else if (type == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
-			mProportion = 0.5f;
+			mProportion = 1f;
+		} else if (type == MessageType.MESSAGE_TYPE_1_INCH_DUAL || type == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) {
+			mProportion = 1f;
 		}
 		return mProportion;
 	}

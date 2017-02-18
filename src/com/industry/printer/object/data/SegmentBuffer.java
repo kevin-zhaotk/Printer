@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import org.apache.http.util.CharArrayBuffer;
 
+import android.content.Context;
+
 import com.industry.printer.BinInfo;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
@@ -27,6 +29,7 @@ public class SegmentBuffer {
 	public int mHight;
 	public int mType;
 	public CharArrayBuffer mBuffer;
+	private Context mContext;
 	
 	private RFIDDevice mRfid;
 	/**
@@ -34,12 +37,12 @@ public class SegmentBuffer {
 	 * @param info 从bin文件生成的BinInfo对象
 	 * @param type  打印头类型 见 MessageType
 	 */
-	public SegmentBuffer(char[] info, int type, int heads, int ch) {
-		this(info, type, heads, ch, DIRECTION_NORMAL);
+	public SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch) {
+		this(ctx, info, type, heads, ch, DIRECTION_NORMAL);
 	}
 	
-	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction) {
-		this(info, type, heads, ch, direction, 0);
+	public SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch, int direction) {
+		this(ctx, info, type, heads, ch, direction, 0);
 	}
 
 
@@ -53,10 +56,11 @@ public class SegmentBuffer {
 	 * @param direction 数据方向
 	 * @param shift  顺移列数
 	 */
-	public SegmentBuffer(char[] info, int type, int heads, int ch, int direction, int shift) {
+	public SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch, int direction, int shift) {
 		mType = type;
 		mBuffer = new CharArrayBuffer(0);
 		char feed = 0x0;
+		mContext = ctx;
 		/*计算info的总列数*/
 		mColumns = info.length/ch;	
 		/*计算每个打印头的高度*/
@@ -82,7 +86,7 @@ public class SegmentBuffer {
 		/*原始列数+偏移列数=该buffer的总列数*/
 		mColumns += shift;
 		
-		mRfid = RFIDManager.getInstance().getDevice(mType);
+		mRfid = RFIDManager.getInstance(mContext).getDevice(mType);
 	}
 	
 	public void readColumn(char[] buffer, int col, int offset) {

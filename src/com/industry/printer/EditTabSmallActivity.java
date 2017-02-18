@@ -403,6 +403,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		MessageObject msgobj = mMsgTask.getMsgObject();
 		// 如果使用了光標，就以光標的座標爲基準
 		if(msgobj.getSelected()) {
+			Debug.d(TAG, "--->!!!!fuck msg selected");
 			x[0] = msgobj.getX();
 			x[1] = msgobj.getY();
 			return x;
@@ -411,8 +412,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		{
 			if(obj instanceof MessageObject)
 				continue;
+			Debug.d(TAG, "--->obj: " + obj.mId + " -- xend = " + obj.getXEnd() + " x[0]=" + x[0]);
 			x[0] = obj.getXEnd()>x[0] ? obj.getXEnd() : x[0];
 			x[1] = 0;
+			Debug.d(TAG, "--->x[0] = " + x[0]);
 		}
 		return x;
 	}
@@ -471,7 +474,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						break;
 					}
             		mMsgTask = new MessageTask(mContext, mObjName);
-            		clearCurObj();
+            		// 默認選中第一個非消息對象
+            		setCurObj(1);
             		mObjView.setTask(mMsgTask);
 	    			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
             		break;

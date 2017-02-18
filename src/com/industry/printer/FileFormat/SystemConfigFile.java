@@ -19,6 +19,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Xml;
 
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -254,6 +255,11 @@ public class SystemConfigFile{
 				mParam[30] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_32)) {
 				mParam[31] = Integer.parseInt(t.getValue());
+				if (mParam[31] == 0) { // 計數器不重置
+					
+				} else { // 計數器不重置
+					mParam[17] = 0;
+				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_33)) {
 				mParam[32] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_34)) {
@@ -1000,171 +1006,6 @@ public class SystemConfigFile{
 		return value;
 	}
 	
-	public void paramTrans() {
-		// 參數16
-		mFPGAParam[15] = mParam[2]/150;
-				
-		// 參數1
-		mFPGAParam[4] = 170000/(mParam[0]*mFPGAParam[15]);
-		if (mFPGAParam[4] > 65535) {
-			mFPGAParam[4] = 65535;
-		} else if (mFPGAParam[4] < 65) {
-			mFPGAParam[4] = 65;
-		}
-		
-		// 參數3
-		mFPGAParam[6] = (int) (mParam[9]*25.4/(mParam[8] *3.14)/mParam[2]);
-		if (mFPGAParam[6] < 1 || mFPGAParam[6] > 20) {
-			mFPGAParam[6] = 1;
-		}
-		// 參數4
-		mFPGAParam[3] = mParam[3] * mFPGAParam[15] * 6 * mFPGAParam[4]/1000;
-		if (mFPGAParam[3] <= 2) {
-			mFPGAParam[3] = 3;
-		} else if (mFPGAParam[3] >= 65535) {
-			mFPGAParam[3] = 65534;
-		}
-		mFPGAParam[8] = (int) (mParam[3]*mParam[9]/(mParam[8]*3.14) * mFPGAParam[15]);
-		if (mFPGAParam[8] <= 10) {
-			mFPGAParam[8] = 11;
-		} else if (mFPGAParam[8] >= 65535) {
-			mFPGAParam[8] = 65534;
-		}
-		// 參數5
-		if (mParam[4] == 0 || mParam[4] == 1) {
-			mFPGAParam[0] = 0;
-		} else if (mParam[4] == 2) {
-			mFPGAParam[0] = 1;
-		}
-		
-		// 參數6
-		if (mParam[4] == 0 && mParam[5] == 0) {
-			mFPGAParam[1] = 4;
-		} else if (mParam[4] == 0 && mParam[5] == 1) {
-			mFPGAParam[1] = 3;
-		} else if (mParam[4] != 0 && mParam[5] == 0) {
-			mFPGAParam[1] = 2;
-		} else if (mParam[4] != 0 && mParam[5] == 1) {
-			mFPGAParam[1] = 1;
-		}
-		// 參數7
-		mFPGAParam[5] = mParam[6] * mFPGAParam[15] * 6 * mFPGAParam[4]/1000;
-		if (mFPGAParam[5] < 3) {
-			mFPGAParam[5] = 3;
-		} else if (mFPGAParam[5] > 65534) {
-			mFPGAParam[5] = 65534;
-		}
-		mFPGAParam[7] = (int) (mParam[6]*mParam[9]/(mParam[8]*3.14));
-		if (mFPGAParam[7] < 11) {
-			mFPGAParam[7] = 11;
-		} else if (mFPGAParam[7] > 65534) {
-			mFPGAParam[7] = 65534;
-		}
-		
-		// 參數8
-		if (mParam[7] == 0) {
-			mFPGAParam[17] = mFPGAParam[17] | 0x10;
-		} else if (mParam[7] == 1) {
-			mFPGAParam[17] = mFPGAParam[17] & 0xef;
-		}
-		
-		if (mParam[14] == 0) {
-			mFPGAParam[17] = mFPGAParam[17] & 0xfe;
-		} else if (mParam[14] == 1) {
-			mFPGAParam[17] = mFPGAParam[17] | 0x01;
-		}
-
-		if (mParam[15] == 0) {
-			mFPGAParam[17] = mFPGAParam[17] & 0xfd;
-		} else if (mParam[15] == 1) {
-			mFPGAParam[17] = mFPGAParam[17] | 0x02;
-		}
-
-		Debug.d(TAG, "--->param[16]=" + mParam[16] + ", " + (mFPGAParam[16] & 0xe7f));
-		if (mParam[16] == 1) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
-		} else if (mParam[16] == 2) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
-			mFPGAParam[16] = mFPGAParam[16] | 0x080;
-		} else if (mParam[16] == 3) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
-			mFPGAParam[16] = mFPGAParam[16] | 0x100;
-		} else if (mParam[16] == 4) {
-			mFPGAParam[16] = mFPGAParam[16] & 0xe7f;
-			mFPGAParam[16] = mFPGAParam[16] | 0x180;
-		}
-		Debug.d(TAG, "--->param[16]=" + mFPGAParam[16]);
-		// 参数23
-		if (mParam[22] == 0) {
-			mFPGAParam[17] = mFPGAParam[17] & 0xfb;
-		} else if (mParam[22] == 1) {
-			mFPGAParam[17] = mFPGAParam[17] | 0x04;
-		}
-		// 参数24
-	    if (mParam[23] == 0) {
-			mFPGAParam[17] = mFPGAParam[17] & 0xf7;
-		} else if (mParam[23] == 1) {
-			mFPGAParam[17] = mFPGAParam[17] | 0x08;
-		}
-	    // 参数25
-	    int feature = 0;
-	    if (mParam[24] == 0) {
-			mFPGAParam[18] = mParam[25];
-		} else if (mParam[24] == 1) {
-			RFIDManager manager = RFIDManager.getInstance();
-			RFIDDevice device = manager.getDevice(0);
-			if (device == null || !device.isReady()) {
-				feature = 50;	//如果參數不合法就按默認值
-			} else {
-				feature = device.mFeature[4];
-				if (feature < 50 || feature > 112) {
-					feature = 50;
-				}
-			}
-			mFPGAParam[18] = feature;
-		}
-	    
-	    // 参数27
-	    
-	    //RFID特征值6
-	    int info = 17;
-	    // 参数28
-	    if (mParam[26] == 0) {
-	    	mFPGAParam[16] = mFPGAParam[16] & 0xff8f;
-			mFPGAParam[16] = mFPGAParam[16] | ((mParam[27]-17) << 4);
-			Debug.d(TAG, "--->param=" + ((mParam[27]-17) << 4));
-			Debug.d(TAG, "--->fpgaparam=" + mFPGAParam[16]);
-		} else if (mParam[26] == 1) {
-			RFIDManager manager = RFIDManager.getInstance();
-			RFIDDevice device = manager.getDevice(0);
-			if (device == null || !device.isReady()) {
-				info = 17;	//如果參數不合法就按默認值
-			} else {
-				info = device.mFeature[5];
-				if (info > 24 || info < 17) {
-					info = 17;
-				}
-			}
-			mFPGAParam[16] = mFPGAParam[16] & 0xff8f;
-			mFPGAParam[16] = mFPGAParam[16] | ((info-17) << 4);
-		}
-	    
-	    // 参数29
-	    mFPGAParam[19] = mParam[28];
-	    // 参数30
-	    mFPGAParam[2] = mParam[29];
-	    for (int i = 0; i < mFPGAParam.length; i++) {
-			Debug.d(TAG, "--->mFPGAParam[" + i + "]=" + mFPGAParam[i]);
-		}
-	    
-	}
-	
-	public int getFPGAParam(int index) {
-		if (index >= mFPGAParam.length) {
-			return 0;
-		}
-		return mFPGAParam[index];
-	}
 	
 	public int[] getParams() {
 		return mParam;
@@ -1182,6 +1023,33 @@ public class SystemConfigFile{
 			return ;
 		}
 		mParam[index] = value;
+	}
+	
+	public int getHeads() {
+		int heads = 1;
+		switch (mParam[30]) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+		case MessageType.MESSAGE_TYPE_16_3:
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			heads = 1;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+		case MessageType.MESSAGE_TYPE_25_4:
+		case MessageType.MESSAGE_TYPE_33:
+			heads = 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			heads = 3;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			heads = 4;
+		default:
+			break;
+		}
+		return heads;
 	}
 	
 }

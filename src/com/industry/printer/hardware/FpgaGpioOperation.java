@@ -14,6 +14,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.DataTask;
+import com.printer.corelib.Paramter;
 
 /**
  * @author kevin
@@ -213,9 +214,19 @@ public class FpgaGpioOperation {
 		}
 		char data[] = new char[Configs.gParams];
 		SystemConfigFile config = SystemConfigFile.getInstance(context);
-		config.paramTrans();
+//		config.paramTrans();
+		RFIDManager manager = RFIDManager.getInstance(context);
+		RFIDDevice device = manager.getDevice(0);
+		Paramter paramter = Paramter.getInstance();
+		int feature4 = 0;
+		int feature5 = 0;
+		if (device != null) {
+			feature4 = device.mFeature[4];
+			feature5 = device.mFeature[5];
+		}
+		paramter.paramTrans(config.mParam, feature4, feature5);
 		for (int i = 0; i < 24; i++) {
-			data[i] = (char) config.getFPGAParam(i);
+			data[i] = (char) paramter.getFPGAParam(i);
  		}
 		
 		if (type != SETTING_TYPE_NORMAL) {

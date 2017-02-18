@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 import com.industry.printer.FileFormat.DotMatrixFont;
+import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -359,7 +360,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		loadMessage();
 		
 		/****初始化RFID****/
-		mRfidManager = RFIDManager.getInstance();
+		mRfidManager = RFIDManager.getInstance(mContext);
 		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		
 		refreshCount();
@@ -413,7 +414,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	private void switchRfid() {
 		mRfid += 1;
-		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getParam(16)) {
+		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getHeads()) {
 			mRfid = 0;
 		}
 		refreshInk();
@@ -481,20 +482,22 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 * 測試實際情況爲power值在35-44之間，對實際值進行對應
 	 */
 	private void refreshPower() {
+		Debug.d(TAG, "--->refreshPower");
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
 			int power = LRADCBattery.getPower();
-			if (power >= 43) {
+			Debug.d(TAG, "--->power: " + power);
+			if (power >= 41) {
 				mPower.setText(String.valueOf(100));
-			} else if (power >= 40) {
-				mPower.setText(String.valueOf(75));
 			} else if (power >= 38) {
-				mPower.setText(String.valueOf(50));
+				mPower.setText(String.valueOf(75));
 			} else if (power >= 36) {
-				mPower.setText(String.valueOf(25));
+				mPower.setText(String.valueOf(50));
 			} else if (power >= 35) {
+				mPower.setText(String.valueOf(25));
+			} else if (power >= 33) {
 				mPower.setText(String.valueOf(0));
 			} else {
-				mPower.setText("");
+				mPower.setText("--");
 			}
 			
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
@@ -668,7 +671,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					
-					for (int i = 0; i < mSysconfig.getParam(16); i++) {
+					for (int i = 0; i < mSysconfig.getHeads(); i++) {
 						mRfidManager.downLocal(i);
 					}
 					/*打印時不再實時更新墨水量*/
@@ -751,7 +754,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			return true;
 		}
 		DataTask task = mDTransThread.getData();
-		int heads = SystemConfigFile.getInstance(mContext).getParam(16);// task.getHeads();
+		int heads = SystemConfigFile.getInstance(mContext).getHeads();// task.getHeads();
 		for (int i = 0; i < heads; i++) {
 			float ink = mRfidManager.getLocalInk(i);
 			if (ink <= 0) {
@@ -1106,6 +1109,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
+				// QRReader reader = QRReader.getInstance(mContext);
+				// Debug.d(TAG, "--->QRdata: " + reader.read());
 				break;
 			case R.id.StopPrint:
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);

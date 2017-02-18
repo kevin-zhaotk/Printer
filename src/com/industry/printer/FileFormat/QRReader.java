@@ -4,9 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.RandomAccessFile;
+import java.util.List;
 
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
+import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
 
@@ -22,6 +26,7 @@ public class QRReader {
 	
 	/* 當前行數 */
 	public int mRow;
+	String mRoot;
 	
 	BufferedReader mReader;
 	
@@ -42,27 +47,31 @@ public class QRReader {
 	}
 	
 	private void init() {
-		File last = new File(Configs.QR_LAST);
+		List<String> paths = ConfigPath.getMountedUsb();
+		mRoot = paths.get(0);
+		File last = new File(mRoot + Configs.QR_LAST);
 		
 		try {
 			if (!last.exists()) {
-				mRow = 0;
+				mRow = 1;
 				last.createNewFile();
 			}
 			FileReader reader = new FileReader(last);
 			BufferedReader bReader = new BufferedReader(reader);
 			String row = bReader.readLine();
 			mRow = Integer.parseInt(row);
+			Debug.d("XXX", "--->row: " + mRow);
 			if (mRow <= 0) {
 				mRow = 1;
 			}
-			FileReader r = new FileReader(Configs.QR_DATA);
+			FileReader r = new FileReader(mRoot + Configs.QR_DATA);
 			mReader = new BufferedReader(r);
 			for (int i = 0; i < mRow; i++) {
 				mReader.readLine();
 			}
 		} catch(Exception e) {
-			mRow = 0;
+			Debug.d("XXX", "--->exception: " + e.getMessage());
+			mRow = 1;
 		}
 	}
 	
@@ -74,13 +83,22 @@ public class QRReader {
 		try {
 			String line = mReader.readLine();
 			int index = line.indexOf(",");
+			Debug.d("XXX", "--->line: " + line);
 			String content = line.substring(index + 1);
-			mWriter = new FileOutputStream(Configs.QR_LAST);
-			mWriter.write(String.valueOf(mRow++).getBytes());
-			mWriter.close();
-			return content;
+			// mWriter = new FileOutputStream(mRoot + Configs.QR_LAST);
+			FileWriter w = new FileWriter(mRoot + Configs.QR_LAST);
+			w.write(String.valueOf(mRow++));
+			w.flush();
+			w.close();
+//			mWriter.write(String.valueOf(mRow++).getBytes());
+//			mWriter.flush();
+//			mWriter.close();
+			Debug.d("XXX", "--->content: " + content.trim());
+			return content.trim();
 		} catch (Exception e) {
+			Debug.d("XXX", "--->e: " + e.getMessage());
 			return null;
 		}
+		
 	}
 }

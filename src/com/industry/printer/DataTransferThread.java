@@ -181,13 +181,13 @@ public class DataTransferThread extends Thread {
 		}
 		
 		if (mScheduler == null) {
-			mScheduler = new RfidScheduler();
+			mScheduler = new RfidScheduler(mContext);
 		}
 		
 		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
 		mScheduler.init();
-		for (int i = 0; i < configFile.getParam(16); i++) {
-			mScheduler.add(new RfidTask(i));
+		for (int i = 0; i < configFile.getHeads(); i++) {
+			mScheduler.add(new RfidTask(i, mContext));
 		}
 		mScheduler.load();
 		

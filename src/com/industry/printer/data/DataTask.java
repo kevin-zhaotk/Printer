@@ -165,6 +165,8 @@ public class DataTask {
 		Debug.d(TAG, "+++++type:" + msg.getType());
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
+		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
+			div = 0.5f;
 		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
@@ -323,7 +325,7 @@ public class DataTask {
 		}
 		Debug.d(TAG, "--->type=" + type);
 		for (int i = 0; i < type; i++) {
-			buffers.add(new SegmentBuffer(mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
 		}
 		
 		/*计算转换后的buffer总列数*/

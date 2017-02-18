@@ -292,10 +292,10 @@ public class MessageTask {
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
 		MessageObject msg = getMsgObject();
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH
-				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
-			dots = 308;
-		} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
-			dots = 308 * 2;
+				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST
+				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL
+				|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
+			dots = 304;
 		}
 		Debug.d(TAG, "+++dots=" + dots);
 		float prop = dots/Configs.gDots;
@@ -304,6 +304,7 @@ public class MessageTask {
 		 * 注： 为了跟PC端保持一致，生成的bin文件宽度为1.tlk中坐标的四分之一，在提取点阵之前先对原始Bitmap进行X坐标缩放（为原图的1/4）
 		 * 	  然后进行灰度和二值化处理；
 		 */
+		Debug.d(TAG, "--->div=" + div + "  h=" + bmp.getHeight() + "  prop = " + prop);
 		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div * prop), (int) (bmp.getHeight() * getHeads() * prop), true);
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
@@ -313,14 +314,15 @@ public class MessageTask {
 			can.drawBitmap(bitmap, 0, 0, p);
 			bitmap.recycle();
 			bitmap = b;
-		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
 			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 640, Bitmap.Config.ARGB_8888);
 			// can.setBitmap(b);
 			Canvas c = new Canvas(b);
 			c.drawColor(Color.WHITE);
 			int h = bitmap.getHeight()/2;
-			c.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), h), new Rect(0, 0, b.getWidth(), h), p);
-			c.drawBitmap(bitmap, new Rect(0, h, bitmap.getWidth(), h*2), new Rect(0, 320, b.getWidth(), 320 + h), p);
+			int dstH = b.getHeight()/2;
+			c.drawBitmap(bitmap, new Rect(0, 0, bitmap.getWidth(), h), new Rect(0, 0, b.getWidth(), 308), p);
+			c.drawBitmap(bitmap, new Rect(0, h, bitmap.getWidth(), h*2), new Rect(0, 320, b.getWidth(), 320 + 308), p);
 			// c.drawBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight()/2), new Matrix(), null);
 			// c.drawBitmap(Bitmap.createBitmap(bitmap, 0, bitmap.getHeight()/2, bitmap.getWidth(), bitmap.getHeight()/2), 0, 320, null);
 			bitmap.recycle();
@@ -491,6 +493,7 @@ public class MessageTask {
 			case MessageType.MESSAGE_TYPE_25_4:
 			case MessageType.MESSAGE_TYPE_33:
 			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+			case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
 				height = 2;
 				break;
 			case MessageType.MESSAGE_TYPE_38_1:

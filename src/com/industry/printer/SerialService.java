@@ -1,7 +1,6 @@
 package com.industry.printer;
 
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.data.RFIDData;
 import com.industry.printer.hardware.SerialController;
 
 import android.app.Service;

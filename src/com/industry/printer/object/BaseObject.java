@@ -103,6 +103,13 @@ public class BaseObject{
 	
 	public static final String DEFAULT_FONT = "0T+";
 	
+	/**
+	 * supported fonts
+	 */
+	private static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
+											"1T", "2+", "2B", "2i", "3+", "3B",
+											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
+	
 	public BaseObject(Context context, String id, float x)
 	{
 		this(id);
@@ -232,7 +239,17 @@ public class BaseObject{
 		if (!new File("file://android_assets/" + f).exists()) {
 			mFont = DEFAULT_FONT;
 		}*/
+		boolean isCorrect = false;
 		Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		if (mWidth == 0) {
@@ -319,7 +336,7 @@ public class BaseObject{
 			can.drawBitmap(gBmp, 0, 0, mPaint);
 			gBmp.recycle();
 			gBmp = b;
-		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL) {
+		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
 			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308*2, true);
 			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320*2, Bitmap.Config.ARGB_8888);
 			can.setBitmap(b);
