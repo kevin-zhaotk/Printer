@@ -69,6 +69,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private PopWindowAdapter mDots;
 	private PopWindowAdapter mHandle;
 	private PopWindowAdapter mCntReset;
+	private PopWindowAdapter mQRsource;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -219,11 +220,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mPen4Invert = new PopWindowAdapter(mContext, null);
 		
 		mPens = new PopWindowAdapter(mContext, null);
+		mHandle = new PopWindowAdapter(mContext, null);
 		
 		mAutoVol = new PopWindowAdapter(mContext, null);
 		mAutoPulse = new PopWindowAdapter(mContext, null);
 		mDots = new PopWindowAdapter(mContext, null);
 		mCntReset = new PopWindowAdapter(mContext, null);
+		mQRsource = new PopWindowAdapter(mContext, null);
 		initAdapters();
 	}
 	
@@ -339,7 +342,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[13] = new ItemOneLine(14, R.string.str_textview_param14, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[14] = new ItemOneLine(15, R.string.str_textview_param15, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[15] = new ItemOneLine(16, R.string.str_textview_param16, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, 0);
+		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[17] = new ItemOneLine(18, R.string.str_textview_param18, 0);
 		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_length_unit_6_1mm);
 		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_length_unit_6_1mm);
@@ -465,6 +468,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		for (int i = 0; i < items.length; i++) {
 			mCntReset.addItem(items[i]);
 		}
+		for (int i = 0; i < items.length; i++) {
+			mHandle.addItem(items[i]);
+		}
+		for (int i = 0; i < items.length; i++) {
+			mQRsource.addItem(items[i]);
+		}
+		
 		
 		items = mContext.getResources().getStringArray(R.array.pens_item_entries);
 		for (int i = 0; i < items.length; i++) {
@@ -537,7 +547,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		} else if (position == 15) { //參數16
 			mSpiner.setAdapter(mPen2Invert);
 		} else if (position == 16) { //參數17
-			mSpiner.setAdapter(mPens);
+			mSpiner.setAdapter(mQRsource);
 		} else if (position == 20) { //參數21
 			mSpiner.setAdapter(mPen3Mirror);
 		} else if (position == 21) { //參數22

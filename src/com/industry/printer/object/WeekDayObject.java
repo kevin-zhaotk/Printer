@@ -16,8 +16,8 @@ public class WeekDayObject extends BaseObject {
 		setContent(String.valueOf(dat));
 	}
 
-	public WeekDayObject() {
-		super(OBJECT_TYPE_WEEKDAY);
+	public WeekDayObject(Context context) {
+		super(context, OBJECT_TYPE_WEEKDAY);
 		Calendar c = Calendar.getInstance();
 		int dat = c.get(Calendar.DAY_OF_WEEK);
 		setContent(String.valueOf(dat));

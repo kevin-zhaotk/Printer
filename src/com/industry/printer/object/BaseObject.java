@@ -27,6 +27,7 @@ import com.industry.printer.data.InternalCodeCalculater;
 import android.R.color;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -112,15 +113,16 @@ public class BaseObject{
 	
 	public BaseObject(Context context, String id, float x)
 	{
-		this(id);
+		this(context, id);
 		setX(x);
-		mContext = context;
+		
 		initName();
 	}
 	
-	public BaseObject(String id)
+	public BaseObject(Context ctx, String id)
 	{
 		//super(context);
+		mContext = ctx;
 		mId=id;
 		mIndex = 0;
 		mXcor=0;
@@ -184,6 +186,9 @@ public class BaseObject{
 	{
 		mPaint = new Paint();
 		mPaint.setTextSize(getfeed());
+		AssetManager asset = mContext.getAssets();
+		Debug.d(TAG, "--->initPaint assset: " + asset);
+		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
@@ -252,9 +257,9 @@ public class BaseObject{
 		}
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
-		if (mWidth == 0) {
+		// if (mWidth == 0) {
 			setWidth(width);
-		}
+		// }
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
@@ -304,6 +309,8 @@ public class BaseObject{
 		/*對320高的buffer進行單獨處理*/
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			wDiv = 1;
+		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
+			wDiv = 0.5f;
 		}
 		/*draw Bitmap of single digit*/
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
@@ -556,6 +563,9 @@ public class BaseObject{
 		if(font== null)
 			return;
 		mFont = font;
+		AssetManager asset = mContext.getAssets();
+		Debug.d(TAG, "--->initPaint assset: " + asset);
+		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);
 	}
@@ -703,5 +713,14 @@ public class BaseObject{
 	public float getProportion() {
 		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
 		return dots/Configs.gDots;
+	}
+	
+	protected void meature() {
+		int width = (int) mPaint.measureText(getContent());
+		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+			mWidth = width * 1.25f;
+		} else {
+			mWidth = width;
+		}
 	}
 }

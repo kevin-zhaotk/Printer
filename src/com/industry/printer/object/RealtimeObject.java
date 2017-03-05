@@ -159,13 +159,16 @@ public class RealtimeObject extends BaseObject {
 	public Bitmap getScaledBitmap(Context context)
 	{
 		Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		/* 如果需要重新繪製，先計算新的尺寸 */
+		meature();
+		
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		mCan = new Canvas(bmp);
 		
 		for(BaseObject o : mSubObjs)
 		{
+			Debug.d(TAG, "++++>id:" + o.mId + ", width=" + (o.getXEnd() - getX()));
 			Bitmap b = o.getScaledBitmap(context);
-			Debug.d(TAG, "--->id:" + o.mId + ", width=" + (o.getXEnd() - getX()));
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
 		return bmp;
@@ -174,7 +177,8 @@ public class RealtimeObject extends BaseObject {
 	
 	public Bitmap getBgBitmap(Context context)
 	{
-		System.out.println("getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		meature();
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
@@ -195,6 +199,18 @@ public class RealtimeObject extends BaseObject {
 		}
 		return bmp;
 	}
+	
+	@Override
+	protected void meature() {
+		float x = mXcor;
+		for (int i = 0; i < mSubObjs.size(); i++) {
+			BaseObject object = mSubObjs.get(i);
+			object.meature();
+			object.setX(x);
+			x = x + object.getWidth();
+		}
+		mXcor_end = x;
+	};
 	
 	
 	@Override
@@ -259,6 +275,17 @@ public class RealtimeObject extends BaseObject {
 		for(BaseObject o : mSubObjs)
 		{
 			o.setSelected(s);
+		}
+	}
+	
+	@Override
+	public void setFont(String font) {
+		super.setFont(font);
+		if(mSubObjs == null)
+				return;
+		for(BaseObject o : mSubObjs)
+		{
+			o.setFont(font);
 		}
 	}
 	

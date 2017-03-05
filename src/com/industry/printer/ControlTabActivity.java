@@ -352,6 +352,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				db.setFirstBoot(mContext, false);
 			}
 		}
+		/* 如果設置參數32爲on，計數器重置 */
+		if (mSysconfig.getParam(31) == 1) {
+			mCounter = 0;
+		}
 		/***PG1 PG2输出状态为 0x11，清零模式**/
 		FpgaGpioOperation.clean();
 		
@@ -701,7 +705,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case RFIDManager.MSG_RFID_READ_SUCCESS:
 					boolean ready = true;
 					Bundle bd = (Bundle) msg.getData();
-					for (int i=0; i < mSysconfig.getParam(16); i++) {
+					for (int i=0; i < mSysconfig.getHeads(); i++) {
 						RFIDDevice dev = mRfidManager.getDevice(i);
 						if (dev.getLocalInk() <= 0) {
 							ready = false;

@@ -132,6 +132,11 @@
 	    <item>"MM-DD-YY"</item>
 	    <item>"YY/MM/DD"</item>
 	    <item>"MM/DD/YY"</item>
+	    <item>DD/MM/YY</item>
+	    <item>YY</item>
+	    <item>MM</item>
+	    <item>DD</item>
+	    <item>HH:NN</item>
 	</string-array>
 	
 	<string-array name="strarrayCounter">

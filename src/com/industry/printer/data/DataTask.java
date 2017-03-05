@@ -160,6 +160,7 @@ public class DataTask {
 		char[] var;
 		if(mObjList==null || mObjList.isEmpty())
 			return;
+		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
 		float div = (float) (2.0/mTask.getHeads());
 		MessageObject msg = mTask.getMsgObject();
 		Debug.d(TAG, "+++++type:" + msg.getType());
@@ -174,7 +175,7 @@ public class DataTask {
 		{
 			if (o instanceof BarcodeObject) {
 				/* 如果二維碼從QR文件中讀 */
-				if (!((BarcodeObject)o).mSource) {
+				if (config.getParam(16) == 0 || prev) {
 					continue;
 				}
 				QRReader reader = QRReader.getInstance(mContext);

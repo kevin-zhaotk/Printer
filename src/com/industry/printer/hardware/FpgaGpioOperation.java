@@ -224,7 +224,7 @@ public class FpgaGpioOperation {
 			feature4 = device.mFeature[4];
 			feature5 = device.mFeature[5];
 		}
-		paramter.paramTrans(config.mParam, feature4, feature5);
+		paramter.paramTrans(config.mParam, feature4, feature5, config.getHeads());
 		for (int i = 0; i < 24; i++) {
 			data[i] = (char) paramter.getFPGAParam(i);
  		}

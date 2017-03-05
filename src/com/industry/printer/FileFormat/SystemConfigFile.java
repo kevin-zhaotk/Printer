@@ -255,11 +255,6 @@ public class SystemConfigFile{
 				mParam[30] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_32)) {
 				mParam[31] = Integer.parseInt(t.getValue());
-				if (mParam[31] == 0) { // 計數器不重置
-					
-				} else { // 計數器不重置
-					mParam[17] = 0;
-				}
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_33)) {
 				mParam[32] = Integer.parseInt(t.getValue());
 			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_34)) {
