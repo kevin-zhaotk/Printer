@@ -133,18 +133,20 @@ public class BinInfo {
 	
 	public BinInfo(Context ctx, Bitmap bmp) {
 		BinFileMaker m = new BinFileMaker(ctx);
+		// BinCreater.saveBitmap(bmp, "bar.png");
 		m.extract(bmp);
 		mBuffer = m.getBuffer();
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		byte[] header = new byte[BinCreater.RESERVED_FOR_HEADER];
 		int width = bmp.getWidth();
+		Debug.d(TAG, "--->width=" + width);
 		header[2] = (byte) (width & 0x0ff);
     	header[1] = (byte) ((width>>8) & 0x0ff);
     	header[0] = (byte) ((width>>16) & 0x0ff);
-    	
+    	// BinCreater.saveBin("/mnt/usbhost0/bar.bin", mBuffer, 19*8);
     	buffer.append(header, 0, header.length);
     	buffer.append(mBuffer, 0, mBuffer.length);
-    	
+    	mBuffer = buffer.buffer();
     	resolve();
 	}
 	
@@ -395,6 +397,7 @@ public class BinInfo {
      */
     public static void cover(char[] dst, char[] src, int x, int high) {
     	int len = src.length;
+    	Debug.d(TAG, "--->cover: " + dst.length + "  " + x + "  " + high + "  " + src.length);
     	if(dst.length < x*high + src.length)
     	{
     		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);

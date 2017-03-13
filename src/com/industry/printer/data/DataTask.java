@@ -14,6 +14,7 @@ import android.content.Context;
 import android.database.CharArrayBuffer;
 import android.graphics.Bitmap;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
@@ -23,6 +24,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinCreater;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -174,16 +176,21 @@ public class DataTask {
 		for(BaseObject o:mObjList)
 		{
 			if (o instanceof BarcodeObject) {
+				Debug.d(TAG, "--->param17= " + config.getParam(16) + "   isprev= " + prev + "  QR= " + ((BarcodeObject)o).isQRCode());
 				/* 如果二維碼從QR文件中讀 */
-				if (config.getParam(16) == 0 || prev) {
+				if (config.getParam(16) == 0 || prev || !((BarcodeObject)o).isQRCode()) {
 					continue;
 				}
 				QRReader reader = QRReader.getInstance(mContext);
 				String content = reader.read();
+				if (TextUtils.isEmpty(content)) {
+					continue;
+				}
 				o.setContent(content);
 				Bitmap bmp = o.getScaledBitmap(mContext);
+				Debug.d(TAG,"--->cover barcode x = " + (o.getX()/div));
+				BinInfo info = new BinInfo(mContext, Bitmap.createScaledBitmap(bmp, bmp.getWidth()/2, bmp.getHeight(), true));
 				
-				BinInfo info = new BinInfo(mContext, bmp);
 				BinInfo.cover(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
 			} else if(o instanceof CounterObject)
 			{
@@ -294,15 +301,29 @@ public class DataTask {
 		if (mObjList == null || mObjList.isEmpty()) {
 			return false;
 		}
+		
 		for(BaseObject o:mObjList)
 		{
 			if((o instanceof CounterObject)
 					|| (o instanceof RealtimeObject)
 					|| (o instanceof JulianDayObject)
-					|| (o instanceof ShiftObject))
+					|| (o instanceof ShiftObject)
+					|| isQRFromfile(o))
 			{
 				return true;
 			}
+		}
+		return false;
+	}
+	
+	private boolean isQRFromfile(BaseObject object) {
+		if (!(object instanceof BarcodeObject)) {
+			return false;
+		}
+		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+		int value = config.getParam(16);
+		if (value == 1 && ((BarcodeObject)object).isQRCode()) {
+			return true;
 		}
 		return false;
 	}

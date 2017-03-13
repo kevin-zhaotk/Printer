@@ -10,6 +10,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.BaseObj;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -79,6 +81,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private RelativeLayout mBtnList;
 	private RelativeLayout mBtnZout;
 	private RelativeLayout mBtnZin;
+	private ImageView mBtnWide;
+	private ImageView mBtnNarrow;
 	/************************
 	 * create Object buttons
 	 * **********************/
@@ -228,7 +232,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnZin = (RelativeLayout) getView().findViewById(R.id.btn_zoomIn);
 		mBtnZin.setOnClickListener(this);
 		mBtnZin.setOnTouchListener(this);
-		
+
+		mBtnWide = (ImageView) getView().findViewById(R.id.wide_btn);
+		mBtnWide.setOnClickListener(this);
+		mBtnWide.setOnTouchListener(this);
+
+		mBtnNarrow = (ImageView) getView().findViewById(R.id.narrow_btn);
+		mBtnNarrow.setOnClickListener(this);
+		mBtnNarrow.setOnTouchListener(this);
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
 		
@@ -662,6 +673,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			case R.id.btn_zoomOut:
 				onZoomOutPressed();
 				break;
+			case R.id.wide_btn:
+				onWidePressed();
+				break;
+			case R.id.narrow_btn:
+				onNarrowPressed();
+				break;
 			case R.id.btn_cursor:
 				onCursorPressed();
 				break;
@@ -696,6 +713,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			break;
 		case R.id.btn_zoomIn:
 			// onZoomInXTouch(event);
+			break;
+		case R.id.wide_btn:
+			onWideTouch(event);
+			break;
+		case R.id.narrow_btn:
+			onNarrowTouch(event);
 			break;
 		default:
 			break;
@@ -1006,6 +1029,58 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
+	private boolean onWideTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(WIDE_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======Down button released!!");
+			mKeyRepeatHandler.removeMessages(WIDE_KEY);
+		}
+		return false;
+	}
+	private void onWidePressed() {
+		BaseObject object = getCurObj();
+		if (object == null || object instanceof MessageObject) {
+			return;
+		}
+		if (object instanceof RealtimeObject) {
+			((RealtimeObject)object).wide();
+		} else {
+			object.setWidth(object.getWidth() + 4);
+		}
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
+	private boolean onNarrowTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			Debug.d(TAG, "======Down button pressed!!");
+			mKeyRepeatHandler.sendEmptyMessageDelayed(NARROW_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			Debug.d(TAG, "======Down button released!!");
+			mKeyRepeatHandler.removeMessages(NARROW_KEY);
+		}
+		return false;
+	}
+	private void onNarrowPressed() {
+		BaseObject object = getCurObj();
+		if (object == null || object instanceof MessageObject) {
+			return;
+		}
+		if (object instanceof RealtimeObject) {
+			((RealtimeObject)object).narrow();
+		} else {
+			object.setWidth(object.getWidth() - 4);
+		}
+		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+	}
+	
 	private void onListPressed() {
 		ArrayList<BaseObject> list = mMsgTask.getObjects();
 		mNameAdapter.removeAll();
@@ -1051,6 +1126,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	public final int DOWN_KEY=4;
 	public final int ZOOM_IN_KEY=5;
 	public final int ZOOM_OUT_KEY=6;
+	public final int WIDE_KEY=7;
+	public final int NARROW_KEY=8;
 	
 	Handler mKeyRepeatHandler = new Handler(){
 		public void handleMessage(Message msg)
@@ -1080,6 +1157,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				case ZOOM_OUT_KEY:
 					Debug.d(TAG, "zoom x out key pressed");
 					// zoomOutXKeyPressed();
+					break;
+				case WIDE_KEY:
+					Debug.d(TAG, "zoom x out key pressed");
+					onWidePressed();
+					break;
+				case NARROW_KEY:
+					Debug.d(TAG, "zoom x out key pressed");
+					onNarrowPressed();
 					break;
 				default:
 					Debug.d(TAG, "unknow key repeat ");

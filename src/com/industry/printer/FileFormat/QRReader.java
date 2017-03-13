@@ -2,9 +2,11 @@ package com.industry.printer.FileFormat;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.util.List;
 
@@ -64,6 +66,7 @@ public class QRReader {
 			if (mRow <= 0) {
 				mRow = 1;
 			}
+			
 			FileReader r = new FileReader(mRoot + Configs.QR_DATA);
 			mReader = new BufferedReader(r);
 			for (int i = 0; i < mRow; i++) {

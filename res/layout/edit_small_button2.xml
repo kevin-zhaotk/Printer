@@ -49,6 +49,29 @@
 	    </RelativeLayout>
 	    
 	    <RelativeLayout
+		    android:id="@+id/btn_insert" 
+		    android:layout_width="0dp"
+	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
+	        android:layout_weight="1">
+	        <ImageView 
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:src="@drawable/style_editbtn"
+			    />
+			<TextView
+			    android:id="@+id/btn_insert_tv"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:gravity="center"
+		        android:textSize="@dimen/editButtonsTextsize"
+		        android:textColor="@color/black"
+		        android:text="@string/str_edit_btn_insert" 
+			    />
+	    </RelativeLayout>
+	    
+	    
+	    <RelativeLayout
 		    android:id="@+id/btn_zoomOut" 
 		    android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
@@ -57,7 +80,7 @@
 	        <ImageView 
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
-		        android:src="@drawable/style_zoomout"
+		        android:src="@drawable/high"
 			    />
 	    </RelativeLayout>
 	    
@@ -70,7 +93,7 @@
 	        <ImageView 
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
-		        android:src="@drawable/style_zoomin"
+		        android:src="@drawable/low"
 			    />
 	    </RelativeLayout>
 	    

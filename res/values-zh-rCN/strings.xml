@@ -95,11 +95,10 @@
 	    <item>50.8 mm HP quadruple</item>
 	    <item>Unknown</item>
 	    <item>Unknown</item>
-	    <item>Unknown</item>
-	    <item>1 Inch standard</item>
-	    <item>1 Inch fast</item>
-	    <item>1 Inch Dual standard</item>
-	    <item>1 Inch Dual fast</item>
+	    <item>25.4mm</item>
+	    <item>25.4mm fast</item>
+	    <item>25.4mm x2</item>
+	    <item>25.4mm x2 fast</item>
 	</string-array>
 	
 	<string-array name="strFontFile">

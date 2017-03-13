@@ -81,6 +81,7 @@ public class DataTransferThread extends Thread {
 		long last = 0;
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
+		Debug.d(TAG, "--->runing getBuffer ok");
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);

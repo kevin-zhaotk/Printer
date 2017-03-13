@@ -529,10 +529,10 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
-		public static final int MESSAGE_TYPE_1_INCH = 10; //320點每列的噴頭
-		public static final int MESSAGE_TYPE_1_INCH_FAST = 11; //320點每列的噴頭
-		public static final int MESSAGE_TYPE_1_INCH_DUAL = 12; //320點每列的噴頭,雙頭
-		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 13; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_1_INCH = 9; //320點每列的噴頭
+		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
+		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 12; //320點每列的噴頭,雙頭
 	}
 	
 }

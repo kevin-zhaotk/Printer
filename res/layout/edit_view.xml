@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffff">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
         
@@ -14,5 +14,14 @@
 	        android:layout_height="280dp"
 	        android:background="#ffffff"
          	/>
-    </LinearLayout>
+        
+        <View
+        android:layout_width="5000dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="153px"
+        android:background="@color/black"
+        />
+    </RelativeLayout>
+    
+    
 </HorizontalScrollView>

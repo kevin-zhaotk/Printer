@@ -33,7 +33,7 @@ public class BinFromBitmap extends BinCreater {
         mHeight = bmp.getHeight(); 
         
         int []pixels = new int[mWidth * mHeight]; 
-        
+        // BinCreater.saveBitmap(bmp, "bar_extract.png");
         // 计算每列占的字节数
         int colEach = mHeight%8==0?mHeight/8:mHeight/8+1;
         Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
@@ -48,20 +48,22 @@ public class BinFromBitmap extends BinCreater {
             for(int j = 0; j < mWidth; j++) { 
                 int grey = pixels[mWidth * i + j]; 
                 
-                int red = ((grey  & 0x00FF0000 ) >> 16); 
-                int green = ((grey & 0x0000FF00) >> 8); 
+                int red = ((grey  & 0x00FF0000 ) >> 16) & 0x0ff; 
+                int green = ((grey & 0x0000FF00) >> 8) & 0x0ff; 
                 int blue = (grey & 0x000000FF);
                 
                 grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
-                pixels[mWidth * i + j] = grey>128? 0x0:0xffffff;
+                // System.out.print("  " + grey);
+                // pixels[mWidth * i + j] = grey>128? 0x0:0xffffff;
                 if(grey>128)
                 	mBinBits[j*colEach+i/8] &= ~(0x01<<(i%8));
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
                 	mDots++;
                 }
-                //Debug.d(TAG, "pixels["+(width * i + j)+"]=0x" + Integer.toHexString(pixels[width * i + j]));
+                
             }
+            // System.out.println();
         }
         
         return mDots; 

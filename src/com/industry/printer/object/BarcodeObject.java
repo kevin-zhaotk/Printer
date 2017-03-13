@@ -54,7 +54,7 @@ public class BarcodeObject extends BaseObject {
 		mSource = false;
 		mCode = 3;
 		mFormat="CODE_128";
-		setContent("1234567890");
+		setContent("http://zsq.vegnet.cn/t/16808300001000000098");
 		mWidth=0;
 		
 	}
@@ -107,6 +107,10 @@ public class BarcodeObject extends BaseObject {
 	public String getCode()
 	{
 		return mFormat;
+	}
+	
+	public boolean isQRCode() {
+		return "QR".equals(mFormat);
 	}
 	
 	public void setShow(boolean show)
@@ -166,6 +170,7 @@ public class BarcodeObject extends BaseObject {
 				if (mWidth <= 0) {
 					mWidth = mHeight;
 				}
+				Debug.d(TAG, "--->content = " + mContent);
 				matrix = writer.encode(mContent,
 						format, (int)mWidth, (int)mHeight, hints);
 				matrix = deleteWhite(matrix);
@@ -186,6 +191,8 @@ public class BarcodeObject extends BaseObject {
 					if (matrix.get(x, y)) 
 					{
 						pixels[y * width + x] = 0xff000000;
+					} else {
+						pixels[y * width + x] = 0xffffffff;
 					}
 				}
 			}
@@ -213,6 +220,7 @@ public class BarcodeObject extends BaseObject {
 				BinFromBitmap.recyleBitmap(code);
 				mBitmap = bmp;
 			}
+			
 			return mBitmap;
 
 		} catch (Exception e) {

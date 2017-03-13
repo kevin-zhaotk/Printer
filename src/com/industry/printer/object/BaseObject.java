@@ -257,9 +257,9 @@ public class BaseObject{
 		}
 		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
-		// if (mWidth == 0) {
+		if (mWidth == 0) {
 			setWidth(width);
-		// }
+		}
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);

@@ -92,27 +92,23 @@
 			    />
 	    </RelativeLayout>
 	    
-	    <RelativeLayout
-		    android:id="@+id/btn_insert" 
-		    android:layout_width="0dp"
+	    <ImageView
+	        android:id="@+id/wide_btn"
+	        android:layout_width="0dp"
 	        android:layout_height="@dimen/editButtonsHeight"
 	        android:focusable="false"
-	        android:layout_weight="1">
-	        <ImageView 
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:src="@drawable/style_editbtn"
-			    />
-			<TextView
-			    android:id="@+id/btn_insert_tv"
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:gravity="center"
-		        android:textSize="@dimen/editButtonsTextsize"
-		        android:textColor="@color/black"
-		        android:text="@string/str_edit_btn_insert" 
-			    />
-	    </RelativeLayout>
+	        android:layout_weight="1"
+	        android:src="@drawable/wide"
+	        />
+	    
+	    <ImageView
+	        android:id="@+id/narrow_btn"
+	        android:layout_width="0dp"
+	        android:layout_height="@dimen/editButtonsHeight"
+	        android:focusable="false"
+	        android:layout_weight="1"
+	        android:src="@drawable/narrow"
+	        />
 	    
 	    <RelativeLayout
 		    android:id="@+id/btn_up" 

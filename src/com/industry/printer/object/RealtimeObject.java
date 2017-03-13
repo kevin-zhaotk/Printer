@@ -158,12 +158,17 @@ public class RealtimeObject extends BaseObject {
 	@Override
 	public Bitmap getScaledBitmap(Context context)
 	{
-		Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		// Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		Debug.d(TAG, "--->getScaledBitmap reDraw: " + isNeedRedraw);
+		if (!isNeedRedraw) {
+			return mBitmap;
+		}
+		isNeedRedraw = false;
 		/* 如果需要重新繪製，先計算新的尺寸 */
-		meature();
+		// meature();
 		
-		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
-		mCan = new Canvas(bmp);
+		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		mCan = new Canvas(mBitmap);
 		
 		for(BaseObject o : mSubObjs)
 		{
@@ -171,14 +176,14 @@ public class RealtimeObject extends BaseObject {
 			Bitmap b = o.getScaledBitmap(context);
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
-		return bmp;
+		return mBitmap;
 	}
 	
 	
 	public Bitmap getBgBitmap(Context context)
 	{
 		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
-		meature();
+		// meature();
 		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
@@ -219,17 +224,18 @@ public class RealtimeObject extends BaseObject {
 		super.setHeight(size);
 		size = getHeight();
 		float x = getX();
+		isNeedRedraw = true;
 		if(mSubObjs == null)
 			return;
 		for(BaseObject o : mSubObjs)
 		{
-			o.setX(x);
+			// o.setX(x);
 			o.setHeight(size);
 			o.resizeByHeight();
 			
-			x = o.getXEnd();
+			// x = o.getXEnd();
 		}
-		setWidth(x - getX());
+		// setWidth(x - getX());
 	}
 	
 	@Override
@@ -237,6 +243,28 @@ public class RealtimeObject extends BaseObject {
 	{
 		int height = mTask.getMsgObject().getPixels(size);
 		setHeight(height);
+	}
+	
+	public void wide() {
+		float x = getX();
+		for(BaseObject o : mSubObjs) {
+			o.setX(x);
+			o.setWidth(o.getWidth() + 1);
+			x = o.getXEnd();
+		}
+		setWidth(x - getX());
+		isNeedRedraw = true;
+	}
+	
+	public void narrow() {
+		float x = getX();
+		for(BaseObject o : mSubObjs) {
+			o.setX(x);
+			o.setWidth(o.getWidth() - 1);
+			x = o.getXEnd();
+		}
+		setWidth(x - getX());
+		isNeedRedraw = true;
 	}
 	
 	@Override
@@ -287,6 +315,8 @@ public class RealtimeObject extends BaseObject {
 		{
 			o.setFont(font);
 		}
+		isNeedRedraw = true;
+		meature();
 	}
 	
 	@Override

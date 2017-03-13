@@ -78,16 +78,16 @@ public class EditScrollView extends View {
 				break;
 			case 2:
 			case 4:
-				canvas.drawLine(scrollx, 76, scrollx + mScreenW, 76, p);
+				canvas.drawLine(0, 76, 5000, 76, p);
 				break;
 			case 5:
-				canvas.drawLine(scrollx, 50, scrollx + mScreenW, 50, p);
-				canvas.drawLine(scrollx, 101, scrollx + mScreenW, 101, p);
+				canvas.drawLine(0, 50, 5000, 50, p);
+				canvas.drawLine(0, 101, 5000, 101, p);
 				break;
 			case 6:
-				canvas.drawLine(scrollx, 38, scrollx + mScreenW, 38, p);
-				canvas.drawLine(scrollx, 76, scrollx + mScreenW, 76, p);
-				canvas.drawLine(scrollx, 114, scrollx + mScreenW, 114, p);
+				canvas.drawLine(0, 38, 5000, 38, p);
+				canvas.drawLine(0, 76, 5000, 76, p);
+				canvas.drawLine(0, 114, 5000, 114, p);
 				break;
 			default:
 				break;
@@ -107,9 +107,9 @@ public class EditScrollView extends View {
 				
 				float[] points = {
 					/* 画水平线 */
-					scrollx, obj.getY(), scrollx + mScreenW, obj.getY(),
+					0, obj.getY(), 5000, obj.getY(),
 					/* 画垂直线 */
-					obj.getX(), 0, obj.getX(), mScreenH
+					obj.getX(), 0, obj.getX(), 280
 				};
 				p.setColor(Color.BLUE);
 				p.setStrokeWidth(1);
@@ -138,8 +138,8 @@ public class EditScrollView extends View {
 			}
 			
 		}
-		p.setColor(Color.BLACK);
-		canvas.drawLine(scrollx, 153, getW(), 153, p);
+		// p.setColor(Color.BLACK);
+		// canvas.drawLine(0, 153, getW(), 153, p);
 		Debug.d(TAG, "<<<==onDraw");
 		 //mParent.fling(100);
 	} 
@@ -182,7 +182,8 @@ public class EditScrollView extends View {
 		float w = metrics.widthPixels;
 		float h = metrics.heightPixels;
 		
-		mScreenW = (int) (w * density + 0.5f);
-		mScreenH = (int) (h * density + 0.5f);
+		// mScreenW = (int) (w * density + 0.5f);
+		// mScreenH = (int) (h * density + 0.5f);
+		mScreenW = (int) (w + 0.5f);
 	}
 }
