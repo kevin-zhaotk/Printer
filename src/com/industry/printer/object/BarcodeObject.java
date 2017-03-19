@@ -54,7 +54,7 @@ public class BarcodeObject extends BaseObject {
 		mSource = false;
 		mCode = 3;
 		mFormat="CODE_128";
-		setContent("http://zsq.vegnet.cn/t/16808300001000000098");
+		setContent("123456789");
 		mWidth=0;
 		
 	}
@@ -72,6 +72,8 @@ public class BarcodeObject extends BaseObject {
 			mCode = 3;
 		} else if ("CODE_39".equals(code)) {
 			mCode = 5;
+		} else if ("ITF_14".equals(code)) {
+			mCode = 6;
 		} else if ("QR".equals(code)) {
 			mCode = 0;
 			mId = BaseObject.OBJECT_TYPE_QR;
@@ -99,6 +101,9 @@ public class BarcodeObject extends BaseObject {
 		} else if (code == 5) {
 			mCode = 5;
 			mFormat = "CODE_39";
+		} else if (code == 6) {
+			mCode = 6;
+			mFormat = "ITF_14";
 		}
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		isNeedRedraw = true;
@@ -209,10 +214,10 @@ public class BarcodeObject extends BaseObject {
 			if(mShow && !is2D())
 			{
 				// 用於生成bin的bitmap
-				Bitmap bmp = Bitmap.createBitmap(width, height+30, Config.ARGB_8888);
-				Bitmap code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 30);
+				Bitmap bmp = Bitmap.createBitmap(width, height+15, Config.ARGB_8888);
+				Bitmap code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 15);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
-				BinCreater.saveBitmap(code, "barcode.png");
+				//BinCreater.saveBitmap(code, "barcode.png");
 				Canvas can = new Canvas(bmp);
 				can.drawBitmap(mBitmap, 0, 0, mPaint);
 				can.drawBitmap(code, tl[0], height, mPaint);
@@ -237,7 +242,7 @@ public class BarcodeObject extends BaseObject {
 	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
         tv.setLayoutParams(layoutParams);
         tv.setText(contents);
-        tv.setTextSize(25);
+        tv.setTextSize(15);
         tv.setHeight(height);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         tv.setWidth(width);
@@ -258,7 +263,7 @@ public class BarcodeObject extends BaseObject {
 	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
 		Paint paint = new Paint(); 
 		
-		paint.setTextSize(20);
+		paint.setTextSize(10);
 		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
@@ -270,7 +275,7 @@ public class BarcodeObject extends BaseObject {
 		int left = (int) ((perPix - numWid)/2);
 		for (int i = 0; i < content.length(); i++) {
 			String n = content.substring(i, i+1);
-			canvas.drawText(n, i*perPix + left, 25, paint);
+			canvas.drawText(n, i*perPix + left, 10, paint);
 		}
 		return bitmap;
 	}
@@ -392,6 +397,7 @@ public class BarcodeObject extends BaseObject {
 		} else {
 			code = mContent; 
 		}
+		mContent = code;
 		
 		for (int i = 0; i < code.length(); i++) {
 			if (i%2 == 0) {
@@ -406,9 +412,7 @@ public class BarcodeObject extends BaseObject {
 		if (sum >= 10) {
 			sum = 0;
 		}
-		
 		code += sum;
-		
 		return code;
 	}
 	

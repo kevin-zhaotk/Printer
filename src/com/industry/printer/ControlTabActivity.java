@@ -786,7 +786,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				child.recycle();
 				x += cutWidth;
 				ImageView imgView = new ImageView(mContext);
-				imgView.setScaleType(ScaleType.FIT_START);
+				imgView.setScaleType(ScaleType.FIT_XY);
 //				if (density == 1) {
 					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
 //				} else {

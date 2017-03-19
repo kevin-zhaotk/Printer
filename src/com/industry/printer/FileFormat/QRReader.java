@@ -61,7 +61,11 @@ public class QRReader {
 			FileReader reader = new FileReader(last);
 			BufferedReader bReader = new BufferedReader(reader);
 			String row = bReader.readLine();
-			mRow = Integer.parseInt(row);
+			try {
+				mRow = Integer.parseInt(row);
+			} catch (Exception e) {
+				mRow = 1;
+			}
 			Debug.d("XXX", "--->row: " + mRow);
 			if (mRow <= 0) {
 				mRow = 1;
@@ -74,7 +78,6 @@ public class QRReader {
 			}
 		} catch(Exception e) {
 			Debug.d("XXX", "--->exception: " + e.getMessage());
-			mRow = 1;
 		}
 	}
 	

@@ -211,15 +211,19 @@ public class MessageListAdater extends BaseAdapter {
 		
 		float scale = (float)DimenssionConvertion.dip2px(mContext, 100)/bmp.getHeight();
 		mHolder.mllPreview.removeAllViews();
+		Debug.d(TAG, "--->width= " + bmp.getWidth() + "  scale= " + scale);
 			for (int i = 0;x < bmp.getWidth(); i++) {
-				if (x + 1200 > bmp.getWidth()) {
+				if (x + 1200 + 50 > bmp.getWidth()) {
 					cutWidth = bmp.getWidth() - x;
 				} else {
 					cutWidth =1200;
-					
+				}
+				if (cutWidth <= 0) {
+					break;
 				}
 				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
 				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mHolder.mllPreview.getHeight());
+				
 				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
 				child.recycle();
 				x += cutWidth;

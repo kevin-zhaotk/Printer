@@ -425,9 +425,9 @@ public class BaseObject{
 	{
 		if (this instanceof BarcodeObject && size < 4.0*MessageObject.PIXELS_PER_MM) {
 			size = 4.0f * MessageObject.PIXELS_PER_MM;
-		} else if (size < MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM) {
+		}/* else if (size < MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM) {
 			size = MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM;
-		} else if (size > 152) {
+		}*/ else if (size > 152) {
 			size = 152;
 		}
 		
@@ -533,13 +533,11 @@ public class BaseObject{
 		if(mContent!=null && mContent.equals(content))
 			return;
 		mContent = content;
-		mPaint.setTextSize(getfeed());
+		/*mPaint.setTextSize(getfeed());
 		mWidth = mPaint.measureText(mContent);
-		// mPaint.setTextSize(Configs.gDots);
-		//Bitmap bmp = Bitmap.createScaledBitmap(getBitmap(), (int)mWidth, (int)mHeight, true);
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
-		mYcor_end = mYcor + mHeight;
+		mYcor_end = mYcor + mHeight;*/
 		isNeedRedraw = true;
 	}
 	
