@@ -95,6 +95,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public EditText mDigits;
 	public TextView mDir;
 	public TextView mCode;
+	private EditText mHeight_O;
+	private CheckBox mHeightType;
 	public CheckBox mShow;
 	public EditText mLineWidth;
 	public TextView mPicture; // 圖片路徑
@@ -114,6 +116,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private Button  mPagedown;
 	private ScrollView mScroll;
 	public TextView mLineType;
+	
 	
 	private RelativeLayout mSource;
 	private CheckBox mSourceCB;
@@ -256,6 +259,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    mContent = (EditText)findViewById(R.id.cntEdit);
 		    mFont = (TextView) findViewById(R.id.fontSpin);
 		    mFont.setOnClickListener(this);
+		    mHeightType = (CheckBox) findViewById(R.id.height_type);
+		    mHeightType.setOnCheckedChangeListener(this);
+		    mHeight_O = (EditText) findViewById(R.id.highEdit_o);
 		     
 		    if (mObject instanceof RealtimeObject) {
 		    	mRtFormat = (TextView) findViewById(R.id.rtFormat);
@@ -728,6 +734,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		if (view == mSourceCB) {
 			mContent.setEnabled(!checked);
 			((BarcodeObject)mObject).mSource = checked;
+		} else if (view == mHeightType) {
+			
 		}
 	}
 }

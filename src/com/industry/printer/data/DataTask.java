@@ -158,6 +158,7 @@ public class DataTask {
 	
 	public void refreshVariables(boolean prev)
 	{
+		float scaleW = 2, scaleH = 1;
 		String substr=null;
 		char[] var;
 		if(mObjList==null || mObjList.isEmpty())
@@ -168,8 +169,12 @@ public class DataTask {
 		Debug.d(TAG, "+++++type:" + msg.getType());
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
+			scaleW = 0.5f;
+			scaleH = 0.25f;
 		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
 			div = 0.5f;
+			scaleW = 0.5f;
+			scaleH = 0.25f;
 		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
@@ -189,7 +194,7 @@ public class DataTask {
 				o.setContent(content);
 				Bitmap bmp = o.getScaledBitmap(mContext);
 				Debug.d(TAG,"--->cover barcode x = " + (o.getX()/div));
-				BinInfo info = new BinInfo(mContext, Bitmap.createScaledBitmap(bmp, bmp.getWidth()/2, bmp.getHeight(), true));
+				BinInfo info = new BinInfo(mContext, Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/scaleW), (int) (bmp.getHeight()/scaleH), true));
 				
 				BinInfo.cover(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
 			} else if(o instanceof CounterObject)

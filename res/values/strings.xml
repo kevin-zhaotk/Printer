@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+<!-- En 20170322 -->
+
     <string name="app_version">Ver:</string>
     <string name="system_time">Time:</string>
     <string name="app_name">Printer</string>
@@ -59,6 +61,7 @@
 	<!-- object info table -->
 	<string name="strWidth">Width</string>
 	<string name="strHigh">Height</string>
+	<string name="strHightype">Stepwise</string>
 	<string name="strXcor">X-Cor</string>
 	<string name="strYcor">Y-Cor</string>
 	<string name="strCnt">Content</string>
@@ -85,18 +88,18 @@
 	<string name="strInsertSerial">Please connect device...</string>
 	<string name="strReinsertSerial">Error, please reconnect device</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP head</item>
-	    <item>12.7 mm HP standard</item>
+	    <item>12.7 mm HP fast</item>
+	    <item>--</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
-	    <item>Non</item>
-	    <item>Non</item>
-	    <item>25.4mm</item>
+	    <item>7dot</item>
+	    <item>16dot</item>
+	    <item>--</item>
 	    <item>25.4mm fast</item>
-	    <item>25.4mm x2</item>
+	    <item>--</item>
 	    <item>25.4mm x2 fast</item>
 	</string-array>
 	
@@ -419,7 +422,8 @@
 	<string name="str_radioSdcard">SDCard</string>
 	
 	<string name="str_title_infodialog">Object Info</string>
-	
+	<string name="str_fileopt_del">DEL</string>
+	<string name="str_fileopt_cancel">Cancel</string>	
 	<string name="str_search">Search</string>
 
 <!-- 树莓派3 打印界面相关 -->	
@@ -694,4 +698,6 @@
 	<string name="str_cnt_min">Start</string>
 	<string name="str_cnt_max">End</string>
 	<string name="str_loading">loading...</string>
+	
+	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
 </resources>

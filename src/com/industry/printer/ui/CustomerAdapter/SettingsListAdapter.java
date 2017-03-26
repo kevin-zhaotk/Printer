@@ -97,7 +97,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		public static final int TYPE_SWITCH = 1;
 		public static final int TYPE_DIRECTION = 2;
 		public static final int TYPE_VALUE = 3;
-		
+		public static final int TYPE_ARRAY = 4;
 	}
 	
 	public Handler handler = new Handler(){
@@ -147,6 +147,8 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				mValue = getEntry(entry, mSysconfig.getParam(param -1));
 			} else if (mType == ItemType.TYPE_VALUE) {
 				mValue = String.valueOf(mSysconfig.getParam(param-1));
+			} else if (mType == ItemType.TYPE_ARRAY) {
+				mValue = getEntry(entry, mSysconfig.getParam(param -1));
 			}
 			
 		}
@@ -169,6 +171,10 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 					mSysconfig.setParam(mParamId-1, value);
 				}
 				
+				break;
+			case ItemType.TYPE_ARRAY:
+				mValue = getEntry(mEntry, value);
+				mSysconfig.setParam(mParamId-1, value);
 				break;
 			default:
 				break;
@@ -356,7 +362,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[27] = new ItemOneLine(28, R.string.str_textview_param28, R.string.str_time_unit_0_1us);
 		mSettingItems[28] = new ItemOneLine(29, R.string.str_textview_param29, R.string.str_time_unit_ms);
 		mSettingItems[29] = new ItemOneLine(30, R.string.str_textview_param30, R.string.str_time_unit_ms);
-		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, R.array.strPrinterArray, 0, ItemType.TYPE_VALUE);
+		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, R.array.strPrinterArray, 0, ItemType.TYPE_ARRAY);
 		mSettingItems[31] = new ItemOneLine(32, R.string.str_textview_param32, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[32] = new ItemOneLine(33, R.string.str_textview_param33, 0);
 		mSettingItems[33] = new ItemOneLine(34, R.string.str_textview_param34, 0);

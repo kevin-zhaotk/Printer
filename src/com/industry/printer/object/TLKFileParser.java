@@ -143,7 +143,6 @@ public class TLKFileParser  extends TlkFile{
                     		 Debug.d(TAG, "line="+line);
                     		 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(j);
                     		 parseSubObject(obj, line);
-                    		 Debug.d(TAG, "--->line143:" + obj.toString());
                     	 }
                      }
                  }
@@ -168,9 +167,10 @@ public class TLKFileParser  extends TlkFile{
 			object.setX(StringUtil.parseInt(attr[2])/(2*mProportion));
 			object.setWidth(StringUtil.parseInt(attr[4])/(2 * mProportion)-StringUtil.parseInt(attr[2])/(2 * mProportion));
 		} else {
+			Log.d(TAG, "--->x = " + (StringUtil.parseInt(attr[2]) / mProportion));
 			object.setX(StringUtil.parseInt(attr[2]) / mProportion);
 			object.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);
-			
+			Log.d(TAG, "--->xEnd = " + object.getXEnd());
 		}
 		
 	}
@@ -297,6 +297,7 @@ public class TLKFileParser  extends TlkFile{
 		if(obj != null && !(obj instanceof MessageObject) )
 		{
 			try {
+				
 			obj.setIndex(Integer.parseInt(attr[0]));
 			if((obj instanceof CounterObject)||
 					obj instanceof JulianDayObject ||

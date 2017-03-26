@@ -22,6 +22,8 @@ import android.util.Log;
 
 public class RealtimeObject extends BaseObject {
 
+	private static final String TAG = RealtimeObject.class.getSimpleName();
+	
 	public final static long MS_DAY = 24*60*60*1000;
 	public static final long MS_PER_HOUR = 60*60*1000;
 	public static final long MS_PER_MINUTE = 60*1000;
@@ -169,10 +171,10 @@ public class RealtimeObject extends BaseObject {
 		
 		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		mCan = new Canvas(mBitmap);
-		
+		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + mBitmap.getWidth());
 		for(BaseObject o : mSubObjs)
 		{
-			Debug.d(TAG, "++++>id:" + o.mId + ", width=" + (o.getXEnd() - getX()));
+			Log.d(TAG, "++++>id:" + o.mId + ", x=" + (o.getX() - getX()));
 			Bitmap b = o.getScaledBitmap(context);
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
@@ -316,7 +318,7 @@ public class RealtimeObject extends BaseObject {
 			o.setFont(font);
 		}
 		isNeedRedraw = true;
-		meature();
+		// meature();
 	}
 	
 	@Override

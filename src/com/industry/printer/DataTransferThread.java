@@ -87,12 +87,6 @@ public class DataTransferThread extends Thread {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
-			for (BaseObject object : mDataTask.getObjList()) {
-				if (object instanceof CounterObject) {
-					Debug.e(TAG, "--->counter: " + object.getContent());
-				}
-			}
-			
 		}
 		
 		Debug.e(TAG, "--->write data");

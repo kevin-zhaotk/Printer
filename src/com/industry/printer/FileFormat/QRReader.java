@@ -70,8 +70,16 @@ public class QRReader {
 			if (mRow <= 0) {
 				mRow = 1;
 			}
-			
-			FileReader r = new FileReader(mRoot + Configs.QR_DATA);
+			String path = null;
+			if (new File(mRoot + Configs.QR_CSV).exists()) {
+				path = mRoot + Configs.QR_CSV;
+			} else if (new File(mRoot + Configs.QR_DATA).exists()) {
+				path = mRoot + Configs.QR_DATA;
+			}
+			if (path == null) {
+				return;
+			}
+			FileReader r = new FileReader(path);
 			mReader = new BufferedReader(r);
 			for (int i = 0; i < mRow; i++) {
 				mReader.readLine();
@@ -106,5 +114,9 @@ public class QRReader {
 			return null;
 		}
 		
+	}
+	
+	public boolean isReady() {
+		return mReader != null;
 	}
 }

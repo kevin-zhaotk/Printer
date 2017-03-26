@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!-- Fr 20170319 -->
 
     <string name="app_version">Version:</string>
     <string name="system_time">Heure:</string>
@@ -59,6 +61,7 @@
 	<!-- object info table -->
 	<string name="strWidth">Largeur</string>
 	<string name="strHigh">Hauteur</string>
+	<string name="strHightype">Stepwise</string>	
 	<string name="strXcor">X-Cor</string>
 	<string name="strYcor">Y-Cor</string>
 	<string name="strCnt">Contenu</string>
@@ -86,16 +89,41 @@
 	<string name="strReinsertSerial">Erreur, reconnecter le produit</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm HP tête</item>
-	    <item>12.7 mm HP la norme</item>
+	    <item>--</item>
 	    <item>25.4 mm HP double</item>
 	    <item>16.3 mm Xaar tête</item>
 	    <item>33 mm Xaar double</item>
 	    <item>38.1 mm HP Tripler</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>7DOT</item>
+	    <item>16DOT</item>
+	    <item>--</item>
+	    <item>25.4mm fast</item>
+	    <item>--</item>
+	    <item>25.4mm x2 fast</item>	    
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>WelldrawH000</item>
+	    <item>0T+</item>
+	    <item>1+</item>
+	    <item>1B+</item>
+	    <item>1B2</item>
+	    <item>1BS</item>
+	    <item>1T</item>
+	    <item>2+</item>
+	    <item>2B</item>
+	    <item>2i</item>
+	    <item>3+</item>
+	    <item>3B</item>
+	    <item>3i</item>
+	    <item>3T</item>
+	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>6B</item>
+	    <item>7</item>
+	    <item>8</item>
+	    <item>9</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
@@ -107,10 +135,18 @@
 	    <item>Diminuer</item>
 	</string-array>
 	<string name="strCode">Code Type</string>
+	
 	<string-array name="strCodeArray">
-	    <item>ENA128</item>
+	    <item>EAN8</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
 	    <item>QR</item>
 	</string-array>
+	
+	<string name="strBarsource">Data</string>	
 	
 	<string-array name="strLineArray">
 	    <item>Ligne continue</item>
@@ -133,6 +169,7 @@
 	    <item>MM/DD/YYYY</item>
 	    <item>YY/MM/DD</item>
 	    <item>MM/DD/YY</item>
+	    <item>HH:NN</item>	    
 	</string-array>
 	
 	<string-array name="strarrayCounter">
@@ -384,7 +421,7 @@
 	<string name="str_radioUsb2">USB2</string>
 	<string name="str_radioSdcard">SDCard</string>
 	
-	<string name="str_title_infodialog">"Informations sur l'objet"</string>
+	<string name="str_title_infodialog">Informations sur l\'objet</string>
 	
 	<string name="str_search">Cherche</string>
 
@@ -399,7 +436,7 @@
 	<string name="str_hint_preview">Apercu message </string>
 	<string name="str_print_count">Enregistrement: </string>
 	<string name="str_print_count_default">0</string>
-	<string name="str_print_printing">"Tâche d'impression En cours d'exécution..."</string>
+	<string name="str_print_printing">Tâche d\'impression En cours d\'exécution...</string>
 	<string name="str_print_startok">Presse lancé avec succès...</string>
 	<string name="str_print_stopok">Press interrompu avec succès...</string>
 	<string name="str_toast_no_bin">Aucun fichier BIN trouvé</string>
@@ -442,7 +479,7 @@
 	<string name="str_textview_param25">25.Tension automatique</string>
 	<string name="str_textview_param26">26.Ensemble de tension</string>
 	<string name="str_textview_param27">27.Impulsion automatique</string>
-	<string name="str_textview_param28">"28.Set d'impulsions"</string>
+	<string name="str_textview_param28">28.Set d\'impulsions</string>
 	<string name="str_textview_param29">29.Garder humide</string>
 	<string name="str_textview_param30">30.Filtre Pho</string>
 	<string name="str_textview_param31">31.Réservé</string>
@@ -496,7 +533,7 @@
 	    <item>05. Vitesse</item>
 	    <item>06. Temps de répétition</item>
 	    <item>07. Encodeur largeur</item>
-	    <item>"08. Répétition de l'impulsion"</item>
+	    <item>08. Répétition de l\'impulsion</item>
 	    <item>09. Delay Pulse</item>
 	    <item>10. Taille du point</item>
 	    <item>11. Réservé</item>
@@ -578,6 +615,10 @@
 	    <item>2</item>
 	    <item>3</item>
 	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>7</item>
+	    <item>8</item>
 	</string-array>
 	
 	
@@ -592,8 +633,15 @@
 	    <item>Port</item>
 	</string-array>
 	
+	<string-array name="message_dots">
+	    <item>128</item>
+	    <item>152</item>
+	    <item>384</item>
+	</string-array>
+	
 	<string name="str_time_unit_0_1v">0.1V</string>
 	<string name="str_length_unit_mm">mm</string>
+	<string name="str_length_unit_6_1mm">1/6mm</string>	
 	<string name="str_time_unit_mm">ms</string>
 	<string name="str_time_unit_ms">ms</string>
 	<string name="str_time_unit_mm_s">mm/s</string>
@@ -604,10 +652,10 @@
 	<string name="str_system_setting">Paramètres</string>
 	<string name="str_upgrade_progress">Mise à niveau du système....</string>
 	<string name="str_time_format">%1$04d-%2$02d-%3$02d %4$02d:%5$02d:%6$02d</string>
-	<string name="str_toast_ink_unvalid">"Niveau d'encre dotle, défini par défaut：800"</string>
+	<string name="str_toast_ink_unvalid">Niveau d\'encre dotle, défini par défaut：800</string>
 	<string name="str_toast_photoelectricity_delay">Détection photoélectrique haut niveau réglé sur défaut:100</string>
 	<string name="str_toast_photoelectricity_antishake">Photoélectricité anti shake out niveau réglé sur défaut:20</string>
-	<string name="str_toast_timingprint">"Délai d'impression du niveau d'impression, défini par défaut:1000"</string>
+	<string name="str_toast_timingprint">Délai d\'impression du niveau d\'impression, défini par défaut:1000</string>
 	
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">Insérer</string>
@@ -648,4 +696,6 @@
 	
 	<string name="str_cnt_min">Début</string>
 	<string name="str_cnt_max">Fin</string>
+	<string name="str_loading">loading...</string>
+	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
 </resources>

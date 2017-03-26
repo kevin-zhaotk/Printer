@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+<!-- CN 20170319 -->
+ 
     <string name="app_version">版本:</string>
     <string name="system_time">系统时间:</string>
     <string name="app_name">打印机</string>
@@ -59,6 +61,7 @@
 	<!-- object info table -->
 	<string name="strWidth">宽</string>
 	<string name="strHigh">高</string>
+	<string name="strHightype">位置</string>	
 	<string name="strXcor">X坐标</string>
 	<string name="strYcor">Y坐标</string>
 	<string name="strCnt">内容</string>
@@ -76,29 +79,51 @@
 	<string name="strShift3">班次3</string>
 	<string name="strShift4">班次4</string>
 	<string name="strShift5">班次5</string>
-	<string name="strInfoname">信息名称</string>
-	<string name="strHeadType">类型</string>
+	<string name="strInfoname">信息</string>
+	<string name="strHeadType">喷头</string>
 	<string name="strUpgradeConfirm">确认要更新？</string>
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>
 	<string name="strLoading">正在加载请耐心等待...</string>
-	
 	<string name="strInsertSerial">请插入打印设备</string>
 	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP head</item>
-	    <item>12.7 mm HP standard</item>
-	    <item>25.4 mm HP dual</item>
-	    <item>16.3 mm Xaar head</item>
-	    <item>33 mm Xaar dual</item>
-	    <item>38.1 mm HP Triple</item>
-	    <item>50.8 mm HP quadruple</item>
-	    <item>Unknown</item>
-	    <item>Unknown</item>
-	    <item>25.4mm</item>
-	    <item>25.4mm fast</item>
-	    <item>25.4mm x2</item>
-	    <item>25.4mm x2 fast</item>
+	    <item>12.7 mm </item>
+	    <item>-- </item>
+	    <item>25.4 mm 双头</item>
+	    <item>16.3 mm Xaar128</item>
+	    <item>-- </item>
+	    <item>38.1 mm 三头</item>
+	    <item>50.8 mm 四头</item>
+	    <item>7点 </item>
+	    <item>16点 </item>
+	    <item>-- </item>
+	    <item>一寸喷头 </item>
+	    <item>-- </item>
+	    <item>双一寸</item>
+	</string-array>
+	
+	<string-array name="strFontArray">
+	    <item>0T+</item>
+	    <item>1+</item>
+	    <item>1B+</item>
+	    <item>1B2</item>
+	    <item>1BS</item>
+	    <item>1T</item>
+	    <item>2+</item>
+	    <item>2B</item>
+	    <item>2i</item>
+	    <item>3+</item>
+	    <item>3B</item>
+	    <item>3i</item>
+	    <item>3T</item>
+	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>6B</item>
+	    <item>7</item>
+	    <item>8</item>
+	    <item>9</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
@@ -111,6 +136,16 @@
 	</string-array>
 	<string name="strCode">编码类型</string>
 
+	<string-array name="strCodeArray">
+	    <item>EAN8</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
+	    <item>QR</item>
+	</string-array>
+	
 	<string name="strBarsource">内容来源</string>
 	
 	<string-array name="strLineArray">
@@ -147,6 +182,7 @@
 	    <item>9位</item>
 	    <item>10位</item>
 	</string-array>
+	
 	<string-array name="strarrayFontSize">
 	    <item>1 mm</item>
 	    <item>2 mm</item>
@@ -273,6 +309,7 @@
 	<string name="strResvname62">62.保留</string>
 	<string name="strResvname63">63.保留</string>
 	<string name="strResvname64">64.保留</string>
+	
 	<string name="strBtnSave">确认</string>
 	
 	<string-array name="trigger_mode_name">
@@ -382,15 +419,14 @@
 	
 	<string name="str_radioLocal">本地</string>
 	<string name="str_radioUsb">USB</string>
+	<string name="str_radioUsb1">USB1</string>
+	<string name="str_radioUsb2">USB2</string>	
 	<string name="str_radioSdcard">SDCard</string>
+	
 	<string name="str_title_infodialog">对象信息编辑</string>
 	
 	<string name="str_fileopt_del">删除</string>
 	<string name="str_fileopt_cancel">取消</string>
-	
-	<string name="str_radioUsb1">USB1</string>
-	<string name="str_radioUsb2">USB2</string>
-	
 	<string name="str_search">搜索</string>
 	
 <!-- 树莓派3 打印界面相关 -->	
@@ -418,7 +454,6 @@
 	<string name="str_state_printing">打印运行中</string>
 	<string name="str_state_stopped">打印已停止</string>
 	
-
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">01.速度</string>
 	<string name="str_textview_param2">02.打印方向</string>
@@ -484,7 +519,6 @@
 	<string name="str_textview_param62">62.保留</string>
 	<string name="str_textview_param63">63.保留</string>
 	<string name="str_textview_param64">64.保留</string>
-	
 	<string name="str_btn_settings_sync">确认</string>
 	
 	<string-array name="array_triger_mode">
@@ -590,6 +624,7 @@
 	    <item>8</item>
 	</string-array>
 	
+	
 	<string-array name="switch_item_entries">
 	    <item>关</item>
 	    <item>开</item>
@@ -601,12 +636,19 @@
 	    <item>外部光电</item>
 	</string-array>
 	
+	<string-array name="message_dots">
+	    <item>128</item>
+	    <item>152</item>
+	    <item>384</item>
+	</string-array>	
+	
 	<string name="str_time_unit_0_1v">0.1伏</string>
 	<string name="str_length_unit_mm">毫米</string>
 	<string name="str_length_unit_6_1mm">1/6毫米</string>
 	<string name="str_time_unit_ms">毫秒</string>
 	<string name="str_time_unit_mm_s">毫米/秒</string>
 	<string name="str_time_unit_us">微秒</string>
+	<string name="str_time_unit_0_1us">0.1us</string>
 	<string name="str_time_unit_100us">100微秒</string>
 	<string name="str_setting_time">时间设置</string>
 	<string name="str_system_setting">系统设置</string>
@@ -616,6 +658,7 @@
 	<string name="str_toast_photoelectricity_delay">光电延时超出范围，设为默认值:100</string>
 	<string name="str_toast_photoelectricity_antishake">光电防抖超出范围，设为默认值:20</string>
 	<string name="str_toast_timingprint">定时打印超出范围，设为默认值:1000</string>
+
 <!-- 树莓派3 编辑界面相关 -->
 	<string name="str_edit_btn_insert">插入</string>
 	<string name="str_edit_btn_temp1">测试1</string>
@@ -628,6 +671,7 @@
 	<string name="str_edit_line2">第二行:</string>
 	<string name="str_edit_line3">第三行:</string>
 	<string name="str_edit_line4">第四行:</string>
+	
 	<string name="str_notice_save">请输入文件名:</string>
 	<string name="str_notice_no_objects">没有可保存的对象</string>
 	<string name="str_file_title">信息：</string>
@@ -654,6 +698,7 @@
 	
 	<string name="str_cnt_min">起始值</string>
 	<string name="str_cnt_max">結束值</string>
-	
 	<string name="str_loading">正在加载...</string>
+	
+	<string name="str_toast_no_qrfile">沒有找到 QR.txt或QR.csv</string>
 </resources>

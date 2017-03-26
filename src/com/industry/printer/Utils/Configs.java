@@ -129,6 +129,7 @@ public class Configs {
 	 * 
 	 */
 	public static final String QR_DATA = SYSTEM_CONFIG_DIR + "/QRdata/QR.txt";
+	public static final String QR_CSV = SYSTEM_CONFIG_DIR + "/QRdata/QR.csv";
 	/**
 	 * 
 	 */

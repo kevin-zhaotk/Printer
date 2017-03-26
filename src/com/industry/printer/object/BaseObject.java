@@ -214,14 +214,14 @@ public class BaseObject{
 	}
 	
 	protected void drawNormal() {
-		Debug.d(TAG, "--->drawNormal");
+		// Debug.d(TAG, "--->drawNormal");
 		mPaint.setColor(Color.BLACK);
 		mBitmap = draw();
 	}
 	
 	protected void drawSelected() {
 		mPaint.setColor(Color.RED);
-		Debug.d(TAG, "--->drawSelected");
+		// Debug.d(TAG, "--->drawSelected");
 		mBitmapSelected = draw();
 	}
 	
@@ -245,7 +245,7 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}*/
 		boolean isCorrect = false;
-		Debug.d(TAG,"--->getBitmap font = " + mFont);
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
 		for (String font : mFonts) {
 			if (font.equals(mFont)) {
 				isCorrect = true;
@@ -264,7 +264,7 @@ public class BaseObject{
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
-		Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
+		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
 		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
 		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
@@ -472,7 +472,7 @@ public class BaseObject{
 		mWidth = size;
 		mXcor_end = mXcor + mWidth;
 		isNeedRedraw = true;
-		Debug.d(TAG, "===>x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
+		Log.d(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getWidth()
@@ -484,7 +484,7 @@ public class BaseObject{
 	{
 		mXcor=x;
 		mXcor_end = mXcor + mWidth; 
-		Debug.d(TAG, "===>x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
+		Debug.d(TAG, "===>setX x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getX()

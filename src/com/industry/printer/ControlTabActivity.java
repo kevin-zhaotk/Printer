@@ -29,6 +29,7 @@ import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
+import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TlkObject;
@@ -145,6 +146,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mEncoderState;
 	public TextView mPrintState;
 	public TextView mPower;
+	public TextView mPowerV;
+	public TextView mTime;
 	
 	public SystemConfigFile mSysconfig;
 	/**
@@ -334,8 +337,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mInkLevel2 = (TextView) getView().findViewById(R.id.ink_value2);
 		
 		mPower = (TextView) getView().findViewById(R.id.power_state);
-//		mPhotocellState = (TextView) findViewById(R.id.sw_photocell_state);
-//		mEncoderState = (TextView) findViewById(R.id.sw_encoder_state);
+		mPowerV = (TextView) getView().findViewById(R.id.powerV);
+		mTime = (TextView) getView().findViewById(R.id.time);
+		
 		
 		refreshPower();
 		//  加载打印计数
@@ -503,7 +507,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			} else {
 				mPower.setText("--");
 			}
-			
+			mPowerV.setText(String.valueOf(power));
+			mTime.setText("0");
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
 		}
 	}
@@ -611,7 +616,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					Debug.d(TAG, "--->prepare buffer");
 					DataTask dt = mDTransThread.getData();
-					
+					if (!checkQRFile()) {
+						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
+						/* 沒有QR.txt或QR.csv文件就報警 */
+						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
+						break;
+					}
 					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
 						break;
@@ -764,6 +774,26 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			if (ink <= 0) {
 				ready = false;
 			}
+		}
+		return ready;
+	}
+	
+	private boolean checkQRFile() {
+		boolean ready = true;
+		if (mDTransThread == null) {
+			return true;
+		}
+		QRReader reader = QRReader.getInstance(mContext);
+		boolean qrReady = reader.isReady();
+		DataTask task = mDTransThread.getData();
+		for (BaseObject obj : task.getObjList()) {
+			if (!(obj instanceof BarcodeObject)) {
+				continue;
+			}
+			if (!((BarcodeObject) obj).isQRCode() || mSysconfig.getParam(16) == 0) {
+				continue;
+			}
+			ready = qrReady;
 		}
 		return ready;
 	}
