@@ -188,7 +188,10 @@ public class BaseObject{
 		mPaint.setTextSize(getfeed());
 		AssetManager asset = mContext.getAssets();
 		Debug.d(TAG, "--->initPaint assset: " + asset);
-		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+		try {
+			mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {
+		}
 	}
 	public Bitmap getScaledBitmap(Context context)
 	{
@@ -255,7 +258,10 @@ public class BaseObject{
 		if (!isCorrect) {
 			mFont = DEFAULT_FONT;
 		}
-		mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		try {
+			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		
 		int width = (int)mPaint.measureText(getContent());
 		if (mWidth == 0) {
 			setWidth(width);
@@ -267,9 +273,9 @@ public class BaseObject{
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
 		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
-		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
-			setWidth(width * 1.25f);
-		}
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			setWidth(width * 1.25f);
+//		}
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
@@ -563,7 +569,9 @@ public class BaseObject{
 		mFont = font;
 		AssetManager asset = mContext.getAssets();
 		Debug.d(TAG, "--->initPaint assset: " + asset);
+		try {
 		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);
 	}
