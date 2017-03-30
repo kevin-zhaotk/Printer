@@ -38,6 +38,7 @@ import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+import com.industry.printer.R;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
@@ -74,6 +75,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener {
 	public static final String TAG="ControlTabActivity";
@@ -247,7 +249,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public byte[] mPrintBuffer;
 	
 	/**
-	 * 当前打印任务
+	 * 褰撳墠鎵撳嵃浠诲姟
 	 */
 	public MessageTask mMsgTask;
 	/**
@@ -342,12 +344,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		
 		refreshPower();
-		//  加载打印计数
+		//  鍔犺浇鎵撳嵃璁℃暟
 		PrinterDBHelper db = PrinterDBHelper.getInstance(mContext);
 		//mCounter = db.getCount(mContext);
 		RTCDevice rtcDevice = RTCDevice.getInstance(mContext);
 
-		// 如果是第一次启动，向RTC的NVRAM写入0
+		// 濡傛灉鏄涓�娆″惎鍔紝鍚慠TC鐨凬VRAM鍐欏叆0
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equalsIgnoreCase(PlatformInfo.getProduct())) {
 			rtcDevice.initSystemTime(mContext);
 			mCounter = rtcDevice.readCounter(mContext);
@@ -356,18 +358,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				db.setFirstBoot(mContext, false);
 			}
 		}
-		/* 如果設置參數32爲on，計數器重置 */
+		/* 濡傛灉瑷疆鍙冩暩32鐖瞣n锛岃▓鏁稿櫒閲嶇疆 */
 		if (mSysconfig.getParam(31) == 1) {
 			mCounter = 0;
 		}
-		/***PG1 PG2输出状态为 0x11，清零模式**/
+		/***PG1 PG2杈撳嚭鐘舵�佷负 0x11锛屾竻闆舵ā寮�**/
 		FpgaGpioOperation.clean();
 		
 		//Debug.d(TAG, "===>loadMessage");
-		// 通过监听系统广播加载
+		// 閫氳繃鐩戝惉绯荤粺骞挎挱鍔犺浇
 		loadMessage();
 		
-		/****初始化RFID****/
+		/****鍒濆鍖朢FID****/
 		mRfidManager = RFIDManager.getInstance(mContext);
 		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		
@@ -450,7 +452,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		} else {
 			mInkLevel.setBackgroundColor(Color.RED);
 			mInkLevel.setText(level);
-			//鎖值爲0停止打印
+			//閹栧�肩埐0鍋滄鎵撳嵃
 			if (mDTransThread != null && mDTransThread.isRunning()) {
 				mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 			}
@@ -487,7 +489,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	/**
-	 * 測試實際情況爲power值在35-44之間，對實際值進行對應
+	 * 娓│瀵﹂殯鎯呮硜鐖瞤ower鍊煎湪35-44涔嬮枔锛屽皪瀵﹂殯鍊奸�茶灏嶆噳
 	 */
 	private void refreshPower() {
 		Debug.d(TAG, "--->refreshPower");
@@ -527,10 +529,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					
-					//方案2：从tlk文件重新绘制图片，然后解析生成buffer
+					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
 					//parseTlk(f);
 					//initBgBuffer();
-					/**获取打印缩略图，用于预览展现**/
+					/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
 					mMsgTask = new MessageTask(mContext, mObjPath);
 					mObjList = mMsgTask.getObjects();
 					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
@@ -544,12 +546,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mPreBitmap != null) {
 						BinFromBitmap.recyleBitmap(mPreBitmap);
 					}
-					//方案1：从bin文件生成buffer
+					//鏂规1锛氫粠bin鏂囦欢鐢熸垚buffer
 					initDTThread();
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
-					/*如果圖片尺寸過大就無法顯示*/
+					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
 //					if (mPreBitmap.getWidth() > 1280) {
 //						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
 //						BinFromBitmap.recyleBitmap(mPreBitmap);
@@ -557,7 +559,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 //					}
 					//mMsgPreImg.setImageBitmap(mPreBitmap);
 					dispPreview(mPreBitmap);
-					BinCreater.saveBitmap(mPreBitmap, "prev.png");
+					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
@@ -618,7 +620,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					DataTask dt = mDTransThread.getData();
 					if (!checkQRFile()) {
 						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
-						/* 沒有QR.txt或QR.csv文件就報警 */
+						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
 					}
@@ -627,7 +629,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					/**
-					 * 测试buffer生成是否正确，按打印按钮把打印内容保存到u盘
+					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
 					 */
 //					char[] buf = dt.getPrintBuffer();
 //					Debug.d(TAG, "--->save print bin");
@@ -642,18 +644,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 //					}
 					Debug.d(TAG, "--->clean");
 					/**
-					 * 启动打印后要完成的几个工作：
-					 * 1、每次打印，  先清空 （见文件）， 然后 发设置
-					 * 2、启动DataTransfer线程，生成打印buffer，并下发数据
-					 * 3、调用ioctl启动内核线程，开始轮训FPGA状态
+					 * 鍚姩鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
+					 * 1銆佹瘡娆℃墦鍗帮紝  鍏堟竻绌� 锛堣鏂囦欢锛夛紝 鐒跺悗 鍙戣缃�
+					 * 2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
+					 * 3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
 					 */
-					/*打印过程中禁止切换打印对象*/
+					/*鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
 					Debug.d(TAG, "--->update settings");
 					FpgaGpioOperation.updateSettings(mContext, dt, FpgaGpioOperation.SETTING_TYPE_NORMAL);
 					Debug.d(TAG, "--->launch thread");
-					/*打印对象在openfile时已经设置，所以这里直接启动打印任务即可*/
+					/*鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙�*/
 					if (!mDTransThread.launch(mContext)) {
 						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
 						break;
@@ -664,9 +666,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
-					 * 停止打印后要完成的几个工作：
-					 * 1、调用ioctl停止内核线程，停止轮训FPGA状态
-					 * 2、停止DataTransfer线程
+					 * 鍋滄鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
+					 * 1銆佽皟鐢╥octl鍋滄鍐呮牳绾跨▼锛屽仠姝㈣疆璁璅PGA鐘舵��
+					 * 2銆佸仠姝ataTransfer绾跨▼
 					 */
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
@@ -674,12 +676,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mDTransThread = null;
 						initDTThread();
 					}
-					/*打印任务停止后允许切换打印对象*/
+					/*鎵撳嵃浠诲姟鍋滄鍚庡厑璁稿垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_STOPPED);
 					
 					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
 					FpgaGpioOperation.clean();
-					/* 如果當前打印信息中有計數器，需要記錄當前值到TLK文件中*/
+					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
 					break;
@@ -688,7 +690,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					for (int i = 0; i < mSysconfig.getHeads(); i++) {
 						mRfidManager.downLocal(i);
 					}
-					/*打印時不再實時更新墨水量*/
+					/*鎵撳嵃鏅備笉鍐嶅鏅傛洿鏂板ⅷ姘撮噺*/
 					// refreshInk();
 					// mRfidManager.write(mHandler);
 					break;
@@ -801,7 +803,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
-		float scale = (float)mllPreview.getHeight()/bmp.getHeight();
+		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+		float scale = (float)75.0f/bmp.getHeight();
 		mllPreview.removeAllViews();
 			for (int i = 0;x < bmp.getWidth(); i++) {
 				if (x + 1200 > bmp.getWidth()) {
@@ -852,12 +855,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		Debug.d(TAG, "--->init");
 		
-		// 初始化buffer
+		// 鍒濆鍖朾uffer
 		mDTransThread.initDataBuffer(mContext, mMsgTask);
 		// TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
-		// 设置dot count
+		// 璁剧疆dot count
 		mDTransThread.setDotCount(mMsgTask.getDots());
-		// 设置UI回调
+		// 璁剧疆UI鍥炶皟
 		mDTransThread.setOnInkChangeListener(this);
 		
 	}
@@ -1150,7 +1153,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
 					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 				break;
-			/*清洗打印头（一个特殊的打印任务），需要单独的设置：参数2必须为 4，参数4为200， 参数5为20；*/
+			/*娓呮礂鎵撳嵃澶达紙涓�涓壒娈婄殑鎵撳嵃浠诲姟锛夛紝闇�瑕佸崟鐙殑璁剧疆锛氬弬鏁�2蹇呴』涓� 4锛屽弬鏁�4涓�200锛� 鍙傛暟5涓�20锛�*/
 			case R.id.btnFlush:
 				DataTransferThread thread = DataTransferThread.getInstance();
 				thread.purge(mContext);
