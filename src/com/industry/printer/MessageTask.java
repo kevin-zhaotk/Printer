@@ -262,13 +262,11 @@ public class MessageTask {
 				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				BinFromBitmap.recyleBitmap(t);
-			}
-			else if(o instanceof JulianDayObject)
-			{
+			} else if(o instanceof JulianDayObject) {
 				// o.drawVarBitmap();
-			}
-			else if(o instanceof ShiftObject)
-			{
+			} else if (o instanceof BarcodeObject && ((BarcodeObject) o).dynamicCode()) {
+				
+			} else if(o instanceof ShiftObject)	{
 				// o.drawVarBitmap();
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);

@@ -167,6 +167,9 @@ public class RealtimeObject extends BaseObject {
 		}
 		isNeedRedraw = false;
 		/* 如果需要重新繪製，先計算新的尺寸 */
+		if (mXcor_end - mXcor == 0) {
+			meature();
+		}
 		// meature();
 		
 		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);

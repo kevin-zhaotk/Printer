@@ -192,9 +192,11 @@ public class DataTask {
 					continue;
 				}
 				o.setContent(content);
-				Bitmap bmp = o.getScaledBitmap(mContext);
-				Debug.d(TAG,"--->cover barcode x = " + (o.getX()/div));
-				BinInfo info = new BinInfo(mContext, Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/scaleW), (int) (bmp.getHeight()/scaleH), true));
+				// Bitmap bmp = o.getScaledBitmap(mContext);
+				Bitmap bmp = ((BarcodeObject)o).getPrintBitmap((int)(o.getWidth()/scaleW), mBinInfo.getBytesFeed()*8, (int)(o.getWidth()/scaleW), (int)(o.getHeight()/scaleH), (int)o.getY());
+				Debug.d(TAG,"--->cover barcode w = " + o.getWidth() + "  h = " + o.getHeight() + " total=" + (mBinInfo.getBytesFeed()*8) + " " + (o.getWidth()/scaleW) + " " + (o.getHeight()/scaleH));
+				BinCreater.saveBitmap(bmp, "bar.png");
+				BinInfo info = new BinInfo(mContext, bmp);
 				
 				BinInfo.cover(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
 			} else if(o instanceof CounterObject)

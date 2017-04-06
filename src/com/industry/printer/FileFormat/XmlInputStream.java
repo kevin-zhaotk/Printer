@@ -87,6 +87,9 @@ public class XmlInputStream {
 	
 	public void close() {
 		try {
+			if (mInputStream == null) {
+				return;
+			}
 			mInputStream.close();
 			Debug.d(TAG, "--->close sysconfig.xml");
 		} catch (IOException e) {

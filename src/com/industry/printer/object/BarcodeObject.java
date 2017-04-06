@@ -21,6 +21,7 @@ import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.BinInfo;
 import com.industry.printer.R;																																																																								
 					
+import android.R.bool;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -41,6 +42,7 @@ public class BarcodeObject extends BaseObject {
 	public boolean mShow;
 	/*内容来源 是否U盤*/
 	public boolean mSource;
+	private boolean isDynamic;
 	
 	public Bitmap mBinmap;
 	
@@ -127,6 +129,14 @@ public class BarcodeObject extends BaseObject {
 		return mShow;
 	}
 	
+	public boolean dynamicCode() {
+		return isDynamic;
+	}
+	
+	public void dynamicCode(boolean dynamic) {
+		isDynamic = dynamic;
+	}
+	
 	@Override
 	public void setContent(String content)
 	{
@@ -181,9 +191,6 @@ public class BarcodeObject extends BaseObject {
 				matrix = deleteWhite(matrix);
 			}
 			int tl[] = matrix.getTopLeftOnBit();
-			for (int i = 0; i < tl.length; i++) {
-				Debug.d(TAG, "--->tl=" + tl[i]);
-			}
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
 			Debug.d(TAG, "mWidth="+mWidth+", width="+width + "   height=" + height);
@@ -232,6 +239,42 @@ public class BarcodeObject extends BaseObject {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Bitmap getPrintBitmap(int totalW, int totalH, int w, int h, int y) {
+		BitMatrix matrix=null;
+		MultiFormatWriter writer = new MultiFormatWriter();
+		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
+        hints.put(EncodeHintType.CHARACTER_SET, CODE);
+        try {
+			matrix = writer.encode(mContent,
+					BarcodeFormat.QR_CODE, w, w, hints);
+			matrix = deleteWhite(matrix);
+        } catch (Exception e) {
+        	return null;
+        }
+		int width = matrix.getWidth();
+		int height = matrix.getHeight();
+		int[] pixels = new int[width * height];
+		for (int y1 = 0; y1 < height; y1++) 
+		{
+			for (int x = 0; x < width; x++) 
+			{
+				if (matrix.get(x, y1)) 
+				{
+					pixels[y1 * width + x] = 0xff000000;
+				} else {
+					pixels[y1 * width + x] = 0xffffffff;
+				}
+			}
+		}
+		Bitmap bg = Bitmap.createBitmap(totalW, totalH, Config.ARGB_8888);
+		Canvas canvas = new Canvas(bg);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		
+		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, w, h, true), 0, y, mPaint);
+		return bg;
 	}
 
 	protected Bitmap createCodeBitmapFromTextView(String contents,int width,int height, boolean isBin) {
