@@ -24,7 +24,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.d(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
+		Log.d(TAG, getLineNumber()+ ":"+log, tr);
 		return 0;
 	}
 	public static int i(String tag, String log)
@@ -32,7 +32,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.i(TAG, getLineNumber()+ "  " + tag+":"+log);
+		Log.i(tag, getLineNumber()+ ":"+log);
 		return 0;
 	}
 	
@@ -41,7 +41,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.i(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
+		Log.i(tag, getLineNumber() + ":"+log, tr);
 		return 0;
 	}
 	
@@ -50,7 +50,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.v(TAG, getLineNumber()+ "  " + tag+":"+log);
+		Log.v(tag, getLineNumber() + ":"+log);
 		return 0;
 	}
 	public static int v(String tag, String log, Throwable tr)
@@ -58,19 +58,19 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.v(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
+		Log.v(tag, getLineNumber() + ":"+log, tr);
 		return 0;
 	}
 
 	public static int e(String tag, String log)
 	{
-		Log.e(TAG, getLineNumber()+ "  " + tag+":"+log);
+		Log.e(tag, getLineNumber() + ":"+log);
 		return 0;
 	}
 	
 	public static int e(String tag, String log, Throwable tr)
 	{
-		Log.e(TAG, getLineNumber()+ "  " + tag+":"+log, tr);
+		Log.e(tag, getLineNumber() + ":"+log, tr);
 		return 0;
 	}
 	

@@ -220,6 +220,7 @@ public class RealtimeObject extends BaseObject {
 			x = x + object.getWidth();
 		}
 		mXcor_end = x;
+		setWidth(mXcor_end = mXcor);
 	};
 	
 	

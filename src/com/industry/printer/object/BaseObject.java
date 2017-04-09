@@ -324,7 +324,7 @@ public class BaseObject{
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
-		Debug.d(TAG, "--->Width=" + mWidth);
+		Debug.d(TAG, "--->id = " + mId + " Width=" + mWidth);
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
 		Debug.d(TAG, "--->singleW=" + singleW);
@@ -624,7 +624,7 @@ public class BaseObject{
 			str=str+"0";
 		}
 		str += ff.intValue();
-		Debug.d(TAG,"floatToFormatString str ="+str);
+		// Debug.d(TAG,"floatToFormatString str ="+str);
 		return str;
 	}
 	
@@ -639,7 +639,7 @@ public class BaseObject{
 			str=str+"0";
 		}
 		str += f;
-		Debug.d(TAG,"intToFormatString str ="+str);
+		// Debug.d(TAG,"intToFormatString str ="+str);
 		return str;
 	}
 	
@@ -654,7 +654,7 @@ public class BaseObject{
 			str += 1;
 		else
 			str += 0;
-		Debug.d(TAG,"boolToFormatString str ="+str);
+		// Debug.d(TAG,"boolToFormatString str ="+str);
 		return str;
 	}
 	

@@ -446,7 +446,7 @@ public class MessageTask {
 		
 
 		//保存1.TLK文件
-		saveTlk(mContext);
+		// saveTlk(mContext);
 		//保存1.bin文件
 		saveBin();
 		
@@ -479,7 +479,7 @@ public class MessageTask {
 		if (obj == null) {
 			return height;
 		}
-		Debug.d(TAG, "--->head type: " + obj.getType());
+		// Debug.d(TAG, "--->head type: " + obj.getType());
 		switch (obj.getType()) {
 			case MessageType.MESSAGE_TYPE_12_7:
 			case MessageType.MESSAGE_TYPE_12_7_S:

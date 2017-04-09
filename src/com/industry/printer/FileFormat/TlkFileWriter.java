@@ -47,13 +47,13 @@ public class TlkFileWriter extends TlkFile{
 			{
 				if(o instanceof RealtimeObject)
 				{
-					System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+o.toString());
+					// System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+o.toString());
 					bw.write(BaseObject.intToFormatString(i, 3)+"^"+o.toString());
 					bw.newLine();
 					o.setIndex(i++);
 					for(BaseObject so : ((RealtimeObject) o).getSubObjs())
 					{
-						System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+so.toString());
+						// System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+so.toString());
 						bw.write(BaseObject.intToFormatString(i, 3)+"^"+so.toString());
 						bw.newLine();
 						so.setIndex(i++);
@@ -61,7 +61,7 @@ public class TlkFileWriter extends TlkFile{
 				}
 				else
 				{
-					Debug.d(TAG, "filestr="+BaseObject.intToFormatString(i, 3) +"^"+o.toString());
+					// Debug.d(TAG, "filestr="+BaseObject.intToFormatString(i, 3) +"^"+o.toString());
 					bw.write(BaseObject.intToFormatString(i, 3)+"^"+o.toString());
 					bw.newLine();
 					o.setIndex(i++);

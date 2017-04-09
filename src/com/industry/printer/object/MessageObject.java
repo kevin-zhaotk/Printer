@@ -67,7 +67,7 @@ public class MessageObject extends BaseObject {
 		str += "00000^00000^00000^00000^0^000^";
 		str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
 		str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
-		System.out.println("file string ["+str+"]");
+		Debug.d(TAG, "file string ["+str+"]");
 		return str;
 	}
 	
