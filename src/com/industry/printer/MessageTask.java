@@ -264,7 +264,7 @@ public class MessageTask {
 				BinFromBitmap.recyleBitmap(t);
 			} else if(o instanceof JulianDayObject) {
 				// o.drawVarBitmap();
-			} else if (o instanceof BarcodeObject && ((BarcodeObject) o).dynamicCode()) {
+			} else if (o instanceof BarcodeObject && o.getSource()) {
 				
 			} else if(o instanceof ShiftObject)	{
 				// o.drawVarBitmap();

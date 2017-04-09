@@ -91,6 +91,7 @@ public class BaseObject{
 	public String mContent;
 	public String mName;
 	public int mDotsPerClm;
+	public boolean mSource;
 	/* 
 	 * 是否需要重新绘制bitmap 
 	 * 需要重新绘制bitmap的几种情况：1、宽高变化；2、字体修改； 3，内容变化
@@ -131,6 +132,7 @@ public class BaseObject{
 		mYcor_end=0;
 		mDragable = true;
 		isNeedRedraw = true;
+		mSource = false;
 		// 參數40：列高
 		mDotsPerClm = SystemConfigFile.getInstance(mContext).getParam(39);
 		mFont = DEFAULT_FONT;
@@ -600,6 +602,16 @@ public class BaseObject{
 	public int getDotsPerClm() {
 		return mDotsPerClm;
 	}
+	
+
+	public boolean getSource() {
+		return mSource ;
+	}
+	
+	public void setSource(boolean dynamic) {
+		mSource  = dynamic;
+	}
+	
 	
 	public static String floatToFormatString(float f, int n)
 	{

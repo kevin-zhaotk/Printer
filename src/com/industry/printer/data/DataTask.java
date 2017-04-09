@@ -169,8 +169,8 @@ public class DataTask {
 		Debug.d(TAG, "+++++type:" + msg.getType());
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
-			scaleW = 0.5f;
-			scaleH = 0.25f;
+			scaleW = 1;
+			scaleH = 0.5f;
 		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
 			div = 0.5f;
 			scaleW = 0.5f;
@@ -195,10 +195,10 @@ public class DataTask {
 				// Bitmap bmp = o.getScaledBitmap(mContext);
 				Bitmap bmp = ((BarcodeObject)o).getPrintBitmap((int)(o.getWidth()/scaleW), mBinInfo.getBytesFeed()*8, (int)(o.getWidth()/scaleW), (int)(o.getHeight()/scaleH), (int)o.getY());
 				Debug.d(TAG,"--->cover barcode w = " + o.getWidth() + "  h = " + o.getHeight() + " total=" + (mBinInfo.getBytesFeed()*8) + " " + (o.getWidth()/scaleW) + " " + (o.getHeight()/scaleH));
-				BinCreater.saveBitmap(bmp, "bar.png");
+				// BinCreater.saveBitmap(bmp, "bar.png");
 				BinInfo info = new BinInfo(mContext, bmp);
 				
-				BinInfo.cover(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
+				BinInfo.overlap(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
 			} else if(o instanceof CounterObject)
 			{
 				String str = prev? ((CounterObject) o).getContent() : ((CounterObject) o).getNext();

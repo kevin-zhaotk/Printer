@@ -42,7 +42,6 @@ public class BarcodeObject extends BaseObject {
 	public boolean mShow;
 	/*内容来源 是否U盤*/
 	public boolean mSource;
-	private boolean isDynamic;
 	
 	public Bitmap mBinmap;
 	
@@ -53,7 +52,6 @@ public class BarcodeObject extends BaseObject {
 		super(context, BaseObject.OBJECT_TYPE_BARCODE, x);
 		// TODO Auto-generated constructor stub
 		mShow = true;
-		mSource = false;
 		mCode = 3;
 		mFormat="CODE_128";
 		setContent("123456789");
@@ -127,14 +125,6 @@ public class BarcodeObject extends BaseObject {
 	public boolean getShow()
 	{
 		return mShow;
-	}
-	
-	public boolean dynamicCode() {
-		return isDynamic;
-	}
-	
-	public void dynamicCode(boolean dynamic) {
-		isDynamic = dynamic;
 	}
 	
 	@Override
@@ -273,6 +263,7 @@ public class BarcodeObject extends BaseObject {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		
 		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		canvas.drawColor(Color.WHITE);
 		canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, w, h, true), 0, y, mPaint);
 		return bg;
 	}

@@ -393,7 +393,14 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						// mObject.setWidth(Float.parseFloat(mWidthEdit.getText().toString()));
 						// mObject.setHeight(Float.parseFloat(mHighEdit.getText().toString()));
 						Debug.d(TAG, "--->positive click");
-						mObject.setHeight(mHighEdit.getText().toString());
+						try {
+							if (mHeightType.isChecked()) {
+								mObject.setHeight(Integer.parseInt(mHeight_O.getText().toString()));
+							} else {
+								mObject.setHeight(mHighEdit.getText().toString());
+							}
+						} catch (Exception e) {
+						}
 						mObject.setX(Float.parseFloat(mXcorEdit.getText().toString())/2);
 						mObject.setY(Float.parseFloat(mYcorEdit.getText().toString())/2);
 						Debug.d(TAG, "content="+mContent.getText().toString());
@@ -461,6 +468,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			{
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
 				mHighEdit.setText(mObject.getDisplayHeight());
+				mHeight_O.setText(String.valueOf(mObject.getHeight()));
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()*2));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
@@ -735,7 +743,13 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			mContent.setEnabled(!checked);
 			((BarcodeObject)mObject).mSource = checked;
 		} else if (view == mHeightType) {
-			
+			if (checked) {
+				mHeight_O.setEnabled(true);
+				mHighEdit.setEnabled(false);
+			} else {
+				mHeight_O.setEnabled(false);
+				mHighEdit.setEnabled(true);
+			}
 		}
 	}
 }
