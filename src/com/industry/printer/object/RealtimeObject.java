@@ -161,7 +161,7 @@ public class RealtimeObject extends BaseObject {
 	public Bitmap getScaledBitmap(Context context)
 	{
 		// Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
-		Debug.d(TAG, "--->getScaledBitmap reDraw: " + isNeedRedraw);
+		
 		if (!isNeedRedraw) {
 			return mBitmap;
 		}
@@ -170,6 +170,7 @@ public class RealtimeObject extends BaseObject {
 		if (mXcor_end - mXcor == 0) {
 			meature();
 		}
+		Debug.d(TAG, "--->getScaledBitmap xEnd: " + mXcor_end + " x="+ mXcor + "  height=" + mHeight);
 		// meature();
 		
 		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
@@ -220,7 +221,7 @@ public class RealtimeObject extends BaseObject {
 			x = x + object.getWidth();
 		}
 		mXcor_end = x;
-		setWidth(mXcor_end = mXcor);
+		setWidth(mXcor_end - mXcor);
 	};
 	
 	

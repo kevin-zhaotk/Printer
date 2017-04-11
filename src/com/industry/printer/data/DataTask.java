@@ -183,11 +183,14 @@ public class DataTask {
 			if (o instanceof BarcodeObject) {
 				Debug.d(TAG, "--->param17= " + config.getParam(16) + "   isprev= " + prev + "  QR= " + ((BarcodeObject)o).isQRCode());
 				/* 如果二維碼從QR文件中讀 */
-				if (config.getParam(16) == 0 || prev || !((BarcodeObject)o).isQRCode()) {
+				if (config.getParam(16) == 0 || !((BarcodeObject)o).isQRCode()) {
 					continue;
 				}
-				QRReader reader = QRReader.getInstance(mContext);
-				String content = reader.read();
+				String content = "123456789";
+				if (!prev) {
+					QRReader reader = QRReader.getInstance(mContext);
+					content = reader.read();
+				}
 				if (TextUtils.isEmpty(content)) {
 					continue;
 				}

@@ -735,10 +735,12 @@ public class BaseObject{
 	
 	protected void meature() {
 		int width = (int) mPaint.measureText(getContent());
+		
 		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
 			mWidth = width * 1.25f;
 		} else {
 			mWidth = width;
 		}
+		Debug.d(TAG, "meature mHeight = " + mHeight + "  mWidth = " + mWidth);
 	}
 }

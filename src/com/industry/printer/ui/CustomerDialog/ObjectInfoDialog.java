@@ -409,6 +409,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
+						mObject.setSource(mSourceCB.isChecked());
 						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)

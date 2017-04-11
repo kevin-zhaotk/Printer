@@ -18,6 +18,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
+import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
@@ -803,8 +804,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
+		float scale = 1;
 		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
-		float scale = (float)75.0f/bmp.getHeight();
+		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
+		
+		if (PlatformInfo.PRODUCT_7INCH.equals(product)) {
+			scale = (float)75.0f/bmp.getHeight();
+		} else if (PlatformInfo.PRODUCT_3INCH.equals(product)) {
+			scale = (float)75.0f/bmp.getHeight();
+		} else {
+			scale = (float)75.0f/bmp.getHeight();
+		}
 		mllPreview.removeAllViews();
 			for (int i = 0;x < bmp.getWidth(); i++) {
 				if (x + 1200 > bmp.getWidth()) {
