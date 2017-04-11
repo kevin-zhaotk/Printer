@@ -265,6 +265,7 @@ public class BaseObject{
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
 			setWidth(width);
 		}
@@ -480,7 +481,7 @@ public class BaseObject{
 		mWidth = size;
 		mXcor_end = mXcor + mWidth;
 		isNeedRedraw = true;
-		Log.d(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
+		Debug.d(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getWidth()

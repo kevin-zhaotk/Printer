@@ -33,6 +33,8 @@ public class EditScrollView extends View {
 	public HorizontalScrollView mParent;
 	public Context mContext;
 	public MessageTask mTask;
+	/* 防止鍵盤彈出時刷新界面，導致文本寬度被設定爲默認寬度 */
+	private boolean needDraw = false;
 	
 	public EditScrollView(Context context) {
 		super(context);
@@ -63,7 +65,11 @@ public class EditScrollView extends View {
 	}
 	@Override  
 	protected void onDraw(Canvas canvas) {
-		Debug.d(TAG, "====>onDraw");
+		Debug.d(TAG, "====>onDraw needDraw = " + needDraw);
+		if (!needDraw) {
+			return;
+		}
+		needDraw = false;
 		int scrollx = 0;
 		if (mParent != null) {
 			scrollx = mParent.getScrollX();
@@ -185,5 +191,13 @@ public class EditScrollView extends View {
 		// mScreenW = (int) (w * density + 0.5f);
 		// mScreenH = (int) (h * density + 0.5f);
 		mScreenW = (int) (w + 0.5f);
+	}
+	
+	public void beginDraw() {
+		needDraw = true;
+	}
+	
+	public void endDraw() {
+		needDraw = false;
 	}
 }

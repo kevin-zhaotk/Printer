@@ -361,6 +361,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							mObject.setContent(mContent.getText().toString());
 							((BarcodeObject) mObject).setCode(mCode.getText().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
+							mObject.setSource(mSourceCB.isChecked());
 						}
 						else if(mObject instanceof RectObject)
 						{
@@ -409,7 +410,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
-						mObject.setSource(mSourceCB.isChecked());
+						
 						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)

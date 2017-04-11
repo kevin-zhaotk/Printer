@@ -335,6 +335,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			BaseObject obj = getCurObj();
 			Debug.d(TAG, "=====obj:"+obj.mId + "  draw:" + obj.isNeedDraw());
 			mObjView.setTask(mMsgTask);
+			mObjView.beginDraw();
 			mObjView.invalidate();
 			if(obj != null && !(obj instanceof MessageObject)){
 				makeObjToCenter((int)obj.getX());

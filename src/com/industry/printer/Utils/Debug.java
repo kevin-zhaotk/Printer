@@ -15,7 +15,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.d(TAG, getLineNumber()+ "  " + tag + ":" + log);
+		Log.d(tag, getLineNumber()+ ":" + log);
 		return 0;
 	}
 	

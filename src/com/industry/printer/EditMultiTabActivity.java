@@ -368,6 +368,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 			Debug.d(TAG, "=====get curobj");
 			BaseObject obj = getCurObj();
 			Debug.d(TAG, "=====obj:"+obj.mId);
+			mObjView.beginDraw();
 			mObjView.invalidate();
 			if(obj != null){
 				makeObjToCenter((int)obj.getX());
