@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.industry.printer.R;
-import com.industry.printer.R.id;
-import com.industry.printer.R.layout;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
@@ -22,6 +20,7 @@ import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -31,12 +30,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +53,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public RelativeLayout mPagePrev;
 		public RelativeLayout mPageNext;
 		public TextView 	mDelete;
+		public ImageView 	mLoading;
+		public RelativeLayout 	mLoadingLy;
+		
+		private Animation mOperating;
+		
 		
 		public EditText		  mSearch;
 		public static String mTitle;
@@ -65,6 +73,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public LinkedList<Map<String, Object>> mFilterContent;
 		
 		private static final int MSG_FILTER_CHANGED = 1;
+		private static final int MSG_LOADED = 2;
 		
 		public Handler mHandler = new Handler() {
 			@Override
@@ -75,7 +84,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					String title = bundle.getString("title");
 					filterAfter(title);
 					break;
-
+				case MSG_LOADED:
+					mMessageList.setAdapter(mFileAdapter);
+					mFileAdapter.notifyDataSetChanged();
+					hideLoading();
+					break;
 				default:
 					break;
 				}
@@ -96,6 +109,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					new String[]{"title", "abstract", ""}, 
 					// new int[]{R.id.tv_message_title, R.id.tv_message_abstract
 					new int[]{R.id.tv_msg_title, R.id.ll_preview, R.id.image_selected});
+			
+			mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
+			LinearInterpolator lin = new LinearInterpolator();  
+			mOperating.setInterpolator(lin);
 		}
 		
 		@Override
@@ -128,8 +145,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 
 			 mMessageList.setOnTouchListener(this);
 			 mMessageList.setOnScrollListener(this);
+			 
+			 mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
+			 mLoading = (ImageView) findViewById(R.id.loading_img);
 			 loadMessages();
-			 mFileAdapter.notifyDataSetChanged();
 			 
 			 setupViews();
 		 }
@@ -140,6 +159,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mPageNext.setVisibility(View.GONE);
 			}
 		}
+		
+		
 
 		@Override
 		public void onClick(View arg0) {
@@ -193,62 +214,72 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		@SuppressWarnings("unchecked")
 		public void loadMessages()
 		{
-			TLKFileParser parser = new TLKFileParser(getContext(), null);
-			String tlkPath = ConfigPath.getTlkPath();
-			if (tlkPath == null) {
-				return ;
-			}
-			
-			File rootpath = new File(tlkPath);
-			// File[] Tlks = rootpath.listFiles();
-			String[] Tlks = rootpath.list();
-			if (Tlks == null) {
-				return ;
-			}
-			Arrays.sort(Tlks, new Comparator() {
-				public int compare(Object arg0, Object arg1) {
-					int cp1 = 0;
-					int cp2 = 0;
-					try {
-				    	cp1 = Integer.parseInt((String) arg0);
-				    	cp2 = Integer.parseInt((String) arg1);
-				    } catch(NumberFormatException e) {
-				    	e.printStackTrace();
-				    }
-				    if (cp1 > cp2) {
-				    	return 1;
-				    } else if(cp1 == cp2) {
-				    	return 0;
-				    }
-				    return -1;
+			showLoading();
+			mHandler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					TLKFileParser parser = new TLKFileParser(getContext(), null);
+					String tlkPath = ConfigPath.getTlkPath();
+					if (tlkPath == null) {
+						return ;
+					}
+					Debug.d(TAG, "--->load message begin");
+					File rootpath = new File(tlkPath);
+					// File[] Tlks = rootpath.listFiles();
+					String[] Tlks = rootpath.list();
+					if (Tlks == null) {
+						return ;
+					}
+					Arrays.sort(Tlks, new Comparator() {
+						public int compare(Object arg0, Object arg1) {
+							int cp1 = 0;
+							int cp2 = 0;
+							try {
+						    	cp1 = Integer.parseInt((String) arg0);
+						    	cp2 = Integer.parseInt((String) arg1);
+						    } catch(NumberFormatException e) {
+						    	e.printStackTrace();
+						    }
+						    if (cp1 > cp2) {
+						    	return 1;
+						    } else if(cp1 == cp2) {
+						    	return 0;
+						    }
+						    return -1;
+						}
+					});
+					
+					Debug.d(TAG, "--->load message sort ok");
+					for (String t:Tlks) {
+						
+						File file = new File(tlkPath, t);
+						if (!file.isDirectory()) {
+							continue;
+						}
+						
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("title", t);
+						mContent.add(map);
+						mFilterContent.add(map);
+					}
+					// mMessageList.setAdapter(mFileAdapter);
+					Debug.d(TAG, "--->load message load success");
+					mHandler.sendEmptyMessage(MSG_LOADED);
 				}
 			});
 			
 			
-			for (String t:Tlks) {
-				/*
-				String path = rootpath.getAbsolutePath() + "/" + t;
-				if (!new File(path).isDirectory()) {
-					continue;
-				}
-				
-				
-				Debug.d(TAG, "--->loadMessage:" + path);
-				parser.setTlk(path);
-				String content = parser.getContentAbatract();
-				*/
-				File file = new File(tlkPath, t);
-				if (!file.isDirectory()) {
-					continue;
-				}
-				
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("title", t);
-				mContent.add(map);
-				mFilterContent.add(map);
-			}
-			mMessageList.setAdapter(mFileAdapter);
-			
+		}
+		
+		private void showLoading() {
+			mLoadingLy.setVisibility(View.VISIBLE);
+			mLoading.startAnimation(mOperating);
+		}
+		
+		private void hideLoading() {
+			mLoading.clearAnimation();
+			mLoadingLy.setVisibility(View.GONE);
 		}
 		
 		public static String getSelected() {

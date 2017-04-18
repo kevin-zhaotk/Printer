@@ -283,6 +283,9 @@ public class BinCreater {
     	try {
     		
     		File file = new File(f);
+    		if (file.exists()) {
+				file.delete();
+			}
     		Debug.d(TAG, "--->saveBin f:" + file.getAbsoluteFile());
     		if (!file.exists() && !file.createNewFile()) {
 				Debug.d(TAG, "===>error: create bin file failed");

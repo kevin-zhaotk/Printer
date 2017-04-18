@@ -17,6 +17,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
+import com.industry.printer.object.BaseObject;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.R;																																																																								
@@ -267,6 +268,13 @@ public class BarcodeObject extends BaseObject {
 		canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, w, h, true), 0, y, mPaint);
 		return bg;
 	}
+	
+	public int getDotcount() {
+		Bitmap bmp = getScaledBitmap(mContext);
+		BinFileMaker maker = new BinFileMaker(mContext);
+		int dots = maker.extract(bmp);
+		return dots;
+	}
 
 	protected Bitmap createCodeBitmapFromTextView(String contents,int width,int height, boolean isBin) {
 		float div = (float) (4.0/mTask.getHeads());
@@ -485,7 +493,8 @@ public class BarcodeObject extends BaseObject {
 		str += "000^";
 		str += BaseObject.boolToFormatString(mShow, 3)+"^";
 		str += mContent+"^";
-		str += "00000000^00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
+		str += BaseObject.boolToFormatString(mSource, 8) + "^";
+		str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

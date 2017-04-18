@@ -212,6 +212,19 @@ public class MessageTask {
 				} else {
 					mDots += object.drawVarBitmap();
 				}
+			} else if (object instanceof BarcodeObject && object.getSource() == true) {
+				int dots = ((BarcodeObject) object).getDotcount();
+				MessageObject msg = getMsgObject();
+				if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST 
+						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH ) {
+					mDots += dots * 2;
+				} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL 
+						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST ) {
+					mDots += dots * 2 * 4;
+				} else {
+					mDots += dots/2;
+				}
+				
 			}
 		}
 	}
@@ -444,7 +457,7 @@ public class MessageTask {
 
 	public void save() {
 		
-
+		resetIndexs();
 		//保存1.TLK文件
 		// saveTlk(mContext);
 		//保存1.bin文件
@@ -462,6 +475,20 @@ public class MessageTask {
 		//保存1.bmp文件
 		savePreview();
 	}
+	
+	private void resetIndexs() {
+		int i = 0;
+		for (BaseObject o : mObjects) {
+			o.setIndex(i + 1);
+			if (o instanceof RealtimeObject) {
+				i = o.getIndex() + ((RealtimeObject) o).getSubObjs().size();
+			} else {
+				i = o.getIndex();
+			}
+		}
+	}
+	
+	
 	public MessageObject getMsgObject() {
 		MessageObject msg = null;
 		for (BaseObject object: mObjects) {

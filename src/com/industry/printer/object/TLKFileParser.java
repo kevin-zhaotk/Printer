@@ -205,6 +205,8 @@ public class TLKFileParser  extends TlkFile{
 			int isShow = Integer.parseInt(attr[11]);
 			((BarcodeObject) obj).setShow(isShow==0?false:true); 
 			((BarcodeObject) obj).setContent(attr[12]);
+			int source = Integer.parseInt(attr[13]);
+			obj.setSource(source != 0);
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
 		{
@@ -396,7 +398,8 @@ public class TLKFileParser  extends TlkFile{
 	}
 	
 	private float setDotsPerClm(int type) {
-		int dots = 0;
+		float dots = 0;
+		Debug.d(TAG, "--->setDotsPerClm type = " + type);
 		switch (type) {
 			case MessageType.MESSAGE_TYPE_12_7:
 			case MessageType.MESSAGE_TYPE_12_7_S:
@@ -404,23 +407,24 @@ public class TLKFileParser  extends TlkFile{
 			case MessageType.MESSAGE_TYPE_33:
 			case MessageType.MESSAGE_TYPE_38_1:
 			case MessageType.MESSAGE_TYPE_50_8:
-				dots = 152;
+				dots = 152f;
 				break;
 			case MessageType.MESSAGE_TYPE_16_3:
-				dots = 128;
+				dots = 128f;
 				break;
 			case MessageType.MESSAGE_TYPE_1_INCH:
 			case MessageType.MESSAGE_TYPE_1_INCH_FAST:
-				dots = 320;
+				dots = 320f;
 				break;
 			case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
 			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
-				dots = 640;
+				dots = 640f;
 				break;
 			default:
-				dots = 152;
+				dots = 152f;
 				break;
 		}
+		Debug.d(TAG, "--->setDotsPerClm dots = " + dots);
 		mProportion = dots/Configs.gDots;
 		if (type == MessageType.MESSAGE_TYPE_1_INCH || type == MessageType.MESSAGE_TYPE_1_INCH_FAST ) {
 			mProportion = 1f;

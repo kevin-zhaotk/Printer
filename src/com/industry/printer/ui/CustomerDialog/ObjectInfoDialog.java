@@ -492,6 +492,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				{
 					mCode.setText(((BarcodeObject) mObject).getCode());
 					mShow.setChecked(((BarcodeObject) mObject).getShow());
+					mSourceCB.setChecked(mObject.getSource());
 				}
 				else if(mObject instanceof ShiftObject)
 				{

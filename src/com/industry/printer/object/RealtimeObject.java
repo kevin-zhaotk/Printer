@@ -149,6 +149,14 @@ public class RealtimeObject extends BaseObject {
 		setWidth(mXcor_end - getX());
 	}
 	
+	public void setIndex(int index)
+	{
+		mIndex = index++;
+		for (BaseObject object : mSubObjs) {
+			object.setIndex(index++);
+		}
+	}
+	
 	public void setOffset(int offset) {
 		mOffset = offset;
 	}
