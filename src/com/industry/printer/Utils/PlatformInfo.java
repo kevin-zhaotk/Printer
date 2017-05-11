@@ -55,7 +55,7 @@ public class PlatformInfo {
 	public static final int SMALL_SCREEN_FULL = 3;
 	
 	/* 通過點陣字庫獲取buffer */
-	public static final boolean isDotMatrix = false;
+	public static int DotMatrixType = 0;
 	
 	/* 通过该常量来区分硬件平台 */
 	private static String mProduct = PRODUCT_SMFY_SUPER3;
@@ -70,8 +70,9 @@ public class PlatformInfo {
 	 * 其他设备都是通过BMP提取
 	 * @return
 	 */
-	public static boolean isBufferFromDotMatrix() {
-		return isDotMatrix;
+	public static final int isBufferFromDotMatrix() {	
+		
+		return DotMatrixType;
 	}
 	
 	public static String getProduct() {
@@ -154,4 +155,10 @@ public class PlatformInfo {
 	public static int getEditType() {
 		return SMALL_SCREEN_FULL;
 	}
+	public static int  SetDotMatrixType(int Type) {
+		DotMatrixType=Type;
+		 return 0;
+		 
+	}		
+	
 }

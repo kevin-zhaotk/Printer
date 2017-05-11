@@ -33,6 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 
+import android.graphics.BitmapFactory;//addbylk70507
+
 public class MessageListAdater extends BaseAdapter {
 	
 	private static final String TAG = MessageListAdater.class.getSimpleName();
@@ -176,19 +178,41 @@ public class MessageListAdater extends BaseAdapter {
 		 * 缺點：效率低
 		 */
 		Bitmap bmp = mPreviews.get(title);
+        Bitmap Bmp_bak   = mPreviews.get(title);
 		if (bmp == null) {
+			/*
 			MessageTask task = new MessageTask(mContext, title);
 			DataTask dTask = new DataTask(mContext, task);
 			dTask.prepareBackgroudBuffer();
-			bmp = dTask.getPreview();
+            /// 获得 浏览图像 
+			bmp = dTask.getPreview();///
+			
 			if (bmp.getWidth() > 1500) {
 				Bitmap b = Bitmap.createBitmap(bmp, 0, 0, 1500, bmp.getHeight());
 				BinFromBitmap.recyleBitmap(bmp);
 				bmp = b;
 			}
+			*/
+			
+			try
+			{   String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
+			   Debug.e(TAG, "===="+path);			
+			    File file =new File(path);
+				if( file.exists() )
+				{
+					bmp=BitmapFactory.decodeFile(path);
+					Debug.e(TAG, path);
+				}
+			}
+			catch (Exception e)
+			{
+				
+			}
+			 bmp = Bitmap.createScaledBitmap(bmp, 1500, 100, true);
 			mPreviews.put(title, bmp);
 		}
 		// mHolder.mImage.setImageBitmap(bmp);
+		//////////////////////////////////////////////
 		dispPreview(bmp);
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
@@ -211,7 +235,7 @@ public class MessageListAdater extends BaseAdapter {
 		
 		float scale = (float)DimenssionConvertion.dip2px(mContext, 100)/bmp.getHeight();
 		mHolder.mllPreview.removeAllViews();
-		Debug.d(TAG, "--->width= " + bmp.getWidth() + "  scale= " + scale);
+		Debug.e(TAG, "-===================-->width= " + bmp.getWidth() + "  scale============================= " + scale);
 			for (int i = 0;x < bmp.getWidth(); i++) {
 				if (x + 1200 + 50 > bmp.getWidth()) {
 					cutWidth = bmp.getWidth() - x;

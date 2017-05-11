@@ -207,7 +207,7 @@ public class MessageTask {
 			if((object instanceof CounterObject) || (object instanceof RealtimeObject) ||
 					(object instanceof JulianDayObject) || (object instanceof ShiftObject)	)
 			{
-				if(PlatformInfo.isBufferFromDotMatrix()) {
+				if(PlatformInfo.isBufferFromDotMatrix()==1) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
 				} else {
 					mDots += object.drawVarBitmap();
@@ -230,7 +230,7 @@ public class MessageTask {
 	}
 	
 	public void saveBin() {
-		if (PlatformInfo.isBufferFromDotMatrix()) {
+		if (PlatformInfo.isBufferFromDotMatrix()==1) {
 			saveBinDotMatrix();
 		} else {
 			saveObjectBin();
@@ -299,7 +299,7 @@ public class MessageTask {
 		/**
 		 * 爲了兼容128點，152點和384點高的三種列高信息，需要計算等比例縮放比例
 		 */
-		float dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		float dots = 152;///SystemConfigFile.getInstance(mContext).getParam(39);
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
 		MessageObject msg = getMsgObject();
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH
@@ -338,6 +338,16 @@ public class MessageTask {
 			// c.drawBitmap(Bitmap.createBitmap(bitmap, 0, bitmap.getHeight()/2, bitmap.getWidth(), bitmap.getHeight()/2), 0, 320, null);
 			bitmap.recycle();
 			bitmap = b;
+		}else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3  ) )
+		{ //add by lk 170418
+			bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), 128, true);
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 128, Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			can.drawBitmap(bitmap, 0, 0, p);
+			bitmap.recycle();
+			bitmap = b;
+  		//add by lk 170418 end						
 		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
@@ -415,16 +425,70 @@ public class MessageTask {
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
+						
+		String content="";
+
 		for(BaseObject o:mObjects)
 		{
 			if (o instanceof MessageObject) {
 				continue;
 			}
-			Bitmap t = o.getScaledBitmap(mContext);
-			if (t== null) {
-				continue;
+			
+			if(o instanceof CounterObject)
+			{						
+		//	o.setContent2(str_new_content)		;
+				Bitmap  t  = o.getpreviewbmp();
+
+				if (t== null) {
+					continue;
+					}
+				
+					can.drawBitmap(t, o.getX(), o.getY(), p);			
 			}
-			can.drawBitmap(t, o.getX(), o.getY(), p);
+
+			else if(o instanceof RealtimeObject)
+			{	Debug.e(TAG, "RealtimeObject");		
+				Bitmap  t  = o.getpreviewbmp();
+
+				if (t== null) {
+					continue;
+					}
+				can.drawBitmap(t, o.getX(), o.getY(), p);				
+			}			
+			else if(o instanceof JulianDayObject)
+			{
+				Bitmap  t  = o.getpreviewbmp();
+
+				if (t== null) {
+					continue;
+					}
+				can.drawBitmap(t, o.getX(), o.getY(), p);				
+			}else 
+			{
+				Bitmap t  = o.getScaledBitmap(mContext);
+					if (t== null) {
+					continue;
+				}	
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			
+			}
+			
+			/*	
+			else if(o instanceof ShiftObject)
+			{
+				content += o.getContent();
+			}
+			*/
+
+		//can.drawText(mContent, 0, height-30, mPaint);	
+			
+		//	if(o instanceof CounterObject)
+		//	{
+		//		o.setContent("lkaa");//mContext="liukun";
+		//	}	
+			
+		///	String o.setContent2("lkaa");//mContext="liukun";
+			
 		}
 		// Bitmap.createScaledBitmap();
 		float scale = bmp.getHeight() / 100;
@@ -544,7 +608,7 @@ public class MessageTask {
 	public float getDiv() {
 		return 4f/getHeads();
 	}
-	
+
 	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_12_7 	= 0;
@@ -554,6 +618,8 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
+		public static final int MESSAGE_TYPE_HZK_16_16  = 7;
+		public static final int MESSAGE_TYPE_HZK_32_32  = 8;				
 		public static final int MESSAGE_TYPE_1_INCH = 9; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭

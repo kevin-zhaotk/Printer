@@ -156,7 +156,7 @@ public class DataTask {
 		return mBuffer;
 	}
 	
-	public void refreshVariables(boolean prev)
+	public void refreshVariables(boolean prev) //回复 VAR 
 	{
 		float scaleW = 2, scaleH = 1;
 		String substr=null;
@@ -212,8 +212,8 @@ public class DataTask {
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
-				// BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
-				// Debug.d(TAG, "--->object x=" + o.getX()/div);
+			//	 BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
+			//	 Debug.e(TAG, "--=============->object x=  " + o.getX()/div+"===="+o.getX() + div );
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed());
 			}
 			else if(o instanceof RealtimeObject)

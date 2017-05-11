@@ -8,7 +8,8 @@ public class BinFromDotMatrix extends BinCreater {
 	
 	public BinFromDotMatrix(Context context) {
 		mContext = context;
-		mHeight = 32;
+	 	mHeight = 32; 	
+	///	mHeight = 16;// add by lk 
 	}
 	
 	@Override

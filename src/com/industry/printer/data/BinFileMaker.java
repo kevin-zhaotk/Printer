@@ -23,7 +23,7 @@ public class BinFileMaker {
 	}
 	
 	public void init() {
-		if (PlatformInfo.isBufferFromDotMatrix()) {
+		if (PlatformInfo.isBufferFromDotMatrix()==1) {
 			mBinCreater = new BinFromDotMatrix(mContext);
 		} else {
 			mBinCreater = new BinFromBitmap();

@@ -44,10 +44,12 @@ public class DotMatrixReader {
 				mReader = new FileInputStream(ConfigPath.getFont());
 				mReader.mark(0);
 				mReader.reset();
+				Debug.e(TAG, "11111===>DotMatrixReader");
 			} else {
 				mReader = context.getAssets().open("dotmatrix/HZK16");
 				mReader.mark(0);
 				mReader.reset();
+				Debug.e(TAG, "2222==>DotMatrixReader");
 			}
 			
 		} catch (FileNotFoundException e) {

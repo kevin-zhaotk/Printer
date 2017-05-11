@@ -430,6 +430,9 @@ public class TLKFileParser  extends TlkFile{
 			mProportion = 1f;
 		} else if (type == MessageType.MESSAGE_TYPE_1_INCH_DUAL || type == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) {
 			mProportion = 1.0f;
+		} else if ( type == MessageType.MESSAGE_TYPE_16_3)
+		{
+			mProportion = 1.0f;			
 		}
 		return mProportion;
 	}

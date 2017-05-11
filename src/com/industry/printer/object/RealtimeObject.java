@@ -85,7 +85,7 @@ public class RealtimeObject extends BaseObject {
 				mSubObjs.add(o);
 				
 				/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-				if (PlatformInfo.isBufferFromDotMatrix()) {
+				if (PlatformInfo.isBufferFromDotMatrix()==1) {
 					x = x + o.getContent().length() * 16;
 				} 
 				/*通过bitmap提取点阵的系统用下面的计算方法*/
@@ -134,7 +134,7 @@ public class RealtimeObject extends BaseObject {
 			}
 			
 			/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-			if (PlatformInfo.isBufferFromDotMatrix()) {
+			if (PlatformInfo.isBufferFromDotMatrix()==1) {
 				x = x + o.getContent().length() * 16;
 			} 
 			/*通过bitmap提取点阵的系统用下面的计算方法*/
@@ -391,6 +391,31 @@ public class RealtimeObject extends BaseObject {
 	public Vector<BaseObject> getSubObjs()
 	{
 		return mSubObjs;
+	}
+//////addbylk 
+	@Override	 
+	public Bitmap getpreviewbmp()
+	{
+		// Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		
+
+		/* 如果需要重新繪製，先計算新的尺寸 */
+		if (mXcor_end - mXcor == 0) {
+	//		meature();
+		}
+		Debug.e(TAG, "=============--->getScaledBitmap xEnd: " + mXcor_end + " x="+ mXcor + "  height=" + mHeight);
+		// meature();
+		
+		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		mCan = new Canvas(mBitmap);
+		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + mBitmap.getWidth());
+		for(BaseObject o : mSubObjs)
+		{
+			Debug.e(TAG, "============>id:" + o.mId + ", x=" + (o.getX() - getX()));
+			Bitmap b = o.getpreviewbmp();
+			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+		}
+		return mBitmap;
 	}
 
 }

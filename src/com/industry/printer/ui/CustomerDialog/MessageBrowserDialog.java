@@ -215,7 +215,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void loadMessages()
 		{
 			showLoading();
-			mHandler.post(new Runnable() {
+			mHandler.post(
+					new Runnable() {
 				
 				@Override
 				public void run() {
@@ -231,24 +232,28 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					if (Tlks == null) {
 						return ;
 					}
-					Arrays.sort(Tlks, new Comparator() {
-						public int compare(Object arg0, Object arg1) {
-							int cp1 = 0;
-							int cp2 = 0;
-							try {
-						    	cp1 = Integer.parseInt((String) arg0);
-						    	cp2 = Integer.parseInt((String) arg1);
-						    } catch(NumberFormatException e) {
-						    	e.printStackTrace();
-						    }
-						    if (cp1 > cp2) {
-						    	return 1;
-						    } else if(cp1 == cp2) {
-						    	return 0;
-						    }
-						    return -1;
-						}
-					});
+					Arrays.sort( Tlks,
+							     new Comparator() 
+										{
+									public int compare(Object arg0, Object arg1)
+									{
+										int cp1 = 0;
+										int cp2 = 0;
+										try {
+									    	cp1 = Integer.parseInt((String) arg0);
+									    	cp2 = Integer.parseInt((String) arg1);
+									    } catch(NumberFormatException e) {
+									    	e.printStackTrace();
+									    }
+									    if (cp1 > cp2) {
+									    	return 1;
+									    } else if(cp1 == cp2) {
+									    	return 0;
+									    }
+									    return -1;
+									}
+								}
+							);
 					
 					Debug.d(TAG, "--->load message sort ok");
 					for (String t:Tlks) {
@@ -267,7 +272,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					Debug.d(TAG, "--->load message load success");
 					mHandler.sendEmptyMessage(MSG_LOADED);
 				}
-			});
+			}
+					);
 			
 			
 		}

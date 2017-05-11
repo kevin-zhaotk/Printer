@@ -374,13 +374,13 @@ public class BinInfo {
     		len = dst.length - x*high;
     		//return;
     	}
-    	boolean matrix = PlatformInfo.isBufferFromDotMatrix();
+    	int  matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
     		if (x*high + i < 0) {
 				continue;
 			}
-    		if (matrix) {
+    		if (matrix==1) {
     			dst[x*high + i] = src[i];
     		} else {
     			dst[x*high + i] |= src[i];
