@@ -700,4 +700,5 @@
 	<string name="str_loading">loading...</string>
 	
 	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+	<string name="str_barcode_end">Barcode file is end</string>
 </resources>

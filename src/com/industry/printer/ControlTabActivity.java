@@ -78,7 +78,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener {
+public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -205,6 +205,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 */
 	public static final int MESSAGE_PRINT_STOP = 6;
 	
+	public static final int MESSAGE_PRINT_END = 14;
+	
 	/**
 	 * MESSAGE_INKLEVEL_DOWN
 	 *   message tobe sent when ink level change 
@@ -227,6 +229,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_RFID_ZERO = 12;
 	
 	public static final int MESSAGE_RFID_ALARM = 13;
+	
+	
 	
 	/**
 	 * the bitmap for preview
@@ -686,6 +690,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					updateCntIfNeed();
 					
 					break;
+				case MESSAGE_PRINT_END:
+					FpgaGpioOperation.uninit();
+					switchState(STATE_STOPPED);
+					FpgaGpioOperation.clean();
+					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					
 					for (int i = 0; i < mSysconfig.getHeads(); i++) {
@@ -861,7 +870,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		if (mDTransThread == null) {
 			Debug.d(TAG, "--->Print thread ready");
-			mDTransThread = DataTransferThread.getInstance();	
+			mDTransThread = DataTransferThread.getInstance();
+			mDTransThread.setCallback(this);
 		}
 		Debug.d(TAG, "--->init");
 		
@@ -1251,5 +1261,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		mDTransThread.refreshCount();
 		refreshCount();
+	}
+	
+	@Override
+	public void OnFinished(int code) {
+		Debug.d(TAG, "--->onFinished");
+		mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+		this.getActivity().runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(mContext, R.string.str_barcode_end, Toast.LENGTH_LONG).show();	
+			}
+		});
+		
 	}
 }

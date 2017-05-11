@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import android.R.bool;
 import android.R.integer;
 import android.content.Context;
 import android.database.CharArrayBuffer;
@@ -65,6 +66,8 @@ public class DataTask {
 	
 	private int mDots;
 	
+	public boolean isReady = true;
+	
 	/**
 	 * 背景的binInfo，
 	 */
@@ -90,6 +93,7 @@ public class DataTask {
 	
 	private void init(MessageTask task) {
 		mTask = task;
+		isReady = true;
 		if (task != null) {
 			mObjList = task.getObjects();
 		}
@@ -192,6 +196,7 @@ public class DataTask {
 					content = reader.read();
 				}
 				if (TextUtils.isEmpty(content)) {
+					isReady = false;
 					continue;
 				}
 				o.setContent(content);

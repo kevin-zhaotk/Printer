@@ -215,8 +215,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void loadMessages()
 		{
 			showLoading();
-			mHandler.post(new Runnable() {
-				
+			new Thread(){
 				@Override
 				public void run() {
 					TLKFileParser parser = new TLKFileParser(getContext(), null);
@@ -267,7 +266,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					Debug.d(TAG, "--->load message load success");
 					mHandler.sendEmptyMessage(MSG_LOADED);
 				}
-			});
+			}.start();
 			
 			
 		}
@@ -318,13 +317,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			switch (state) {
 			case OnScrollListener.SCROLL_STATE_IDLE:
 				Debug.d(TAG, "===>idle");
-				
+				mFileAdapter.setScrollState(false);
+				mFileAdapter.notifyDataSetChanged();
 				break;
 			case OnScrollListener.SCROLL_STATE_FLING:
 				Debug.d(TAG, "===>fling");
+				mFileAdapter.setScrollState(true);
 				break;
 			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 				Debug.d(TAG, "===>touch scroll");
+				mFileAdapter.setScrollState(true);
 				break;
 			default:
 				break;

@@ -157,15 +157,15 @@
     <string name="strRtFmt">Formato</string>
 
     <string-array name="strTimeFormat">
-        <item>AAAA-MM-GG</item>
-        <item>MM-GG-AAAA</item>
         <item>AA-MM-GG</item>
-        <item>MM-GG-AA</item>
-        <item>AAAA/MM/GG</item>
-        <item>MM/GG/AAAA</item>
-        <item>AA/MM/GG</item>
-        <item>MM/GG/AA</item>
-        <item>HH:NN</item>
+	    <item>MM-GG-AA</item>
+	    <item>AA/MM/GG</item>
+	    <item>MM/GG/AA</item>
+	    <item>GG/MM/AA</item>
+	    <item>AA</item>
+	    <item>MM</item>
+	    <item>GG</item>
+	    <item>HH:NN</item>
     </string-array>
     <string-array name="strarrayCounter">
         <item>3 punti</item>

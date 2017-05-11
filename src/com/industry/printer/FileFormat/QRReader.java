@@ -43,6 +43,12 @@ public class QRReader {
 		return mInstance;
 	}
 	
+	public static QRReader reInstance(Context ctx) {
+		mInstance = null;
+		mInstance = new QRReader(ctx);
+		return mInstance;
+	}
+	
 	public QRReader(Context ctx) {
 		mContext = ctx;
 		init();

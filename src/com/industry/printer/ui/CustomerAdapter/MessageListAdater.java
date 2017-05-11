@@ -85,6 +85,8 @@ public class MessageListAdater extends BaseAdapter {
 	 */
 	private int mSelected;
 	
+	private boolean mScrolling;
+	
 	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
 	/**
@@ -109,6 +111,15 @@ public class MessageListAdater extends BaseAdapter {
 	{
 		return this;
 	}
+	
+	public void setScrollState(boolean stat) {
+		mScrolling = stat;
+	}
+	
+	public boolean getScrollState() {
+		return mScrolling;
+	}
+	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -134,6 +145,9 @@ public class MessageListAdater extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+//		if (mScrolling) {
+//			return convertView;
+//		}
 		if(convertView!=null)
 			mHolder = (ItemViewHolder) convertView.getTag();
 		else
@@ -170,12 +184,17 @@ public class MessageListAdater extends BaseAdapter {
 		} else {
 			mHolder.mImage.setImageResource(R.drawable.preview_null);
 		}*/
+		
 		/*
 		 * 通過bin生成預覽圖
 		 * 優點：實時
 		 * 缺點：效率低
 		 */
 		Bitmap bmp = mPreviews.get(title);
+		if (bmp == null && mScrolling) {
+			mHolder.mllPreview.removeAllViews();
+			return convertView;
+		}
 		if (bmp == null) {
 			MessageTask task = new MessageTask(mContext, title);
 			DataTask dTask = new DataTask(mContext, task);
