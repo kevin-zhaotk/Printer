@@ -41,6 +41,7 @@ import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.R;
 
+import android.R.bool;
 import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -432,6 +433,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getHeads()) {
 			mRfid = 0;
 		}
+		Debug.d(TAG, "--->switchRfid to: " + mRfid);
 		refreshInk();
 		// refreshCount();
 		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
@@ -443,7 +445,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshInk() {
 		
 		float ink = mRfidManager.getLocalInk(mRfid);
-		Debug.d(TAG, "--->refresh ink: " + ink);
+		Debug.d(TAG, "--->refresh ink: " + mRfid + " = " + ink);
 		String level = String.valueOf(mRfid + 1) + "-" + (String.format("%.1f", ink) + "%");
 		
 		if (!mRfidManager.isValid(mRfid)) {
@@ -463,8 +465,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 			
 		}
-		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 1.0f) + ", " + (ink > 0f));
-		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 0f));
+		// Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 1.0f) + ", " + (ink > 0f));
+		// Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 0f));
 		if (ink <= 1.0f && ink > 0f && mInkLow == false) {
 			mInkLow = true;
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_LOW, 5000);
@@ -514,9 +516,61 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			} else {
 				mPower.setText("--");
 			}
-			mPowerV.setText(String.valueOf(power));
-			mTime.setText("0");
+			//mPowerV.setText(String.valueOf(power));
+			// mTime.setText("0");
+			// display Voltage & pulse width
+			
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
+		}
+
+		refreshVoltage();
+		refreshPulse();
+	}
+	
+	/**
+	 * if setting param25 == on, read from RFID feature 5
+	 * if setting param25 == off, read from setting param 26
+	 */
+	private void refreshVoltage() {
+		boolean auto = false;
+		if (mRfidManager == null) {
+			auto = false;
+		} else {
+			int vol = mSysconfig.getParam(24);
+			if (vol > 0) {
+				auto = true;
+			}
+		}
+		
+		if (auto) {
+			RFIDDevice device = mRfidManager.getDevice(0);
+			int vol = device.getFeature(4);
+			mPowerV.setText(String.valueOf(vol));
+		} else {
+			mPowerV.setText(String.valueOf(mSysconfig.getParam(25)));
+		}
+	}
+
+	/**
+	 * if setting param27 == on, read from RFID feature 4
+	 * if setting param27 == off, read from setting param 28
+	 */
+	private void refreshPulse() {
+		boolean auto = false;
+		if (mRfidManager == null) {
+			auto = false;
+		} else {
+			int p = mSysconfig.getParam(26);
+			if (p > 0) {
+				auto = true;
+			}
+		}
+		if (auto) {
+			RFIDDevice device = mRfidManager.getDevice(0);
+			int pulse = device.getFeature(3);
+			mTime.setText(String.valueOf(pulse));
+		} else {
+			mTime.setText(String.valueOf(mSysconfig.getParam(27)));
 		}
 	}
 	
@@ -816,14 +870,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		float scale = 1;
 		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
 		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
-		
-		if (PlatformInfo.PRODUCT_7INCH.equals(product)) {
-			scale = (float)75.0f/bmp.getHeight();
-		} else if (PlatformInfo.PRODUCT_3INCH.equals(product)) {
-			scale = (float)75.0f/bmp.getHeight();
-		} else {
-			scale = (float)75.0f/bmp.getHeight();
-		}
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Debug.d(TAG, "--->screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+		float height = mllPreview.getHeight();
+		scale = (height/bmp.getHeight());
 		mllPreview.removeAllViews();
 			for (int i = 0;x < bmp.getWidth(); i++) {
 				if (x + 1200 > bmp.getWidth()) {

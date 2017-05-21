@@ -960,6 +960,13 @@ public class RFIDDevice implements RfidCallback{
 	
 	public byte[] mFeature;
 	
+	public int getFeature(int index) {
+		if(mFeature == null || index >= mFeature.length) {
+			return 0;
+		} else {
+			return mFeature[index];
+		}
+	}
 	/**
 	 * 特征码读取
 	 */

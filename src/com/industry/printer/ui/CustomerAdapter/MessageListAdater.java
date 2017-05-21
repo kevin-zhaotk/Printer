@@ -21,6 +21,7 @@ import android.R.integer;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -86,7 +87,7 @@ public class MessageListAdater extends BaseAdapter {
 	private int mSelected;
 	
 	private boolean mScrolling;
-	
+	private Bitmap mDefault;
 	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
 	/**
@@ -104,7 +105,7 @@ public class MessageListAdater extends BaseAdapter {
 		System.arraycopy(from, 0, mKeys, 0, from.length);
 		System.arraycopy(to, 0, mViewIDs, 0, to.length);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+		mDefault = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.preview_default);
 	}
 	
 	public MessageListAdater getInstance()
@@ -193,6 +194,8 @@ public class MessageListAdater extends BaseAdapter {
 		Bitmap bmp = mPreviews.get(title);
 		if (bmp == null && mScrolling) {
 			mHolder.mllPreview.removeAllViews();
+			// mDefault = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.preview_default);
+			// dispPreview(mDefault);
 			return convertView;
 		}
 		if (bmp == null) {

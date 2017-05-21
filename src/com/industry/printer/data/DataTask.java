@@ -190,6 +190,9 @@ public class DataTask {
 				if (config.getParam(16) == 0 || !((BarcodeObject)o).isQRCode()) {
 					continue;
 				}
+				if (!((BarcodeObject)o).mSource) {
+					continue;
+				}
 				String content = "123456789";
 				if (!prev) {
 					QRReader reader = QRReader.getInstance(mContext);

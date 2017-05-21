@@ -69,8 +69,10 @@ public class RealtimeObject extends BaseObject {
 		for(;str != null && str.length()>0;)
 		{
 			if(	!str.startsWith("YY", i) &&
+					!str.startsWith("AA", i) &&
 					!str.startsWith("MM", i) &&
 					!str.startsWith("DD", i) &&
+					!str.startsWith("GG", i) &&
 					!str.startsWith("HH", i) &&
 					!str.startsWith("NN", i))
 			{
@@ -95,7 +97,7 @@ public class RealtimeObject extends BaseObject {
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
-			if(str.startsWith("YY", i))
+			if(str.startsWith("YY", i) || str.startsWith("AA", i))
 			{
 				System.out.println("YY detected");
 				o = new RealtimeYear(mContext, this, x,false);
@@ -109,7 +111,7 @@ public class RealtimeObject extends BaseObject {
 				mSubObjs.add(o);
 				i += 2;
 			}
-			else if(str.startsWith("DD", i))
+			else if(str.startsWith("DD", i) || str.startsWith("GG", i))
 			{
 				System.out.println("DD detected");
 				o = new RealtimeDate(mContext, this, x);
