@@ -463,7 +463,18 @@ public class MessageTask {
 					continue;
 					}
 				can.drawBitmap(t, o.getX(), o.getY(), p);				
-			}else 
+			}else if(o instanceof TextObject)
+			{
+				Bitmap  t  = o.getpreviewbmp();
+
+				if (t== null) {
+					continue;
+					}
+				can.drawBitmap(t, o.getX(), o.getY(), p);				
+			}	
+					
+			/*	
+				TextObject
 			{
 				Bitmap t  = o.getScaledBitmap(mContext);
 					if (t== null) {
@@ -471,7 +482,7 @@ public class MessageTask {
 				}	
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 			
-			}
+			}*/
 			
 			/*	
 			else if(o instanceof ShiftObject)
@@ -493,6 +504,9 @@ public class MessageTask {
 		// Bitmap.createScaledBitmap();
 		float scale = bmp.getHeight() / 100;
 		width = (int) (width / scale);
+		
+		width=width/2; //addbylk 减半输出 
+		
 		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
 		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
 	}

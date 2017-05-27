@@ -109,19 +109,20 @@ public class RealtimeMonth extends BaseObject {
 		
 		 
 		String str_new_content="";
-		mContent =	mContent.replace('0', 'M');	
+		str_new_content =	mContent;	
 		
-		mContent =	mContent.replace('1', 'M');	
-		mContent =	mContent.replace('2', 'M');	
-		mContent =	mContent.replace('3', 'M');	
-		mContent =	mContent.replace('4', 'M');	
-		mContent =	mContent.replace('5', 'M');	
-		mContent =	mContent.replace('6', 'M');	
-		mContent =	mContent.replace('7', 'M');	
-		mContent =	mContent.replace('8', 'M');	
-		mContent =	mContent.replace('9', 'M');	
+		str_new_content =	str_new_content.replace('0', 'M');		
+		str_new_content =	str_new_content.replace('1', 'M');	
+		str_new_content =	str_new_content.replace('2', 'M');	
+		str_new_content =	str_new_content.replace('3', 'M');	
+		str_new_content =	str_new_content.replace('4', 'M');	
+		str_new_content =	str_new_content.replace('5', 'M');	
+		str_new_content =	str_new_content.replace('6', 'M');	
+		str_new_content =	str_new_content.replace('7', 'M');	
+		str_new_content =	str_new_content.replace('8', 'M');	
+		str_new_content =	str_new_content.replace('9', 'M');	
 		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
-		mCan.drawText(mContent , 0, mHeight-fm.descent, mPaint);
+		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}	

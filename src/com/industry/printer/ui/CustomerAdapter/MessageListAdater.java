@@ -21,9 +21,11 @@ import android.R.integer;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -32,6 +34,30 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
+
+
+//addbylk
+import android.R.color;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Paint.FontMetrics;
+import android.graphics.Typeface;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.View;
+
+
+
+
+
 
 import android.graphics.BitmapFactory;//addbylk70507
 
@@ -87,6 +113,8 @@ public class MessageListAdater extends BaseAdapter {
 	 */
 	private int mSelected;
 	
+	private int[] mSCroll;	
+	
 	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
 	/**
@@ -104,6 +132,12 @@ public class MessageListAdater extends BaseAdapter {
 		System.arraycopy(from, 0, mKeys, 0, from.length);
 		System.arraycopy(to, 0, mViewIDs, 0, to.length);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mSCroll= new int [1024];
+		for(int x=0;x<1024;x++)
+		{
+			mSCroll[x]=0;
+	
+		}
 		
 	}
 	
@@ -177,30 +211,37 @@ public class MessageListAdater extends BaseAdapter {
 		 * 優點：實時
 		 * 缺點：效率低
 		 */
-		Bitmap bmp = mPreviews.get(title);
+		Bitmap bmp_disk = mPreviews.get(title);
         Bitmap Bmp_bak   = mPreviews.get(title);
-		if (bmp == null) {
-			/*
+     /*   
+		if (bmp_disk == null) {
+			
 			MessageTask task = new MessageTask(mContext, title);
 			DataTask dTask = new DataTask(mContext, task);
 			dTask.prepareBackgroudBuffer();
             /// 获得 浏览图像 
-			bmp = dTask.getPreview();///
+			bmp_disk = dTask.getPreview();///
 			
-			if (bmp.getWidth() > 1500) {
-				Bitmap b = Bitmap.createBitmap(bmp, 0, 0, 1500, bmp.getHeight());
-				BinFromBitmap.recyleBitmap(bmp);
-				bmp = b;
+			if (bmp_disk.getWidth() > 1500) {
+				Bitmap b = Bitmap.createBitmap(bmp_disk, 0, 0, 1500, bmp_disk.getHeight());
+				BinFromBitmap.recyleBitmap(bmp_disk);
+				bmp_disk = b;
 			}
-			*/
-			
+			mPreviews.put(title, bmp_disk);		
+		}
+		*/
+		 
+		 if (bmp_disk == null) 
+		 {
 			try
-			{   String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
+			{  
+				bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+				String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
 			   Debug.e(TAG, "===="+path);			
 			    File file =new File(path);
 				if( file.exists() )
 				{
-					bmp=BitmapFactory.decodeFile(path);
+					bmp_disk=BitmapFactory.decodeFile(path);
 					Debug.e(TAG, path);
 				}
 			}
@@ -208,26 +249,107 @@ public class MessageListAdater extends BaseAdapter {
 			{
 				
 			}
-			 bmp = Bitmap.createScaledBitmap(bmp, 1500, 100, true);
-			mPreviews.put(title, bmp);
+			Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+			 Paint mPaint;
+			 mPaint = new Paint();
+			 
+			 Canvas mCan;
+			mCan = new Canvas(Bmp_bak);
+			//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
+			int iwidth=bmp_disk.getWidth();
+			if(bmp_disk.getWidth()>1500)
+			{
+				iwidth=1500;
+			}
+			
+			 
+			 mCan.drawBitmap(bmp_disk, new Rect(0, 0, iwidth, 100), new Rect(0, 0, iwidth, 100), null);
+			   Debug.e(TAG, "mSCroll mSCroll==11111=============="+mSCroll);	
+				
+		//	bmp_disk = Bitmap.createScaledBitmap(bmp_disk);//,bmp_disk.getWidth(), bmp_disk.getHeight() , true);		
+			
+		//	bmp_disk = Bitmap.createScaledBitmap(bmp_disk,1500, 100, true);
+			mPreviews.put(title, Bmp_bak);
 		}
+
+		 
 		// mHolder.mImage.setImageBitmap(bmp);
 		//////////////////////////////////////////////
-		dispPreview(bmp);
+
+		
+		/*	
+	
+		ImageView imgView = new ImageView(mContext);
+		imgView.setScaleType(ScaleType.FIT_START);
+//		if (density == 1) {
+		//	imgView.setLayoutParams(new LayoutParams(1500,100));
+//		} else {
+//			imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
+//		}
+		
+		imgView.setBackgroundColor(Color.WHITE);
+		imgView.setImageBitmap(Bmp_bak);
+		mHolder.mllPreview.addView(imgView);
+	*/
+		
+
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
 		if(position == mSelected)
 		{
+					try
+					{  
+						bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+						String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
+					   Debug.e(TAG, "===="+path);			
+					    File file =new File(path);
+						if( file.exists() )
+						{
+							bmp_disk=BitmapFactory.decodeFile(path);
+							Debug.e(TAG, path);
+						}
+					}
+					catch (Exception e)
+					{
+						
+					}
+					Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+					 Paint mPaint;
+					 mPaint = new Paint();
+					 
+					 Canvas mCan;
+					mCan = new Canvas(Bmp_bak);
+					//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
+					int iwidth=bmp_disk.getWidth();
+					if(bmp_disk.getWidth()>1500)
+					{
+						iwidth=1500;
+					}
+					
+					 mCan.drawBitmap(bmp_disk, new Rect(mSCroll[position], 0, iwidth+mSCroll[position], 100), new Rect(0, 0, iwidth, 100), null);
+					   Debug.e(TAG, "mSCroll mSCroll=2222=============="+mSCroll[position]);	
+					mPreviews.put(title, Bmp_bak);			 
+				 
+					
 			Debug.d(TAG, "---blue");
 			mHolder.mMark.setVisibility(View.VISIBLE);
 		}
 		else {
+		//	mSCroll[position]=0;
+			 
 			Debug.d(TAG, "---transparent");
 			mHolder.mMark.setVisibility(View.GONE);
 		}
-		
+	 	dispPreview(Bmp_bak);	
 		return convertView;
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
@@ -236,8 +358,10 @@ public class MessageListAdater extends BaseAdapter {
 		float scale = (float)DimenssionConvertion.dip2px(mContext, 100)/bmp.getHeight();
 		mHolder.mllPreview.removeAllViews();
 		Debug.e(TAG, "-===================-->width= " + bmp.getWidth() + "  scale============================= " + scale);
-			for (int i = 0;x < bmp.getWidth(); i++) {
-				if (x + 1200 + 50 > bmp.getWidth()) {
+			for (int i = 0;x < bmp.getWidth(); i++) 
+			{
+				if (x + 1200 + 50 > bmp.getWidth()) 
+				{
 					cutWidth = bmp.getWidth() - x;
 				} else {
 					cutWidth =1200;
@@ -280,10 +404,44 @@ public class MessageListAdater extends BaseAdapter {
 			for (int i = 0; i < list.length; i++) {
 				File f = list[i];
 				f.delete();
-			}
+			} 
 		}
 		file.delete();
 		mCntList.remove(mSelected);
 		notifyDataSetChanged();
 	}
+	public void Scroll(int left_rigt) 
+	{
+		
+		if(mSelected!=-1)
+		{
+			/*
+			if(left_rigt==1)
+			{	
+				mSCroll[mSelected]-=left_rigt;
+				
+				if(mSCroll[mSelected]<0)
+				{
+					mSCroll[mSelected]=0;;			 
+				}				
+			}
+			else
+			{
+			*/
+				mSCroll[mSelected]+=left_rigt;
+		
+			// }
+		}
+		
+		Debug.e(TAG, "------Scroll");	
+		if (mSelected < 0 || mSelected >= mCntList.size()) {
+			return;
+		}
+
+
+		Debug.e(TAG, "------Scroll2");		
+		
+	}
+
+	
 }

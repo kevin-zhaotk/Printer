@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industry.printer"
-    android:versionCode="7050802"
-    android:versionName="7050802"
+    android:versionCode="7051701"
+    android:versionName="7051701"
     >
 	
     <!-- 

@@ -1,4 +1,5 @@
 package com.industry.printer.ui.CustomerDialog;
+ 
 
 import java.io.File;
 import java.util.Arrays;
@@ -7,6 +8,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Logger;
+ 
+
+
 
 import com.industry.printer.R;
 import com.industry.printer.Utils.ConfigPath;
@@ -74,6 +78,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		private static final int MSG_FILTER_CHANGED = 1;
 		private static final int MSG_LOADED = 2;
+
+		private static final int MSG_REF = 3;
 		
 		public Handler mHandler = new Handler() {
 			@Override
@@ -88,6 +94,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					mMessageList.setAdapter(mFileAdapter);
 					mFileAdapter.notifyDataSetChanged();
 					hideLoading();
+					break;
+				case MSG_REF:
+					mMessageList.setAdapter(mFileAdapter);
+					mFileAdapter.notifyDataSetChanged();	
 					break;
 				default:
 					break;
@@ -146,11 +156,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mMessageList.setOnTouchListener(this);
 			 mMessageList.setOnScrollListener(this);
 			 
+			 
 			 mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
 			 mLoading = (ImageView) findViewById(R.id.loading_img);
 			 loadMessages();
 			 
 			 setupViews();
+			
 		 }
 		
 		private void setupViews() {
@@ -196,6 +208,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mFileAdapter.setSelected(position);
 			mFileAdapter.notifyDataSetChanged();
 			mTitle = (String) selected.get("title");
+			//addbylk
+		//	mMessageList.setAdapter(mFileAdapter);
+			mFileAdapter.notifyDataSetChanged();
 			/*
 			if(mVSelected == null)
 			{
@@ -296,9 +311,54 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			}
 		}
 
+		float mdownx,mdowny;
 		@Override
 		public boolean onTouch(View arg0, MotionEvent arg1) {
 			// TODO Auto-generated method stub
+			
+			float curX,curY;
+			switch( arg1.getAction())
+			{
+			case MotionEvent.ACTION_DOWN:
+				Debug.e(TAG, "------ACTION_DOWN"+ arg1.getX());	
+				mdownx=arg1.getX();
+				mdowny=arg1.getY();
+				break;
+			case MotionEvent.ACTION_MOVE:
+				Debug.e(TAG, "------ACTION_MOVE"+ arg1.getX());					
+
+				break;
+			case MotionEvent.ACTION_UP:
+				Debug.e(TAG, "------ACTION_UP"+ arg1.getX());					
+				curX=arg1.getX();
+				curY=arg1.getY();
+						
+				
+				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
+				{
+					/*
+					if( curX>mdownx )
+					{
+						mFileAdapter.Scroll(1);
+					}
+					else
+					{
+						mFileAdapter.Scroll(2);			
+					}
+					*/
+					mFileAdapter.Scroll( (int)( mdownx-curX ) );			
+					
+				mHandler.sendEmptyMessage(MSG_LOADED);					
+				}
+				
+				
+
+				// mFileAdapter.Scroll(1);
+			//	mFileAdapter.notifyDataSetChanged();
+				break;			
+			
+			}
+			
 			return false;
 		}
 

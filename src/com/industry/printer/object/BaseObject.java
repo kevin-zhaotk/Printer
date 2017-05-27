@@ -226,8 +226,9 @@ public class BaseObject{
 	}
 	
 	protected void drawSelected() {
-		mPaint.setColor(Color.RED);
+		// mPaint.setColor(Color.RED);
 		// Debug.d(TAG, "--->drawSelected");
+		mPaint.setColor(Color.BLACK);	
 		mBitmapSelected = draw();
 	}
 	
@@ -292,7 +293,7 @@ public class BaseObject{
 	protected Bitmap getBitmap(Context context)
 	{
 		//mPaint.setColor(Color.RED);
-		//Debug.d(TAG,"getBitmap mContent="+mContent);
+		Debug.e(TAG,"=================getBitmap mContent="+mContent);
 		mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
@@ -537,7 +538,8 @@ public class BaseObject{
 	{
 		mIsSelected = s;
 		if(mIsSelected)
-			mPaint.setColor(Color.RED);
+		//	mPaint.setColor(Color.RED);//addbylk
+			mPaint.setColor(Color.BLACK);	
 		else
 			mPaint.setColor(Color.BLACK);
 	}

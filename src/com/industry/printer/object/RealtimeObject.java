@@ -397,7 +397,7 @@ public class RealtimeObject extends BaseObject {
 	public Bitmap getpreviewbmp()
 	{
 		// Debug.d(TAG, "--->getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
-		
+		Bitmap bitmap;
 
 		/* 如果需要重新繪製，先計算新的尺寸 */
 		if (mXcor_end - mXcor == 0) {
@@ -406,16 +406,16 @@ public class RealtimeObject extends BaseObject {
 		Debug.e(TAG, "=============--->getScaledBitmap xEnd: " + mXcor_end + " x="+ mXcor + "  height=" + mHeight);
 		// meature();
 		
-		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
-		mCan = new Canvas(mBitmap);
-		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + mBitmap.getWidth());
+		bitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		mCan = new Canvas(bitmap);
+		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + bitmap.getWidth());
 		for(BaseObject o : mSubObjs)
 		{
 			Debug.e(TAG, "============>id:" + o.mId + ", x=" + (o.getX() - getX()));
 			Bitmap b = o.getpreviewbmp();
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
-		return mBitmap;
+		return bitmap;
 	}
 
 }
