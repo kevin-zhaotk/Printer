@@ -267,8 +267,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					mHandler.sendEmptyMessage(MSG_LOADED);
 				}
 			}.start();
+			
+			
 		}
-
 		
 		private void showLoading() {
 			mLoadingLy.setVisibility(View.VISIBLE);
