@@ -4,8 +4,33 @@ import java.util.Calendar;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
-
+/*
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Color;
+*/
+
+import android.R.color;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Paint.FontMetrics;
+import android.graphics.Typeface;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.View;
+
+import android.graphics.Typeface;
+import android.graphics.Paint.FontMetrics;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -77,5 +102,64 @@ public class RealtimeYear extends BaseObject {
 		str += "^00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
 		Debug.d(TAG, "file string ["+str+"]");
 		return str;
+	}
+//////addbylk 
+	@Override	 
+	public Bitmap getpreviewbmp()
+	{
+		Bitmap bitmap;
+	    Paint Paint; 
+		Paint = new Paint();
+		Paint.setTextSize(getfeed());
+		Paint.setAntiAlias(true);//.setAntiAlias(true); //去除锯齿  
+		Paint.setFilterBitmap(true); //对位图进行滤波处理
+	
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			Paint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		
+		int width = (int)Paint.measureText(getContent());
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		if (mWidth == 0) {
+			setWidth(width);
+		}
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+	 
+		Canvas can = new Canvas(bitmap);
+		FontMetrics fm = Paint.getFontMetrics();
+		
+		Paint.setColor(Color.BLUE);//设置 变量 在 位图 里 为 蓝色 
+	
+		
+		 
+		String str_new_content="";
+		str_new_content =	mContent;	
+		
+		str_new_content =	str_new_content.replace('0', 'Y');		
+		str_new_content =	str_new_content.replace('1', 'Y');	
+		str_new_content =	str_new_content.replace('2', 'Y');	
+		str_new_content =	str_new_content.replace('3', 'Y');	
+		str_new_content =	str_new_content.replace('4', 'Y');	
+		str_new_content =	str_new_content.replace('5', 'Y');	
+		str_new_content =	str_new_content.replace('6', 'Y');	
+		str_new_content =	str_new_content.replace('7', 'Y');	
+		str_new_content =	str_new_content.replace('8', 'Y');	
+		str_new_content =	str_new_content.replace('9', 'Y');	
+		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
+		can.drawText(str_new_content , 0, mHeight-fm.descent, Paint);
+	
+		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}
 }

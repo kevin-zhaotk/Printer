@@ -1042,6 +1042,11 @@ public class SystemConfigFile{
 			break;
 		case MessageType.MESSAGE_TYPE_50_8:
 			heads = 4;
+		case MessageType.MESSAGE_TYPE_HZK_16_16:
+			heads = 5;		
+		case MessageType.MESSAGE_TYPE_HZK_32_32:
+			heads = 6;				
+					
 		default:
 			break;
 		}

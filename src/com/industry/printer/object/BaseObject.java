@@ -103,12 +103,13 @@ public class BaseObject{
 	public HashMap<String, byte[]> mVBuffer;
 	public MessageTask mTask;
 	
-	public static final String DEFAULT_FONT = "0T+";
-	
+
+//	public static final String DEFAULT_FONT = "0T+";//	
+	public static final String DEFAULT_FONT = "1+";// addbylk	
 	/**
 	 * supported fonts
 	 */
-	private static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
+	public static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
 											"1T", "2+", "2B", "2i", "3+", "3B",
 											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
 	
@@ -134,7 +135,7 @@ public class BaseObject{
 		isNeedRedraw = true;
 		mSource = false;
 		// 參數40：列高
-		mDotsPerClm = SystemConfigFile.getInstance(mContext).getParam(39);
+		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		mFont = DEFAULT_FONT;
 		initPaint();
 		setSelected(true);	
@@ -225,8 +226,9 @@ public class BaseObject{
 	}
 	
 	protected void drawSelected() {
-		mPaint.setColor(Color.RED);
+		// mPaint.setColor(Color.RED);
 		// Debug.d(TAG, "--->drawSelected");
+		mPaint.setColor(Color.BLACK);	
 		mBitmapSelected = draw();
 	}
 	
@@ -282,9 +284,6 @@ public class BaseObject{
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
-	private int getfeed() {
-		return (int)(mHeight/10 * 11);
-	}
 	private int getfeedsent() {
 		return (int)(mHeight/10 * 11/20 + 1);
 	}
@@ -367,6 +366,16 @@ public class BaseObject{
 			gBmp.recycle();
 			gBmp = b;
 		}
+		else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3)) { //add by lk 170418
+			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 128, true);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 128, Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			can.drawBitmap(gBmp, 0, 0, mPaint);
+			gBmp.recycle();
+			gBmp = b;
+		}		//addbylk 170418 end
+		
 		BinFileMaker maker = new BinFileMaker(mContext);
 		dots = maker.extract(gBmp);
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
@@ -527,7 +536,8 @@ public class BaseObject{
 	{
 		mIsSelected = s;
 		if(mIsSelected)
-			mPaint.setColor(Color.RED);
+		//	mPaint.setColor(Color.RED);//addbylk
+			mPaint.setColor(Color.BLACK);	
 		else
 			mPaint.setColor(Color.BLACK);
 	}
@@ -730,7 +740,7 @@ public class BaseObject{
 	}
 	
 	public float getProportion() {
-		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
+		int dots = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		return dots/Configs.gDots;
 	}
 	
@@ -743,5 +753,13 @@ public class BaseObject{
 			mWidth = width;
 		}
 		Debug.d(TAG, "meature mHeight = " + mHeight + "  mWidth = " + mWidth);
+	}
+	//////addbylk 		 
+	public Bitmap getpreviewbmp()
+	{
+		return  Bitmap.createBitmap(0 , Configs.gDots, Bitmap.Config.ARGB_8888);
+	}
+	public int getfeed() {
+		return (int)(mHeight/10 * 11);
 	}
 }

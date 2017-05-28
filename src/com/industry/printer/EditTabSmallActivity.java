@@ -1009,11 +1009,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if(obj == null)
 			return;
 		float h = obj.getHeight();
+		if(h<30)
+		return;
 		h = h - MessageObject.PIXELS_PER_MM;
 		obj.setHeight(h);
-		if (!(obj instanceof RealtimeObject)) {
+	/*	if ((obj instanceof RealtimeObject)) {
 			obj.resizeByHeight();
 		}
+		*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	
@@ -1022,11 +1025,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if(obj == null)
 			return;
 		float h = obj.getHeight();
+		
 		h = h + MessageObject.PIXELS_PER_MM;
 		obj.setHeight(h);
-		if (!(obj instanceof RealtimeObject)) {
+		/*
+		if ((obj instanceof RealtimeObject)) {
 			obj.resizeByHeight();
 		}
+		*/
 		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
 	}
 	

@@ -7,6 +7,11 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.Paint.FontMetrics;
 import android.renderscript.Sampler.Value;
 import android.util.Log;
 
@@ -202,4 +207,58 @@ public class CounterObject extends BaseObject {
 		System.out.println("counter string ["+str+"]");
 		return str;
 	}
+//////add by lk 
+	@Override	 
+	public Bitmap getpreviewbmp()
+	{
+		Bitmap bitmap;
+		mPaint.setTextSize(getfeed());
+		mPaint.setAntiAlias(true); //  
+		mPaint.setFilterBitmap(true); //
+	
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		
+		int width = (int)mPaint.measureText(getContent());
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		if (mWidth == 0) {
+			setWidth(width);
+		}
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
+	 
+		String str_new_content="";
+		mContent =	mContent.replace('0', 'c');	
+		
+		mContent =	mContent.replace('1', 'c');	
+		mContent =	mContent.replace('2', 'c');	
+		mContent =	mContent.replace('3', 'c');	
+		mContent =	mContent.replace('4', 'c');	
+		mContent =	mContent.replace('5', 'c');	
+		mContent =	mContent.replace('6', 'c');	
+		mContent =	mContent.replace('7', 'c');	
+		mContent =	mContent.replace('8', 'c');	
+		mContent =	mContent.replace('9', 'c');	
+		
+		
+		mCan.drawText(mContent , 0, mHeight-fm.descent, mPaint);
+	
+		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
+	}	
+	
 }

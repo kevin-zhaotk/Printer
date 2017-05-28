@@ -343,6 +343,19 @@ public static final String TAG="SettingsTabActivity";
 				// FpgaGpioOperation.updateSettings(mContext);
 				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
 				// device.read();
+				if(mSysconfig.getParam(30)==7)
+				{				Debug.i(TAG, "111===>onclick");
+				   PlatformInfo.SetDotMatrixType(1);
+				   
+				}else if(mSysconfig.getHeads()==8)
+				{				Debug.i(TAG, "222===>onclick");
+				   PlatformInfo.SetDotMatrixType(2);
+				} 
+				else
+				{				Debug.i(TAG, "=333==>onclick");
+					  PlatformInfo.SetDotMatrixType(0);			
+				}
+				Debug.i(TAG, "===>onclick");
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();

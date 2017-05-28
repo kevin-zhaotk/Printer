@@ -24,7 +24,7 @@ public class Debug {
 		if (!Configs.DEBUG) {
 			return 0;
 		}
-		Log.d(tag, getLineNumber()+ ":"+log, tr);
+		Log.d(TAG, getLineNumber()+ ":"+log, tr);
 		return 0;
 	}
 	public static int i(String tag, String log)
