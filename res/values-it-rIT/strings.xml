@@ -458,11 +458,11 @@
     <string name="str_textview_param30">30.Filtro Pho</string>
     <string name="str_textview_param31">31.Riservato</string>
     <string name="str_textview_param32">32.Riservato</string>
-    <string name="str_textview_param33">33.Riservato</string>
-    <string name="str_textview_param34">34.Riservato</string>
-    <string name="str_textview_param35">35.Riservato</string>
-    <string name="str_textview_param36">36.Riservato</string>
-    <string name="str_textview_param37">37.Riservato</string>
+	<string name="str_textview_param33">33.Dotsize</string>
+	<string name="str_textview_param34">34.PWML</string>
+	<string name="str_textview_param35">35.STR</string>
+	<string name="str_textview_param36">36.Slant</string>
+	<string name="str_textview_param37">37.PWMH</string>
     <string name="str_textview_param38">38.Riservato</string>
     <string name="str_textview_param39">39.Riservato</string>
     <string name="str_textview_param40">40.Riservato</string>

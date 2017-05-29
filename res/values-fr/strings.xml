@@ -484,11 +484,11 @@
 	<string name="str_textview_param30">30.Filtre Pho</string>
 	<string name="str_textview_param31">31.Réservé</string>
 	<string name="str_textview_param32">32.Réservé</string>
-	<string name="str_textview_param33">33.Réservé</string>
-	<string name="str_textview_param34">34.Réservé</string>
-	<string name="str_textview_param35">35.Réservé</string>
-	<string name="str_textview_param36">36.Réservé</string>
-	<string name="str_textview_param37">37.Réservé</string>
+	<string name="str_textview_param33">33.Dotsize</string>
+	<string name="str_textview_param34">34.PWML</string>
+	<string name="str_textview_param35">35.STR</string>
+	<string name="str_textview_param36">36.Slant</string>
+	<string name="str_textview_param37">37.PWMH</string>
 	<string name="str_textview_param38">38.Réservé</string>
 	<string name="str_textview_param39">39.Réservé</string>
 	<string name="str_textview_param40">40.Réservé</string>

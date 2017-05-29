@@ -364,11 +364,11 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[29] = new ItemOneLine(30, R.string.str_textview_param30, R.string.str_time_unit_ms);
 		mSettingItems[30] = new ItemOneLine(31, R.string.str_textview_param31, R.array.strPrinterArray, 0, ItemType.TYPE_ARRAY);
 		mSettingItems[31] = new ItemOneLine(32, R.string.str_textview_param32, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[32] = new ItemOneLine(33, R.string.str_textview_param33, 0);
-		mSettingItems[33] = new ItemOneLine(34, R.string.str_textview_param34, 0);
-		mSettingItems[34] = new ItemOneLine(35, R.string.str_textview_param35, 0);
-		mSettingItems[35] = new ItemOneLine(36, R.string.str_textview_param36, 0);
-		mSettingItems[36] = new ItemOneLine(37, R.string.str_textview_param37, 0);
+		mSettingItems[32] = new ItemOneLine(33, R.string.str_textview_param33, R.string.str_time_unit_us);
+		mSettingItems[33] = new ItemOneLine(34, R.string.str_textview_param34, R.string.str_time_unit_us);
+		mSettingItems[34] = new ItemOneLine(35, R.string.str_textview_param35, R.string.str_time_unit_us);
+		mSettingItems[35] = new ItemOneLine(36, R.string.str_textview_param36, R.string.str_time_unit_us);
+		mSettingItems[36] = new ItemOneLine(37, R.string.str_textview_param37, R.string.str_time_unit_us);
 		mSettingItems[37] = new ItemOneLine(38, R.string.str_textview_param38, 0);
 		mSettingItems[38] = new ItemOneLine(39, R.string.str_textview_param39, 0);
 		mSettingItems[39] = new ItemOneLine(40, R.string.str_textview_param40, R.array.message_dots,	0,	ItemType.TYPE_VALUE);
