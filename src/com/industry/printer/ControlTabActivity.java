@@ -475,7 +475,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mHandler.removeMessages(MESSAGE_RFID_LOW);
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 		}
-		
+		refreshVoltage();
+		refreshPulse();
 	}
 	
 	private void refreshCount() {
@@ -522,9 +523,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
 		}
-
-		refreshVoltage();
-		refreshPulse();
 	}
 	
 	/**
