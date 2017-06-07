@@ -182,7 +182,7 @@
 		        />
 	    </RelativeLayout>
 	    <RelativeLayout
-	        android:layout_width="240dp" 
+	        android:layout_width="300dp" 
 	        android:layout_height="fill_parent"
 		    android:layout_centerInParent="true"
 	        >
