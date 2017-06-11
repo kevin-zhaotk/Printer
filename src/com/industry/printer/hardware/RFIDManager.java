@@ -24,6 +24,7 @@ public class RFIDManager implements RfidCallback{
 	private static RFIDManager	mInstance=null;
 	private List<RFIDDevice> mRfidDevices = new ArrayList<RFIDDevice>();
 	private int mCurrent=0;
+	private int mLiveHeads = 1;
 	private RFIDDevice mDevice;
 	private Handler mCallback;
 	
@@ -36,9 +37,16 @@ public class RFIDManager implements RfidCallback{
 	public static final int MSG_RFID_READ_SUCCESS = 105;
 	public static final int MSG_RFID_READ_FAIL = 106;
 	public static final int MSG_RFID_INIT = 107;
+	public static final int MSG_RFID_CHECK_FAIL = 108;
+	public static final int MSG_RFID_CHECK_SUCCESS = 109;
 	
 	public static final int MSG_RFID_SWITCH_DEVICE = 1;
 	public static final int MSG_RFID_INIT_NEXT = 2;
+	
+
+	public static final int MSG_RFID_CHECK_SWITCH_DEVICE = 3;
+	public static final int MSG_RFID_CHECK_NEXT = 4;
+	public static final int MSG_RFID_CHECK_COMPLETE = 5;
 	
 	private Handler mHandler = new Handler() {
 		@Override
@@ -56,11 +64,11 @@ public class RFIDManager implements RfidCallback{
 				mDevice = mRfidDevices.get(mCurrent);
 				mDevice.addLisetener(RFIDManager.this);
 				if (mDevice.getLocalInk() > 0) {
-					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 1000);
+					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
 					break;
 				}
 				ExtGpio.rfidSwitch(mCurrent);
-				mHandler.sendEmptyMessageDelayed(MSG_RFID_INIT_NEXT, 1000);	
+				mHandler.sendEmptyMessageDelayed(MSG_RFID_INIT_NEXT, 200);	
 				break;
 			case MSG_RFID_INIT_NEXT:
 				if (mDevice.getLocalInk() > 0) {
@@ -73,6 +81,38 @@ public class RFIDManager implements RfidCallback{
 					mDevice.lookForCards(false);
 				}
 				// mDevice.connect();
+				break;
+				
+			case MSG_RFID_CHECK_SWITCH_DEVICE:
+				mDevice.removeListener(RFIDManager.this);
+				Debug.d(TAG, "--->dev: " + mCurrent + "  ink:" + mDevice.getLocalInk());
+				mCurrent++;
+				if (mCurrent >= mLiveHeads) {
+					Debug.d(TAG, "--->rfid check success");
+					mCallback.sendEmptyMessageDelayed(MSG_RFID_CHECK_SUCCESS, 100);
+					break;
+				}
+				mDevice = mRfidDevices.get(mCurrent);
+				mDevice.addLisetener(RFIDManager.this);
+				
+				ExtGpio.rfidSwitch(mCurrent);
+				mHandler.sendEmptyMessageDelayed(MSG_RFID_CHECK_NEXT, 200);	
+				
+				break;
+			case MSG_RFID_CHECK_NEXT:
+				if (RFIDDevice.isNewModel) {
+					mDevice.readBlock(RFIDDevice.SECTOR_UUID, RFIDDevice.BLOCK_UUID, RFIDDevice.RFID_DATA_MIFARE_KEY_A);
+				} else {
+					mDevice.keyVerfication(RFIDDevice.SECTOR_UUID, RFIDDevice.BLOCK_UUID, RFIDDevice.RFID_DATA_MIFARE_KEY_A);
+				}
+				break;
+			case MSG_RFID_CHECK_COMPLETE:
+				if (msg.arg1 > 0) {
+					mCallback.sendEmptyMessageDelayed(MSG_RFID_CHECK_SUCCESS, 100);
+				} else {
+					mCallback.sendEmptyMessageDelayed(MSG_RFID_CHECK_FAIL, 100);
+				}
+				
 				break;
 			}
 		}
@@ -223,6 +263,7 @@ public class RFIDManager implements RfidCallback{
 			mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 2000);
 			return;
 		}
+		Debug.d(TAG, "--->rfid: " + Integer.toHexString(data.getCommand()));
 		switch(data.getCommand()) {
 			case RFIDDevice.RFID_CMD_CONNECT:
 				mDevice.lookForCards(false);
@@ -258,6 +299,8 @@ public class RFIDManager implements RfidCallback{
 					mDevice.readBlock(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_READY) {
 					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
+				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_UUID_READY) {
+					mHandler.sendEmptyMessageDelayed(MSG_RFID_CHECK_SWITCH_DEVICE, 200);
 				}
 				break;
 			case RFIDDevice.RFID_CMD_MIFARE_KEY_VERIFICATION:
@@ -271,6 +314,8 @@ public class RFIDManager implements RfidCallback{
 					mDevice.readBlock(RFIDDevice.SECTOR_INKLEVEL, RFIDDevice.BLOCK_INKLEVEL);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_KEY_VERFYED) {
 					mDevice.readBlock(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL);
+				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_UUID_KEY_VERFYING) {
+					mDevice.readBlock(RFIDDevice.SECTOR_UUID, RFIDDevice.BLOCK_UUID);
 				}
 				break;
 			case RFIDDevice.RFID_CMD_MIFARE_READ_BLOCK:
@@ -282,10 +327,35 @@ public class RFIDManager implements RfidCallback{
 					mDevice.keyVerfication(RFIDDevice.SECTOR_COPY_INKLEVEL, RFIDDevice.BLOCK_COPY_INKLEVEL, mDevice.mRFIDKeyA);
 				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_BACKUP_READY) {
 					mHandler.sendEmptyMessageDelayed(MSG_RFID_SWITCH_DEVICE, 200);
+				} else if (mDevice.getState() == RFIDDevice.STATE_RFID_UUID_READY) {
+					if (mDevice.checkUID(data.getData())) {
+						mHandler.sendEmptyMessageDelayed(MSG_RFID_CHECK_SWITCH_DEVICE, 200);
+					} else {
+						Message msg = mHandler.obtainMessage(MSG_RFID_CHECK_COMPLETE);
+						msg.arg1 = 0;
+						msg.sendToTarget();
+					}
+					
 				}
 				break;
 			default:
 				break;
 		}
+	}
+	
+	public boolean checkUID(int heads) {
+		mLiveHeads = heads;
+		mCurrent = 0;
+		ExtGpio.rfidSwitch(mCurrent);
+
+		try {
+			Thread.sleep(500);
+		} catch (Exception e) {
+		}
+		mDevice = mRfidDevices.get(mCurrent);
+		mDevice.removeListener(this);
+		mDevice.addLisetener(this);
+		mHandler.sendEmptyMessage(MSG_RFID_CHECK_NEXT);
+		return true;
 	}
 }

@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -199,6 +200,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 *   message tobe sent when dismiss loading dialog 
 	 */
 	public static final int MESSAGE_PRINT_START = 5;
+	public static final int MESSAGE_PRINT_CHECK_UID = 15;
 	
 	/**
 	 * MESSAGE_PRINT_STOP
@@ -655,8 +657,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT,data, data.length*2);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
-				case MESSAGE_PRINT_START:
-					
+				case MESSAGE_PRINT_CHECK_UID:
+					//Debug.d(TAG, "--->initDTThread");
+					if (mDTransThread == null) {
+						initDTThread();
+					}
+					Debug.d(TAG, "--->prepare buffer");
+					DataTask dt = mDTransThread.getData();
+					mRfidManager.checkUID(dt.getHeads());
+					break;
+				case RFIDManager.MSG_RFID_CHECK_FAIL:
+					Toast.makeText(mContext, "Rfid changed", Toast.LENGTH_SHORT).show();
+					break;
+				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
+				case MESSAGE_PRINT_START: 
 					if (!checkRfid()) {
 						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
 						return;
@@ -669,19 +683,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
 					}
-					//Debug.d(TAG, "--->initDTThread");
-					if (mDTransThread == null) {
-						initDTThread();
-					}
-					Debug.d(TAG, "--->prepare buffer");
-					DataTask dt = mDTransThread.getData();
 					if (!checkQRFile()) {
 						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
 						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
 					}
-					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
+					DataTask task = mDTransThread.getData();
+					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
 						break;
 					}
@@ -710,7 +719,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
 					Debug.d(TAG, "--->update settings");
-					FpgaGpioOperation.updateSettings(mContext, dt, FpgaGpioOperation.SETTING_TYPE_NORMAL);
+					FpgaGpioOperation.updateSettings(mContext, task, FpgaGpioOperation.SETTING_TYPE_NORMAL);
 					Debug.d(TAG, "--->launch thread");
 					/*鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙�*/
 					if (!mDTransThread.launch(mContext)) {
@@ -1214,7 +1223,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
-				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
 				// QRReader reader = QRReader.getInstance(mContext);
 				// Debug.d(TAG, "--->QRdata: " + reader.read());
 				break;

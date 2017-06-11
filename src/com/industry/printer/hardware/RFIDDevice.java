@@ -75,6 +75,11 @@ public class RFIDDevice implements RfidCallback{
 	public static final int INK_LEVEL_MIN = 0;
 	
 	/**
+	 * UUID
+	 */
+	public static byte SECTOR_UUID = 0;
+	public static byte BLOCK_UUID = 0;
+	/**
 	 * 特征值
 	 */
 	public static byte SECTOR_FEATURE = 0x04;
@@ -158,6 +163,11 @@ public class RFIDDevice implements RfidCallback{
 	public static final int STATE_RFID_BACKUP_READY = 27;
 	public static final int STATE_RFID_BACKUP_WRITING = 28;
 	public static final int STATE_RFID_BACKUP_SYNCED = 29;
+	
+	public static final int STATE_RFID_UUID_KEY_VERFYING = 51;
+	public static final int STATE_RFID_UUID_KEY_VERFYED = 52;
+	public static final int STATE_RFID_UUID_READING = 53;
+	public static final int STATE_RFID_UUID_READY = 54;
 	
 	private int mState;
 	
@@ -413,6 +423,8 @@ public class RFIDDevice implements RfidCallback{
 			mState = STATE_RFID_VALUE_KEY_VERFYING;
 		} else if (sector == SECTOR_COPY_INKLEVEL && block == BLOCK_COPY_INKLEVEL) {
 			mState = STATE_RFID_BACKUP_KEY_VERFYING;
+		} else if(sector == SECTOR_UUID && block == BLOCK_UUID) {
+			mState = STATE_RFID_UUID_KEY_VERFYING;
 		}
 		
 		byte blk = (byte) (sector*4 + block); 
@@ -514,6 +526,8 @@ public class RFIDDevice implements RfidCallback{
 			mState = STATE_RFID_VALUE_READING;
 		} else if (sector == SECTOR_COPY_INKLEVEL && block == BLOCK_COPY_INKLEVEL) {
 			mState = STATE_RFID_BACKUP_READING;
+		} else if (sector == SECTOR_UUID && block == BLOCK_UUID) {
+			mState = STATE_RFID_UUID_READING;
 		}
 		openDevice();
 		Debug.d(TAG, "--->readBlock sector:" + sector + ", block:" +block);
@@ -551,6 +565,8 @@ public class RFIDDevice implements RfidCallback{
 			mState = STATE_RFID_VALUE_READING;
 		} else if (sector == SECTOR_COPY_INKLEVEL && block == BLOCK_COPY_INKLEVEL) {
 			mState = STATE_RFID_BACKUP_READING;
+		} else if (sector == SECTOR_UUID && block == BLOCK_UUID) {
+			mState = STATE_RFID_UUID_READING;
 		}
 		
 		Debug.d(TAG, "--->readBlock sector:" + sector + ", block:" +block);
@@ -688,24 +704,27 @@ public class RFIDDevice implements RfidCallback{
 	 * read serial No. using default key
 	 * @return 4bytes serial No.
 	 */
-	public byte[] getSerialNo() {
-		if (!keyVerfication((byte) 0, (byte) 0, RFID_DEFAULT_KEY_A)) {
-			return null;
-		}
-		
+	public void getSerialNo() {
 		byte[] block = readBlock((byte)0, (byte) 0);
-		byte[] sn = new byte[4];
-		ByteArrayInputStream stream = new ByteArrayInputStream(block);
-		stream.skip(1);
-		stream.read(sn, 0, 4);
-		try {
-			stream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return sn;
 	}
 	
+	public boolean checkUID(byte[] uid) {
+		boolean noChange = true;
+		if (mSN == null || mSN.length <= 0) {
+			return false;
+		}
+		if (uid == null || uid.length <= 0) {
+			return false;
+		}
+		for (int i = 0; i < mSN.length; i++) {
+			Debug.d(TAG, "--->mSN[" +  i + "] = " + (int)mSN[i] + ",  uid[" + i +"] = " + (int)uid[i]);
+			if (mSN[i] != uid[i]) {
+				noChange = false;
+				break;
+			}
+		}
+		return noChange;
+	}
 	/**
 	 * 初始化流程：1、寻卡； 2、防冲突； 3、选卡
 	 * 使用默认密钥读取uid 和block1的数据
@@ -1263,6 +1282,11 @@ public class RFIDDevice implements RfidCallback{
 			return;
 		}
 		Debug.d(TAG, "--->onFinish: 0x" + Integer.toHexString(data.getCommand()));
+		
+		for (int i = 0; i < data.mRealData.length; i++) {
+			System.out.print(data.mRealData[i] + ", ");
+		}
+		
 		switch (data.getCommand()) {
 		case RFID_CMD_CONNECT:
 			//
@@ -1287,6 +1311,10 @@ public class RFIDDevice implements RfidCallback{
 			break;
 		case RFID_CMD_MIFARE_READ_BLOCK:
 		case RFID_CMD_READ_VERIFY:
+			if (mState == STATE_RFID_UUID_READING) {
+				mState = STATE_RFID_UUID_READY;
+				break;	
+			}
 			int value = parseRead(data);
 			if (mState == STATE_RFID_MAX_READING) {
 				mInkMax = value;
@@ -1316,6 +1344,8 @@ public class RFIDDevice implements RfidCallback{
 				mState = STATE_RFID_VALUE_KEY_VERFYED;
 			} else if (mState == STATE_RFID_BACKUP_KEY_VERFYING) {
 				mState = STATE_RFID_BACKUP_KEY_VERFYED;
+			} else if (mState == STATE_RFID_UUID_KEY_VERFYING) {
+				mState = STATE_RFID_UUID_KEY_VERFYED;
 			}
 			break;
 		case RFID_CMD_MIFARE_WRITE_BLOCK:
