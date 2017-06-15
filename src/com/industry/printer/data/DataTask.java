@@ -30,6 +30,7 @@ import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
@@ -292,8 +293,16 @@ public class DataTask {
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
 				var = varbin.getVarBuffer(shift, ((ShiftObject)o).getBits());
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
-			}
-			else
+			} else if (o instanceof LetterHourObject) {
+				BinInfo varbin= mVarBinList.get(o);
+				if (varbin == null) {
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads(), 24);
+					mVarBinList.put(o, varbin);
+				}
+				String t = ((LetterHourObject) o).getContent();
+				var = varbin.getVarBuffer(t);
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
+			} else
 			{
 				Debug.d(TAG, "not Variable object");
 			}

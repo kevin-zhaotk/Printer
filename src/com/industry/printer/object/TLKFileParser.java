@@ -21,6 +21,8 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.StringUtil;
+import com.industry.printer.object.BaseObject;
+import com.industry.printer.object.LetterHourObject;
 
 import android.R.integer;
 import android.content.Context;
@@ -286,8 +288,10 @@ public class TLKFileParser  extends TlkFile{
 				((ShiftObject)obj).setShift(i, attr[13 + i]);
 				((ShiftObject)obj).setValue(i, attr[9 + i]);
 			}
-		}
-		else
+		} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(attr[1])) {
+			obj = new LetterHourObject(mContext, 0);
+			
+		} else
 		{
 			Debug.d(TAG, "Unknown object type: "+attr[1]);
 			return null;

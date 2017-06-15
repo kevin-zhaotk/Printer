@@ -26,6 +26,7 @@ import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.ObjectsFromString;
 import com.industry.printer.object.RealtimeObject;
@@ -205,13 +206,15 @@ public class MessageTask {
 		}
 		for (BaseObject object : mObjects) {
 			if((object instanceof CounterObject) || (object instanceof RealtimeObject) ||
-					(object instanceof JulianDayObject) || (object instanceof ShiftObject)	)
+					(object instanceof JulianDayObject) || (object instanceof ShiftObject))
 			{
 				if(PlatformInfo.isBufferFromDotMatrix()==1) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
 				} else {
 					mDots += object.drawVarBitmap();
 				}
+			} else if ((object instanceof LetterHourObject)) {
+				mDots += ((LetterHourObject) object).drawVarBitmap();
 			} else if (object instanceof BarcodeObject && object.getSource() == true) {
 				int dots = ((BarcodeObject) object).getDotcount();
 				MessageObject msg = getMsgObject();
@@ -281,6 +284,8 @@ public class MessageTask {
 				
 			} else if(o instanceof ShiftObject)	{
 				// o.drawVarBitmap();
+			} else if (o instanceof LetterHourObject) {
+				
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);

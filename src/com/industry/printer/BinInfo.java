@@ -79,9 +79,36 @@ public class BinInfo {
 	public byte[] mBuffer;
 	public ByteArrayInputStream mCacheStream;
 
+	public int mVarCount = 10;
+	
 	public BinInfo(String file) {
 		this(file, 1);
 		Debug.d(TAG, "===>binFile: " + file);
+	}
+	
+	public BinInfo(String file, int type, int varCount) {
+		mColumn = 0;
+		mVarCount = varCount;
+		mBufferBytes = null;
+		mBufferChars = null;
+		if (type <=0 || type > 4) {
+			mType = 1;
+		} else {
+			mType = type;
+		}
+		/**读取文件头信息**/
+		
+		mFile = new File(file);
+		try {
+			mFStream = new FileInputStream(mFile);
+			mBuffer = new byte[mFStream.available()];
+			mFStream.read(mBuffer);
+			mFStream.close();
+			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
+			resolve();
+		} catch (Exception e) {
+			Debug.d(TAG, ""+e.getMessage());
+		}
 	}
 	
 	public BinInfo(String file, int type)
@@ -193,7 +220,10 @@ public class BinInfo {
 		mCharsFeed = mBytesFeed/2;
 		//通过文件后缀是否带有v判断是否为变量的bin文件
 		if (mFile != null && mFile.getName().contains("v")) {
-			mColPerElement = mColumn/10;
+			if (mVarCount <= 0) {
+				mVarCount = 10;
+			}
+			mColPerElement = mColumn/mVarCount;
 		} else {
 			mColPerElement = 0;
 		}

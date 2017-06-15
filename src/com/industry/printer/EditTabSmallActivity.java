@@ -34,6 +34,7 @@ import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
@@ -560,6 +561,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						GraphicObject image = new GraphicObject(mContext, cur[0]);
 						image.setY(cur[1]);
 						onInsertObject(image);
+					} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
+						LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
+						lh.setY(cur[1]);
+						onInsertObject(lh);
 					}
             		
             		break;

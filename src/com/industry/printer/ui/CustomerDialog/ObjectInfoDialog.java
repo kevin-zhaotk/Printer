@@ -17,6 +17,7 @@ import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
@@ -220,9 +221,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	    	 mMsg = (EditText) findViewById(R.id.msgNameEdit);
 	    	 mPrinter = (TextView) findViewById(R.id.headTypeSpin);
 	    	 mPrinter.setOnClickListener(this);
-	     }
-	     else 
-	     {
+	     } else if (mObject instanceof LetterHourObject) {
+	    	this.setContentView(R.layout.obj_info_julian); 
+	     } else {
 	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
@@ -288,6 +289,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    	mSourceCB.setOnCheckedChangeListener(this);
 		    	mSourceCB.setChecked(((BarcodeObject) mObject).mSource);
 		    	//mContent.setEnabled(false);
+			} else if (mObject instanceof LetterHourObject) {
+				mContent.setEnabled(false);
 			}
 		    
 		    mLineWidth = (EditText) findViewById(R.id.lineWidth);
