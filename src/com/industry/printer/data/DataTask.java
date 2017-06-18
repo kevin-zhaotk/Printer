@@ -335,6 +335,7 @@ public class DataTask {
 					|| (o instanceof RealtimeObject)
 					|| (o instanceof JulianDayObject)
 					|| (o instanceof ShiftObject)
+					|| (o instanceof LetterHourObject)
 					|| isQRFromfile(o))
 			{
 				return true;

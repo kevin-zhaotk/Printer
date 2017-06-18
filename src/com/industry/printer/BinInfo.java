@@ -305,7 +305,13 @@ public class BinInfo {
     	ByteArrayBuffer ba = new ByteArrayBuffer(0);
    		for(int i=0; i<var.length(); i++)
    		{
-   			n = Integer.parseInt(var.substring(i, i+1));
+   			String v = var.substring(i, i+1);
+   			try {
+   				n = Integer.parseInt(v);
+			} catch (Exception e) {
+				n = (int)v.charAt(0) - (int)"A".charAt(0);
+			}
+   			
    			// Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerH=" + mBytesPerH + ", type=" + mType);
    			/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
    			for (int k = 0; k < mColPerElement; k++) {

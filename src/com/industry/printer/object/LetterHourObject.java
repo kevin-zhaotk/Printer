@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.Paint.FontMetrics;
 
 public class LetterHourObject extends BaseObject {
@@ -30,6 +31,7 @@ public class LetterHourObject extends BaseObject {
 	@Override
 	public void setContent(String content) {
 		
+		
 	}
 	
 	@Override
@@ -44,6 +46,41 @@ public class LetterHourObject extends BaseObject {
 		}
 		return HOUR_LETTER[hour];
 		
+	}
+	@Override	 
+	public Bitmap getScaledBitmap(Context context) {
+		Bitmap bitmap;
+		mPaint.setTextSize(getfeed());
+		mPaint.setAntiAlias(true); //  
+		mPaint.setFilterBitmap(true); //
+	
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		int width = (int)mPaint.measureText(getContent());
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		if (mWidth == 0) {
+			setWidth(width);
+		}
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		mPaint.setColor(Color.BLUE);
+		mCan.drawText(getContent() , 0, mHeight-fm.descent, mPaint);
+	
+		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}
 	
 	@Override
@@ -149,8 +186,4 @@ public class LetterHourObject extends BaseObject {
 		return str;
 	}
 	
-	@Override	 
-	public Bitmap getpreviewbmp() {
-		return null;
-	}
 }
