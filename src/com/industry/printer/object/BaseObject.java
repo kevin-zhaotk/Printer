@@ -23,6 +23,7 @@ import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
+import com.industry.printer.object.data.BitmapWriter;
 
 import android.R.color;
 import android.content.Context;
@@ -283,6 +284,10 @@ public class BaseObject{
 //			setWidth(width * 1.25f);
 //		}
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	}
+	
+	public Bitmap makeBinBitmap() {
+		return null;
 	}
 	
 	private int getfeedsent() {

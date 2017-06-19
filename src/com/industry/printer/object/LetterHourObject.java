@@ -40,7 +40,7 @@ public class LetterHourObject extends BaseObject {
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
-		int hour = calendar.get(Calendar.HOUR);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		if (hour < 0 || hour >= HOUR_LETTER.length) {
 			hour = 0;
 		}
