@@ -204,6 +204,11 @@ public class MessageTask {
 		if (mObjects == null || mObjects.size() <= 0) {
 			return;
 		}
+		MessageObject msgObj = getMsgObject();
+		float scaleW = getScale(msgObj.getType());
+		float scaleH = getScaleH(msgObj.getType());
+		int h = getHeight(msgObj.getType());
+		
 		for (BaseObject object : mObjects) {
 			if((object instanceof CounterObject) || (object instanceof RealtimeObject) ||
 					(object instanceof JulianDayObject) || (object instanceof ShiftObject))
@@ -211,10 +216,11 @@ public class MessageTask {
 				if(PlatformInfo.isBufferFromDotMatrix()==1) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
 				} else {
-					mDots += object.drawVarBitmap();
+					// mDots += object.drawVarBitmap();
+					mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
 				}
 			} else if ((object instanceof LetterHourObject)) {
-				mDots += ((LetterHourObject) object).drawVarBitmap();
+				mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
 			} else if (object instanceof BarcodeObject && object.getSource() == true) {
 				int dots = ((BarcodeObject) object).getDotcount();
 				MessageObject msg = getMsgObject();
@@ -236,7 +242,8 @@ public class MessageTask {
 		if (PlatformInfo.isBufferFromDotMatrix()==1) {
 			saveBinDotMatrix();
 		} else {
-			saveObjectBin();
+			// saveObjectBin();
+			saveBinNoScale();
 		}
 		
 	}
@@ -275,7 +282,7 @@ public class MessageTask {
 			}
 			else if(o instanceof RealtimeObject)
 			{
-				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext);
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext, 1, 1);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				BinFromBitmap.recyleBitmap(t);
 			} else if(o instanceof JulianDayObject) {
@@ -361,6 +368,74 @@ public class MessageTask {
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
 		return ;
+	}
+	
+	private void saveBinNoScale() {
+		int width=0;
+		Paint p=new Paint();
+		if(mObjects==null || mObjects.size() <= 1)
+			return ;
+		for(BaseObject o:mObjects)
+		{
+			if (o instanceof MessageObject) {
+				continue;
+			}
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+		/*計算得到的width爲152點陣對應的寬度，要根據噴頭類型轉換成實際寬度 */
+		MessageObject msgObj = getMsgObject();
+		float scaleW = getScale(msgObj.getType());
+		float scaleH = getScaleH(msgObj.getType());
+		//實際寬度
+		int bWidth = (int) (width * scaleW);
+		int bHeight = getHeight(msgObj.getType());
+		Bitmap bmp = Bitmap.createBitmap(bWidth , bHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width=" + bWidth + ", height=" + bHeight);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjects)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			
+			if((o instanceof CounterObject)
+					|| (o instanceof JulianDayObject)
+					|| (o instanceof BarcodeObject && o.getSource())
+					|| (o instanceof ShiftObject)
+					|| (o instanceof LetterHourObject))
+			{
+				// o.drawVarBitmap();
+			}
+			else if(o instanceof RealtimeObject) {
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext, scaleW, scaleH);
+				can.drawBitmap(t, (int)(o.getX() * scaleW), o.getY(), p);
+				BinFromBitmap.recyleBitmap(t);
+			} else if (o instanceof BarcodeObject) {
+				// Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
+				Debug.d(TAG, "--->save height=" + o.getHeight() + " scaleH = " + scaleH);
+				int h = (int)(o.getHeight() * scaleH);
+				Debug.d(TAG, "--->save height=" + h);
+				h = h%2 == 0? h : h + 1; 
+				int w = h;
+				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), w, h, o.getFont());
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if (o instanceof GraphicObject) {
+				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
+				if (t != null) {
+					can.drawBitmap(t, o.getX(), o.getY(), p);
+				}
+			} else {
+				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
+				can.drawBitmap(t, (int)(o.getX() * scaleW), (int)(o.getY() * scaleH), p);
+				// BinFromBitmap.recyleBitmap(t);
+			}
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		// 生成bin文件
+		BinFileMaker maker = new BinFileMaker(mContext);
+		mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true));
+		// 保存bin文件
+		maker.save(ConfigPath.getBinAbsolute(mName));
 	}
 	
 	/**
@@ -737,6 +812,114 @@ public class MessageTask {
 		return 4f/getHeads();
 	}
 
+	public static float getScale(int type) {
+		float scale = 1f;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 1f;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128f/152f;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128f/152f * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 3f;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 4f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 4f;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
+	
+
+	public static float getScaleH(int type) {
+		float scale = 1f;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 1f;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128f/152f;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128f/152f * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 3f;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 4f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 320/152f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 640/152f;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
+	
+	public static int getHeight(int type) {
+		int scale = 152;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 152;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 152 * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128 * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 152 * 3;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 152 * 4;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 320;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 640;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
 	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_12_7 	= 0;

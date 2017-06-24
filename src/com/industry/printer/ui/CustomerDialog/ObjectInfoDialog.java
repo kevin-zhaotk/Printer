@@ -178,7 +178,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		 // this.setTitle(R.string.str_title_infodialog);
 	     if(mObject==null)
 	     {
-	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
+//	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_msg); 
 	     }
 	     else if(mObject instanceof TextObject)

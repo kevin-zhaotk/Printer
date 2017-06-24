@@ -26,6 +26,7 @@ import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.object.data.BitmapWriter;
 
 import android.R.color;
+import android.R.integer;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -286,8 +287,35 @@ public class BaseObject{
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
-	public Bitmap makeBinBitmap() {
-		return null;
+	/**
+	 * draw content to a bitmap
+	 * @param ctx context
+	 * @param content content
+	 * @param ctH	real height of content
+	 * @param w		total width
+	 * @param h		total height
+	 * @return
+	 */
+	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
+		Bitmap bitmap;
+		Paint paint = new Paint();
+		paint.setTextSize(ctH);
+		paint.setAntiAlias(true); //去除锯齿  
+		paint.setFilterBitmap(true); //对位图进行滤波处理
+		boolean isCorrect = false;
+		
+		try {
+			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+font+".ttf"));
+		} catch (Exception e) {
+			
+		}
+		int width = (int)paint.measureText(content);
+		Debug.d(TAG, "--->content: " + content + "  width=" + width);
+		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		FontMetrics fm = paint.getFontMetrics();
+		canvas.drawText(content, 0, ctH-fm.descent, paint);
+		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	
 	private int getfeedsent() {
@@ -309,7 +337,64 @@ public class BaseObject{
 		//BinCreater.saveBitmap(bmp, "bg.png");
 		return bmp;
 	}
-	
+
+	/**
+	 * 根據content生成變量的bin
+	 * @param content 內容
+	 * @param ctW	單個字符的實際寬度
+	 * @param ctH	字符實際高度
+	 * @param dstH  背景圖高度
+	 * @return
+	 */
+	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
+		int dots = 0;
+		int singleW;
+		Paint paint = new Paint();
+		int height = (int) (mHeight * scaleH);
+		paint.setTextSize(height);
+		paint.setAntiAlias(true); //去除锯齿  
+		paint.setFilterBitmap(true); //对位图进行滤波处理
+		
+		try {
+			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {
+			
+		}
+		
+		int width = (int)paint.measureText("8");
+		FontMetrics fm = paint.getFontMetrics();
+		
+		/*draw Bitmap of single digit*/
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas can = new Canvas(bmp);
+		
+		/*draw 0-9 totally 10 digits Bitmap*/
+		singleW = (int)(mWidth * scaleW/mContent.length());
+		Debug.d(TAG, "--->singleW=" + singleW);
+		
+		/* 最終生成v.bin使用的bitmap */
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Bitmap.Config.ARGB_8888);
+		Canvas gCan = new Canvas(gBmp);
+		
+		gCan.drawColor(Color.WHITE);	/*white background*/
+		for(int i =0; i<=9; i++)
+		{
+			can.drawColor(Color.WHITE);
+			can.drawText(String.valueOf(i), 0, height - fm.descent, paint);
+			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, height, false), i*singleW, (int)getY() * scaleH, paint);
+		}
+		BinFromBitmap.recyleBitmap(bmp);
+		
+		BinFileMaker maker = new BinFileMaker(mContext);
+		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth()/2, dstH, false));
+		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
+		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
+		//
+		BinFromBitmap.recyleBitmap(gBmp);
+		/*根據變量內容的實際長度計算點數*/
+		dots = (dots* getContent().length()/10) + 1;
+		return dots;
+	}
 	public int drawVarBitmap()
 	{
 		int dots = 0;

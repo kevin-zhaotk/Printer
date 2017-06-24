@@ -202,7 +202,7 @@ public class CounterObject extends BaseObject {
 		str += "000^000^000^000^";
 		str += BaseObject.intToFormatString(mMax, 8)+"^";
 		str += BaseObject.intToFormatString(mMin, 8)+"^";
-		str += BaseObject.intToFormatString(Integer.parseInt(mContent) , 8)+"^";
+		str += BaseObject.intToFormatString(0 , 8)+"^";
 		str += "00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("counter string ["+str+"]");
 		return str;

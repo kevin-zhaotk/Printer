@@ -334,7 +334,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 
 			Debug.d(TAG, "=====get curobj");
 			BaseObject obj = getCurObj();
-			Debug.d(TAG, "=====obj:"+obj.mId + "  draw:" + obj.isNeedDraw());
+//			Debug.d(TAG, "=====obj:"+obj.mId + "  draw:" + obj.isNeedDraw());
 			mObjView.setTask(mMsgTask);
 			mObjView.beginDraw();
 			mObjView.invalidate();

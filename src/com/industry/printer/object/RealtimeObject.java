@@ -196,11 +196,11 @@ public class RealtimeObject extends BaseObject {
 	}
 	
 	
-	public Bitmap getBgBitmap(Context context)
+	public Bitmap getBgBitmap(Context context, float scaleW, float scaleH)
 	{
 		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
 		// meature();
-		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end * scaleW - mXcor * scaleW) , (int)(mHeight * scaleH), Bitmap.Config.ARGB_8888);
 		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawColor(Color.WHITE);
@@ -210,15 +210,32 @@ public class RealtimeObject extends BaseObject {
 			//constant 
 			if(o instanceof TextObject)
 			{
-				Bitmap b = o.getScaledBitmap(context);
-				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+				Bitmap b = o.makeBinBitmap(context, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
+				mCan.drawBitmap(b, (int)(o.getX() * scaleW - getX() * scaleW), 0, mPaint);
 			}
 			else	//variable
 			{
-				o.drawVarBitmap();
+				// o.drawVarBitmap();
 			}
 		}
 		return bmp;
+	}
+
+	@Override
+	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
+		int dot = 0;
+		for(BaseObject o : mSubObjs)
+		{
+			Debug.d(TAG, "--->obj: " + o.mId);
+			if(o instanceof TextObject)
+			{
+			}
+			else	//variable
+			{
+				dot += o.makeVarBin(ctx, scaleW, scaleH, dstH);
+			}
+		}
+		return dot;
 	}
 	
 	@Override

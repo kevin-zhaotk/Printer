@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.Paint.FontMetrics;
@@ -84,77 +85,44 @@ public class LetterHourObject extends BaseObject {
 	}
 	
 	@Override
-	public int drawVarBitmap()
-	{
+	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
 		int dots = 0;
-		//mPaint.setTextSize(mHeight);
-		int singleW; //the width value of each char
-		int height = (int)mPaint.getTextSize();
-		int width = (int)mPaint.measureText("8");
-		FontMetrics fm = mPaint.getFontMetrics();
-		float wDiv = (float) (2.0/mTask.getHeads());
-		MessageObject msg = mTask.getMsgObject();
-		/*對320高的buffer進行單獨處理*/
-		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
-			wDiv = 1;
-		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
-			wDiv = 0.5f;
+		int singleW;
+		Paint paint = new Paint();
+		int height = (int) (mHeight * scaleH);
+		paint.setTextSize(height);
+		paint.setAntiAlias(true); //去除锯齿  
+		paint.setFilterBitmap(true); //对位图进行滤波处理
+		
+		try {
+			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {
+			
 		}
+		
+		int width = (int)paint.measureText("8");
+		FontMetrics fm = paint.getFontMetrics();
+		
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
-		Debug.d(TAG, "--->id = " + mId + " Width=" + mWidth);
 		/*draw 0-9 totally 10 digits Bitmap*/
-		singleW = (int)mWidth/mContent.length();
+		singleW = (int)(mWidth * scaleW);
 		Debug.d(TAG, "--->singleW=" + singleW);
-		singleW = (int) (singleW/wDiv);
-		Debug.d(TAG, "--->singleW/div=" + singleW);
-		Bitmap gBmp = Bitmap.createBitmap(singleW * HOUR_LETTER.length, Configs.gDots * mTask.getHeads(), Bitmap.Config.ARGB_8888);
+		
+		/* 最終生成v.bin使用的bitmap */
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
+		
 		gCan.drawColor(Color.WHITE);	/*white background*/
-		for(int i = 0; i < HOUR_LETTER.length; i++)
+		for(int i =0; i< HOUR_LETTER.length; i++)
 		{
-			/*draw background to white firstly*/
 			can.drawColor(Color.WHITE);
-			can.drawText(HOUR_LETTER[i], 0, mHeight-fm.descent, mPaint);
-			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
-			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight * mTask.getHeads()), false), i*singleW, (int)getY() * mTask.getHeads(), mPaint);
+			can.drawText(HOUR_LETTER[i], 0, height - fm.descent, paint);
+			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, height, false), i*singleW, (int)getY() * scaleH, paint);
 		}
 		BinFromBitmap.recyleBitmap(bmp);
-		/*對320高的buffer進行單獨處理*/
-		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
-			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320, Bitmap.Config.ARGB_8888);
-			can.setBitmap(b);
-			can.drawColor(Color.WHITE);
-			can.drawBitmap(gBmp, 0, 0, mPaint);
-			gBmp.recycle();
-			gBmp = b;
-		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
-			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308*2, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320*2, Bitmap.Config.ARGB_8888);
-			can.setBitmap(b);
-			can.drawColor(Color.WHITE);
-			int h = gBmp.getHeight()/2;
-			/*先把gBmp的上半部分0~307高貼到620高的上半部分（0~319）*/
-			can.drawBitmap(gBmp, new Rect(0, 0, gBmp.getWidth(), h), new Rect(0, 0, b.getWidth(), h), null);
-			
-			/*先把gBmp的下半部分308~615高貼到620高的下半部分（320~619）*/
-			// can.drawBitmap(Bitmap.createBitmap(gBmp, 0, 308, gBmp.getWidth(), 308), 0, 320, mPaint);
-			can.drawBitmap(gBmp, new Rect(0, h, gBmp.getWidth(), h*2), new Rect(0, 320, b.getWidth(), 320 + h), null);
-			gBmp.recycle();
-			gBmp = b;
-		}
-		else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3)) { //add by lk 170418
-			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 128, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 128, Bitmap.Config.ARGB_8888);
-			can.setBitmap(b);
-			can.drawColor(Color.WHITE);
-			can.drawBitmap(gBmp, 0, 0, mPaint);
-			gBmp.recycle();
-			gBmp = b;
-		}		//addbylk 170418 end
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
 		dots = maker.extract(gBmp);
