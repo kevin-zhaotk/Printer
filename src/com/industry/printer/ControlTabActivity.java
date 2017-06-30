@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
+
+import com.friendlyarm.AndroidSDK.GPIOEnum;
+import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
@@ -41,6 +44,8 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListe
 import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.R;
+
+import com.softwinner.Gpio;
 
 import android.R.bool;
 import android.app.ActionBar.LayoutParams;
@@ -382,9 +387,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		
 		refreshCount();
-		
-		
-		
 	}
 	
 	public void onConfigureChanged() {
@@ -804,6 +806,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						switchRfid();
 						refreshCount();
 						mRfidInit = true;
+						Gpio.writeGpio('i', 11, 0);
 					}
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
@@ -821,7 +824,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					
+					Gpio.writeGpio('i', 11, 1);
 					if (mRfiAlarmTimes++ < 3) {
 						ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 150);						
@@ -960,6 +963,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.GONE);
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
+				Gpio.writeGpio('i', 12, 1);
 				break;
 			case STATE_STOPPED:
 				mBtnStart.setClickable(true);
@@ -972,6 +976,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.VISIBLE);
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
+				Gpio.writeGpio('i', 12, 0);
 				break;
 			default:
 				Debug.d(TAG, "--->unknown state");

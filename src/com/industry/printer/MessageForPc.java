@@ -40,7 +40,7 @@ public class MessageForPc {
 	}
 	
 	public String getName() {
-		return mTask;
+		return mTask.getName();
 	}
 	
 	/**
