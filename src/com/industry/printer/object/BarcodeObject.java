@@ -159,7 +159,7 @@ public class BarcodeObject extends BaseObject {
 			mBitmap = drawQR(mContent, (int)mWidth, (int)mHeight);
 		}
 		// mBitmap = draw(mContent, (int)mWidth, (int)mHeight);
-		
+		setWidth(mWidth);
 		return mBitmap;
 	}
 	
