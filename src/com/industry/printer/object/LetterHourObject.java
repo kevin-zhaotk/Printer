@@ -93,6 +93,8 @@ public class LetterHourObject extends BaseObject {
 		paint.setTextSize(height);
 		paint.setAntiAlias(true); //去除锯齿  
 		paint.setFilterBitmap(true); //对位图进行滤波处理
+		//buffer減半，因此scaleW要除以2
+		scaleW =scaleW / 2;
 		
 		try {
 			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+mFont+".ttf"));
@@ -100,7 +102,7 @@ public class LetterHourObject extends BaseObject {
 			
 		}
 		
-		int width = (int)paint.measureText("8");
+		int width = (int)paint.measureText("H");
 		FontMetrics fm = paint.getFontMetrics();
 		
 		/*draw Bitmap of single digit*/
@@ -112,7 +114,7 @@ public class LetterHourObject extends BaseObject {
 		Debug.d(TAG, "--->singleW=" + singleW);
 		
 		/* 最終生成v.bin使用的bitmap */
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*HOUR_LETTER.length, dstH, Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		
 		gCan.drawColor(Color.WHITE);	/*white background*/
@@ -131,7 +133,7 @@ public class LetterHourObject extends BaseObject {
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
 		/*根據變量內容的實際長度計算點數*/
-		dots = (dots* getContent().length()/10) + 1;
+		dots = (dots* getContent().length()/24) + 1;
 		return dots;
 	}
 	

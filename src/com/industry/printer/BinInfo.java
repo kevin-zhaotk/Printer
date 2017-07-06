@@ -79,7 +79,7 @@ public class BinInfo {
 	public byte[] mBuffer;
 	public ByteArrayInputStream mCacheStream;
 
-	public int mVarCount = 10;
+	public int mVarCount;
 	
 	public BinInfo(String file) {
 		this(file, 1);
@@ -113,27 +113,7 @@ public class BinInfo {
 	
 	public BinInfo(String file, int type)
 	{
-		mColumn = 0;
-		mBufferBytes = null;
-		mBufferChars = null;
-		if (type <=0 || type > 4) {
-			mType = 1;
-		} else {
-			mType = type;
-		}
-		/**读取文件头信息**/
-		
-		mFile = new File(file);
-		try {
-			mFStream = new FileInputStream(mFile);
-			mBuffer = new byte[mFStream.available()];
-			mFStream.read(mBuffer);
-			mFStream.close();
-			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
-			resolve();
-		} catch (Exception e) {
-			Debug.d(TAG, ""+e.getMessage());
-		}
+		this(file, type, 10);
 	}
 	
 	public BinInfo(InputStream stream, int type) {
@@ -223,6 +203,7 @@ public class BinInfo {
 			if (mVarCount <= 0) {
 				mVarCount = 10;
 			}
+			Debug.d(TAG, "===>varCount: " + mVarCount);
 			mColPerElement = mColumn/mVarCount;
 		} else {
 			mColPerElement = 0;
@@ -312,7 +293,7 @@ public class BinInfo {
 				n = (int)v.charAt(0) - (int)"A".charAt(0);
 			}
    			
-   			// Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerH=" + mBytesPerH + ", type=" + mType);
+   			Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerH=" + mBytesPerH + ", type=" + mType);
    			/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
    			for (int k = 0; k < mColPerElement; k++) {
    				for (int j = 0; j < mType; j++) {

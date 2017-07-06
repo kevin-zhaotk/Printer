@@ -408,7 +408,7 @@ public class MessageTask {
 			}
 			else if(o instanceof RealtimeObject) {
 				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext, scaleW, scaleH);
-				can.drawBitmap(t, (int)(o.getX() * scaleW), o.getY(), p);
+				can.drawBitmap(t, (int)(o.getX() * scaleW), o.getY() * scaleH, p);
 				BinFromBitmap.recyleBitmap(t);
 			} else if (o instanceof BarcodeObject) {
 				// Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
@@ -416,13 +416,13 @@ public class MessageTask {
 				int h = (int)(o.getHeight() * scaleH);
 				Debug.d(TAG, "--->save height=" + h);
 				h = h%2 == 0? h : h + 1; 
-				int w = h;
+				int w = (int) (o.getWidth() * scaleW);
 				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), w, h, o.getFont());
-				can.drawBitmap(t, o.getX(), o.getY(), p);
+				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 			} else if (o instanceof GraphicObject) {
 				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
 				if (t != null) {
-					can.drawBitmap(t, o.getX(), o.getY(), p);
+					can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 				}
 			} else {
 				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
