@@ -60,6 +60,23 @@ public class MessageTask {
 	
 	/**
 	 * 通过tlk文件解析构造出Task
+	 * @param tlk  tlk path, absolute path
+	 * @param name
+	 */
+	public MessageTask(Context context, String tlk, String name) {
+		this(context);
+		String tlkPath="";
+		File file = new File(tlk);
+		setName(name);
+		TLKFileParser parser = new TLKFileParser(context, mName);
+		parser.setTlk(tlk);
+		parser.parse(context, this, mObjects);                                      
+		mDots = parser.getDots();
+	}
+	
+	/**
+	 * 通过tlk名稱解析构造出Task
+	 * @param context
 	 * @param tlk
 	 */
 	public MessageTask(Context context, String tlk) {
@@ -82,13 +99,13 @@ public class MessageTask {
 	 * @param tlk tlk信息名称
 	 * @param content 树莓3上编辑的字符串内容
 	 */
-	public MessageTask(Context context, String tlk, String content) {
-		this(context);
-		String tlkPath="";
-		setName(tlk);
-		
-		mObjects = ObjectsFromString.makeObjs(mContext, content);
-	}
+//	public MessageTask(Context context, String tlk, String content) {
+//		this(context);
+//		String tlkPath="";
+//		setName(tlk);
+//		
+//		mObjects = ObjectsFromString.makeObjs(mContext, content);
+//	}
 	/**
 	 * set Task name
 	 * @param name

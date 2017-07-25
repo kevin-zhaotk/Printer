@@ -122,6 +122,10 @@ public class DataTransferThread extends Thread {
 				mInkListener.onCountChanged();
 				
 				mScheduler.schedule();
+				
+				if (mCallback != null) {
+					mCallback.onComplete();
+				}
 			}
 			
 			if(mNeedUpdate == true) {
@@ -331,7 +335,14 @@ public class DataTransferThread extends Thread {
 	
 	
 	public interface Callback {
+		/**
+		 * 整個任務打印完成
+		 */
 		public void OnFinished(int code);
+		/**
+		 * 一個任務打印完成
+		 */
+		public void onComplete();
 	}
 	
 	public static final int CODE_BARFILE_END = 1;

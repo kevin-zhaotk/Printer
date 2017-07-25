@@ -1,10 +1,12 @@
-package src.com.industry.printer;
+package com.industry.printer;
 
 import android.content.Context;
 
+import com.industry.printer.FileFormat.TlkFileParser;
 import com.industry.printer.MessageTask;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
+import com.industry.printer.object.TLKFileParser;
 
 public class MessageForPc {
 
@@ -29,6 +31,11 @@ public class MessageForPc {
 		mContext = ctx;
 		mTask = new MessageTask(mContext);
 		MessageObject msg = new MessageObject(mContext, 0);
+	}
+
+	public MessageForPc(Context ctx, String tlk, String name) {
+		mContext = ctx;
+		mTask = new MessageTask(mContext, tlk, name);
 	}
 	
 	/**
@@ -68,5 +75,10 @@ public class MessageForPc {
 	 */
 	public void save() {
 		mTask.save();
+	}
+	
+	public void reCreate(Context context) {
+		mTask.createTaskFolderIfNeed();
+		mTask.save(); 
 	}
 }

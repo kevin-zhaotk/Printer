@@ -801,12 +801,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
 					} else {
 						mHandler.removeMessages(MESSAGE_RFID_ZERO);
+						ExtGpio.writeGpio('h', 7, 0);
 					}
 					if (mRfidInit == false) {
 						switchRfid();
 						refreshCount();
 						mRfidInit = true;
-						Gpio.writeGpio('i', 11, 0);
 					}
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
@@ -824,7 +824,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					Gpio.writeGpio('i', 11, 1);
+					Debug.d(TAG, "--->alarm");
+					ExtGpio.writeGpio('h', 7, 1);
 					if (mRfiAlarmTimes++ < 3) {
 						ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 150);						
@@ -963,7 +964,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.GONE);
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
-				Gpio.writeGpio('i', 12, 1);
+				ExtGpio.writeGpio('b', 11, 1);
 				break;
 			case STATE_STOPPED:
 				mBtnStart.setClickable(true);
@@ -976,7 +977,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.VISIBLE);
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
-				Gpio.writeGpio('i', 12, 0);
+				ExtGpio.writeGpio('b', 11, 0);
 				break;
 			default:
 				Debug.d(TAG, "--->unknown state");
@@ -1338,5 +1339,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 		});
 		
+	}
+	
+	@Override
+	public void onComplete() {
+		//this.sendmsg(mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mMsgTask.getName()+"\r\n");
 	}
 }

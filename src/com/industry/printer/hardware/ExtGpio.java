@@ -24,6 +24,8 @@ public class ExtGpio {
 	private static final int GPIO_RFID_CARD6 = 0x08;
 	private static final int GPIO_RFID_CARD7 = 0x09;
 	private static final int GPIO_RFID_CARD8 = 0x0A;
+	private static final int GPIO_WRITE = 0x10;
+	
 	
 	// RFID卡1對應的3-8譯碼器編碼
 	private static final int RFID_CARD1_CODE = 3;
@@ -59,6 +61,20 @@ public class ExtGpio {
 		} else if (sw == RFID_CARD8) {
 			FpgaGpioOperation.ioctl(fd, GPIO_RFID_CARD8, 0);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param group
+	 * @param index
+	 * @param value
+	 */
+	public static void writeGpio(char group, int index, int value) {
+		int fd = open();
+		int g = group - 'a';
+		int v = ((g & 0x0f) << 12) | ((index & 0x0ff) << 4) | value;
+		Debug.d("ExtGpio", "--->writeGpio: fd= " + fd + "  group=" + group + "  index=" + index + " value=" + value + "  v=" + v);
+		FpgaGpioOperation.ioctl(fd, GPIO_WRITE, v);
 	}
 	
 	public static void playClick() {
