@@ -33,7 +33,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mContext = ctx;
         mContainer = container;
         mTask = task;
-        mImageMap = new HashMap<>();
+        mImageMap = new HashMap<BaseObject, ImageView>();
         reset();
     }
 
