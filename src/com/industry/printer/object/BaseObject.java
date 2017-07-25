@@ -237,7 +237,7 @@ public class BaseObject{
 	
 	private Bitmap draw() {
 		Bitmap bitmap;
-		mPaint.setTextSize(getfeed());
+		mPaint.setTextSize(152); // (getfeed());
 		mPaint.setAntiAlias(true); //去除锯齿  
 		mPaint.setFilterBitmap(true); //对位图进行滤波处理
 		/*try {
@@ -274,17 +274,17 @@ public class BaseObject{
 		if (mWidth == 0) {
 			setWidth(width);
 		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
-		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
+		mCan.drawText(mContent, 0, 152 - fm.descent, mPaint);
 //		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
 //			setWidth(width * 1.25f);
 //		}
-		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
 	/**
@@ -580,7 +580,7 @@ public class BaseObject{
 			size=0;
 		mWidth = size;
 		mXcor_end = mXcor + mWidth;
-		isNeedRedraw = true;
+//		isNeedRedraw = true;
 		Debug.d(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	

@@ -458,7 +458,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	 {
 		 mObject = obj;
 	 }
-	 
+
+	 public BaseObject getObject() {
+		 return mObject;
+	 }
+
 	 private void fillObjInfo()
 	 {
 		 int i=0;

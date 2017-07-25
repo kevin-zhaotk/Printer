@@ -132,6 +132,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public BinInfo mBg;
 	BroadcastReceiver mReceiver;
 	public Handler mCallback;
+
+	private boolean mFlagAlarming = false;
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
@@ -479,6 +481,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mHandler.removeMessages(MESSAGE_RFID_LOW);
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 		}
+		} else {
+			mFlagAlarming = false;
+		}
 		refreshVoltage();
 		refreshPulse();
 	}
@@ -690,6 +695,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
+					} else {
+						mFlagAlarming = false;
 					}
 					DataTask task = mDTransThread.getData();
 					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
@@ -801,6 +808,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
 					} else {
 						mHandler.removeMessages(MESSAGE_RFID_ZERO);
+						mFlagAlarming = false;
 						ExtGpio.writeGpio('h', 7, 0);
 					}
 					if (mRfidInit == false) {
@@ -824,7 +832,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					Debug.d(TAG, "--->alarm");
+					mFlagAlarming = true;
 					ExtGpio.writeGpio('h', 7, 1);
 					if (mRfiAlarmTimes++ < 3) {
 						ExtGpio.playClick();
@@ -879,11 +887,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
-		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
-		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		Debug.d(TAG, "--->screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+//		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+//		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
+//		DisplayMetrics dm = new DisplayMetrics();
+//		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+//		Debug.d(TAG, "--->screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
 		float height = mllPreview.getHeight();
 		scale = (height/bmp.getHeight());
 		mllPreview.removeAllViews();
@@ -895,6 +903,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 				}
 				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
+				if (cutWidth * scale < 1 || bmp.getHeight() * scale < 1) {
+					child.recycle();
+					break;
+				}
 				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
 				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
 				child.recycle();
@@ -1310,6 +1322,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				}
 			default:
 				break;
+		}
+		return false;
+	}
+
+	public boolean isAlarming() {
+		return mFlagAlarming;
+	}
+
+	public boolean isPrinting() {
+		if (mDTransThread != null) {
+			return mDTransThread.isRunning();
 		}
 		return false;
 	}

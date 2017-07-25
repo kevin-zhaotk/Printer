@@ -6,14 +6,27 @@
     android:background="#436eee" >
 
     
-    <include layout="@layout/edit_view"
+    <!--<include layout="@layout/edit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons"
         android:layout_above="@+id/buttons_1"
         android:layout_marginTop="10dp"
-        />
+        />-->
+    <HorizontalScrollView
+        android:background="@drawable/background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/buttons_1"
+        android:layout_marginTop="10dp"
+        >
+        <RelativeLayout
+            android:id="@+id/edit_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+        </RelativeLayout>
+    </HorizontalScrollView>
 	<include layout="@layout/edit_small_button" 
         android:id="@+id/buttons_1"
         android:layout_width="match_parent"

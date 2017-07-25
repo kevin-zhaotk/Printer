@@ -31,8 +31,8 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.ui.MessageDisplayManager;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -84,6 +84,8 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	public Context mContext;
 	public EditScrollView mObjView;
 	public HorizontalScrollView mHScroll;
+	public MessageDisplayManager mMsgManager;
+	public RelativeLayout mRelatively;
 	
 	public String mObjName;
 	public MessageTask mMsgTask;

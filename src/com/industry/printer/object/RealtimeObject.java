@@ -175,23 +175,27 @@ public class RealtimeObject extends BaseObject {
 		if (!isNeedRedraw) {
 			return mBitmap;
 		}
-		isNeedRedraw = false;
+
 		/* 如果需要重新繪製，先計算新的尺寸 */
 		if (mXcor_end - mXcor == 0) {
 			meature();
 		}
+		mContent = "";
 		Debug.d(TAG, "--->getScaledBitmap xEnd: " + mXcor_end + " x="+ mXcor + "  height=" + mHeight);
 		// meature();
 		
-		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
-		mCan = new Canvas(mBitmap);
-		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + mBitmap.getWidth());
+//		mBitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+//		mCan = new Canvas(mBitmap);
+//		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + mBitmap.getWidth());
 		for(BaseObject o : mSubObjs)
 		{
 			Log.d(TAG, "++++>id:" + o.mId + ", x=" + (o.getX() - getX()));
-			Bitmap b = o.getScaledBitmap(context);
-			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+			//Bitmap b = o.getScaledBitmap(context);
+			//mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+			mContent += o.getContent();
 		}
+		mBitmap = super.getScaledBitmap(context);
+		isNeedRedraw = false;
 		return mBitmap;
 	}
 	
