@@ -192,7 +192,10 @@ public class DataTransferThread extends Thread {
 		
 		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
 		mScheduler.init();
-		for (int i = 0; i < configFile.getHeads(); i++) {
+		int heads = configFile.getHeads();
+		/**如果是4合2的打印头，需要修改为4头*/
+		heads = configFile.getParam(42) > 0 ? configFile.getParam(42) : heads;
+		for (int i = 0; i < heads; i++) {
 			mScheduler.add(new RfidTask(i, mContext));
 		}
 		mScheduler.load();

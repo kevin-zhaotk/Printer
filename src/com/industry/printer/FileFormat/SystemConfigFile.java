@@ -73,7 +73,7 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_RESERVED_40 = "_10040";
 	public static final String PH_SETTING_RESERVED_41 = "_10041";
 	public static final String PH_SETTING_RESERVED_42 = "_10042";
-	public static final String PH_SETTING_RESERVED_43 = "_10043";
+	public static final String PH_SETTING_RESERVED_43 = "_10043"; 	// 实际的打印喷头数量
 	public static final String PH_SETTING_RESERVED_44 = "_10044";
 	public static final String PH_SETTING_RESERVED_45 = "_10045";
 	public static final String PH_SETTING_RESERVED_46 = "_10046";

@@ -287,7 +287,7 @@
 	<string name="strResvname40">40.Reserved</string>
 	<string name="strResvname41">41.Reserved</string>
 	<string name="strResvname42">42.Reserved</string>
-	<string name="strResvname43">43.Reserved</string>
+	<string name="strResvname43">43.Pens</string>
 	<string name="strResvname44">44.Reserved</string>
 	<string name="strResvname45">45.Reserved</string>
 	<string name="strResvname46">46.Reserved</string>
@@ -495,7 +495,7 @@
 	<string name="str_textview_param40">40.Reserved</string>
 	<string name="str_textview_param41">41.Handle</string>
 	<string name="str_textview_param42">42.Reserved</string>
-	<string name="str_textview_param43">43.Reserved</string>
+	<string name="str_textview_param43">43.Pens</string>
 	<string name="str_textview_param44">44.Reserved</string>
 	<string name="str_textview_param45">45.Reserved</string>
 	<string name="str_textview_param46">46.Reserved</string>
@@ -569,7 +569,7 @@
 	    <item>40. Reserved</item>
 	    <item>41. Reserved</item>
 	    <item>42. Reserved</item>
-	    <item>43. Reserved</item>
+	    <item>43. Pens</item>
 	    <item>44. Reserved</item>
 	    <item>45. Reserved</item>
 	    <item>46. Reserved</item>
