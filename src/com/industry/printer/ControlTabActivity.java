@@ -437,7 +437,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	private void switchRfid() {
 		mRfid += 1;
-		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getHeads()) {
+		int heads = mSysconfig.getParam(42) > 0 ? mSysconfig.getParam(42) : mSysconfig.getHeads();
+		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= heads) {
 			mRfid = 0;
 		}
 		Debug.d(TAG, "--->switchRfid to: " + mRfid);
