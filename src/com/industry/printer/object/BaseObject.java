@@ -94,6 +94,7 @@ public class BaseObject{
 	public String mContent;
 	public String mName;
 	public int mDotsPerClm;
+	/*内容来源 是否U盤*/
 	public boolean mSource;
 	/* 
 	 * 是否需要重新绘制bitmap 

@@ -117,12 +117,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private Button  mPagedown;
 	private ScrollView mScroll;
 	public TextView mLineType;
-	
-	
-	private RelativeLayout mSource;
-	private CheckBox mSourceCB;
-	
-	
+		
 	public EditText mMsg;
 	public TextView mPrinter;
 	/*
@@ -283,11 +278,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			    mCode = (TextView) findViewById(R.id.spinCode);
 			    mCode.setOnClickListener(this);
 			    mShow = (CheckBox) findViewById(R.id.check_Num_show);
-		    	mSource = (RelativeLayout) findViewById(R.id.data_source);
-		    	mSource.setVisibility(View.VISIBLE);
-		    	mSourceCB = (CheckBox) findViewById(R.id.source);
-		    	mSourceCB.setOnCheckedChangeListener(this);
-		    	mSourceCB.setChecked(((BarcodeObject) mObject).mSource);
 		    	//mContent.setEnabled(false);
 			} else if (mObject instanceof LetterHourObject) {
 				mContent.setEnabled(false);
@@ -364,7 +354,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							mObject.setContent(mContent.getText().toString());
 							((BarcodeObject) mObject).setCode(mCode.getText().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
-							mObject.setSource(mSourceCB.isChecked());
 						}
 						else if(mObject instanceof RectObject)
 						{
@@ -499,7 +488,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				{
 					mCode.setText(((BarcodeObject) mObject).getCode());
 					mShow.setChecked(((BarcodeObject) mObject).getShow());
-					mSourceCB.setChecked(mObject.getSource());
 				}
 				else if(mObject instanceof ShiftObject)
 				{
@@ -749,10 +737,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 
 	@Override
 	public void onCheckedChanged(CompoundButton view, boolean checked) {
-		if (view == mSourceCB) {
-			mContent.setEnabled(!checked);
-			((BarcodeObject)mObject).mSource = checked;
-		} else if (view == mHeightType) {
+		if (view == mHeightType) {
 			if (checked) {
 				mHeight_O.setEnabled(true);
 				mHighEdit.setEnabled(false);

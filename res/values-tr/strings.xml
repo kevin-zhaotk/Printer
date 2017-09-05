@@ -662,4 +662,5 @@
     <string name="str_cnt_max">Son</string>
 
     <string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+    <string name="str_recover_print">recover last print</string>
 </resources>

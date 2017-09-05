@@ -47,8 +47,6 @@ public class BarcodeObject extends BaseObject {
 	public String mFormat;
 	public int mCode;
 	public boolean mShow;
-	/*内容来源 是否U盤*/
-	public boolean mSource;
 	
 	public Bitmap mBinmap;
 	
@@ -68,6 +66,7 @@ public class BarcodeObject extends BaseObject {
 
 	public void setCode(String code)
 	{
+		
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		if ("EAN8".equals(code)) {
 			mCode = 0;

@@ -24,6 +24,7 @@ import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.Utils.SystemPropertiesProxy;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
@@ -84,7 +85,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.os.SystemProperties;
+import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
 	public static final String TAG="ControlTabActivity";
@@ -241,7 +243,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public static final int MESSAGE_RFID_ALARM = 13;
 	
-	
+	public static final int MESSAGE_RECOVERY_PRINT = 16;
 	
 	/**
 	 * the bitmap for preview
@@ -437,7 +439,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	private void switchRfid() {
 		mRfid += 1;
-		int heads = mSysconfig.getParam(42) > 0 ? mSysconfig.getParam(42) : mSysconfig.getHeads();
+		int heads = mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0 ? mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) : mSysconfig.getHeads();
 		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= heads) {
 			mRfid = 0;
 		}
@@ -632,7 +634,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
-					
+					mHandler.sendEmptyMessageDelayed(MESSAGE_RECOVERY_PRINT, 1000);
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
 					String text = msg.getData().getString("text");
@@ -669,6 +671,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//Debug.d(TAG, "--->initDTThread");
 					if (mDTransThread == null) {
 						initDTThread();
+					}
+					if (mDTransThread == null) {
+						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
+						break;
 					}
 					Debug.d(TAG, "--->prepare buffer");
 					DataTask dt = mDTransThread.getData();
@@ -841,7 +847,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					} else {
 						mRfiAlarmTimes = 0;
 					}
-					
+					break;
+				case MESSAGE_RECOVERY_PRINT:
+					SharedPreferences preference = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+					boolean pCrash = preference.getBoolean("stat_before_crash", false);
+					if (pCrash) {
+						ToastUtil.show(mContext, R.string.str_recover_print);
+						mHandler.sendEmptyMessageDelayed(MESSAGE_PRINT_START, 2000);
+						preference.edit().putBoolean("stat_before_crash", false).commit();
+					}
 					break;
 				default:
 					break;
@@ -943,6 +957,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public void initDTThread() {
 		
+		if (mMsgTask == null) {
+			return;
+		}
 		if (mDTransThread == null) {
 			Debug.d(TAG, "--->Print thread ready");
 			mDTransThread = DataTransferThread.getInstance();
@@ -1243,12 +1260,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 				mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
+//				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
 				// QRReader reader = QRReader.getInstance(mContext);
 				// Debug.d(TAG, "--->QRdata: " + reader.read());
 				break;
 			case R.id.StopPrint:
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 				break;
 			/*娓呮礂鎵撳嵃澶达紙涓�涓壒娈婄殑鎵撳嵃浠诲姟锛夛紝闇�瑕佸崟鐙殑璁剧疆锛氬弬鏁�2蹇呴』涓� 4锛屽弬鏁�4涓�200锛� 鍙傛暟5涓�20锛�*/
 			case R.id.btnFlush:

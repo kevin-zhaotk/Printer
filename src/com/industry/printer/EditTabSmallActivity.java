@@ -58,7 +58,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	public Context mContext;
 	public EditScrollView mObjView;
-	public HorizontalScrollView mHScroll;
 	public MessageDisplayManager mMsgManager;
 	private RelativeLayout mRelatively;
 	
@@ -184,7 +183,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mRelatively = (RelativeLayout) getView().findViewById(R.id.edit_view);
 		mMsgManager = new MessageDisplayManager(mContext, mRelatively, mMsgTask);
 
-		
 		/*
 		mObjList = (Spinner) getView().findViewById(R.id.object_list);
 		mNameAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
@@ -249,7 +247,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnNarrow.setOnTouchListener(this);
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
-		
+		mObjName = null;
 		/*initialize the object list spinner*/
 
 		initAdapter();
@@ -307,6 +305,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 
 	public static final int OBJECT_UPDATE = 3;
 
+	public static final int OBJECT_UPDATE_CONTENT = 4;
+	
+	
 	public Handler mObjRefreshHandler = new Handler(){
 		@Override
 		public void  handleMessage (Message msg)
@@ -325,6 +326,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				case OBJECT_UPDATE:
 					mMsgManager.update(obj);
 					break;
+				case OBJECT_UPDATE_CONTENT:
+					mMsgManager.updateDraw(obj);
+					break;
 				default:
 					break;
 			}
@@ -334,13 +338,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void makeObjToCenter(int x)
 	{
-		Debug.d(TAG, "current scrollX="+mHScroll.getScrollX());
-		if(x - mHScroll.getScrollX() > 500)
-		{
-			mHScroll.scrollTo(x-300, 0);
-		} else if (x < mHScroll.getScrollX()) {
-			mHScroll.scrollTo(x, 0);
-		}
 	}
 	
 	public BaseObject getCurObj()
@@ -520,7 +517,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						onInsertObject(ellipse);
 					} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 						BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+						boolean source = bundle.getBoolean(ObjectInsertDialog.OBJECT_SOURCE, false);
 						bar.setY(cur[1]);
+						if (source) {
+							bar.setSource(source);
+							bar.setCode("QR");
+						}
 						onInsertObject(bar);
 					} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
 						GraphicObject image = new GraphicObject(mContext, cur[0]);
@@ -708,7 +710,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
 //		mMsgTask.addObject(msgObject);
 		mMsgManager.add(msgObject);
-		mHScroll.scrollTo(0, 0);
 	}
 	
 	private void onSave() {
@@ -772,7 +773,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			@Override
 			public void onClick() {
 				Debug.d(TAG, "===>onShowinfo  clicked");
-				Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+				Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE_CONTENT);
 				msg.obj = objDialog.getObject();
 				msg.sendToTarget();
 			}
@@ -902,24 +903,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void cursorMove(MessageObject object) {
-		float x = object.getX();
-		float y = object.getY();
-		if (x + 20 > mHScroll.getScrollX() + mHScroll.getWidth()) {
-			Debug.d(TAG, "--->x=" + x + ", scrollx=" + mHScroll.getScrollX() + ",  width=" + mHScroll.getWidth());
-			mHScroll.scrollBy(200, 0);
-		} else if (x-20 < mHScroll.getScrollX()) {
-			mHScroll.scrollBy(-200, 0);
-			if (x <= 20) {
-				object.setX(20f);
-			}
-		}
 		
-		if (y + 10 > mHScroll.getHeight()) {
-			object.setY(mHScroll.getHeight() -10);
-		} else if (y < 10) {
-			object.setY(10f);
-		}
-		mObjView.invalidate();
 	}
 	
 	private boolean onRightTouch(MotionEvent event) {
@@ -1115,12 +1099,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		/*如果當前選中的不是cursor或者cursor的座標爲（0,0） 重置座標*/
 		if (!o.getSelected() || o.getX() == 0 || o.getY() == 0) {
 			/* 光标显示在ScrollView中间  */
-			int x = mHScroll.getWidth()/2 + mObjView.getScrollX();
-			int y = mHScroll.getHeight()/2;
-			Debug.d(TAG, "--->x=" + x + ", y=" + y);
-			o.setX(x);
-			o.setY(y);
-
 			mMsgManager.setSelect(0);
 		} else {
 			o.setSelected(false);
@@ -1132,13 +1110,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	public void scrollPageFore() {
-		mHScroll.scrollBy(300, 0);
-		mObjView.invalidate();
 	}
 	
 	public void scrollPageBack() {
-		mHScroll.scrollBy(-300, 0);
-		mObjView.invalidate();
 	}
 	
 	public final int LEFT_KEY=1;

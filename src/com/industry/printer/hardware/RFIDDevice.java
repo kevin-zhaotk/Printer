@@ -977,7 +977,7 @@ public class RFIDDevice implements RfidCallback{
 		setInkLevel(mCurInkLevel, true);
 	}
 	
-	public byte[] mFeature;
+	public byte[] mFeature = new byte[24];
 	
 	public int getFeature(int index) {
 		if(mFeature == null || index >= mFeature.length) {

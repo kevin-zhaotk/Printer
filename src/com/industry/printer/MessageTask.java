@@ -627,57 +627,44 @@ public class MessageTask {
 
 		for(BaseObject o:mObjects)
 		{
-		if (o instanceof MessageObject) {
-		continue;
-		}
+			if (o instanceof MessageObject) {
+				continue;
+			}
 
 		if(o instanceof CounterObject)
 		{
 //			o.setContent2(str_new_content)	 ;
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-
-		else if(o instanceof RealtimeObject)
-		{	Debug.e(TAG, "RealtimeObject");
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-		else if(o instanceof JulianDayObject)
-		{
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}else if(o instanceof TextObject)
-		{
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-		else //addbylk
-		{
-		Bitmap t = o.getScaledBitmap(mContext);
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-
-
+			Bitmap  t  = o.getpreviewbmp();
+			if (t== null) {
+			continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+		} else if(o instanceof RealtimeObject) {	
+			Debug.e(TAG, "RealtimeObject");
+			Bitmap  t  = o.getpreviewbmp();	
+			if (t== null) {
+			continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+		} else if(o instanceof JulianDayObject) {
+			Bitmap  t  = o.getpreviewbmp();	
+			if (t== null) {
+				continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+		} else if(o instanceof TextObject) {
+			Bitmap  t  = o.getpreviewbmp();
+			if (t== null) {
+			continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+		} else {//addbylk
+			Bitmap t = o.getScaledBitmap(mContext);
+			Debug.d(TAG, "++++++++++++++++++>bmp: " + t);
+			if (t== null) {
+				continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
 		}
 
 		/*

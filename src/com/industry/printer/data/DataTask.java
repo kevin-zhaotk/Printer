@@ -108,6 +108,9 @@ public class DataTask {
 	 */
 	public boolean prepareBackgroudBuffer()
 	{
+		if (mTask == null) {
+			return false;
+		}
 		/**记录当前打印的信息路径**/
 		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask.getHeads());
 		if (mBinInfo == null) {
@@ -186,12 +189,9 @@ public class DataTask {
 		for(BaseObject o:mObjList)
 		{
 			if (o instanceof BarcodeObject) {
-				Debug.d(TAG, "--->param17= " + config.getParam(16) + "   isprev= " + prev + "  QR= " + ((BarcodeObject)o).isQRCode());
+				Debug.d(TAG, "+++++++++++++>source: " + o.getSource());
 				/* 如果二維碼從QR文件中讀 */
-				if (config.getParam(16) == 0 || !((BarcodeObject)o).isQRCode()) {
-					continue;
-				}
-				if (!((BarcodeObject)o).mSource) {
+				if (!o.getSource()) {
 					continue;
 				}
 				String content = "123456789";
@@ -336,22 +336,10 @@ public class DataTask {
 					|| (o instanceof JulianDayObject)
 					|| (o instanceof ShiftObject)
 					|| (o instanceof LetterHourObject)
-					|| isQRFromfile(o))
+					|| o.getSource())
 			{
 				return true;
 			}
-		}
-		return false;
-	}
-	
-	private boolean isQRFromfile(BaseObject object) {
-		if (!(object instanceof BarcodeObject)) {
-			return false;
-		}
-		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
-		int value = config.getParam(16);
-		if (value == 1 && ((BarcodeObject)object).isQRCode()) {
-			return true;
 		}
 		return false;
 	}

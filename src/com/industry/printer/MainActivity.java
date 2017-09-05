@@ -95,6 +95,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			Debug.d(TAG, "--->stat: " + savedInstanceState.getBoolean("printing"));
+		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setLocale();
 		setContentView(R.layout.activity_main);
@@ -191,6 +194,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				ExtGpio.playClick();
 			}
 		}.start();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("printing", true);
 	}
 
 	@Override

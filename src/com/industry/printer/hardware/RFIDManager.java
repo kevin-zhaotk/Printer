@@ -127,7 +127,11 @@ public class RFIDManager implements RfidCallback{
 	
 	public RFIDManager(Context ctx) {
 		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
-		TOTAL_RFID_DEVICES = configFile.getHeads();
+		if (configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0) {
+			TOTAL_RFID_DEVICES = configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS);
+		} else {
+			TOTAL_RFID_DEVICES = configFile.getHeads();
+		}
 	}
 	
 	

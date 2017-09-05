@@ -61,7 +61,10 @@ public class MessageDisplayManager implements View.OnTouchListener {
             return;
         }
         if (object instanceof MessageObject) {
-            return;
+        	// if there is already a messageobject, do nothing
+        	if (mTask.getMsgObject() != null) {
+        		return;
+        	}
         }
         if (mImageMap.containsKey(object)) {
             return;
@@ -110,8 +113,25 @@ public class MessageDisplayManager implements View.OnTouchListener {
         params.leftMargin = (int) object.getX();
         view.setLayoutParams(params);
     }
+    
+    public void updateDraw(BaseObject object) {
+        if (object instanceof MessageObject) {
+            return;
+        }
+        if (!mImageMap.containsKey(object)) {
+            return;
+        }
+        ImageView view = mImageMap.get(object);
+        mImageMap.remove(object);
+        mContainer.removeView(view);
+        draw(object);
+    }
 
     private void draw(BaseObject object) {
+    	
+    	if (object instanceof MessageObject) {
+            return;
+        }
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.leftMargin = (int)object.getX();
         lp.topMargin = (int) object.getY();

@@ -208,6 +208,7 @@ public class TLKFileParser  extends TlkFile{
 			((BarcodeObject) obj).setShow(isShow==0?false:true); 
 			((BarcodeObject) obj).setContent(attr[12]);
 			int source = Integer.parseInt(attr[13]);
+			Debug.d(TAG, "--->source = " + source);
 			obj.setSource(source == 1);
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
