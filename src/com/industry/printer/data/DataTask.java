@@ -450,6 +450,24 @@ public class DataTask {
 		return mTask.getHeads();
 	}
 	
+	public int getHeadType() {
+		return mTask.getHeadType();
+	}
+	
+	public int getBufferHeightFeed() {
+		if (mBinInfo == null) {
+			return 0;
+		}
+		return mBinInfo.mCharsPerHFeed;
+	}
+	
+	public int getBufferColumns() {
+		if (mBinInfo == null) {
+			return 0;
+		}
+		return mBinInfo.mColumn;
+	}
+	
 	public Bitmap getPreview() {
 		char[] preview = getPrintBuffer(true);
 		// String path = "/mnt/usbhost1/prev.bin";

@@ -3,12 +3,14 @@ package com.industry.printer;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import android.R.color;
 import android.app.PendingIntent.OnFinished;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Rfid.RfidScheduler;
 import com.industry.printer.Rfid.RfidTask;
@@ -81,7 +83,7 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		long last = 0;
 		/*逻辑要求，必须先发数据*/
-		buffer = mDataTask.getPrintBuffer();
+		buffer = getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs != null && usbs.size() > 0) {
@@ -106,7 +108,7 @@ public class DataTransferThread extends Thread {
 				mInterval = SystemClock.currentThreadTimeMillis() - last;
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
-				buffer = mDataTask.getPrintBuffer();
+				buffer = getPrintBuffer();
 				if (!mDataTask.isReady) {
 					mRunning = false;
 					if (mCallback != null) {
@@ -350,4 +352,32 @@ public class DataTransferThread extends Thread {
 	
 	public static final int CODE_BARFILE_END = 1;
 	public static final int CODE_NO_BARFILE = 2;
+	
+	private char[] getPrintBuffer() {
+		char[] buffer;
+		int htype = mDataTask.getHeads();
+		// specific process for 9mm header
+		if (htype == MessageType.MESSAGE_TYPE_9MM) {
+			int columns = mDataTask.getBufferColumns();
+			int h = mDataTask.getBufferHeightFeed();
+			char[] b1 = mDataTask.getPrintBuffer();
+			char[] b2 = mDataTask.getPrintBuffer();
+			char[] b3 = mDataTask.getPrintBuffer();
+			char[] b4 = mDataTask.getPrintBuffer();
+			char[] b5 = mDataTask.getPrintBuffer();
+			char[] b6 = mDataTask.getPrintBuffer();
+			buffer = new char[columns * h * 6];
+			for (int i = 0; i < columns; i++) {
+				System.arraycopy(b1, i * h, buffer, i * h *6, h);
+				System.arraycopy(b2, i * h, buffer, i * h * (6 + 1), h);
+				System.arraycopy(b3, i * h, buffer, i * h * (6 + 2), h);
+				System.arraycopy(b4, i * h, buffer, i * h * (6 + 3), h);
+				System.arraycopy(b5, i * h, buffer, i * h * (6 + 4), h);
+				System.arraycopy(b6, i * h, buffer, i * h * (6 + 5), h);
+			}
+		} else {
+			buffer = mDataTask.getPrintBuffer();
+		}
+		return buffer;
+	}
 }

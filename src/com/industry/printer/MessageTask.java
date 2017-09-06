@@ -803,6 +803,15 @@ public class MessageTask {
 		}
 		return height;
 	}
+	
+	public int getHeadType() {
+		int height = 1;
+		MessageObject obj = getMsgObject();
+		if (obj == null) {
+			return MessageType.MESSAGE_TYPE_12_7;
+		}
+		return obj.getType();
+	}
 
 	public String getPreview() {
 		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
@@ -939,6 +948,7 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 12; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_9MM = 13; //320點每列的噴頭,雙頭
 	}
 	
 }
