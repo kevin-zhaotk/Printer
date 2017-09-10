@@ -127,26 +127,26 @@
 	</string-array>
 	
 	<string-array name="strFontTipsArray">
-	    <item>0T+</item>
-	    <item>1+</item>
-	    <item>1B+</item>
-	    <item>1B2</item>
-	    <item>1BS</item>
-	    <item>1T</item>
-	    <item>2+</item>
-	    <item>2B</item>
-	    <item>2i</item>
-	    <item>3+</item>
-	    <item>3B</item>
-	    <item>3i</item>
-	    <item>3T</item>
-	    <item>4</item>
-	    <item>5</item>
-	    <item>6</item>
-	    <item>6B</item>
-	    <item>7</item>
-	    <item>8</item>
-	    <item>9</item>
+	    <item>0T+ font</item>
+	    <item>1+ 字体</item>
+	    <item>1B+ 字体</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ 字体</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ 字体</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
