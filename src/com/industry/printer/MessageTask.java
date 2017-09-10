@@ -948,7 +948,7 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 12; //320點每列的噴頭,雙頭
-		public static final int MESSAGE_TYPE_9MM = 13; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_9MM = 13; //9mm head, copy6 times for print
 	}
 	
 }

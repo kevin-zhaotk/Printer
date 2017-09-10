@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:horizontalSpacing="20dp"
         android:verticalSpacing="20dp"
-        android:numColumns="5"
+        android:numColumns="2"
         android:background="#00000000"
         >
         
