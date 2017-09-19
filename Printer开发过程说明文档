@@ -1,3 +1,7 @@
+////修改日志 //////////////////////////////
+原始 版本号 是 2017040923 
+PULL 日期是 4月 16日 
+
 1 修改了切换HZK16 字库 模式 。通过  设置界面-》 31选项 -》8子选项 可以切换设置
   （存在的问题是 字符的高 实际时 32 ）
 2.添加了 16.3mm Xaar128 碰头类型， BIN 高 128
@@ -6,5 +10,76 @@
 4.预览修改：生成 1.bmp  用指定字符代替实时时间日期数据。
            显示时 可以左右滚动。
 17.05.17 注。
+
+
+17.06.22 
+多头完成  。 大 字体 添加 前 备份 
+17.08.27
+大字体 完成 。 
+功能：
+1调整字库满足 需求 ， 
+2支持 Y坐标 移动 。 
+3HOME预览大字体 16点满高 
+4自动切换7  16  字体 
+5 编辑区域显示与BIN文件对应  
+17.08.29
+更新 dk16-16_DZK 字库 
+17.08.31
+更新 7.ttf 
+17.09.03
+强制 1.tlk 高   152 ；
+17.09.04
+dot  count x 50倍保存， 改为x 220倍
+修改位置  MessageObject：toString（）
+17.09.18 
+修改 属性按钮 支持 16 7 字体 
+    禁止修改 字体 和 字高 
+    显示 MM 改 改成  DOT  
+修改位置  ObjectInfoDialog：fillObjInfo（）
+        EditTabSmallActivity： handleMessage
+        
+禁止缩放按钮        
+修改位置         onClick（）
+
+
+
+
+////内部逻辑描述 //////////////////////////////
+---
+seting 31參數 
+	 a.  都按  X=x/n,  Y=y/n  保存一次， 
+     b.  X=(x+300)/n , Y=(y+300) /n  , 保存一次   如果 N>=1 
+     c.   X=(x+600)/n , Y=(y+600) /n  , 保存一次  如果N>=2 
+     d . X=(x+900)/ , Y=(y+900) /n  , 保存一次  如果N>=3 
+-----    
+ 7.0  对应  16_8DZK    对应   8*5
+16.0  对应  16—16DZK  对应  16*10    
+
+/////////////////////////////////////////////
+
+
+
+
+
+
+
+cd superoid/android42/
+. build/envsetup.sh
+lunch 15
+cd /home/TL-LINK/A20_android/superoid/android42/
+到这里整个配置工作就结束了
+
+编译apk
+mmm packages/apps/Printer/
+然后adb push把Printer.apk push到设备的/system/app目录下就可以了
+
+ubuntu已经安装了adb相关的工具
+
+adb push out/target/product/smfy-super3/system/app/Printer.apk /system/app/
+adb push out/target/product/smfy-super3/system/app/Printer.apk /sdcard/Download/
+
+adb pull /sdcard/Download/msg1/9/v2.bin   /home/kevin/v2.bin
+git@github.com:kevin-zhaotk/Printer.git
+
 
 

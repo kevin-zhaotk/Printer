@@ -1,11 +1,20 @@
 package com.industry.printer.object;
 
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
+
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -23,6 +32,7 @@ import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
+import com.industry.printer.object.data.BitmapWriter;
 
 import android.R.color;
 import android.content.Context;
@@ -68,6 +78,7 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_WEEKDAY  ="034";
 	public static final String OBJECT_TYPE_WEEKS	="035";
 	public static final String OBJECT_TYPE_RT_SECOND="036";
+	public static final String OBJECT_TYPE_LETTERHOUR ="037";
 	
 	
 	public Context mContext;
@@ -112,6 +123,9 @@ public class BaseObject{
 	public static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
 											"1T", "2+", "2B", "2i", "3+", "3B",
 											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
+	
+	public byte[] bin; 
+	private FileInputStream mFStream;
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -284,16 +298,18 @@ public class BaseObject{
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
-
+	public Bitmap makeBinBitmap() {
+		return null;
+	}
+	
 	private int getfeedsent() {
 		return (int)(mHeight/10 * 11/20 + 1);
 	}
-
-
+	
 	protected Bitmap getBitmap(Context context)
 	{
 		//mPaint.setColor(Color.RED);
-		Debug.e(TAG,"=================getBitmap mContent="+mContent);
+		//Debug.d(TAG,"getBitmap mContent="+mContent);
 		mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
@@ -388,6 +404,126 @@ public class BaseObject{
 		dots = (dots* getContent().length()/10) + 1;
 		return dots;
 	}
+
+	public int drawVarBitmapN(int N )
+	{
+		int dots = 0;
+		//mPaint.setTextSize(mHeight);
+		int singleW; //the width value of each char
+		int height = (int)mPaint.getTextSize();
+		int width = (int)mPaint.measureText("8");
+		FontMetrics fm = mPaint.getFontMetrics();
+		float wDiv = (float) (2.0);
+		MessageObject msg = mTask.getMsgObject();
+ 
+		/*draw Bitmap of single digit*/
+		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
+		Canvas can = new Canvas(bmp);
+		
+		Debug.e(TAG, "--->id = " + mId + " Width=" + mWidth);
+		/*draw 0-9 totally 10 digits Bitmap*/
+		singleW = (int)mWidth/mContent.length();
+		Debug.e(TAG, "--->singleW=" + singleW);
+		singleW = (int) (singleW/wDiv);
+		Debug.e(TAG, "--->singleW/div=" + singleW);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots , Bitmap.Config.ARGB_8888);
+		Canvas gCan = new Canvas(gBmp);
+		gCan.drawColor(Color.WHITE);	/*white background*/
+		for(int i =0; i<=9; i++)
+		{
+			/*draw background to white firstly*/
+			can.drawColor(Color.WHITE);
+			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
+			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
+			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight  ), false), i*singleW, (int)getY()  , mPaint);
+		}
+		BinFromBitmap.recyleBitmap(bmp);
+	 
+			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth()*N, gBmp.getHeight(), true);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), gBmp.getHeight(), Bitmap.Config.ARGB_8888);
+			can.setBitmap(b);
+			can.drawColor(Color.WHITE);
+			can.drawBitmap(gBmp, 0, 0, mPaint);
+			gBmp.recycle();
+			gBmp = b;
+	 
+		
+		BinFileMaker maker = new BinFileMaker(mContext);
+		dots = maker.extract(gBmp);
+		Debug.e(TAG, "--->id: " + mId + " index:  " + mIndex);
+		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
+		
+	
+		////////////////////////////////////////////////////////////////////////////
+
+		
+		///读入	
+			File	mFile = new File( ConfigPath.getVBinAbsolute(mTask.getName(), mIndex) );
+			try {
+				 
+				mFStream = new FileInputStream(mFile);
+				bin = new byte[mFStream.available()];
+				mFStream.read(bin);
+				mFStream.close();
+				Debug.d(TAG, "--->buffer.size=" + bin.length);
+			//	resolve();
+			} catch (Exception e) {
+				Debug.d(TAG, ""+e.getMessage());
+			}
+		
+	        //修改
+	        
+	        int w=(bin[0]&0xff)<<16 | (bin[1]&0xff)<<8 | (bin[2]&0xff);
+			Debug.e(TAG, "w=============================" +w+bin[2]+ bin[1] +bin[0]   ); 
+			Debug.e(TAG, "w=============================" + ((bin[0]&0xff)<<16)    ); 	
+			Debug.e(TAG, "w=============================" + ((bin[1]&0xff)<<8)    ); 				
+			Debug.e(TAG, "w=============================" + ((bin[2]&0xff))    ); 				
+			w=(int)(w/N);
+			
+	        int h=(bin[3]&0xff)<<16 | (bin[4]&0xff)<<8 | (bin[5]&0xff);
+			Debug.e(TAG, "h=============================" +h+bin[5]+ bin[4] +bin[3]   );
+			h=h*N;        
+ 
+	
+			bin[2] = (byte) (w & 0x0ff);
+			bin[1] = (byte) ((w>>8) & 0x0ff);
+			bin[0] = (byte) ((w>>16) & 0x0ff);
+	    	
+	    	 
+			bin[5] = (byte) (h & 0x0ff);
+			bin[4] = (byte) ((h>>8) & 0x0ff);
+			bin[3] = (byte) ((h>>16) & 0x0ff);	
+		
+		     //保存	
+	    	try{
+	    		File file = new File( ConfigPath.getVBinAbsolute(mTask.getName(), mIndex)  );
+	    		FileOutputStream fs = new FileOutputStream(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex)    );
+	    		ByteArrayOutputStream barr = new ByteArrayOutputStream();
+	    		//barr.write(head);
+	    		barr.write(bin,0,bin.length);
+	    		barr.writeTo(fs);
+	    		fs.flush();
+	    		fs.close();
+	    		barr.close();
+	    	}catch(Exception e)
+	    	{
+	    		Debug.d(TAG, "Exception: "+e.getMessage());
+	    		return 0 ;
+	    	}
+	        ///////////////////////////////////////////////
+	
+	    	 
+	 
+		
+		//
+		BinFromBitmap.recyleBitmap(gBmp);
+		/*根據變量內容的實際長度計算點數*/
+		dots = (dots* getContent().length()/10) + 1;
+		return dots;
+	}
+	
+	
+	
 	/**
 	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap
 	 * 设计： 
@@ -429,12 +565,11 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bg);
 	}
 	
-	public void generateVarbinFromMatrix(String f) {
+	public void generateVarbinFromMatrix(String f,float height,float width) {
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract("0123456789");
+		maker.extract("0123456789",height,width);
 		maker.save(f + getVarBinFileName());
 	}
-	
 	
 	public Canvas getCanvas()
 	{
@@ -764,4 +899,6 @@ public class BaseObject{
 	public int getfeed() {
 		return (int)(mHeight/10 * 11);
 	}
+	
+	
 }

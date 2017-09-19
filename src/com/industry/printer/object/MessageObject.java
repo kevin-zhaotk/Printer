@@ -4,6 +4,7 @@ import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 
 import android.content.Context;
 
@@ -15,7 +16,8 @@ public class MessageObject extends BaseObject {
 	public static final int PIXELS_PER_MM = 12;
 	public static final float[] mBaseList = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
 	public static final float[] mBaseList_16 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16.3f};
-	
+	public static final float[] mBaseList_16_8 = {7};
+	public static final float[] mBaseList_16_10 = {7, 16 };
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -60,14 +62,28 @@ public class MessageObject extends BaseObject {
 
 	
 	public String toString()
-	{
-		String str="";
-		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += "00000^00000^00000^00000^0^000^";
-		str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
-		str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
-		Debug.d(TAG, "file string ["+str+"]");
+	{			String str="";
+		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
+		{
+
+			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+			str += mId+"^";
+			str += "00000^00000^00000^00000^0^000^";
+			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+			str += BaseObject.intToFormatString(mDots*50, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+			Debug.d(TAG, "file string ["+str+"]");
+		}
+		else
+		{
+			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+			str += mId+"^";
+			str += "00000^00000^00000^00000^0^000^";
+			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+			str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+			Debug.d(TAG, "file string ["+str+"]");		
+		
+		}
+		
 		return str;
 	}
 	
@@ -97,7 +113,22 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
-		}
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		{	size = new String[mBaseList_16_8.length];
+			for (int i = 0; i < size.length; i++) {
+				size[i] =  String.valueOf((int)mBaseList_16_8[i]); 
+			}			 		 
+		 		
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk
+		{	size = new String[mBaseList_16_10.length];
+			for (int i = 0; i < size.length; i++) {
+			size[i] = String.valueOf((int)mBaseList_16_10[i]); 
+			}		
+		
+
+	}
+		
+		
 		return size;
 	}
 	
@@ -121,7 +152,21 @@ public class MessageObject extends BaseObject {
 			return h/4;
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			return h*12.7f/16.3f;
-		}
+		
+		}else if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 碰头 类型 
+		{
+			if( h==7)
+			{
+				return 6.33333333333f;//152/12/2;	//强制 152			
+			}
+			else
+			{
+				return 12.666666666666f;///304/12/2;		//强制 304
+			}
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		{
+			return 6.33333333333f;//152/12/2;	//强制 152			
+		}			
 		return h;
 	}
 	
@@ -162,6 +207,22 @@ public class MessageObject extends BaseObject {
 				break;
 			}
 		}
+		
+		if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 碰头 类型 
+		{		Debug.e(TAG, "====--->size: " + size);
+			if( size==76.0)
+			{
+				return "7"; 	
+			}
+			else
+			{
+				return "16"; 
+			}
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		{
+			 return "7"; 			
+		}			
+		
 		return String.valueOf(h);
 	}
 }

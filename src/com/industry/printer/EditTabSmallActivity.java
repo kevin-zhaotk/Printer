@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.object.BarcodeObject;
@@ -34,6 +35,7 @@ import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
@@ -507,7 +509,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		mMsgTask.save();
            			
             		dismissProgressDialog();
-            //addbylk		OnPropertyChanged(false);
+            		OnPropertyChanged(false);
             		break;
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		
@@ -520,47 +522,192 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		if (bundle == null) {
 						break;
 					}
-            		Debug.d(TAG, "--->mContext: " + mContext);
-            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
-            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
-            		float[] cur = getNextXcor();
-            		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
-            			TextObject text = new TextObject(mContext, cur[0]);
-            			text.setY(cur[1]);
-						onInsertObject(text);
-					} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
-						CounterObject counter = new CounterObject(mContext, cur[0]);
-						counter.setY(cur[1]);
-						onInsertObject(counter);
-					} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
-						RealtimeObject time = new RealtimeObject(mContext, cur[0]);
-						time.setY(cur[1]);
-						onInsertObject(time);
-					} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
-						JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
-						julian.setY(cur[1]);
-						onInsertObject(julian);
-					} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
-						RectObject rect = new RectObject(mContext, cur[0]);
-						rect.setY(cur[1]);
-						onInsertObject(rect);
-					} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
-						LineObject line = new LineObject(mContext, cur[0]);
-						line.setY(cur[1]);
-						onInsertObject(line);
-					} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
-						EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
-						ellipse.setY(cur[1]);
-						onInsertObject(ellipse);
-					} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
-						BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
-						bar.setY(cur[1]);
-						onInsertObject(bar);
-					} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
-						GraphicObject image = new GraphicObject(mContext, cur[0]);
-						image.setY(cur[1]);
-						onInsertObject(image);
-					}
+    				if (PlatformInfo.isBufferFromDotMatrix()==1)
+    				{
+	            		Debug.d(TAG, "--->mContext: " + mContext);
+	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
+	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
+	            		float[] cur = getNextXcor();
+	            		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
+	            			TextObject text = new TextObject(mContext, cur[0]);
+	            			text.setY(cur[1]);
+	            			text.setFont("4");
+	            			text.setHeight(76.0f);
+							onInsertObject(text);
+						} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
+							CounterObject counter = new CounterObject(mContext, cur[0]);
+							counter.setY(cur[1]);
+							counter.setFont("4");
+							counter.setHeight(76.0f);						
+							onInsertObject(counter);
+						} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
+							RealtimeObject time = new RealtimeObject(mContext, cur[0]);
+							time.setY(cur[1]);
+							time.setFont("4");	
+							time.setHeight(76.0f);
+							onInsertObject(time);
+						} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
+							JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
+							julian.setY(cur[1]);
+							julian.setFont("4");
+							julian.setHeight(76.0f);
+							onInsertObject(julian);
+						} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
+							RectObject rect = new RectObject(mContext, cur[0]);
+							rect.setY(cur[1]);
+							rect.setFont("4");	
+							rect.setHeight(76.0f);
+							onInsertObject(rect);
+						} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
+							LineObject line = new LineObject(mContext, cur[0]);
+							line.setY(cur[1]);
+							line.setFont("4");		
+							line.setHeight(76.0f);
+							onInsertObject(line);
+						} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
+							EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
+							ellipse.setY(cur[1]);
+							ellipse.setFont("4");	
+							ellipse.setHeight(76.0f);
+							onInsertObject(ellipse);
+						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
+							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							bar.setY(cur[1]);
+							bar.setFont("4");	
+							bar.setHeight(76.0f);
+							onInsertObject(bar);
+						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
+							GraphicObject image = new GraphicObject(mContext, cur[0]);
+							image.setY(cur[1]);
+							image.setFont("4");	
+							image.setHeight(76.0f);
+							onInsertObject(image);
+						} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
+							LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("4");
+							lh.setHeight(76.0f);
+							onInsertObject(lh);
+						}
+    				}
+    				else if (PlatformInfo.isBufferFromDotMatrix()==2)
+    				{
+	            		Debug.d(TAG, "--->mContext: " + mContext);
+	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
+	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
+	            		float[] cur = getNextXcor();
+	            		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
+	            			TextObject text = new TextObject(mContext, cur[0]);
+	            			text.setY(cur[1]);
+	            			text.setFont("7");
+	            			text.setHeight(152.0f);	            			
+							onInsertObject(text);
+						} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
+							CounterObject counter = new CounterObject(mContext, cur[0]);
+							counter.setY(cur[1]);
+							counter.setFont("7");
+							counter.setHeight(152.0f);	   
+							
+							onInsertObject(counter);
+						} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
+							RealtimeObject time = new RealtimeObject(mContext, cur[0]);
+							time.setY(cur[1]);
+							time.setFont("7");		
+							time.setHeight(152.0f);	   
+							onInsertObject(time);
+						} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
+							JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
+							julian.setY(cur[1]);
+							julian.setFont("7");	
+							julian.setHeight(152.0f);	   
+							onInsertObject(julian);
+						} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
+							RectObject rect = new RectObject(mContext, cur[0]);
+							rect.setY(cur[1]);
+							rect.setFont("7");	
+							rect.setHeight(152.0f);	   
+							onInsertObject(rect);
+						} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
+							LineObject line = new LineObject(mContext, cur[0]);
+							line.setY(cur[1]);
+							line.setFont("7");	
+							line.setHeight(152.0f);	   
+							onInsertObject(line);
+						} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
+							EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
+							ellipse.setY(cur[1]);
+							ellipse.setFont("7");	
+							ellipse.setHeight(152.0f);	   
+							onInsertObject(ellipse);
+						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
+							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							bar.setY(cur[1]);
+							bar.setFont("7");	
+							bar.setHeight(152.0f);	   
+							onInsertObject(bar);
+						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
+							GraphicObject image = new GraphicObject(mContext, cur[0]);
+							image.setY(cur[1]);
+							image.setFont("7");		
+							image.setHeight(152.0f);	   
+							onInsertObject(image);
+						} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
+							LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("7");
+							lh.setHeight(152.0f);	   
+							onInsertObject(lh);
+						}
+    				}
+    				else
+    				{
+	            		Debug.d(TAG, "--->mContext: " + mContext);
+	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
+	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
+	            		float[] cur = getNextXcor();
+	            		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
+	            			TextObject text = new TextObject(mContext, cur[0]);
+	            			text.setY(cur[1]);
+							onInsertObject(text);
+						} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
+							CounterObject counter = new CounterObject(mContext, cur[0]);
+							counter.setY(cur[1]);
+							onInsertObject(counter);
+						} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
+							RealtimeObject time = new RealtimeObject(mContext, cur[0]);
+							time.setY(cur[1]);
+							onInsertObject(time);
+						} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
+							JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
+							julian.setY(cur[1]);
+							onInsertObject(julian);
+						} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
+							RectObject rect = new RectObject(mContext, cur[0]);
+							rect.setY(cur[1]);
+							onInsertObject(rect);
+						} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
+							LineObject line = new LineObject(mContext, cur[0]);
+							line.setY(cur[1]);
+							onInsertObject(line);
+						} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
+							EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
+							ellipse.setY(cur[1]);
+							onInsertObject(ellipse);
+						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
+							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							bar.setY(cur[1]);
+							onInsertObject(bar);
+						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
+							GraphicObject image = new GraphicObject(mContext, cur[0]);
+							image.setY(cur[1]);
+							onInsertObject(image);
+						} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
+							LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							onInsertObject(lh);
+						}    					
+    					
+    				}
             		
             		break;
             }   
@@ -668,18 +815,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			case R.id.btn_right:
 				rightKeyPressed();
 				break;
-			case R.id.btn_zoomIn:
-				onZoomInPressed();
-				break;
-			case R.id.btn_zoomOut:
-				onZoomOutPressed();
-				break;
-			case R.id.wide_btn:
-				onWidePressed();
-				break;
-			case R.id.narrow_btn:
-				onNarrowPressed();
-				break;
+			//case R.id.btn_zoomIn:
+			//	onZoomInPressed();
+			//	break;
+			//case R.id.btn_zoomOut:
+			//	onZoomOutPressed();
+			//	break;
+			//case R.id.wide_btn:
+			//	onWidePressed();
+			//	break;
+			//case R.id.narrow_btn:
+			//	onNarrowPressed();
+			//	break;
 			case R.id.btn_cursor:
 				onCursorPressed();
 				break;
@@ -709,18 +856,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		case R.id.btn_down:
 			onDownTouch(event);
 			break;
-		case R.id.btn_zoomOut:
+		//case R.id.btn_zoomOut:
 			// onZoomOutXTouch(event);
-			break;
-		case R.id.btn_zoomIn:
+		//	break;
+	//	case R.id.btn_zoomIn:
 			// onZoomInXTouch(event);
-			break;
-		case R.id.wide_btn:
-			onWideTouch(event);
-			break;
-		case R.id.narrow_btn:
-			onNarrowTouch(event);
-			break;
+		//	break;
+	//	case R.id.wide_btn:
+	//		onWideTouch(event);
+	//		break;
+	//	case R.id.narrow_btn:
+	//		onNarrowTouch(event);
+	//		break;
 		default:
 			break;
 		}

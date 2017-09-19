@@ -80,8 +80,8 @@ public class RealtimeDate extends BaseObject {
 		Bitmap bitmap;
 		
 		mPaint.setTextSize(getfeed());
-		mPaint.setAntiAlias(true); //去除锯齿  
-		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+		mPaint.setAntiAlias(true); //  
+		mPaint.setFilterBitmap(true); //
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
@@ -98,7 +98,7 @@ public class RealtimeDate extends BaseObject {
 			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
 		
-		int width = (int)mPaint.measureText(getContent());//addbylk 测量尺寸 
+		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 
 		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
 			setWidth(width);
@@ -107,7 +107,7 @@ public class RealtimeDate extends BaseObject {
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE);//设置 变量 在 位图 里 为 蓝色 
+		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
 	
 		
 		 

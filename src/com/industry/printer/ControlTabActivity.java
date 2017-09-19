@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -9,6 +10,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
+
+import com.friendlyarm.AndroidSDK.GPIOEnum;
+import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
@@ -41,6 +45,9 @@ import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.R;
 
+// import com.softwinner.Gpio;
+
+import android.R.bool;
 import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -78,7 +85,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener {
+public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
 	public static final String TAG="ControlTabActivity";
 	
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
@@ -198,12 +205,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 *   message tobe sent when dismiss loading dialog 
 	 */
 	public static final int MESSAGE_PRINT_START = 5;
+	public static final int MESSAGE_PRINT_CHECK_UID = 15;
 	
 	/**
 	 * MESSAGE_PRINT_STOP
 	 *   message tobe sent when dismiss loading dialog 
 	 */
 	public static final int MESSAGE_PRINT_STOP = 6;
+	
+	public static final int MESSAGE_PRINT_END = 14;
 	
 	/**
 	 * MESSAGE_INKLEVEL_DOWN
@@ -227,6 +237,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_RFID_ZERO = 12;
 	
 	public static final int MESSAGE_RFID_ALARM = 13;
+	
+	
 	
 	/**
 	 * the bitmap for preview
@@ -285,6 +297,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mObjList = new ArrayList<BaseObject>();
 		mContext = this.getActivity();
 		mSysconfig = SystemConfigFile.getInstance(mContext);
+
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
@@ -363,6 +376,22 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mSysconfig.getParam(31) == 1) {
 			mCounter = 0;
 		}
+		
+		  ///////////////////////////////////////////////////////////// 						//addbylk
+			if(mSysconfig.getParam(30)==7)//16*8点 
+			{				Debug.e(TAG, "111===>onclick");
+			   PlatformInfo.SetDotMatrixType(1);				   
+			}
+			else if(mSysconfig.getParam(30)==8)//16×16点 
+			{				Debug.e(TAG, "222===>onclick");
+			   PlatformInfo.SetDotMatrixType(2);
+			} 
+			else
+			{				Debug.e(TAG, "=333==>onclick");
+				  PlatformInfo.SetDotMatrixType(0);			
+			}	
+			///////////////////////////////////////////////////////////////////		
+		
 		/***PG1 PG2杈撳嚭鐘舵�佷负 0x11锛屾竻闆舵ā寮�**/
 		FpgaGpioOperation.clean();
 		
@@ -375,9 +404,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		
 		refreshCount();
-		
-		
-		
 	}
 	
 	public void onConfigureChanged() {
@@ -410,11 +436,29 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	public void loadMessage() {
+		/*从U盘中读取系统设置，解析*/
+		mSysconfig = SystemConfigFile.getInstance(mContext);		
+		  ///////////////////////////////////////////////////////////// 						//addbylk
+			if(mSysconfig.getParam(30)==7)//16*8点 
+			{				Debug.e(TAG, "111===>onclick");
+			   PlatformInfo.SetDotMatrixType(1);				   
+			}
+			else if(mSysconfig.getParam(30)==8)//16×16点 
+			{				Debug.e(TAG, "222===>onclick");
+			   PlatformInfo.SetDotMatrixType(2);
+			} 
+			else
+			{				Debug.e(TAG, "=333==>onclick");
+				  PlatformInfo.SetDotMatrixType(0);			
+			}	
+			///////////////////////////////////////////////////////////////////		
+		
 		String f = mSysconfig.getLastMsg();
 		Debug.d(TAG, "===>load message: " + f);
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
+			
 		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", f);
@@ -428,6 +472,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getHeads()) {
 			mRfid = 0;
 		}
+		Debug.d(TAG, "--->switchRfid to: " + mRfid);
 		refreshInk();
 		// refreshCount();
 		mHandler.sendEmptyMessageDelayed(MESSAGE_SWITCH_RFID, 3000);
@@ -439,7 +484,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private void refreshInk() {
 		
 		float ink = mRfidManager.getLocalInk(mRfid);
-		Debug.d(TAG, "--->refresh ink: " + ink);
+		Debug.d(TAG, "--->refresh ink: " + mRfid + " = " + ink);
 		String level = String.valueOf(mRfid + 1) + "-" + (String.format("%.1f", ink) + "%");
 		
 		if (!mRfidManager.isValid(mRfid)) {
@@ -459,8 +504,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 			
 		}
-		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 1.0f) + ", " + (ink > 0f));
-		Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 0f));
+		// Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 1.0f) + ", " + (ink > 0f));
+		// Debug.e(TAG, "--->ink = " + ink + ", " + (ink <= 0f));
 		if (ink <= 1.0f && ink > 0f && mInkLow == false) {
 			mInkLow = true;
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_LOW, 5000);
@@ -469,7 +514,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mHandler.removeMessages(MESSAGE_RFID_LOW);
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 		}
-		
+		refreshVoltage();
+		refreshPulse();
 	}
 	
 	private void refreshCount() {
@@ -510,9 +556,58 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			} else {
 				mPower.setText("--");
 			}
-			mPowerV.setText(String.valueOf(power));
-			mTime.setText("0");
+			//mPowerV.setText(String.valueOf(power));
+			// mTime.setText("0");
+			// display Voltage & pulse width
+			
 			mHandler.sendEmptyMessageDelayed(MESSAGE_REFRESH_POWERSTAT, 5*60*1000);
+		}
+	}
+	
+	/**
+	 * if setting param25 == on, read from RFID feature 5
+	 * if setting param25 == off, read from setting param 26
+	 */
+	private void refreshVoltage() {
+		boolean auto = false;
+		if (mRfidManager == null) {
+			auto = false;
+		} else {
+			int vol = mSysconfig.getParam(24);
+			if (vol > 0) {
+				auto = true;
+			}
+		}
+		
+		if (auto) {
+			RFIDDevice device = mRfidManager.getDevice(0);
+			int vol = device.getFeature(4);
+			mPowerV.setText(String.valueOf(vol));
+		} else {
+			mPowerV.setText(String.valueOf(mSysconfig.getParam(25)));
+		}
+	}
+
+	/**
+	 * if setting param27 == on, read from RFID feature 4
+	 * if setting param27 == off, read from setting param 28
+	 */
+	private void refreshPulse() {
+		boolean auto = false;
+		if (mRfidManager == null) {
+			auto = false;
+		} else {
+			int p = mSysconfig.getParam(26);
+			if (p > 0) {
+				auto = true;
+			}
+		}
+		if (auto) {
+			RFIDDevice device = mRfidManager.getDevice(0);
+			int pulse = device.getFeature(3);
+			mTime.setText(String.valueOf(pulse));
+		} else {
+			mTime.setText(String.valueOf(mSysconfig.getParam(27)));
 		}
 	}
 	
@@ -522,9 +617,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			switch(msg.what)
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
+					Debug.e(TAG, "====================================open tlk :"   );
+					
 					progressDialog();
 					mObjPath = msg.getData().getString("file", null);
-					Debug.d(TAG, "open tlk :" + mObjPath );
+					Debug.d(TAG, "=========open tlk22 :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
 						break;
@@ -533,7 +630,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
 					//parseTlk(f);
 					//initBgBuffer();
-					/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
+					///鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇 
 					mMsgTask = new MessageTask(mContext, mObjPath);
 					mObjList = mMsgTask.getObjects();
 					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
@@ -552,14 +649,33 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
-					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
+					///濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�
 //					if (mPreBitmap.getWidth() > 1280) {
 //						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
 //						BinFromBitmap.recyleBitmap(mPreBitmap);
 //						mPreBitmap = b;
 //					}
 					//mMsgPreImg.setImageBitmap(mPreBitmap);
-					dispPreview(mPreBitmap);
+					/*从U盘中读取系统设置，解析*/
+					mSysconfig = SystemConfigFile.getInstance(mContext);		
+					  ///////////////////////////////////////////////////////////// 						//addbylk
+						if(mSysconfig.getParam(30)==7)//16*8点 
+						{				Debug.e(TAG, "111===>onclick");
+						   PlatformInfo.SetDotMatrixType(1);	
+							dispPreviewM(mPreBitmap);
+						}
+						else if(mSysconfig.getParam(30)==8)//16×16点 
+						{				Debug.e(TAG, "222===>onclick");
+						   PlatformInfo.SetDotMatrixType(2);
+							dispPreviewM(mPreBitmap);
+						} 
+						else
+						{				Debug.e(TAG, "=333==>onclick");
+							  PlatformInfo.SetDotMatrixType(0);	
+								dispPreview(mPreBitmap);
+						}
+						
+
 					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshCount();
@@ -599,12 +715,66 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT,data, data.length*2);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
-				case MESSAGE_PRINT_START:
+				case MESSAGE_PRINT_CHECK_UID:
+					 		
+					DataTask dt1 = mDTransThread.getData();					 
+					char[] buf = dt1.getPrintBuffer();
+					Debug.e(TAG, "==============================>save print bin");
+					ArrayList<String> usbs = ConfigPath.getMountedUsb();
+					if (usbs != null && usbs.size() > 0) {
+						String path = usbs.get(0);
+						File file = new File(path + "/print1.bin");
+					if (file.exists()) {
+							file.delete();
+						}
+						BinCreater.saveBin( path + "/print1.bin", buf, dt1.mBinInfo.getBytesFeed() * 8);
+						Debug.e(TAG, "===========================================>path"+path );	
+					}
+					Debug.e(TAG, "===========================================>path");
+				 
+					//Debug.d(TAG, "--->initDTThread");
+					if (mDTransThread == null) {
+						initDTThread();
+					}
+					Debug.d(TAG, "--->prepare buffer");
+					DataTask dt = mDTransThread.getData();
+					mRfidManager.checkUID(dt.getHeads());
+					break;
+				case RFIDManager.MSG_RFID_CHECK_FAIL:
+					Toast.makeText(mContext, "Rfid changed", Toast.LENGTH_SHORT).show();
+					break;
+				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
+				case MESSAGE_PRINT_START: 
+					Debug.e(TAG, "==============================>MESSAGE_PRINT_START");
+					/**
+					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
+					 */
+			/*		
+					DataTask dt1 = mDTransThread.getData();					 
+					char[] buf = dt1.getPrintBuffer();
+					Debug.e(TAG, "==============================>save print bin");
+					ArrayList<String> usbs = ConfigPath.getMountedUsb();
+					if (usbs != null && usbs.size() > 0) {
+						String path = usbs.get(0);
+						File file = new File(path + "/print1.bin");
+					if (file.exists()) {
+							file.delete();
+						}
+						BinCreater.saveBin( path + "/print1.bin", buf, dt1.mBinInfo.getBytesFeed() * 8);
+						Debug.e(TAG, "===========================================>path"+path );	
+					}
+					Debug.e(TAG, "===========================================>path");
+				*/					
 					
+					//手机  墨水量 低  
+				
 					if (!checkRfid()) {
 						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
 						return;
 					}
+					
+					
+					 
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
 						break;
@@ -613,57 +783,40 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
 						break;
 					}
-					//Debug.d(TAG, "--->initDTThread");
-					if (mDTransThread == null) {
-						initDTThread();
-					}
-					Debug.d(TAG, "--->prepare buffer");
-					DataTask dt = mDTransThread.getData();
 					if (!checkQRFile()) {
 						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
-						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
+					///	  娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀�  
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
 					}
-					if (dt == null || dt.getObjList() == null || dt.getObjList().size() == 0) {
+					DataTask task = mDTransThread.getData();
+					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
 						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
 						break;
 					}
-					/**
-					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
-					 */
-//					char[] buf = dt.getPrintBuffer();
-//					Debug.d(TAG, "--->save print bin");
-//					ArrayList<String> usbs = ConfigPath.getMountedUsb();
-//					if (usbs != null && usbs.size() > 0) {
-//						String path = usbs.get(0);
-//						File file = new File(path + "/print.bin");
-//						if (file.exists()) {
-//							file.delete();
-//						}
-//						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
-//					}
-					Debug.d(TAG, "--->clean");
-					/**
-					 * 鍚姩鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
-					 * 1銆佹瘡娆℃墦鍗帮紝  鍏堟竻绌� 锛堣鏂囦欢锛夛紝 鐒跺悗 鍙戣缃�
-					 * 2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
-					 * 3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
-					 */
-					/*鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞�*/
+
+				///	/
+				//	 鍚姩鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
+				//	 1銆佹瘡娆℃墦鍗帮紝  鍏堟竻绌� 锛堣鏂囦欢锛夛紝 鐒跺悗 鍙戣缃�
+				//	  2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
+				//	  3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
+				//	 /
+					///鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞� 
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
-					Debug.d(TAG, "--->update settings");
-					FpgaGpioOperation.updateSettings(mContext, dt, FpgaGpioOperation.SETTING_TYPE_NORMAL);
-					Debug.d(TAG, "--->launch thread");
-					/*鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙�*/
+					Debug.e(TAG, "--->update settings");
+					FpgaGpioOperation.updateSettings(mContext, task, FpgaGpioOperation.SETTING_TYPE_NORMAL);
+					Debug.e(TAG, "--->launch thread");
+					///鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙� 
 					if (!mDTransThread.launch(mContext)) {
 						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
 						break;
 					}
-					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
+					Debug.e(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
+
 					// FpgaGpioOperation.init();
 					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
+						 			
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -685,6 +838,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
+					break;
+				case MESSAGE_PRINT_END:
+					FpgaGpioOperation.uninit();
+					switchState(STATE_STOPPED);
+					FpgaGpioOperation.clean();
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
 					
@@ -734,6 +892,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						switchRfid();
 						refreshCount();
 						mRfidInit = true;
+						ExtGpio.writeGpio('h', 7, 0);
+						ExtGpio.writeGpio('b', 11, 0);
 					}
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
@@ -751,7 +911,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					
+					Debug.d(TAG, "--->alarm");
+					ExtGpio.writeGpio('h', 7, 0);
+					ExtGpio.writeGpio('b', 11, 0);
 					if (mRfiAlarmTimes++ < 3) {
 						ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 150);						
@@ -805,26 +967,26 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
-		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+		Debug.e(TAG, "-===1>dispPreview: " + mllPreview.getHeight());
 		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
-		
-		if (PlatformInfo.PRODUCT_7INCH.equals(product)) {
-			scale = (float)75.0f/bmp.getHeight();
-		} else if (PlatformInfo.PRODUCT_3INCH.equals(product)) {
-			scale = (float)75.0f/bmp.getHeight();
-		} else {
-			scale = (float)75.0f/bmp.getHeight();
-		}
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Debug.e(TAG, "====2>screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+		float height = mllPreview.getHeight();
+		scale = (height/bmp.getHeight());
+		Debug.e(TAG, "=====================3scale: " + scale  );	
 		mllPreview.removeAllViews();
-			for (int i = 0;x < bmp.getWidth(); i++) {
-				if (x + 1200 > bmp.getWidth()) {
+			for (int i = 0;x < bmp.getWidth(); i++)
+			{
+				if (x + 1200 > bmp.getWidth())
+				{
 					cutWidth = bmp.getWidth() - x;
-				} else {
+				} else{
 					cutWidth =1200;
 					
 				}
 				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
-				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
+				Debug.e(TAG, "====>child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight()+"_"+cutWidth);
 				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
 				child.recycle();
 				x += cutWidth;
@@ -841,7 +1003,48 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mllPreview.addView(imgView);
 			}
 	}
-	
+
+	private void dispPreviewM(Bitmap bmp) {
+		int x=0,y=0;
+		int cutWidth = 0;
+		float scale = 1;
+		Debug.e(TAG, "-===1>dispPreview: " + mllPreview.getHeight());
+		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Debug.e(TAG, "====2>screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+		float height = mllPreview.getHeight();
+		scale = (height/bmp.getHeight()*2);
+		Debug.e(TAG, "=====================3scale: " + scale  );	
+		mllPreview.removeAllViews();
+			for (int i = 0;x < bmp.getWidth(); i++)
+			{
+				if (x + 1200 > bmp.getWidth())
+				{
+					cutWidth = bmp.getWidth() - x;
+				} else{
+					cutWidth =1200;
+					
+				}
+				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
+				Debug.e(TAG, "====>child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight()+"_"+cutWidth);
+				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale*3), (int) (bmp.getHeight() * scale), true);
+				child.recycle();
+				x += cutWidth;
+				ImageView imgView = new ImageView(mContext);
+				imgView.setScaleType(ScaleType.FIT_XY);
+//				if (density == 1) {
+					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
+//				} else {
+//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
+//				}
+				
+				imgView.setBackgroundColor(Color.WHITE);
+				imgView.setImageBitmap(scaledChild);
+				mllPreview.addView(imgView);
+			}
+	}
+		
 	private int mRfiAlarmTimes = 0;
 	private boolean mRfidInit = false;
 	
@@ -861,7 +1064,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		if (mDTransThread == null) {
 			Debug.d(TAG, "--->Print thread ready");
-			mDTransThread = DataTransferThread.getInstance();	
+			mDTransThread = DataTransferThread.getInstance();
+			mDTransThread.setCallback(this);
 		}
 		Debug.d(TAG, "--->init");
 		
@@ -892,6 +1096,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.GONE);
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
+				ExtGpio.writeGpio('h', 7, 1);
+				ExtGpio.writeGpio('b', 11, 1);
 				break;
 			case STATE_STOPPED:
 				mBtnStart.setClickable(true);
@@ -904,6 +1110,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.VISIBLE);
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
+				ExtGpio.writeGpio('h', 7, 0);
+				ExtGpio.writeGpio('b', 11, 0);
 				break;
 			default:
 				Debug.d(TAG, "--->unknown state");
@@ -1155,7 +1363,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		switch (v.getId()) {
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
-				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
 				// QRReader reader = QRReader.getInstance(mContext);
 				// Debug.d(TAG, "--->QRdata: " + reader.read());
 				break;
@@ -1251,5 +1459,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		mDTransThread.refreshCount();
 		refreshCount();
+	}
+	
+	@Override
+	public void OnFinished(int code) {
+		Debug.d(TAG, "--->onFinished");
+		mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+		this.getActivity().runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(mContext, R.string.str_barcode_end, Toast.LENGTH_LONG).show();	
+			}
+		});
+		
 	}
 }

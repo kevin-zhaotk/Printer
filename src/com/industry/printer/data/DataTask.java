@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import android.R.bool;
 import android.R.integer;
 import android.content.Context;
 import android.database.CharArrayBuffer;
@@ -29,6 +30,7 @@ import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeDate;
 import com.industry.printer.object.RealtimeHour;
@@ -36,11 +38,12 @@ import com.industry.printer.object.RealtimeMinute;
 import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
+import com.industry.printer.object.TextObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.data.SegmentBuffer;
 
-
+import com.industry.printer.Utils.PlatformInfo; //addbylk 
 /**
  * 用于生成打印数据和预览图
  * @author zhaotongkai
@@ -64,6 +67,8 @@ public class DataTask {
 	public char[] mBuffer;
 	
 	private int mDots;
+	
+	public boolean isReady = true;
 	
 	/**
 	 * 背景的binInfo，
@@ -90,6 +95,7 @@ public class DataTask {
 	
 	private void init(MessageTask task) {
 		mTask = task;
+		isReady = true;
 		if (task != null) {
 			mObjList = task.getObjects();
 		}
@@ -110,7 +116,7 @@ public class DataTask {
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
-		Debug.d(TAG, "--->bgbuffer = " + mBgBuffer.length);
+		Debug.e(TAG, "=====>bgbuffer = " + mBgBuffer.length);
 		if (mBgBuffer == null) {
 			return false;
 		}
@@ -118,6 +124,48 @@ public class DataTask {
 		return true;
 	}
 	
+	/*
+	
+	public boolean prepareBackgroudBuffer()
+	{
+		 
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask.getHeads());
+		if (mBinInfo == null) {
+			Debug.e(TAG, "--->binInfo null");
+			return false;
+		}
+		Debug.e(TAG, "1================ = " + mBgBuffer.length);
+		if (PlatformInfo.isBufferFromDotMatrix()!=0) 
+		{	
+			Debug.e(TAG, "=2================ " + mBgBuffer.length);	
+			
+			byte[]	mBufferBytes = new byte[mBinInfo.mBuffer.length];
+			char[]	mBufferChars = new char[(mBinInfo.mBuffer.length)/2+2];
+			
+			mBufferBytes=mBinInfo.mBuffer;
+			Debug.e(TAG, "3================= " + mBgBuffer.length);
+	    	//把byte[]存为char[]
+	    	for(int i = 0; i < mBufferChars.length-1; i++) {
+	    		Debug.e(TAG, "4=================  " + mBgBuffer.length);
+	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
+    	}
+		
+
+		BinInfo.overlap(mBgBuffer, mBufferChars, 1 , mBinInfo.getCharsFeed());
+		}
+		else 
+			{
+				mBgBuffer = mBinInfo.getBgBuffer();
+			
+			}
+		Debug.e(TAG, "--->bgbuffer = " + mBgBuffer.length);
+		if (mBgBuffer == null) {
+			return false;
+		}
+		mPrintBuffer = new char[mBinInfo.mBuffer.length/2];
+		return true;
+	}
+	*/
 	public char[] getPrintBuffer() {
 		return getPrintBuffer(false);
 	}
@@ -127,7 +175,15 @@ public class DataTask {
 		try {
 			cReader.read(mPrintBuffer);
 			if (isNeedRefresh()) {
-				refreshVariables(isPreview);
+				if (PlatformInfo.isBufferFromDotMatrix()!=0) 
+				{
+					refreshVariablesM(isPreview);
+				}
+				else
+				{				
+					refreshVariables(isPreview);
+				}
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -155,8 +211,321 @@ public class DataTask {
 		Debug.d(TAG, "--->buffer = " + mBuffer.length);
 		return mBuffer;
 	}
+
+	//addylk forM
+	public void refreshVariablesM(boolean prev)	
+	{
+		MessageObject msg = mTask.getMsgObject();
+	if(mObjList==null || mObjList.size() <= 0)
+		return ;
 	
-	public void refreshVariables(boolean prev) //回复 VAR 
+	String content="";
+	float  height=0;
+	float  width=0;
+	byte [] g_1binbits=null;
+	int leftwidth=2;	
+	int leftmov=3;
+//	float scaleW = 2, scaleH = 1;
+//	
+	// 生成bin文件
+	BinFileMaker maker = new BinFileMaker(mContext);
+	
+
+	for(BaseObject o:mObjList)
+	{
+		if((o instanceof MessageObject)	)
+		{
+			continue;
+		}
+		
+		if(o instanceof CounterObject)
+		{
+
+				    //leftwidth += leftwidth > objlist.getXEnd()  ?  leftwidth : objlist.getXEnd();
+													
+ 				
+			char[] var;
+			String str = prev? ((CounterObject) o).getContent() : ((CounterObject) o).getNext();
+			BinInfo info = mVarBinList.get(o);
+			Debug.e(TAG, "====>object index=" + o.getIndex()+"="+ leftwidth );
+			if (info == null) {
+				info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+				mVarBinList.put(o, info);
+			}
+			var = info.getVarBuffer(str);
+			// BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
+			// Debug.d(TAG, "--->object x=" + o.getX()/div);(int)(o.getX()*2/18.6)
+		////	int objleft =  ((int)(o.mXcor/9.5+0.5));
+		//////	objleft= objleft+leftmov;
+		////	BinInfo.overlap(mPrintBuffer, var, objleft , info.getCharsFeed());
+			
+			int objleft =  ((int)(o.mXcor/9.5+0.5));
+			objleft= objleft+leftmov;
+			int objtop =  ((int)(o.mYcor/9.5+0.5));
+			
+			BinInfo.overlap(mPrintBuffer, var , objleft,objtop,0, info.getCharsFeed());		
+			if( o.mHeight==76)
+			{						 
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
+			}else if( o.mHeight==152)
+			{
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
+			}				
+		//	content += o.getContent();
+		//	o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
+		}
+		else if(o instanceof RealtimeObject)
+		{					
+			Debug.e(TAG, " ======000000000000000"   );
+			String substr=null;
+			char[] var;		
+			Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
+			
+			for(BaseObject rtSub : rt)
+			{					
+				if(rtSub instanceof RealtimeYear)
+				{
+					substr = ((RealtimeYear)rtSub).getContent();
+					Debug.e(TAG, " ======111" + substr );				
+				}
+				else if(rtSub instanceof RealtimeMonth)
+				{
+					substr = ((RealtimeMonth)rtSub).getContent();
+					Debug.e(TAG, " ======222" + substr );								
+					//continue;
+				}
+				else if(rtSub instanceof RealtimeDate)
+				{
+					substr = ((RealtimeDate)rtSub).getContent();
+					Debug.e(TAG, " ======3333" + substr );						
+					//continue;
+				} 
+				else if(rtSub instanceof RealtimeHour)
+				{
+				//	substr = ((RealtimeHour)rtSub).getContent();
+					Debug.e(TAG, " ======4444"   );	
+				} 
+				else if(rtSub instanceof RealtimeMinute)
+				{
+				//	substr = ((RealtimeMinute)rtSub).getContent();
+					Debug.e(TAG, " ======55555"   );	
+				}
+				else if(rtSub instanceof TextObject  )
+				{
+					if( rtSub.mHeight==76)
+					{						 
+						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.8);
+					}else if( o.mHeight==152)
+					{
+						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.1);				
+					}	
+					continue;
+				}
+				//else
+				//	continue;
+				BinInfo info = mVarBinList.get(rtSub);
+			//	if (info == null) 
+				{
+					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask.getHeads());
+					mVarBinList.put(rtSub, info);
+				}
+				var = info.getVarBuffer(substr);
+				//BinCreater.saveBin("/mnt/usbhost1/v" + o.getIndex() + ".bin", var, info.mBytesPerHFeed*8);
+				int objleft =  ((int)(rtSub.mXcor/9.5+0.5));
+				objleft= objleft+leftmov;
+				int objtop =  ((int)(rtSub.mYcor/9.5+0.5));
+				
+				BinInfo.overlap(mPrintBuffer, var , objleft,objtop,0, info.getCharsFeed());
+				
+			///	BinInfo.overlap(mPrintBuffer, var, objleft, info.getCharsFeed());	
+				Debug.e(TAG, "=====X " + rtSub.getX()+ ", Y=" + rtSub.mYcor );
+				if( rtSub.mHeight==76)
+				{						 
+					 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.8);
+				}else if( o.mHeight==152)
+				{
+					 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.1);				
+				}
+				////- 特殊 处理 坐标 坐标 增加 
+			    if(rtSub instanceof TextObject  )
+				{
+					if( rtSub.mHeight==76)
+					{						 
+						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.8);
+					}else if( o.mHeight==152)
+					{
+						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.1);				
+					}				 
+				}
+				
+			}			
+		//	Bitmap t = ((RealtimeObject)o).getBgBitmapN(mContext,N);
+		//	can.drawBitmap(t, o.getX(), o.getY(), p);
+		//	BinFromBitmap.recyleBitmap(t);
+			       //  9999-99-99
+		//	content +="    -  -  ";// o.getContent();
+		//	o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
+			Debug.e(TAG, "--->realtime: " + content);
+		}
+		else if(o instanceof JulianDayObject)
+		{	
+			char[] var;			
+			String vString = ((JulianDayObject)o).getContent();
+			BinInfo varbin= mVarBinList.get(o);
+			if (varbin == null) {
+				varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+				mVarBinList.put(o, varbin);
+			}
+			Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX() );
+			var = varbin.getVarBuffer(vString);
+			
+	//		int objleft =  ((int)(o.mXcor/9.5+0.5));	
+	//		objleft= objleft+leftmov;
+	//		BinInfo.overlap(mPrintBuffer, var, objleft, varbin.getCharsFeed());	
+			
+			int objleft =  ((int)(o.mXcor/9.5+0.5));
+			objleft= objleft+leftmov;
+			int objtop =  ((int)(o.mYcor/9.5+0.5));			
+			BinInfo.overlap(mPrintBuffer, var , objleft,objtop,0, varbin.getCharsFeed());			
+			
+			
+			if( o.mHeight==76)
+			{						 
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
+			}else if( o.mHeight==152)
+			{
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
+			}	
+		//	content += o.getContent();
+	//		o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
+		}
+		else if(o instanceof ShiftObject)
+		{
+	 
+ 				
+			
+			char[]  var;
+			/*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
+			 *所以，shift變量的v.bin固定爲8位，如果bit=1，需要跳過前面的0*/
+			int shift = ((ShiftObject)o).getShiftIndex();
+			Debug.d(TAG, "--->shift ******: " + shift);
+			BinInfo varbin= mVarBinList.get(o);
+			if (varbin == null) {
+				varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+				mVarBinList.put(o, varbin);
+			}
+			// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
+			var = varbin.getVarBuffer(shift, ((ShiftObject)o).getBits());
+		/////	int objleft =  ((int)(o.mXcor/9.5+0.5));
+		/////		objleft += leftmov;
+		/////	BinInfo.overlap(mPrintBuffer, var, objleft, varbin.getCharsFeed());	
+			
+			int objleft =  ((int)(o.mXcor/9.5+0.5));
+			objleft= objleft+leftmov;
+			int objtop =  ((int)(o.mYcor/9.5+0.5));			
+			BinInfo.overlap(mPrintBuffer, var , objleft,objtop,0, varbin.getCharsFeed());			
+			
+			if( o.mHeight==76)
+			{						 
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
+			}else if( o.mHeight==152)
+			{
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
+			}	
+			// content += o.getContent();
+	//		o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
+		}
+		else if(o instanceof TextObject )
+		{
+			if( o.mHeight==76)
+			{						 
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
+			}else if( o.mHeight==152)
+			{
+				 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
+			}			
+		}
+		/*else if(o instanceof TextObject )
+		{
+			char[] var;			
+			String vString = o.getContent();//((JulianDayObject)o).getContent();
+			BinInfo varbin= mVarBinList.get(o);
+			if (varbin == null) {
+				varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+				mVarBinList.put(o, varbin);
+			}
+			Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/7 );
+			var = varbin.getVarBuffer(vString);
+			BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/7), varbin.getCharsFeed());	
+			*/
+			/*
+			
+			content = o.getContent();
+			height = o.mHeight;
+			width = o.mWidth; 
+			
+			 Debug.e(TAG, "====DZ_buffer 000="+height+ width);
+		mDots = maker.extract(content,height,width);
+		
+							 
+		byte[] bit_32 = new byte[ mDots ];//字模高  × 字模宽 
+		 Debug.e(TAG, "====DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
+	 bit_32 = maker.getBuffer() ;	
+	 Debug.e(TAG, "====DZ_buffer 222=");
+	
+		 if( height ==76)
+		 {
+			for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
+			{
+					Debug.e(TAG, "====DZ_buffer.length-76=");
+					int objcew=  ((int)(o.mXcor /7 )*4 );
+					mPrintBuffer[(i +   objcew ) ] = (char) bit_32[i];
+					mPrintBuffer[(i+1 + objcew  ) ] = (char) bit_32[i+1];
+					mPrintBuffer[(i+2 + objcew ) ] = (char) bit_32[i+2];
+					mPrintBuffer[(i+3 + objcew  ) ] =(char)  bit_32[i+3];						
+			}
+		 }
+		 if( height ==120)
+		 {
+			for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
+			{
+					Debug.e(TAG, "====DZ_buffer.length-120=");
+					int objcew=  ((int)(o.mXcor /7 )*4 );
+					mPrintBuffer[(i +   objcew ) ] = (char) bit_32[i];
+					mPrintBuffer[(i+1 + objcew  ) ] =(char)  bit_32[i+1];
+					mPrintBuffer[(i+2 + objcew ) ] =(char)  bit_32[i+2];
+					mPrintBuffer[(i+3 + objcew  ) ] =(char)  bit_32[i+3];
+					
+			}
+		 }	*/
+		 
+		 
+		 
+			 				
+	//	}
+	
+	//can.drawText(mContent, 0, height-30, mPaint);
+	}
+		
+	//	maker.setBuffer(g_1binbits);
+		// 保存bin文件
+	//	maker.saveBin(ConfigPath.getTlkDir(mName) + "/1.bin",g_1binbits,32);	
+	/*	
+	for(BaseObject o:mObjList)
+	{
+		if((o instanceof MessageObject)	) {
+			((MessageObject) o).setDotCount(mDots);
+			break;
+		}
+	}
+	*/
+	
+	return ;
+}
+	
+	
+	
+	public void refreshVariables(boolean prev)
 	{
 		float scaleW = 2, scaleH = 1;
 		String substr=null;
@@ -186,12 +555,16 @@ public class DataTask {
 				if (config.getParam(16) == 0 || !((BarcodeObject)o).isQRCode()) {
 					continue;
 				}
+				if (!((BarcodeObject)o).mSource) {
+					continue;
+				}
 				String content = "123456789";
 				if (!prev) {
 					QRReader reader = QRReader.getInstance(mContext);
 					content = reader.read();
 				}
 				if (TextUtils.isEmpty(content)) {
+					isReady = false;
 					continue;
 				}
 				o.setContent(content);
@@ -212,8 +585,8 @@ public class DataTask {
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
-			//	 BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
-			//	 Debug.e(TAG, "--=============->object x=  " + o.getX()/div+"===="+o.getX() + div );
+				// BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
+				// Debug.d(TAG, "--->object x=" + o.getX()/div);
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed());
 			}
 			else if(o instanceof RealtimeObject)
@@ -284,8 +657,16 @@ public class DataTask {
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
 				var = varbin.getVarBuffer(shift, ((ShiftObject)o).getBits());
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
-			}
-			else
+			} else if (o instanceof LetterHourObject) {
+				BinInfo varbin= mVarBinList.get(o);
+				if (varbin == null) {
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads(), 24);
+					mVarBinList.put(o, varbin);
+				}
+				String t = ((LetterHourObject) o).getContent();
+				var = varbin.getVarBuffer(t);
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
+			} else
 			{
 				Debug.d(TAG, "not Variable object");
 			}
@@ -318,6 +699,7 @@ public class DataTask {
 					|| (o instanceof RealtimeObject)
 					|| (o instanceof JulianDayObject)
 					|| (o instanceof ShiftObject)
+					|| (o instanceof LetterHourObject)
 					|| isQRFromfile(o))
 			{
 				return true;

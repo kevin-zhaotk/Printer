@@ -95,7 +95,7 @@
 	    <item>-- </item>
 	    <item>38.1 mm 三头</item>
 	    <item>50.8 mm 四头</item>
-	    <item>7点 </item>
+	    <item>32点 </item>
 	    <item>16点 </item>
 	    <item>-- </item>
 	    <item>一寸喷头 </item>
@@ -487,11 +487,11 @@
 	<string name="str_textview_param30">30.光电滤波</string>
 	<string name="str_textview_param31">31.喷头类型</string>
 	<string name="str_textview_param32">32.计数重置</string>
-	<string name="str_textview_param33">33.保留</string>
-	<string name="str_textview_param34">34.保留</string>
-	<string name="str_textview_param35">35.保留</string>
-	<string name="str_textview_param36">36.保留</string>
-	<string name="str_textview_param37">37.保留</string>
+	<string name="str_textview_param33">33.墨点</string>
+	<string name="str_textview_param34">34.PWML</string>
+	<string name="str_textview_param35">35.启动时间</string>
+	<string name="str_textview_param36">36.旋转</string>
+	<string name="str_textview_param37">37.PWMH</string>
 	<string name="str_textview_param38">38.保留</string>
 	<string name="str_textview_param39">39.保留</string>
 	<string name="str_textview_param40">40.保留</string>
@@ -701,4 +701,5 @@
 	<string name="str_loading">正在加载...</string>
 	
 	<string name="str_toast_no_qrfile">沒有找到 QR.txt或QR.csv</string>
+	<string name="str_barcode_end">QR.txt已經打印結束</string>
 </resources>

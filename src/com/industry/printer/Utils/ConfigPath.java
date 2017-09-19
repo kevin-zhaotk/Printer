@@ -26,6 +26,8 @@ public class ConfigPath {
 	private static ArrayList<String> mUsbPaths=null;
 	
 	public static ArrayList<String> getMountedUsb() {
+	///	mUsbPaths.add("/sdcard/Download"); //addbylk 手机使用修改u盘路经    1/2 
+		
 		return mUsbPaths;
 	}
 	

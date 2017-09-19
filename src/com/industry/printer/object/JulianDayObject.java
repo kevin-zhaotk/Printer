@@ -63,8 +63,8 @@ public class JulianDayObject extends BaseObject {
 	{
 		Bitmap bitmap;
 		mPaint.setTextSize(getfeed());
-		mPaint.setAntiAlias(true); //去除锯齿  
-		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+		mPaint.setAntiAlias(true); //  
+		mPaint.setFilterBitmap(true); //
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
@@ -90,7 +90,7 @@ public class JulianDayObject extends BaseObject {
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE);//设置 变量 在 位图 里 为 蓝色 
+		mPaint.setColor(Color.BLUE);// 
 	
 		
 		 

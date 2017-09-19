@@ -182,7 +182,7 @@
 		        />
 	    </RelativeLayout>
 	    <RelativeLayout
-	        android:layout_width="240dp" 
+	        android:layout_width="300dp" 
 	        android:layout_height="fill_parent"
 		    android:layout_centerInParent="true"
 	        >
@@ -267,7 +267,7 @@
 		<LinearLayout
 		    android:id="@+id/ll_preview"
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
+		    android:layout_height="@dimen/control_preview_height"
 		    android:orientation="horizontal"
 		    android:background="#ffffff"
 		    >

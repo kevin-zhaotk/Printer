@@ -39,8 +39,8 @@ public class TextObject extends BaseObject {
 	{	Debug.e(TAG, "1===== " + getContent() );
 		Bitmap bitmap;
 		mPaint.setTextSize(getfeed());
-		mPaint.setAntiAlias(true); //åŽ»é™¤é”¯é½¿  
-		mPaint.setFilterBitmap(true); //å¯¹ä½å›¾è¿›è¡Œæ»¤æ³¢å¤„ç†
+		mPaint.setAntiAlias(true); //È¥³ý¾â³Ý  
+		mPaint.setFilterBitmap(true); //¶ÔÎ»Í¼½øÐÐÂË²¨´¦Àí
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);

@@ -23,7 +23,8 @@ public class BinFileMaker {
 	}
 	
 	public void init() {
-		if (PlatformInfo.isBufferFromDotMatrix()==1) {
+		if (PlatformInfo.isBufferFromDotMatrix()!=0) 
+		{
 			mBinCreater = new BinFromDotMatrix(mContext);
 		} else {
 			mBinCreater = new BinFromBitmap();
@@ -37,19 +38,26 @@ public class BinFileMaker {
 		return mBinCreater.extract(bmp);
 	}
 	
-	public int extract(String text) {
+	public int extract(String text,float height,float width) 
+	{
 		if (mBinCreater == null) {
 			init();
 		}
-		return mBinCreater.extract(text);
+		return mBinCreater.extract(text,height,width);
 	}
 	
 	
 	public void save(String f) {
 		mBinCreater.saveBin(f);
 	}
+    public  void saveBin(String f, byte[] dots, int single){
+		mBinCreater.saveBin(f,dots,single);	
+    }
 	
 	public byte[] getBuffer() {
 		return mBinCreater.mBinBits;
 	}
+	public void setBuffer(byte[] Bits) {
+		 mBinCreater.mBinBits=Bits;
+	}	
 }

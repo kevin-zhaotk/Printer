@@ -5,18 +5,21 @@ import java.util.zip.Inflater;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.StringUtils;
 import com.industry.printer.R;
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.R.array;
 import com.industry.printer.R.id;
 import com.industry.printer.R.layout;
 import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.EllipseObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.LineObject;
 import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
@@ -56,6 +59,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.industry.printer.MessageTask.MessageType;
 
 public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener {
 	
@@ -124,6 +129,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	
 	public EditText mMsg;
 	public TextView mPrinter;
+	
+	public EditText m_MM ; 
 	/*
 	 * 
 	 */
@@ -153,11 +160,32 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				Bundle data = msg.getData();
 				String font = data.getString("font");
 				mFont.setText(font);
+		    	 Debug.e(TAG, "====000 " + font);
 				break;
 			case MSG_SELECTED_SIZE:
 				Bundle d = msg.getData();
 				String size = d.getString("height");
 				mHighEdit.setText(size);
+				String font1 ="4";				
+				if(size.compareTo("16")==0 )//addbylk
+				{ Debug.e(TAG, "===11= " + size);	
+				//	Bundle data = msg.getData();
+					 font1 = "7";
+					mFont.setText(font1);	
+					mHeight_O.setText(String.valueOf(152.0f));		
+				}
+				if(size.compareTo("7")==0  )
+				{ Debug.e(TAG, "====22 " + size);	
+				//	Bundle data = msg.getData();
+					  font1 = "4";
+					mFont.setText(font1);
+					mHeight_O.setText(String.valueOf(76.0f));	
+				}	
+				TextView view = mSpiner.getAttachedView();
+				if (view == mFont) {
+				view.setText(font1);
+				}
+		    	 Debug.e(TAG, "==== " + size);				
 				break;
 			}
 		}
@@ -220,13 +248,15 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	    	 mMsg = (EditText) findViewById(R.id.msgNameEdit);
 	    	 mPrinter = (TextView) findViewById(R.id.headTypeSpin);
 	    	 mPrinter.setOnClickListener(this);
-	     }
-	     else 
-	     {
+	     } else if (mObject instanceof LetterHourObject) {
+	    	this.setContentView(R.layout.obj_info_julian); 
+	     } else {
 	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
 	     
+	   //  m_MM  = (EditText) findViewById(  );
+	 	mFontView 		= (TextView) findViewById(R.id.fontView);
 	     mScroll = (ScrollView) findViewById(R.id.viewInfo);
 //	    mXCorView 	= (TextView) findViewById(R.id.xCorView);
 //	 	mXCorUnit 		= (TextView) findViewById(R.id.xCorUnit);
@@ -235,7 +265,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 //	 	mWidthView 	= (TextView) findViewById(R.id.widthView);
 //	 	mWidthUnit 	= (TextView) findViewById(R.id.widthUnitView);
 //	 	mHighView 		= (TextView) findViewById(R.id.highView);
-//	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
+ 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
 //	 	mCntView 		= (TextView) findViewById(R.id.cntView);
 //	 	mFontView 		= (TextView) findViewById(R.id.fontView);
 //	 	mRtfmtView 	= (TextView) findViewById(R.id.rtFmtView);
@@ -288,6 +318,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    	mSourceCB.setOnCheckedChangeListener(this);
 		    	mSourceCB.setChecked(((BarcodeObject) mObject).mSource);
 		    	//mContent.setEnabled(false);
+			} else if (mObject instanceof LetterHourObject) {
+				mContent.setEnabled(false);
 			}
 		    
 		    mLineWidth = (EditText) findViewById(R.id.lineWidth);
@@ -411,6 +443,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
 						
+						
 						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)
@@ -469,13 +502,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			else
 			{
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
-				mHighEdit.setText(mObject.getDisplayHeight());
-				mHeight_O.setText(String.valueOf(mObject.getHeight()));
+
+					mHighEdit.setText(mObject.getDisplayHeight());
+
+
+				mFont.setText(mObject.getFont());			
+				mHeight_O.setText(String.valueOf(mObject.getHeight()));			
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()*2));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
 				
-				mFont.setText(mObject.getFont());
+				
 				if(mObject instanceof RealtimeObject)
 				{
 					mRtFormat.setText(((RealtimeObject) mObject).getFormat());
@@ -541,6 +578,25 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			Debug.d(TAG, ">>>>>disable content");
 			mContent.setEnabled(false);
 		}
+		if (PlatformInfo.isBufferFromDotMatrix()!=0)  
+		{	
+			float alpha =0.2f;	
+			
+			mFont.setEnabled(false); 
+
+			mFont.setAlpha(alpha);
+			
+			mHeight_O.setEnabled(false);		
+			mHeight_O.setAlpha(alpha);
+			
+			mHighUnit.setText("dot");
+			
+		}
+		else
+		{
+			mHighUnit.setText("mm");
+		}
+		
 		
 	}
 	 
@@ -658,10 +714,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			mSpiner.showAsDropUp(v);
 			break;
 		case R.id.fontSpin:
-			// mSpiner.setAdapter(mFontAdapter);
-			// mSpiner.showAsDropUp(v);
-			FontSelectDialog dialog1 = new FontSelectDialog(mContext, mHandler);
-			dialog1.show();
+		//	 mSpiner.setAdapter(mFontAdapter);
+		//	 mSpiner.showAsDropUp(v);
+		 	FontSelectDialog dialog1 = new FontSelectDialog(mContext, mHandler);
+		 	dialog1.show();
 			break;
 		case R.id.rtFormat:
 			mSpiner.setAdapter(mFormatAdapter);
@@ -724,7 +780,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		if (view == mPrinter) {
 			view.setText((String)mTypeAdapter.getItem(index));
 		} else if (view == mFont) {
-			view.setText((String)mFontAdapter.getItem(index));
+		view.setText((String)mFontAdapter.getItem(index));
 		} else if (view == mRtFormat) {
 			view.setText((String)mFormatAdapter.getItem(index));
 		} else if (view == mLineType) {

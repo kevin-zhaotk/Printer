@@ -1,0 +1,116 @@
+﻿虚拟机基本信息
+
+用户名  kevin  密码 zmzmkm
+root用户 密码  zmzmkm
+
+代码路径
+/home/TL-LINK/A20_android/
+
+eclipse路径：
+/home/kevin/Downloads/eclipse-2
+在文件浏览器里双击eclipse这个文件就可以运行，直接可以打开app源码
+
+开机需要先配置环境：
+编译必须是root用户，所以先切换到root
+
+su
+
+cd /home/TL-LINK
+source mk_env.sh
+
+cd A20_android/
+source setup.sh
+
+cd superoid/android42/
+. build/envsetup.sh
+lunch 15
+cd /home/TL-LINK/A20_android/superoid/android42/
+到这里整个配置工作就结束了
+
+编译apk
+mmm packages/apps/Printer/
+然后adb push把Printer.apk push到设备的/system/app目录下就可以了
+
+ubuntu已经安装了adb相关的工具
+
+adb push out/target/product/smfy-super3/system/app/Printer.apk /system/app/
+adb push out/target/product/smfy-super3/system/app/Printer.apk /sdcard/Download/
+
+ adb pull /sdcard/Download/msg1/9/v2.bin   /home/kevin/v2.bin
+
+
+
+git@github.com:kevin-zhaotk/Printer.git
+
+
+
+seting 31參數 
+
+		 a.  都按  X=x/n,  Y=y/n  保存一次， 
+     b.  X=(x+300)/n , Y=(y+300) /n  , 保存一次   如果 N>=1 
+     c.   X=(x+600)/n , Y=(y+600) /n  , 保存一次  如果N>=2 
+     d . X=(x+900)/ , Y=(y+900) /n  , 保存一次  如果N>=3 
+
+
+
+
+DotMatrixReader.java
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+export LD_LIBRARY_PATH=/usr/local/comp/mips-elf/gcc-4.4.0-pmon/lib:
+export CROSS_COMPILE=mipsel-linux-
+export PATH=/usr/local/comp/mips-elf/gcc-4.4.0-pmon/bin/:$PATH
+
+g
+////////////////////////////
+
+find .|xargs grep -ri "IBM" 
+
+./ddr_dir/config_freq.S
+
+loopc
+
+
+
+find . -name *.c|xargs grep sb700
+
+cd /home/kevin/LX/work/cpcie/170705/pmon-loongson3/Targets/Bonito3a9780e
+
+cd /home/kevin/LX/work/vpx/70801/pmon-loongson3/Targets/Bonito3a9780e#
+
+
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+Press <Enter> to execute loading image:/dev/fs/ext2@wd0/boot/vmlinux           
+Press any other key to abort.                                                  
+00                                                                             
+we can't locate root directory in super block!                                 
+/dev/fs/ext2@wd0/boot/vmlinux: Undefined error: 0                              
+AUTO                                                                           
+Press <Enter> to execute loading image:/dev/fs/iso9600@cd0/boot/vmlinux        
+Press any other key to abort.                                                  
+00                                                                             
+/dev/fs/iso9600@cd0/boot/vmlinux: Undefined error: 0  
+
+
+load /dev/fs/ext2@wd1/vmlinux
+
+
+g  console=ttyS0,115200 console=tty root=/dev/sdb1
+
+g  console=ttyS0,115200 console=tty root=/dev/sda1
+
+
+
+
+
+
+
+
+
+	

@@ -8,6 +8,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
@@ -69,8 +70,10 @@ public class RealtimeObject extends BaseObject {
 		for(;str != null && str.length()>0;)
 		{
 			if(	!str.startsWith("YY", i) &&
+					!str.startsWith("AA", i) &&
 					!str.startsWith("MM", i) &&
 					!str.startsWith("DD", i) &&
+					!str.startsWith("GG", i) &&
 					!str.startsWith("HH", i) &&
 					!str.startsWith("NN", i))
 			{
@@ -85,17 +88,17 @@ public class RealtimeObject extends BaseObject {
 				mSubObjs.add(o);
 				
 				/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-				if (PlatformInfo.isBufferFromDotMatrix()==1) {
-					x = x + o.getContent().length() * 16;
-				} 
+				// if (PlatformInfo.isBufferFromDotMatrix()==1) {
+				//	x = x + o.getContent().length() * 16;
+			//	} 
 				/*通过bitmap提取点阵的系统用下面的计算方法*/
-				else {
+			//	else {
 					x = o.getXEnd();
-				}
+			//	}
 				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
-			if(str.startsWith("YY", i))
+			if(str.startsWith("YY", i) || str.startsWith("AA", i))
 			{
 				System.out.println("YY detected");
 				o = new RealtimeYear(mContext, this, x,false);
@@ -109,7 +112,7 @@ public class RealtimeObject extends BaseObject {
 				mSubObjs.add(o);
 				i += 2;
 			}
-			else if(str.startsWith("DD", i))
+			else if(str.startsWith("DD", i) || str.startsWith("GG", i))
 			{
 				System.out.println("DD detected");
 				o = new RealtimeDate(mContext, this, x);
@@ -134,13 +137,13 @@ public class RealtimeObject extends BaseObject {
 			}
 			
 			/*树莓系统通过点阵字库计算坐标，每个字模列宽为16bit*/ 
-			if (PlatformInfo.isBufferFromDotMatrix()==1) {
-				x = x + o.getContent().length() * 16;
-			} 
+		//	if (PlatformInfo.isBufferFromDotMatrix()==1) {
+			///	x = x + o.getContent().length() * 16;
+		//	} 
 			/*通过bitmap提取点阵的系统用下面的计算方法*/
-			else {
-				x = o.getXEnd();
-			}
+		//	else {
+		 		x = o.getXEnd();
+		//	}
 			str = str.substring(i);
 			i=0;
 			System.out.println("realtime c x_end="+x);
@@ -218,7 +221,33 @@ public class RealtimeObject extends BaseObject {
 		}
 		return bmp;
 	}
-	
+
+	public Bitmap getBgBitmapN(Context context,int N)
+	{
+		int Nv;
+		Nv=N;
+		Debug.d(TAG, "getBitmap width="+(mXcor_end - mXcor)+", mHeight="+mHeight);
+		// meature();
+		Bitmap bmp = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
+		//System.out.println("getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
+		mCan = new Canvas(bmp);
+		mCan.drawColor(Color.WHITE);
+		for(BaseObject o : mSubObjs)
+		{
+			Debug.d(TAG, "--->obj: " + o.mId);
+			//constant 
+			if(o instanceof TextObject)
+			{
+				Bitmap b = o.getScaledBitmap(context);
+				mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
+			}
+			else	//variable
+			{
+				o.drawVarBitmapN(Nv); ///VX。BIN 生成
+			}
+		}
+		return bmp;
+	}
 	@Override
 	protected void meature() {
 		float x = mXcor;
@@ -346,12 +375,13 @@ public class RealtimeObject extends BaseObject {
 	
 	
 	@Override
-	public void generateVarbinFromMatrix(String f) {
+ 
+	public void generateVarbinFromMatrix(String f,float height,float width) {
 		for (BaseObject object : getSubObjs()) {
 			if (object.mId.equals(BaseObject.OBJECT_TYPE_TEXT)) {
 				continue;
 			}
-			object.generateVarbinFromMatrix(f);
+			object.generateVarbinFromMatrix(f,height,width);
 			
 		}
 	}

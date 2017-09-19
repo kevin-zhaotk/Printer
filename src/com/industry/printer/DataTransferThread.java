@@ -3,6 +3,7 @@ package com.industry.printer;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import android.app.PendingIntent.OnFinished;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -82,13 +83,37 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
+	
+			SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+			int N=  config.getParam(1) ;
+			if(N==1)
+			{
+			Debug.e(TAG, "===================="+ buffer.length );	
+				char[] trans1 = new char [  buffer.length ];
+				
+				for (int irow = 0; irow < buffer.length-2; irow+=2)
+				{
+				//	Debug.e(TAG, "000============"+ buffer.length );	
+						trans1[buffer.length-1-irow-1] = buffer[irow] ;
+						trans1[buffer.length-1-irow-1+1] = buffer[irow+1] ;						
+							
+				}
+				Debug.e(TAG, "11111===================="+ buffer.length );				
+				for (int irow = 0; irow < buffer.length; irow++)
+				{
+						buffer[irow] = trans1[irow] ;
+				}	
+			}
+		
+		
+		
+		
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 		}
-		
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		last = SystemClock.currentThreadTimeMillis();
@@ -107,6 +132,32 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
 				buffer = mDataTask.getPrintBuffer();
+				if(N==1)
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans2 = new char [  buffer.length ];
+					
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{
+					//	Debug.e(TAG, "000============"+ buffer.length );	
+							trans2[buffer.length-1-irow-1] = buffer[irow] ;
+							trans2[buffer.length-1-irow-1+1] = buffer[irow+1] ;						
+								
+					}
+					Debug.e(TAG, "11111===================="+ buffer.length );				
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans2[irow] ;
+					}	
+				}
+
+				if (!mDataTask.isReady) {
+					mRunning = false;
+					if (mCallback != null) {
+						mCallback.OnFinished(CODE_BARFILE_END);
+					}
+					break;
+				}
 				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				last = SystemClock.currentThreadTimeMillis();
@@ -121,6 +172,24 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				//在此处发生打印数据，同时
 				buffer = mDataTask.getPrintBuffer();
+				if(N==1)
+				{
+				Debug.e(TAG, "333===================="+ buffer.length );	
+					char[] trans3 = new char [  buffer.length ];
+					
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{
+					//	Debug.e(TAG, "000============"+ buffer.length );	
+							trans3[buffer.length-1-irow-1] = buffer[irow] ;
+							trans3[buffer.length-1-irow-1+1] = buffer[irow+1] ;						
+								
+					}
+					Debug.e(TAG, "444===================="+ buffer.length );				
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans3[irow] ;
+					}	
+				}
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
@@ -315,4 +384,18 @@ public class DataTransferThread extends Thread {
 	public void refreshCount() {
 		mcountdown = getInkThreshold();
 	}
+	
+	private Callback mCallback;
+	
+	public void setCallback(Callback callback) {
+		mCallback = callback;
+	}
+	
+	
+	public interface Callback {
+		public void OnFinished(int code);
+	}
+	
+	public static final int CODE_BARFILE_END = 1;
+	public static final int CODE_NO_BARFILE = 2;
 }

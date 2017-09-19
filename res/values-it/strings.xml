@@ -92,7 +92,7 @@
         <item>33 mm testa doppia Xaar</item>
         <item>38.1 mm testa tripla HP</item>
         <item>50.8 mm testa quadripla HP</item>
-        <item>7DOT</item>
+        <item>32DOT</item>
         <item>16DOT</item>
         <item>--</item>
         <item>25.4mm fast</item>
@@ -157,15 +157,15 @@
     <string name="strRtFmt">Formato</string>
 
     <string-array name="strTimeFormat">
-        <item>AAAA-MM-GG</item>
-        <item>MM-GG-AAAA</item>
         <item>AA-MM-GG</item>
-        <item>MM-GG-AA</item>
-        <item>AAAA/MM/GG</item>
-        <item>MM/GG/AAAA</item>
-        <item>AA/MM/GG</item>
-        <item>MM/GG/AA</item>
-        <item>HH:NN</item>
+	    <item>MM-GG-AA</item>
+	    <item>AA/MM/GG</item>
+	    <item>MM/GG/AA</item>
+	    <item>GG/MM/AA</item>
+	    <item>AA</item>
+	    <item>MM</item>
+	    <item>GG</item>
+	    <item>HH:NN</item>
     </string-array>
     <string-array name="strarrayCounter">
         <item>3 punti</item>
@@ -458,11 +458,11 @@
     <string name="str_textview_param30">30.Filtro Pho</string>
     <string name="str_textview_param31">31.Riservato</string>
     <string name="str_textview_param32">32.Riservato</string>
-    <string name="str_textview_param33">33.Riservato</string>
-    <string name="str_textview_param34">34.Riservato</string>
-    <string name="str_textview_param35">35.Riservato</string>
-    <string name="str_textview_param36">36.Riservato</string>
-    <string name="str_textview_param37">37.Riservato</string>
+    <string name="str_textview_param33">33.Dotsize</string>
+	<string name="str_textview_param34">34.PWML</string>
+	<string name="str_textview_param35">35.STR</string>
+	<string name="str_textview_param36">36.Slant</string>
+	<string name="str_textview_param37">37.PWMH</string>
     <string name="str_textview_param38">38.Riservato</string>
     <string name="str_textview_param39">39.Riservato</string>
     <string name="str_textview_param40">40.Riservato</string>

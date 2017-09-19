@@ -30,6 +30,7 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public Button	mLine;
 	public Button	mRect;
 	public Button	mEllipse;
+	public Button 	mHour;
 	public Message		mDismissMsg;
 	
 	public ObjectInsertDialog(Context context) {
@@ -70,6 +71,9 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 */
 		mJulian = (Button) findViewById(R.id.objinsert_julian);
 		mJulian.setOnClickListener(this);
+		
+		mHour = (Button) findViewById(R.id.objinsert_hour);
+		mHour.setOnClickListener(this);
 	}
 
 	@Override
@@ -95,6 +99,11 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				break;
 			case R.id.objinsert_julian:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_JULIAN);
+				mDismissMsg.setData(bundle);
+				break;
+
+			case R.id.objinsert_hour:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_LETTERHOUR);
 				mDismissMsg.setData(bundle);
 				break;
 				/*

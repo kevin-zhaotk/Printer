@@ -5,7 +5,7 @@ import android.content.Context;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.PlatformInfo;
-
+import java.util.ArrayList;
 public class TlkFile {
 	
 	private static final String TAG = TlkFile.class.getSimpleName();
@@ -21,19 +21,40 @@ public class TlkFile {
 		mDirectory = ConfigPath.getTlkDir(file);
 		setTlk(ConfigPath.getTlkAbsolute(file));
 	}
+
+	 //addbylk 手机使用修改u盘路经    2/2 
 	/**
 	 * 设置需要解析的tlk文件名，可以是绝对路径或相对路径
 	 */
+	  // 设备 
+   
+	 public void setTlk(String file) {
+			String path = PlatformInfo.getMntPath();
+			if (file == null || file.isEmpty())
+				return;
+			if (path != null && file.startsWith(path)) {
+				mPath = file;
+			} else {
+				mPath = ConfigPath.getTlkPath() + file;
+			}
+		}
+	
+	
+  // 手机 
+	 	
+	/*
 	public void setTlk(String file) {
-		String path = PlatformInfo.getMntPath();
+		ArrayList<String> path = ConfigPath.getMountedUsb();
 		if (file == null || file.isEmpty())
 			return;
-		if (path != null && file.startsWith(path)) {
+		if (path != null && file.startsWith(path.get(0))) {
 			mPath = file;
 		} else {
 			mPath = ConfigPath.getTlkPath() + file;
 		}
-	}
+	}	 
+	*/
+	
 	
 	public String getDirectory() {
 		return mDirectory;

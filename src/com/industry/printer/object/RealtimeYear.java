@@ -1,4 +1,5 @@
 package com.industry.printer.object;
+
 import java.util.Calendar;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
@@ -110,8 +111,8 @@ public class RealtimeYear extends BaseObject {
 	    Paint Paint; 
 		Paint = new Paint();
 		Paint.setTextSize(getfeed());
-		Paint.setAntiAlias(true);//.setAntiAlias(true); //å»é™¤é”¯é½¿  
-		Paint.setFilterBitmap(true); //å¯¹ä½å›¾è¿›è¡Œæ»¤æ³¢å¤„ç†
+		Paint.setAntiAlias(true);//.setAntiAlias(true); //È¥³ı¾â³İ  
+		Paint.setFilterBitmap(true); //¶ÔÎ»Í¼½øĞĞÂË²¨´¦Àí
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
@@ -139,7 +140,7 @@ public class RealtimeYear extends BaseObject {
 		Canvas can = new Canvas(bitmap);
 		FontMetrics fm = Paint.getFontMetrics();
 		
-		Paint.setColor(Color.BLUE);//è®¾ç½® å˜é‡ åœ¨ ä½å›¾ é‡Œ ä¸º è“è‰² 
+		Paint.setColor(Color.BLUE);//ÉèÖÃ ±äÁ¿ ÔÚ Î»Í¼ Àï Îª À¶É« 
 	
 		
 		 

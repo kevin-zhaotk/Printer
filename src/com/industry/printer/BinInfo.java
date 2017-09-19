@@ -79,9 +79,36 @@ public class BinInfo {
 	public byte[] mBuffer;
 	public ByteArrayInputStream mCacheStream;
 
+	public int mVarCount = 10;
+	
 	public BinInfo(String file) {
 		this(file, 1);
 		Debug.d(TAG, "===>binFile: " + file);
+	}
+	
+	public BinInfo(String file, int type, int varCount) {
+		mColumn = 0;
+		mVarCount = varCount;
+		mBufferBytes = null;
+		mBufferChars = null;
+		if (type <=0 || type > 4) {
+			mType = 1;
+		} else {
+			mType = type;
+		}
+		/**读取文件头信息**/
+		
+		mFile = new File(file);
+		try {
+			mFStream = new FileInputStream(mFile);
+			mBuffer = new byte[mFStream.available()];
+			mFStream.read(mBuffer);
+			mFStream.close();
+			Debug.d(TAG, "--->buffer.size=" + mBuffer.length);
+			resolve();
+		} catch (Exception e) {
+			Debug.d(TAG, ""+e.getMessage());
+		}
 	}
 	
 	public BinInfo(String file, int type)
@@ -193,7 +220,10 @@ public class BinInfo {
 		mCharsFeed = mBytesFeed/2;
 		//通过文件后缀是否带有v判断是否为变量的bin文件
 		if (mFile != null && mFile.getName().contains("v")) {
-			mColPerElement = mColumn/10;
+			if (mVarCount <= 0) {
+				mVarCount = 10;
+			}
+			mColPerElement = mColumn/mVarCount;
 		} else {
 			mColPerElement = 0;
 		}
@@ -275,7 +305,13 @@ public class BinInfo {
     	ByteArrayBuffer ba = new ByteArrayBuffer(0);
    		for(int i=0; i<var.length(); i++)
    		{
-   			n = Integer.parseInt(var.substring(i, i+1));
+   			String v = var.substring(i, i+1);
+   			try {
+   				n = Integer.parseInt(v);
+			} catch (Exception e) {
+				n = (int)v.charAt(0) - (int)"A".charAt(0);
+			}
+   			
    			// Debug.d(TAG, "===>mColPerElement:" + mColPerElement + ", mBytesPerH=" + mBytesPerH + ", type=" + mType);
    			/* 如果每列的字节数为单数，则需要在每列尾部补齐一个字节 */
    			for (int k = 0; k < mColPerElement; k++) {
@@ -380,12 +416,100 @@ public class BinInfo {
     		if (x*high + i < 0) {
 				continue;
 			}
-    		if (matrix==1) {
+    		if (matrix!=0) {
     			dst[x*high + i] = src[i];
     		} else {
     			dst[x*high + i] |= src[i];
     		}
     	}
+    }
+    /**
+     * 疊加方式2  addbylk
+     * @param dst
+     * @param src
+     * @param x
+     * @param high
+     */
+    
+    public static void overlap(char[] dst, char[] src,int offsetx , int offsety,int dsthigh ,int high)
+    {
+    	int len = src.length;
+    	
+    //	if(dst.length < offsetx*high + src.length)
+    //	{
+ //   		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);
+    //		len = dst.length - offsetx*high;
+    		//return;
+    //	}
+    	
+    			int[] isrc=null;
+    			int tempint=0;
+    			isrc  =new int  [len ]; //32高4字节 ×宽 
+    	    	for( int i2=0;i2<len/2;i2++)
+    	    	{
+    	    		tempint =(int) ( src[i2*2 ] );
+    	    		isrc[i2]=(tempint<<16)&0xffff0000;   
+    	    		
+    	    		tempint =(int) ( src[i2*2+1 ] );
+    	    		isrc[i2]|= tempint&0x0000ffff;     	
+    	    		
+    	    		isrc[i2]= isrc[i2]<<offsety;
+    	    	}
+    	    	
+    	    	for( int i2=0;i2<len/2;i2++)
+    	    	{
+    	    		src[i2*2]=(char) ( (isrc[i2] >>16)&0x0000ffff ); 
+    	    		src[i2*2+1]=  (char) (isrc[i2 ] & 0x0000ffff);		
+    	    	} 	
+    	     	
+    	
+
+		    	
+		    	int  matrix = PlatformInfo.isBufferFromDotMatrix();
+		    	///  单一  X 方向 移动   
+		    	for(int i=0; i< len; i++)
+		    	{
+		    		if (offsetx*high + i < 0) {
+						continue;
+					}
+		    		if (matrix!=0) {
+		    			dst[offsetx*high + i] |= src[i];
+		    		} else {
+		    			dst[offsetx*high + i] |= src[i];
+		    		}
+		    	}
+		    	
+    	
+    	
+   /* 	
+    	int dstlen=dst.length;
+		int[] idst=null;
+		int tempint=0;
+    	idst  =new int  [dstlen ]; //32高4字节 ×宽 
+    	for( int i2=0;i2<dstlen/2;i2++)
+    	{
+    		tempint =(int) ( dst[i2*2 ] );
+    		idst[i2]=(tempint<<16)&0xffff0000;   
+    		
+    		tempint =(int) ( dst[i2*2+1 ] );
+    		idst[i2]|= tempint&0x0000ffff; 
+    		//idst[i2]|=idst[i2];   
+    		
+    		 idst[i2]= idst[i2]<<1;//offsety;
+    		Debug.e(TAG, "====" + idst[i2] );
+    	}
+    	
+    	for( int i2=0;i2<dstlen/2;i2++)
+    	{
+    		dst[i2*2]=(char) ( (idst[i2] >>16)&0x0000ffff ); 
+    		dst[i2*2+1]=  (char) (idst[i2 ] & 0x0000ffff);		
+    	  		
+  
+    		Debug.e(TAG, "====" + dst[i2] );
+    	} 	
+   */ 	
+    	
+    	
     }
     
     /**

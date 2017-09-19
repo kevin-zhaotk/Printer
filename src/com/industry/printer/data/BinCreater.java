@@ -45,7 +45,7 @@ public class BinCreater {
 		return 0;
 	}
 	
-	public int extract(String text) {
+	public int extract(String text,float height,float width) {
 		Debug.e(TAG, "--->please Override this Method in Child class");
 		return 0;
 	}
@@ -230,6 +230,7 @@ public class BinCreater {
     	int bytesPerCol = 0;
     	bytesPerCol = single%8==0? single/8 : (single/8+1);
     	int columns = dots.length/bytesPerCol;
+    	Debug.d(TAG, "--->saveBin columns:" + columns);
     	try {
     		
     		File file = new File(f);
@@ -280,6 +281,7 @@ public class BinCreater {
     		dots[2*i +1] = (byte) ((c_dots[i] >> 8) & 0x0ff);
     	}
     	int columns = dots.length/bytesPerCol;
+    	Debug.d(TAG, "--->saveBin columns:" + columns + "   bytesPerCol=" + bytesPerCol + "  dot.len= " + dots.length);
     	try {
     		
     		File file = new File(f);

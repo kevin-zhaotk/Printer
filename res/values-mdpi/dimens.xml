@@ -6,4 +6,5 @@
     -->
 	<dimen name="top_btn_height">80dp</dimen>
 	<dimen name="top_btn_textsize">35sp</dimen>
+	
 </resources>

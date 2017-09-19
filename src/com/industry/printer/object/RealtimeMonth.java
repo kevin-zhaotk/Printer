@@ -76,8 +76,8 @@ public class RealtimeMonth extends BaseObject {
 	{	Debug.d(TAG, "1===== " + getContent() );
 		Bitmap bitmap;
 		mPaint.setTextSize(getfeed());
-		mPaint.setAntiAlias(true); //å»é™¤é”¯é½¿  
-		mPaint.setFilterBitmap(true); //å¯¹ä½å›¾è¿›è¡Œæ»¤æ³¢å¤„ç†
+		mPaint.setAntiAlias(true); //È¥³ı¾â³İ  
+		mPaint.setFilterBitmap(true); //¶ÔÎ»Í¼½øĞĞÂË²¨´¦Àí
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
@@ -104,7 +104,7 @@ public class RealtimeMonth extends BaseObject {
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE);//è®¾ç½® å˜é‡ åœ¨ ä½å›¾ é‡Œ ä¸º è“è‰² 
+		mPaint.setColor(Color.BLUE);//ÉèÖÃ ±äÁ¿ ÔÚ Î»Í¼ Àï Îª À¶É« 
 		Debug.d(TAG, "3===== " + getContent() );
 		
 		 

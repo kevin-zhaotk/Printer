@@ -31,70 +31,70 @@ public class SystemConfigFile{
 	private static final String TAG = SystemConfigFile.class.getSimpleName();
 	
 	
-	public static final String PH_SETTING_ENCODER = "encoder";
-	public static final String PH_SETTING_TRIGER_MODE = "trigerMode";
-	public static final String PH_SETTING_HIGH_DELAY = "PHOHighDelay";
-	public static final String PH_SETTING_LOW_DELAY = "PHOLowDelay";
-	public static final String PH_SETTING_PHOOUTPUT_PERIOD = "PHOOutputPeriod";
-	public static final String PH_SETTING_TIMED_PERIOD = "timedPeriod";
-	public static final String PH_SETTING_TRIGER_PULSE = "trigerPulse";
-	public static final String PH_SETTING_LENFIXED_PULSE = "lenFixedPulse";
-	public static final String PH_SETTING_DELAY_PULSE = "delayPulse";
-	public static final String PH_SETTING_HIGH_LEN = "highLen";
-	public static final String PH_SETTING_RESERVED_11 = "reserved11";
-	public static final String PH_SETTING_RESERVED_12 = "reserved12";
-	public static final String PH_SETTING_RESERVED_13 = "reserved13";
-	public static final String PH_SETTING_RESERVED_14 = "reserved14";
-	public static final String PH_SETTING_RESERVED_15 = "reserved15";
-	public static final String PH_SETTING_RESERVED_16 = "bold";
-	public static final String PH_SETTING_RESERVED_17 = "reserved17";
-	public static final String PH_SETTING_RESERVED_18 = "reserved18";
-	public static final String PH_SETTING_RESERVED_19 = "reserved19";
-	public static final String PH_SETTING_RESERVED_20 = "reserved20";
-	public static final String PH_SETTING_RESERVED_21 = "reserved21";
-	public static final String PH_SETTING_RESERVED_22 = "reserved22";
-	public static final String PH_SETTING_RESERVED_23 = "reserved23";
-	public static final String PH_SETTING_RESERVED_24 = "reserved24";
-	public static final String PH_SETTING_RESERVED_25 = "reserved25";
-	public static final String PH_SETTING_RESERVED_26 = "reserved26";
-	public static final String PH_SETTING_RESERVED_27 = "reserved27";
-	public static final String PH_SETTING_RESERVED_28 = "reserved28";
-	public static final String PH_SETTING_RESERVED_29 = "reserved29";
-	public static final String PH_SETTING_RESERVED_30 = "reserved30";
-	public static final String PH_SETTING_RESERVED_31 = "reserved31";
-	public static final String PH_SETTING_RESERVED_32 = "reserved32";
-	public static final String PH_SETTING_RESERVED_33 = "reserved33";
-	public static final String PH_SETTING_RESERVED_34 = "reserved34";
-	public static final String PH_SETTING_RESERVED_35 = "reserved35";
-	public static final String PH_SETTING_RESERVED_36 = "reserved36";
-	public static final String PH_SETTING_RESERVED_37 = "reserved37";
-	public static final String PH_SETTING_RESERVED_38 = "reserved38";
-	public static final String PH_SETTING_RESERVED_39 = "reserved39";
-	public static final String PH_SETTING_RESERVED_40 = "reserved40";
-	public static final String PH_SETTING_RESERVED_41 = "reserved41";
-	public static final String PH_SETTING_RESERVED_42 = "reserved42";
-	public static final String PH_SETTING_RESERVED_43 = "reserved43";
-	public static final String PH_SETTING_RESERVED_44 = "reserved44";
-	public static final String PH_SETTING_RESERVED_45 = "reserved45";
-	public static final String PH_SETTING_RESERVED_46 = "reserved46";
-	public static final String PH_SETTING_RESERVED_47 = "reserved47";
-	public static final String PH_SETTING_RESERVED_48 = "reserved48";
-	public static final String PH_SETTING_RESERVED_49 = "reserved49";
-	public static final String PH_SETTING_RESERVED_50 = "reserved50";
-	public static final String PH_SETTING_RESERVED_51 = "reserved51";
-	public static final String PH_SETTING_RESERVED_52 = "reserved52";
-	public static final String PH_SETTING_RESERVED_53 = "reserved53";
-	public static final String PH_SETTING_RESERVED_54 = "reserved54";
-	public static final String PH_SETTING_RESERVED_55 = "reserved55";
-	public static final String PH_SETTING_RESERVED_56 = "reserved56";
-	public static final String PH_SETTING_RESERVED_57 = "reserved57";
-	public static final String PH_SETTING_RESERVED_58 = "reserved58";
-	public static final String PH_SETTING_RESERVED_59 = "reserved59";
-	public static final String PH_SETTING_RESERVED_60 = "reserved60";
-	public static final String PH_SETTING_RESERVED_61 = "reserved61";
-	public static final String PH_SETTING_RESERVED_62 = "reserved62";
-	public static final String PH_SETTING_RESERVED_63 = "reserved63";
-	public static final String PH_SETTING_RESERVED_64 = "reserved64";
+	public static final String PH_SETTING_ENCODER = "_10001";
+	public static final String PH_SETTING_TRIGER_MODE = "_10002";
+	public static final String PH_SETTING_HIGH_DELAY = "_10003";
+	public static final String PH_SETTING_LOW_DELAY = "_10004";
+	public static final String PH_SETTING_PHOOUTPUT_PERIOD = "_10005";
+	public static final String PH_SETTING_TIMED_PERIOD = "_10006";
+	public static final String PH_SETTING_TRIGER_PULSE = "_10007";
+	public static final String PH_SETTING_LENFIXED_PULSE = "_10008";
+	public static final String PH_SETTING_DELAY_PULSE = "_10009";
+	public static final String PH_SETTING_HIGH_LEN = "_10010";
+	public static final String PH_SETTING_RESERVED_11 = "_10011";
+	public static final String PH_SETTING_RESERVED_12 = "_10012";
+	public static final String PH_SETTING_RESERVED_13 = "_10013";
+	public static final String PH_SETTING_RESERVED_14 = "_10014";
+	public static final String PH_SETTING_RESERVED_15 = "_10015";
+	public static final String PH_SETTING_RESERVED_16 = "_10016";
+	public static final String PH_SETTING_RESERVED_17 = "_10017";
+	public static final String PH_SETTING_RESERVED_18 = "_10018";
+	public static final String PH_SETTING_RESERVED_19 = "_10019";
+	public static final String PH_SETTING_RESERVED_20 = "_10020";
+	public static final String PH_SETTING_RESERVED_21 = "_10021";
+	public static final String PH_SETTING_RESERVED_22 = "_10022";
+	public static final String PH_SETTING_RESERVED_23 = "_10023";
+	public static final String PH_SETTING_RESERVED_24 = "_10024";
+	public static final String PH_SETTING_RESERVED_25 = "_10025";
+	public static final String PH_SETTING_RESERVED_26 = "_10026";
+	public static final String PH_SETTING_RESERVED_27 = "_10027";
+	public static final String PH_SETTING_RESERVED_28 = "_10028";
+	public static final String PH_SETTING_RESERVED_29 = "_10029";
+	public static final String PH_SETTING_RESERVED_30 = "_10030";
+	public static final String PH_SETTING_RESERVED_31 = "_10031";
+	public static final String PH_SETTING_RESERVED_32 = "_10032";
+	public static final String PH_SETTING_RESERVED_33 = "_10033";
+	public static final String PH_SETTING_RESERVED_34 = "_10034";
+	public static final String PH_SETTING_RESERVED_35 = "_10035";
+	public static final String PH_SETTING_RESERVED_36 = "_10036";
+	public static final String PH_SETTING_RESERVED_37 = "_10037";
+	public static final String PH_SETTING_RESERVED_38 = "_10038";
+	public static final String PH_SETTING_RESERVED_39 = "_10039";
+	public static final String PH_SETTING_RESERVED_40 = "_10040";
+	public static final String PH_SETTING_RESERVED_41 = "_10041";
+	public static final String PH_SETTING_RESERVED_42 = "_10042";
+	public static final String PH_SETTING_RESERVED_43 = "_10043";
+	public static final String PH_SETTING_RESERVED_44 = "_10044";
+	public static final String PH_SETTING_RESERVED_45 = "_10045";
+	public static final String PH_SETTING_RESERVED_46 = "_10046";
+	public static final String PH_SETTING_RESERVED_47 = "_10047";
+	public static final String PH_SETTING_RESERVED_48 = "_10048";
+	public static final String PH_SETTING_RESERVED_49 = "_10049";
+	public static final String PH_SETTING_RESERVED_50 = "_10050";
+	public static final String PH_SETTING_RESERVED_51 = "_10051";
+	public static final String PH_SETTING_RESERVED_52 = "_10052";
+	public static final String PH_SETTING_RESERVED_53 = "_10053";
+	public static final String PH_SETTING_RESERVED_54 = "_10054";
+	public static final String PH_SETTING_RESERVED_55 = "_10055";
+	public static final String PH_SETTING_RESERVED_56 = "_10056";
+	public static final String PH_SETTING_RESERVED_57 = "_10057";
+	public static final String PH_SETTING_RESERVED_58 = "_10058";
+	public static final String PH_SETTING_RESERVED_59 = "_10059";
+	public static final String PH_SETTING_RESERVED_60 = "_10060";
+	public static final String PH_SETTING_RESERVED_61 = "_10061";
+	public static final String PH_SETTING_RESERVED_62 = "_10062";
+	public static final String PH_SETTING_RESERVED_63 = "_10063";
+	public static final String PH_SETTING_RESERVED_64 = "_10064";
 	
 	public static final String LAST_MESSAGE = "message";
 	
@@ -1022,6 +1022,7 @@ public class SystemConfigFile{
 	
 	public int getHeads() {
 		int heads = 1;
+		Debug.d(TAG, "--->:getHeads: " + mParam[30]);
 		switch (mParam[30]) {
 		case MessageType.MESSAGE_TYPE_12_7:
 		case MessageType.MESSAGE_TYPE_12_7_S:
@@ -1041,11 +1042,8 @@ public class SystemConfigFile{
 			break;
 		case MessageType.MESSAGE_TYPE_50_8:
 			heads = 4;
-		case MessageType.MESSAGE_TYPE_HZK_16_16:
-			heads = 5;		
-		case MessageType.MESSAGE_TYPE_HZK_32_32:
-			heads = 6;				
-					
+			break;
+
 		default:
 			break;
 		}

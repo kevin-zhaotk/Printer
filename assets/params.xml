@@ -99,9 +99,9 @@
 	</param>
 	<param>
 	    <id>17</id>
-		<min>1</min>
-		<max>8</max>
-		<default>1</default>
+		<min>0</min>
+		<max>1</max>
+		<default>0</default>
 	</param>
 	<param>
 	    <id>19</id>
@@ -179,9 +179,31 @@
 	<param>
 	    <id>33</id>
 		<min>0</min>
-		<max>1</max>
+		<max>5000</max>
 		<default>0</default>
 	</param>
+	
+	<param>
+	    <id>34</id>
+		<min>0</min>
+		<max>100</max>
+		<default>0</default>
+	</param>
+	
+	<param>
+	    <id>35</id>
+		<min>0</min>
+		<max>1000</max>
+		<default>0</default>
+	</param>
+	
+	<param>
+	    <id>36</id>
+		<min>0</min>
+		<max>1000000</max>
+		<default>0</default>
+	</param>
+	
 	<param>
 	    <id>40</id>
 		<min>128</min>

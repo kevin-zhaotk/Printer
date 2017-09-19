@@ -340,10 +340,10 @@ public class Configs {
 	}
 	
 	/**
-	 * 设置参数33表示32×Nbuffer的双数bit位移值
+	 * 设置参数53表示32×Nbuffer的双数bit位移值
 	 * @return
 	 */
 	public static int getEvenShift() {
-		return mSysconfig.getParam(32);
+		return mSysconfig.getParam(52);
 	}
 }

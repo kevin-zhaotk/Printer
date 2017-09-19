@@ -24,6 +24,8 @@ public class ExtGpio {
 	private static final int GPIO_RFID_CARD6 = 0x08;
 	private static final int GPIO_RFID_CARD7 = 0x09;
 	private static final int GPIO_RFID_CARD8 = 0x0A;
+	private static final int GPIO_WRITE = 0x10;
+	
 	
 	// RFID卡1對應的3-8譯碼器編碼
 	private static final int RFID_CARD1_CODE = 3;
@@ -61,6 +63,20 @@ public class ExtGpio {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param group
+	 * @param index
+	 * @param value
+	 */
+	public static void writeGpio(char group, int index, int value) {
+		int fd = open();
+		int g = group - 'a';
+		int v = ((g & 0x0f) << 12) | ((index & 0x0ff) << 4) | value;
+		Debug.d("ExtGpio", "--->writeGpio: fd= " + fd + "  group=" + group + "  index=" + index + " value=" + value + "  v=" + v);
+		FpgaGpioOperation.ioctl(fd, GPIO_WRITE, v);
+	}
+	
 	public static void playClick() {
 		int fd = open();
 		FpgaGpioOperation.ioctl(fd, GPIO_PLAY, 0);
@@ -79,6 +95,7 @@ public class ExtGpio {
 	}
 	
 	public static boolean writeSysfs() {
+		
         String path = "/sys/devices/platform/ext-gpio/playClick";
         if (!new File(path).exists()) {
             Debug.e("", "File not found: " + path);
@@ -98,6 +115,7 @@ public class ExtGpio {
             Debug.e("", "IO Exception when write: " + path, e);
             return false;
         }
+        
     }
 
 }

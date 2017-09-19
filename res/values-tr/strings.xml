@@ -93,7 +93,7 @@
         <item>33 mm Xaar dual</item>
         <item>38.1 mm HP Triple</item>
         <item>50.8 mm HP quadruple</item>
-        <item>7dot</item>
+        <item>32dot</item>
         <item>16dot</item>
         <item>--</item>
         <item>25.4mm fast</item>
@@ -459,11 +459,11 @@
     <string name="str_textview_param30">30.Pho Filtresi</string>
     <string name="str_textview_param31">31.Ayrılmış</string>
     <string name="str_textview_param32">32.Ayrılmış</string>
-    <string name="str_textview_param33">33.Ayrılmış</string>
-    <string name="str_textview_param34">34.Ayrılmış</string>
-    <string name="str_textview_param35">35.Ayrılmış</string>
-    <string name="str_textview_param36">36.Ayrılmış</string>
-    <string name="str_textview_param37">37.Ayrılmış</string>
+	<string name="str_textview_param33">33.Dotsize</string>
+	<string name="str_textview_param34">34.PWML</string>
+	<string name="str_textview_param35">35.STR</string>
+	<string name="str_textview_param36">36.Slant</string>
+	<string name="str_textview_param37">37.PWMH</string>
     <string name="str_textview_param38">38.Ayrılmış</string>
     <string name="str_textview_param39">39.Ayrılmış</string>
     <string name="str_textview_param40">40.Ayrılmış</string>
