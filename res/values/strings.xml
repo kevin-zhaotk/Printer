@@ -16,6 +16,8 @@
 	<string name="str_btn_stop">Stop</string>
 	<string name="str_btn_clean">Purge</string>
 	<string name="str_btn_open">Open</string>
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
 	<string name="str_btn_new">New</string>
 	<string name="str_btn_save">Save</string>
 	<string name="str_btn_saveas">Saveas</string>

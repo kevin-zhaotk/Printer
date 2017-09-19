@@ -332,7 +332,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				default:
 					break;
 			}
-
+			OnPropertyChanged(true);
 		}
 	};
 	

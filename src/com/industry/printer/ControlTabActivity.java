@@ -902,7 +902,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
-//		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
 //		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
 //		DisplayMetrics dm = new DisplayMetrics();
 //		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -915,7 +915,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					cutWidth = bmp.getWidth() - x;
 				} else {
 					cutWidth =1200;
-					
 				}
 				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
 				if (cutWidth * scale < 1 || bmp.getHeight() * scale < 1) {

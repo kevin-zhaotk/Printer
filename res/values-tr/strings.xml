@@ -55,6 +55,10 @@
     <string name="str_btn_setTime">Zaman Ayarı</string>
     <string name="str_btn_image">Logo</string>
     <string name="str_goto">git</string>
+    
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
+	
     <!-- object info table -->
     <string name="strWidth">Genişlik</string>
     <string name="strHigh">Yükseklik</string>

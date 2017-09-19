@@ -72,24 +72,55 @@
          android:orientation="vertical"
          android:layout_alignParentTop="true"
          >
-        <TextView
-            android:id="@+id/count_down"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textColor="#000000"
-            android:textSize="25sp"
-	    	android:gravity="center"
-        />
-        <TextView
-	        android:id="@+id/ctrl_counter_view"
-	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:textColor="#000000"
-	        android:textSize="25sp"
-	        android:gravity="center"
-        />
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/cnt_dw_label"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                android:text="@string/str_remain_ink"
+                />
+	        <TextView
+	            android:id="@+id/count_down"
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:layout_toRightOf="@id/cnt_dw_label"
+	            android:layout_marginLeft="20dp"
+	            android:textColor="#000000"
+	            android:textSize="25sp"
+	        />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/cnt_cnter_label"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="#000000"
+                android:textSize="25sp"
+                android:text="@string/str_remain_ptimes"
+                />
+	        <TextView
+		        android:id="@+id/ctrl_counter_view"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:layout_toRightOf="@id/cnt_cnter_label"
+		        android:layout_marginLeft="20dp"
+		        android:textColor="#000000"
+		        android:textSize="25sp"
+		        android:gravity="center"
+	        />
+	    </RelativeLayout>
          
          
      </LinearLayout>

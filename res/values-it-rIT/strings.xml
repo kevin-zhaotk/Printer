@@ -55,6 +55,10 @@
     <string name="str_btn_setTime">Imposta ora</string>
     <string name="str_btn_image">Logo</string>
     <string name="str_goto">Vai a</string>
+    
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
+	
     <!-- object info table -->
     <string name="strWidth">Larghezza</string>
     <string name="strHigh">Altezza</string>

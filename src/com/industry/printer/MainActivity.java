@@ -473,4 +473,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		}
 		mVerTitle.setText(R.string.app_version);
 	}
+	
+	public void hideKeyboard() {
+		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.hideSoftInputFromWindow(mEditTitle.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
 }

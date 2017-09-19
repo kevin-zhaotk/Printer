@@ -16,6 +16,8 @@
 	<string name="str_btn_stop">停止</string>
 	<string name="str_btn_clean">清洗</string>
 	<string name="str_btn_open">打开</string>
+	<string name="str_remain_ink">剩余锁值</string>
+	<string name="str_remain_ptimes">打印次数</string>
 	<string name="str_btn_new">新建</string>
 	<string name="str_btn_save">保存</string>
 	<string name="str_btn_saveas">另存为</string>

@@ -42,7 +42,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
@@ -58,7 +61,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener {
+public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener
+	, OnTouchListener{
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -224,6 +228,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     }
 	     
 	     mScroll = (ScrollView) findViewById(R.id.viewInfo);
+	     mScroll.setOnTouchListener(this);
 //	    mXCorView 	= (TextView) findViewById(R.id.xCorView);
 //	 	mXCorUnit 		= (TextView) findViewById(R.id.xCorUnit);
 //	 	mYCorView	= (TextView) findViewById(R.id.yCorView);
@@ -436,7 +441,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 			}
 		});
-	     
+	    
 	     /*mPageup = (Button) findViewById(R.id.btn_page_up);
 	     mPageup.setOnClickListener(this);
 	     mPagedown = (Button) findViewById(R.id.btn_page_down);
@@ -746,5 +751,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mHighEdit.setEnabled(true);
 			}
 		}
+	}
+
+	@Override
+	public boolean onTouch(View arg0, MotionEvent arg1) {
+		InputMethodManager im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.hideSoftInputFromWindow(arg0.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		return false;
 	}
 }

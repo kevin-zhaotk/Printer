@@ -315,7 +315,7 @@ public class BaseObject{
 		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
-		canvas.drawText(content, 0, ctH-fm.descent, paint);
+		canvas.drawText(content, 0, ctH-fm.descent-5, paint);
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	
