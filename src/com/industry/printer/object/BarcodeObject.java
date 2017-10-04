@@ -47,6 +47,7 @@ public class BarcodeObject extends BaseObject {
 	public String mFormat;
 	public int mCode;
 	public boolean mShow;
+	public int mTextSize;
 	
 	public Bitmap mBinmap;
 	
@@ -58,6 +59,7 @@ public class BarcodeObject extends BaseObject {
 		// TODO Auto-generated constructor stub
 		mShow = true;
 		mCode = 3;
+		mTextSize = 20;
 		mFormat="CODE_128";
 		setContent("123456789");
 		mWidth=0;
@@ -133,6 +135,19 @@ public class BarcodeObject extends BaseObject {
 		return mShow;
 	}
 	
+	public void setTextsize(int size) {
+		if (size == mTextSize) {
+			return;
+		}
+		if (size > 0 && size < 100) {
+			mTextSize = size;
+			isNeedRedraw = true;
+		}
+	}
+	
+	public int getTextsize() {
+		return mTextSize;
+	}
 	@Override
 	public void setContent(String content)
 	{
@@ -204,6 +219,9 @@ public class BarcodeObject extends BaseObject {
 	private Bitmap draw(String content, int w, int h) {
 		BitMatrix matrix=null;
 		int margin = 0;
+		if (h <= mTextSize) {
+			h = mTextSize + 10;
+		}
 		Paint paint = new Paint();
 		Debug.d("BarcodeObject", "--->draw w : " + w + "  h: " + h);
 		try {
@@ -216,7 +234,7 @@ public class BarcodeObject extends BaseObject {
             /* 条形码的宽度设置:每个数字占70pix列  */
 			if ("EAN13".equals(mFormat)) {
 				matrix = writer.encode(checkSum(),
-				        format, w, h - 25, null);
+				        format, w, h - mTextSize - 5, null);
             
 			} else if ("EAN8".equals(mFormat)) {
 				matrix = writer.encode(checkLen(),
@@ -224,7 +242,7 @@ public class BarcodeObject extends BaseObject {
             
 			} else {
 				matrix = writer.encode(content,
-				        format, w, h - 25, null);
+				        format, w, h - mTextSize- 5, null);
 			}
             
 			int tl[] = matrix.getTopLeftOnBit();
@@ -252,7 +270,7 @@ public class BarcodeObject extends BaseObject {
 			{
 				// 用於生成bin的bitmap
 				Bitmap bmp = Bitmap.createBitmap(width, h, Config.ARGB_8888);
-				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, 25);
+				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, mTextSize + 5);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
 				//BinCreater.saveBitmap(code, "barcode.png");
 				Canvas can = new Canvas(bmp);
@@ -423,7 +441,7 @@ public class BarcodeObject extends BaseObject {
 	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
 		Paint paint = new Paint(); 
 		
-		paint.setTextSize(20);
+		paint.setTextSize(mTextSize);
 		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
@@ -435,7 +453,7 @@ public class BarcodeObject extends BaseObject {
 		int left = (int) ((perPix - numWid)/2);
 		for (int i = 0; i < content.length(); i++) {
 			String n = content.substring(i, i+1);
-			canvas.drawText(n, i*perPix + left, height - 5, paint);
+			canvas.drawText(n, i*perPix + left, mTextSize, paint);
 		}
 		return bitmap;
 	}
@@ -614,7 +632,8 @@ public class BarcodeObject extends BaseObject {
 		str += BaseObject.boolToFormatString(mShow, 3)+"^";
 		str += mContent+"^";
 		str += BaseObject.boolToFormatString(mSource, 8) + "^";
-		str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
+		str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
+		str += BaseObject.intToFormatString(mTextSize, 3);
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

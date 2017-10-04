@@ -121,7 +121,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private Button  mPagedown;
 	private ScrollView mScroll;
 	public TextView mLineType;
-		
+	private EditText mTextsize;
+	
 	public EditText mMsg;
 	public TextView mPrinter;
 	/*
@@ -284,6 +285,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			    mCode.setOnClickListener(this);
 			    mShow = (CheckBox) findViewById(R.id.check_Num_show);
 		    	//mContent.setEnabled(false);
+			    mTextsize = (EditText) findViewById(R.id.et_text_size);
 			} else if (mObject instanceof LetterHourObject) {
 				mContent.setEnabled(false);
 			}
@@ -359,6 +361,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							mObject.setContent(mContent.getText().toString());
 							((BarcodeObject) mObject).setCode(mCode.getText().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
+							((BarcodeObject) mObject).setTextsize(Integer.parseInt(mTextsize.getText().toString()));
 						}
 						else if(mObject instanceof RectObject)
 						{
@@ -493,6 +496,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				{
 					mCode.setText(((BarcodeObject) mObject).getCode());
 					mShow.setChecked(((BarcodeObject) mObject).getShow());
+					mTextsize.setText(String.valueOf(((BarcodeObject) mObject).getTextsize()));
 				}
 				else if(mObject instanceof ShiftObject)
 				{

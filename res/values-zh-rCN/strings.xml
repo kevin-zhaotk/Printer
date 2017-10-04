@@ -71,6 +71,7 @@
 	<string name="txtDefault">text</string>
 	<string name="strDragable">是否拖动</string>
 	<string name="strShow">显示内容</string>
+	<string name="strFontsize">字号</string>
 	<string name="strFont">字体</string>
 	<string name="strLinewidth">线宽</string>
 	<string name="strBits">位数</string>

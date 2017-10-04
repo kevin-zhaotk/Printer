@@ -849,7 +849,7 @@ public class BaseObject{
 	//////addbylk 		 
 	public Bitmap getpreviewbmp()
 	{
-		return  Bitmap.createBitmap(0 , Configs.gDots, Bitmap.Config.ARGB_8888);
+		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
 	}
 	public int getfeed() {
 		return (int)(mHeight/10 * 11);

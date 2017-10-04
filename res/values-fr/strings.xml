@@ -37,8 +37,8 @@
 	<string name="strPrintstate">Impression:</string>
 	<string name="strPrinting">Impression</string>
 	<string name="strPrintok">Prêt</string>
-	<string name="strOn">Sur</string>
-	<string name="strOff">De</string>
+	<string name="strOn">On</string>
+	<string name="strOff">Off</string>
 	<string name="strwaitting">Impression......</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
@@ -72,6 +72,7 @@
 	<string name="txtDefault">texte</string>
 	<string name="strDragable">Draggable</string>
 	<string name="strShow">Montrer</string>
+	<string name="strFontsize">Font Size</string>
 	<string name="strFont">Font</string>
 	<string name="strLinewidth">Largeur de ligne</string>
 	<string name="strBits">Chiffres</string>
@@ -338,8 +339,8 @@
 
 	<string name="strBtnSave">Ok</string>
 	<string-array name="trigger_mode_name">
-	    <item>Sur</item>
-	    <item>De</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="trigger_mode_value">
@@ -358,8 +359,8 @@
 	</string-array>
 	
 	<string-array name="encoder_name">
-	    <item>Sur</item>
-	    <item>De</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="encoder_value">
@@ -649,8 +650,8 @@
 	
 	
 	<string-array name="switch_item_entries">
-	    <item>De</item>
-	    <item>Sur</item>
+	    <item>Off</item>
+	    <item>On</item>
 	</string-array>
 	
 	<string-array name="photo_item_entries">

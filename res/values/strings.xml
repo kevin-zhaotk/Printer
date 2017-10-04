@@ -71,6 +71,7 @@
 	<string name="txtDefault">text</string>
 	<string name="strDragable">Dragable</string>
 	<string name="strShow">Show</string>
+	<string name="strFontsize">Font Size</string>
 	<string name="strFont">Font</string>
 	<string name="strLinewidth">Line Width</string>
 	<string name="strBits">Digits</string>

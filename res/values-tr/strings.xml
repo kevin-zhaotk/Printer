@@ -70,6 +70,7 @@
     <string name="txtDefault">mesaj</string>
     <string name="strDragable">Sürüklenebilir</string>
     <string name="strShow">Göster</string>
+	<string name="strFontsize">Font Size</string>
     <string name="strFont">Yazı tipi</string>
     <string name="strLinewidth">Satır Genişliği</string>
     <string name="strBits">Rakamlar</string>

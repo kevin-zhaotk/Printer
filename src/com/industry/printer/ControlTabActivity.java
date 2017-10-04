@@ -398,6 +398,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mMsgTask != null) {
 			mMsgFile.setText(mMsgTask.getName());
 		}
+		int heads = 1;
 		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
 		mTvStop.setText(R.string.str_btn_stop);
@@ -406,6 +407,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mTVPrinting.setText(R.string.str_state_printing);
 		mTVStopped.setText(R.string.str_state_stopped);
 		mtvInk.setText(R.string.str_state_inklevel);
+		if (mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0) {
+			heads = mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS);
+		} else {
+			heads = mSysconfig.getHeads();
+		}
+		if (heads > RFIDManager.TOTAL_RFID_DEVICES) {
+			mRfidManager = RFIDManager.getInstance(mContext);
+			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
+		}
 	}
 	
 	private void setupViews() {
@@ -924,7 +934,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
 				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
 				child.recycle();
-				x += cutWidth;
+				Debug.d(TAG, "--->scaledChild  width = " + child.getWidth() + " scale= " + scale);
+				x += cutWidth; 
 				ImageView imgView = new ImageView(mContext);
 				imgView.setScaleType(ScaleType.FIT_XY);
 //				if (density == 1) {

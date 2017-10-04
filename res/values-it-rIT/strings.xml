@@ -69,6 +69,7 @@
     <string name="txtDefault">testo</string>
     <string name="strDragable">Trascina</string>
     <string name="strShow">Mostra</string>
+	<string name="strFontsize">Font Size</string>
     <string name="strFont">Font</string>
     <string name="strLinewidth">Larghezza Linea</string>
     <string name="strBits">Digita</string>
