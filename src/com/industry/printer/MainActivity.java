@@ -5,7 +5,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +41,8 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -41,8 +50,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.industry.printer.FileFormat.QRReader;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.hardware.ExtGpio;
@@ -51,6 +62,9 @@ import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
 //import android.app.TabActivity;
+import com.industry.printer.ui.CustomerDialog.ImportDialog;
+import com.industry.printer.ui.CustomerDialog.ImportDialog.IListener;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener, OnTouchListener, OnClickListener {
 
@@ -65,6 +79,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public RadioButton	mRadioCtl;
 	public RadioButton	mRadioSet;
 	public RadioButton	mRadioEdit;
+	public RadioButton	btn_Other;
 	public TextView		mExtStatus;
 	
 	public ControlTabActivity 	mControlTab;
@@ -73,7 +88,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public EditTabSmallActivity mEditSmallTab;
 	public SettingsTabActivity	mSettingsTab;
 	
-	public LinearLayout mCtrlExtra;
+	public RelativeLayout mCtrlExtra;
 	public TextView mCtrlTitle;
 	public TextView mCountdown;
 	public TextView mEditTitle;
@@ -83,10 +98,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public TextView mDelete;
 	public TextView mVersion;
 	private TextView mVerTitle;
+	private ImageButton mCopy;
 	
 	private RelativeLayout mPgBack;
 	private RelativeLayout mPgFore;
 	
+	private LoadingDialog mProgressDialog;
+	
+	private TextView IP_address;// localhost ip
 	static {
 		System.loadLibrary("Hardware_jni");
 	}
@@ -101,11 +120,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setLocale();
 		setContentView(R.layout.activity_main);
+		IP_address=(TextView)findViewById(R.id.IP_address);
 		boolean isroot=false;
 		mContext = getApplicationContext();
 		mLanguage = getResources().getConfiguration().locale.getLanguage();
 		
-		
+		IP_address.setText(getLocalIpAddress());
 		/*get write permission of ttyACM0*/
 		//SystemProperties.set("ctl.start","mptty");
 
@@ -132,6 +152,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	    mRadioSet.setOnCheckedChangeListener(this);
 	    mRadioSet.setOnTouchListener(this);
 	    
+	    btn_Other = (RadioButton) findViewById(R.id.btn_Other);
+	   
+	   
 	    //mExtStatus = (TextView) findViewById(R.id.tv_counter_msg);
 	    
 		/*
@@ -182,7 +205,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		initView();
 		Configs.initConfigs(mContext);
 		
-		/*App 启动以后，扬声器响两声*/
+		 btn_Other.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					
+					Intent intent = new Intent();
+					intent.setClass(MainActivity.this, Socket_Control_Activity.class);
+					startActivity(intent);
+					
+				}
+			});
+		 
+		/*App 鍚姩浠ュ悗锛屾壃澹板櫒鍝嶄袱澹�*/
 		new Thread() {
 			@Override
 			public void run() {
@@ -245,7 +280,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 //	}
 	
 	private void initView() {
-		mCtrlExtra = (LinearLayout) findViewById(R.id.ctrl_extra);
+		mCtrlExtra = (RelativeLayout) findViewById(R.id.ctrl_extra);
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
 		mCountdown = (TextView) findViewById(R.id.count_down);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
@@ -257,6 +292,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
 		mVerTitle = (TextView) findViewById(R.id.setting_version_key);
+		
+		mCopy = (ImageButton) findViewById(R.id.msg_tranfer);
+		mCopy.setOnClickListener(this);
+		
 		try {
 			// InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
 			// BufferedReader reader = new BufferedReader(sReader);
@@ -453,6 +492,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		case R.id.delete:
 			mEditSmallTab.deleteSelected();
+		case R.id.msg_tranfer:
+			showImportDialog();
+			break;
 		default:
 			break;
 		}
@@ -478,4 +520,92 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         im.hideSoftInputFromWindow(mEditTitle.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
+	
+	private ImportDialog mImportDialog;
+	
+	private void showImportDialog() {
+		if (mImportDialog == null) {
+			mImportDialog = new ImportDialog(this);
+		}
+		mImportDialog.setListener(new IListener() {
+			@Override
+			public void onImport() {
+				msgImport();
+			}
+			
+			@Override
+			public void onExport() {
+				msgExport();
+			}
+		});
+		mImportDialog.show();
+	}
+	
+	private void dismissLoading() {
+		if (mProgressDialog != null) {
+			mProgressDialog.dismiss();
+		}
+	}
+	/**
+	 * import from USB to flash
+	 */
+	private void msgImport() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		try {
+		if (usbs != null && usbs.size() > 0) {
+			FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+		}
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
+	}
+	
+	/**
+	 * export out to USB from flash
+	 */
+	private void msgExport() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		try  {
+		if (usbs != null && usbs.size() > 0) {
+			FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
+		}
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
+	}
+	// locahost ip___________________________________________________________
+		public static String getLocalIpAddress() {  
+			String hostIp = null;  
+		    try {  
+		        Enumeration nis = NetworkInterface.getNetworkInterfaces();  
+		        InetAddress ia = null;  
+		        while (nis.hasMoreElements()) {  
+		            NetworkInterface ni = (NetworkInterface) nis.nextElement();  
+		            Enumeration<InetAddress> ias = ni.getInetAddresses();  
+		            while (ias.hasMoreElements()) {  
+		                ia = ias.nextElement();  
+		                if (ia instanceof Inet6Address) {  
+		                    continue;// skip ipv6  
+		                }  
+		                String ip = ia.getHostAddress();  
+		                if (!"127.0.0.1".equals(ip)) {  
+		                    hostIp = ia.getHostAddress();  
+		                    break;  
+		                }  
+		            }  
+		        }  
+		    } catch (SocketException e) {  
+		        Log.i("error", "SocketException");  
+		        e.printStackTrace();  
+		    }  
+		    return hostIp; 
+		}
+
+
+	// locahost ip__________________________________________________________	
+	
 }

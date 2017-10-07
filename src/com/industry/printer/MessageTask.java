@@ -81,7 +81,7 @@ public class MessageTask {
 	 */
 	public MessageTask(Context context, String tlk) {
 		this(context);
-		String tlkPath="";
+		Debug.d(TAG, "--->tlk: " + tlk);
 		if (tlk.startsWith(ConfigPath.getTlkPath())) {
 			File file = new File(tlk);
 			setName(file.getName());
@@ -438,6 +438,8 @@ public class MessageTask {
 				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 			} else if (o instanceof GraphicObject) {
 				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
+				Debug.d(TAG, "---> w= " + t.getWidth() + " h= " + t.getHeight());
+				Debug.d(TAG, "---> x= " + o.getX() * scaleW + " y= " + o.getY() * scaleH);
 				if (t != null) {
 					can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 				}

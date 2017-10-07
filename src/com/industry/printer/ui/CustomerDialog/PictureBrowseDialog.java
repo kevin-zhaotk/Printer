@@ -20,6 +20,7 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class PictureBrowseDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener {
 
@@ -31,6 +32,8 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 	public RelativeLayout mPageNext;
 	public EditText		  mSearch;
 	public GridView		  mPicView;	
+	private TextView	  mTips;
+	
 	public PictureBrowseAdapter mAdapter;
 	private PictureItem   mItem;
 	
@@ -63,6 +66,8 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 		 mPicView = (GridView) findViewById(R.id.picture_grid);
 		 mPicView.setOnItemClickListener(this);
 		 
+		 mTips = (TextView) findViewById(R.id.tip_nothing);
+		 
 		 mAdapter = new PictureBrowseAdapter(getContext());
 		 setupViews();
 		 load();
@@ -70,10 +75,8 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 	 }
 	
 	private void setupViews() {
-		if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
-			mPagePrev.setVisibility(View.GONE);
-			mPageNext.setVisibility(View.GONE);
-		}
+		mPagePrev.setVisibility(View.GONE);
+		mPageNext.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -115,6 +118,11 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 	public void load() {
 		File dir = new File(ConfigPath.getPictureDir());
 		File[] list = dir.listFiles();
+		if (list == null || list.length <= 0) {
+			mTips.setVisibility(View.VISIBLE);
+			mPicView.setVisibility(View.GONE);
+			return;
+		}
 		for (File file : list) {
 			PictureItem item = new PictureItem(file.getAbsolutePath(), file.getName());
 			mAdapter.addItem(item);

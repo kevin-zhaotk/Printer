@@ -43,6 +43,9 @@ public class GraphicObject  extends BaseObject{
 		Bitmap b = BitmapFactory.decodeFile(file);
 		mBitmap = ImageConverter.convertGreyImg(b);
 		BinFromBitmap.recyleBitmap(b);
+		mWidth = mBitmap.getWidth();
+		mHeight = mBitmap.getHeight();
+		Debug.d(TAG, "setImage w= " + mWidth + " h= " + mHeight);
 	}
 	
 	public String getImage() {

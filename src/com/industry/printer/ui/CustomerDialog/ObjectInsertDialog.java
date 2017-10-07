@@ -62,10 +62,10 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		mBarcodeV = (Button) findViewById(R.id.objinsert_barcode_var);
 		mBarcodeV.setOnClickListener(this);
 		
-		/*
+		
 		mGraphic = (Button) findViewById(R.id.objinsert_graphic);
 		mGraphic.setOnClickListener(this);
-		
+/*		
 		mLine = (Button) findViewById(R.id.objinsert_line);
 		mLine.setOnClickListener(this);
 		
@@ -117,11 +117,12 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_LETTERHOUR);
 				mDismissMsg.setData(bundle);
 				break;
-				/*
+				
 			case R.id.objinsert_graphic:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_GRAPHIC);
 				mDismissMsg.setData(bundle);
 				break;
+/*
 			case R.id.objinsert_line:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_LINE);
 				mDismissMsg.setData(bundle);

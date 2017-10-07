@@ -88,6 +88,7 @@
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>
 	<string name="strLoading">正在加载请耐心等待...</string>
+	<string name="strCopying">正在拷贝...</string>
 	<string name="strInsertSerial">请插入打印设备</string>
 	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
@@ -729,4 +730,19 @@
 	<string name="str_toast_no_qrfile">沒有找到 QR.txt或QR.csv</string>
 	<string name="str_barcode_end">QR.txt已經打印結束</string>
 	<string name="str_recover_print">recover last print</string>
+	
+	<string name="str_net_devname">设备名称</string>
+	<string name="str_net_ipaddr">IP地址</string>
+	<string name="str_net_stat">在线状态</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">计数</string>
+	<string name="str_net_int">墨水</string>
+	<string name="str_net_commands">命令</string>
+	<string name="str_net_back">返回</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">连接</string>
+	
+	<string name="str_tip_nothing">~ 没有找到图片!!!</string>
 </resources>

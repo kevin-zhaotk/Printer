@@ -87,6 +87,7 @@
     <string name="strUpgradeNoApk">Yükseltme dosyası yok!!!</string>
     <string name="strSaving">kaydediliyor, lütfen bekleyin...</string>
     <string name="strLoading">yükleniyor, lütfen bekleyin...</string>
+    <string name="strCopying">Copying, attendere prego...</string>
     <string name="strInsertSerial">Lütfen cihazı bağlayın...</string>
     <string name="strReinsertSerial">Hata, lütfen cihazı yenden bağlayın</string>
 
@@ -692,4 +693,20 @@
 
     <string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
     <string name="str_recover_print">recover last print</string>
+    
+    
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
 </resources>

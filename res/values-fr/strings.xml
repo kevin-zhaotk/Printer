@@ -89,6 +89,7 @@
 	<string name="strUpgradeNoApk">Aucun fichier de mise à jour!</string>
 	<string name="strSaving">Enregistrement, en cours</string>
 	<string name="strLoading">Chargement, en cours</string>
+	<string name="strCopying">Copying, en cours...</string>
 	<string name="strInsertSerial">Merci de connecter le produit</string>
 	<string name="strReinsertSerial">Erreur, reconnecter le produit</string>
 	<string-array name="strPrinterArray">
@@ -726,4 +727,20 @@
 	<string name="str_loading">loading...</string>
 	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
 	<string name="str_recover_print">recover last print</string>
+	
+	
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
 </resources>

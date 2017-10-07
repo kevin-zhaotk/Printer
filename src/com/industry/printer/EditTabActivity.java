@@ -38,6 +38,7 @@ import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickList
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FileBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
@@ -47,7 +48,6 @@ import com.industry.printer.widget.PopWindowSpiner;
 import com.industry.printer.widget.SpanableStringFormator;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -637,12 +637,12 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 //		return ;
 //	}
 	
-	public ProgressDialog mProgressDialog;
+	public LoadingDialog mProgressDialog;
 	public Thread mProgressThread;
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mProgressDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strSaving), true,false);
+		mProgressDialog = LoadingDialog.show(mContext, R.string.strSaving);
 		mProgressShowing = true;
 		
 		mProgressThread = new Thread(){

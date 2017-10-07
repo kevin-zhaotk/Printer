@@ -151,6 +151,11 @@ public class Configs {
 	 */
 	public static final String PICTURE_SUB_PATH = "/pictures/";
 	
+	/**
+	 * TLK path on flash
+	 */
+	public static  final String TLK_PATH_FLASH = "/data/data/com.industry.printer/MSG";
+	
 	public static SystemConfigFile mSysconfig;
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 

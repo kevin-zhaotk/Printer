@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="60dp"
+    android:background="#436EEE"
+     >
+    
+	<ImageButton
+	    android:id="@+id/ib_import"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:src="@drawable/usb_to_flash"
+	    />
+    
+	<ImageButton
+	    android:id="@+id/ib_export"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="100dp"
+	    android:src="@drawable/flash_to_usb"
+	    />
+    
+</LinearLayout>

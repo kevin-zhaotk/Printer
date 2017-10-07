@@ -111,8 +111,8 @@ public class RealtimeYear extends BaseObject {
 	    Paint Paint; 
 		Paint = new Paint();
 		Paint.setTextSize(getfeed());
-		Paint.setAntiAlias(true);//.setAntiAlias(true); //去除锯齿  
-		Paint.setFilterBitmap(true); //对位图进行滤波处理
+		Paint.setAntiAlias(true);//.setAntiAlias(true);   
+		Paint.setFilterBitmap(true); 
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
@@ -140,7 +140,7 @@ public class RealtimeYear extends BaseObject {
 		Canvas can = new Canvas(bitmap);
 		FontMetrics fm = Paint.getFontMetrics();
 		
-		Paint.setColor(Color.BLUE);//设置 变量 在 位图 里 为 蓝色 
+		Paint.setColor(Color.BLUE); 
 	
 		
 		 

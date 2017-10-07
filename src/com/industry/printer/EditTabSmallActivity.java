@@ -3,7 +3,6 @@ package com.industry.printer;
 import java.util.ArrayList;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.YuvImage;
 import android.graphics.drawable.GradientDrawable;
@@ -44,6 +43,7 @@ import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
@@ -450,9 +450,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						break;
 					}
             		mMsgTask = new MessageTask(mContext, mObjName);
-            		// 默認選中第一個非消息對象
-					mMsgManager.setSelect(1);
 					mMsgManager.fill(mMsgTask);
+					// 默認選中第一個非消息對象
+					mMsgManager.setSelect(1);
             		break;
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());
@@ -558,12 +558,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return -1;
 	}
 	
-	public ProgressDialog mProgressDialog;
+	public LoadingDialog mProgressDialog;
 	public Thread mProgressThread;
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mProgressDialog = ProgressDialog.show(mContext, "", getView().getResources().getString(R.string.strSaving), true,false);
+		mProgressDialog = LoadingDialog.show(mContext, R.string.strSaving);
 		mProgressShowing = true;
 		
 		mProgressThread = new Thread(){

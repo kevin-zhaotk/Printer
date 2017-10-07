@@ -3,9 +3,9 @@ package com.industry.printer.Utils;
 import java.io.File;
 
 import com.industry.printer.R;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 
 import android.R.integer;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -78,10 +78,7 @@ public class PackageInstaller {
 			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
 			return false;
 		}
-		ProgressDialog dialog = new ProgressDialog(mContext);
-		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		dialog.setMessage(mContext.getText(R.string.str_upgrade_progress));
-		dialog.show();
+		LoadingDialog dialog = LoadingDialog.show(mContext, R.string.str_upgrade_progress);
 		new Thread() {
 			public void run() {
 				try{

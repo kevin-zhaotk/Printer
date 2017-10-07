@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industry.printer"
-    android:versionCode="7092910517"
-    android:versionName="7092910517"
+    android:versionCode="70100710517"
+    android:versionName="7010070517"
     >
 	
     <!-- 
@@ -60,6 +60,11 @@
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_DETACHED"
                  android:resource="@xml/device_filter" />
         </activity>
+        
+        <activity 
+            android:name="com.industry.printer.Socket_Control_Activity" 
+            android:screenOrientation="landscape" 
+            android:configChanges="keyboardHidden|orientation|locale|layoutDirection|screenSize"/>
 <!-- 
         <activity
             android:name="com.industry.printer.ControlTabActivity">

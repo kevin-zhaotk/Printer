@@ -39,8 +39,8 @@ public class TextObject extends BaseObject {
 	{	Debug.e(TAG, "1===== " + getContent() );
 		Bitmap bitmap;
 		mPaint.setTextSize(getfeed());
-		mPaint.setAntiAlias(true); //去除锯齿  
-		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+		mPaint.setAntiAlias(true);   
+		mPaint.setFilterBitmap(true); 
 	
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);

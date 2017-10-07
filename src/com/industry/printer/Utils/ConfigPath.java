@@ -94,11 +94,18 @@ public class ConfigPath {
 	
 	public static String getTlkPath() {
 		
-		ArrayList<String> paths = makeSysDirsIfNeed();
+		/*
+		 * ArrayList<String> paths = makeSysDirsIfNeed();
 		if (paths == null || paths.size() <= 0) {
 			return null;
 		}
 		return paths.get(0)+Configs.TLK_FILE_SUB_PATH;
+		*/
+		File tlkDir = new File(Configs.TLK_PATH_FLASH);
+		if (!tlkDir.exists() || !tlkDir.isDirectory()) {
+			tlkDir.mkdirs();
+		}
+		return  Configs.TLK_PATH_FLASH;
 	}
 	
 	public static String getTxtPath() {

@@ -37,6 +37,7 @@ public class TLKFileParser  extends TlkFile{
 	
 	public TLKFileParser(Context context, String file) {
 		super(context, file);
+		Debug.d(TAG, "--->file: " + file);
 	}
 	
 	/*
@@ -124,7 +125,7 @@ public class TLKFileParser  extends TlkFile{
                  String line;
                  
                  while (( line = buffreader.readLine()) != null) {
-                     Debug.d(TAG, "line="+line);
+                     //Debug.d(TAG, "line="+line);
                      if (StringUtil.isEmpty(line.trim())) {
 						continue;
 					}
@@ -133,6 +134,7 @@ public class TLKFileParser  extends TlkFile{
                     	 continue;
                      }
                      objlist.add(pObj);
+                     Debug.d(TAG, "--->objlist size= " + objlist.size());
                      if(pObj instanceof RealtimeObject)
                      {
                     	 i = ((RealtimeObject) pObj).mSubObjs.size();
@@ -329,14 +331,14 @@ public class TLKFileParser  extends TlkFile{
 				Debug.d(TAG, "e: " + e.getCause());
 			}
 		}
-		Debug.d(TAG, "--->line295:" + obj.toString());
-		Debug.d(TAG, "index = "+obj.getIndex());
-		Debug.d(TAG, "x = "+obj.getX());
-		Debug.d(TAG, "y = "+obj.getY());
-		Debug.d(TAG, "x end = "+obj.getXEnd());
-		Debug.d(TAG, "y end = "+obj.getYEnd());
-		Debug.d(TAG, "dragable = "+obj.getDragable());
-		Debug.d(TAG, "*************************");
+//		Debug.d(TAG, "--->line295:" + obj.toString());
+//		Debug.d(TAG, "index = "+obj.getIndex());
+//		Debug.d(TAG, "x = "+obj.getX());
+//		Debug.d(TAG, "y = "+obj.getY());
+//		Debug.d(TAG, "x end = "+obj.getXEnd());
+//		Debug.d(TAG, "y end = "+obj.getYEnd());
+//		Debug.d(TAG, "dragable = "+obj.getDragable());
+//		Debug.d(TAG, "*************************");
 		return obj;
 	}
 	

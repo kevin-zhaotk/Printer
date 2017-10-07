@@ -24,7 +24,6 @@ import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 import android.R.integer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -110,7 +109,6 @@ public static final String TAG="SettingsTabActivity";
 	public RelativeLayout		mTimeset;
 
 	public Context 			mContext;
-	public ProgressDialog 		pDialog;
 	
 	public ScrollView			mScrollView;
 	public PHSettingFragment 	mPHSettings;
