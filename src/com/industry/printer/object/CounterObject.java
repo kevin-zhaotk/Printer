@@ -242,21 +242,21 @@ public class CounterObject extends BaseObject {
 		FontMetrics fm = mPaint.getFontMetrics();
 		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
 	 
-		String str_new_content="";
-		mContent =	mContent.replace('0', 'c');	
+		String str_new_content = mContent;
+		str_new_content =	str_new_content.replace('0', 'c');	
 		
-		mContent =	mContent.replace('1', 'c');	
-		mContent =	mContent.replace('2', 'c');	
-		mContent =	mContent.replace('3', 'c');	
-		mContent =	mContent.replace('4', 'c');	
-		mContent =	mContent.replace('5', 'c');	
-		mContent =	mContent.replace('6', 'c');	
-		mContent =	mContent.replace('7', 'c');	
-		mContent =	mContent.replace('8', 'c');	
-		mContent =	mContent.replace('9', 'c');	
+		str_new_content =	str_new_content.replace('1', 'c');	
+		str_new_content =	str_new_content.replace('2', 'c');	
+		str_new_content =	str_new_content.replace('3', 'c');	
+		str_new_content =	str_new_content.replace('4', 'c');	
+		str_new_content =	str_new_content.replace('5', 'c');	
+		str_new_content =	str_new_content.replace('6', 'c');	
+		str_new_content =	str_new_content.replace('7', 'c');	
+		str_new_content =	str_new_content.replace('8', 'c');	
+		str_new_content =	str_new_content.replace('9', 'c');	
 		
 		
-		mCan.drawText(mContent , 0, mHeight-fm.descent, mPaint);
+		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}	

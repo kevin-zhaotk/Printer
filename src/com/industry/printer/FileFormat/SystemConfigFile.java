@@ -140,16 +140,16 @@ public class SystemConfigFile{
 		FileReader reader=null;
 		BufferedReader br = null;
 		String tag;
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			Debug.d(TAG, "--->no usb storage mounted");
-			return false;
-		}
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			Debug.d(TAG, "--->no usb storage mounted");
+//			return false;
+//		}
 		/*
 		 * use this first usb as default 
 		 */
-		Debug.d(TAG, "--->usb root path:" + paths.get(0));
-		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.SYSTEM_CONFIG_XML);
+		//Debug.d(TAG, "--->usb root path:" + paths.get(0));
+		XmlInputStream inStream = new XmlInputStream(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
 			Debug.d(TAG, "--->read system_config file fail");
@@ -432,17 +432,17 @@ public class SystemConfigFile{
 	
 	public void saveConfig() {
 		
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			Debug.d(TAG, "===>saveConfig error");
-			return ;
-		}
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			Debug.d(TAG, "===>saveConfig error");
+//			return ;
+//		}
 		
 		/*
 		 * use the first usb as the default device
 		 */
-		String dev = paths.get(0);
-		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+//		String dev = paths.get(0);
+		File dir = new File(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 		if (!dir.exists()) {
 			if(dir.mkdirs() == false)
 				return;
@@ -577,7 +577,7 @@ public class SystemConfigFile{
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_RESERVED_64, String.valueOf(mParam[63]));
 		list.add(tag1);
-		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
+		XmlOutputStream stream = new XmlOutputStream(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
 		stream.close();
 	}
@@ -653,12 +653,12 @@ public class SystemConfigFile{
 	public String getLastMsg() {
 		
 		String tag;
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			return null;
-		}
-		Debug.d(TAG, "===>path:"+paths.get(0));
-		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.LAST_MESSAGE_XML);
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			return null;
+//		}
+//		Debug.d(TAG, "===>path:"+paths.get(0));
+		XmlInputStream inStream = new XmlInputStream(Configs.CONFIG_PATH_FLASH + Configs.LAST_MESSAGE_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
 			inStream.close();
@@ -678,9 +678,12 @@ public class SystemConfigFile{
 	
 	public void saveLastMsg(String name) {
 		
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty() || name == null) {
-			Debug.d(TAG, "===>saveConfig error");
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty() || name == null) {
+//			Debug.d(TAG, "===>saveConfig error");
+//			return ;
+//		}
+		if (name == null) {
 			return ;
 		}
 		File file = new File(name);
@@ -688,8 +691,8 @@ public class SystemConfigFile{
 		/*
 		 * use the first usb as the default device
 		 */
-		String dev = paths.get(0);
-		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+//		String dev = paths.get(0);
+		File dir = new File(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 		if (!dir.exists()) {
 			if(dir.mkdirs() == false)
 				return;
@@ -697,7 +700,7 @@ public class SystemConfigFile{
 		ArrayList<XmlTag> list = new ArrayList<XmlTag>();
 		XmlTag tag1 = new XmlTag(LAST_MESSAGE, file.getName());
 		list.add(tag1);
-		XmlOutputStream stream = new XmlOutputStream(dev+Configs.LAST_MESSAGE_XML);
+		XmlOutputStream stream = new XmlOutputStream(Configs.CONFIG_PATH_FLASH + Configs.LAST_MESSAGE_XML);
 		stream.write(list);
 		
 	}

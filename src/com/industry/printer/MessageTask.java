@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFileWriter;
@@ -51,6 +53,9 @@ public class MessageTask {
 
 	public int mType;
 	private int mIndex;
+	
+	private SaveTask mSaveTask;
+	private Handler mCallback; 
 	
 	public MessageTask(Context context) {
 		mName="";
@@ -728,25 +733,30 @@ public class MessageTask {
 		}
 	}
 
-	public void save() {
+	public void save(Handler handler) {
 		
-		resetIndexs();
-		//保存1.TLK文件
-		// saveTlk(mContext);
-		//保存1.bin文件
-		saveBin();
-		
-		//保存其他必要的文件
-		saveExtras();
-		
-		//保存vx.bin文件
-		saveVarBin();
-		
-		//保存1.TLK文件
-		saveTlk(mContext);
-				
-		//保存1.bmp文件
-		savePreview();
+//		resetIndexs();
+//		//保存1.TLK文件
+//		// saveTlk(mContext);
+//		//保存1.bin文件
+//		saveBin();
+//		
+//		//保存其他必要的文件
+//		saveExtras();
+//		
+//		//保存vx.bin文件
+//		saveVarBin();
+//		
+//		//保存1.TLK文件
+//		saveTlk(mContext);
+//				
+//		//保存1.bmp文件
+//		savePreview();
+		mCallback = handler;
+		if (mSaveTask == null) {
+			mSaveTask = new SaveTask();
+		}
+		mSaveTask.execute((Void[])null);
 	}
 	
 	private void resetIndexs() {
@@ -953,4 +963,35 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_9MM = 13; //9mm head, copy6 times for print
 	}
 	
+	
+	public class SaveTask extends AsyncTask<Void, Void, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			resetIndexs();
+			//保存1.TLK文件
+			// saveTlk(mContext);
+			//保存1.bin文件
+			saveBin();
+			
+			//保存其他必要的文件
+			saveExtras();
+			
+			//保存vx.bin文件
+			saveVarBin();
+			
+			//保存1.TLK文件
+			saveTlk(mContext);
+					
+			//保存1.bmp文件
+			savePreview();
+			return null;
+		}
+		@Override
+        protected void onPostExecute(Void result) {
+			if (mCallback != null) {
+				mCallback.sendEmptyMessage(EditTabSmallActivity.HANDLER_MESSAGE_SAVE_SUCCESS);
+			}
+		}
+	}
 }

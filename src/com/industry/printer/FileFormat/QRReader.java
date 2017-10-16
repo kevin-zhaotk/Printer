@@ -56,6 +56,9 @@ public class QRReader {
 	
 	private void init() {
 		List<String> paths = ConfigPath.getMountedUsb();
+		if (paths == null || paths.size() <= 0) {
+			return;
+		}
 		mRoot = paths.get(0);
 		File last = new File(mRoot + Configs.QR_LAST);
 		

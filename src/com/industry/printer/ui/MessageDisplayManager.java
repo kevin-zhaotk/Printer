@@ -70,7 +70,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
             return;
         }
         draw(object);
-        mTask.addObject(object);
+//        mTask.addObject(object);
         setSelect(object);
     }
 
@@ -164,6 +164,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
 
     public void setSelect(int i) {
         ArrayList<BaseObject> objects = mTask.getObjects();
+        if (i >= objects.size()) {
+			return;
+		}
         BaseObject object = objects.get(i);
         setSelect(object);
     }

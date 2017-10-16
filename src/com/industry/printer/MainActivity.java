@@ -492,6 +492,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		case R.id.delete:
 			mEditSmallTab.deleteSelected();
+			break;
 		case R.id.msg_tranfer:
 			showImportDialog();
 			break;
@@ -553,9 +554,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try {
-		if (usbs != null && usbs.size() > 0) {
-			FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
-		}
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+			}
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+			}
+		
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
 		}
@@ -569,9 +574,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try  {
-		if (usbs != null && usbs.size() > 0) {
-			FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
-		}
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
+			}
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
+			}
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
 		}

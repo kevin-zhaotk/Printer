@@ -62,6 +62,9 @@ public class ConfigPath {
 	 */
 	public static ArrayList<String> makeSysDirsIfNeed() {
 		ArrayList<String> paths = getMountedUsb();
+		if (paths == null || paths.size() <= 0) {
+			return paths;
+		}
 		for (String path : paths) {
 			File rootDir = new File(path+Configs.SYSTEM_CONFIG_DIR);
 			if (rootDir.exists() && rootDir.isDirectory()) {

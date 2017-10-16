@@ -318,6 +318,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 
 				case OBJECT_INSERT:
 					mMsgManager.add(obj);
+					mMsgTask.addObject(obj);
 					break;
 				case OBJECT_REMOVE:
 
@@ -438,6 +439,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 */
 	public static final int HANDLER_MESSAGE_INSERT_OBJECT = 6;
 	
+	/**
+	 * HANDLER_MESSAGE_SAVE_SUCCESS 
+	 * this message will be sent out when MessageTask Async save-task run success
+	 */
+	public static final int HANDLER_MESSAGE_SAVE_SUCCESS = 10;
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -459,6 +466,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		mObjName = MessageSaveDialog.getTitle();
             		createfile=true;
             	case HANDLER_MESSAGE_SAVE:    //save
+            		Debug.d(TAG, "--->save");
             		progressDialog();
             		if (mObjName == null || mMsgTask == null) {
 						break;
@@ -467,8 +475,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
             		
-            		mMsgTask.save();
-           			
+            		mMsgTask.save(mHandler);
+            		break;
+            	case HANDLER_MESSAGE_SAVE_SUCCESS:
             		dismissProgressDialog();
             		OnPropertyChanged(false);
             		break;
@@ -564,31 +573,34 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	public void progressDialog()
 	{
 		mProgressDialog = LoadingDialog.show(mContext, R.string.strSaving);
-		mProgressShowing = true;
-		
-		mProgressThread = new Thread(){
-			
-			@Override
-			public void run(){
-				
-				try{
-					for(;mProgressShowing==true;)
-					{
-						Thread.sleep(2000);
-					}
-					mHandler.sendEmptyMessage(HANDLER_MESSAGE_DISMISSDIALOG);
-				}catch(Exception e)
-				{
-					
-				}
-			}
-		};
-		mProgressThread.start();
+		Debug.d(TAG, "--->progress dialog show");
+//		mProgressShowing = true;
+//		
+//		mProgressThread = new Thread(){
+//			
+//			@Override
+//			public void run(){
+//				
+//				try{
+//					for(;mProgressShowing==true;)
+//					{
+//						Thread.sleep(2000);
+//					}
+//					mHandler.sendEmptyMessage(HANDLER_MESSAGE_DISMISSDIALOG);
+//				}catch(Exception e)
+//				{
+//					
+//				}
+//			}
+//		};
+//		mProgressThread.start();
 	}
 	
 	public void dismissProgressDialog()
 	{
 		mProgressShowing=false;
+		mProgressDialog.cancel();
+		Debug.d(TAG, "--->progress dialog cancel");
 		//Thread thread = mProgressThread;
 		//thread.interrupt();
 		

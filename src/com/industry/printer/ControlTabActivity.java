@@ -272,6 +272,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public static final int MESSAGE_RECOVERY_PRINT = 16;
 	
+	public static final int MESSAGE_OPEN_MSG_SUCCESS = 17;
 	/**
 	 * the bitmap for preview
 	 */
@@ -666,8 +667,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
 					//parseTlk(f);
 					//initBgBuffer();
-					/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
-					mMsgTask = new MessageTask(mContext, mObjPath);
+					new Thread(){
+						@Override
+						public void run() {
+							/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
+							mMsgTask = new MessageTask(mContext, mObjPath);
+							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
+						}
+					}.start();
+					break;
+				case MESSAGE_OPEN_MSG_SUCCESS:
 					mObjList = mMsgTask.getObjects();
 					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 					//String preview = parser.getContentAbatract();
@@ -739,6 +748,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_CHECK_UID:
+					if (mDTransThread != null && mDTransThread.isRunning()) {
+						break;
+					}
 					//Debug.d(TAG, "--->initDTThread");
 					if (mDTransThread == null) {
 						initDTThread();
@@ -756,6 +768,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
+					if (mDTransThread != null && mDTransThread.isRunning()) {
+						break;
+					}
 					if (!checkRfid()) {
 						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
 						return;
@@ -823,6 +838,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 1銆佽皟鐢╥octl鍋滄鍐呮牳绾跨▼锛屽仠姝㈣疆璁璅PGA鐘舵��
 					 * 2銆佸仠姝ataTransfer绾跨▼
 					 */
+					if (mDTransThread != null && !mDTransThread.isRunning()) {
+						break;
+					}
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
@@ -2076,11 +2094,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 
 	    public void onComplete() {
 			String msg=mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mMsgTask.getName()+"\r\n";
-			
-			 PrintWriter pout = null;  
-	         try {  
-	             pout = new PrintWriter(new BufferedWriter(  
-	                     new OutputStreamWriter(Gsocket.getOutputStream())),true);  
+			PrintWriter pout = null;  
+	        try {
+	            pout = new PrintWriter(new BufferedWriter(  
+	                   new OutputStreamWriter(Gsocket.getOutputStream())),true);  
 	             pout.println(msg);  
 	         }catch (IOException e) {  
 	             e.printStackTrace();  

@@ -99,7 +99,6 @@ public class DataTransferThread extends Thread {
 		while(mRunning == true) {
 			
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-			
 			int writable = FpgaGpioOperation.pollState();
 			// writable = 1;
 			if (writable == 0) { //timeout
@@ -120,13 +119,10 @@ public class DataTransferThread extends Thread {
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				last = SystemClock.currentThreadTimeMillis();
 				countDown();
-				
 				mInkListener.onCountChanged();
-				
 				mScheduler.schedule();
-				
 				if (mCallback != null) {
-					mCallback.onComplete();
+					//mCallback.onComplete();
 				}
 			}
 			

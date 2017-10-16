@@ -468,6 +468,13 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	 */
 	public static final int HANDLER_MESSAGE_DISMISSDIALOG=4;
 	
+	/**
+	 * HANDLER_MESSAGE_SAVE_SUCCESS 
+	 * this message will be sent out when MessageTask Async save-task run success
+	 */
+	public static final int HANDLER_MESSAGE_SAVE_SUCCESS = 10;
+	
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -499,8 +506,12 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
             		
-            		mMsgTask.save();
+            		mMsgTask.save(mHandler);
            			
+            		dismissProgressDialog();
+            		OnPropertyChanged(false);
+            		break;
+            	case HANDLER_MESSAGE_SAVE_SUCCESS:
             		dismissProgressDialog();
             		OnPropertyChanged(false);
             		break;

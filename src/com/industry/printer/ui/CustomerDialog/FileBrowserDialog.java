@@ -274,15 +274,18 @@ public class FileBrowserDialog extends CustomerDialogBase {
 					}
 				}
 			});
-	        for (String p : paths) {
-	        	if (p.contains(Configs.USB_ROOT_PATH)) {
-	        		mUsbStorage.setEnabled(true);
-	        		mUsbStorage.setTextColor(Color.BLACK);
-	        	} else if (p.contains(Configs.USB_ROOT_PATH2)) {
-	        		mUsbStorage2.setEnabled(true);
-	        		mUsbStorage2.setTextColor(Color.BLACK);
-	        	}
-	        }
+	        if (paths != null && paths.size() > 0) {
+	        	for (String p : paths) {
+		        	if (p.contains(Configs.USB_ROOT_PATH)) {
+		        		mUsbStorage.setEnabled(true);
+		        		mUsbStorage.setTextColor(Color.BLACK);
+		        	} else if (p.contains(Configs.USB_ROOT_PATH2)) {
+		        		mUsbStorage2.setEnabled(true);
+		        		mUsbStorage2.setTextColor(Color.BLACK);
+		        	}
+		        }
+			}
+	        
 	        Debug.d(TAG, "===>onCreate 1");
 	        fileOpen(new File(mCurPath));
 //	        mSDCard = (RadioButton) findViewById(R.id.radio_sdcard);
