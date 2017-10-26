@@ -42,6 +42,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.PreferenceConstants;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.Utils.SystemPropertiesProxy;
@@ -439,7 +440,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		
 		//Debug.d(TAG, "===>loadMessage");
 		// 閫氳繃鐩戝惉绯荤粺骞挎挱鍔犺浇
-		loadMessage();
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		boolean loading = p.getBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, false);
+		/**
+		 * if crash happened when load the last message, don`t load it again
+		 * avoid endless loop of crash
+		 */
+		if (!loading) {
+			loadMessage();
+		}
+		
 		
 		/****鍒濆鍖朢FID****/
 		mRfidManager = RFIDManager.getInstance(mContext);
@@ -468,8 +478,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		} else {
 			heads = mSysconfig.getHeads();
 		}
+		Debug.d(TAG, "--->onConfigChanged: " + heads + "   -- " + RFIDManager.TOTAL_RFID_DEVICES);
 		if (heads > RFIDManager.TOTAL_RFID_DEVICES) {
-			mRfidManager = RFIDManager.getInstance(mContext);
+			mRfidManager = RFIDManager.getInstance(mContext,true);
 			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		}
 	}
@@ -491,7 +502,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public void loadMessage() {
 		String f = mSysconfig.getLastMsg();
-		Debug.d(TAG, "===>load message: " + f);
+		Debug.d(TAG, "===>load message: " + f );
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
@@ -657,6 +668,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
+					
 					mObjPath = msg.getData().getString("file", null);
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
@@ -838,9 +850,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 1銆佽皟鐢╥octl鍋滄鍐呮牳绾跨▼锛屽仠姝㈣疆璁璅PGA鐘舵��
 					 * 2銆佸仠姝ataTransfer绾跨▼
 					 */
-					if (mDTransThread != null && !mDTransThread.isRunning()) {
-						break;
-					}
+//					if (mDTransThread != null && !mDTransThread.isRunning()) {
+//						switchState(STATE_STOPPED);
+//						FpgaGpioOperation.clean();
+//						break;
+//					}
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
@@ -895,6 +909,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Bundle bd = (Bundle) msg.getData();
 					for (int i=0; i < mSysconfig.getHeads(); i++) {
 						RFIDDevice dev = mRfidManager.getDevice(i);
+						if (dev == null) {
+							break;
+						}
 						if (dev.getLocalInk() <= 0) {
 							ready = false;
 							break;
@@ -974,12 +991,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		QRReader reader = QRReader.getInstance(mContext);
 		boolean qrReady = reader.isReady();
+		Debug.d(TAG, "--->checkQRfile = " + qrReady);
 		DataTask task = mDTransThread.getData();
 		for (BaseObject obj : task.getObjList()) {
 			if (!(obj instanceof BarcodeObject)) {
 				continue;
 			}
-			if (!((BarcodeObject) obj).isQRCode() || mSysconfig.getParam(16) == 0) {
+			if (!((BarcodeObject) obj).isQRCode() /*|| mSysconfig.getParam(16) == 0 */) {
 				continue;
 			}
 			ready = qrReady;
@@ -1308,6 +1326,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		p.edit().putBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, true).commit();
 		if (mProgressShowing || (mLoadingDialog != null && mLoadingDialog.isShowing())) {
 			return;
 		}
@@ -1338,6 +1358,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public void dismissProgressDialog()
 	{
 		mProgressShowing=false;
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		p.edit().putBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, false).commit();
 	}
 	
 	public int currentRfid = 0;
@@ -1523,62 +1545,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			    }  
 			    return s;  
 			}  
-			//这个函数根据命令处理____________________________________________________________________________________
-			/*
-			private void RecInfo(String relus)
-			{
-				String msg= toStringHex(relus);
-				String sValues;
-				if(msg.indexOf("|")<=0)
-				{
-					return;
-				}
-				sValues=msg.substring(msg.indexOf("|")+1).substring(msg.indexOf("|")+1).substring(0, msg.substring(msg.indexOf("|")+1).indexOf("|")-1);
-				switch(Integer.parseInt(sValues))
-				{
-				case 100:
-				{
-					mObjPath=getSDPath()+ msg.substring(msg.indexOf("/")+1, msg.lastIndexOf("/"));
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
-				
-					
-					break;
-				}
-				case 200:
-				{
-					refreshInk();
-					break;
-				}
 			
-			
-				case 500:
-				{
-					if (mDTransThread != null && mDTransThread.isRunning()) {
-						mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
-					}
-					break;
-				}
-				case 600:
-				{
-					Commands="600";
-					msg = msg.replace("|", " ");
-					String[] strArray = msg.split("\\s");
-					StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
-					
-					
-					for (Map.Entry<String, String> entry : obtainSimpleInfo(mContext).entrySet()) {
-						String key = entry.getKey();
-						String value = entry.getValue();
-						sb.append(key).append(" = ").append(value).append("\n");
-					}  
-					sb.append("IP").append(" = ").append(getLocalIpAddress()).append("\n");
-					
-					break;
-				}
-				default:
-				}
-			}*/
-			//_______________________________________________________________________________________________________________
 			//获取本机地址
 			public static String getLocalIpAddress() {  
 			        try {  
@@ -1680,6 +1647,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            if(msg.indexOf("100")>=0) { 
 		                            	if(PrinterFlag==0)
 		                            	{
+		                            		//打印赵工写好了，再测试
 		                            		PrnComd="100";
 		                            	    PrinterFlag=1;
 		                            		StopFlag=1;
@@ -1717,7 +1685,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            {
 		                            	//300发文件
 		                            	AddPaths="";
-		                            	if(SendFileFlag==0)
+		                            	if(SendFileFlag==0)//发文件等赵工写好了，再测试
 		                            	{
 		                            		SendFileFlag=1;
 		                            	this.sendmsg(WriteFiles(Gsocket,msg));
@@ -1729,7 +1697,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            	//400取计数器
 		                            	for(int i=0;i<7;i++)
 		                            	{
-		                            	sendmsg(mCounter+" |\r\nink|"+mRfidManager.getLocalInk(i)+"|\r\n"+mMsgTask.getName()+"|\r\n");
+		                            	sendmsg(mCounter+" |\r\nink|"+mRfidManager.getLocalInk(i));//+"|\r\n"+mMsgTask.getName()+"|\r\n");//获取INK无显示问题，赵工这地方改好，前面注示去掉就OK了
 		                            	this.sendmsg(msg+"recv success!");
 		                            	}
 		                            }
@@ -1748,6 +1716,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            else if(msg.indexOf("600")>=0)
 		                            {
 		                           //600字符串长成所需文件
+		                            	
 		                    			String[] strArray = msg.split("\\|");
 		                    			
 		                    			StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
@@ -1767,6 +1736,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                    			TextObject text = new TextObject(mContext, strArray[3].length());
 		                    			message.insert(text);
 		                    			message.save();*/
+		                            	//文字生成赵工写好了，再测试
 		                            	MakeTlk(msg);
 		                    			this.sendmsg(msg+"recv success!");
 		                            }
@@ -2094,14 +2064,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 
 	    public void onComplete() {
 			String msg=mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mMsgTask.getName()+"\r\n";
+			Debug.d(TAG, "--->onComplete: msg = " + msg);
 			PrintWriter pout = null;  
-	        try {
-	            pout = new PrintWriter(new BufferedWriter(  
-	                   new OutputStreamWriter(Gsocket.getOutputStream())),true);  
-	             pout.println(msg);  
-	         }catch (IOException e) {  
-	             e.printStackTrace();  
-	         }  
+//	        try {
+//	            pout = new PrintWriter(new BufferedWriter(  
+//	                   new OutputStreamWriter(Gsocket.getOutputStream())),true);  
+//	             pout.println(msg);  
+//	         }catch (IOException e) {  
+//	             e.printStackTrace();  
+//	         }  
 		}
 	//Socket________________________________________________________________________________________________________________________________
 	}

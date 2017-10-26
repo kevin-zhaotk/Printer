@@ -94,6 +94,7 @@ public class QRReader {
 				mReader.readLine();
 			}
 		} catch(Exception e) {
+			mReader = null;
 			Debug.d("XXX", "--->exception: " + e.getMessage());
 		}
 	}

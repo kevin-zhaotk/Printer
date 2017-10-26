@@ -231,11 +231,13 @@ public class BarcodeObject extends BaseObject {
             // hints.put(EncodeHintType.MARGIN, margin);
             BarcodeFormat format = getBarcodeFormat(mFormat);
             
+            Debug.d(TAG, "--->content: " + mContent);
             /* 条形码的宽度设置:每个数字占70pix列  */
 			if ("EAN13".equals(mFormat)) {
-				matrix = writer.encode(checkSum(),
+				content = checkSum();
+				matrix = writer.encode(content,
 				        format, w, h - mTextSize - 5, null);
-            
+				
 			} else if ("EAN8".equals(mFormat)) {
 				matrix = writer.encode(checkLen(),
 				        format, w, h, null);
@@ -577,8 +579,9 @@ public class BarcodeObject extends BaseObject {
 		} else {
 			code = mContent; 
 		}
+		Debug.d(TAG, "--->content: " + mContent);
 		mContent = code;
-		
+		Debug.d(TAG, "--->code: " + code);
 		for (int i = 0; i < code.length(); i++) {
 			if (i%2 == 0) {
 				odd += Integer.parseInt(code.substring(i, i+1));
@@ -592,7 +595,9 @@ public class BarcodeObject extends BaseObject {
 		if (sum >= 10) {
 			sum = 0;
 		}
+		Debug.d(TAG, "--->sum: " + sum);
 		code += sum;
+		Debug.d(TAG, "--->code: " + code);
 		return code;
 	}
 	
@@ -618,22 +623,37 @@ public class BarcodeObject extends BaseObject {
 		float prop = dots/Configs.gDots;
 		String str="";
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
-		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
-		str += BaseObject.intToFormatString(0, 1)+"^";
-		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-		str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
-		str += mCode +"^";
-		str += "000^";
-		str += BaseObject.boolToFormatString(mShow, 3)+"^";
-		str += mContent+"^";
-		str += BaseObject.boolToFormatString(mSource, 8) + "^";
-		str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
-		str += BaseObject.intToFormatString(mTextSize, 3);
+		if (BaseObject.OBJECT_TYPE_QR.equalsIgnoreCase(mId)) {
+			str += mId+"^";
+			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+			//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
+			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+			str += BaseObject.intToFormatString(0, 1)+"^";
+			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+			str += "000^000^000^000^000^";
+			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+			str += "00000000^00000000^00000000^00000000^00000000^00000000^00000000" + "^";
+			str += mContent;
+		} else {
+			str += mId+"^";
+			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+			//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
+			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+			str += BaseObject.intToFormatString(0, 1)+"^";
+			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+			str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
+			str += mCode +"^";
+			str += "000^";
+			str += BaseObject.boolToFormatString(mShow, 3)+"^";
+			str += mContent+"^";
+			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+			str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
+			str += BaseObject.intToFormatString(mTextSize, 3);
+		}
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

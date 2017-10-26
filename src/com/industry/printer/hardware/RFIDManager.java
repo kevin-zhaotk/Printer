@@ -117,6 +117,13 @@ public class RFIDManager implements RfidCallback{
 			}
 		}
 	};
+	
+	public static RFIDManager getInstance(Context ctx, boolean reInit) {
+		if (reInit) {
+			mInstance = null;
+		}
+		return getInstance(ctx);
+	}
 	public static RFIDManager getInstance(Context ctx) {
 		if (mInstance == null) {
 			Debug.d(TAG, "--->new RfidManager");

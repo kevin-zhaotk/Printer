@@ -11,6 +11,7 @@ import com.industry.printer.ui.Items.PictureItem;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -116,7 +117,13 @@ public class PictureBrowseDialog extends CustomerDialogBase implements android.v
 	}
 	
 	public void load() {
-		File dir = new File(ConfigPath.getPictureDir());
+		String p = ConfigPath.getPictureDir();
+		if (TextUtils.isEmpty(p)) {
+			mTips.setVisibility(View.VISIBLE);
+			mPicView.setVisibility(View.GONE);
+			return;
+		}
+		File dir = new File(p);
 		File[] list = dir.listFiles();
 		if (list == null || list.length <= 0) {
 			mTips.setVisibility(View.VISIBLE);

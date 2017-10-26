@@ -3,18 +3,17 @@ package com.industry.printer;
 import java.io.File;
 import java.util.ArrayList;
 
-import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.widget.Toast;
 
-import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
@@ -23,6 +22,7 @@ import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
+import com.industry.printer.exception.PermissionDeniedException;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -30,7 +30,6 @@ import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.MessageObject;
-import com.industry.printer.object.ObjectsFromString;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
@@ -70,12 +69,19 @@ public class MessageTask {
 	 */
 	public MessageTask(Context context, String tlk, String name) {
 		this(context);
+		if (tlk == null || TextUtils.isEmpty(tlk)) {
+			return;
+		}
 		String tlkPath="";
 		File file = new File(tlk);
 		setName(name);
 		TLKFileParser parser = new TLKFileParser(context, mName);
 		parser.setTlk(tlk);
-		parser.parse(context, this, mObjects);                                      
+		try {
+			parser.parse(context, this, mObjects);
+		} catch (PermissionDeniedException e) {
+			Toast.makeText(mContext, R.string.str_no_permission, Toast.LENGTH_LONG).show();
+		}
 		mDots = parser.getDots();
 	}
 	
@@ -87,15 +93,30 @@ public class MessageTask {
 	public MessageTask(Context context, String tlk) {
 		this(context);
 		Debug.d(TAG, "--->tlk: " + tlk);
-		if (tlk.startsWith(ConfigPath.getTlkPath())) {
+		String path = ""; 
+		if (tlk.startsWith(File.separator)) {
 			File file = new File(tlk);
 			setName(file.getName());
+			path = file.getParent();
 		} else {
 			setName(tlk);
 		}
 		
 		TLKFileParser parser = new TLKFileParser(context, mName);
-		parser.parse(context, this, mObjects);                                      
+		try {
+			parser.parse(context, this, mObjects);
+			if (tlk.startsWith(File.separator)) {
+				parser.setTlk(path);
+			}
+		} catch (PermissionDeniedException e) {
+			((MainActivity)context).runOnUiThread(new  Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(mContext, R.string.str_no_permission, Toast.LENGTH_LONG).show();
+				}
+			});
+			
+		}
 		mDots = parser.getDots();
 	}
 	
@@ -753,9 +774,11 @@ public class MessageTask {
 //		//保存1.bmp文件
 //		savePreview();
 		mCallback = handler;
-		if (mSaveTask == null) {
-			mSaveTask = new SaveTask();
+		if (mSaveTask != null) {
+			Debug.e(TAG, "--->There is already a save task running");
+			return;
 		}
+		mSaveTask = new SaveTask();
 		mSaveTask.execute((Void[])null);
 	}
 	
@@ -898,11 +921,11 @@ public class MessageTask {
 			break;
 		case MessageType.MESSAGE_TYPE_1_INCH:
 		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
-			scale = 320/152f;
+			scale = 2f;
 			break;
 		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
 		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
-			scale = 640/152f;
+			scale = 4f;
 			break;
 		default:
 			break;
@@ -991,6 +1014,7 @@ public class MessageTask {
         protected void onPostExecute(Void result) {
 			if (mCallback != null) {
 				mCallback.sendEmptyMessage(EditTabSmallActivity.HANDLER_MESSAGE_SAVE_SUCCESS);
+				mSaveTask = null;
 			}
 		}
 	}

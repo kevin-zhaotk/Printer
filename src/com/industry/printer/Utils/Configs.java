@@ -99,6 +99,11 @@ public class Configs {
 	public static final String SDCARD_ROOT_PATH = "/storage/sd_external";
 	
 	/**
+	 * System config
+	 */
+	public static  final String CONFIG_PATH_FLASH = "/mnt/sdcard";
+	
+	/**
 	 * TLK_FILE_NAME
 	 * tlk file
 	 */
@@ -151,14 +156,11 @@ public class Configs {
 	 */
 	public static final String PICTURE_SUB_PATH = "/pictures/";
 	
+	
 	/**
 	 * TLK path on flash
 	 */
-	public static  final String TLK_PATH_FLASH = "/data/data/com.industry.printer/MSG";
-	/**
-	 * System config
-	 */
-	public static  final String CONFIG_PATH_FLASH = "/data/data/com.industry.printer";
+	public static  final String TLK_PATH_FLASH = CONFIG_PATH_FLASH + "/MSG";
 	
 	public static SystemConfigFile mSysconfig;
 	/**

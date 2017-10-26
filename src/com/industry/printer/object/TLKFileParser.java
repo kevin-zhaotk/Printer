@@ -21,6 +21,7 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.StringUtil;
+import com.industry.printer.exception.PermissionDeniedException;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.LetterHourObject;
 
@@ -100,7 +101,7 @@ public class TLKFileParser  extends TlkFile{
 		}
 	}
 	*/
-	public void parse(Context context, MessageTask task, ArrayList<BaseObject> objlist)
+	public void parse(Context context, MessageTask task, ArrayList<BaseObject> objlist) throws PermissionDeniedException
 	{
 		int i;
 		BaseObject pObj;
@@ -111,10 +112,12 @@ public class TLKFileParser  extends TlkFile{
 		}
 		objlist.clear();
 		File file = new File(mPath);
-		if(file.isDirectory() || !file.exists())
+		if(file.isDirectory())
 		{
-			Debug.d(TAG, "File:" + mPath + " is directory or not exist");
+			Debug.d(TAG, "File:" + mPath + " is directory");
 			return;
+		} else if (!file.exists()) {
+			Debug.d(TAG, "File:" + mPath + " is not exist");
 		}
 		try{
 			 InputStream instream = new FileInputStream(file); 
@@ -152,9 +155,12 @@ public class TLKFileParser  extends TlkFile{
                  }
                  instream.close();
 			 }
-		}catch(Exception e)
+		}catch(IOException e)
 		{
 			Debug.d(TAG, "parse error: "+e.getMessage());
+			if (e.getMessage().contains("Permission denied")) {
+				throw new PermissionDeniedException();
+			}
 		}
 	}
 	
@@ -202,17 +208,18 @@ public class TLKFileParser  extends TlkFile{
 				} else {
 					((BarcodeObject) obj).setCode("QR");
 				}
-				
+				((BarcodeObject) obj).setContent(attr[21]);
 			} else {
 				((BarcodeObject) obj).setCode(Integer.parseInt(attr[9]));
+				((BarcodeObject) obj).setContent(attr[12]);
+				((BarcodeObject) obj).setTextsize(Integer.parseInt(attr[21]));
 			}
 			int isShow = Integer.parseInt(attr[11]);
 			((BarcodeObject) obj).setShow(isShow==0?false:true); 
-			((BarcodeObject) obj).setContent(attr[12]);
 			int source = Integer.parseInt(attr[13]);
 			Debug.d(TAG, "--->source = " + source);
 			obj.setSource(source == 1);
-			((BarcodeObject) obj).setTextsize(Integer.parseInt(attr[21]));
+			
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
 		{

@@ -122,7 +122,7 @@ public class DataTransferThread extends Thread {
 				mInkListener.onCountChanged();
 				mScheduler.schedule();
 				if (mCallback != null) {
-					//mCallback.onComplete();
+					mCallback.onComplete();
 				}
 			}
 			
@@ -180,6 +180,7 @@ public class DataTransferThread extends Thread {
 	public boolean launch(Context ctx) {
 		mRunning = true;
 		DataTransferThread thread = getInstance();
+		Debug.d(TAG, "--->thread : " + thread.isRunning());
 		if (!isBufferReady || mDataTask == null) {
 			return false;
 		}

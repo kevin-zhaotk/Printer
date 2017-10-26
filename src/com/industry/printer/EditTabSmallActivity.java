@@ -456,6 +456,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		if (mObjName == null || mObjName.isEmpty()) {
 						break;
 					}
+            		((MainActivity)mContext).onEditTitleChanged(mObjName);
             		mMsgTask = new MessageTask(mContext, mObjName);
 					mMsgManager.fill(mMsgTask);
 					// 默認選中第一個非消息對象
@@ -474,7 +475,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		// mMsgTask = new MessageTask(mContext, mObjName);
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
-            		
+            		((MainActivity)mContext).onEditTitleChanged(mObjName);
             		mMsgTask.save(mHandler);
             		break;
             	case HANDLER_MESSAGE_SAVE_SUCCESS:
@@ -716,12 +717,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void onNew() {
 		mObjName = null;
-//		mMsgTask.removeAll();
 		mMsgManager.removeAll();
 		MessageObject msgObject = new MessageObject(mContext, 0);
 		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
-//		mMsgTask.addObject(msgObject);
 		mMsgManager.add(msgObject);
+		mMsgTask.addObject(msgObject);
+		((MainActivity)mContext).onEditTitleChanged(mContext.getString(R.string.str_filename_no));
 	}
 	
 	private void onSave() {

@@ -517,6 +517,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mVerTitle.setText(R.string.app_version);
 	}
 	
+	/**
+	 * when message title changed in edit tab 
+	 * @param title
+	 */
+	public void onEditTitleChanged(String title) {
+		mEditTitle.setText(title);
+	}
+	
 	public void hideKeyboard() {
 		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         im.hideSoftInputFromWindow(mEditTitle.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -554,13 +562,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try {
+			// Messages
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
 			}
+			// system
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 			}
-		
+			// pictutes
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+			}
+			
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
 		}
@@ -574,18 +588,24 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try  {
+			// Messages
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
 			}
+			// system
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
+			}
+			// pictutes
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH, usbs.get(0)  + Configs.PICTURE_SUB_PATH);
 			}
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
 		}
 		mProgressDialog.dismiss();
 	}
-	// locahost ip___________________________________________________________
+	// locahost ip
 		public static String getLocalIpAddress() {  
 			String hostIp = null;  
 		    try {  

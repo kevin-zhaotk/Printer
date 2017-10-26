@@ -54,6 +54,10 @@ public class MessageDisplayManager implements View.OnTouchListener {
             add(object);
         }
     }
+    
+    public MessageTask getTask() {
+    	return mTask;
+    }
 
     public void add(BaseObject object) {
 
@@ -144,6 +148,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
         } else {
             image.setBackgroundColor(Color.WHITE);
         }
+        /** width&height must be reseted after object bitmap drawed success */
+        lp.width = (int)object.getWidth();
+        lp.height = (int)object.getHeight();
         mContainer.addView(image, lp);
         mImageMap.put(object, image);
         image.setTag(object);

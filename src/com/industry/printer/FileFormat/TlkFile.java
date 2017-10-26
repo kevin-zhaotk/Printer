@@ -26,10 +26,10 @@ public class TlkFile {
 	 * 设置需要解析的tlk文件名，可以是绝对路径或相对路径
 	 */
 	public void setTlk(String file) {
-		String path = ConfigPath.getTlkPath();
+		// String path = ConfigPath.getTlkPath();
 		if (file == null || file.isEmpty())
 			return;
-		if (path != null && file.startsWith(path)) {
+		if (file.startsWith("/")) {
 			mPath = file;
 		} else {
 			mPath = ConfigPath.getTlkPath() + file;

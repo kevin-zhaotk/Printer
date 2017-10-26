@@ -707,4 +707,6 @@
 	<string name="str_net_thousand">1000</string>
 	<string name="str_net_connect">Connect</string>
 	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
 </resources>

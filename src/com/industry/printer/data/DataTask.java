@@ -118,10 +118,10 @@ public class DataTask {
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
-		Debug.d(TAG, "--->bgbuffer = " + mBgBuffer.length);
 		if (mBgBuffer == null) {
 			return false;
 		}
+		Debug.d(TAG, "--->bgbuffer = " + mBgBuffer.length);
 		mPrintBuffer = new char[mBgBuffer.length];
 		return true;
 	}

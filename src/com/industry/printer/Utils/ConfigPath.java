@@ -165,10 +165,10 @@ public class ConfigPath {
 	}
 	
 	public static String getPictureDir() {
-		ArrayList<String> paths = getMountedUsb();
-		if (paths == null || paths.size() <= 0) {
-			return null;
-		}
-		return paths.get(0) + Configs.PICTURE_SUB_PATH;
+//		ArrayList<String> paths = getMountedUsb();
+//		if (paths == null || paths.size() <= 0) {
+//			return null;
+//		}
+		return Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH;
 	}
 }
