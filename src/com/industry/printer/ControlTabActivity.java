@@ -850,11 +850,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 1銆佽皟鐢╥octl鍋滄鍐呮牳绾跨▼锛屽仠姝㈣疆璁璅PGA鐘舵��
 					 * 2銆佸仠姝ataTransfer绾跨▼
 					 */
-//					if (mDTransThread != null && !mDTransThread.isRunning()) {
-//						switchState(STATE_STOPPED);
-//						FpgaGpioOperation.clean();
-//						break;
-//					}
+					if (mDTransThread != null && !mDTransThread.isRunning()) {
+						switchState(STATE_STOPPED);
+						FpgaGpioOperation.clean();
+						break;
+					}
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
@@ -1009,6 +1009,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
+		if (bmp == null) {
+			return;
+		}
 		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
 //		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
 //		DisplayMetrics dm = new DisplayMetrics();
@@ -1044,6 +1047,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				imgView.setBackgroundColor(Color.WHITE);
 				imgView.setImageBitmap(scaledChild);
 				mllPreview.addView(imgView);
+				// scaledChild.recycle();
 			}
 	}
 	

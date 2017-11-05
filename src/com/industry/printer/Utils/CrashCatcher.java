@@ -33,7 +33,12 @@ public class CrashCatcher implements UncaughtExceptionHandler {
 	
 	@Override
 	public void uncaughtException(Thread thread, Throwable arg1) {
-		Debug.d(TAG, "--->uncaughtException: " + arg1.getMessage());
+		Debug.e(TAG, "*****************Exception begin*********************");
+		Debug.e(TAG, "***");
+		Debug.e(TAG, "--->uncaughtException: " + arg1.getMessage());
+		arg1.printStackTrace();
+		Debug.e(TAG, "***");
+		Debug.e(TAG, "*****************Exception end*********************");
 		DataTransferThread dtt = DataTransferThread.getInstance();
 		if (dtt.isRunning()) {
 			SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);

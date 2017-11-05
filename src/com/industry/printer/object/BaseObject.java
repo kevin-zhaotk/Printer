@@ -178,6 +178,11 @@ public class BaseObject{
 			mName = mContext.getString(R.string.object_shift);
 		else if(this instanceof RTSecondObject)
 			mName = mContext.getString(R.string.object_second);
+		else if (this instanceof LetterHourObject)
+			mName = mContext.getString(R.string.object_charHour);
+		else {
+			mName = "unKnown";
+		}
 	}
 	
 	public String getTitle() {

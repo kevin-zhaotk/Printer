@@ -648,4 +648,6 @@
 	
 	<string name="str_cnt_min">Start</string>
 	<string name="str_cnt_max">Ende</string>
+	
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
 </resources>

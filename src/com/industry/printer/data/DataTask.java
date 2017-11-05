@@ -131,6 +131,9 @@ public class DataTask {
 	}
 	
 	public char[] getPrintBuffer(boolean isPreview) {
+		if (mBgBuffer == null) {
+			return null;
+		}
 		CharArrayReader cReader = new CharArrayReader(mBgBuffer);
 		try {
 			cReader.read(mPrintBuffer);
@@ -470,6 +473,9 @@ public class DataTask {
 	
 	public Bitmap getPreview() {
 		char[] preview = getPrintBuffer(true);
+		if (preview == null) {
+			return null;
+		}
 		// String path = "/mnt/usbhost1/prev.bin";
 		// BinCreater.saveBin(path, preview, getInfo().mBytesPerHFeed*8*getHeads());
 		Debug.d(TAG, "--->column=" + mBinInfo.mColumn + ", charperh=" + mBinInfo.mCharsPerHFeed);

@@ -5,6 +5,7 @@ import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinFromBitmap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -258,7 +259,9 @@ public class CounterObject extends BaseObject {
 		
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
-		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
+		Bitmap result = Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+		BinFromBitmap.recyleBitmap(bitmap);
+		return result;
 	}	
 	
 }

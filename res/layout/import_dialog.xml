@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="60dp"
+    android:padding="30dp"
     android:background="#436EEE"
      >
     
@@ -18,8 +18,16 @@
 	    android:id="@+id/ib_export"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="100dp"
+	    android:layout_marginLeft="15dp"
 	    android:src="@drawable/flash_to_usb"
+	    />
+    
+	<ImageButton
+	    android:id="@+id/ib_flush"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="15dp"
+	    android:src="@drawable/usb_to_flash_override"
 	    />
     
 </LinearLayout>

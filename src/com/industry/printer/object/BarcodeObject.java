@@ -177,6 +177,12 @@ public class BarcodeObject extends BaseObject {
 		return mBitmap;
 	}
 	
+	
+	@Override
+	public Bitmap getpreviewbmp() {
+		return mBitmap;
+	}
+
 	@Override
 	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
 		if (is2D()) {

@@ -62,6 +62,8 @@ import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
 //import android.app.TabActivity;
+import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
+import com.industry.printer.ui.CustomerDialog.DialogListener;
 import com.industry.printer.ui.CustomerDialog.ImportDialog;
 import com.industry.printer.ui.CustomerDialog.ImportDialog.IListener;
 import com.industry.printer.ui.CustomerDialog.LoadingDialog;
@@ -539,12 +541,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mImportDialog.setListener(new IListener() {
 			@Override
 			public void onImport() {
-				msgImport();
+				msgImportOnly();
 			}
 			
 			@Override
 			public void onExport() {
 				msgExport();
+			}
+			@Override
+			public void onFlush() {
+				confirmDialog();
 			}
 		});
 		mImportDialog.show();
@@ -554,6 +560,41 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
 		}
+	}
+	
+	private void confirmDialog() {
+		ConfirmDialog dialog = new ConfirmDialog(this, R.string.str_flush_tips);
+		dialog.setListener(new DialogListener() {
+			
+			@Override
+			public void onConfirm() {
+				msgImport();
+			}
+			
+		});
+		dialog.show();
+	}
+	
+	/**
+	 * import from USB to flash
+	 */
+	private void msgImportOnly() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		try {
+			// Messages
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+			}
+			// pictutes
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+			}
+			
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
 	}
 	/**
 	 * import from USB to flash

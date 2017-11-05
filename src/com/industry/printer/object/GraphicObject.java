@@ -76,6 +76,14 @@ public class GraphicObject  extends BaseObject{
 		return false;
 	}
 	
+	
+	
+	@Override
+	public Bitmap getpreviewbmp() {
+		Debug.d(TAG, "--->getpreviewbmp w= " + mWidth + " h= " + mHeight);
+		return Bitmap.createScaledBitmap(mBitmap, (int)mWidth, (int)mHeight, false);
+	}
+
 	public String toString()
 	{
 		float prop = getProportion();

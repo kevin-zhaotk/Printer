@@ -412,6 +412,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 *  Handler message for open tlk file
 	 */
 	public static final int HANDLER_MESSAGE_OPEN=0;
+	
+	public static final int HANDLER_MESSAGE_OPEN_SUCCESS = 11;
 	/**
 	 * HANDLER_MESSAGE_SAVEAS
 	 *   Handler message for save event happens
@@ -457,10 +459,20 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						break;
 					}
             		((MainActivity)mContext).onEditTitleChanged(mObjName);
-            		mMsgTask = new MessageTask(mContext, mObjName);
-					mMsgManager.fill(mMsgTask);
+            		progressDialog();
+            		new Thread(new Runnable() {
+						@Override
+						public void run() {
+							mMsgTask = new MessageTask(mContext, mObjName);
+							mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN_SUCCESS);
+						}
+					}).start();
+            		break;
+            	case HANDLER_MESSAGE_OPEN_SUCCESS:
+            		mMsgManager.fill(mMsgTask);
 					// 默認選中第一個非消息對象
 					mMsgManager.setSelect(1);
+					dismissProgressDialog();
             		break;
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());

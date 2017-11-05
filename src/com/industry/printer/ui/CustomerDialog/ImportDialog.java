@@ -15,6 +15,7 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 	
 	private ImageButton mImport;
 	private ImageButton mExport;
+	private ImageButton mFlush;
 	
 	private IListener mListener;
 	
@@ -33,9 +34,11 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 		
 		mImport = (ImageButton) findViewById(R.id.ib_import);
 		mExport = (ImageButton) findViewById(R.id.ib_export);
+		mFlush = (ImageButton) findViewById(R.id.ib_flush);
 		
 		mImport.setOnClickListener(this);
 		mExport.setOnClickListener(this);
+		mFlush.setOnClickListener(this);
 	}
 
 
@@ -57,6 +60,12 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 					mListener.onExport();
 				}
 				break;
+			case R.id.ib_flush:
+				dismiss();
+				if (mListener != null) {
+					mListener.onFlush();
+				}
+				break;
 			default:
 				break;	
 		}
@@ -65,5 +74,6 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 	public interface IListener {
 		public void onImport();
 		public void onExport();
+		public void onFlush();
 	}
 }

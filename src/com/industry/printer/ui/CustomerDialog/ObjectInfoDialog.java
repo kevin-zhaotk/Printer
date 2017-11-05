@@ -31,6 +31,7 @@ import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnNagitiveListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.Items.PictureItem;
 import com.industry.printer.widget.PopWindowSpiner;
 
 import android.app.AlertDialog;
@@ -695,7 +696,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				
 				@Override
 				public void onClick() {
-					((GraphicObject)mObject).setImage(dialog.getSelect().getPath());
+					PictureItem item = dialog.getSelect();
+					if (item == null) {
+						dialog.dismiss();
+						return;
+					}
+					((GraphicObject)mObject).setImage(item.getPath());
 					mPicture.setText(mObject.getContent());
 					dialog.dismiss();
 				}

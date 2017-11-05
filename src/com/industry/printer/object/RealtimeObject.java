@@ -37,8 +37,7 @@ public class RealtimeObject extends BaseObject {
 		Debug.d(TAG, ">>>RealtimeObject mcontext: " + mContext);
 		mSubObjs = new Vector<BaseObject>();
 		mOffset = 0;
-		setFormat("YY-MM-DD");
-		//setContent(BaseObject.intToFormatString(t.year, 4) +"/"+BaseObject.intToFormatString(t.month+1, 2)+"/"+BaseObject.intToFormatString(t.monthDay, 2));
+		// setFormat("YY-MM-DD");
 	}
 
 	public void setFormat(String format)
@@ -94,40 +93,34 @@ public class RealtimeObject extends BaseObject {
 				else {
 					x = o.getXEnd();
 				}
-				System.out.println("realtime con ="+str.substring(0, i)+", x_end="+x);
 			}
 			
 			if(str.startsWith("YY", i) || str.startsWith("AA", i))
 			{
-				System.out.println("YY detected");
 				o = new RealtimeYear(mContext, this, x,false);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("MM", i))
 			{
-				System.out.println("MM detected");
 				o = new RealtimeMonth(mContext, this, x);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("DD", i) || str.startsWith("GG", i))
 			{
-				System.out.println("DD detected");
 				o = new RealtimeDate(mContext, this, x);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("HH", i))
 			{
-				System.out.println("HH detected");
 				o = new RealtimeHour(mContext, x);
 				mSubObjs.add(o);
 				i += 2;
 			}
 			else if(str.startsWith("NN", i))
 			{
-				System.out.println("NN detected");
 				o = new RealtimeMinute(mContext, x);
 				mSubObjs.add(o);
 				i += 2;
@@ -145,7 +138,6 @@ public class RealtimeObject extends BaseObject {
 			}
 			str = str.substring(i);
 			i=0;
-			System.out.println("realtime c x_end="+x);
 		}
 		mXcor_end = x;
 		setWidth(mXcor_end - getX());

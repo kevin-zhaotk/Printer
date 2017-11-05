@@ -240,6 +240,7 @@
     <string name="object_ellipse">Ellisse</string>
     <string name="object_shift">Sposta</string>
     <string name="object_second">Second</string>
+    <string name="object_charHour">AlphaHour</string>
     <string name="object_msg_name">Soggetto</string>
     <!-- Settings frame -->
     <string name="strParam0">00.Riservato</string>
@@ -709,4 +710,5 @@
 	
 	<string name="str_tip_nothing">~ There is no picture !!!</string>
 	<string name="str_no_permission">Permission denied for access the files</string>
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
 </resources>

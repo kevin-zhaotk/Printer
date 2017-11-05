@@ -73,6 +73,6 @@ public class TextObject extends BaseObject {
 				
 		mCan.drawText(mContent , 0, mHeight-fm.descent, mPaint);
 	
-		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
+		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}	
 }
