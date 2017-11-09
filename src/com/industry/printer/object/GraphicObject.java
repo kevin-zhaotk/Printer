@@ -10,6 +10,7 @@ import com.industry.printer.ImageConverter;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 
@@ -38,6 +39,7 @@ public class GraphicObject  extends BaseObject{
 			Debug.d(TAG, "please select a correct file");
 			return;
 		}
+		mImage = f.getPath();
 		Debug.d(TAG, "setImage file: "+file);
 		mContent = f.getName();
 		Bitmap b = BitmapFactory.decodeFile(file);
@@ -76,7 +78,18 @@ public class GraphicObject  extends BaseObject{
 		return false;
 	}
 	
-	
+	/**
+	 * do some extra process after the message saved success
+	 * for graphic object: copy picture files to message-own directory
+	 */
+	public void afterSave() {
+		if (mImage == null || mImage.startsWith(Configs.TLK_PATH_FLASH + "/" + mTask.getName())) {
+			return;
+		}
+		// String srcPath = Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH + "/" + mContent;
+		String dstPath = Configs.TLK_PATH_FLASH  + "/" + mTask.getName() + "/" + mContent;
+		FileUtil.copyFile(mImage, dstPath);
+	}
 	
 	@Override
 	public Bitmap getpreviewbmp() {

@@ -21,7 +21,7 @@ import com.industry.printer.object.data.SegmentBuffer;
 
 public class Configs {
 	
-	public static final boolean DEBUG=false;
+	public static final boolean DEBUG=true;
 	/** 每列的有效点阵数 **/
 	public static int gDots;
 	/** 每列的总字节数 **/
@@ -154,7 +154,7 @@ public class Configs {
 	/**
 	 * picture path
 	 */
-	public static final String PICTURE_SUB_PATH = "/pictures/";
+	public static final String PICTURE_SUB_PATH = "/pictures";
 	
 	
 	/**

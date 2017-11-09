@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.industry.printer.MessageTask;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
+import com.printer.corelib.Debug;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +133,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
     }
 
     private void draw(BaseObject object) {
-    	
+    	Debug.d(TAG, "--->draw");
     	if (object instanceof MessageObject) {
             return;
         }

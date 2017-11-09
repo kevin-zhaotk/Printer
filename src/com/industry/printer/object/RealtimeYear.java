@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 /*
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -126,7 +127,7 @@ public class RealtimeYear extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			Paint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			Paint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)Paint.measureText(getContent());

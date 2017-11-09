@@ -18,6 +18,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
@@ -198,10 +199,8 @@ public class BaseObject{
 	{
 		mPaint = new Paint();
 		mPaint.setTextSize(getfeed());
-		AssetManager asset = mContext.getAssets();
-		Debug.d(TAG, "--->initPaint assset: " + asset);
 		try {
-			mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+			// mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {
 		}
 	}
@@ -272,7 +271,7 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());
@@ -311,7 +310,7 @@ public class BaseObject{
 		boolean isCorrect = false;
 		
 		try {
-			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+font+".ttf"));
+			paint.setTypeface(FontCache.get(ctx, "fonts/"+font+".ttf"));
 		} catch (Exception e) {
 			
 		}
@@ -332,7 +331,7 @@ public class BaseObject{
 	{
 		//mPaint.setColor(Color.RED);
 		//Debug.d(TAG,"getBitmap mContent="+mContent);
-		mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.get(context, "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
@@ -362,7 +361,7 @@ public class BaseObject{
 		paint.setFilterBitmap(true); //对位图进行滤波处理
 		
 		try {
-			paint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "fonts/"+mFont+".ttf"));
+			paint.setTypeface(FontCache.get(ctx, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {
 			
 		}
@@ -677,10 +676,8 @@ public class BaseObject{
 		if(font== null)
 			return;
 		mFont = font;
-		AssetManager asset = mContext.getAssets();
-		Debug.d(TAG, "--->initPaint assset: " + asset);
 		try {
-		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);

@@ -14,6 +14,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ReflectCaller;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
@@ -375,13 +376,13 @@ public static final String TAG="SettingsTabActivity";
 					File file = new File(str);
 					Debug.d(TAG, "===>file:"+file.getPath());
 					if (!file.exists()) {
-						Toast.makeText(mContext, R.string.strUpgradeNoApk, Toast.LENGTH_LONG);
+						ToastUtil.show(mContext, R.string.strUpgradeNoApk);
 						break;
 					}
 					Debug.d(TAG, "===>start upgrade service");
 					// System.setProperty("ctl.start", "Upgrade");
 					// SystemProperties.set("ctl.start","Upgrade");
-					Toast.makeText(mContext, R.string.str_upgrade_progress, Toast.LENGTH_LONG);
+					ToastUtil.show(mContext, R.string.str_upgrade_progress);
 					ReflectCaller.SysPropUpgrade();
 				}
 				break;

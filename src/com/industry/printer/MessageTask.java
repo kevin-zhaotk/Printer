@@ -20,6 +20,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.exception.PermissionDeniedException;
@@ -80,7 +81,7 @@ public class MessageTask {
 		try {
 			parser.parse(context, this, mObjects);
 		} catch (PermissionDeniedException e) {
-			Toast.makeText(mContext, R.string.str_no_permission, Toast.LENGTH_LONG).show();
+			ToastUtil.show(mContext, R.string.str_no_permission);
 		}
 		mDots = parser.getDots();
 	}
@@ -112,7 +113,7 @@ public class MessageTask {
 			((MainActivity)context).runOnUiThread(new  Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(mContext, R.string.str_no_permission, Toast.LENGTH_LONG).show();
+					ToastUtil.show(mContext, R.string.str_no_permission);
 				}
 			});
 			
@@ -702,9 +703,9 @@ public class MessageTask {
 				}
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 			}
-			if (t != null) {
-				BinFromBitmap.recyleBitmap(t);
-			}
+//			if (t != null) {
+//				BinFromBitmap.recyleBitmap(t);
+//			}
 		}
 		// Bitmap.createScaledBitmap();
 		float scale = bmp.getHeight() / 100;
@@ -721,18 +722,7 @@ public class MessageTask {
 	private void saveExtras() {
 		for (BaseObject object : getObjects()) {
 			if (object instanceof GraphicObject) {
-				String source = ConfigPath.getPictureDir() + ((GraphicObject)object).getImage();
-				String dst = getPath() + "/" + ((GraphicObject)object).getImage();
-				Debug.d(TAG, "--->source: " + source);
-				Debug.d(TAG, "--->dst: " + dst);
-				// if file is exist, dont copy again
-				File file = new File(dst);
-				if (file.exists()) {
-					continue;
-				} else {
-					FileUtil.copyFile(source, dst);
-					((GraphicObject)object).setImage(dst);
-				}
+				((GraphicObject) object).afterSave();
 			}
 		}
 	}
@@ -991,6 +981,8 @@ public class MessageTask {
 					
 			//保存1.bmp文件
 			savePreview();
+			
+			//
 			return null;
 		}
 		@Override

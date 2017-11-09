@@ -3,6 +3,7 @@ package com.industry.printer.object;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -53,7 +54,7 @@ public class RealtimeHour extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 

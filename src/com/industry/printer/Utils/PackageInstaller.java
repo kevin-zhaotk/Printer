@@ -75,7 +75,7 @@ public class PackageInstaller {
 		int newVersion = pInfo.versionCode;
 		Debug.d(TAG, "===>curVer:" + curVersion + ",  newVer:" + newVersion);
 		if (curVersion == newVersion) {
-			Toast.makeText(mContext, R.string.str_no_upgrade, Toast.LENGTH_LONG);
+			ToastUtil.show(mContext, R.string.str_no_upgrade);
 			return false;
 		}
 		LoadingDialog dialog = LoadingDialog.show(mContext, R.string.str_upgrade_progress);

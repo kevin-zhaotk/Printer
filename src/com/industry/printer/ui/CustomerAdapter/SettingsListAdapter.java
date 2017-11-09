@@ -69,7 +69,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	private PopWindowAdapter mDots;
 	private PopWindowAdapter mHandle;
 	private PopWindowAdapter mCntReset;
-	private PopWindowAdapter mQRsource;
+//	private PopWindowAdapter mQRsource;
 	
 	private ItemViewHolder mEncoderHolder;
 	private HashMap<Integer, ItemViewHolder> mHoldMap;
@@ -232,7 +232,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mAutoPulse = new PopWindowAdapter(mContext, null);
 		mDots = new PopWindowAdapter(mContext, null);
 		mCntReset = new PopWindowAdapter(mContext, null);
-		mQRsource = new PopWindowAdapter(mContext, null);
+		// mQRsource = new PopWindowAdapter(mContext, null);
 		initAdapters();
 	}
 	
@@ -348,7 +348,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		mSettingItems[13] = new ItemOneLine(14, R.string.str_textview_param14, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[14] = new ItemOneLine(15, R.string.str_textview_param15, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
 		mSettingItems[15] = new ItemOneLine(16, R.string.str_textview_param16, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
-		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, R.array.switch_item_entries, 0, ItemType.TYPE_SWITCH);
+		mSettingItems[16] = new ItemOneLine(17, R.string.str_textview_param17, 0);
 		mSettingItems[17] = new ItemOneLine(18, R.string.str_textview_param18, 0);
 		mSettingItems[18] = new ItemOneLine(19, R.string.str_textview_param19, R.string.str_length_unit_6_1mm);
 		mSettingItems[19] = new ItemOneLine(20, R.string.str_textview_param20, R.string.str_length_unit_6_1mm);
@@ -477,9 +477,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		for (int i = 0; i < items.length; i++) {
 			mHandle.addItem(items[i]);
 		}
-		for (int i = 0; i < items.length; i++) {
-			mQRsource.addItem(items[i]);
-		}
+//		for (int i = 0; i < items.length; i++) {
+//			mQRsource.addItem(items[i]);
+//		}
 		
 		
 		items = mContext.getResources().getStringArray(R.array.pens_item_entries);
@@ -552,9 +552,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mSpiner.setAdapter(mPen1Invert);
 		} else if (position == 15) { //參數16
 			mSpiner.setAdapter(mPen2Invert);
-		} else if (position == 16) { //參數17
+		}/* else if (position == 16) { //參數17
 			mSpiner.setAdapter(mQRsource);
-		} else if (position == 20) { //參數21
+		}*/ else if (position == 20) { //參數21
 			mSpiner.setAdapter(mPen3Mirror);
 		} else if (position == 21) { //參數22
 			mSpiner.setAdapter(mPen4Mirror);
@@ -587,56 +587,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		TextView view = mSpiner.getAttachedView();
 		int position = (Integer) view.getTag();
 		String value = null;
-		/*
-		if (position == 1) {
-			value = (String)mDirection.getItem(index);
-		} else if (position == 2) { //參數3
-			value = (String)mResolution.getItem(index);
-		} else if (position == 4) { //參數5
-			value = (String)mPhotocell.getItem(index);
-		} else if (position == 5) { //參數6
-			value = (String)mEncoderAdapter.getItem(index);
-		} else if (position == 6) { //參數7
-			value = (String)mRepeat.getItem(index);
-			SystemConfigFile.mParam7 = getSwitchvalue(index);
-		} else if (position == 7) { //參數8
-			value = (String)mNozzle.getItem(index);
-			SystemConfigFile.mParam8 = getValue(mNozzle, index);
-		} else if (position == 12) { //參數13
-			value = (String)mPen1Mirror.getItem(index);
-			SystemConfigFile.mResv13 = getSwitchvalue(index);
-		} else if (position == 13) { //參數14
-			value = (String)mPen2Mirror.getItem(index);
-			SystemConfigFile.mResv14 = getSwitchvalue(index);
-		} else if (position == 14) { //參數15
-			value = (String)mPen1Invert.getItem(index);
-			SystemConfigFile.mResv15 = getSwitchvalue(index);
-		} else if (position == 15) { //參數16
-			value = (String)mPen2Invert.getItem(index);
-			SystemConfigFile.mResv16 = getSwitchvalue(index);
-		} else if (position == 16) { //參數17
-			value = (String)mPens.getItem(index);
-			SystemConfigFile.mResv17 = getValue(mPens, index);
-		} else if (position == 20) { //參數21
-			value = (String)mPen3Mirror.getItem(index);
-			SystemConfigFile.mResv21 = getSwitchvalue(index);
-		} else if (position == 21) { //參數22
-			value = (String)mPen4Mirror.getItem(index);
-			SystemConfigFile.mResv22 = getSwitchvalue(index);
-		} else if (position == 22) { //參數23
-			value = (String)mPen3Invert.getItem(index);
-			SystemConfigFile.mResv23 = getSwitchvalue(index);
-		} else if (position == 23) { //參數24
-			value = (String)mPen4Invert.getItem(index);
-			SystemConfigFile.mResv24 = getSwitchvalue(index);
-		} else if (position == 24) { //參數25
-			value = (String)mAutoVol.getItem(index);
-			SystemConfigFile.mResv25 = getSwitchvalue(index);
-		} else if (position == 26) { //參數27
-			mSpiner.setAdapter(mAutoPulse);
-			value = (String)mAutoPulse.getItem(index);
-			SystemConfigFile.mResv27 = getSwitchvalue(index);
-		}*/
+		
 		mSettingItems[position].setValue(index);
 		mSysconfig.setParam(position, mSettingItems[position].getValue());
 		value = mSettingItems[position].getDisplayValue();
@@ -657,52 +608,6 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 				 mSettingItems[i-1].mValue = String.valueOf(value);
 			 }
 		}
-		/*
-		SystemConfigFile.mParam2 = SystemConfigFile.checkParam(2, SystemConfigFile.mParam2);
-		mSettingItems[1].mValue = String.valueOf(SystemConfigFile.mParam2); 
-		
-		SystemConfigFile.mParam3 = SystemConfigFile.checkParam(3, SystemConfigFile.mParam3);
-		mSettingItems[2].mValue = String.valueOf(SystemConfigFile.mParam3);
-		
-		SystemConfigFile.mParam4 = SystemConfigFile.checkParam(4, SystemConfigFile.mParam4);
-		mSettingItems[3].mValue = String.valueOf(SystemConfigFile.mParam4);
-		
-		SystemConfigFile.mParam5 = SystemConfigFile.checkParam(5, SystemConfigFile.mParam5);
-		mSettingItems[4].mValue = String.valueOf(SystemConfigFile.mParam5);
-		
-		SystemConfigFile.mParam6 = SystemConfigFile.checkParam(6, SystemConfigFile.mParam6);
-		mSettingItems[5].mValue = String.valueOf(SystemConfigFile.mParam6);
-		
-		SystemConfigFile.mParam7 = SystemConfigFile.checkParam(7, SystemConfigFile.mParam7);
-		mSettingItems[6].mValue = String.valueOf(SystemConfigFile.mParam7);
-		
-		SystemConfigFile.mParam8 = SystemConfigFile.checkParam(8, SystemConfigFile.mParam8);
-		mSettingItems[7].mValue = String.valueOf(SystemConfigFile.mParam8);
-		
-		SystemConfigFile.mParam9 = SystemConfigFile.checkParam(9, SystemConfigFile.mParam9);
-		mSettingItems[8].mValue = String.valueOf(SystemConfigFile.mParam9);
-		
-		SystemConfigFile.mParam10 = SystemConfigFile.checkParam(10, SystemConfigFile.mParam10);
-		if (SystemConfigFile.mParam10 < SystemConfigFile.mParam5) {
-			SystemConfigFile.mParam10 = SystemConfigFile.mParam5;
-		}
-		mSettingItems[9].mValue = String.valueOf(SystemConfigFile.mParam10);
-		
-		SystemConfigFile.mResv12 = SystemConfigFile.checkParam(12, SystemConfigFile.mResv12);
-		mSettingItems[11].mValue = String.valueOf(SystemConfigFile.mResv12);
-		
-		SystemConfigFile.mResv13 = SystemConfigFile.checkParam(13, SystemConfigFile.mResv13);
-		mSettingItems[12].mValue = String.valueOf(SystemConfigFile.mResv13);
-		
-		SystemConfigFile.mResv14 = SystemConfigFile.checkParam(14, SystemConfigFile.mResv14);
-		mSettingItems[13].mValue = String.valueOf(SystemConfigFile.mResv14);
-		
-		SystemConfigFile.mResv15 = SystemConfigFile.checkParam(15, SystemConfigFile.mResv15);
-		mSettingItems[14].mValue = String.valueOf(SystemConfigFile.mResv15);
-
-		SystemConfigFile.mResv16 = SystemConfigFile.checkParam(16, SystemConfigFile.mResv16);
-		mSettingItems[15].mValue = String.valueOf(SystemConfigFile.mResv16);
-		*/
 		refresh();
 	}
 	
@@ -730,200 +635,6 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			mSettingItems[pos].mValue = arg0.toString();
 			Debug.d(TAG, "--->param=" + mSettingItems[pos].getDisplayValue());
 			mSysconfig.setParam(pos, getValueFromEditText(arg0));
-			/*
-			switch (pos) {
-			case 2:
-				SystemConfigFile.mParam3 = getValueFromEditText(arg0);
-				break;
-			case 3:
-				SystemConfigFile.mParam4 = getValueFromEditText(arg0);
-				break;
-			case 4:
-				SystemConfigFile.mParam5 = getValueFromEditText(arg0);
-				break;
-			case 5:
-				SystemConfigFile.mParam6 = getValueFromEditText(arg0);
-				break;
-			case 6:
-				SystemConfigFile.mParam7 = getValueFromEditText(arg0);
-				break;
-			case 7:
-				SystemConfigFile.mParam8 = getValueFromEditText(arg0);
-				break;
-			case 8:
-				SystemConfigFile.mParam9 = getValueFromEditText(arg0);
-				break;
-			case 9:
-				SystemConfigFile.mParam10 = getValueFromEditText(arg0);
-				break;
-			case 10:
-				SystemConfigFile.mResv11 = getValueFromEditText(arg0);
-				Debug.d(TAG, "--->mResv11=" + SystemConfigFile.mResv11);
-				break;
-			case 11:
-				SystemConfigFile.mResv12 = getValueFromEditText(arg0);
-				break;
-			case 12:
-				SystemConfigFile.mResv13 = getValueFromEditText(arg0);
-				break;
-			case 13:
-				SystemConfigFile.mResv14 = getValueFromEditText(arg0);
-				break;
-			case 14:
-				SystemConfigFile.mResv15 = getValueFromEditText(arg0);
-				break;
-			case 15:
-				SystemConfigFile.mResv16 = getValueFromEditText(arg0);
-				break;
-			case 16:
-				SystemConfigFile.mResv17 = getValueFromEditText(arg0);
-			case 17:
-				SystemConfigFile.mResv18 = getValueFromEditText(arg0);
-				break;
-			case 18:
-				SystemConfigFile.mResv19 = getValueFromEditText(arg0);
-				break;
-			case 19:
-				SystemConfigFile.mResv20 = getValueFromEditText(arg0);
-				break;
-			case 20:
-				SystemConfigFile.mResv21 = getValueFromEditText(arg0);
-				break;
-			case 21:
-				SystemConfigFile.mResv22 = getValueFromEditText(arg0);
-				break;
-			case 22:
-				SystemConfigFile.mResv23 = getValueFromEditText(arg0);
-				break;
-			case 23:
-				SystemConfigFile.mResv24 = getValueFromEditText(arg0);
-				break;
-			case 24:
-				SystemConfigFile.mResv25 = getValueFromEditText(arg0);
-				break;
-			case 25:
-				SystemConfigFile.mResv26 = getValueFromEditText(arg0);
-				break;
-			case 26:
-				SystemConfigFile.mResv27 = getValueFromEditText(arg0);
-				break;
-			case 27:
-				SystemConfigFile.mResv28 = getValueFromEditText(arg0);
-				break;
-			case 28:
-				SystemConfigFile.mResv29 = getValueFromEditText(arg0);
-				break;
-			case 29:
-				SystemConfigFile.mResv30 = getValueFromEditText(arg0);
-				break;
-			case 30:
-				SystemConfigFile.mResv31 = getValueFromEditText(arg0);
-				break;
-			case 31:
-				SystemConfigFile.mResv32 = getValueFromEditText(arg0);
-				break;
-			case 32:
-				SystemConfigFile.mResv33 = getValueFromEditText(arg0);
-				break;
-			case 33:
-				SystemConfigFile.mResv34 = getValueFromEditText(arg0);
-				break;
-			case 34:
-				SystemConfigFile.mResv35 = getValueFromEditText(arg0);
-				break;
-			case 35:
-				SystemConfigFile.mResv36 = getValueFromEditText(arg0);
-				break;
-			case 36:
-				SystemConfigFile.mResv37 = getValueFromEditText(arg0);
-				break;
-			case 37:
-				SystemConfigFile.mResv38 = getValueFromEditText(arg0);
-				break;
-			case 38:
-				SystemConfigFile.mResv39 = getValueFromEditText(arg0);
-				break;
-			case 39:
-				SystemConfigFile.mResv40 = getValueFromEditText(arg0);
-				break;
-			case 40:
-				SystemConfigFile.mResv41 = getValueFromEditText(arg0);
-				break;
-			case 41:
-				SystemConfigFile.mResv42 = getValueFromEditText(arg0);
-				break;
-			case 42:
-				SystemConfigFile.mResv43 = getValueFromEditText(arg0);
-				break;
-			case 43:
-				SystemConfigFile.mResv44 = getValueFromEditText(arg0);
-				break;
-			case 44:
-				SystemConfigFile.mResv45 = getValueFromEditText(arg0);
-				break;
-			case 45:
-				SystemConfigFile.mResv46 = getValueFromEditText(arg0);
-				break;
-			case 46:
-				SystemConfigFile.mResv47 = getValueFromEditText(arg0);
-				break;
-			case 47:
-				SystemConfigFile.mResv48 = getValueFromEditText(arg0);
-				break;
-			case 48:
-				SystemConfigFile.mResv49 = getValueFromEditText(arg0);
-				break;
-			case 49:
-				SystemConfigFile.mResv50 = getValueFromEditText(arg0);
-				break;
-			case 50:
-				SystemConfigFile.mResv51 = getValueFromEditText(arg0);
-				break;
-			case 51:
-				SystemConfigFile.mResv52 = getValueFromEditText(arg0);
-				break;
-			case 52:
-				SystemConfigFile.mResv53 = getValueFromEditText(arg0);
-				break;
-			case 53:
-				SystemConfigFile.mResv54 = getValueFromEditText(arg0);
-				break;
-			case 54:
-				SystemConfigFile.mResv55 = getValueFromEditText(arg0);
-				break;
-			case 55:
-				SystemConfigFile.mResv56 = getValueFromEditText(arg0);
-				break;
-			case 56:
-				SystemConfigFile.mResv57 = getValueFromEditText(arg0);
-				break;
-			case 57:
-				SystemConfigFile.mResv58 = getValueFromEditText(arg0);
-				break;
-			case 58:
-				SystemConfigFile.mResv59 = getValueFromEditText(arg0);
-				break;
-			case 59:
-				SystemConfigFile.mResv60 = getValueFromEditText(arg0);
-				break;
-			case 60:
-				SystemConfigFile.mResv61 = getValueFromEditText(arg0);
-				break;
-			case 61:
-				SystemConfigFile.mResv62 = getValueFromEditText(arg0);
-				break;
-			case 62:
-				SystemConfigFile.mResv63 = getValueFromEditText(arg0);
-				break;
-			case 63:
-				SystemConfigFile.mResv64 = getValueFromEditText(arg0);
-				break;
-				
-			default:
-				break;
-			}
-			*/
-			
 		}
 		@Override
 		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,

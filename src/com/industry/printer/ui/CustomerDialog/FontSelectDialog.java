@@ -8,6 +8,7 @@ import java.util.jar.Attributes.Name;
 
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -132,7 +133,7 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 			String font = mFonts.get(position).get(FONT_NAME);
 			mHolder.mText.setText(font);
 			
-			Typeface tf = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + font + ".ttf");
+			Typeface tf = FontCache.get(mContext, "fonts/" + font + ".ttf");
 			mHolder.mTips.setTypeface(tf);
 			mHolder.mTips.setText(mFonts.get(position).get(FONT_TIPS));
 			mHolder.mText.setSelected(position == this.position);

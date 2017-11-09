@@ -768,7 +768,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						initDTThread();
 					}
 					if (mDTransThread == null) {
-						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_message);
 						break;
 					}
 					Debug.d(TAG, "--->prepare buffer");
@@ -776,7 +776,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mRfidManager.checkUID(dt.getHeads());
 					break;
 				case RFIDManager.MSG_RFID_CHECK_FAIL:
-					Toast.makeText(mContext, "Rfid changed", Toast.LENGTH_SHORT).show();
+					ToastUtil.show(mContext, "Rfid changed");
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
@@ -784,19 +784,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					if (!checkRfid()) {
-						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_ink);
 						return;
 					}
 					if (mDTransThread != null && mDTransThread.isRunning()) {
-						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_print_printing);
 						break;
 					}
 					if (mObjPath == null || mObjPath.isEmpty()) {
-						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_message);
 						break;
 					}
 					if (!checkQRFile()) {
-						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
+						// Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_qrfile);
 						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
@@ -805,7 +806,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					DataTask task = mDTransThread.getData();
 					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
-						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_emptycontent);
 						break;
 					}
 					/**
@@ -837,12 +838,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->launch thread");
 					/*鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙�*/
 					if (!mDTransThread.launch(mContext)) {
-						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
+						ToastUtil.show(mContext, R.string.str_toast_no_bin);
 						break;
 					}
 					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
-					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
+					ToastUtil.show(mContext, R.string.str_print_startok);
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -864,8 +865,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					/*鎵撳嵃浠诲姟鍋滄鍚庡厑璁稿垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_STOPPED);
 					
-					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
+					ToastUtil.show(mContext, R.string.str_print_stopok);
 					FpgaGpioOperation.clean();
+					rollback();
 					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
@@ -1054,6 +1056,22 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	private int mRfiAlarmTimes = 0;
 	private boolean mRfidInit = false;
 	
+	/**
+	 * Counter & dynamic QR objects need a roll-back operation after each print-stop
+	 * because these dynamic objects generate the next value after each single print finished;
+	 * then, if stop printing at that time these values will step forward by "1" to the real value;
+	 * a mistake will happen at the next continue printing  
+	 */
+	private void rollback() {
+		if (mMsgTask == null) {
+			return;
+		}
+		for (BaseObject object : mMsgTask.getObjects()) {
+			if (object instanceof CounterObject) {
+				((CounterObject) object).rollback();
+			}
+		}
+	}
 	private void updateCntIfNeed() {
 		for (BaseObject object : mMsgTask.getObjects()) {
 			if (object instanceof CounterObject) {
@@ -1492,7 +1510,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			
 			@Override
 			public void run() {
-				Toast.makeText(mContext, R.string.str_barcode_end, Toast.LENGTH_LONG).show();	
+				ToastUtil.show(mContext, R.string.str_barcode_end);	
 			}
 		});
 		
@@ -1505,7 +1523,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				//Net = new Network();
 				int nRet = 0;
 			//	if (!Net.checkNetWork(mContext)) {
-				//	Toast.makeText(mContext, "没有开启网络...!", Toast.LENGTH_LONG).show();
+				//	ToastUtil.show(mContext, "没有开启网络...!");
 				//	return;
 			//	}
 				hostip = getLocalIpAddress(); //获取本机

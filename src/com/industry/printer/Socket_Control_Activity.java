@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import com.industry.printer.Socket_Server.ClientThread;
 import com.industry.printer.Socket_Server.PrintInterface;
 import com.industry.printer.Socket_Server.Db.Server_Socket_Database;
+import com.industry.printer.Utils.ToastUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -123,7 +124,7 @@ public class Socket_Control_Activity extends Activity implements PrintInterface{
 	                long arg3) {
 	            TextView tv=(TextView)view.findViewById(R.id.Print);
 	            TextView st=(TextView)view.findViewById(R.id.Stop);
-	            Toast.makeText(getBaseContext(), "您点击了第" + tv.getText()+"行"+arg2+"行"+arg3+"列", 2000).show();
+	            ToastUtil.show(getBaseContext(), "您点击了第" + tv.getText()+"行"+arg2+"行"+arg3+"列");
 	        }
 	    });
 	
@@ -250,14 +251,14 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
 					   }
 						else
 						{
-							Toast.makeText(getBaseContext(), "Select Connect Button Please...", 2000).show();
+							ToastUtil.show(getBaseContext(), "Select Connect Button Please...");
 							return;
 						}
 					
 					
 					
                   
-                    Toast.makeText(getBaseContext(), "Printing，，，", 2000).show();
+						ToastUtil.show(getBaseContext(), "Printing，，，");
 			}
 		});
 		
@@ -274,7 +275,7 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
 			   }
 				else
 				{
-					Toast.makeText(getBaseContext(), "Select Connect Button Please...", 2000).show();
+					ToastUtil.show(getBaseContext(), "Select Connect Button Please...");
 					return;
 				}
 			
@@ -283,7 +284,7 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
           
 					
 					
-			   Toast.makeText(getBaseContext(), "Stoped.", 2000).show();
+				ToastUtil.show(getBaseContext(), "Stoped.");
                   
               
 		
@@ -305,7 +306,7 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
 			   }
 				else
 				{
-					Toast.makeText(getBaseContext(), "Select Connect Button Please...", 2000).show();
+					ToastUtil.show(getBaseContext(), "Select Connect Button Please...");
 					return;
 				}
 			
@@ -315,7 +316,7 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
               // 将用户在文本框内输入的内容写入网络  
                   
             
-				Toast.makeText(getBaseContext(), "Purge...", 2000).show();
+				ToastUtil.show(getBaseContext(), "Purge...");
 
 		
 			}
@@ -349,7 +350,7 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
 					}
 					else
 					{
-						Toast.makeText(getBaseContext(), "Set IP Address&Ports Please.", 2000).show();
+						ToastUtil.show(getBaseContext(), "Set IP Address&Ports Please.");
 						Cr.close();
 						return;
 						
@@ -361,11 +362,11 @@ public class Socket_Control_Activity_Item extends BaseAdapter{
                 catch (Exception e)  
                 {  
                     e.printStackTrace(); 
-                    Toast.makeText(getBaseContext(), "Connection failed.", 2000).show();
+                    ToastUtil.show(getBaseContext(), "Connection failed.");
                     return ;
                 }  
 				device_id="1";
-				Toast.makeText(getBaseContext(), "connected Success.", 2000).show();
+				ToastUtil.show(getBaseContext(), "connected Success.");
 
 		
 			}

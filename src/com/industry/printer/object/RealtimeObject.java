@@ -37,7 +37,7 @@ public class RealtimeObject extends BaseObject {
 		Debug.d(TAG, ">>>RealtimeObject mcontext: " + mContext);
 		mSubObjs = new Vector<BaseObject>();
 		mOffset = 0;
-		// setFormat("YY-MM-DD");
+		setFormat("YY-MM-DD");
 	}
 
 	public void setFormat(String format)

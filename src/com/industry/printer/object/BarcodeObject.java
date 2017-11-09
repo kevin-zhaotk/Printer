@@ -246,7 +246,7 @@ public class BarcodeObject extends BaseObject {
 				
 			} else if ("EAN8".equals(mFormat)) {
 				matrix = writer.encode(checkLen(),
-				        format, w, h, null);
+				        format, w, h- mTextSize- 5, null);
             
 			} else {
 				matrix = writer.encode(content,

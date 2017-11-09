@@ -49,7 +49,7 @@ public class BitmapWriter {
 	
 	public Bitmap make(BaseObject object) {
 		// 暂时不支持字体
-		// mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
+		// mPaint.setTypeface(FontCache.get(context, "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(object.getContent());
 		int height = (int)mPaint.getTextSize();
 		
