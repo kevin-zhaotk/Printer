@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -590,7 +591,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 			}
-			
+			// system
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+			}
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
 		}
@@ -602,6 +606,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private void msgImport() {
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		File msg = new File(Configs.TLK_PATH_FLASH);
+		if (msg.exists()) {
+			msg.delete();
+		}
+		
 		try {
 			// Messages
 			if (usbs != null && usbs.size() > 0) {

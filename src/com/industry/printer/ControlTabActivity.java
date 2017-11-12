@@ -999,7 +999,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			if (!(obj instanceof BarcodeObject)) {
 				continue;
 			}
-			if (!((BarcodeObject) obj).isQRCode() /*|| mSysconfig.getParam(16) == 0 */) {
+			if (!((BarcodeObject) obj).isQRCode() || !obj.getSource()) {
 				continue;
 			}
 			ready = qrReady;

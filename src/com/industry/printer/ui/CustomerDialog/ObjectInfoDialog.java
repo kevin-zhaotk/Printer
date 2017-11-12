@@ -526,6 +526,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					mLineType.setText(lines[((EllipseObject)mObject).getLineType()]);
 				} else if (mObject instanceof GraphicObject) {
 					mPicture.setText(mObject.getContent());
+				} else if (mObject instanceof GraphicObject) {
+					mPicture.setText(mObject.getContent());
 				}
 			}
 	 }

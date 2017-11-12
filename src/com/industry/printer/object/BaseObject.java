@@ -653,6 +653,7 @@ public class BaseObject{
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
 		mYcor_end = mYcor + mHeight;*/
+		mWidth = 0;
 		isNeedRedraw = true;
 	}
 	
