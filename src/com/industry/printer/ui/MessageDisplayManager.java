@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.industry.printer.MessageTask;
+import com.industry.printer.R;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
 import com.printer.corelib.Debug;
@@ -137,17 +138,22 @@ public class MessageDisplayManager implements View.OnTouchListener {
     	if (object instanceof MessageObject) {
             return;
         }
+    	
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.leftMargin = (int)object.getX();
         lp.topMargin = (int) object.getY();
         ImageView image = new ImageView(mContext);
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
+        
+        image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         image.setImageBitmap(object.getScaledBitmap(mContext));
 
         if (object.getSelected()) {
-            image.setBackgroundColor(Color.GREEN);
+            // image.setBackgroundColor(Color.GREEN);
+        	image.setBackgroundResource(R.drawable.msg_bg_selected);
+        	
         } else {
-            image.setBackgroundColor(Color.WHITE);
+            // image.setBackgroundColor(Color.WHITE);
+            image.setBackgroundResource(R.drawable.msg_bg_unselected);
         }
         /** width&height must be reseted after object bitmap drawed success */
         lp.width = (int)object.getWidth();
@@ -188,7 +194,8 @@ public class MessageDisplayManager implements View.OnTouchListener {
             if (obj.getSelected()) {
                 ImageView view = mImageMap.get(obj);
                 if (view != null) {
-                    view.setBackgroundColor(Color.WHITE);
+//                    view.setBackgroundColor(Color.WHITE);
+                    view.setBackgroundResource(R.drawable.msg_bg_unselected);
                 }
                 obj.setSelected(false);
             }
@@ -200,7 +207,8 @@ public class MessageDisplayManager implements View.OnTouchListener {
         object.setSelected(true);
         ImageView v = mImageMap.get(object);
         if (v != null) {
-            v.setBackgroundColor(Color.GREEN);
+//            v.setBackgroundColor(Color.GREEN);
+        	v.setBackgroundResource(R.drawable.msg_bg_selected);
         }
     }
 
