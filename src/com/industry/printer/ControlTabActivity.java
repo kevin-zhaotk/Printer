@@ -844,6 +844,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
 					ToastUtil.show(mContext, R.string.str_print_startok);
+					
+					testCounter();
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -867,7 +869,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					ToastUtil.show(mContext, R.string.str_print_stopok);
 					FpgaGpioOperation.clean();
-					rollback();
+					//rollback();
 					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
@@ -1060,8 +1062,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 * Counter & dynamic QR objects need a roll-back operation after each print-stop
 	 * because these dynamic objects generate the next value after each single print finished;
 	 * then, if stop printing at that time these values will step forward by "1" to the real value;
-	 * a mistake will happen at the next continue printing  
+	 * a mistake will happen at the next continue printing
+	 * Deprecated: move to DataTransferThread to do this  
 	 */
+	@Deprecated
 	private void rollback() {
 		if (mMsgTask == null) {
 			return;
@@ -2097,5 +2101,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 //	         }  
 		}
 	//Socket________________________________________________________________________________________________________________________________
-	}
+	
+	    private void testCounter() {
+	    	DataTask task = mDTransThread.getData();
+	    	List<BaseObject> list = task.getObjList();
+	    	for (BaseObject object : list) {
+				if (object instanceof CounterObject) {
+					for (int i = 0; i < 105; i++) {
+						Debug.d(TAG, "--->next Value: " + ((CounterObject)object).getNext());
+					}
+				}
+			}
+	    }
+}
 

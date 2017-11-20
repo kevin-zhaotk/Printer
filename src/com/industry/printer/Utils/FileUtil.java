@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.text.TextUtils;
+
 public class FileUtil {
 
 	private static final String TAG = FileUtil.class.getSimpleName();
@@ -99,5 +101,29 @@ public class FileUtil {
                 copyDirectiory(dir1, dir2);  
             }  
         }  
+    } 
+    
+    public static void deleteFolder(String filePath) {       
+    	if (!TextUtils.isEmpty(filePath)) {  
+    	    try {  
+    	        File file = new File(filePath);  
+    	        if (file.isDirectory()) { //目录  
+    	            File files[] = file.listFiles();  
+    	            for (int i = 0; i < files.length; i++) {
+    	                deleteFolder(files[i].getAbsolutePath());  
+    	            }  
+    	        }  
+    	           
+    	        if (!file.isDirectory()) { //如果是文件，删除  
+    	            file.delete();  
+    	        } else { //目录  
+    	           if (file.listFiles().length == 0) { //目录下没有文件或者目录，删除  
+    	                file.delete();  
+    	           }  
+    	        }
+    	    } catch (Exception e) {  
+    	        e.printStackTrace();  
+    	    }  
+    	}  
     } 
 }

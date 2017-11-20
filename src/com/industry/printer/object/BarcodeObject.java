@@ -155,6 +155,16 @@ public class BarcodeObject extends BaseObject {
 		isNeedRedraw = true;
 	}
 	
+	@Override
+	public void setSource(boolean dynamic) {
+		mSource  = dynamic;
+		if (dynamic) {
+			mName = mContext.getString(R.string.object_dynamic_qr);
+		} else {
+			mName = mContext.getString(R.string.object_bar);
+		}
+	}
+	
 	private static final String CODE = "utf-8"; 
 	
 	public Bitmap getScaledBitmap(Context context) {
@@ -237,7 +247,7 @@ public class BarcodeObject extends BaseObject {
             // hints.put(EncodeHintType.MARGIN, margin);
             BarcodeFormat format = getBarcodeFormat(mFormat);
             
-            Debug.d(TAG, "--->content: " + mContent);
+            Debug.d(TAG, "--->content: " + mContent + "   format:" + mFormat);
             /* 条形码的宽度设置:每个数字占70pix列  */
 			if ("EAN13".equals(mFormat)) {
 				content = checkSum();
@@ -245,7 +255,8 @@ public class BarcodeObject extends BaseObject {
 				        format, w, h - mTextSize - 5, null);
 				
 			} else if ("EAN8".equals(mFormat)) {
-				matrix = writer.encode(checkLen(),
+				content = checkLen();
+				matrix = writer.encode(content,
 				        format, w, h- mTextSize- 5, null);
             
 			} else {

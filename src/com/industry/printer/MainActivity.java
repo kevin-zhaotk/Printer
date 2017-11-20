@@ -608,7 +608,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		File msg = new File(Configs.TLK_PATH_FLASH);
 		if (msg.exists()) {
-			msg.delete();
+			Debug.d(TAG, "--->delete MSG");
+			FileUtil.deleteFolder(msg.getAbsolutePath());
 		}
 		
 		try {

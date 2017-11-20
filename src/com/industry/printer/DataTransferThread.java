@@ -142,7 +142,9 @@ public class DataTransferThread extends Thread {
 			}
 			//Debug.d(TAG, "===>kernel buffer empty, fill it");
 			//TO-DO list 下面需要把打印数据下发
+			
 		}
+		rollback();
 		
 	}
 	
@@ -376,5 +378,17 @@ public class DataTransferThread extends Thread {
 			buffer = mDataTask.getPrintBuffer();
 		}
 		return buffer;
+	}
+	
+	private void rollback() {
+		
+		if (mDataTask == null || mDataTask.getObjList() == null) {
+			return;
+		}
+		for (BaseObject object : mDataTask.getObjList()) {
+			if (object instanceof CounterObject) {
+				((CounterObject) object).rollback();
+			}
+		}
 	}
 }

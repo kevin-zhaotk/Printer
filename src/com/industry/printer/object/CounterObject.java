@@ -176,7 +176,7 @@ public class CounterObject extends BaseObject {
 		}
 		else	//decrease
 		{
-			if(mValue-mStepLen < mMax || mValue > mMin)
+			if(mValue-mStepLen < mMin)
 				mValue=mMax;
 			else
 				mValue -= mStepLen;
@@ -197,12 +197,13 @@ public class CounterObject extends BaseObject {
 		}
 		else	//decrease
 		{
-			if(mValue-mStepLen < mMax || mValue > mMin)
+			if(mValue-mStepLen < mMin)
 				mValue=mMax;
 			else
 				mValue -= mStepLen;
 		}
 		setContent( BaseObject.intToFormatString(mValue, mBits));
+		Debug.d(TAG, "rollback mContent="+mContent+", mValue="+mValue);
 	}
 	
 	public String toString()

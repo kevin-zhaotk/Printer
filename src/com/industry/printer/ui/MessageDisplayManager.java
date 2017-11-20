@@ -1,7 +1,9 @@
 package com.industry.printer.ui;
 
+import android.R.integer;
 import android.content.Context;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +30,11 @@ public class MessageDisplayManager implements View.OnTouchListener {
     private Context mContext;
     private ViewGroup mContainer;
     private MessageTask mTask;
+    
+    /** 
+     * The select shadow, show up when object selected 
+     */
+    private ImageView mShadow;
 
     private HashMap<BaseObject, ImageView> mImageMap;
 
@@ -35,6 +42,8 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mContext = ctx;
         mContainer = container;
         mTask = task;
+        mShadow = new ImageView(mContext);
+        
         mImageMap = new HashMap<BaseObject, ImageView>();
         reset();
     }
@@ -45,6 +54,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
             mContainer.removeAllViews();
         }
         mImageMap.clear();
+        mShadow.setImageResource(R.drawable.msg_bg_selected);
+        mShadow.setVisibility(View.GONE);
+        mContainer.addView(mShadow);
     }
 
     public void fill(MessageTask task) {
@@ -88,6 +100,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mImageMap.remove(object);
         mContainer.removeView(view);
         mTask.removeObject(object);
+        mShadow.setVisibility(View.GONE);
     }
 
     public void removeAll() {
@@ -96,6 +109,8 @@ public class MessageDisplayManager implements View.OnTouchListener {
         }
         if (mContainer != null) {
             mContainer.removeAllViews();
+            mShadow.setVisibility(View.GONE);
+            mContainer.addView(mShadow);
         }
         mTask.removeAll();
     }
@@ -118,6 +133,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         params.topMargin = (int) object.getY();
         params.leftMargin = (int) object.getX();
         view.setLayoutParams(params);
+        showSelectRect(params.leftMargin, params.topMargin, params.width, params.height);
     }
     
     public void updateDraw(BaseObject object) {
@@ -144,24 +160,23 @@ public class MessageDisplayManager implements View.OnTouchListener {
         lp.topMargin = (int) object.getY();
         ImageView image = new ImageView(mContext);
         
-        image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        image.setScaleType(ImageView.ScaleType.FIT_XY);
         image.setImageBitmap(object.getScaledBitmap(mContext));
 
-        if (object.getSelected()) {
-            // image.setBackgroundColor(Color.GREEN);
-        	image.setBackgroundResource(R.drawable.msg_bg_selected);
-        	
-        } else {
-            // image.setBackgroundColor(Color.WHITE);
-            image.setBackgroundResource(R.drawable.msg_bg_unselected);
-        }
+//        if (object.getSelected()) {
+//        	image.setBackgroundResource(R.drawable.msg_bg_selected);
+//        	
+//        } else {
+//            image.setBackgroundResource(R.drawable.msg_bg_unselected);
+//        }
         /** width&height must be reseted after object bitmap drawed success */
         lp.width = (int)object.getWidth();
         lp.height = (int)object.getHeight();
-        mContainer.addView(image, lp);
+        mContainer.addView(image, 0,lp);
         mImageMap.put(object, image);
         image.setTag(object);
         image.setOnTouchListener(this);
+        showSelectRect(lp.leftMargin, lp.topMargin, lp.width, lp.height);
     }
 
     @Override
@@ -193,10 +208,6 @@ public class MessageDisplayManager implements View.OnTouchListener {
         {
             if (obj.getSelected()) {
                 ImageView view = mImageMap.get(obj);
-                if (view != null) {
-//                    view.setBackgroundColor(Color.WHITE);
-                    view.setBackgroundResource(R.drawable.msg_bg_unselected);
-                }
                 obj.setSelected(false);
             }
 
@@ -205,11 +216,17 @@ public class MessageDisplayManager implements View.OnTouchListener {
             return;
         }
         object.setSelected(true);
-        ImageView v = mImageMap.get(object);
-        if (v != null) {
-//            v.setBackgroundColor(Color.GREEN);
-        	v.setBackgroundResource(R.drawable.msg_bg_selected);
-        }
+        showSelectRect((int)object.getX(), (int)object.getY(), (int)object.getWidth(), (int) object.getHeight());
     }
 
+    private void showSelectRect(int x, int y, int w, int h) {
+    	RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mShadow.getLayoutParams();
+    	lp.width = w;
+    	lp.height = h;
+    	lp.leftMargin = x;
+    	lp.topMargin = y;
+    	mShadow.setVisibility(View.VISIBLE);
+    	mShadow.setLayoutParams(lp);
+    }
+    
 }

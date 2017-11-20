@@ -245,6 +245,7 @@
 	<string name="object_second">实时时间秒</string>
 	<string name="object_charHour">字符小时</string>
 	<string name="object_msg_name">信息名称</string>
+	<string name="object_dynamic_qr">动态二维码</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.保留</string>
 	<string name="strPrSpeedname">01.打印频率</string>

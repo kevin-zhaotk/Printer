@@ -4,6 +4,7 @@ import java.util.zip.Inflater;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.StringUtils;
+import com.google.zxing.maxicode.MaxiCodeReader;
 import com.industry.printer.R;
 import com.industry.printer.R.array;
 import com.industry.printer.R.id;
@@ -43,6 +44,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -63,7 +66,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener
-	, OnTouchListener{
+	, OnTouchListener, TextWatcher {
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -275,6 +278,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    if (mObject instanceof CounterObject) {
 		    	mCntView = (TextView) findViewById(R.id.cntView);
 		    	mDigits = (EditText) findViewById(R.id.cntBits);
+		    	mDigits.addTextChangedListener(this);
 			    // mDir = (TextView) findViewById(R.id.spinDirect);
 			    // mDir.setOnClickListener(this);
 			    mMin = (EditText) findViewById(R.id.et_start);
@@ -770,5 +774,25 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		InputMethodManager im = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         im.hideSoftInputFromWindow(arg0.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		return false;
+	}
+	
+	@Override
+	public void afterTextChanged(Editable s) {
+		if (s.toString().length() <= 0) {
+			return;
+		}
+		mMin.setText("0");
+		int max = (int) Math.pow(10, Integer.parseInt(mDigits.getText().toString())) - 1;
+		mMax.setText(String.valueOf(max));
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		
 	}
 }
