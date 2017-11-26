@@ -606,24 +606,20 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private void msgImport() {
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		File msg = new File(Configs.TLK_PATH_FLASH);
-		if (msg.exists()) {
-			Debug.d(TAG, "--->delete MSG");
-			FileUtil.deleteFolder(msg.getAbsolutePath());
-		}
+		
 		
 		try {
 			// Messages
 			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
 			}
 			// system
 			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 			}
 			// pictutes
 			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+				FileUtil.copyClean(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 			}
 			
 		} catch (Exception e) {

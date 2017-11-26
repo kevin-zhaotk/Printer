@@ -157,7 +157,7 @@ public class BinInfo {
     	resolve();
 	}
 	
-	private void resolve() {
+	private synchronized void resolve() {
 		byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
 		/*把bin文件内容读入内存*/
 		mCacheStream = new ByteArrayInputStream(mBuffer);
@@ -242,7 +242,7 @@ public class BinInfo {
 		return mCharsPerHFeed;
 	}
 	
-    public char[] getBgBuffer()
+    public synchronized char[] getBgBuffer()
     {
     	if (mLength <= 0) {
 			return null;
@@ -278,7 +278,7 @@ public class BinInfo {
     	return mBufferChars; // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     
-    public char[] getVarBuffer(String var)
+    public synchronized char[] getVarBuffer(String var)
     {
     	int n;
     	byte[] feed = {0};
@@ -326,7 +326,7 @@ public class BinInfo {
     
     /*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
 	 *所以，shift變量的v.bin固定爲8位，如果bit=1，需要跳過前面的0*/
-    public char[] getVarBuffer(int shift, int bits)
+    public synchronized char[] getVarBuffer(int shift, int bits)
     {
     	int n, offset=0;
     	byte[] feed = {0};

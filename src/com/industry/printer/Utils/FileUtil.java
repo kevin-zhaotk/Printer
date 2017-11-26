@@ -102,6 +102,22 @@ public class FileUtil {
             }  
         }  
     } 
+    /**
+     * copy from source directory to target directory, and delete the target directory before copy
+     * @param sourceDir
+     * @param targetDir
+     */
+    public static void copyClean(String sourceDir, String targetDir) {
+    	File target = new File(targetDir);
+		if (target.exists()) {
+			FileUtil.deleteFolder(target.getAbsolutePath());
+		}
+		try {
+			copyDirectiory(sourceDir, targetDir);
+		} catch (Exception e) {
+			Debug.e(TAG, "--->exception: " + e.getMessage());
+		}
+    }
     
     public static void deleteFolder(String filePath) {       
     	if (!TextUtils.isEmpty(filePath)) {  
