@@ -482,6 +482,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		Debug.d(TAG, "--->save");
             		progressDialog();
             		if (mObjName == null || mMsgTask == null) {
+            			Debug.e(TAG, "--->nothing to save");
+            			dismissProgressDialog();
 						break;
 					}
             		// mMsgTask = new MessageTask(mContext, mObjName);

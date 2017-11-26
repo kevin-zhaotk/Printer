@@ -180,6 +180,7 @@
 	<string name="object_shift">AaBb</string>
 	<string name="object_second">Nächste</string>
 	<string name="object_msg_name">Subject</string>
+	<string name="object_qr">QRCode</string>
 	<string name="object_dynamic_qr">DynamicQR</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Reserviert</string>

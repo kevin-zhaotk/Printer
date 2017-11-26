@@ -464,10 +464,12 @@ public class MessageTask {
 				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), w, h, o.getFont());
 				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 			} else if (o instanceof GraphicObject) {
-				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
-				Debug.d(TAG, "---> w= " + t.getWidth() + " h= " + t.getHeight());
-				Debug.d(TAG, "---> x= " + o.getX() * scaleW + " y= " + o.getY() * scaleH);
+				int h = (int)(o.getHeight() * scaleH);
+				int w = (int) (o.getWidth() * scaleW);
+				Bitmap t = ((GraphicObject) o).makeBinBitmap(mContext, null, w, h, null);
 				if (t != null) {
+					Debug.d(TAG, "---> w= " + t.getWidth() + " h= " + t.getHeight());
+					Debug.d(TAG, "---> x= " + o.getX() * scaleW + " y= " + o.getY() * scaleH);
 					can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 				}
 			} else {
@@ -708,11 +710,9 @@ public class MessageTask {
 //			}
 		}
 		// Bitmap.createScaledBitmap();
-		float scale = bmp.getHeight() / 100;
+		float scale = bmp.getHeight() / 100f;
 		width = (int) (width / scale);
-
-		width=width/2; //addbylk 减半输出 
-
+		Debug.d(TAG, "---> +++++++ height = " + bmp.getHeight() + "   scale = " + scale);
 		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
 		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
 	}

@@ -375,6 +375,8 @@ public class BaseObject{
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)(mWidth * scaleW/mContent.length());
+		/** divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
+		singleW = singleW / 2;
 		Debug.d(TAG, "--->singleW=" + singleW);
 		
 		/* 最終生成v.bin使用的bitmap */
@@ -391,7 +393,7 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
-		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth()/2, dstH, false));
+		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), dstH, false));
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//

@@ -165,6 +165,20 @@ public class BarcodeObject extends BaseObject {
 		}
 	}
 	
+	@Override
+	public String getTitle() {
+		if (is2D()) {
+			if (mSource) {
+				mName = mContext.getString(R.string.object_dynamic_qr);
+			} else {
+				mName = mContext.getString(R.string.object_qr);
+			}
+		} else {
+			mName = mFormat + " " + mContext.getString(R.string.object_bar);
+		}
+		return mName;
+	}
+	
 	private static final String CODE = "utf-8"; 
 	
 	public Bitmap getScaledBitmap(Context context) {

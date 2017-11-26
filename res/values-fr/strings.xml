@@ -246,6 +246,7 @@
 	<string name="object_second">Seconde</string>
 	<string name="object_charHour">AlphaHour</string>
 	<string name="object_msg_name">Assujettir</string>
+	<string name="object_qr">QRCode</string>
 	<string name="object_dynamic_qr">DynamicQR</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Réservé</string>

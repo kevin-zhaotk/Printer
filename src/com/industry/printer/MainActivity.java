@@ -189,19 +189,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		//set current tab
 		//mTab.setCurrentTab(0);
 		
-		IntentFilter filter = new IntentFilter();
-		//filter.addDataScheme("file");
-		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
-		filter.addAction(ACTION_USB_PERMISSION);
-		filter.addDataScheme("file");
-		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
-		
-		
-		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
-		
-		mContext.registerReceiver(mReceiver, filter);
+		/** system config does not load from USB, so no need to listen the usb attachment state*/
+		// registerBroadcast();
 		
 		//FpgaGpioOperation.updateSettings(this.getApplicationContext());
 		
@@ -651,6 +640,23 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
 		}
 		mProgressDialog.dismiss();
+	}
+	
+	private void registerBroadcast() {
+		IntentFilter filter = new IntentFilter();
+		//filter.addDataScheme("file");
+		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
+		
+		filter.addAction(ACTION_USB_PERMISSION);
+		filter.addDataScheme("file");
+		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
+		
+		
+		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
+		mContext.registerReceiver(mReceiver, filter);
+		
 	}
 	// locahost ip
 		public static String getLocalIpAddress() {  

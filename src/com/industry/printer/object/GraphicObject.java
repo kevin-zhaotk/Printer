@@ -42,11 +42,13 @@ public class GraphicObject  extends BaseObject{
 		mImage = f.getPath();
 		Debug.d(TAG, "setImage file: "+file);
 		mContent = f.getName();
-		Bitmap b = BitmapFactory.decodeFile(file);
-		mBitmap = ImageConverter.convertGreyImg(b);
-		BinFromBitmap.recyleBitmap(b);
-		mWidth = mBitmap.getWidth();
-		mHeight = mBitmap.getHeight();
+		mBitmap = BitmapFactory.decodeFile(file);
+		// mBitmap = ImageConverter.convertGreyImg(b);
+		// BinFromBitmap.recyleBitmap(b);
+		if (mBitmap != null) {
+			mWidth = mBitmap.getWidth();
+			mHeight = mBitmap.getHeight();
+		}
 		Debug.d(TAG, "setImage w= " + mWidth + " h= " + mHeight);
 	}
 	
@@ -57,7 +59,20 @@ public class GraphicObject  extends BaseObject{
 	
 	public Bitmap getScaledBitmap(Context context)
 	{
+		if (mBitmap != null) {
+			return Bitmap.createScaledBitmap(mBitmap, (int)mWidth, (int)mHeight, false);
+		}
 		return mBitmap;
+	}
+	
+	/**
+	 * 
+	 */
+	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
+		if (mBitmap != null) {
+			return Bitmap.createScaledBitmap(mBitmap, ctW, ctH, false);
+		}
+		return null;
 	}
 	
 	public static String[] pic_formats={".png", ".jpg", ".jpeg", ".bmp"};
@@ -83,17 +98,24 @@ public class GraphicObject  extends BaseObject{
 	 * for graphic object: copy picture files to message-own directory
 	 */
 	public void afterSave() {
-		if (mImage == null || mImage.startsWith(Configs.TLK_PATH_FLASH + "/" + mTask.getName())) {
+		if (mImage == null) {
 			return;
 		}
 		// String srcPath = Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH + "/" + mContent;
 		String dstPath = Configs.TLK_PATH_FLASH  + "/" + mTask.getName() + "/" + mContent;
+		if (mImage.equalsIgnoreCase(dstPath)) {
+			return;
+		}
 		FileUtil.copyFile(mImage, dstPath);
 	}
 	
 	@Override
 	public Bitmap getpreviewbmp() {
 		Debug.d(TAG, "--->getpreviewbmp w= " + mWidth + " h= " + mHeight);
+		if (mBitmap == null) {
+			Debug.e(TAG, "--->no image");
+			return null;
+		}
 		return Bitmap.createScaledBitmap(mBitmap, (int)mWidth, (int)mHeight, false);
 	}
 
