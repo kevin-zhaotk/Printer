@@ -70,21 +70,13 @@ public class FileUtil {
      */
     public static void copyDirectiory(String sourceDir, String targetDir)  throws IOException {
     	Debug.d(TAG, "--->copyDirectory src: " + sourceDir + "  target: " + targetDir);
-    	File dir = new File(targetDir);
-    	String name = dir.getName();
-    	// avoid deleting the root directories of MSG, system & pictures
-    	if ("MSG".equalsIgnoreCase(name)
-    			|| "MSG1".equalsIgnoreCase(name)
-    			|| "system".equalsIgnoreCase(name) 
-    			|| "pictures".equalsIgnoreCase(name)) {
-    		if (dir.exists()) {
-    			dir.delete();
-    		}
-		}
     	
         // make directory  
         (new File(targetDir)).mkdirs();  
-        File[] file = (new File(sourceDir)).listFiles();  
+        File[] file = (new File(sourceDir)).listFiles();
+        if (file == null || file.length <= 0) {
+			return;
+		}
         for (int i = 0; i < file.length; i++) {  
             if (file[i].isFile()) {  
                 // source file

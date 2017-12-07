@@ -55,12 +55,12 @@ public class QRReader {
 	}
 	
 	private void init() {
-		List<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.size() <= 0) {
-			return;
-		}
-		mRoot = paths.get(0);
-		File last = new File(mRoot + Configs.QR_LAST);
+//		List<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.size() <= 0) {
+//			return;
+//		}
+//		mRoot = paths.get(0);
+		File last = new File(Configs.QR_LAST);
 		
 		try {
 			if (!last.exists()) {
@@ -80,10 +80,10 @@ public class QRReader {
 				mRow = 1;
 			}
 			String path = null;
-			if (new File(mRoot + Configs.QR_CSV).exists()) {
-				path = mRoot + Configs.QR_CSV;
-			} else if (new File(mRoot + Configs.QR_DATA).exists()) {
-				path = mRoot + Configs.QR_DATA;
+			if (new File(Configs.QR_CSV).exists()) {
+				path =  Configs.QR_CSV;
+			} else if (new File(Configs.QR_DATA).exists()) {
+				path = Configs.QR_DATA;
 			}
 			if (path == null) {
 				return;
@@ -110,7 +110,7 @@ public class QRReader {
 			Debug.d("XXX", "--->line: " + line);
 			String content = line.substring(index + 1);
 			// mWriter = new FileOutputStream(mRoot + Configs.QR_LAST);
-			FileWriter w = new FileWriter(mRoot + Configs.QR_LAST);
+			FileWriter w = new FileWriter(Configs.QR_LAST);
 			w.write(String.valueOf(mRow++));
 			w.flush();
 			w.close();

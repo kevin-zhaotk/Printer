@@ -1,11 +1,10 @@
 package com.industry.printer.object;
 
+import android.content.Context;
+
 import com.industry.printer.MessageTask.MessageType;
-import com.industry.printer.MessageTask;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
-
-import android.content.Context;
 
 public class MessageObject extends BaseObject {
 
@@ -13,8 +12,11 @@ public class MessageObject extends BaseObject {
 	public int mType;
 	
 	public static final int PIXELS_PER_MM = 12;
-	public static final float[] mBaseList = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
-	public static final float[] mBaseList_16 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16.3f};
+	public static final float[] mBaseList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 
+											7, 7.5f, 8, 8.5f, 9, 9.5f, 10, 10.5f, 11, 11.5f, 12, 12.7f};
+	public static final float[] mBaseList_16 = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 
+											7, 7.5f, 8, 8.5f, 9, 9.5f, 10, 10.5f, 11, 11.5f, 12, 12.5f, 
+											13, 13.5f, 14, 14.5f, 15, 15.5f, 16, 16.3f};
 	
 	
 	public MessageObject(Context context,  float x) {

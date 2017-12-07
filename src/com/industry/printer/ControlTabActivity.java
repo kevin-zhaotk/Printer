@@ -843,9 +843,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}
 					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
-					ToastUtil.show(mContext, R.string.str_print_startok);
-					
-					testCounter();
+					ToastUtil.show(mContext, R.string.str_print_startok);					
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -2102,16 +2100,5 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 	//Socket________________________________________________________________________________________________________________________________
 	
-	    private void testCounter() {
-	    	DataTask task = mDTransThread.getData();
-	    	List<BaseObject> list = task.getObjList();
-	    	for (BaseObject object : list) {
-				if (object instanceof CounterObject) {
-					for (int i = 0; i < 105; i++) {
-						Debug.d(TAG, "--->next Value: " + ((CounterObject)object).getNext());
-					}
-				}
-			}
-	    }
 }
 

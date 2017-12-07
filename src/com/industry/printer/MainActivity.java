@@ -575,15 +575,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			// Messages
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
-			}
 			// pictutes
-			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
-			}
 			// system
-			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 			}
+			QRReader reader = QRReader.getInstance(MainActivity.this);
+			reader.reInstance(MainActivity.this);
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
 		}
@@ -610,7 +608,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			if (usbs != null && usbs.size() > 0) {
 				FileUtil.copyClean(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 			}
-			
+			QRReader reader = QRReader.getInstance(MainActivity.this);
+			reader.reInstance(MainActivity.this);
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
 		}
@@ -624,17 +623,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try  {
-			// Messages
+			
 			if (usbs != null && usbs.size() > 0) {
+				// Messages
 				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
-			}
-			// system
-			if (usbs != null && usbs.size() > 0) {
+				// system
 				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
-			}
-			// pictutes
-			if (usbs != null && usbs.size() > 0) {
+				// pictutes
 				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH, usbs.get(0)  + Configs.PICTURE_SUB_PATH);
+				// print.bin
+				FileUtil.copyFile("/mnt/sdcard/print.bin", usbs.get(0) + "/print.bin");
 			}
 		} catch (Exception e) {
 			Debug.d(TAG, "--->msgExport e: " + e.getMessage());

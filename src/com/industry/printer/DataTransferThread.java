@@ -85,12 +85,14 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		buffer = getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
-		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		if (usbs != null && usbs.size() > 0) {
-			String path = usbs.get(0);
-			path = path + "/print.bin";
-			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
-		}
+//		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+//		if (usbs != null && usbs.size() > 0) {
+//			String path = usbs.get(0);
+//			path = path + "/print.bin";
+//			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+//		}
+		// save the print.bin to /mnt/sdcard/
+		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		last = SystemClock.currentThreadTimeMillis();

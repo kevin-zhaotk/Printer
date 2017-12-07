@@ -170,6 +170,7 @@
 	    <item>CODE_128</item>
 	    <item>CODE_39</item>
 	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
 	
@@ -212,7 +213,9 @@
 	
 	<string-array name="strarrayFontSize">
 	    <item>1 mm</item>
+	    <item>1.5 mm</item>
 	    <item>2 mm</item>
+	    <item>2.5 mm</item>
 	    <item>3 mm</item>
 	    <item>4 mm</item>
 	    <item>5 mm</item>

@@ -280,7 +280,7 @@ public class BaseObject{
 			setWidth(width);
 		}
 		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
@@ -315,11 +315,11 @@ public class BaseObject{
 			
 		}
 		int width = (int)paint.measureText(content);
-		Debug.d(TAG, "--->content: " + content + "  width=" + width);
 		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
-		canvas.drawText(content, 0, ctH-fm.descent-5, paint);
+		canvas.drawText(content, 0, ctH-fm.descent, paint);
+		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	
@@ -655,7 +655,7 @@ public class BaseObject{
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
 		mYcor_end = mYcor + mHeight;*/
-		mWidth = 0;
+//		mWidth = 0;
 		isNeedRedraw = true;
 	}
 	

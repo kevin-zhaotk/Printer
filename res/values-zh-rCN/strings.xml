@@ -170,6 +170,7 @@
 	    <item>CODE_128</item>
 	    <item>CODE_39</item>
 	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
 	

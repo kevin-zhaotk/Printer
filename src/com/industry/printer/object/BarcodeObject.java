@@ -43,6 +43,7 @@ import android.widget.TextView;
 public class BarcodeObject extends BaseObject {
 
 	private static final int QUIET_ZONE_SIZE = 4;
+	private static final int STROKE_WIDTH = 3;
 	
 	public String mFormat;
 	public int mCode;
@@ -82,6 +83,8 @@ public class BarcodeObject extends BaseObject {
 			mCode = 5;
 		} else if ("ITF_14".equals(code)) {
 			mCode = 6;
+		} else if ("UPC_A".equals(code)) {
+			mCode = 7;
 		} else if ("QR".equals(code)) {
 			mCode = 0;
 			mId = BaseObject.OBJECT_TYPE_QR;
@@ -112,6 +115,9 @@ public class BarcodeObject extends BaseObject {
 		} else if (code == 6) {
 			mCode = 6;
 			mFormat = "ITF_14";
+		} else if (code == 7) {
+			mCode = 7;
+			mFormat = "UPC_A";
 		}
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		isNeedRedraw = true;
@@ -269,7 +275,12 @@ public class BarcodeObject extends BaseObject {
 				        format, w, h - mTextSize - 5, null);
 				
 			} else if ("EAN8".equals(mFormat)) {
-				content = checkLen();
+				content = checkLen(8);
+				matrix = writer.encode(content,
+				        format, w, h- mTextSize- 5, null);
+            
+			} else if ("ITF_14".equals(mFormat)) {
+				content = checkLen(14);
 				matrix = writer.encode(content,
 				        format, w, h- mTextSize- 5, null);
             
@@ -299,6 +310,15 @@ public class BarcodeObject extends BaseObject {
 			/* 条码/二维码的四个边缘空出20像素作为白边 */
 			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+			
+			if ("ITF_14".equals(mFormat)) {
+				Canvas cvs = new Canvas(bitmap);
+				paint.setStrokeWidth(STROKE_WIDTH * 2);
+				cvs.drawLine(/* top */  0, STROKE_WIDTH, bitmap.getWidth(), STROKE_WIDTH, paint);
+				cvs.drawLine(/* left */ STROKE_WIDTH, 0, STROKE_WIDTH, bitmap.getHeight(), paint);
+				cvs.drawLine(/* right */bitmap.getWidth() - STROKE_WIDTH, 0, bitmap.getWidth() - STROKE_WIDTH, bitmap.getHeight(), paint);
+				cvs.drawLine(/* bottom*/0, bitmap.getHeight() - STROKE_WIDTH,bitmap.getWidth(), bitmap.getHeight() - STROKE_WIDTH, paint);
+			}
 			if(mShow)
 			{
 				// 用於生成bin的bitmap
@@ -548,7 +568,7 @@ public class BarcodeObject extends BaseObject {
 			return BarcodeFormat.UPC_E;
 		} else if ("UPC_A".equals(format)) {
 			return BarcodeFormat.UPC_A;
-		} else if ("ITF".equals(format)) {
+		} else if ("ITF_14".equals(format)) {
 			return BarcodeFormat.ITF;
 		} else if ("RSS14".equals(format)) {
 			return BarcodeFormat.RSS_14;
@@ -636,14 +656,14 @@ public class BarcodeObject extends BaseObject {
 	 * EAN8只支持8位長度
 	 * @return
 	 */
-	private String checkLen() {
+	private String checkLen(int dstLen) {
 		int len = mContent.length();
-		if (len < 8) {
-			for (int i = 0; i < 8 - len; i++) {
+		if (len < dstLen) {
+			for (int i = 0; i < dstLen - len; i++) {
 				mContent += "0";
 			}
-		} else if (mContent.length() > 8) {
-			return mContent.substring(0, 8);
+		} else if (mContent.length() > dstLen) {
+			return mContent.substring(0, dstLen);
 		}
 		return mContent;
 	}
