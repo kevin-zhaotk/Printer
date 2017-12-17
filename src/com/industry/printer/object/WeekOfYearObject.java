@@ -1,7 +1,6 @@
 package com.industry.printer.object;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.cache.FontCache;
@@ -12,34 +11,32 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
-import android.provider.ContactsContract.Contacts.Data;
 
-public class WeekDayObject extends BaseObject {
+public class WeekOfYearObject extends BaseObject{
 
-	public WeekDayObject(Context context, float x) {
-		super(context, OBJECT_TYPE_WEEKDAY, x);
-		Calendar c = Calendar.getInstance();
-		int dat = c.get(Calendar.DAY_OF_WEEK);
-		setContent(String.valueOf(dat));
+	public static String TAG="GraphicObject";
+	
+	public WeekOfYearObject(Context ctx) {
+		this(ctx, 0);
+		init();
 	}
-
-	public WeekDayObject(Context context) {
-		super(context, OBJECT_TYPE_WEEKDAY);
-		Calendar c = Calendar.getInstance();
-		int dat = c.get(Calendar.DAY_OF_WEEK);
-		setContent(String.valueOf(dat));
+	
+	public WeekOfYearObject(Context ctx, float x) {
+		super(ctx, BaseObject.OBJECT_TYPE_WEEKOFYEAR, x);
+	}
+	
+	private void init() {
+		Calendar calendar = Calendar.getInstance();
+		int week = calendar.get(Calendar.WEEK_OF_YEAR);
+		setContent(String.valueOf(week));
+		Debug.d(TAG, "--->week of year: " + week);
 	}
 	
 	@Override
 	public String getContent() {
-		Calendar c = Calendar.getInstance();
-		int dat = c.get(Calendar.DAY_OF_WEEK);
-		if (dat == 1) {
-			dat = 7;
-		} else {
-			dat = dat - 1;
-		}
-		mContent = String.valueOf(dat);
+		Calendar calendar = Calendar.getInstance();
+		int week = calendar.get(Calendar.WEEK_OF_YEAR);
+		mContent = String.valueOf(week);
 		return mContent;
 	}
 	
@@ -67,9 +64,12 @@ public class WeekDayObject extends BaseObject {
 		try {
 			Paint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
 		} catch (Exception e) {}
-		
-		int width = (int)Paint.measureText("D");
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		String str_new_content="W";	
+		for (int i = 1; i < mContent.length(); i++) {
+			str_new_content += "W";
+		}
+			
+		int width = (int)Paint.measureText(str_new_content);
 		if (mWidth == 0) {
 			setWidth(width);
 		}
@@ -78,17 +78,12 @@ public class WeekDayObject extends BaseObject {
 	 
 		Canvas can = new Canvas(bitmap);
 		FontMetrics fm = Paint.getFontMetrics();
-		
 		Paint.setColor(Color.BLUE); 
-	
-		
-		 
-		String str_new_content="D";	
 		can.drawText(str_new_content , 0, mHeight-fm.descent, Paint);
-	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
 	}
 	
+	@Override
 	public String toString()
 	{
 		float prop = getProportion();
@@ -107,24 +102,13 @@ public class WeekDayObject extends BaseObject {
 				.append("^")
 				.append(BaseObject.boolToFormatString(mDragable, 3))
 				.append("^")
-				.append("000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^")
+				.append("000^000^000^000^000^000")
+				.append("^00000000^00000000^00000000^0000^0000^")
 				.append(mFont)
 				.append("^000^000");
-				
+		
 		String str = builder.toString();
-//		String str="";
-//		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-//		str += mId+"^";
-//		str += BaseObject.floatToFormatString(getX()*2 * prop, 5)+"^";
-//		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
-//		str += BaseObject.floatToFormatString(getXEnd()*2 * prop, 5)+"^";
-//		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
-//		str += BaseObject.intToFormatString(0, 1)+"^";
-//		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-//		str += "000^000^000^000^000^00000000^00000000^00000000^00000000^0000^0000^0000^000^000";
-		Debug.d(TAG,"file string ["+str+"]");
+		Debug.d(TAG, "file string ["+str+"]");
 		return str;
 	}
-	
-	
 }

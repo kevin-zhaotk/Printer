@@ -253,6 +253,7 @@ public class RealtimeObject extends BaseObject {
 	{
 		super.setHeight(size);
 		size = getHeight();
+		Debug.d(TAG, "--->setHeight: " + size);
 		float x = getX();
 		isNeedRedraw = true;
 		if(mSubObjs == null)

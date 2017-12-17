@@ -689,6 +689,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					}.start();
 					break;
 				case MESSAGE_OPEN_MSG_SUCCESS:
+					
+					sendToRemote(mContext.getString(R.string.str_prepared));
 					mObjList = mMsgTask.getObjects();
 					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 					//String preview = parser.getContentAbatract();
@@ -780,6 +782,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
+					
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						break;
 					}
@@ -830,6 +833,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
 					 * 3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
 					 */
+					sendToRemote(mContext.getString(R.string.str_print_startok));
 					/*鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
@@ -862,6 +866,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mDTransThread = null;
 						initDTThread();
 					}
+					sendToRemote(mContext.getString(R.string.str_print_stopok));
 					/*鎵撳嵃浠诲姟鍋滄鍚庡厑璁稿垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_STOPPED);
 					
@@ -1515,6 +1520,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				ToastUtil.show(mContext, R.string.str_barcode_end);	
 			}
 		});
+		
+	}
+	
+	
+	private void sendToRemote(String msg) {
+		try {
+			PrintWriter pout = new PrintWriter(new BufferedWriter(  
+                     new OutputStreamWriter(Gsocket.getOutputStream())),true); 
+             pout.println(msg);
+		} catch (Exception e) {
+		}
 		
 	}
 	

@@ -28,6 +28,8 @@ import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
 import com.industry.printer.object.RTSecondObject;
 import com.industry.printer.object.ShiftObject;
+import com.industry.printer.object.WeekDayObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnNagitiveListener;
@@ -227,7 +229,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	    	 mPrinter.setOnClickListener(this);
 	     } else if (mObject instanceof LetterHourObject) {
 	    	this.setContentView(R.layout.obj_info_julian); 
-	     } else {
+	     } else if (mObject instanceof WeekOfYearObject
+	    		 || mObject instanceof WeekDayObject) {
+		   	this.setContentView(R.layout.obj_info_text); 
+		 }
+	     else {
 	    	 Debug.d(TAG, "--->obj: " + mObject.mIndex);
 	    	 this.setContentView(R.layout.obj_info_text);
 	     }
@@ -292,6 +298,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    	//mContent.setEnabled(false);
 			    mTextsize = (EditText) findViewById(R.id.et_text_size);
 			} else if (mObject instanceof LetterHourObject) {
+				mContent.setEnabled(false);
+			} else if (mObject instanceof WeekOfYearObject) {
 				mContent.setEnabled(false);
 			}
 		    
@@ -530,8 +538,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					mLineType.setText(lines[((EllipseObject)mObject).getLineType()]);
 				} else if (mObject instanceof GraphicObject) {
 					mPicture.setText(mObject.getContent());
-				} else if (mObject instanceof GraphicObject) {
-					mPicture.setText(mObject.getContent());
 				}
 			}
 	 }
@@ -547,7 +553,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				 mObject instanceof ShiftObject ||
 				 mObject instanceof EllipseObject ||
 				 mObject instanceof RectObject ||
-				 mObject instanceof LineObject)
+				 mObject instanceof LineObject ||
+				 mObject instanceof WeekOfYearObject ||
+				 mObject instanceof WeekDayObject )
 		{
 			Debug.d(TAG, ">>>>>disable content");
 			mContent.setEnabled(false);

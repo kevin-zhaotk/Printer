@@ -27,6 +27,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.usb.UsbManager;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -190,7 +191,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		//mTab.setCurrentTab(0);
 		
 		/** system config does not load from USB, so no need to listen the usb attachment state*/
-		// registerBroadcast();
+		registerBroadcast();
 		
 		//FpgaGpioOperation.updateSettings(this.getApplicationContext());
 		
@@ -411,6 +412,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public static final int REFRESH_TIME_DISPLAY = 1;
 	public static final int UPDATE_COUNTER = 2;
 	
+	public static final int NET_CONNECTED = 3;
+	public static final int NET_DISCONNECTED = 4;
+	
 	public Handler mHander = new Handler(){
 		
 		public void handleMessage(Message msg) {
@@ -439,6 +443,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				mSettingsTab.setParam(17, msg.arg1);
 				mSettingsTab.mSysconfig.saveConfig();
 				break;
+				
+			case NET_CONNECTED:
+				IP_address.setText(getLocalIpAddress());
+				break;
+			case NET_DISCONNECTED:
+				IP_address.setText("");
+				break;
+				
 			default:
 				break;
 			}
@@ -623,7 +635,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		try  {
-			
+			Debug.d(TAG, "--->msgExport");
 			if (usbs != null && usbs.size() > 0) {
 				// Messages
 				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
@@ -649,15 +661,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		filter.addDataScheme("file");
 		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
 		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
 		
+		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
+		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		
 		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
 		mContext.registerReceiver(mReceiver, filter);
 		
 	}
 	// locahost ip
-		public static String getLocalIpAddress() {  
+	public static String getLocalIpAddress() {  
 			String hostIp = null;  
 		    try {  
 		        Enumeration nis = NetworkInterface.getNetworkInterfaces();  
@@ -666,7 +679,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		            NetworkInterface ni = (NetworkInterface) nis.nextElement();  
 		            Enumeration<InetAddress> ias = ni.getInetAddresses();  
 		            while (ias.hasMoreElements()) {  
-		                ia = ias.nextElement();  
+		                ia = ias.nextElement(); 
+		                Debug.d(TAG, "--->ipAddr: " + ia.getHostAddress());
 		                if (ia instanceof Inet6Address) {  
 		                    continue;// skip ipv6  
 		                }  

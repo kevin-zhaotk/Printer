@@ -209,22 +209,49 @@ public class CounterObject extends BaseObject {
 	public String toString()
 	{
 		float prop = getProportion();
-		String str="";
+		StringBuilder builder = new StringBuilder(mId);
+		builder.append("^")
+				.append(BaseObject.floatToFormatString(getX()*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getY()*2 * prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getXEnd() * prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getYEnd()*2 * prop, 5))
+				.append("^")
+				.append(BaseObject.intToFormatString(0, 1))
+				.append("^")
+				.append(BaseObject.boolToFormatString(mDragable, 3))
+				.append("^")
+				.append(BaseObject.intToFormatString(mBits, 3))
+				.append("^")
+				.append("000^000^000^000^")
+				.append(BaseObject.intToFormatString(mMax, 8))
+				.append("^")
+				.append(BaseObject.intToFormatString(mMin, 8))
+				.append("^")
+				.append(BaseObject.intToFormatString(Integer.parseInt(mContent) , 8))
+				.append("^")
+				.append("00000000^0000^0000^")
+				.append(mFont)
+				.append("^000^000");
+				
+				
+		String str = builder.toString();
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd() * prop, 5)+"^";
-		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
-		str += BaseObject.intToFormatString(0, 1)+"^";
-		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-		str += BaseObject.intToFormatString(mBits, 3)+"^";
-		str += "000^000^000^000^";
-		str += BaseObject.intToFormatString(mMax, 8)+"^";
-		str += BaseObject.intToFormatString(mMin, 8)+"^";
-		str += BaseObject.intToFormatString(Integer.parseInt(mContent) , 8)+"^";
-		str += "00000000^0000^0000^" + mFont + "^000^000";
+//		str += mId+"^";
+//		str += BaseObject.floatToFormatString(getX()*prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getXEnd() * prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
+//		str += BaseObject.intToFormatString(0, 1)+"^";
+//		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//		str += BaseObject.intToFormatString(mBits, 3)+"^";
+//		str += "000^000^000^000^";
+//		str += BaseObject.intToFormatString(mMax, 8)+"^";
+//		str += BaseObject.intToFormatString(mMin, 8)+"^";
+//		str += BaseObject.intToFormatString(Integer.parseInt(mContent) , 8)+"^";
+//		str += "00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("counter string ["+str+"]");
 		return str;
 	}

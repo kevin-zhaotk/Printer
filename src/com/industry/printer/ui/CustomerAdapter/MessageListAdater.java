@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -325,6 +326,13 @@ public class MessageListAdater extends BaseAdapter {
 						iwidth=1500;
 					}
 					
+					WindowManager wManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+					int width = wManager.getDefaultDisplay().getWidth();
+					if (width >= bmp_disk.getWidth()) {
+						mSCroll[position] = 0;
+					} else if (mSCroll[position] + width > bmp_disk.getWidth()) {
+						mSCroll[position] = bmp_disk.getWidth() - width;
+					}
 					 mCan.drawBitmap(bmp_disk, new Rect(mSCroll[position], 0, iwidth+mSCroll[position], 100), new Rect(0, 0, iwidth, 100), null);
 					   Debug.e(TAG, "mSCroll mSCroll=2222=============="+mSCroll[position]);	
 					mPreviews.put(title, Bmp_bak);			 
@@ -415,6 +423,10 @@ public class MessageListAdater extends BaseAdapter {
 		
 		if(mSelected!=-1)
 		{
+			mSCroll[mSelected]+=left_rigt;
+			if (mSCroll[mSelected] < 0) {
+				mSCroll[mSelected] = 0;
+			}
 			/*
 			if(left_rigt==1)
 			{	
@@ -428,7 +440,7 @@ public class MessageListAdater extends BaseAdapter {
 			else
 			{
 			*/
-				mSCroll[mSelected]+=left_rigt;
+				
 		
 			// }
 		}

@@ -715,4 +715,7 @@
 	<string name="str_tip_nothing">~ There is no picture !!!</string>
 	<string name="str_no_permission">Permission denied for access the files</string>
 	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

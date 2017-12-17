@@ -35,6 +35,7 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.object.data.BitmapWriter;
 
 /**
@@ -662,10 +663,20 @@ public class MessageTask {
 			if (o instanceof MessageObject) {
 				continue;
 			}
-
-			if(o instanceof CounterObject)
+			t  = o.getpreviewbmp();
+			if (t == null) {
+				t = o.getScaledBitmap(mContext);
+				Debug.d(TAG, "++++++++++++++++++>bmp: " + t);
+				if (t== null) {
+					continue;
+				}
+			}
+			if (t == null) {
+				continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			/*if(o instanceof CounterObject)
 			{
-	//			o.setContent2(str_new_content)	 ;
 				t  = o.getpreviewbmp();
 				if (t== null) {
 				continue;
@@ -697,6 +708,20 @@ public class MessageTask {
 				}
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				
+			} else if (o instanceof WeekOfYearObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				
+			} else if (o instanceof WeekOfYearObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				
 			} else {//addbylk
 				t = o.getScaledBitmap(mContext);
 				Debug.d(TAG, "++++++++++++++++++>bmp: " + t);
@@ -704,7 +729,7 @@ public class MessageTask {
 					continue;
 				}
 				can.drawBitmap(t, o.getX(), o.getY(), p);
-			}
+			}*/
 //			if (t != null) {
 //				BinFromBitmap.recyleBitmap(t);
 //			}

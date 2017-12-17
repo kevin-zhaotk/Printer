@@ -63,12 +63,21 @@ public class MessageObject extends BaseObject {
 	
 	public String toString()
 	{
-		String str="";
-		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += "00000^00000^00000^00000^0^000^";
-		str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
-		str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+		StringBuilder builder = new StringBuilder(mId);
+		
+		builder.append("^")
+				.append("00000^00000^00000^00000^0^000^")
+				.append(BaseObject.intToFormatString(mType,3))
+				.append("^000^000^000^000^")
+				.append(BaseObject.intToFormatString(mDots*2, 7))
+				.append("^00000000^00000000^00000000^0000^0000^0000^000^")
+				.append(mContent);
+				
+		String str = builder.toString();		
+//		str += mId+"^";
+//		str += "00000^00000^00000^00000^0^000^";
+//		str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+//		str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
 		Debug.d(TAG, "file string ["+str+"]");
 		return str;
 	}

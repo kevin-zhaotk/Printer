@@ -33,6 +33,9 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 	public Button	mRect;
 	public Button	mEllipse;
 	public Button 	mHour;
+	public Button 	mWoy;
+	public Button 	mWday;
+	
 	public Message		mDismissMsg;
 	
 	public ObjectInsertDialog(Context context) {
@@ -80,6 +83,13 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		
 		mHour = (Button) findViewById(R.id.objinsert_hour);
 		mHour.setOnClickListener(this);
+		
+		mWoy = (Button) findViewById(R.id.objinsert_week_year);
+		mWoy.setOnClickListener(this);
+
+		mWday = (Button) findViewById(R.id.objinsert_week_day);
+		mWday.setOnClickListener(this);
+		
 	}
 
 	@Override
@@ -121,6 +131,15 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 			case R.id.objinsert_graphic:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_GRAPHIC);
 				mDismissMsg.setData(bundle);
+				break;
+			case R.id.objinsert_week_year:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_WEEKOFYEAR);
+				mDismissMsg.setData(bundle);
+				break;
+			case R.id.objinsert_week_day:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_WEEKDAY);
+				mDismissMsg.setData(bundle);
+				
 				break;
 /*
 			case R.id.objinsert_line:

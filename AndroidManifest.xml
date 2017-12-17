@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.industry.printer"
-    android:versionCode="70120610517"
-    android:versionName="70120610517"
+    android:versionCode="7012140517"
+    android:versionName="7012140517"
     >
 	
     <!-- 
@@ -26,6 +26,10 @@
 	<uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
 	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 	<uses-permission android:name="android.permission.INTERNET"/>
+	<!--允许读取网络状态-->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<!--允许读取wifi网络状态-->
+ 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <application
         android:allowBackup="true"
         android:name=".PrinterApplication"

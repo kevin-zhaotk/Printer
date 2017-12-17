@@ -304,6 +304,10 @@ public class TLKFileParser  extends TlkFile{
 		} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(attr[1])) {
 			obj = new LetterHourObject(mContext, 0);
 			
+		} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(attr[1])) {
+			obj = new WeekOfYearObject(mContext);
+		} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(attr[1])) {
+			obj = new WeekDayObject(mContext);
 		} else
 		{
 			Debug.d(TAG, "Unknown object type: "+attr[1]);
@@ -320,7 +324,9 @@ public class TLKFileParser  extends TlkFile{
 			obj.setIndex(Integer.parseInt(attr[0]));
 			if((obj instanceof CounterObject)||
 					obj instanceof JulianDayObject ||
-					obj instanceof ShiftObject)
+					obj instanceof ShiftObject ||
+					obj instanceof WeekOfYearObject ||
+					obj instanceof WeekDayObject)
 			{
 				obj.setX(StringUtil.parseInt(attr[2])/mProportion);
 				obj.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);

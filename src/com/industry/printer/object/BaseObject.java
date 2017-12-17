@@ -2,6 +2,7 @@ package com.industry.printer.object;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Wrapper;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -72,6 +73,8 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_WEEKS	="035";
 	public static final String OBJECT_TYPE_RT_SECOND="036";
 	public static final String OBJECT_TYPE_LETTERHOUR ="037";
+	
+	public static final String OBJECT_TYPE_WEEKOFYEAR = "41";
 	
 	
 	public Context mContext;
@@ -242,6 +245,7 @@ public class BaseObject{
 	
 	private Bitmap draw() {
 		Bitmap bitmap;
+		Paint paint = new Paint();
 		mPaint.setTextSize(152); // (getfeed());
 		mPaint.setAntiAlias(true); //去除锯齿  
 		mPaint.setFilterBitmap(true); //对位图进行滤波处理
@@ -271,14 +275,26 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}
 		try {
+			paint.setTextSize(mHeight);
+			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
-			setWidth(width);
+		int rWidth = (int)paint.measureText(getContent());
+		if (width <= 0) {
+			width = 10;
 		}
+		if (rWidth <= 0) {
+			rWidth = 10;
+		}
+		
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width + "  rWidth = " + rWidth);
+		if (mWidth == 0) {
+			setWidth(rWidth);
+		}
+		
+		
 		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
@@ -560,9 +576,9 @@ public class BaseObject{
 			return;
 		}
 		float width = mPaint.measureText(s);
-		if (getHeight() <= 4 * MessageObject.PIXELS_PER_MM) {
-			width = width * 1.25f;
-		}
+//		if (getHeight() <= 4 * MessageObject.PIXELS_PER_MM) {
+//			width = width * 1.25f;
+//		}
 		setWidth(width);
 	}
 	
@@ -844,11 +860,12 @@ public class BaseObject{
 	protected void meature() {
 		int width = (int) mPaint.measureText(getContent());
 		
-		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
-			mWidth = width * 1.25f;
-		} else {
-			mWidth = width;
-		}
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			mWidth = width * 1.25f;
+//		} else {
+//			mWidth = width;
+//		}
+		mWidth = width;
 		Debug.d(TAG, "meature mHeight = " + mHeight + "  mWidth = " + mWidth);
 	}
 	//////addbylk 		 
@@ -857,6 +874,6 @@ public class BaseObject{
 		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
 	}
 	public int getfeed() {
-		return (int)(mHeight/10 * 11);
+		return (int)mHeight;
 	}
 }

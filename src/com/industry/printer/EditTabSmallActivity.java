@@ -39,6 +39,8 @@ import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.object.WeekDayObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
@@ -554,6 +556,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						onInsertObject(image);
 					} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
 						LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
+						lh.setY(cur[1]);
+						onInsertObject(lh);
+					} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(type)) {
+						WeekOfYearObject lh = new WeekOfYearObject(mContext, cur[0]);
+						lh.setY(cur[1]);
+						onInsertObject(lh);
+					} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(type)) {
+						WeekDayObject lh = new WeekDayObject(mContext, cur[0]);
 						lh.setY(cur[1]);
 						onInsertObject(lh);
 					}

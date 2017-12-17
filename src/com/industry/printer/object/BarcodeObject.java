@@ -672,39 +672,90 @@ public class BarcodeObject extends BaseObject {
 	{
 		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
 		float prop = dots/Configs.gDots;
-		String str="";
-		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+		
+		StringBuilder builder = new StringBuilder(mId);
 		if (BaseObject.OBJECT_TYPE_QR.equalsIgnoreCase(mId)) {
-			str += mId+"^";
-			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
-			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
-			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
-			//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
-			str += BaseObject.intToFormatString(0, 1)+"^";
-			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-			str += "000^000^000^000^000^";
-			str += BaseObject.boolToFormatString(mSource, 8) + "^";
-			str += "00000000^00000000^00000000^00000000^00000000^00000000^00000000" + "^";
-			str += mContent;
+			builder.append("^")
+				.append(BaseObject.floatToFormatString(getX()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getY()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getXEnd()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getYEnd()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.intToFormatString(0, 1))
+				.append("^")
+				.append(BaseObject.boolToFormatString(mDragable, 3))
+				.append("^")
+				.append("000^000^000^000^000^")
+				.append(BaseObject.boolToFormatString(mSource, 8))
+				.append("^")
+				.append("00000000^00000000^00000000^00000000^00000000^00000000^00000000^")
+				.append(mContent);
 		} else {
-			str += mId+"^";
-			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
-			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
-			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
-			//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
-			str += BaseObject.intToFormatString(0, 1)+"^";
-			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-			str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
-			str += mCode +"^";
-			str += "000^";
-			str += BaseObject.boolToFormatString(mShow, 3)+"^";
-			str += mContent+"^";
-			str += BaseObject.boolToFormatString(mSource, 8) + "^";
-			str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
-			str += BaseObject.intToFormatString(mTextSize, 3);
+			builder.append("^")
+			.append(BaseObject.floatToFormatString(getX()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getY()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getXEnd()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getYEnd()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.intToFormatString(0, 1))
+			.append("^")
+			.append(BaseObject.boolToFormatString(mDragable, 3))
+			.append("^")
+			.append(BaseObject.floatToFormatString(mContent.length(), 3))
+			.append("^")
+			.append(mCode)
+			.append("^")
+			.append("000^")
+			.append(BaseObject.boolToFormatString(mShow, 3))
+			.append("^")
+			.append(BaseObject.boolToFormatString(mShow, 3))
+			.append("^")
+			
+			.append(mContent)
+			.append("^")
+			.append("00000000^00000000^00000000^0000^0000^")
+			.append(mFont)
+			.append("^000^")
+			.append(BaseObject.intToFormatString(mTextSize, 3));
 		}
+		
+		String str = builder.toString();
+		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+//		if (BaseObject.OBJECT_TYPE_QR.equalsIgnoreCase(mId)) {
+//			str += mId+"^";
+//			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+//			str += BaseObject.intToFormatString(0, 1)+"^";
+//			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//			str += "000^000^000^000^000^";
+//			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+//			str += "00000000^00000000^00000000^00000000^00000000^00000000^00000000" + "^";
+//			str += mContent;
+//		} else {
+//			str += mId+"^";
+//			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+//			str += BaseObject.intToFormatString(0, 1)+"^";
+//			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//			str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
+//			str += mCode +"^";
+//			str += "000^";
+//			str += BaseObject.boolToFormatString(mShow, 3)+"^";
+//			str += mContent+"^";
+//			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+//			str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
+//			str += BaseObject.intToFormatString(mTextSize, 3);
+//		}
 		System.out.println("file string ["+str+"]");
 		return str;
 	}
