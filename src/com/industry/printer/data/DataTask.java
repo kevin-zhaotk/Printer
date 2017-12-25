@@ -40,6 +40,8 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RealtimeYear;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
+import com.industry.printer.object.WeekDayObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.object.data.SegmentBuffer;
 
 
@@ -305,6 +307,24 @@ public class DataTask {
 				String t = ((LetterHourObject) o).getContent();
 				var = varbin.getVarBuffer(t);
 				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
+			} else if (o instanceof WeekOfYearObject) {
+				BinInfo varbin= mVarBinList.get(o);
+				if (varbin == null) {
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+					mVarBinList.put(o, varbin);
+				}
+				String t = ((WeekOfYearObject) o).getContent();
+				var = varbin.getVarBuffer(t);
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
+			}  else if (o instanceof WeekDayObject) {
+				BinInfo varbin= mVarBinList.get(o);
+				if (varbin == null) {
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask.getHeads());
+					mVarBinList.put(o, varbin);
+				}
+				String t = ((WeekDayObject) o).getContent();
+				var = varbin.getVarBuffer(t);
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), varbin.getCharsFeed());
 			} else
 			{
 				Debug.d(TAG, "not Variable object");
@@ -339,6 +359,8 @@ public class DataTask {
 					|| (o instanceof JulianDayObject)
 					|| (o instanceof ShiftObject)
 					|| (o instanceof LetterHourObject)
+					|| (o instanceof WeekOfYearObject)
+					|| (o instanceof WeekDayObject)
 					|| o.getSource())
 			{
 				return true;

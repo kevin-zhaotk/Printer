@@ -16,14 +16,17 @@ LOCAL_JNI_SHARED_LIBRARIES := libHardware_jni
 #LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_MODULE_TAGS := optional
-LOCAL_STATIC_JAVA_LIBRARIES := zxingcore corelib
+LOCAL_STATIC_JAVA_LIBRARIES := zxingcore corelib rxjava rxandroid
 
 include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
 
 LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := zxingcore:libs/zxingcore.jar \
-		corelib:libs/corelibrary.jar
+		corelib:libs/corelibrary.jar \
+		rxjava:libs/rxjava-1.3.4.jar \
+		rxandroid:libs/rxAndroid-1.1.0.jar
+		
 
 include $(BUILD_MULTI_PREBUILT)
 

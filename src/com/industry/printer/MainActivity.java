@@ -13,8 +13,18 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -58,12 +68,10 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.SystemPropertiesProxy;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
-import com.industry.printer.ui.ExtendMessageTitleFragment;
-//import com.android.internal.app.LocalePicker;
-//import android.app.TabActivity;
 import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
 import com.industry.printer.ui.CustomerDialog.DialogListener;
 import com.industry.printer.ui.CustomerDialog.ImportDialog;
@@ -582,50 +590,170 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	 */
 	private void msgImportOnly() {
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
-		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		try {
-			// Messages
-			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
-			// pictutes
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
-			// system
-				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
-			}
-			QRReader reader = QRReader.getInstance(MainActivity.this);
-			reader.reInstance(MainActivity.this);
-		} catch (Exception e) {
-			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
-		}
-		mProgressDialog.dismiss();
+		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
+
+		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.SYSTEM_CONFIG_DIR)
+				.flatMap(new Func1<String, Observable<Map<String, String>>>() {
+
+					@Override
+					public Observable<Map<String, String>> call(String arg0) {
+						// TODO Auto-generated method stub
+						Map<String, String> src = new HashMap<String, String>();
+						if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
+							src.put("source",usbs.get(0) + arg0);
+							src.put("dest", Configs.TLK_PATH_FLASH);
+						} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
+							src.put("source",usbs.get(0) + arg0);
+							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+						} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
+							src.put("source",usbs.get(0) + arg0);
+							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+						}
+						Debug.d(TAG, "--->flatMap");
+						return Observable.just(src);
+					}
+				})
+				.map(new Func1<Map<String, String>, Observable<Void>>() {
+
+					@Override
+					public Observable<Void> call(Map<String, String> arg0) {
+						try {
+						FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+						Debug.d(TAG, "--->map");
+						return null;
+					}
+					
+				})
+				.subscribeOn(Schedulers.io())
+				//.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Action1<Observable<Void>>() {
+					@Override
+					public void call(Observable<Void> arg0) {
+						
+					}
+				}, 
+				new Action1<Throwable>() {
+					@Override
+					public void call(Throwable arg0) {
+						
+					}
+				}, 
+				new Action0() {
+					
+					@Override
+					public void call() {
+						Debug.d(TAG, "--->complete");
+						mProgressDialog.dismiss();
+						//ToastUtil.show(mContext, "finished!!!");
+					}
+				});
+								
+				
+//		try {
+//			// Messages
+//			if (usbs != null && usbs.size() > 0) {
+//				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+//			// pictutes
+//				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+//			// system
+//				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+//			}
+//			QRReader reader = QRReader.getInstance(MainActivity.this);
+//			reader.reInstance(MainActivity.this);
+//		} catch (Exception e) {
+//			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+//		}
+//		mProgressDialog.dismiss();
+//		ToastUtil.show(mContext, "finished!!!");
 	}
 	/**
 	 * import from USB to flash
 	 */
 	private void msgImport() {
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
-		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		
+		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.SYSTEM_CONFIG_DIR)
+		.flatMap(new Func1<String, Observable<Map<String, String>>>() {
+
+			@Override
+			public Observable<Map<String, String>> call(String arg0) {
+				// TODO Auto-generated method stub
+				Map<String, String> src = new HashMap<String, String>();
+				if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
+					src.put("source",usbs.get(0) + arg0);
+					src.put("dest", Configs.TLK_PATH_FLASH);
+				} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
+					src.put("source",usbs.get(0) + arg0);
+					src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+				} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
+					src.put("source",usbs.get(0) + arg0);
+					src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+				}
+				Debug.d(TAG, "--->flatMap");
+				return Observable.just(src);
+			}
+		})
+		.map(new Func1<Map<String, String>, Observable<Void>>() {
+
+			@Override
+			public Observable<Void> call(Map<String, String> arg0) {
+				try {
+				FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Debug.d(TAG, "--->map");
+				return null;
+			}
+			
+		})
+		.subscribeOn(Schedulers.io())
+		//.observeOn(AndroidSchedulers.mainThread())
+		.subscribe(new Action1<Observable<Void>>() {
+			@Override
+			public void call(Observable<Void> arg0) {
+				
+			}
+		}, 
+		new Action1<Throwable>() {
+			@Override
+			public void call(Throwable arg0) {
+				
+			}
+		}, 
+		new Action0() {
+			
+			@Override
+			public void call() {
+				Debug.d(TAG, "--->complete");
+				mProgressDialog.dismiss();
+				// ToastUtil.show(mContext, "finished!!!");
+			}
+		});
+//		try {
+//			// Messages
+//			if (usbs != null && usbs.size() > 0) {
+//				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+//			}
+//			// system
+//			if (usbs != null && usbs.size() > 0) {
+//				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+//			}
+//			// pictutes
+//			if (usbs != null && usbs.size() > 0) {
+//				FileUtil.copyClean(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+//			}
+//			QRReader reader = QRReader.getInstance(MainActivity.this);
+//			reader.reInstance(MainActivity.this);
+//		} catch (Exception e) {
+//			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+//		}
+//		mProgressDialog.dismiss();
 		
-		try {
-			// Messages
-			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
-			}
-			// system
-			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
-			}
-			// pictutes
-			if (usbs != null && usbs.size() > 0) {
-				FileUtil.copyClean(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
-			}
-			QRReader reader = QRReader.getInstance(MainActivity.this);
-			reader.reInstance(MainActivity.this);
-		} catch (Exception e) {
-			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
-		}
-		mProgressDialog.dismiss();
 	}
 	
 	/**
@@ -633,23 +761,83 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	 */
 	private void msgExport() {
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
-		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-		try  {
-			Debug.d(TAG, "--->msgExport");
-			if (usbs != null && usbs.size() > 0) {
-				// Messages
-				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
-				// system
-				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
-				// pictutes
-				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH, usbs.get(0)  + Configs.PICTURE_SUB_PATH);
-				// print.bin
-				FileUtil.copyFile("/mnt/sdcard/print.bin", usbs.get(0) + "/print.bin");
+		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		
+		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.SYSTEM_CONFIG_DIR)
+		.flatMap(new Func1<String, Observable<Map<String, String>>>() {
+
+			@Override
+			public Observable<Map<String, String>> call(String arg0) {
+				// TODO Auto-generated method stub
+				Map<String, String> src = new HashMap<String, String>();
+				if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
+					src.put("source",Configs.TLK_PATH_FLASH);
+					src.put("dest", usbs.get(0) + arg0);
+				} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
+					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+					src.put("dest", usbs.get(0) + arg0);
+				} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
+					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+					src.put("dest", usbs.get(0) + arg0);
+				}
+				Debug.d(TAG, "--->flatMap");
+				return Observable.just(src);
 			}
-		} catch (Exception e) {
-			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
-		}
-		mProgressDialog.dismiss();
+		})
+		.map(new Func1<Map<String, String>, Observable<Void>>() {
+
+			@Override
+			public Observable<Void> call(Map<String, String> arg0) {
+				try {
+				FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				Debug.d(TAG, "--->map");
+				return null;
+			}
+			
+		})
+		.subscribeOn(Schedulers.io())
+		//.observeOn(AndroidSchedulers.mainThread())
+		.subscribe(new Action1<Observable<Void>>() {
+			@Override
+			public void call(Observable<Void> arg0) {
+				
+			}
+		}, 
+		new Action1<Throwable>() {
+			@Override
+			public void call(Throwable arg0) {
+				
+			}
+		}, 
+		new Action0() {
+			
+			@Override
+			public void call() {
+				Debug.d(TAG, "--->complete");
+				mProgressDialog.dismiss();
+//				ToastUtil.show(mContext, "finished!!!");
+			}
+		});
+//		try  {
+//			Debug.d(TAG, "--->msgExport");
+//			if (usbs != null && usbs.size() > 0) {
+//				// Messages
+//				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
+//				// system
+//				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
+//				// pictutes
+//				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH, usbs.get(0)  + Configs.PICTURE_SUB_PATH);
+//				// print.bin
+//				FileUtil.copyFile("/mnt/sdcard/print.bin", usbs.get(0) + "/print.bin");
+//			}
+//		} catch (Exception e) {
+//			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
+//		}
+//		mProgressDialog.dismiss();
+//		ToastUtil.show(mContext, "finished!!!");
 	}
 	
 	private void registerBroadcast() {

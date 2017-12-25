@@ -115,6 +115,8 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 				convertView = mInflater.inflate(R.layout.font_item_layout, null);
 				mHolder = new Holder();
 				mHolder.mText = (TextView) convertView.findViewById(R.id.font);
+				mHolder.mExtra = (TextView) convertView.findViewById(R.id.fontTips);
+				mHolder.mExtra.setVisibility(View.GONE);
 			}
 			
 			mHolder.mText.setText(mFonts[position]);
@@ -133,6 +135,7 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 	
 	public class Holder {
 		public TextView mText;
+		public TextView mExtra;
 	}
 
 	@Override

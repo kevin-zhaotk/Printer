@@ -102,7 +102,7 @@
 	    <item>7dot</item>
 	    <item>16dot</item>
 	    <item>--</item>
-	    <item>25.4mm fast</item>
+	    <item>25.4mm fast ONE INCH</item>
 	    <item>--</item>
 	    <item>25.4mm x2 fast</item>
 	</string-array>
@@ -246,6 +246,8 @@
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">Shift</string>
 	<string name="object_second">Second</string>
+	<string name="object_weekofyear">WeekOfYear</string>
+	<string name="object_weekday">WeekDay</string>
 	<string name="object_charHour">AlphaHour</string>
 	<string name="object_msg_name">Subject</string>
 	<string name="object_qr">QRCode</string>
@@ -758,4 +760,6 @@
 	
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	<string name="str_build_tlk_ok">build TLK success</string>
+	<string name="str_build_tlk_fail">build TLK failed</string>
 </resources>

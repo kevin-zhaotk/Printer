@@ -1778,7 +1778,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                    			message.save();*/
 		                            	//文字生成赵工写好了，再测试
 		                            	MakeTlk(msg);
-		                    			this.sendmsg(msg+"recv success!");
+		                    			this.sendmsg(getString(R.string.str_build_tlk_ok));
 		                            }
 		                            else if(msg.indexOf("800")>=0)
 		                            {

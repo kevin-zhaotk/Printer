@@ -400,13 +400,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	public void deleteSelected() {
-		BaseObject object = getCurObj();
-		if (object == null || object instanceof MessageObject) {
-			return;
-		}
-		Debug.d(TAG, "--->delete: " + object.getId());
-//		mMsgTask.removeObject(object);
-		mMsgManager.remove(object);
+		onDelete();
 	}
 
 	/**
@@ -640,6 +634,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	public boolean isPropertyChanged()
 	{
+		Debug.d(TAG, "--->changed : " + mPropertyChanged);
 		return mPropertyChanged;
 	}
 

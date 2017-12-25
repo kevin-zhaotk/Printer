@@ -255,11 +255,12 @@ public class BarcodeObject extends BaseObject {
 	private Bitmap draw(String content, int w, int h) {
 		BitMatrix matrix=null;
 		int margin = 0;
-		if (h <= mTextSize) {
-			h = mTextSize + 10;
-		}
+//		if (h <= mTextSize) {
+//			h = mTextSize + 10;
+//		}
+		int textH = (h * mTextSize) / 100;
 		Paint paint = new Paint();
-		Debug.d("BarcodeObject", "--->draw w : " + w + "  h: " + h);
+		Debug.d("BarcodeObject", "--->draw w : " + w + "  h: " + h + "  textH = " + textH);
 		try {
 			MultiFormatWriter writer = new MultiFormatWriter();
 			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
@@ -272,21 +273,21 @@ public class BarcodeObject extends BaseObject {
 			if ("EAN13".equals(mFormat)) {
 				content = checkSum();
 				matrix = writer.encode(content,
-				        format, w, h - mTextSize - 5, null);
+				        format, w, h - textH - 5, null);
 				
 			} else if ("EAN8".equals(mFormat)) {
 				content = checkLen(8);
 				matrix = writer.encode(content,
-				        format, w, h- mTextSize- 5, null);
+				        format, w, h- textH- 5, null);
             
 			} else if ("ITF_14".equals(mFormat)) {
 				content = checkLen(14);
 				matrix = writer.encode(content,
-				        format, w, h- mTextSize- 5, null);
+				        format, w, h- textH- 5, null);
             
 			} else {
 				matrix = writer.encode(content,
-				        format, w, h - mTextSize- 5, null);
+				        format, w, h - textH- 5, null);
 			}
             
 			int tl[] = matrix.getTopLeftOnBit();
@@ -323,7 +324,7 @@ public class BarcodeObject extends BaseObject {
 			{
 				// 用於生成bin的bitmap
 				Bitmap bmp = Bitmap.createBitmap(width, h, Config.ARGB_8888);
-				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, mTextSize + 5);
+				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, textH + 5);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
 				//BinCreater.saveBitmap(code, "barcode.png");
 				Canvas can = new Canvas(bmp);

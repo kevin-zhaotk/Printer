@@ -1,7 +1,9 @@
 package com.industry.printer.ui;
 
 import android.R.integer;
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.opengl.Visibility;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ImageView.ScaleType;
 
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
@@ -63,6 +66,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         if (task == null) {
             return;
         }
+        removeAll();
         mTask = task;
         for (BaseObject object : mTask.getObjects()) {
             add(object);
@@ -161,7 +165,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
         ImageView image = new ImageView(mContext);
         
         image.setScaleType(ImageView.ScaleType.FIT_XY);
-        image.setImageBitmap(object.getScaledBitmap(mContext));
+        Bitmap bmp = object.getScaledBitmap(mContext);
+        
+        image.setImageBitmap(bmp);
 
 //        if (object.getSelected()) {
 //        	image.setBackgroundResource(R.drawable.msg_bg_selected);
@@ -170,7 +176,12 @@ public class MessageDisplayManager implements View.OnTouchListener {
 //            image.setBackgroundResource(R.drawable.msg_bg_unselected);
 //        }
         /** width&height must be reseted after object bitmap drawed success */
-        lp.width = (int)object.getWidth();
+        if (object.getWidth() >= 4096) {
+        	lp.width = 4096;
+		} else {
+			lp.width = (int)object.getWidth();
+		}
+        
         lp.height = (int)object.getHeight();
         mContainer.addView(image, 0,lp);
         mImageMap.put(object, image);

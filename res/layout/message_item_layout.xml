@@ -25,14 +25,19 @@
 -->
  
 
-	    <LinearLayout
+	    <HorizontalScrollView
+	        android:layout_width="match_parent"
+	        android:layout_height="100dp"
+	        >
+	        
+	        <LinearLayout
 	        android:id="@+id/ll_preview"	        
 	        android:layout_width="match_parent"
 	        android:layout_height="100dp"
 	        android:orientation="horizontal"
-	        android:background="#ffffff">
+	        android:background="#ffffff"/>
 	        
-	    </LinearLayout>
+	    </HorizontalScrollView>
 	    
 		<!-- <ImageView 
 		    android:id="@+id/message_image"

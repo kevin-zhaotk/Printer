@@ -85,13 +85,19 @@
 	<string name="strInsertSerial">Verbinden mit PC...</string>
 	<string name="strReinsertSerial">Fehler, Verbindeung mit PC herstellen</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP head</item>
-	    <item>12.7 mm HP standard</item>
+	    <item>12.7 mm HP fast</item>
+	    <item>--</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>7dot</item>
+	    <item>16dot</item>
+	    <item>--</item>
+	    <item>25.4mm fast ONE INCH</item>
+	    <item>--</item>
+	    <item>25.4mm x2 fast</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
@@ -185,6 +191,8 @@
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">AaBb</string>
 	<string name="object_second">Nächste</string>
+	<string name="object_weekofyear">WeekOfYear</string>
+	<string name="object_weekday">WeekDay</string>
 	<string name="object_msg_name">Subject</string>
 	<string name="object_qr">QRCode</string>
 	<string name="object_dynamic_qr">DynamicQR</string>

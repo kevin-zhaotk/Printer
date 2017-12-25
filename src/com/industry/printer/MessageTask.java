@@ -35,6 +35,7 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.object.WeekDayObject;
 import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.object.data.BitmapWriter;
 
@@ -256,7 +257,9 @@ public class MessageTask {
 		
 		for (BaseObject object : mObjects) {
 			if((object instanceof CounterObject) || (object instanceof RealtimeObject) ||
-					(object instanceof JulianDayObject) || (object instanceof ShiftObject))
+					(object instanceof JulianDayObject) || (object instanceof ShiftObject)
+					|| (object instanceof WeekOfYearObject)
+					|| (object instanceof WeekDayObject))
 			{
 				if(PlatformInfo.isBufferFromDotMatrix()==1) {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
@@ -447,7 +450,9 @@ public class MessageTask {
 					|| (o instanceof JulianDayObject)
 					|| (o instanceof BarcodeObject && o.getSource())
 					|| (o instanceof ShiftObject)
-					|| (o instanceof LetterHourObject))
+					|| (o instanceof LetterHourObject)
+					|| (o instanceof WeekOfYearObject)
+					|| (o instanceof WeekDayObject))
 			{
 				// o.drawVarBitmap();
 			}

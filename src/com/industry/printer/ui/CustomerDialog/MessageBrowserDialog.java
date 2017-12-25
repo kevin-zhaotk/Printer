@@ -331,11 +331,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				curY=arg1.getY();
 				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
 				{
-					mFileAdapter.Scroll( (int)( mdownx-curX ) );
-					mFileAdapter.notifyDataSetChanged();
+					//mFileAdapter.Scroll( (int)( mdownx-curX ) );
+					//mFileAdapter.notifyDataSetChanged();
 				}
 				mdownx = curX;
-				break;
+				return false;
+				//break;
 			case MotionEvent.ACTION_UP:
 				Debug.e(TAG, "------ACTION_UP"+ arg1.getX());					
 				curX=arg1.getX();

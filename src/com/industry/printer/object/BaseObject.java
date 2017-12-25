@@ -184,9 +184,15 @@ public class BaseObject{
 			mName = mContext.getString(R.string.object_second);
 		else if (this instanceof LetterHourObject)
 			mName = mContext.getString(R.string.object_charHour);
+		else if (this instanceof WeekOfYearObject) {
+			mName = mContext.getString(R.string.object_weekofyear);
+		} else if (this instanceof WeekDayObject) {
+			mName = mContext.getString(R.string.object_weekday);
+		}
 		else {
 			mName = "unKnown";
 		}
+		Debug.d(TAG, "--->mName: " + mName);
 	}
 	
 	public String getTitle() {

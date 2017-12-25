@@ -24,10 +24,7 @@ public class WeekDayObject extends BaseObject {
 	}
 
 	public WeekDayObject(Context context) {
-		super(context, OBJECT_TYPE_WEEKDAY);
-		Calendar c = Calendar.getInstance();
-		int dat = c.get(Calendar.DAY_OF_WEEK);
-		setContent(String.valueOf(dat));
+		this(context, 0);
 	}
 	
 	@Override
@@ -42,6 +39,7 @@ public class WeekDayObject extends BaseObject {
 		mContent = String.valueOf(dat);
 		return mContent;
 	}
+	
 	
 	@Override	 
 	public Bitmap getpreviewbmp()
