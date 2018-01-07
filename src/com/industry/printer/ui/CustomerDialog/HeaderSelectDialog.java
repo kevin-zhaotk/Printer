@@ -32,11 +32,13 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 	private TextView mCancel;
 	
 	private Handler mHandler;
+	private int mSelected;
 	
-	public HeaderSelectDialog(Context context, Handler handler) {
+	public HeaderSelectDialog(Context context, Handler handler, int current) {
 		super(context, R.style.Dialog_Fullscreen);
 		mContext = context;
 		mHandler = handler;
+		mSelected = current;
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 	    mCancel.setOnClickListener(this);
 	    
 	    mFontlist = (GridView) findViewById(R.id.sizelist);
-	    mAdapter = new FontItemAdapter();
+	    mAdapter = new FontItemAdapter(mSelected);
 	    
 	    
 	    mFontlist.setAdapter(mAdapter);
@@ -69,8 +71,9 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 		private String[] mFonts; // = new String[MessageObject.mBaseList.length];
 		
 		
-		public FontItemAdapter() {
+		public FontItemAdapter(int pos) {
 			mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			position = pos;
 			init();
 		}
 		

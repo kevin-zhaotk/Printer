@@ -473,7 +473,7 @@
 	<string name="str_hint_preview">message preview</string>
 	<string name="str_print_count">Records: </string>
 	<string name="str_print_count_default">0</string>
-	<string name="str_print_printing">Print Task Running already...</string>
+	<string name="str_print_printing">Print Task Running already, no new task create</string>
 	<string name="str_print_startok">start print task success...</string>
 	<string name="str_print_stopok">stop print task success...</string>
 	<string name="str_toast_no_bin">No bin file found !!!</string>
@@ -756,10 +756,16 @@
 	<string name="str_tip_nothing">~ There is no picture !!!</string>
 	<string name="str_no_permission">Permission denied for access the files</string>
 	
+	<string name="str_message_tips">Message %s already exist, overwrite it?</string>
+	
 	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
 	
+	<string name="str_build_tlk_start">start building tlk... </string>
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
 	<string name="str_build_tlk_ok">build TLK success</string>
 	<string name="str_build_tlk_fail">build TLK failed</string>
+	
+	<string name="str_tlk_opening">tlk parsing...</string>
+	<string name="str_print_thread_create_err">print thread creation failed...</string>
 </resources>

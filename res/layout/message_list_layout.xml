@@ -138,6 +138,7 @@
 	    android:layout_height="fill_parent"
 	    android:layout_above="@id/message_list_btns"
 	    android:background="#ffffff"
+	    android:descendantFocusability= "blocksDescendants"
 	    />
 	
 	    

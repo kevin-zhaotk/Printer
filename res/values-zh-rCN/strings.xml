@@ -754,6 +754,7 @@
 	<string name="str_no_permission">权限不足</string>
 	<string name="str_flush_tips">将会覆盖原有系统设置信息，确定?</string>
 	
+	<string name="str_message_tips">信息%s已经存在，是否覆盖?</string>
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

@@ -92,6 +92,11 @@ public class RFIDManager implements RfidCallback{
 					mCallback.sendEmptyMessageDelayed(MSG_RFID_CHECK_SUCCESS, 100);
 					break;
 				}
+				if (mCurrent >= mRfidDevices.size()) {
+					Debug.d(TAG, "--->rfid check failure");
+					mCallback.sendEmptyMessageDelayed(MSG_RFID_CHECK_FAIL, 100);
+					break;
+				}
 				mDevice = mRfidDevices.get(mCurrent);
 				mDevice.addLisetener(RFIDManager.this);
 				
@@ -136,8 +141,10 @@ public class RFIDManager implements RfidCallback{
 		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
 		if (configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0) {
 			TOTAL_RFID_DEVICES = configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS);
+			Debug.d(TAG, "--->heads: " + TOTAL_RFID_DEVICES);
 		} else {
 			TOTAL_RFID_DEVICES = configFile.getHeads();
+			Debug.d(TAG, "--->heads: " + TOTAL_RFID_DEVICES);
 		}
 	}
 	

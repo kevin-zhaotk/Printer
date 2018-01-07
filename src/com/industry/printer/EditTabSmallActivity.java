@@ -1,5 +1,6 @@
 package com.industry.printer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Fragment;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.renderscript.BaseObj;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +26,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.object.BarcodeObject;
@@ -43,8 +47,10 @@ import com.industry.printer.object.WeekDayObject;
 import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.DialogListener;
 import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
@@ -323,7 +329,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 					mMsgTask.addObject(obj);
 					break;
 				case OBJECT_REMOVE:
-
 					mMsgManager.remove(obj);
 					break;
 				case OBJECT_UPDATE:
@@ -400,7 +405,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	public void deleteSelected() {
-		onDelete();
+		BaseObject obj = getCurObj();
+		onDelete(obj);
 	}
 
 	/**
@@ -443,6 +449,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 */
 	public static final int HANDLER_MESSAGE_SAVE_SUCCESS = 10;
 	
+	public static final int HANDLER_MESSAGE_SAVE_CONFIRM = 7;
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -476,6 +484,26 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		createfile=true;
             	case HANDLER_MESSAGE_SAVE:    //save
             		Debug.d(TAG, "--->save");
+            		if (checkMsg(mObjName)) {
+            			ConfirmDialog dialog = new ConfirmDialog(mContext, String.format(getString(R.string.str_message_tips), mObjName));
+            			dialog.setListener(new DialogListener (){
+            				@Override
+            				public void onConfirm() {
+            					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
+            					
+            				}
+            				@Override
+            				public void onCancel() {
+            					mObjName = "";
+            				}
+            			});
+            			dialog.show();
+            		} else {
+            			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
+            			
+            		}
+            		break;
+            	case HANDLER_MESSAGE_SAVE_CONFIRM:
             		progressDialog();
             		if (mObjName == null || mMsgTask == null) {
             			Debug.e(TAG, "--->nothing to save");
@@ -567,6 +595,14 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             super.handleMessage(msg);   
        } 
 	};
+	
+	private boolean checkMsg(String message) {
+		File dir = new File(ConfigPath.getTlkDir(message));
+		if (dir.exists()) {
+			return true;
+		}
+		return false;
+	}
 	
 	int getTouchedObj(float x, float y)
 	{
@@ -747,7 +783,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private void onSave() {
 		if(!isPropertyChanged())
 			return;
-		if(mObjName != null)
+		if(!TextUtils.isEmpty(mObjName))
 		{
 			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
 			return;
@@ -813,8 +849,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		objDialog.setOnDeleteListener(new onDeleteListener() {
 
 			@Override
-			public void onClick() {
-				onDelete();
+			public void onClick(BaseObject obj) {
+				onDelete(obj);
 			}
 		});
 		objDialog.show();
@@ -835,16 +871,17 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		objDialog.setOnDeleteListener(new onDeleteListener() {
 			
 			@Override
-			public void onClick() {
-				onDelete();
+			public void onClick(BaseObject object) {
+				onDelete(object);
 			}
 		});
 		objDialog.show();
 	}
 	
-	private void onDelete() {
+	private void onDelete(BaseObject obj) {
 		// TODO Auto-generated method stub
-		BaseObject obj = getCurObj();
+		// BaseObject obj = getCurObj();
+		Debug.d(TAG, "--->onDelete: " + obj.getId());
 		if(obj == null || obj instanceof MessageObject)
 			return;
 //		mMsgTask.removeObject(obj);
@@ -858,12 +895,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private void onInsertObject(BaseObject object) {
 		//mMsgTask.addObject(object);
 //		mMsgManager.add(object);
-//		setCurObj(object);
+		
 		/**
 		 * display object info dialog 
 		 */
 		// mObjRefreshHandler.sendMessage(msg);
-		// clearCurObj();
+		//setCurObj(i)
 		object.setTask(mMsgTask);
 		onShowInfo(object);
 	}

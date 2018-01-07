@@ -104,8 +104,13 @@ public class FileUtil {
 		if (target.exists()) {
 			FileUtil.deleteFolder(target.getAbsolutePath());
 		}
+		File src = new File(sourceDir);
 		try {
-			copyDirectiory(sourceDir, targetDir);
+			if (src.isFile()) {
+				copyFile(sourceDir, targetDir);
+			} else {
+				copyDirectiory(sourceDir, targetDir);
+			}
 		} catch (Exception e) {
 			Debug.e(TAG, "--->exception: " + e.getMessage());
 		}

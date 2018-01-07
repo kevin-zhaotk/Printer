@@ -453,7 +453,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			public void onClick(View arg0) {
 				dismiss();
 				if(mDelListener != null) {
-					mDelListener.onClick();
+					mDelListener.onClick(mObject);
 				}
 			}
 		});
@@ -588,7 +588,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	 }
 	 
 	 public interface onDeleteListener {
-		 void onClick();
+		 void onClick(BaseObject object);
 	 }
 	 
 	 private void initAdapter() {

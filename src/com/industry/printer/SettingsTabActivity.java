@@ -354,7 +354,7 @@ public static final String TAG="SettingsTabActivity";
 				{				Debug.i(TAG, "=333==>onclick");
 					  PlatformInfo.SetDotMatrixType(0);			
 				}
-				Debug.i(TAG, "===>onclick");
+				Debug.i(TAG, "===>onclick: " + mSysconfig.getParam(30));
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();

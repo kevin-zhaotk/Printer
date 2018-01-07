@@ -109,7 +109,7 @@ public class DataTransferThread extends Thread {
 				mInterval = SystemClock.currentThreadTimeMillis() - last;
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
-				buffer = getPrintBuffer();
+				
 				if (!mDataTask.isReady) {
 					mRunning = false;
 					if (mCallback != null) {
@@ -119,6 +119,7 @@ public class DataTransferThread extends Thread {
 				}
 				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+				buffer = getPrintBuffer();
 				last = SystemClock.currentThreadTimeMillis();
 				countDown();
 				mInkListener.onCountChanged();

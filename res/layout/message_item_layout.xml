@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffff"
-    android:descendantFocusability= "blocksDescendants"
+    android:descendantFocusability="blocksDescendants"
     >
 <!-- 
     <TextView 
@@ -24,20 +24,13 @@
         />
 -->
  
-
-	    <HorizontalScrollView
-	        android:layout_width="match_parent"
-	        android:layout_height="100dp"
-	        >
-	        
-	        <LinearLayout
+	   <LinearLayout
 	        android:id="@+id/ll_preview"	        
 	        android:layout_width="match_parent"
 	        android:layout_height="100dp"
 	        android:orientation="horizontal"
 	        android:background="#ffffff"/>
 	        
-	    </HorizontalScrollView>
 	    
 		<!-- <ImageView 
 		    android:id="@+id/message_image"

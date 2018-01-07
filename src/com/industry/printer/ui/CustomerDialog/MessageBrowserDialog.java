@@ -121,7 +121,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					new int[]{R.id.tv_msg_title, R.id.ll_preview, R.id.image_selected});
 			
 			mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
-			LinearInterpolator lin = new LinearInterpolator();  
+			LinearInterpolator lin = new LinearInterpolator();
 			mOperating.setInterpolator(lin);
 		}
 		
@@ -204,6 +204,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Debug.d(TAG, "--->onItemClick");
 			Map<String, Object> selected = mContent.get(position);
 			mFileAdapter.setSelected(position);
 			mFileAdapter.notifyDataSetChanged();
@@ -331,8 +332,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				curY=arg1.getY();
 				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
 				{
-					//mFileAdapter.Scroll( (int)( mdownx-curX ) );
-					//mFileAdapter.notifyDataSetChanged();
+					mFileAdapter.Scroll( (int)( mdownx-curX ) );
+					mFileAdapter.notifyDataSetChanged();
 				}
 				mdownx = curX;
 				return false;

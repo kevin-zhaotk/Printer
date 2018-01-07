@@ -106,6 +106,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			switch(msg.what) {
 			case ObjectInfoDialog.MSG_SELECTED_HEADER:
 				int index = msg.arg1;
+				Debug.d(TAG, "--->index: " + index);
 				mSettingItems[30].setValue(index);
 				mSysconfig.setParam(30, mSettingItems[30].getValue());
 				String value = mSettingItems[30].getDisplayValue();
@@ -567,7 +568,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		} else if (position == 26) { //參數27
 			mSpiner.setAdapter(mAutoPulse);
 		} else if (position == 30) { //參數31
-			HeaderSelectDialog dialog = new HeaderSelectDialog(mContext, handler);
+			HeaderSelectDialog dialog = new HeaderSelectDialog(mContext, handler, mSysconfig.getParam(30));
 			dialog.show();
 			return;
 		} else if (position == 31) {
