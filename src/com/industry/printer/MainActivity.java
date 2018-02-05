@@ -792,7 +792,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			@Override
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
-				FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
+				FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
 				} catch (Exception e) {
 					// TODO: handle exception
 				}

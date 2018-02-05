@@ -40,6 +40,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 public class BarcodeObject extends BaseObject {
 
 	private static final int QUIET_ZONE_SIZE = 4;
@@ -272,24 +273,24 @@ public class BarcodeObject extends BaseObject {
             /* 条形码的宽度设置:每个数字占70pix列  */
 			if ("EAN13".equals(mFormat)) {
 				content = checkSum();
-				matrix = writer.encode(content,
-				        format, w, h - textH - 5, null);
-				
+//				matrix = writer.encode(content,
+//				        format, w, h - textH - 5, null);
 			} else if ("EAN8".equals(mFormat)) {
 				content = checkLen(8);
-				matrix = writer.encode(content,
-				        format, w, h- textH- 5, null);
-            
+//				matrix = writer.encode(content,
+//				        format, w, h- textH- 5, null);
 			} else if ("ITF_14".equals(mFormat)) {
 				content = checkLen(14);
-				matrix = writer.encode(content,
-				        format, w, h- textH- 5, null);
-            
-			} else {
-				matrix = writer.encode(content,
-				        format, w, h - textH- 5, null);
+//				matrix = writer.encode(content,
+//				        format, w, h- textH- 5, null);
+			} else if ("UPC_A".equals(mFormat)) {
+				content = checkLen(11,12);
+//				matrix = writer.encode(content,
+//				        format, w, h- textH- 5, null);
 			}
-            
+			matrix = writer.encode(content,
+				        format, w, h - textH- 5, null);
+			            
 			int tl[] = matrix.getTopLeftOnBit();
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
@@ -342,7 +343,7 @@ public class BarcodeObject extends BaseObject {
 		}
 		return null;
 	}
-	
+
 	public BitMatrix encode(String contents, int width, int height, Map<EncodeHintType, ?> hints)
             throws WriterException {
 
@@ -495,7 +496,7 @@ public class BarcodeObject extends BaseObject {
 	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
 		Paint paint = new Paint(); 
 		
-		paint.setTextSize(mTextSize);
+		paint.setTextSize(height - 5);
 		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
@@ -507,7 +508,7 @@ public class BarcodeObject extends BaseObject {
 		int left = (int) ((perPix - numWid)/2);
 		for (int i = 0; i < content.length(); i++) {
 			String n = content.substring(i, i+1);
-			canvas.drawText(n, i*perPix + left, mTextSize, paint);
+			canvas.drawText(n, i*perPix + left, paint.getTextSize(), paint);
 		}
 		return bitmap;
 	}
@@ -536,7 +537,7 @@ public class BarcodeObject extends BaseObject {
 		}
 		catch(Exception e)
 		{
-			Debug.d(TAG, "exception:"+e.getMessage());
+			Debug.e(TAG, "exception:"+e.getMessage());
 		}
 		return width;
 	}
@@ -669,6 +670,18 @@ public class BarcodeObject extends BaseObject {
 		return mContent;
 	}
 	
+	private String checkLen(int min, int max) {
+		int len = mContent.length();
+		if (len < min) {
+			for (int i = 0; i < min - len; i++) {
+				mContent += "0";
+			}
+		} else if (len > max) {
+			mContent = mContent.substring(0, max - 1);
+		}
+		return mContent;
+	}
+	
 	public String toString()
 	{
 		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
@@ -715,10 +728,9 @@ public class BarcodeObject extends BaseObject {
 			.append("000^")
 			.append(BaseObject.boolToFormatString(mShow, 3))
 			.append("^")
-			.append(BaseObject.boolToFormatString(mShow, 3))
-			.append("^")
-			
 			.append(mContent)
+			.append("^")
+			.append(BaseObject.boolToFormatString(mSource, 8))
 			.append("^")
 			.append("00000000^00000000^00000000^0000^0000^")
 			.append(mFont)

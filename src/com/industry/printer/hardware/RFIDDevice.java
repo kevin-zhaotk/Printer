@@ -309,7 +309,7 @@ public class RFIDDevice implements RfidCallback{
 	 * @return
 	 */
 	public byte[] autoSearch(boolean blind) { 
-		Debug.d(TAG, "--->autoSearch");
+		Debug.e(TAG, "--->autoSearch");
 		openDevice();
 		RFIDData data = new RFIDData(RFID_CMD_AUTO_SEARCH, RFID_DATA_SEARCH_MODE);
 		RFIDAsyncTask.execute(mFd, data, this);
@@ -341,7 +341,7 @@ public class RFIDDevice implements RfidCallback{
 	public byte[] avoidConflict(boolean blind) {
 		int limit = 0; 
 		openDevice();
-		Debug.d(TAG, "--->RFID avoidConflict");
+		Debug.e(TAG, "--->RFID avoidConflict");
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_CONFLICT_PREVENTION, RFID_DATA_MIFARE_CONFLICT_PREVENTION);
 		RFIDAsyncTask.execute(mFd, data, this);
 		return null;
@@ -409,7 +409,7 @@ public class RFIDDevice implements RfidCallback{
 	public boolean keyVerfication(byte sector, byte block, byte[] key, boolean blink) {
 		boolean certify = false;
 		
-		Debug.d(TAG, "--->keyVerfication sector:" + sector + ", block:" +block);
+		Debug.e(TAG, "--->keyVerfication sector:" + sector + ", block:" +block);
 		if (sector >= 16 || block >= 4) {
 			Debug.e(TAG, "===>block over");
 			return false;
@@ -637,7 +637,7 @@ public class RFIDDevice implements RfidCallback{
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		Debug.d(TAG, "--->newModel: " + isNewModel);
+		Debug.e(TAG, "--->newModel: " + isNewModel);
 		if (isNewModel) { 
 			mSN = autoSearch(false);
 			Debug.print(TAG, mSN);
@@ -717,7 +717,7 @@ public class RFIDDevice implements RfidCallback{
 			return false;
 		}
 		for (int i = 0; i < mSN.length; i++) {
-			Debug.d(TAG, "--->mSN[" +  i + "] = " + (int)mSN[i] + ",  uid[" + i +"] = " + (int)uid[i]);
+			Debug.e(TAG, "--->mSN[" +  i + "] = " + (int)mSN[i] + ",  uid[" + i +"] = " + (int)uid[i]);
 			if (mSN[i] != uid[i]) {
 				noChange = false;
 				break;
@@ -770,7 +770,7 @@ public class RFIDDevice implements RfidCallback{
 		}
 		if ( !keyVerfication(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA))
 		{
-			Debug.d(TAG, "--->key verfy fail,init and try once");
+			Debug.e(TAG, "--->key verfy fail,init and try once");
 			// 如果秘钥校验失败则重新初始化RFID卡
 			//init();
 			if (!keyVerfication(SECTOR_INK_MAX, BLOCK_INK_MAX, mRFIDKeyA)) {
@@ -797,7 +797,7 @@ public class RFIDDevice implements RfidCallback{
 			sector = SECTOR_COPY_INKLEVEL;
 			block = BLOCK_COPY_INKLEVEL;
 		}
-		Debug.d(TAG, "--->getInkLevel sector:" + sector + ", block:" + block);
+		Debug.e(TAG, "--->getInkLevel sector:" + sector + ", block:" + block);
 		if (isNewModel) {
 			byte[] ink = readBlock(sector, block, mRFIDKeyA);
 			EncryptionMethod encryt = EncryptionMethod.getInstance();
@@ -807,7 +807,7 @@ public class RFIDDevice implements RfidCallback{
 		// 只使用唯一密钥验证
 		if ( !keyVerfication(sector, block, mRFIDKeyA))
 		{
-			Debug.d(TAG, "--->key verfy fail,init and try once");
+			Debug.e(TAG, "--->key verfy fail,init and try once");
 			// 如果秘钥校验失败则重新初始化RFID卡
 			//init();
 			if (!keyVerfication(sector, block, mRFIDKeyA)) {
@@ -817,12 +817,12 @@ public class RFIDDevice implements RfidCallback{
 		}
 		byte[] ink = readBlock(sector, block);
 		EncryptionMethod encryt = EncryptionMethod.getInstance();
-		Debug.d(TAG, "--->ink level:" + encryt.decryptInkLevel(ink));
+		Debug.e(TAG, "--->ink level:" + encryt.decryptInkLevel(ink));
 		return encryt.decryptInkLevel(ink);
 	}
 	
 	public float getInkLevel() {
-		Debug.d(TAG, "--->getInkLevel");
+		Debug.e(TAG, "--->getInkLevel");
 		if (!mReady) {
 			return 0;
 		}
@@ -991,7 +991,7 @@ public class RFIDDevice implements RfidCallback{
 	 */
 	public void readFeatureCode() {
 		int errno = 0;
-		Debug.d(TAG, "--->RFID getFeatureCode");
+		Debug.e(TAG, "--->RFID getFeatureCode");
 		if (isNewModel) {
 			mFeature = readBlock(SECTOR_FEATURE, BLOCK_FEATURE, mRFIDKeyA);
 			return;
@@ -1010,7 +1010,7 @@ public class RFIDDevice implements RfidCallback{
 		if (mFeature== null || mFeature.length<2) {
 			return false;
 		}
-		Debug.d(TAG, "--->RFID getFeatureCode: " + mFeature[1] + ", " +mFeature[2]);
+		Debug.e(TAG, "--->RFID getFeatureCode: " + mFeature[1] + ", " +mFeature[2]);
 		if (mFeature[1] == FEATURE_HIGH && mFeature[2] == FEATURE_LOW) {
 			return true;
 		}

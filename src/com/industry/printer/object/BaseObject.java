@@ -117,7 +117,7 @@ public class BaseObject{
 	/**
 	 * supported fonts
 	 */
-	public static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
+	public static final String[] mFonts = {"0T+", "1+", "1B+", "1B2", "1BS",
 											"1T", "2+", "2B", "2i", "3+", "3B",
 											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
 	
@@ -270,7 +270,7 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}*/
 		boolean isCorrect = false;
-		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		Debug.d(TAG,"--->getBitmap font = " + mFont);
 		for (String font : mFonts) {
 			if (font.equals(mFont)) {
 				isCorrect = true;
@@ -280,6 +280,7 @@ public class BaseObject{
 		if (!isCorrect) {
 			mFont = DEFAULT_FONT;
 		}
+		Debug.d(TAG,"--->getBitmap font = " + mFont);
 		try {
 			paint.setTextSize(mHeight);
 			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
@@ -324,6 +325,9 @@ public class BaseObject{
 	 * @return
 	 */
 	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
+		if (ctW <= 0 || ctH <= 0) {
+			return null;
+		}
 		Bitmap bitmap;
 		Paint paint = new Paint();
 		paint.setTextSize(ctH);
@@ -342,6 +346,7 @@ public class BaseObject{
 		FontMetrics fm = paint.getFontMetrics();
 		canvas.drawText(content, 0, ctH-fm.descent, paint);
 		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
+		
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	

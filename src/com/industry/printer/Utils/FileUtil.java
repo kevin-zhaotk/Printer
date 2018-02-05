@@ -39,6 +39,8 @@ public class FileUtil {
  
 	// 复制文件   
 	public static void copyFile(File sourceFile,File targetFile) throws IOException{  
+		
+		Debug.d(TAG, "--->copyFile: " + sourceFile + "-- to --> " + targetFile);
         // 新建文件输入流并对它进行缓冲   
         FileInputStream input = new FileInputStream(sourceFile);  
         BufferedInputStream inBuff=new BufferedInputStream(input);  
@@ -71,13 +73,18 @@ public class FileUtil {
     public static void copyDirectiory(String sourceDir, String targetDir)  throws IOException {
     	Debug.d(TAG, "--->copyDirectory src: " + sourceDir + "  target: " + targetDir);
     	
+    	File src = new File(sourceDir);
+    	if (src.isFile()) {
+			copyFile(sourceDir, targetDir);
+			return;
+		}
         // make directory  
         (new File(targetDir)).mkdirs();  
         File[] file = (new File(sourceDir)).listFiles();
         if (file == null || file.length <= 0) {
 			return;
 		}
-        for (int i = 0; i < file.length; i++) {  
+        for (int i = 0; i < file.length; i++) { 
             if (file[i].isFile()) {  
                 // source file
                 File sourceFile=file[i];  

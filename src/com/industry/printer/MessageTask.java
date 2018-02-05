@@ -468,6 +468,9 @@ public class MessageTask {
 				h = h%2 == 0? h : h + 1; 
 				int w = (int) (o.getWidth() * scaleW);
 				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), w, h, o.getFont());
+				if (t == null) {
+					continue;
+				}
 				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
 			} else if (o instanceof GraphicObject) {
 				int h = (int)(o.getHeight() * scaleH);

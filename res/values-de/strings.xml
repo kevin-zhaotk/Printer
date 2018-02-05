@@ -4,12 +4,12 @@
     <string name="app_version">Ver:</string>
     <string name="system_time">Zeit:</string>
     <string name="app_name">Drucker</string>
-    <string name="action_settings">Einst.</string>
+    <string name="action_settings">Param.</string>
     <string name="hello_world">Hello world!</string>
 	<string name="ControlTab">Control</string>
 	<string name="manualCtrlTab">Control man</string>
 	<string name="Edit">ABC</string>
-	<string name="Settings">Einstellungen</string>
+	<string name="Settings">Parameter</string>
 	<string name="str_btn_start">Start</string>
 	<string name="str_btn_stop">Stop</string>
 	<string name="str_btn_clean">Reinigen</string>
@@ -23,81 +23,75 @@
 	<string name="str_btn_set">Ändern</string>
 	<string name="str_btn_get">Text</string>
 	<string name="str_btn_print">Drucken</string>
-	<string name="str_btn_finish">Bereit</string>
+	<string name="str_btn_finish">Fertig</string>
 	<string name="str_btn_header1">Kopf1</string>
 	<string name="str_btn_header2">Kopf2</string>
 	<string name="str_btn_header3">Kopf3</string>
 	<string name="str_btn_header4">Kopf4</string>
-	<string name="strDate">Datum:</string>
-	<string name="strInklevel">Verblei. </string>
-	<string name="strPhotocellState">Fotozelle</string>
-	<string name="strEncoderState">Drehgeber</string>
-	<string name="strPrintstate">Drucken：</string>
-	<string name="strPrinting">Drucken</string>
-	<string name="strPrintok">Bereit</string>
-	<string name="strOn">An</string>
-	<string name="strOff">Aus</string>
-	<string name="strwaitting">druckt......</string>
+	<string name="strDate">Date:</string>
+	<string name="strInklevel">Remain </string>
+	<string name="strPhotocellState">Photocell</string>
+	<string name="strEncoderState">Encoder</string>
+	<string name="strPrintstate">Printing：</string>
+	<string name="strPrinting">Printing</string>
+	<string name="strPrintok">Ready</string>
+	<string name="strOn">On</string>
+	<string name="strOff">Off</string>
+	<string name="strwaitting">printing......</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
-	<string name="str_binfile">Öffnen</string>
-	<string name="str_openfile">Öffnet...</string>
-	<string name="str_mvforward">Vorwärts</string>
-	<string name="str_mvbackward">Rückwärts</string>
-	<string name="str_preview">Vorschau</string>
+	<string name="str_binfile">Open</string>
+	<string name="str_openfile">Open...</string>
+	<string name="str_mvforward">Forward</string>
+	<string name="str_mvbackward">Backward</string>
+	<string name="str_preview">Preview</string>
 	
-	<string name="str_del">Löschen</string>
-	<string name="str_btn_shift">AaBb</string>
-	<string name="str_btn_second">Nächste</string>
+	<string name="str_del">Delete</string>
+	<string name="str_btn_shift">Shift</string>
+	<string name="str_btn_second">Second</string>
 	
-	<string name="str_btn_upgrade">Aktualisieren</string>
-	<string name="str_btn_setDate">Datum</string>
-	<string name="str_btn_setTime">Zeit</string>
+	<string name="str_btn_upgrade">Upgrade</string>
+	<string name="str_btn_setDate">Set Date</string>
+	<string name="str_btn_setTime">Set Time</string>
 	<string name="str_btn_image">Logo</string>
 	
-	<string name="str_goto">gehe zu</string>
+	<string name="str_goto">goto</string>
 	<!-- object info table -->
-	<string name="strWidth">Länge</string>
-	<string name="strHigh">Höhe</string>
+	<string name="strWidth">Width</string>
+	<string name="strHigh">Height</string>
 	<string name="strXcor">X-Cor</string>
 	<string name="strYcor">Y-Cor</string>
-	<string name="strCnt">Inhalt</string>
+	<string name="strCnt">Content</string>
 	<string name="strDefault">0</string>
-	<string name="txtDefault">ABC</string>
-	<string name="strDragable">Strecken</string>
-	<string name="strShow">Vorschau</string>
-	<string name="strFont">Schrift</string>
-	<string name="strLinewidth">Line Länge</string>
-	<string name="strBits">Ziffern</string>
-	<string name="strImage">Bild</string>
-	<string name="strDirect">Richtung</string>
+	<string name="txtDefault">text</string>
+	<string name="strDragable">Dragable</string>
+	<string name="strShow">Show</string>
+	<string name="strFont">Font</string>
+	<string name="strLinewidth">Line Width</string>
+	<string name="strBits">Digits</string>
+	<string name="strImage">Image</string>
+	<string name="strDirect">Direction</string>
 	<string name="strShift1">Shift1</string>
 	<string name="strShift2">Shift2</string>
 	<string name="strShift3">Shift3</string>
 	<string name="strShift4">Shift4</string>
 	<string name="strShift5">Shift5</string>
-	<string name="strInfoname">Objekte</string>
-	<string name="strHeadType">KopfType</string>
-	<string name="strUpgradeConfirm">Aktualisieren?</string>
-	<string name="strUpgradeNoApk">keine Datei für Aktualisierung!!!</string>
-	<string name="strSaving">speichert, bitte warten...</string>
-	<string name="strLoading">wird geladen, bitte warten...</string>
-	<string name="strInsertSerial">Verbinden mit PC...</string>
-	<string name="strReinsertSerial">Fehler, Verbindeung mit PC herstellen</string>
+	<string name="strInfoname">Object</string>
+	<string name="strHeadType">PenType</string>
+	<string name="strUpgradeConfirm">Do upgrade?</string>
+	<string name="strUpgradeNoApk">No Upgrade file!!!</string>
+	<string name="strSaving">saving, please wait...</string>
+	<string name="strLoading">loading, please wait...</string>
+	<string name="strInsertSerial">Please connect device...</string>
+	<string name="strReinsertSerial">Error, please reconnect device</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP fast</item>
-	    <item>--</item>
+	    <item>12.7 mm HP head</item>
+	    <item>12.7 mm HP standard</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
-	    <item>7dot</item>
-	    <item>16dot</item>
-	    <item>--</item>
-	    <item>25.4mm fast ONE INCH</item>
-	    <item>--</item>
-	    <item>25.4mm x2 fast</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
@@ -109,31 +103,25 @@
 	</string-array>
 	
 	<string-array name="strDirectArray">
-	    <item>erhöhen</item>
-	    <item>veringern</item>
+	    <item>increase</item>
+	    <item>decrease</item>
 	</string-array>
 	<string name="strCode">Code Type</string>
 	<string-array name="strCodeArray">
-	    <item>EAN8</item>
-	    <item>EAN13</item>
-	    <item>EAN128</item>
-	    <item>CODE_128</item>
-	    <item>CODE_39</item>
-	    <item>UPC_A</item>
-	    <item>ITF_14</item>
+	    <item>ENA128</item>
 	    <item>QR</item>
 	</string-array>
 	
 	<string-array name="strLineArray">
-	    <item>Grundlinie</item>
-	    <item>>Strichlinie</item>
-	    <item>Punktlinie</item>
+	    <item>Solid Line</item>
+	    <item>Dash Line</item>
+	    <item>Dot Line</item>
 	    <item>Dash Dot Line</item>
 	    <item>Dash Dot Dot Line</item>
 	</string-array>
 	<string name="strLinetype">Line Type</string>
 	<string name="str_ok">OK</string>
-	<string name="strNativeBtn">Löschen</string>
+	<string name="strNativeBtn">Cancel</string>
 	
 	<string name="strRtFmt">Format</string>
 	<string-array name="strTimeFormat">
@@ -174,58 +162,54 @@
 	    <item>12.7 mm</item>
 	</string-array>
 	
-	<string name="strOffset">Versatz</string>
+	<string name="strOffset">Offset</string>
 	
 	<!-- object list -->
-	<string name="objectListName">Liste anzeigen</string>
-	<string name="objectInfoName">Text anzeigen</string>
+	<string name="objectListName">Show List</string>
+	<string name="objectInfoName">Show TEXT</string>
 	<string name="object_Msg">TEXT</string>
 	<string name="object_text">Text</string>
-	<string name="object_realtime">Datum</string>
-	<string name="object_counter">Zähler</string>
+	<string name="object_realtime">Date</string>
+	<string name="object_counter">Counter</string>
 	<string name="object_bar">Barcode</string>
 	<string name="object_pic">Graphic</string>
 	<string name="object_julian">Julian</string>
 	<string name="object_line">Line</string>
 	<string name="object_rect">Rect</string>
 	<string name="object_ellipse">Ellipse</string>
-	<string name="object_shift">AaBb</string>
-	<string name="object_second">Nächste</string>
-	<string name="object_weekofyear">WeekOfYear</string>
-	<string name="object_weekday">WeekDay</string>
+	<string name="object_shift">Shift</string>
+	<string name="object_second">Second</string>
 	<string name="object_msg_name">Subject</string>
-	<string name="object_qr">QRCode</string>
-	<string name="object_dynamic_qr">DynamicQR</string>
 	<!-- Settings frame -->
-	<string name="strParam0">00.Reserviert</string>
-	<string name="strPrSpeedname">01.m/min</string>
-	<string name="strDelay_key">verzöger_key</string>
-	<string name="strDelayname">02.Verzögern</string>
-	<string name="strDelay_summary">Einst. Verzögerung</string>
-	<string name="strParam3">03.Reserviert</string>
-	<string name="strTrigger_key">auslöse_key</string>
-	<string name="strTriggername">04.Auslöser</string>
-	<string name="strTrigger_summary">Auslösemode</string>
-	<string name="strDirection_key">Richtung_key</string>
-	<string name="strSyncname">05.Drehgeber</string>
+	<string name="strParam0">00.Reserved</string>
+	<string name="strPrSpeedname">01.Speed</string>
+	<string name="strDelay_key">delay_key</string>
+	<string name="strDelayname">02.Delay</string>
+	<string name="strDelay_summary">Set Delay</string>
+	<string name="strParam3">03.Reserved</string>
+	<string name="strTrigger_key">trigger_key</string>
+	<string name="strTriggername">04.Trigger</string>
+	<string name="strTrigger_summary">Trigger Mode</string>
+	<string name="strDirection_key">direction_key</string>
+	<string name="strSyncname">05.Encoder</string>
 	<string name="strDirectionname">05.Sync</string>
-	<string name="strBold">06.Fett</string>
-	<string name="strFixlen">07.Länge</string>
-	<string name="strFixtime">08.Zeit</string>
-	<string name="strHeadTemp">09.Kopf Temp</string>
+	<string name="strBold">06.Bold</string>
+	<string name="strFixlen">07.Length</string>
+	<string name="strFixtime">08.Fix Time</string>
+	<string name="strHeadTemp">09.Head Temp</string>
 	<string name="strResvTemp">10.Box Temp</string>
-	<string name="strfontwidth">11.LängeSchr.</string>
-	<string name="strDotname">12.Tropfengröße</string>
-	<string name="strDirection_summary">Richtung?</string>
-	<string name="strEncoder_key">Drehgeber</string>
-	<string name="strEncodername">03.Drehgeber</string>
-	<string name="strEncoder_summary">Einst. Drehgeber</string>
+	<string name="strfontwidth">11.fontWidth</string>
+	<string name="strDotname">12.Dotsize</string>
+	<string name="strDirection_summary">Choose Direction</string>
+	<string name="strEncoder_key">encoder</string>
+	<string name="strEncodername">03.Encoder</string>
+	<string name="strEncoder_summary">Set Encoder mode</string>
 	<string name="strHoriRes_key">horires_key</string>
 	<string name="strHoriResname">04.Hori</string>
-	<string name="strHoriRes_summary">Einst. Hori Res</string>
+	<string name="strHoriRes_summary">Setting Hori Res</string>
 	<string name="strVertRes_key">vertres_key</string>
 	<string name="strVertResname">05.Vert</string>
-	<string name="strVertRes_summary">Einst. Vert Res</string>
+	<string name="strVertRes_summary">Setting Vert Res</string>
 	<string name="strTimeunit">ms</string>
 	<string name="strResunit">dpi</string>
 	<string name="strLenunit">0.1mmm</string>
@@ -291,8 +275,8 @@
 
 	<string name="strBtnSave">Ok</string>
 	<string-array name="trigger_mode_name">
-	    <item>An</item>
-	    <item>Aus</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="trigger_mode_value">
@@ -301,8 +285,8 @@
 	</string-array>
 	
 	<string-array name="direction_name">
-	    <item>Links - Rechts</item>
-	    <item>Rechts - Links</item>
+	    <item>Left-To-Right</item>
+	    <item>Right-To-Left</item>
 	</string-array>
 	
 	<string-array name="direction_value">
@@ -311,8 +295,8 @@
 	</string-array>
 	
 	<string-array name="encoder_name">
-	    <item>An</item>
-	    <item>Aus</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="encoder_value">
@@ -341,28 +325,28 @@
 	</string-array>
 	
 	<string-array name="object_list_msg">
-	    <item>Auftrag Name</item>
+	    <item>Message Name</item>
 	</string-array>
 	
 	
-	<string-array name="speichern_dev">
+	<string-array name="storage_dev">
 	    <item>SDCard</item>
 	    <item>USB</item>
 	</string-array>
 	
-	<string name="str_fileicon_des">Dateisymbol</string>
+	<string name="str_fileicon_des">file icon</string>
 	<string name="str_file_save"> Ok </string>
-	<string name="str_file_cancel">Löschen</string>
-	<string name="str_setting_upgrade">Aktualisieren</string>
+	<string name="str_file_cancel">Cancel</string>
+	<string name="str_setting_upgrade">Upgrade</string>
 	
-	<string name="str_month">Monat</string>
-	<string name="str_year">Jahr</string>
-	<string name="str_date">Tag</string>
-	<string name="str_hour">Stunde</string>
+	<string name="str_month">Month</string>
+	<string name="str_year">Year</string>
+	<string name="str_date">Date</string>
+	<string name="str_hour">Hour</string>
 	<string name="str_minute">Minute</string>
 	<string name="str_format">24-Format</string>
-	<string name="str_format_24">Ja</string>
-	<string name="str_format_12">Nein</string>
+	<string name="str_format_24">Yes</string>
+	<string name="str_format_12">No</string>
 	<string name="cor_unit">dp</string>
 	<string name="font_unit">mm</string>
 	
@@ -389,10 +373,10 @@
 	<string name="str_column_text14">text14</string>
 	<string name="str_column_text15">text15</string>
 	<string name="str_column_text16">text16</string>
-	<string name="str_notlkfile">TLK-Datei auswählen</string>
-	<string name="str_tlk_already_exist">Tlk Datei existiert bereits!!!</string>
-	<string name="str_createfile_failure">Fehler erzeugt</string>
-	<string name="str_no_print_target">Ziel wählen</string>
+	<string name="str_notlkfile">Please select a TLK file</string>
+	<string name="str_tlk_already_exist">Tlk file is already exist!!!</string>
+	<string name="str_createfile_failure">Create error</string>
+	<string name="str_no_print_target">Please chose a target</string>
 	
 	<string name="str_radioLocal">Local</string>
 	<string name="str_radioUsb">USB</string>
@@ -402,99 +386,99 @@
 	
 	<string name="str_title_infodialog">Object Info</string>
 	
-	<string name="str_search">Suchen</string>
+	<string name="str_search">Search</string>
 
 <!-- 树莓派3 打印界面相关 -->	
-	<string name="str_msg_name">AFT:</string>
+	<string name="str_msg_name">MSG:</string>
 	<!-- 
-	<string name="str_state_inklevel">Tinte:  %1$d%%</string>
+	<string name="str_state_inklevel">INK:  %1$d%%</string>
 	-->
-	<string name="str_state_inklevel">Tinte:</string>
+	<string name="str_state_inklevel">INK:</string>
 	<string name="str_invalid_ink">--</string>
 	<string name="str_state_battery">Power:%1$d</string>
-	<string name="str_hint_preview">Auftrag Vorschau</string>
-	<string name="str_print_count">Drucke: </string>
+	<string name="str_hint_preview">message preview</string>
+	<string name="str_print_count">Records: </string>
 	<string name="str_print_count_default">0</string>
-	<string name="str_print_printing">druckt bereits...</string>
-	<string name="str_print_startok">Starte drucken...</string>
-	<string name="str_print_stopok">Auftrag beendet STOP...</string>
-	<string name="str_toast_no_bin">Keine Datei gefunden !!!</string>
-	<string name="str_toast_emptycontent">Der Auftrag hat keinen Inhalt!!!</string>
-	<string name="str_toast_no_message">wählen Sie erst einen Auftrag!!!</string>
-	<string name="str_toast_no_ink">wenig Tinte!!!</string>
-	<string name="str_rfid_initfail_notify">RFID Fehler！</string>
+	<string name="str_print_printing">Print Task Running already...</string>
+	<string name="str_print_startok">start print task success...</string>
+	<string name="str_print_stopok">stop print task success...</string>
+	<string name="str_toast_no_bin">No bin file found !!!</string>
+	<string name="str_toast_emptycontent">The message you selected is empty!!!</string>
+	<string name="str_toast_no_message">Please select a message file first!!!</string>
+	<string name="str_toast_no_ink">Ink low!!!</string>
+	<string name="str_rfid_initfail_notify">RFID initiallize fail！</string>
 	<string name="str_page_forward"> 《 </string>
 	<string name="str_page_backward"> 》 </string>
-	<string name="str_message_no_content">Vorschau nicht möglich</string>
-	<string name="str_state_printing">Drucken</string>
-	<string name="str_state_stopped">Bereit</string>
+	<string name="str_message_no_content">can not create preview</string>
+	<string name="str_state_printing">Printing</string>
+	<string name="str_state_stopped">Ready</string>
 	
 <!-- 树莓派3 设置界面相关 -->
 	
-	<string name="str_textview_param1">01. Geschwindigkeit</string>
-	<string name="str_textview_param2">02. Richtung</string>
-	<string name="str_textview_param3">03. Auflösung</string> 
-	<string name="str_textview_param4">04. Druck nach</string>
-	<string name="str_textview_param5">05. Fotozelle</string>
-	<string name="str_textview_param6">06. Drehgeber</string>
-	<string name="str_textview_param7">07. Druckwiederholung</string>
-	<string name="str_textview_param8">08. Düse wählen</string>
-	<string name="str_textview_param9">09. Radumfang</string>
-	<string name="str_textview_param10">10.Drehgeber PPR</string>
-	<string name="str_textview_param11">11.Kopf1 Versatz</string>
-	<string name="str_textview_param12">12.Kopf2 Versatz</string>
-	<string name="str_textview_param13">13.Kopf1 spiegeln</string>
-	<string name="str_textview_param14">14.Kopf2 spiegeln</string>
-	<string name="str_textview_param15">15.Kopf1 Drehen</string>
-	<string name="str_textview_param16">16.Kopf2 Drehen</string>
-	<string name="str_textview_param17">17.Reserviert</string>
-	<string name="str_textview_param18">18.Zähler</string>
-	<string name="str_textview_param19">19.Kopf3 Versatz</string>
-	<string name="str_textview_param20">20.Kopf4 Versatz</string>
-	<string name="str_textview_param21">21.Kopf3 spiegeln</string>
-	<string name="str_textview_param22">22.Kopf4 spiegeln</string>
-	<string name="str_textview_param23">23.Kopf3 Drehen</string>
-	<string name="str_textview_param24">24.Kopf4 Drehen</string>
-	<string name="str_textview_param25">25.Auto Volt</string>
-	<string name="str_textview_param26">26.Volt Einst.</string>
-	<string name="str_textview_param27">27.Auto µs</string>
-	<string name="str_textview_param28">28.µs Einst.</string>
-	<string name="str_textview_param29">29.Feucht halten</string>
-	<string name="str_textview_param30">30.Fot Filter</string>
-	<string name="str_textview_param31">31.Reserviert</string>
-	<string name="str_textview_param32">32.Reserviert</string>
-	<string name="str_textview_param33">33.Reserviert</string>
-	<string name="str_textview_param34">34.Reserviert</string>
-	<string name="str_textview_param35">35.Reserviert</string>
-	<string name="str_textview_param36">36.Reserviert</string>
-	<string name="str_textview_param37">37.Reserviert</string>
-	<string name="str_textview_param38">38.Reserviert</string>
-	<string name="str_textview_param39">39.Reserviert</string>
-	<string name="str_textview_param40">40.Reserviert</string>
-	<string name="str_textview_param41">41.Reserviert</string>
-	<string name="str_textview_param42">42.Reserviert</string>
-	<string name="str_textview_param43">43.Reserviert</string>
-	<string name="str_textview_param44">44.Reserviert</string>
-	<string name="str_textview_param45">45.Reserviert</string>
-	<string name="str_textview_param46">46.Reserviert</string>
-	<string name="str_textview_param47">47.Reserviert</string>
-	<string name="str_textview_param48">48.Reserviert</string>
-	<string name="str_textview_param49">49.Reserviert</string>
-	<string name="str_textview_param50">50.Reserviert</string>
-	<string name="str_textview_param51">51.Reserviert</string>
-	<string name="str_textview_param52">52.Reserviert</string>
-	<string name="str_textview_param53">53.Reserviert</string>
-	<string name="str_textview_param54">54.Reserviert</string>
-	<string name="str_textview_param55">55.Reserviert</string>
-	<string name="str_textview_param56">56.Reserviert</string>
-	<string name="str_textview_param57">57.Reserviert</string>
-	<string name="str_textview_param58">58.Reserviert</string>
-	<string name="str_textview_param59">59.Reserviert</string>
-	<string name="str_textview_param60">60.Reserviert</string>
-	<string name="str_textview_param61">61.Reserviert</string>
-	<string name="str_textview_param62">62.Reserviert</string>
-	<string name="str_textview_param63">63.Reserviert</string>
-	<string name="str_textview_param64">64.Reserviert</string>
+	<string name="str_textview_param1">01. Speed</string>
+	<string name="str_textview_param2">02. Direction</string>
+	<string name="str_textview_param3">03. Resolution</string> 
+	<string name="str_textview_param4">04. Delay</string>
+	<string name="str_textview_param5">05. Photocell</string>
+	<string name="str_textview_param6">06. Encoder</string>
+	<string name="str_textview_param7">07. Repeat print</string>
+	<string name="str_textview_param8">08. Nozzle select</string>
+	<string name="str_textview_param9">09. Wheel Diameter</string>
+	<string name="str_textview_param10">10. Encoder PPR</string>
+	<string name="str_textview_param11">11.Pen1 offset</string>
+	<string name="str_textview_param12">12.Pen2 offset</string>
+	<string name="str_textview_param13">13.Pen1 Mirrored</string>
+	<string name="str_textview_param14">14.Pen2 Mirrored</string>
+	<string name="str_textview_param15">15.Pen1 Invert</string>
+	<string name="str_textview_param16">16.Pen2 Invert</string>
+	<string name="str_textview_param17">17.Pens</string>
+	<string name="str_textview_param18">18.Counter</string>
+	<string name="str_textview_param19">19.Pen3 offset</string>
+	<string name="str_textview_param20">20.Pen4 offset</string>
+	<string name="str_textview_param21">21.Pen3 Mirrored</string>
+	<string name="str_textview_param22">22.Pen4 Mirrored</string>
+	<string name="str_textview_param23">23.Pen3 Invert</string>
+	<string name="str_textview_param24">24.Pen4 Invert</string>
+	<string name="str_textview_param25">25.Auto Voltage</string>
+	<string name="str_textview_param26">26.Voltage Set</string>
+	<string name="str_textview_param27">27.Auto Pulse</string>
+	<string name="str_textview_param28">28.Pulse Set</string>
+	<string name="str_textview_param29">29.Keep Wet</string>
+	<string name="str_textview_param30">30.Pho Filter</string>
+	<string name="str_textview_param31">31.Reserved</string>
+	<string name="str_textview_param32">32.Reserved</string>
+	<string name="str_textview_param33">33.Reserved</string>
+	<string name="str_textview_param34">34.Reserved</string>
+	<string name="str_textview_param35">35.Reserved</string>
+	<string name="str_textview_param36">36.Reserved</string>
+	<string name="str_textview_param37">37.Reserved</string>
+	<string name="str_textview_param38">38.Reserved</string>
+	<string name="str_textview_param39">39.Reserved</string>
+	<string name="str_textview_param40">40.Reserved</string>
+	<string name="str_textview_param41">41.Reserved</string>
+	<string name="str_textview_param42">42.Reserved</string>
+	<string name="str_textview_param43">43.Reserved</string>
+	<string name="str_textview_param44">44.Reserved</string>
+	<string name="str_textview_param45">45.Reserved</string>
+	<string name="str_textview_param46">46.Reserved</string>
+	<string name="str_textview_param47">47.Reserved</string>
+	<string name="str_textview_param48">48.Reserved</string>
+	<string name="str_textview_param49">49.Reserved</string>
+	<string name="str_textview_param50">50.Reserved</string>
+	<string name="str_textview_param51">51.Reserved</string>
+	<string name="str_textview_param52">52.Reserved</string>
+	<string name="str_textview_param53">53.Reserved</string>
+	<string name="str_textview_param54">54.Reserved</string>
+	<string name="str_textview_param55">55.Reserved</string>
+	<string name="str_textview_param56">56.Reserved</string>
+	<string name="str_textview_param57">57.Reserved</string>
+	<string name="str_textview_param58">58.Reserved</string>
+	<string name="str_textview_param59">59.Reserved</string>
+	<string name="str_textview_param60">60.Reserved</string>
+	<string name="str_textview_param61">61.Reserved</string>
+	<string name="str_textview_param62">62.Reserved</string>
+	<string name="str_textview_param63">63.Reserved</string>
+	<string name="str_textview_param64">64.Reserved</string>
 	<string name="str_btn_settings_sync">Ok</string>
 	
 	<string-array name="array_triger_mode">
@@ -515,60 +499,60 @@
 	    <item>08. Repeat pulse</item>
 	    <item>09. Delay Pulse</item>
 	    <item>10. Dot Size</item>
-	    <item>11. Reserviert</item>
-	    <item>12. Reserviert</item>
-	    <item>13. Reserviert</item>
-	    <item>14. Reserviert</item>
-	    <item>15. Reserviert</item>
+	    <item>11. Reserved</item>
+	    <item>12. Reserved</item>
+	    <item>13. Reserved</item>
+	    <item>14. Reserved</item>
+	    <item>15. Reserved</item>
 	    <item>16. Bold</item>
-	    <item>17. Reserviert</item>
-	    <item>18. Reserviert</item>
-	    <item>19. Reserviert</item>
-	    <item>20. Reserviert</item>
-	    <item>21. Reserviert</item>
-	    <item>22. Reserviert</item>
-	    <item>23. Reserviert</item>
-	    <item>24. Reserviert</item>
-	    <item>25. Reserviert</item>
-	    <item>26. Reserviert</item>
-	    <item>27. Reserviert</item>
-	    <item>28. Reserviert</item>
-	    <item>29. Reserviert</item>
-	    <item>30. Reserviert</item>
-	    <item>31. Reserviert</item>
-	    <item>32. Reserviert</item>
-	    <item>33. Reserviert</item>
-	    <item>34. Reserviert</item>
-	    <item>35. Reserviert</item>
-	    <item>36. Reserviert</item>
-	    <item>37. Reserviert</item>
-	    <item>38. Reserviert </item>
-	    <item>39. Reserviert</item>
-	    <item>40. Reserviert</item>
-	    <item>41. Reserviert</item>
-	    <item>42. Reserviert</item>
-	    <item>43. Reserviert</item>
-	    <item>44. Reserviert</item>
-	    <item>45. Reserviert</item>
-	    <item>46. Reserviert</item>
-	    <item>47. Reserviert</item>
-	    <item>48. Reserviert</item>
-	    <item>49. Reserviert</item>
-	    <item>50. Reserviert</item>
-	    <item>51. Reserviert</item>
-	    <item>52. Reserviert</item>
-	    <item>53. Reserviert</item>
-	    <item>54. Reserviert</item>
-	    <item>55. Reserviert</item>
-	    <item>56. Reserviert</item>
-	    <item>57. Reserviert</item>
-	    <item>58. Reserviert</item>
-	    <item>59. Reserviert</item>
-	    <item>60. Reserviert</item>
-	    <item>61. Reserviert</item>
-	    <item>62. Reserviert</item>
-	    <item>63. Reserviert</item>
-	    <item>64. Reserviert</item>
+	    <item>17. Reserved</item>
+	    <item>18. Reserved</item>
+	    <item>19. Reserved</item>
+	    <item>20. Reserved</item>
+	    <item>21. Reserved</item>
+	    <item>22. Reserved</item>
+	    <item>23. Reserved</item>
+	    <item>24. Reserved</item>
+	    <item>25. Reserved</item>
+	    <item>26. Reserved</item>
+	    <item>27. Reserved</item>
+	    <item>28. Reserved</item>
+	    <item>29. Reserved</item>
+	    <item>30. Reserved</item>
+	    <item>31. Reserved</item>
+	    <item>32. Reserved</item>
+	    <item>33. Reserved</item>
+	    <item>34. Reserved</item>
+	    <item>35. Reserved</item>
+	    <item>36. Reserved</item>
+	    <item>37. Reserved</item>
+	    <item>38. Reserved</item>
+	    <item>39. Reserved</item>
+	    <item>40. Reserved</item>
+	    <item>41. Reserved</item>
+	    <item>42. Reserved</item>
+	    <item>43. Reserved</item>
+	    <item>44. Reserved</item>
+	    <item>45. Reserved</item>
+	    <item>46. Reserved</item>
+	    <item>47. Reserved</item>
+	    <item>48. Reserved</item>
+	    <item>49. Reserved</item>
+	    <item>50. Reserved</item>
+	    <item>51. Reserved</item>
+	    <item>52. Reserved</item>
+	    <item>53. Reserved</item>
+	    <item>54. Reserved</item>
+	    <item>55. Reserved</item>
+	    <item>56. Reserved</item>
+	    <item>57. Reserved</item>
+	    <item>58. Reserved</item>
+	    <item>59. Reserved</item>
+	    <item>60. Reserved</item>
+	    <item>61. Reserved</item>
+	    <item>62. Reserved</item>
+	    <item>63. Reserved</item>
+	    <item>64. Reserved</item>
 	</string-array>
 	
 	<string-array name="encoder_item_entries">
@@ -577,8 +561,8 @@
 	</string-array>
 	
 	<string-array name="direction_item_entries">
-	    <item>Links</item>
-	    <item>Rechts</item>
+	    <item>Left</item>
+	    <item>Right</item>
 	</string-array>
 	
 	<string-array name="resolution_item_entries">
@@ -598,13 +582,13 @@
 	
 	
 	<string-array name="switch_item_entries">
-	    <item>Aus</item>
-	    <item>An</item>
+	    <item>Off</item>
+	    <item>On</item>
 	</string-array>
 	
 	<string-array name="photo_item_entries">
-	    <item>Aus</item>
-	    <item>Kopf</item>
+	    <item>Off</item>
+	    <item>Pen</item>
 	    <item>Port</item>
 	</string-array>
 	
@@ -616,38 +600,38 @@
 	<string name="str_time_unit_0_1us">0.1us</string>
 	<string name="str_time_unit_us">us</string>
 	<string name="str_time_unit_100us">100us</string>
-	<string name="str_setting_time">Uhr</string>
-	<string name="str_system_setting">Einstellungen</string>
-	<string name="str_upgrade_progress">Systemaktualisierung....</string>
+	<string name="str_setting_time">Clock</string>
+	<string name="str_system_setting">Settings</string>
+	<string name="str_upgrade_progress">system upgrading....</string>
 	<string name="str_time_format">%1$04d-%2$02d-%3$02d %4$02d:%5$02d:%6$02d</string>
-	<string name="str_toast_ink_unvalid">Tintentropfen, Einstellung zurück auf：800</string>
-	<string name="str_toast_photoelectricity_delay">Signalunterdrückung Fotozelle, Einstellung zurück auf:100</string>
+	<string name="str_toast_ink_unvalid">Ink dot outlevel,set to default：800</string>
+	<string name="str_toast_photoelectricity_delay">Photoelectricity high delay out level set to default:100</string>
 	<string name="str_toast_photoelectricity_antishake">Photoelectricity anti shake out level set to default:20</string>
-	<string name="str_toast_timingprint">Druckzeit überschritten, Einstellung zurück auf:1000</string>
+	<string name="str_toast_timingprint">Timing print out level, set to default:1000</string>
 	
 <!-- 树莓派3 编辑界面相关 -->
-	<string name="str_edit_btn_insert">Einfügen</string>
+	<string name="str_edit_btn_insert">Insert</string>
 	<string name="str_edit_btn_temp1">Temp1</string>
 	<string name="str_edit_btn_temp2">Temp2</string>
 	<string name="str_edit_btn_temp3">Temp3</string>
 	<string name="str_edit_btn_temp4">Temp4</string>
 	<string name="str_edit_btn_temp5">Temp5</string>
 	
-	<string name="str_edit_line1">1. Line:</string>
-	<string name="str_edit_line2">2. Line:</string>
-	<string name="str_edit_line3">3. Line:</string>
-	<string name="str_edit_line4">4. Line:</string>
+	<string name="str_edit_line1">1st Line:</string>
+	<string name="str_edit_line2">2nd Line:</string>
+	<string name="str_edit_line3">3rd Line:</string>
+	<string name="str_edit_line4">4th Line:</string>
 	
 	<string name="str_notice_save">please input message name:</string>
-	<string name="str_notice_no_objects">keine Datei zum Speichern!</string>
-	<string name="str_file_title">Auftrag：</string>
-	<string name="str_file_hint">Dateiname</string>
-	<string name="str_page_prev">SeiteVor</string>
-	<string name="str_page_next">SeiteZurück</string>
-	<string name="str_filename_no">Neu</string>
-	<string name="str_btn_back">Zurück</string>
-	<string name="str_btn_up">Hoch</string>
-	<string name="str_btn_detail">Eingabe</string>
+	<string name="str_notice_no_objects">No Object for save!</string>
+	<string name="str_file_title">Message：</string>
+	<string name="str_file_hint">file name</string>
+	<string name="str_page_prev">PageUp</string>
+	<string name="str_page_next">PageDown</string>
+	<string name="str_filename_no">New</string>
+	<string name="str_btn_back">Back</string>
+	<string name="str_btn_up">Up</string>
+	<string name="str_btn_detail">Set</string>
 	<string name="cursor">Cursor</string>
 <!-- 树莓派3  -->
 	<string name="str_dialog_msgnote">请选择信息行数：</string>
@@ -663,10 +647,5 @@
 	<string name="str_no_upgrade">Already the last Version right now</string>
 	
 	<string name="str_cnt_min">Start</string>
-	<string name="str_cnt_max">Ende</string>
-	
-	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
-	
-	<string name="str_prepared">TLK parse success!!!</string>
-	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	<string name="str_cnt_max">End</string>
 </resources>

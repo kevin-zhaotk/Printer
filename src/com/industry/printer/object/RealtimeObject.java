@@ -207,6 +207,9 @@ public class RealtimeObject extends BaseObject {
 			if(o instanceof TextObject)
 			{
 				Bitmap b = o.makeBinBitmap(context, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
+				if (b == null) {
+					continue;
+				}
 				mCan.drawBitmap(b, (int)(o.getX() * scaleW - getX() * scaleW), 0, mPaint);
 			}
 			else	//variable
