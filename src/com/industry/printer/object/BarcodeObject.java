@@ -194,6 +194,7 @@ public class BarcodeObject extends BaseObject {
 		}
 		
 		isNeedRedraw = false;
+		check();
 		if (!is2D()) {
 			if (mWidth <= 0) {
 				mWidth = mContent.length() * 70;
@@ -271,24 +272,18 @@ public class BarcodeObject extends BaseObject {
             
             Debug.d(TAG, "--->content: " + mContent + "   format:" + mFormat);
             /* 条形码的宽度设置:每个数字占70pix列  */
-			if ("EAN13".equals(mFormat)) {
+/*			if ("EAN13".equals(mFormat)) {
 				content = checkSum();
-//				matrix = writer.encode(content,
-//				        format, w, h - textH - 5, null);
 			} else if ("EAN8".equals(mFormat)) {
 				content = checkLen(8);
-//				matrix = writer.encode(content,
-//				        format, w, h- textH- 5, null);
 			} else if ("ITF_14".equals(mFormat)) {
 				content = checkLen(14);
-//				matrix = writer.encode(content,
-//				        format, w, h- textH- 5, null);
 			} else if ("UPC_A".equals(mFormat)) {
 				content = checkLen(11,12);
-//				matrix = writer.encode(content,
-//				        format, w, h- textH- 5, null);
 			}
-			matrix = writer.encode(content,
+*/			
+            content = check();
+            matrix = writer.encode(content,
 				        format, w, h - textH- 5, null);
 			            
 			int tl[] = matrix.getTopLeftOnBit();
@@ -652,6 +647,23 @@ public class BarcodeObject extends BaseObject {
 		code += sum;
 		Debug.d(TAG, "--->code: " + code);
 		return code;
+	}
+	
+	private String check() {
+		String content = mContent;
+		if ("EAN13".equals(mFormat)) {
+			content = checkSum();
+		} else if ("EAN8".equals(mFormat)) {
+			content = checkLen(8);
+		} else if ("ITF_14".equals(mFormat)) {
+			content = checkLen(14);
+		} else if ("UPC_A".equals(mFormat)) {
+			content = checkLen(11,12);
+		} else {
+			
+		}
+		mContent = content;
+		return mContent;
 	}
 	
 	/**

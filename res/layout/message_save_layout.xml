@@ -24,7 +24,6 @@
         android:layout_marginLeft="75dp"
         android:singleLine="true"
         android:textSize="60sp"
-        android:inputType="number"
         android:textColor="@color/black"
         android:hint="@string/str_file_hint"
         />
