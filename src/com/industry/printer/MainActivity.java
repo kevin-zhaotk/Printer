@@ -618,9 +618,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					@Override
 					public Observable<Void> call(Map<String, String> arg0) {
 						try {
-						FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
+							FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
+							
 						} catch (Exception e) {
 							// TODO: handle exception
+						}
+						if (arg0.get("dest").equalsIgnoreCase(Configs.SYSTEM_CONFIG_DIR)) {
+							FileUtil.deleteFolder(Configs.QR_DATA);
 						}
 						Debug.d(TAG, "--->map");
 						return null;

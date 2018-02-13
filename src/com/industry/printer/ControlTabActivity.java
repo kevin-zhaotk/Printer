@@ -274,6 +274,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_RECOVERY_PRINT = 16;
 	
 	public static final int MESSAGE_OPEN_MSG_SUCCESS = 17;
+	
+	public static final int MESSAGE_RFID_OFF_H7 = 18;
 	/**
 	 * the bitmap for preview
 	 */
@@ -946,13 +948,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					} else {
 						mHandler.removeMessages(MESSAGE_RFID_ZERO);
 						mFlagAlarming = false;
-						ExtGpio.writeGpio('h', 7, 0);
+						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_OFF_H7, 2000);
 					}
 					if (mRfidInit == false) {
 						switchRfid();
 						refreshCount();
 						mRfidInit = true;
 					}
+					break;
+				case MESSAGE_RFID_OFF_H7:
+					ExtGpio.writeGpio('h', 7, 0);
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
 					float ink = mRfidManager.getLocalInk(0);
