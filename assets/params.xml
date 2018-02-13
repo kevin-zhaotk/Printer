@@ -64,13 +64,13 @@
 	<param>
 	    <id>11</id>
 		<min>1</min>
-		<max>65535</max>
+		<max>9999</max>
 		<default>1</default>
 	</param>
 	<param>
 	    <id>12</id>
 		<min>1</min>
-		<max>1000</max>
+		<max>9999</max>
 		<default>1</default>
 	</param>
 	<param>
@@ -106,13 +106,13 @@
 	<param>
 	    <id>19</id>
 		<min>1</min>
-		<max>65535</max>
+		<max>9999</max>
 		<default>1</default>
 	</param>
 	<param>
 	    <id>20</id>
 		<min>1</min>
-		<max>1000</max>
+		<max>9999</max>
 		<default>1</default>
 	</param>
 	<param>
