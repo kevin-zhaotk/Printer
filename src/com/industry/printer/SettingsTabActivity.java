@@ -14,6 +14,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ReflectCaller;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
@@ -24,7 +25,6 @@ import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 import android.R.integer;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -110,7 +110,6 @@ public static final String TAG="SettingsTabActivity";
 	public RelativeLayout		mTimeset;
 
 	public Context 			mContext;
-	public ProgressDialog 		pDialog;
 	
 	public ScrollView			mScrollView;
 	public PHSettingFragment 	mPHSettings;
@@ -343,6 +342,7 @@ public static final String TAG="SettingsTabActivity";
 				// FpgaGpioOperation.updateSettings(mContext);
 				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
 				// device.read();
+				// addbylk_1_1/30_begin ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				if(mSysconfig.getParam(30)==7)//16*8点 
 				{				Debug.e(TAG, "111===>onclick");
 				   PlatformInfo.SetDotMatrixType(1);				   
@@ -356,6 +356,7 @@ public static final String TAG="SettingsTabActivity";
 					  PlatformInfo.SetDotMatrixType(0);			
 				}
 				Debug.i(TAG, "===>onclick");;
+				//addbylk_1_1/30_end ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();
@@ -377,13 +378,13 @@ public static final String TAG="SettingsTabActivity";
 					File file = new File(str);
 					Debug.d(TAG, "===>file:"+file.getPath());
 					if (!file.exists()) {
-						Toast.makeText(mContext, R.string.strUpgradeNoApk, Toast.LENGTH_LONG);
+						ToastUtil.show(mContext, R.string.strUpgradeNoApk);
 						break;
 					}
 					Debug.d(TAG, "===>start upgrade service");
 					// System.setProperty("ctl.start", "Upgrade");
 					// SystemProperties.set("ctl.start","Upgrade");
-					Toast.makeText(mContext, R.string.str_upgrade_progress, Toast.LENGTH_LONG);
+					ToastUtil.show(mContext, R.string.str_upgrade_progress);
 					ReflectCaller.SysPropUpgrade();
 				}
 				break;

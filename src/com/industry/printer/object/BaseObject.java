@@ -1,20 +1,12 @@
 package com.industry.printer.object;
 
-
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-
 import java.io.File;
 import java.io.IOException;
-
+import java.sql.Wrapper;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
-
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -27,6 +19,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
@@ -35,6 +28,7 @@ import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.object.data.BitmapWriter;
 
 import android.R.color;
+import android.R.integer;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -80,6 +74,8 @@ public class BaseObject{
 	public static final String OBJECT_TYPE_RT_SECOND="036";
 	public static final String OBJECT_TYPE_LETTERHOUR ="037";
 	
+	public static final String OBJECT_TYPE_WEEKOFYEAR = "41";
+	
 	
 	public Context mContext;
 	
@@ -102,6 +98,7 @@ public class BaseObject{
 	public String mContent;
 	public String mName;
 	public int mDotsPerClm;
+	/*内容来源 是否U盤*/
 	public boolean mSource;
 	/* 
 	 * 是否需要重新绘制bitmap 
@@ -123,9 +120,6 @@ public class BaseObject{
 	public static final String[] mFonts = {"OT+", "1+", "1B+", "1B2", "1BS",
 											"1T", "2+", "2B", "2i", "3+", "3B",
 											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
-	
-	public byte[] bin; 
-	private FileInputStream mFStream;
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -154,6 +148,7 @@ public class BaseObject{
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
+		Debug.e(TAG, "=====->new baseobject Configs.gDots: " + Configs.gDots );		
 		setHeight(Configs.gDots);
 		setLineWidth(5);
 		setContent("text");
@@ -188,6 +183,11 @@ public class BaseObject{
 			mName = mContext.getString(R.string.object_shift);
 		else if(this instanceof RTSecondObject)
 			mName = mContext.getString(R.string.object_second);
+		else if (this instanceof LetterHourObject)
+			mName = mContext.getString(R.string.object_charHour);
+		else {
+			mName = "unKnown";
+		}
 	}
 	
 	public String getTitle() {
@@ -224,8 +224,9 @@ public class BaseObject{
 		if (isNeedRedraw) {
 			// drawSelected();
 			drawNormal();
+			Debug.e(TAG, "===1--->redraw?" + isNeedRedraw);		
 		}
-		Debug.d(TAG, "--->redraw?" + isNeedRedraw);
+		Debug.e(TAG, "===2--->redraw?" + isNeedRedraw);
 		isNeedRedraw = false;
 //		if (mIsSelected) {
 //			return mBitmapSelected;
@@ -246,6 +247,89 @@ public class BaseObject{
 		mBitmapSelected = draw();
 	}
 	
+	
+	
+	/*
+	private Bitmap draw() {
+		Bitmap bitmap;
+		Paint paint = new Paint();
+		mPaint.setTextSize(152); // (getfeed());
+		mPaint.setAntiAlias(true); //去除锯齿  
+		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+//		try {
+	//		AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
+		//	if (fd != null) {
+			//	fd.close();
+			//} else {
+			//	mFont = DEFAULT_FONT;
+		//	}
+		//} catch (Exception e) {
+		//	mFont = DEFAULT_FONT;
+	//	}
+		
+	//	String f = "fonts/"+mFont+".ttf";
+		//if (!new File("file://android_assets/" + f).exists()) {
+		//	mFont = DEFAULT_FONT;
+	//	}
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			paint.setTextSize(mHeight);
+			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		
+		int width = (int)mPaint.measureText(getContent());
+		int rWidth = (int)paint.measureText(getContent());
+		if (width <= 0) {
+			width = 10;
+		}
+		if (rWidth <= 0) {
+			rWidth = 10;
+		}
+		
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width + "  rWidth = " + rWidth);
+		if (mWidth == 0) {
+			setWidth(rWidth);
+		}
+		
+		
+		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
+        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
+		mCan.drawText(mContent, 0, 152 - fm.descent, mPaint);
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			setWidth(width * 1.25f);
+//		}
+		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	}
+	
+	*/
+	
+    public static int getTextWidth(Paint paint, String str) {  
+        int iRet = 0;  
+        if (str != null && str.length() > 0) {  
+            int len = str.length();  
+            float[] widths = new float[len];  
+            paint.getTextWidths(str, widths);  
+            for (int j = 0; j < len; j++) {  
+                iRet += (int) Math.ceil(widths[j]);  
+            }  
+        }  
+        return iRet;  
+    } 
 	private Bitmap draw() {
 		Bitmap bitmap;
 		mPaint.setTextSize(getfeed());
@@ -279,27 +363,96 @@ public class BaseObject{
 		try {
 			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
-		
+
 		int width = (int)mPaint.measureText(getContent());
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		
+		 
+		//2. 计算文字所在矩形，可以得到宽高  
+	/*	Rect rect = new Rect();  
+		mPaint.getTextBounds(getContent(), 0, getContent().length(), rect);  
+		int w = rect.width();  
+		int h = rect.height();  
+		Debug.e(TAG, "w=" +w+"  h="+h);  
+		width=h;
+		*/
+		
+	
+		//3. 精确计算文字宽度  
+	//	int width = getTextWidth(mPaint, getContent());  
+	//	Debug.e(TAG, "textWidth=" + width);  
+		  
+ 
+
+		
+		
+		//addbylk 由于7.TTF字库 中文 单个字符 生成 tLK 为 300 而不时 304  特别 在此 做出 宽度 补偿 
+	/*
+		for(int x=0;x<getContent().length();x++)
+		{
+			if (! isAscii( getContent().charAt(x) ) )
+				{
+				width+=2;
+				}
+			
+		}
+		*/
+		
+		Debug.e(TAG, "-11-->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
+			
 			setWidth(width);
 		}
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		Debug.e(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
         // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
+		//addbylk 把字符串绘制到BMP上的函数
 		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
 //		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
 //			setWidth(width * 1.25f);
 //		}
+    	Debug.e(TAG, "===2--->draw width"+ width  );
+     	
+    	Debug.e(TAG,  "=3fm.descent:"+ fm.descent ); 
+    	
+    	Debug.e(TAG,  "=4mContent:"+mContent); 
+    	   	
+    	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
 	
-	public Bitmap makeBinBitmap() {
-		return null;
+	
+	/**
+	 * draw content to a bitmap
+	 * @param ctx context
+	 * @param content content
+	 * @param ctH	real height of content
+	 * @param w		total width
+	 * @param h		total height
+	 * @return
+	 */
+	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
+		Bitmap bitmap;
+		Paint paint = new Paint();
+		paint.setTextSize(ctH);
+		paint.setAntiAlias(true); //去除锯齿  
+		paint.setFilterBitmap(true); //对位图进行滤波处理
+		boolean isCorrect = false;
+		
+		try {
+			paint.setTypeface(FontCache.get(ctx, "fonts/"+font+".ttf"));
+		} catch (Exception e) {
+			
+		}
+		int width = (int)paint.measureText(content);
+		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		FontMetrics fm = paint.getFontMetrics();
+		canvas.drawText(content, 0, ctH-fm.descent, paint);
+		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
+		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	
 	private int getfeedsent() {
@@ -310,7 +463,7 @@ public class BaseObject{
 	{
 		//mPaint.setColor(Color.RED);
 		//Debug.d(TAG,"getBitmap mContent="+mContent);
-		mPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.get(context, "fonts/"+mFont+".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
@@ -321,7 +474,66 @@ public class BaseObject{
 		//BinCreater.saveBitmap(bmp, "bg.png");
 		return bmp;
 	}
-	
+
+	/**
+	 * 根據content生成變量的bin
+	 * @param content 內容
+	 * @param ctW	單個字符的實際寬度
+	 * @param ctH	字符實際高度
+	 * @param dstH  背景圖高度
+	 * @return
+	 */
+	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
+		int dots = 0;
+		int singleW;
+		Paint paint = new Paint();
+		int height = (int) (mHeight * scaleH);
+		paint.setTextSize(height);
+		paint.setAntiAlias(true); //去除锯齿  
+		paint.setFilterBitmap(true); //对位图进行滤波处理
+		
+		try {
+			paint.setTypeface(FontCache.get(ctx, "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {
+			
+		}
+		
+		int width = (int)paint.measureText("8");
+		FontMetrics fm = paint.getFontMetrics();
+		
+		/*draw Bitmap of single digit*/
+		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas can = new Canvas(bmp);
+		
+		/*draw 0-9 totally 10 digits Bitmap*/
+		singleW = (int)(mWidth * scaleW/mContent.length());
+		/** divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
+		singleW = singleW / 2;
+		Debug.d(TAG, "--->singleW=" + singleW);
+		
+		/* 最終生成v.bin使用的bitmap */
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Bitmap.Config.ARGB_8888);
+		Canvas gCan = new Canvas(gBmp);
+		
+		gCan.drawColor(Color.WHITE);	/*white background*/
+		for(int i =0; i<=9; i++)
+		{
+			can.drawColor(Color.WHITE);
+			can.drawText(String.valueOf(i), 0, height - fm.descent, paint);
+			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, height, false), i*singleW, (int)getY() * scaleH, paint);
+		}
+		BinFromBitmap.recyleBitmap(bmp);
+		
+		BinFileMaker maker = new BinFileMaker(mContext);
+		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), dstH, false));
+		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
+		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
+		//
+		BinFromBitmap.recyleBitmap(gBmp);
+		/*根據變量內容的實際長度計算點數*/
+		dots = (dots* getContent().length()/10) + 1;
+		return dots;
+	}
 	public int drawVarBitmap()
 	{
 		int dots = 0;
@@ -404,126 +616,6 @@ public class BaseObject{
 		dots = (dots* getContent().length()/10) + 1;
 		return dots;
 	}
-
-	public int drawVarBitmapN(int N )
-	{
-		int dots = 0;
-		//mPaint.setTextSize(mHeight);
-		int singleW; //the width value of each char
-		int height = (int)mPaint.getTextSize();
-		int width = (int)mPaint.measureText("8");
-		FontMetrics fm = mPaint.getFontMetrics();
-		float wDiv = (float) (2.0);
-		MessageObject msg = mTask.getMsgObject();
- 
-		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
-		Canvas can = new Canvas(bmp);
-		
-		Debug.e(TAG, "--->id = " + mId + " Width=" + mWidth);
-		/*draw 0-9 totally 10 digits Bitmap*/
-		singleW = (int)mWidth/mContent.length();
-		Debug.e(TAG, "--->singleW=" + singleW);
-		singleW = (int) (singleW/wDiv);
-		Debug.e(TAG, "--->singleW/div=" + singleW);
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots , Bitmap.Config.ARGB_8888);
-		Canvas gCan = new Canvas(gBmp);
-		gCan.drawColor(Color.WHITE);	/*white background*/
-		for(int i =0; i<=9; i++)
-		{
-			/*draw background to white firstly*/
-			can.drawColor(Color.WHITE);
-			can.drawText(String.valueOf(i), 0, mHeight-fm.descent, mPaint);
-			// Bitmap b = Bitmap.createScaledBitmap(bmp, singleW, (int)mHeight, true);
-			gCan.drawBitmap(Bitmap.createScaledBitmap(bmp, singleW, (int) (mHeight  ), false), i*singleW, (int)getY()  , mPaint);
-		}
-		BinFromBitmap.recyleBitmap(bmp);
-	 
-			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth()*N, gBmp.getHeight(), true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), gBmp.getHeight(), Bitmap.Config.ARGB_8888);
-			can.setBitmap(b);
-			can.drawColor(Color.WHITE);
-			can.drawBitmap(gBmp, 0, 0, mPaint);
-			gBmp.recycle();
-			gBmp = b;
-	 
-		
-		BinFileMaker maker = new BinFileMaker(mContext);
-		dots = maker.extract(gBmp);
-		Debug.e(TAG, "--->id: " + mId + " index:  " + mIndex);
-		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
-		
-	
-		////////////////////////////////////////////////////////////////////////////
-
-		
-		///读入	
-			File	mFile = new File( ConfigPath.getVBinAbsolute(mTask.getName(), mIndex) );
-			try {
-				 
-				mFStream = new FileInputStream(mFile);
-				bin = new byte[mFStream.available()];
-				mFStream.read(bin);
-				mFStream.close();
-				Debug.d(TAG, "--->buffer.size=" + bin.length);
-			//	resolve();
-			} catch (Exception e) {
-				Debug.d(TAG, ""+e.getMessage());
-			}
-		
-	        //修改
-	        
-	        int w=(bin[0]&0xff)<<16 | (bin[1]&0xff)<<8 | (bin[2]&0xff);
-			Debug.e(TAG, "w=============================" +w+bin[2]+ bin[1] +bin[0]   ); 
-			Debug.e(TAG, "w=============================" + ((bin[0]&0xff)<<16)    ); 	
-			Debug.e(TAG, "w=============================" + ((bin[1]&0xff)<<8)    ); 				
-			Debug.e(TAG, "w=============================" + ((bin[2]&0xff))    ); 				
-			w=(int)(w/N);
-			
-	        int h=(bin[3]&0xff)<<16 | (bin[4]&0xff)<<8 | (bin[5]&0xff);
-			Debug.e(TAG, "h=============================" +h+bin[5]+ bin[4] +bin[3]   );
-			h=h*N;        
- 
-	
-			bin[2] = (byte) (w & 0x0ff);
-			bin[1] = (byte) ((w>>8) & 0x0ff);
-			bin[0] = (byte) ((w>>16) & 0x0ff);
-	    	
-	    	 
-			bin[5] = (byte) (h & 0x0ff);
-			bin[4] = (byte) ((h>>8) & 0x0ff);
-			bin[3] = (byte) ((h>>16) & 0x0ff);	
-		
-		     //保存	
-	    	try{
-	    		File file = new File( ConfigPath.getVBinAbsolute(mTask.getName(), mIndex)  );
-	    		FileOutputStream fs = new FileOutputStream(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex)    );
-	    		ByteArrayOutputStream barr = new ByteArrayOutputStream();
-	    		//barr.write(head);
-	    		barr.write(bin,0,bin.length);
-	    		barr.writeTo(fs);
-	    		fs.flush();
-	    		fs.close();
-	    		barr.close();
-	    	}catch(Exception e)
-	    	{
-	    		Debug.d(TAG, "Exception: "+e.getMessage());
-	    		return 0 ;
-	    	}
-	        ///////////////////////////////////////////////
-	
-	    	 
-	 
-		
-		//
-		BinFromBitmap.recyleBitmap(gBmp);
-		/*根據變量內容的實際長度計算點數*/
-		dots = (dots* getContent().length()/10) + 1;
-		return dots;
-	}
-	
-	
-	
 	/**
 	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap
 	 * 设计： 
@@ -564,16 +656,22 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFromBitmap.recyleBitmap(bg);
 	}
-	
+	//addbylk_6_24/30_begin
 	public void generateVarbinFromMatrix(String f,float height,float width) {
 		BinFileMaker maker = new BinFileMaker(mContext);
 		maker.extract("0123456789",height,width);
 		maker.save(f + getVarBinFileName());
 	}
+	// addbylk_6_24/30_end
 	
 	public Canvas getCanvas()
 	{
 		return mCan;
+	}
+	public void setHeight(String size)
+	{
+		float height = mTask.getMsgObject().getPixels(size);
+		setHeight(height);
 	}
 	
 	public void setHeight(float size)
@@ -582,12 +680,16 @@ public class BaseObject{
 			size = 4.0f * MessageObject.PIXELS_PER_MM;
 		}/* else if (size < MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM) {
 			size = MessageObject.mBaseList[0] * MessageObject.PIXELS_PER_MM;
-		}*/ else if (size > 152) {
+		}*/ 
+	//addbylk	xxx/30 
+		
+		else if (size > 152) {
 			size = 152;
 		}
 		
+	//	resizeByHeight();//addbylk xxx/30
 		mHeight = size;
-		Debug.d(TAG, "--->height=" + mHeight);
+		Debug.e(TAG, "====--->height=" + mHeight);
 		mYcor_end = mYcor + mHeight;
 		isNeedRedraw = true;
 	}
@@ -599,18 +701,13 @@ public class BaseObject{
 			return;
 		}
 		float width = mPaint.measureText(s);
-		if (getHeight() <= 4 * MessageObject.PIXELS_PER_MM) {
-			width = width * 1.25f;
-		}
+//		if (getHeight() <= 4 * MessageObject.PIXELS_PER_MM) {
+//			width = width * 1.25f;
+//		}
 		setWidth(width);
 	}
 	
-	public void setHeight(String size)
-	{
-		float height = mTask.getMsgObject().getPixels(size);
-		setHeight(height);
-	}
-	
+
 	public String getDisplayHeight() {
 		return mTask.getMsgObject().getDisplayFs(mHeight);
 	}
@@ -627,7 +724,7 @@ public class BaseObject{
 		mWidth = size;
 		mXcor_end = mXcor + mWidth;
 		isNeedRedraw = true;
-		Debug.d(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
+		Debug.e(TAG, "===>setWidth x= " + mXcor + ", mWidth=" + mWidth + ", xend=" + mXcor_end);
 	}
 	
 	public float getWidth()
@@ -694,6 +791,7 @@ public class BaseObject{
 		mXcor_end = mXcor + mWidth;
 		Debug.d(TAG,"content="+mContent+", mXcor = "+mXcor+", mWidth ="+mWidth + ",mHeight="+mHeight);
 		mYcor_end = mYcor + mHeight;*/
+//		mWidth = 0;
 		isNeedRedraw = true;
 	}
 	
@@ -717,10 +815,8 @@ public class BaseObject{
 		if(font== null)
 			return;
 		mFont = font;
-		AssetManager asset = mContext.getAssets();
-		Debug.d(TAG, "--->initPaint assset: " + asset);
 		try {
-		mPaint.setTypeface(Typeface.createFromAsset(asset, "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
 		} catch (Exception e) {}
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);
@@ -884,21 +980,27 @@ public class BaseObject{
 	protected void meature() {
 		int width = (int) mPaint.measureText(getContent());
 		
-		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
-			mWidth = width * 1.25f;
-		} else {
-			mWidth = width;
-		}
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			mWidth = width * 1.25f;
+//		} else {
+//			mWidth = width;
+//		}
+		mWidth = width;
 		Debug.d(TAG, "meature mHeight = " + mHeight + "  mWidth = " + mWidth);
 	}
 	//////addbylk 		 
 	public Bitmap getpreviewbmp()
 	{
-		return  Bitmap.createBitmap(0 , Configs.gDots, Bitmap.Config.ARGB_8888);
+		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
 	}
+	/*
+	public int getfeed() {
+		return (int)mHeight;
+	}
+	*/
+	// addbylk xxx/30  于现有的字库相匹配 
 	public int getfeed() {
 		return (int)(mHeight/10 * 11);
-	}
-	
+}
 	
 }

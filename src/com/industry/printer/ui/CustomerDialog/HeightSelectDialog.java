@@ -2,7 +2,6 @@ package com.industry.printer.ui.CustomerDialog;
 
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
 
@@ -118,24 +117,7 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 				mHolder.mText = (TextView) convertView.findViewById(R.id.font);
 			}
 			
-			///	mHolder.mText.setText(mFonts[position]);
-	/*
-			if (PlatformInfo.isBufferFromDotMatrix()!=0) 
-			{
-			 	if ( mFonts[position].equals("12.7") )
-			 	{
-				 	mHolder.mText.setText("16*10");				 		
-			 	}else if ( mFonts[position].equals("7.0") )
-			 	{
-				 	mHolder.mText.setText("7*5");				 		
-			 	}
-			}
-			*/
-			 	 
-				 	mHolder.mText.setText(mFonts[position]);				 	
-			 	
-			 	
-			 	
+			mHolder.mText.setText(mFonts[position]);
 			if (position == this.position) {
 				mHolder.mText.setSelected(true);
 			} else {

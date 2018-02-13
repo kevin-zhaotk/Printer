@@ -55,6 +55,10 @@
     <string name="str_btn_setTime">Imposta ora</string>
     <string name="str_btn_image">Logo</string>
     <string name="str_goto">Vai a</string>
+    
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
+	
     <!-- object info table -->
     <string name="strWidth">Larghezza</string>
     <string name="strHigh">Altezza</string>
@@ -65,6 +69,7 @@
     <string name="txtDefault">testo</string>
     <string name="strDragable">Trascina</string>
     <string name="strShow">Mostra</string>
+	<string name="strFontsize">Font Size</string>
     <string name="strFont">Font</string>
     <string name="strLinewidth">Larghezza Linea</string>
     <string name="strBits">Digita</string>
@@ -81,6 +86,7 @@
     <string name="strUpgradeNoApk">Nessun file presente!</string>
     <string name="strSaving"> attendere prego...</string>
     <string name="strLoading">attendere prego...</string>
+    <string name="strCopying">Copying, attendere prego...</string>
     <string name="strInsertSerial">Si prega di collegare un dispositivo...</string>
     <string name="strReinsertSerial">Errore, si prega di riconnettere il dispositivo</string>
 
@@ -92,7 +98,7 @@
         <item>33 mm testa doppia Xaar</item>
         <item>38.1 mm testa tripla HP</item>
         <item>50.8 mm testa quadripla HP</item>
-        <item>32DOT</item>
+        <item>7DOT</item>
         <item>16DOT</item>
         <item>--</item>
         <item>25.4mm fast</item>
@@ -121,6 +127,30 @@
         <item>8</item>
         <item>9</item>
     </string-array>
+    
+    <string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ font</item>
+	    <item>1B+ font</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ font</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ font</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
+	</string-array>
+    
     <string-array name="strFontFile">
         <item>WelldrawH000</item>
     </string-array>
@@ -133,12 +163,13 @@
 
     <string-array name="strCodeArray">
         <item>EAN8</item>
-        <item>EAN13</item>
-        <item>EAN128</item>
-        <item>CODE_128</item>
-        <item>CODE_39</item>
-        <item>UPC_A</item>
-        <item>QR</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
+	    <item>ITF_14</item>
+	    <item>QR</item>
     </string-array>
 
     <string name="strBarsource">Data</string>
@@ -210,7 +241,10 @@
     <string name="object_ellipse">Ellisse</string>
     <string name="object_shift">Sposta</string>
     <string name="object_second">Second</string>
+    <string name="object_charHour">AlphaHour</string>
     <string name="object_msg_name">Soggetto</string>
+    <string name="object_qr">QRCode</string>
+    <string name="object_dynamic_qr">DynamicQR</string>
     <!-- Settings frame -->
     <string name="strParam0">00.Riservato</string>
     <string name="strPrSpeedname">01.Velocita\'</string>
@@ -281,7 +315,7 @@
     <string name="strResvname40">40.Riservato</string>
     <string name="strResvname41">41.Riservato</string>
     <string name="strResvname42">42.Riservato</string>
-    <string name="strResvname43">43.Riservato</string>
+    <string name="strResvname43">43.Pens</string>
     <string name="strResvname44">44.Riservato</string>
     <string name="strResvname45">45.Riservato</string>
     <string name="strResvname46">46.Riservato</string>
@@ -442,7 +476,7 @@
     <string name="str_textview_param14">14.Pen2 Mirrored</string>
     <string name="str_textview_param15">15.Inverti Pen1</string>
     <string name="str_textview_param16">16.Inverti Pen2</string>
-    <string name="str_textview_param17">17.Pens</string>
+    <string name="str_textview_param17">17.Riservato</string>
     <string name="str_textview_param18">18.Counter</string>
     <string name="str_textview_param19">19.Ritardo Pen3</string>
     <string name="str_textview_param20">20.Ritardo Pen4</string>
@@ -468,7 +502,7 @@
     <string name="str_textview_param40">40.Riservato</string>
     <string name="str_textview_param41">41.Riservato</string>
     <string name="str_textview_param42">42.Riservato</string>
-    <string name="str_textview_param43">43.Riservato</string>
+    <string name="str_textview_param43">43.Pens</string>
     <string name="str_textview_param44">44.Riservato</string>
     <string name="str_textview_param45">45.Riservato</string>
     <string name="str_textview_param46">46.Riservato</string>
@@ -541,10 +575,10 @@
         <item>40. Riservato</item>
         <item>41. Riservato</item>
         <item>42. Riservato</item>
-        <item>43. Riservato</item>
+        <item>43. Pens</item>
         <item>44. Riservato</item>
         <item>45. Riservato</item>
-p                  <item>46. Riservato</item>
+		<item>46. Riservato</item>
         <item>47. Riservato</item>
         <item>48. Riservato</item>
         <item>49. Riservato</item>
@@ -662,4 +696,25 @@ p                  <item>46. Riservato</item>
     <string name="str_loading">loading...</string>
 
     <string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+    <string name="str_recover_print">recover last print</string>
+    
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

@@ -2,10 +2,17 @@ package com.industry.printer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,10 +27,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.usb.UsbManager;
 import android.media.ExifInterface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +43,8 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -41,8 +52,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.industry.printer.FileFormat.QRReader;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.hardware.ExtGpio;
@@ -51,6 +64,11 @@ import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 //import com.android.internal.app.LocalePicker;
 //import android.app.TabActivity;
+import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
+import com.industry.printer.ui.CustomerDialog.DialogListener;
+import com.industry.printer.ui.CustomerDialog.ImportDialog;
+import com.industry.printer.ui.CustomerDialog.ImportDialog.IListener;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener, OnTouchListener, OnClickListener {
 
@@ -65,6 +83,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public RadioButton	mRadioCtl;
 	public RadioButton	mRadioSet;
 	public RadioButton	mRadioEdit;
+	public RadioButton	btn_Other;
 	public TextView		mExtStatus;
 	
 	public ControlTabActivity 	mControlTab;
@@ -73,7 +92,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public EditTabSmallActivity mEditSmallTab;
 	public SettingsTabActivity	mSettingsTab;
 	
-	public LinearLayout mCtrlExtra;
+	public RelativeLayout mCtrlExtra;
 	public TextView mCtrlTitle;
 	public TextView mCountdown;
 	public TextView mEditTitle;
@@ -83,10 +102,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public TextView mDelete;
 	public TextView mVersion;
 	private TextView mVerTitle;
+	private ImageButton mCopy;
 	
 	private RelativeLayout mPgBack;
 	private RelativeLayout mPgFore;
 	
+	private LoadingDialog mProgressDialog;
+	
+	private TextView IP_address;// localhost ip
 	static {
 		System.loadLibrary("Hardware_jni");
 	}
@@ -95,14 +118,18 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			Debug.d(TAG, "--->stat: " + savedInstanceState.getBoolean("printing"));
+		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setLocale();
 		setContentView(R.layout.activity_main);
+		IP_address=(TextView)findViewById(R.id.IP_address);
 		boolean isroot=false;
 		mContext = getApplicationContext();
 		mLanguage = getResources().getConfiguration().locale.getLanguage();
 		
-		
+		IP_address.setText(getLocalIpAddress());
 		/*get write permission of ttyACM0*/
 		//SystemProperties.set("ctl.start","mptty");
 
@@ -129,6 +156,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	    mRadioSet.setOnCheckedChangeListener(this);
 	    mRadioSet.setOnTouchListener(this);
 	    
+	    btn_Other = (RadioButton) findViewById(R.id.btn_Other);
+	   
+	   
 	    //mExtStatus = (TextView) findViewById(R.id.tv_counter_msg);
 	    
 		/*
@@ -160,26 +190,27 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		//set current tab
 		//mTab.setCurrentTab(0);
 		
-		IntentFilter filter = new IntentFilter();
-		//filter.addDataScheme("file");
-		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
-		filter.addAction(ACTION_USB_PERMISSION);
-		filter.addDataScheme("file");
-		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
-		
-		
-		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
-		
-		mContext.registerReceiver(mReceiver, filter);
+		/** system config does not load from USB, so no need to listen the usb attachment state*/
+		registerBroadcast();
 		
 		//FpgaGpioOperation.updateSettings(this.getApplicationContext());
 		
 		initView();
 		Configs.initConfigs(mContext);
 		
-		/*App 启动以后，扬声器响两声*/
+		 btn_Other.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					
+					Intent intent = new Intent();
+					intent.setClass(MainActivity.this, Socket_Control_Activity.class);
+					startActivity(intent);
+					
+				}
+			});
+		 
+		/*App 鍚姩浠ュ悗锛屾壃澹板櫒鍝嶄袱澹�*/
 		new Thread() {
 			@Override
 			public void run() {
@@ -191,6 +222,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				ExtGpio.playClick();
 			}
 		}.start();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("printing", true);
 	}
 
 	@Override
@@ -236,7 +273,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 //	}
 	
 	private void initView() {
-		mCtrlExtra = (LinearLayout) findViewById(R.id.ctrl_extra);
+		mCtrlExtra = (RelativeLayout) findViewById(R.id.ctrl_extra);
 		mCtrlTitle = (TextView) findViewById(R.id.ctrl_counter_view);
 		mCountdown = (TextView) findViewById(R.id.count_down);
 		mEditTitle = (TextView) findViewById(R.id.edit_message_view);
@@ -248,6 +285,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mSettingTitle = (TextView) findViewById(R.id.setting_ext_view);
 		mVersion = (TextView) findViewById(R.id.setting_version);
 		mVerTitle = (TextView) findViewById(R.id.setting_version_key);
+		
+		mCopy = (ImageButton) findViewById(R.id.msg_tranfer);
+		mCopy.setOnClickListener(this);
+		
 		try {
 			// InputStreamReader sReader = new InputStreamReader(getAssets().open("Version"));
 			// BufferedReader reader = new BufferedReader(sReader);
@@ -371,6 +412,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public static final int REFRESH_TIME_DISPLAY = 1;
 	public static final int UPDATE_COUNTER = 2;
 	
+	public static final int NET_CONNECTED = 3;
+	public static final int NET_DISCONNECTED = 4;
+	
 	public Handler mHander = new Handler(){
 		
 		public void handleMessage(Message msg) {
@@ -399,6 +443,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				mSettingsTab.setParam(17, msg.arg1);
 				mSettingsTab.mSysconfig.saveConfig();
 				break;
+				
+			case NET_CONNECTED:
+				IP_address.setText(getLocalIpAddress());
+				break;
+			case NET_DISCONNECTED:
+				IP_address.setText("");
+				break;
+				
 			default:
 				break;
 			}
@@ -444,6 +496,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		case R.id.delete:
 			mEditSmallTab.deleteSelected();
+			break;
+		case R.id.msg_tranfer:
+			showImportDialog();
+			break;
 		default:
 			break;
 		}
@@ -464,4 +520,185 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		}
 		mVerTitle.setText(R.string.app_version);
 	}
+	
+	/**
+	 * when message title changed in edit tab 
+	 * @param title
+	 */
+	public void onEditTitleChanged(String title) {
+		mEditTitle.setText(title);
+	}
+	
+	public void hideKeyboard() {
+		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        im.hideSoftInputFromWindow(mEditTitle.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+	
+	private ImportDialog mImportDialog;
+	
+	private void showImportDialog() {
+		if (mImportDialog == null) {
+			mImportDialog = new ImportDialog(this);
+		}
+		mImportDialog.setListener(new IListener() {
+			@Override
+			public void onImport() {
+				msgImportOnly();
+			}
+			
+			@Override
+			public void onExport() {
+				msgExport();
+			}
+			@Override
+			public void onFlush() {
+				confirmDialog();
+			}
+		});
+		mImportDialog.show();
+	}
+	
+	private void dismissLoading() {
+		if (mProgressDialog != null) {
+			mProgressDialog.dismiss();
+		}
+	}
+	
+	private void confirmDialog() {
+		ConfirmDialog dialog = new ConfirmDialog(this, R.string.str_flush_tips);
+		dialog.setListener(new DialogListener() {
+			
+			@Override
+			public void onConfirm() {
+				msgImport();
+			}
+			
+		});
+		dialog.show();
+	}
+	
+	/**
+	 * import from USB to flash
+	 */
+	private void msgImportOnly() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		try {
+			// Messages
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+			// pictutes
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+			// system
+				FileUtil.copyDirectiory(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+			}
+			QRReader reader = QRReader.getInstance(MainActivity.this);
+			reader.reInstance(MainActivity.this);
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
+	}
+	/**
+	 * import from USB to flash
+	 */
+	private void msgImport() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		
+		
+		try {
+			// Messages
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH, Configs.TLK_PATH_FLASH);
+			}
+			// system
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyClean(usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR, Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+			}
+			// pictutes
+			if (usbs != null && usbs.size() > 0) {
+				FileUtil.copyClean(usbs.get(0)  + Configs.PICTURE_SUB_PATH, Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+			}
+			QRReader reader = QRReader.getInstance(MainActivity.this);
+			reader.reInstance(MainActivity.this);
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgImport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
+	}
+	
+	/**
+	 * export out to USB from flash
+	 */
+	private void msgExport() {
+		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		try  {
+			Debug.d(TAG, "--->msgExport");
+			if (usbs != null && usbs.size() > 0) {
+				// Messages
+				FileUtil.copyDirectiory(Configs.TLK_PATH_FLASH, usbs.get(0)  + Configs.SYSTEM_CONFIG_MSG_PATH);
+				// system
+				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR, usbs.get(0)  + Configs.SYSTEM_CONFIG_DIR);
+				// pictutes
+				FileUtil.copyDirectiory(Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH, usbs.get(0)  + Configs.PICTURE_SUB_PATH);
+				// print.bin
+				FileUtil.copyFile("/mnt/sdcard/print.bin", usbs.get(0) + "/print.bin");
+			}
+		} catch (Exception e) {
+			Debug.d(TAG, "--->msgExport e: " + e.getMessage());
+		}
+		mProgressDialog.dismiss();
+	}
+	
+	private void registerBroadcast() {
+		IntentFilter filter = new IntentFilter();
+		//filter.addDataScheme("file");
+		//filter.addAction(UsbManager.EXTRA_PERMISSION_GRANTED);
+		
+		filter.addAction(ACTION_USB_PERMISSION);
+		filter.addDataScheme("file");
+		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+		
+		filter.addAction(PrinterBroadcastReceiver.BOOT_COMPLETED);
+		filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		
+		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
+		mContext.registerReceiver(mReceiver, filter);
+		
+	}
+	// locahost ip
+	public static String getLocalIpAddress() {  
+			String hostIp = null;  
+		    try {  
+		        Enumeration nis = NetworkInterface.getNetworkInterfaces();  
+		        InetAddress ia = null;  
+		        while (nis.hasMoreElements()) {  
+		            NetworkInterface ni = (NetworkInterface) nis.nextElement();  
+		            Enumeration<InetAddress> ias = ni.getInetAddresses();  
+		            while (ias.hasMoreElements()) {  
+		                ia = ias.nextElement(); 
+		                Debug.d(TAG, "--->ipAddr: " + ia.getHostAddress());
+		                if (ia instanceof Inet6Address) {  
+		                    continue;// skip ipv6  
+		                }  
+		                String ip = ia.getHostAddress();  
+		                if (!"127.0.0.1".equals(ip)) {  
+		                    hostIp = ia.getHostAddress();  
+		                    break;  
+		                }  
+		            }  
+		        }  
+		    } catch (SocketException e) {  
+		        Log.i("error", "SocketException");  
+		        e.printStackTrace();  
+		    }  
+		    return hostIp; 
+		}
+
+
+	// locahost ip__________________________________________________________	
+	
 }

@@ -16,9 +16,10 @@ public class MessageObject extends BaseObject {
 	public static final int PIXELS_PER_MM = 12;
 	public static final float[] mBaseList = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, (float) 12.7};
 	public static final float[] mBaseList_16 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16.3f};
+	 // addbylk_1_13/30_begin
 	public static final float[] mBaseList_16_8 = {7};
 	public static final float[] mBaseList_16_10 = {7, 16 };
-	
+	// addbylk_1_13/30_end
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
 		//mIndex = index;
@@ -63,14 +64,14 @@ public class MessageObject extends BaseObject {
 	
 	public String toString()
 	{			String str="";
-		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
+	   // addbylk_1_3/30_begin
+		if(PlatformInfo.isBufferFromDotMatrix()!=0)  
 		{
-
 			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
 			str += mId+"^";
 			str += "00000^00000^00000^00000^0^000^";
 			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
-			str += BaseObject.intToFormatString(mDots*50, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+			str += BaseObject.intToFormatString(mDots*220, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
 			Debug.d(TAG, "file string ["+str+"]");
 		}
 		else
@@ -83,10 +84,13 @@ public class MessageObject extends BaseObject {
 			Debug.d(TAG, "file string ["+str+"]");		
 		
 		}
+		// addbylk_1_3/30_end
 		
 		return str;
 	}
-	
+	// 对话框中显示的字体尺寸列表
+	//
+	//
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
 		Debug.d(TAG, "--->getDisplayFSList mType = " + mType);
@@ -113,18 +117,19 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		 //addbylk_1_14/30_begin
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )
 		{	size = new String[mBaseList_16_8.length];
 			for (int i = 0; i < size.length; i++) {
 				size[i] =  String.valueOf((int)mBaseList_16_8[i]); 
 			}			 		 
 		 		
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )
 		{	size = new String[mBaseList_16_10.length];
 			for (int i = 0; i < size.length; i++) {
 			size[i] = String.valueOf((int)mBaseList_16_10[i]); 
 			}		
-		
+		 //addbylk_1_14/30_end	
 
 	}
 		
@@ -153,20 +158,23 @@ public class MessageObject extends BaseObject {
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			return h*12.7f/16.3f;
 		
-		}else if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 碰头 类型 
+		}		 // addbylk_1_15/30_begin
+		else if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 喷头类型  
 		{
 			if( h==7)
-			{
-				return 6.33333333333f;//152/12/2;	//强制 152			
+			{		Debug.e(TAG, "===========h==7   //强制 76 "  );
+				return 6.33333333333f;//152/12/2;	 //强制 76			
 			}
 			else
-			{
-				return 12.666666666666f;///304/12/2;		//强制 304
+			{	Debug.e(TAG, "===========h==7   //强制 152 "  );
+				return 12.66666666f;///152/12/;  //强制 152
 			}
 		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
 		{
-			return 6.33333333333f;//152/12/2;	//强制 152			
-		}			
+			Debug.e(TAG, "=====MESSAGE_TYPE_HZK_16_8 //强制 76	 "  );
+			return 6.33333333333f;//152/12/2;	      //强制 76			
+		}	
+		 // addbylk_1_15/30_end
 		return h;
 	}
 	
@@ -174,7 +182,7 @@ public class MessageObject extends BaseObject {
 		float h = getRealFontsize(size);
 		return (int)(h * PIXELS_PER_MM);
 	}
-	
+	// Fs Fontsize
 	public String getDisplayFs(float size) {
 		float h = 0;
 		int type = 1;
@@ -207,8 +215,8 @@ public class MessageObject extends BaseObject {
 				break;
 			}
 		}
-		
-		if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 碰头 类型 
+		 // addbylk_1_16/30_begin
+		if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 喷头类型 
 		{		Debug.e(TAG, "====--->size: " + size);
 			if( size==76.0)
 			{
@@ -218,11 +226,12 @@ public class MessageObject extends BaseObject {
 			{
 				return "16"; 
 			}
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 ) 
 		{
 			 return "7"; 			
 		}			
-		
+		 // addbylk_1_16/30_end
 		return String.valueOf(h);
 	}
 }
+

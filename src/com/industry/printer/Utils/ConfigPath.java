@@ -26,7 +26,8 @@ public class ConfigPath {
 	private static ArrayList<String> mUsbPaths=null;
 	
 	public static ArrayList<String> getMountedUsb() {
-	///	mUsbPaths.add("/sdcard/Download"); //addbylk 手机使用修改u盘路经    1/2 
+	//// 	mUsbPaths.add("/sdcard/Download"); //addbylk 手机使用修改u盘路经    1/2 
+		
 		
 		return mUsbPaths;
 	}
@@ -64,6 +65,9 @@ public class ConfigPath {
 	 */
 	public static ArrayList<String> makeSysDirsIfNeed() {
 		ArrayList<String> paths = getMountedUsb();
+		if (paths == null || paths.size() <= 0) {
+			return paths;
+		}
 		for (String path : paths) {
 			File rootDir = new File(path+Configs.SYSTEM_CONFIG_DIR);
 			if (rootDir.exists() && rootDir.isDirectory()) {
@@ -96,11 +100,18 @@ public class ConfigPath {
 	
 	public static String getTlkPath() {
 		
-		ArrayList<String> paths = makeSysDirsIfNeed();
+		/*
+		 * ArrayList<String> paths = makeSysDirsIfNeed();
 		if (paths == null || paths.size() <= 0) {
 			return null;
 		}
 		return paths.get(0)+Configs.TLK_FILE_SUB_PATH;
+		*/
+		File tlkDir = new File(Configs.TLK_PATH_FLASH);
+		if (!tlkDir.exists() || !tlkDir.isDirectory()) {
+			tlkDir.mkdirs();
+		}
+		return  Configs.TLK_PATH_FLASH;
 	}
 	
 	public static String getTxtPath() {
@@ -157,10 +168,10 @@ public class ConfigPath {
 	}
 	
 	public static String getPictureDir() {
-		ArrayList<String> paths = getMountedUsb();
-		if (paths == null || paths.size() <= 0) {
-			return null;
-		}
-		return paths.get(0) + Configs.PICTURE_SUB_PATH;
+//		ArrayList<String> paths = getMountedUsb();
+//		if (paths == null || paths.size() <= 0) {
+//			return null;
+//		}
+		return Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH;
 	}
 }

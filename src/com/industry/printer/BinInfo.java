@@ -91,9 +91,11 @@ public class BinInfo {
 		mVarCount = varCount;
 		mBufferBytes = null;
 		mBufferChars = null;
-		if (type <=0 || type > 4) {
+		if (type <=0 || type > 4) 
+		{
 			mType = 1;
-		} else {
+		} else 
+		{
 			mType = type;
 		}
 		/**读取文件头信息**/
@@ -410,6 +412,7 @@ public class BinInfo {
     		len = dst.length - x*high;
     		//return;
     	}
+		// addbylk_1_6/30_begin
     	int  matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
@@ -422,6 +425,7 @@ public class BinInfo {
     			dst[x*high + i] |= src[i];
     		}
     	}
+		// addbylk_1_6/30_end
     }
     /**
      * 疊加方式2  addbylk
@@ -464,7 +468,7 @@ public class BinInfo {
     	     	
     	
 
-		    	
+    			// addbylk_1_7/30_begin		    	
 		    	int  matrix = PlatformInfo.isBufferFromDotMatrix();
 		    	///  单一  X 方向 移动   
 		    	for(int i=0; i< len; i++)
@@ -478,6 +482,7 @@ public class BinInfo {
 		    			dst[offsetx*high + i] |= src[i];
 		    		}
 		    	}
+				// addbylk_1_7/30_end
 		    	
     	
     	

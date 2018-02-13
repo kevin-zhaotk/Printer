@@ -41,10 +41,42 @@ dot  count x 50倍保存， 改为x 220倍
 禁止缩放按钮        
 修改位置         onClick（）
 
+17.10.18
+修改内容：编辑主控件 宽度 
+修改位置：edit_view.xml 下 editView 宽度 
+模块注释：addbylk_6_19/30_begin 	
+
+17.11.20
+修改内容：大字机 DOT 正确。文本DOT扫描 1.bin ， 变量的DOT 用 3代替填充之后 再扫描 。 
+修改位置：saveBinDotMatrix（） getDotCount（）扫描函数 
+
+17.11.23
+修改内容：整理 saveBinDotMatrix（） 删除重复分支。 
+修改位置：saveBinDotMatrix（） 
+17.11.28 
+修改内容： 更换内核 
+修改位置： libs/corelibrary.jar
 
 
+17.12.02 
+修改内容： 增加 HH：NN  保存功能
+修改位置： RealtimeHour类 getpreviewbmp ；
+         RealtimeMinute 类 getpreviewbmp
 
-////内部逻辑描述 //////////////////////////////
+17.12.03 
+修改内容： 增加 HH：NN 打开功能 
+修改位置： DataTask类  refreshVariablesM(boolean prev)	
+
+17.12.08 
+修改内容： inver（倒置） 功能 
+修改位置： DataTransferThread 下 run() 	
+对应代码块标示： addbylk_2_1/3_begin
+
+
+addbylk_1_19/30_begin 大字体
+addbylk5_1/2_begin 长按键响应 
+addbylk_6_19/30_begin 
+////内部逻辑描述 //////////////////////////////////////////////////
 ---
 seting 31參數 
 	 a.  都按  X=x/n,  Y=y/n  保存一次， 
@@ -53,12 +85,12 @@ seting 31參數
      d . X=(x+900)/ , Y=(y+900) /n  , 保存一次  如果N>=3 
 -----    
  7.0  对应  16_8DZK    对应   8*5
-16.0  对应  16—16DZK  对应  16*10    
+16.0  对应  16—16DZK  对应  16*10  
 
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
 
-
+BaseObject.getfeed()// 匹配TTF 字体 尺寸 
 
 
 
@@ -78,8 +110,7 @@ ubuntu已经安装了adb相关的工具
 adb push out/target/product/smfy-super3/system/app/Printer.apk /system/app/
 adb push out/target/product/smfy-super3/system/app/Printer.apk /sdcard/Download/
 
-adb pull /sdcard/Download/msg1/9/v2.bin   /home/kevin/v2.bin
+adb pull /sdcard/Download/MSG1/9/v2.bin   /home/kevin/v2.bin
 git@github.com:kevin-zhaotk/Printer.git
-
 
 

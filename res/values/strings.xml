@@ -16,6 +16,8 @@
 	<string name="str_btn_stop">Stop</string>
 	<string name="str_btn_clean">Purge</string>
 	<string name="str_btn_open">Open</string>
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
 	<string name="str_btn_new">New</string>
 	<string name="str_btn_save">Save</string>
 	<string name="str_btn_saveas">Saveas</string>
@@ -69,6 +71,7 @@
 	<string name="txtDefault">text</string>
 	<string name="strDragable">Dragable</string>
 	<string name="strShow">Show</string>
+	<string name="strFontsize">Font Size</string>
 	<string name="strFont">Font</string>
 	<string name="strLinewidth">Line Width</string>
 	<string name="strBits">Digits</string>
@@ -85,6 +88,7 @@
 	<string name="strUpgradeNoApk">No Upgrade file!!!</string>
 	<string name="strSaving">saving, please wait...</string>
 	<string name="strLoading">loading, please wait...</string>
+	<string name="strCopying">Copying, please wait...</string>
 	<string name="strInsertSerial">Please connect device...</string>
 	<string name="strReinsertSerial">Error, please reconnect device</string>
 	<string-array name="strPrinterArray">
@@ -95,7 +99,7 @@
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
-	    <item>32dot</item>
+	    <item>7dot</item>
 	    <item>16dot</item>
 	    <item>--</item>
 	    <item>25.4mm fast</item>
@@ -126,6 +130,29 @@
 	    <item>9</item>
 	</string-array>
 	
+	<string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ font</item>
+	    <item>1B+ font</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ font</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ font</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
+	</string-array>
+	
 	<string-array name="strFontFile">
 	    <item>WelldrawH000</item>
 	</string-array>
@@ -143,6 +170,7 @@
 	    <item>CODE_128</item>
 	    <item>CODE_39</item>
 	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
 	
@@ -185,7 +213,9 @@
 	
 	<string-array name="strarrayFontSize">
 	    <item>1 mm</item>
+	    <item>1.5 mm</item>
 	    <item>2 mm</item>
+	    <item>2.5 mm</item>
 	    <item>3 mm</item>
 	    <item>4 mm</item>
 	    <item>5 mm</item>
@@ -216,7 +246,11 @@
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">Shift</string>
 	<string name="object_second">Second</string>
+	<string name="object_charHour">AlphaHour</string>
 	<string name="object_msg_name">Subject</string>
+	<string name="object_qr">QRCode</string>
+	<string name="object_dynamic_qr">DynamicQR</string>
+	
 	<!-- Settings frame -->
 	<string name="strParam0">00.Reserved</string>
 	<string name="strPrSpeedname">01.Speed</string>
@@ -287,7 +321,7 @@
 	<string name="strResvname40">40.Reserved</string>
 	<string name="strResvname41">41.Reserved</string>
 	<string name="strResvname42">42.Reserved</string>
-	<string name="strResvname43">43.Reserved</string>
+	<string name="strResvname43">43.Pens</string>
 	<string name="strResvname44">44.Reserved</string>
 	<string name="strResvname45">45.Reserved</string>
 	<string name="strResvname46">46.Reserved</string>
@@ -469,7 +503,7 @@
 	<string name="str_textview_param14">14.Pen2 Mirrored</string>
 	<string name="str_textview_param15">15.Pen1 Invert</string>
 	<string name="str_textview_param16">16.Pen2 Invert</string>
-	<string name="str_textview_param17">17.From File</string>
+	<string name="str_textview_param17">17.Reserved</string>
 	<string name="str_textview_param18">18.Counter</string>
 	<string name="str_textview_param19">19.Pen3 offset</string>
 	<string name="str_textview_param20">20.Pen4 offset</string>
@@ -495,7 +529,7 @@
 	<string name="str_textview_param40">40.Reserved</string>
 	<string name="str_textview_param41">41.Handle</string>
 	<string name="str_textview_param42">42.Reserved</string>
-	<string name="str_textview_param43">43.Reserved</string>
+	<string name="str_textview_param43">43.Pens</string>
 	<string name="str_textview_param44">44.Reserved</string>
 	<string name="str_textview_param45">45.Reserved</string>
 	<string name="str_textview_param46">46.Reserved</string>
@@ -569,7 +603,7 @@
 	    <item>40. Reserved</item>
 	    <item>41. Reserved</item>
 	    <item>42. Reserved</item>
-	    <item>43. Reserved</item>
+	    <item>43. Pens</item>
 	    <item>44. Reserved</item>
 	    <item>45. Reserved</item>
 	    <item>46. Reserved</item>
@@ -701,4 +735,27 @@
 	
 	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
 	<string name="str_barcode_end">Barcode file is end</string>
+	<string name="str_recover_print">recover last print</string>
+	
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
+	
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

@@ -37,8 +37,8 @@
 	<string name="strPrintstate">Impression:</string>
 	<string name="strPrinting">Impression</string>
 	<string name="strPrintok">Prêt</string>
-	<string name="strOn">Sur</string>
-	<string name="strOff">De</string>
+	<string name="strOn">On</string>
+	<string name="strOff">Off</string>
 	<string name="strwaitting">Impression......</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
@@ -47,6 +47,9 @@
 	<string name="str_mvforward">Soumettre</string>
 	<string name="str_mvbackward">Revenir</string>
 	<string name="str_preview">Apercu</string>
+	
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
 	
 	<string name="str_del">Efface</string>
 	<string name="str_btn_shift">Décalage</string>
@@ -69,6 +72,7 @@
 	<string name="txtDefault">texte</string>
 	<string name="strDragable">Draggable</string>
 	<string name="strShow">Montrer</string>
+	<string name="strFontsize">Font Size</string>
 	<string name="strFont">Font</string>
 	<string name="strLinewidth">Largeur de ligne</string>
 	<string name="strBits">Chiffres</string>
@@ -85,6 +89,7 @@
 	<string name="strUpgradeNoApk">Aucun fichier de mise à jour!</string>
 	<string name="strSaving">Enregistrement, en cours</string>
 	<string name="strLoading">Chargement, en cours</string>
+	<string name="strCopying">Copying, en cours...</string>
 	<string name="strInsertSerial">Merci de connecter le produit</string>
 	<string name="strReinsertSerial">Erreur, reconnecter le produit</string>
 	<string-array name="strPrinterArray">
@@ -95,7 +100,7 @@
 	    <item>33 mm Xaar double</item>
 	    <item>38.1 mm HP Tripler</item>
 	    <item>50.8 mm HP quadruple</item>
-	    <item>32DOT</item>
+	    <item>7DOT</item>
 	    <item>16DOT</item>
 	    <item>--</item>
 	    <item>25.4mm fast</item>
@@ -126,6 +131,29 @@
 	    <item>9</item>
 	</string-array>
 	
+	<string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ font</item>
+	    <item>1B+ font</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ font</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ font</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
+	</string-array>
+	
 	<string-array name="strFontFile">
 	    <item>WelldrawH000</item>
 	</string-array>
@@ -143,6 +171,7 @@
 	    <item>CODE_128</item>
 	    <item>CODE_39</item>
 	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
 	
@@ -216,7 +245,10 @@
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">Décalage</string>
 	<string name="object_second">Seconde</string>
+	<string name="object_charHour">AlphaHour</string>
 	<string name="object_msg_name">Assujettir</string>
+	<string name="object_qr">QRCode</string>
+	<string name="object_dynamic_qr">DynamicQR</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Réservé</string>
 	<string name="strPrSpeedname">01.Vitesse</string>
@@ -287,7 +319,7 @@
 	<string name="strResvname40">40.Réservé</string>
 	<string name="strResvname41">41.Réservé</string>
 	<string name="strResvname42">42.Réservé</string>
-	<string name="strResvname43">43.Réservé</string>
+	<string name="strResvname43">43.Pens</string>
 	<string name="strResvname44">44.Réservé</string>
 	<string name="strResvname45">45.Réservé</string>
 	<string name="strResvname46">46.Réservé</string>
@@ -312,8 +344,8 @@
 
 	<string name="strBtnSave">Ok</string>
 	<string-array name="trigger_mode_name">
-	    <item>Sur</item>
-	    <item>De</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="trigger_mode_value">
@@ -332,8 +364,8 @@
 	</string-array>
 	
 	<string-array name="encoder_name">
-	    <item>Sur</item>
-	    <item>De</item>
+	    <item>On</item>
+	    <item>Off</item>
 	</string-array>
 	
 	<string-array name="encoder_value">
@@ -468,7 +500,7 @@
 	<string name="str_textview_param14">14.Pen2 Miroir</string>
 	<string name="str_textview_param15">15.Pen1 Inverser</string>
 	<string name="str_textview_param16">16.Pen2 Inverser</string>
-	<string name="str_textview_param17">17.Pens</string>
+	<string name="str_textview_param17">17.Réservé</string>
 	<string name="str_textview_param18">18.Compteur</string>
 	<string name="str_textview_param19">19.Pen3 décalage</string>
 	<string name="str_textview_param20">20.Pen4 décalage</string>
@@ -494,7 +526,7 @@
 	<string name="str_textview_param40">40.Réservé</string>
 	<string name="str_textview_param41">41.Réservé</string>
 	<string name="str_textview_param42">42.Réservé</string>
-	<string name="str_textview_param43">43.Réservé</string>
+	<string name="str_textview_param43">43.Pens</string>
 	<string name="str_textview_param44">44.Réservé</string>
 	<string name="str_textview_param45">45.Réservé</string>
 	<string name="str_textview_param46">46.Réservé</string>
@@ -568,7 +600,7 @@
 	    <item>40. Réservé</item>
 	    <item>41. Réservé</item>
 	    <item>42. Réservé</item>
-	    <item>43. Réservé</item>
+	    <item>43. Pens</item>
 	    <item>44. Réservé</item>
 	    <item>45. Réservé</item>
 	    <item>46. Réservé</item>
@@ -623,8 +655,8 @@
 	
 	
 	<string-array name="switch_item_entries">
-	    <item>De</item>
-	    <item>Sur</item>
+	    <item>Off</item>
+	    <item>On</item>
 	</string-array>
 	
 	<string-array name="photo_item_entries">
@@ -698,4 +730,27 @@
 	<string name="str_cnt_max">Fin</string>
 	<string name="str_loading">loading...</string>
 	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+	<string name="str_recover_print">recover last print</string>
+	
+	
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
+	
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

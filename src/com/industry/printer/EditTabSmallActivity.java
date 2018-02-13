@@ -3,7 +3,6 @@ package com.industry.printer;
 import java.util.ArrayList;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.YuvImage;
 import android.graphics.drawable.GradientDrawable;
@@ -41,16 +40,20 @@ import com.industry.printer.object.MessageObject;
 import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.object.WeekDayObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.OnPositiveBtnListener;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog.onDeleteListener;
 import com.industry.printer.ui.CustomerDialog.ObjectInsertDialog;
+import com.industry.printer.ui.MessageDisplayManager;
 import com.industry.printer.widget.PopWindowSpiner;
 
 public class EditTabSmallActivity extends Fragment implements OnClickListener, OnTouchListener {
@@ -58,7 +61,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	public Context mContext;
 	public EditScrollView mObjView;
-	public HorizontalScrollView mHScroll;
+//	public HorizontalScrollView mHScroll;	
+	
+	public MessageDisplayManager mMsgManager; 
+	private RelativeLayout mRelatively;
 	
 	public String mObjName;
 	public MessageTask mMsgTask;
@@ -140,13 +146,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		super.onActivityCreated(savedInstanceState);
 
 		mContext = getActivity();
-		
-		mMsgTask = new MessageTask(mContext);
-		
-		MessageObject msgObject = new MessageObject(mContext, 0);
-		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
-		mMsgTask.addObject(msgObject);  //
-		
+
 		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
 		mBtnNew.setOnTouchListener(this);
@@ -174,12 +174,21 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnList = (RelativeLayout) getView().findViewById(R.id.btn_list);
 		mBtnList.setOnClickListener(this);
 		
-		mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
-		mObjView = (EditScrollView) getView().findViewById(R.id.editView);
-		mObjView.setParent(mHScroll);
-		mObjView.setOnTouchListener(this);
-		mObjView.setTask(mMsgTask);
-		
+       //addbylk xxx/30
+	//	mHScroll = (HorizontalScrollView) getView().findViewById(R.id.scrollView1);
+	//	mObjView = (EditScrollView) getView().findViewById(R.id.editView);
+	//	mObjView.setParent(mHScroll);
+	//	mObjView.setOnTouchListener(this);
+	//	mObjView.setTask(mMsgTask);
+
+		mMsgTask = new MessageTask(mContext);
+
+		MessageObject msgObject = new MessageObject(mContext, 0);
+		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
+		mMsgTask.addObject(msgObject);  //
+		mRelatively = (RelativeLayout) getView().findViewById(R.id.edit_view);
+		mMsgManager = new MessageDisplayManager(mContext, mRelatively, mMsgTask);
+
 		/*
 		mObjList = (Spinner) getView().findViewById(R.id.object_list);
 		mNameAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item);//R.layout.object_list_item);
@@ -244,10 +253,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mBtnNarrow.setOnTouchListener(this);
 		// mTrans = (ImageButton) getView().findViewById(R.id.btn_trans);
 				
-		
+		mObjName = null;
 		/*initialize the object list spinner*/
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		
+		/*initialize the object list spinner*/
+
 		initAdapter();
 	}
 	
@@ -291,70 +300,52 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			
 			@Override
 			public void onItemClick(int index) {
-				setCurObj(index);
-				mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+				mMsgManager.setSelect(index);
 			}
 		});
 	}
-	/**
-	 * REFRESH_OBJECT_CHANGED
-	 *   some object changes, need to resave the tlk&bin files
-	 */
-	public static final int REFRESH_OBJECT_CHANGED=0;
-	/**
-	 * REFRESH_OBJECT_PROPERTIES
-	 *   the object properties changed
-	 */
-	public static final int REFRESH_OBJECT_PROPERTIES=1;
-	/**
-	 * REFRESH_OBJECT_JUST
-	 *   just refresh the object list, no need to resave tlk or bin files
-	 */
-	public static final int REFRESH_OBJECT_JUST=2;
+
+
+	public static final int OBJECT_INSERT = 1;
+
+	public static final int OBJECT_REMOVE = 2;
+
+	public static final int OBJECT_UPDATE = 3;
+
+	public static final int OBJECT_UPDATE_CONTENT = 4;
+	
 	
 	public Handler mObjRefreshHandler = new Handler(){
 		@Override
 		public void  handleMessage (Message msg)
 		{
 			Debug.d(TAG, "====== 44444");
-			ArrayList<BaseObject> objects = mMsgTask.getObjects();
+			BaseObject obj = (BaseObject) msg.obj;
 			switch (msg.what) {
-			
-			case REFRESH_OBJECT_CHANGED:
-				
-				OnPropertyChanged(true);
-				break;
-			case REFRESH_OBJECT_PROPERTIES:
-				OnPropertyChanged(true);
-			case REFRESH_OBJECT_JUST:
-				// mNameAdapter.notifyDataSetChanged();
-				break;
-			default:
-				break;
-			}
 
-			Debug.d(TAG, "=====get curobj");
-			BaseObject obj = getCurObj();
-			Debug.d(TAG, "=====obj:"+obj.mId + "  draw:" + obj.isNeedDraw());
-			mObjView.setTask(mMsgTask);
-			mObjView.beginDraw();
-			mObjView.invalidate();
-			if(obj != null && !(obj instanceof MessageObject)){
-				makeObjToCenter((int)obj.getX());
+				case OBJECT_INSERT:
+					mMsgManager.add(obj);
+					mMsgTask.addObject(obj);
+					break;
+				case OBJECT_REMOVE:
+
+					mMsgManager.remove(obj);
+					break;
+				case OBJECT_UPDATE:
+					mMsgManager.update(obj);
+					break;
+				case OBJECT_UPDATE_CONTENT:
+					mMsgManager.updateDraw(obj);
+					break;
+				default:
+					break;
 			}
-			Debug.d(TAG, "=========");
+			OnPropertyChanged(true);
 		}
 	};
 	
 	private void makeObjToCenter(int x)
 	{
-		Debug.d(TAG, "current scrollX="+mHScroll.getScrollX());
-		if(x - mHScroll.getScrollX() > 500)
-		{
-			mHScroll.scrollTo(x-300, 0);
-		} else if (x < mHScroll.getScrollX()) {
-			mHScroll.scrollTo(x, 0);
-		}
 	}
 	
 	public BaseObject getCurObj()
@@ -374,15 +365,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		return null;
 	}
-	
-	public void clearCurObj()
-	{
-		ArrayList<BaseObject> objects = mMsgTask.getObjects();
-		for(BaseObject obj : objects)
-		{
-			obj.setSelected(false);
-		}
-	}
+
 	public void setCurObj(int i)
 	{
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
@@ -395,7 +378,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		BaseObject obj=objects.get(i);
 		obj.setSelected(true);
 	}
-	
 	public void setCurObj(BaseObject object)
 	{
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
@@ -407,8 +389,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		}
 		object.setSelected(true);
 	}
-	
-	
 	
 	public float[] getNextXcor()
 	{
@@ -440,8 +420,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			return;
 		}
 		Debug.d(TAG, "--->delete: " + object.getId());
-		mMsgTask.removeObject(object);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+//		mMsgTask.removeObject(object);
+		mMsgManager.remove(object);
 	}
 
 	/**
@@ -449,6 +429,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 *  Handler message for open tlk file
 	 */
 	public static final int HANDLER_MESSAGE_OPEN=0;
+	
+	public static final int HANDLER_MESSAGE_OPEN_SUCCESS = 11;
 	/**
 	 * HANDLER_MESSAGE_SAVEAS
 	 *   Handler message for save event happens
@@ -476,6 +458,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	 */
 	public static final int HANDLER_MESSAGE_INSERT_OBJECT = 6;
 	
+	/**
+	 * HANDLER_MESSAGE_SAVE_SUCCESS 
+	 * this message will be sent out when MessageTask Async save-task run success
+	 */
+	public static final int HANDLER_MESSAGE_SAVE_SUCCESS = 10;
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -487,27 +475,41 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		if (mObjName == null || mObjName.isEmpty()) {
 						break;
 					}
-            		mMsgTask = new MessageTask(mContext, mObjName);
-            		// 默認選中第一個非消息對象
-            		setCurObj(1);
-            		mObjView.setTask(mMsgTask);
-	    			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+            		((MainActivity)mContext).onEditTitleChanged(mObjName);
+            		progressDialog();
+            		new Thread(new Runnable() {
+						@Override
+						public void run() {
+							mMsgTask = new MessageTask(mContext, mObjName);
+							mHandler.sendEmptyMessage(HANDLER_MESSAGE_OPEN_SUCCESS);
+						}
+					}).start();
+            		break;
+            	case HANDLER_MESSAGE_OPEN_SUCCESS:
+            		mMsgManager.fill(mMsgTask);
+					// 默認選中第一個非消息對象
+					mMsgManager.setSelect(1);
+					dismissProgressDialog();
             		break;
             	case HANDLER_MESSAGE_SAVEAS:		//saveas
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());
             		mObjName = MessageSaveDialog.getTitle();
             		createfile=true;
             	case HANDLER_MESSAGE_SAVE:    //save
+            		Debug.d(TAG, "--->save");
             		progressDialog();
             		if (mObjName == null || mMsgTask == null) {
+            			Debug.e(TAG, "--->nothing to save");
+            			dismissProgressDialog();
 						break;
 					}
             		// mMsgTask = new MessageTask(mContext, mObjName);
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
-            		
-            		mMsgTask.save();
-           			
+            		((MainActivity)mContext).onEditTitleChanged(mObjName);
+            		mMsgTask.save(mHandler);
+            		break;
+            	case HANDLER_MESSAGE_SAVE_SUCCESS:
             		dismissProgressDialog();
             		OnPropertyChanged(false);
             		break;
@@ -522,9 +524,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		if (bundle == null) {
 						break;
 					}
+            		Debug.e(TAG, "======00000=HANDLER_MESSAGE_INSERT_OBJECT>mContext: " + mContext);
+            		// 设置 info对话框 中的 大字体 字体 和字高
+            		//addbylk_1_8/30 begin//////////////////////////////////////////////////
     				if (PlatformInfo.isBufferFromDotMatrix()==1)
-    				{
-	            		Debug.d(TAG, "--->mContext: " + mContext);
+	    				{           		
+	            		Debug.e(TAG, "--->mContext: " + mContext);
 	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
 	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
 	            		float[] cur = getNextXcor();
@@ -538,12 +543,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 							CounterObject counter = new CounterObject(mContext, cur[0]);
 							counter.setY(cur[1]);
 							counter.setFont("4");
-							counter.setHeight(76.0f);						
+							counter.setHeight(76.0f);							
 							onInsertObject(counter);
 						} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
 							RealtimeObject time = new RealtimeObject(mContext, cur[0]);
 							time.setY(cur[1]);
-							time.setFont("4");	
+							time.setFont("4");
 							time.setHeight(76.0f);
 							onInsertObject(time);
 						} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
@@ -555,31 +560,36 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
 							RectObject rect = new RectObject(mContext, cur[0]);
 							rect.setY(cur[1]);
-							rect.setFont("4");	
+							rect.setFont("4");
 							rect.setHeight(76.0f);
 							onInsertObject(rect);
 						} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
 							LineObject line = new LineObject(mContext, cur[0]);
 							line.setY(cur[1]);
-							line.setFont("4");		
+							line.setFont("4");
 							line.setHeight(76.0f);
 							onInsertObject(line);
 						} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
 							EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
 							ellipse.setY(cur[1]);
-							ellipse.setFont("4");	
+							ellipse.setFont("4");
 							ellipse.setHeight(76.0f);
 							onInsertObject(ellipse);
 						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							boolean source = bundle.getBoolean(ObjectInsertDialog.OBJECT_SOURCE, false);
 							bar.setY(cur[1]);
-							bar.setFont("4");	
+							bar.setFont("4");
 							bar.setHeight(76.0f);
+							if (source) {
+								bar.setSource(source);
+								bar.setCode("QR");
+							}
 							onInsertObject(bar);
 						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
 							GraphicObject image = new GraphicObject(mContext, cur[0]);
 							image.setY(cur[1]);
-							image.setFont("4");	
+							image.setFont("4");
 							image.setHeight(76.0f);
 							onInsertObject(image);
 						} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
@@ -588,11 +598,23 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 							lh.setFont("4");
 							lh.setHeight(76.0f);
 							onInsertObject(lh);
+						} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(type)) {
+							WeekOfYearObject lh = new WeekOfYearObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("4");
+							lh.setHeight(76.0f);
+							onInsertObject(lh);
+						} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(type)) {
+							WeekDayObject lh = new WeekDayObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("4");
+							lh.setHeight(76.0f);
+							onInsertObject(lh);
 						}
     				}
     				else if (PlatformInfo.isBufferFromDotMatrix()==2)
-    				{
-	            		Debug.d(TAG, "--->mContext: " + mContext);
+	    				{           		
+	            		Debug.e(TAG, "=====>mContext222: " + mContext);
 	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
 	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
 	            		float[] cur = getNextXcor();
@@ -600,55 +622,59 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	            			TextObject text = new TextObject(mContext, cur[0]);
 	            			text.setY(cur[1]);
 	            			text.setFont("7");
-	            			text.setHeight(152.0f);	            			
+	            			text.setHeight(152.0f);	   	            			
 							onInsertObject(text);
 						} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
 							CounterObject counter = new CounterObject(mContext, cur[0]);
 							counter.setY(cur[1]);
 							counter.setFont("7");
 							counter.setHeight(152.0f);	   
-							
 							onInsertObject(counter);
 						} else if (BaseObject.OBJECT_TYPE_RT.equals(type)) {
 							RealtimeObject time = new RealtimeObject(mContext, cur[0]);
 							time.setY(cur[1]);
-							time.setFont("7");		
+							time.setFont("7");
 							time.setHeight(152.0f);	   
 							onInsertObject(time);
 						} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(type)) {
 							JulianDayObject julian = new JulianDayObject(mContext, cur[0]);
 							julian.setY(cur[1]);
-							julian.setFont("7");	
+							julian.setFont("7");
 							julian.setHeight(152.0f);	   
 							onInsertObject(julian);
 						} else if (BaseObject.OBJECT_TYPE_RECT.equals(type)) {
 							RectObject rect = new RectObject(mContext, cur[0]);
 							rect.setY(cur[1]);
-							rect.setFont("7");	
+							rect.setFont("7");
 							rect.setHeight(152.0f);	   
 							onInsertObject(rect);
 						} else if (BaseObject.OBJECT_TYPE_LINE.equals(type)) {
 							LineObject line = new LineObject(mContext, cur[0]);
 							line.setY(cur[1]);
-							line.setFont("7");	
+							line.setFont("7");
 							line.setHeight(152.0f);	   
 							onInsertObject(line);
 						} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(type)) {
 							EllipseObject ellipse = new EllipseObject(mContext, cur[0]);
 							ellipse.setY(cur[1]);
-							ellipse.setFont("7");	
+							ellipse.setFont("7");
 							ellipse.setHeight(152.0f);	   
 							onInsertObject(ellipse);
 						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							boolean source = bundle.getBoolean(ObjectInsertDialog.OBJECT_SOURCE, false);
 							bar.setY(cur[1]);
-							bar.setFont("7");	
+							bar.setFont("7");
 							bar.setHeight(152.0f);	   
+							if (source) {
+								bar.setSource(source);
+								bar.setCode("QR");
+							}
 							onInsertObject(bar);
 						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
 							GraphicObject image = new GraphicObject(mContext, cur[0]);
 							image.setY(cur[1]);
-							image.setFont("7");		
+							image.setFont("7");
 							image.setHeight(152.0f);	   
 							onInsertObject(image);
 						} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(type)) {
@@ -657,17 +683,30 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 							lh.setFont("7");
 							lh.setHeight(152.0f);	   
 							onInsertObject(lh);
+						} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(type)) {
+							WeekOfYearObject lh = new WeekOfYearObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("7");
+							lh.setHeight(152.0f);	   
+							onInsertObject(lh);
+						} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(type)) {
+							WeekDayObject lh = new WeekDayObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							lh.setFont("7");
+							lh.setHeight(152.0f);	   
+							onInsertObject(lh);
 						}
     				}
     				else
-    				{
-	            		Debug.d(TAG, "--->mContext: " + mContext);
+	    				{           		
+	            		Debug.e(TAG, "===============>mContext: " + mContext);
 	            		String type = bundle.getString(ObjectInsertDialog.OBJECT_TYPE);
 	            		String format = bundle.getString(ObjectInsertDialog.OBJECT_FORMAT);
 	            		float[] cur = getNextXcor();
 	            		if (BaseObject.OBJECT_TYPE_TEXT.equals(type)) {
 	            			TextObject text = new TextObject(mContext, cur[0]);
 	            			text.setY(cur[1]);
+	            			Debug.e(TAG, "===============HANDLER_MESSAGE_INSERT_OBJECT333>mContext: " + mContext);
 							onInsertObject(text);
 						} else if (BaseObject.OBJECT_TYPE_CNT.equals(type)) {
 							CounterObject counter = new CounterObject(mContext, cur[0]);
@@ -695,7 +734,12 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 							onInsertObject(ellipse);
 						} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(type)) {
 							BarcodeObject bar = new BarcodeObject(mContext, cur[0]);
+							boolean source = bundle.getBoolean(ObjectInsertDialog.OBJECT_SOURCE, false);
 							bar.setY(cur[1]);
+							if (source) {
+								bar.setSource(source);
+								bar.setCode("QR");
+							}
 							onInsertObject(bar);
 						} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equalsIgnoreCase(type)) {
 							GraphicObject image = new GraphicObject(mContext, cur[0]);
@@ -705,9 +749,17 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 							LetterHourObject lh = new LetterHourObject(mContext, cur[0]);
 							lh.setY(cur[1]);
 							onInsertObject(lh);
-						}    					
-    					
+						} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(type)) {
+							WeekOfYearObject lh = new WeekOfYearObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							onInsertObject(lh);
+						} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(type)) {
+							WeekDayObject lh = new WeekDayObject(mContext, cur[0]);
+							lh.setY(cur[1]);
+							onInsertObject(lh);
+						}
     				}
+    				//addbylk_1_8/30 end//////////////////////////////////////////////////
             		
             		break;
             }   
@@ -733,37 +785,40 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return -1;
 	}
 	
-	public ProgressDialog mProgressDialog;
+	public LoadingDialog mProgressDialog;
 	public Thread mProgressThread;
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mProgressDialog = ProgressDialog.show(mContext, "", getView().getResources().getString(R.string.strSaving), true,false);
-		mProgressShowing = true;
-		
-		mProgressThread = new Thread(){
-			
-			@Override
-			public void run(){
-				
-				try{
-					for(;mProgressShowing==true;)
-					{
-						Thread.sleep(2000);
-					}
-					mHandler.sendEmptyMessage(HANDLER_MESSAGE_DISMISSDIALOG);
-				}catch(Exception e)
-				{
-					
-				}
-			}
-		};
-		mProgressThread.start();
+		mProgressDialog = LoadingDialog.show(mContext, R.string.strSaving);
+		Debug.d(TAG, "--->progress dialog show");
+//		mProgressShowing = true;
+//		
+//		mProgressThread = new Thread(){
+//			
+//			@Override
+//			public void run(){
+//				
+//				try{
+//					for(;mProgressShowing==true;)
+//					{
+//						Thread.sleep(2000);
+//					}
+//					mHandler.sendEmptyMessage(HANDLER_MESSAGE_DISMISSDIALOG);
+//				}catch(Exception e)
+//				{
+//					
+//				}
+//			}
+//		};
+//		mProgressThread.start();
 	}
 	
 	public void dismissProgressDialog()
 	{
 		mProgressShowing=false;
+		mProgressDialog.cancel();
+		Debug.d(TAG, "--->progress dialog cancel");
 		//Thread thread = mProgressThread;
 		//thread.interrupt();
 		
@@ -814,7 +869,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				break;
 			case R.id.btn_right:
 				rightKeyPressed();
-				break;
+
+				// 屏蔽缩放按键 	
+			//addbylk_1_21/30_begin
+				
 			//case R.id.btn_zoomIn:
 			//	onZoomInPressed();
 			//	break;
@@ -827,6 +885,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			//case R.id.narrow_btn:
 			//	onNarrowPressed();
 			//	break;
+				
+			//addbylk_1_21/30_end
+
 			case R.id.btn_cursor:
 				onCursorPressed();
 				break;
@@ -856,18 +917,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		case R.id.btn_down:
 			onDownTouch(event);
 			break;
-		//case R.id.btn_zoomOut:
+		case R.id.btn_zoomOut:
 			// onZoomOutXTouch(event);
-		//	break;
-	//	case R.id.btn_zoomIn:
+			break;
+		case R.id.btn_zoomIn:
 			// onZoomInXTouch(event);
-		//	break;
-	//	case R.id.wide_btn:
-	//		onWideTouch(event);
-	//		break;
-	//	case R.id.narrow_btn:
-	//		onNarrowTouch(event);
-	//		break;
+			break;
+		case R.id.wide_btn:
+			onWideTouch(event);
+			break;
+		case R.id.narrow_btn:
+			onNarrowTouch(event);
+			break;
 		default:
 			break;
 		}
@@ -877,15 +938,30 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return false;
 	}
 	
+	/// addbylk_1_21/30_begin  
 	private void onNew() {
+		/*
 		mObjName = null;
-		mMsgTask.removeAll();
+		mMsgTask.removeAll();  //清空 对象列表 
 		MessageObject msgObject = new MessageObject(mContext, 0);
 		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
 		mMsgTask.addObject(msgObject);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
-		mHScroll.scrollTo(0, 0);
+	//	mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+	//	mHScroll.scrollTo(0, 0);
+		((MainActivity)mContext).onEditTitleChanged(mContext.getString(R.string.str_filename_no));	
+		
+		*/
+		mObjName = null;
+		mMsgManager.removeAll();
+		MessageObject msgObject = new MessageObject(mContext, 0);
+		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
+		mMsgManager.add(msgObject);
+		mMsgTask.addObject(msgObject);
+		((MainActivity)mContext).onEditTitleChanged(mContext.getString(R.string.str_filename_no));	
+		
+		
 	}
+	/// addbylk_1_21/30_end
 	
 	private void onSave() {
 		if(!isPropertyChanged())
@@ -942,18 +1018,37 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	private void onShowInfo() {
 		BaseObject object = getCurObj();
-		onShowInfo(object);
-	}
-	
-	private void onShowInfo(BaseObject object) {
-		
-		ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, object);
+		// onShowInfo(object);
+		final ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, object);
 		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
 			@Override
 			public void onClick() {
 				Debug.d(TAG, "===>onShowinfo  clicked");
-				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
+				Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE_CONTENT);
+				msg.obj = objDialog.getObject();
 				msg.sendToTarget();
+			}
+		});
+		objDialog.setOnDeleteListener(new onDeleteListener() {
+
+			@Override
+			public void onClick() {
+				onDelete();
+			}
+		});
+		objDialog.show();
+	}
+	
+	private void onShowInfo(BaseObject object) {
+		
+		final ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, object);
+		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
+			@Override
+			public void onClick() {
+				Debug.d(TAG, "===>onShowinfo  clicked");
+				Message msg = mObjRefreshHandler.obtainMessage(OBJECT_INSERT);
+	 			msg.obj = objDialog.getObject();
+	 			msg.sendToTarget();
 			}
 		});
 		objDialog.setOnDeleteListener(new onDeleteListener() {
@@ -965,26 +1060,58 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		});
 		objDialog.show();
 	}
+	/*
+	
+	private void onShowInfo() {
+		BaseObject object = getCurObj();
+		onShowInfo(object);
+	}
+	
+	private void onShowInfo(BaseObject object) {
+		
+		ObjectInfoDialog objDialog = new ObjectInfoDialog(mContext, object);
+		objDialog.setOnPositiveBtnListener(new OnPositiveBtnListener(){
+			@Override
+			public void onClick() {
+				Debug.d(TAG, "===>onShowinfo  clicked");
+//				Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
+//				msg.sendToTarget();
+			}
+		});
+		objDialog.setOnDeleteListener(new onDeleteListener() {
+			
+			@Override
+			public void onClick() {
+				onDelete();
+			}
+		});
+		objDialog.show();
+	}
+	*/
 	
 	private void onDelete() {
 		// TODO Auto-generated method stub
 		BaseObject obj = getCurObj();
 		if(obj == null || obj instanceof MessageObject)
 			return;
-		mMsgTask.removeObject(obj);
-		setCurObj(0);
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_CHANGED);
+//		mMsgTask.removeObject(obj);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_REMOVE);
+		msg.obj = obj;
+		msg.sendToTarget();
+		mMsgManager.setSelect(0);
 	}
 	
 	private void onInsertObject(BaseObject object) {
 		mMsgTask.addObject(object);
+//		mMsgManager.add(object);
 		setCurObj(object);
 		/**
 		 * display object info dialog 
 		 */
-		// Message msg = mObjRefreshHandler.obtainMessage(REFRESH_OBJECT_CHANGED);
 		// mObjRefreshHandler.sendMessage(msg);
 		// clearCurObj();
+		object.setTask(mMsgTask);
 		onShowInfo(object);
 	}
 	
@@ -994,10 +1121,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if(ret != -1)
 		{
 			ExtGpio.playClick();
-			clearCurObj();
-			setCurObj(ret);
-			// mObjList.setSelection(ret);
-			mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_JUST);
+			mMsgManager.setSelect(ret);
+
 		}
 		return false;
 	}
@@ -1017,7 +1142,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (obj instanceof MessageObject) {
 			cursorMove((MessageObject)obj);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private boolean onLeftTouch(MotionEvent event) {
@@ -1049,28 +1176,13 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (obj instanceof MessageObject) {
 			cursorMove((MessageObject)obj);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private void cursorMove(MessageObject object) {
-		float x = object.getX();
-		float y = object.getY();
-		if (x + 20 > mHScroll.getScrollX() + mHScroll.getWidth()) {
-			Debug.d(TAG, "--->x=" + x + ", scrollx=" + mHScroll.getScrollX() + ",  width=" + mHScroll.getWidth());
-			mHScroll.scrollBy(200, 0);
-		} else if (x-20 < mHScroll.getScrollX()) {
-			mHScroll.scrollBy(-200, 0);
-			if (x <= 20) {
-				object.setX(20f);
-			}
-		}
 		
-		if (y + 10 > mHScroll.getHeight()) {
-			object.setY(mHScroll.getHeight() -10);
-		} else if (y < 10) {
-			object.setY(10f);
-		}
-		mObjView.invalidate();
 	}
 	
 	private boolean onRightTouch(MotionEvent event) {
@@ -1101,8 +1213,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (obj instanceof MessageObject) {
 			cursorMove((MessageObject)obj);
 		}
-		
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private boolean onUpTouch(MotionEvent event) {
@@ -1119,6 +1233,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return false;
 	}
 	
+	
 	private void downKeyPressed()
 	{
 		BaseObject obj = getCurObj();
@@ -1133,7 +1248,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		if (obj instanceof MessageObject) {
 			cursorMove((MessageObject)obj);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private boolean onDownTouch(MotionEvent event) {
@@ -1164,7 +1281,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			obj.resizeByHeight();
 		}
 		*/
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private void onZoomOutPressed() {
@@ -1180,7 +1300,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			obj.resizeByHeight();
 		}
 		*/
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = obj;
+		msg.sendToTarget();
 	}
 	
 	private boolean onWideTouch(MotionEvent event) {
@@ -1206,7 +1329,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		} else {
 			object.setWidth(object.getWidth() + 4);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = object;
+		msg.sendToTarget();
 	}
 	
 	private boolean onNarrowTouch(MotionEvent event) {
@@ -1232,7 +1357,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		} else {
 			object.setWidth(object.getWidth() - 4);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = object;
+		msg.sendToTarget();
 	}
 	
 	private void onListPressed() {
@@ -1251,27 +1379,20 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		/*如果當前選中的不是cursor或者cursor的座標爲（0,0） 重置座標*/
 		if (!o.getSelected() || o.getX() == 0 || o.getY() == 0) {
 			/* 光标显示在ScrollView中间  */
-			int x = mHScroll.getWidth()/2 + mObjView.getScrollX();
-			int y = mHScroll.getHeight()/2;
-			Debug.d(TAG, "--->x=" + x + ", y=" + y);
-			o.setX(x);
-			o.setY(y);
-
-			setCurObj(0);
+			mMsgManager.setSelect(0);
 		} else {
 			o.setSelected(false);
 		}
-		mObjRefreshHandler.sendEmptyMessage(REFRESH_OBJECT_PROPERTIES);
+
+		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
+		msg.obj = o;
+		msg.sendToTarget();
 	}
 	
 	public void scrollPageFore() {
-		mHScroll.scrollBy(300, 0);
-		mObjView.invalidate();
 	}
 	
 	public void scrollPageBack() {
-		mHScroll.scrollBy(-300, 0);
-		mObjView.invalidate();
 	}
 	
 	public final int LEFT_KEY=1;

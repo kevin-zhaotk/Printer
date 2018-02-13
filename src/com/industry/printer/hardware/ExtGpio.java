@@ -95,7 +95,6 @@ public class ExtGpio {
 	}
 	
 	public static boolean writeSysfs() {
-		
         String path = "/sys/devices/platform/ext-gpio/playClick";
         if (!new File(path).exists()) {
             Debug.e("", "File not found: " + path);
@@ -115,7 +114,6 @@ public class ExtGpio {
             Debug.e("", "IO Exception when write: " + path, e);
             return false;
         }
-        
     }
 
 }

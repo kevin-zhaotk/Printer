@@ -31,6 +31,8 @@ public class DotMatrixReader {
 	private File mDotFile;
 	private InputStream mReader;
 	
+	public static	int m_matrixlen;
+	
 	public static DotMatrixReader getInstance(Context context,float height,float width) 
 	{
 		if (mInstance == null)
@@ -102,45 +104,81 @@ public class DotMatrixReader {
 		{
 			if (isAscii(inCodes[i])) {
 				offset = getOffsetByAscii(inCodes[i]);
+				
+				try {
+					mReader.reset();
+					mReader.skip(offset);
+					mReader.read(buffer);
+					Debug.d(TAG, "----------------------");
+					//Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
+					//Debug.print(buffer);
+					Debug.d(TAG, "----------------------");
+	//addbylk0625	
+		 	    	columnTransferSmallend(buffer);
+		///			columnTransferBigend(buffer);
+//					Debug.print(buffer);
+					Debug.e(TAG, "-====columnTransferSmallend----------");
+			
+					if( (int)(height)==76)
+					{	Debug.e(TAG, "-====columnTransferSmallend1111111----------");
+						matrix.append(expendTo32Bit(buffer), 0, 4*6);//32高 8行 宽 
+						Debug.e(TAG, "-====columnTransferSmallend1111..2222---------");
+					}
+					if( (int)(height)==152)
+					{								
+						matrix.append(expendTo32Bit(buffer), 0, 4*12);//32高 16行 宽 
+					}
+					
+					Debug.e(TAG, "-====columnTransferSmallend22222----------");
+					
+			//		matrix.append(buffer, 0, 32);	
+					
+				} catch (IOException e) {
+				}			
+				
 			} else {
 				offset = getOffsetByGBCode(inCodes[i]);
+				try {
+					mReader.reset();
+					mReader.skip(offset);
+					mReader.read(buffer);
+					Debug.d(TAG, "----------------------");
+					//Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
+					//Debug.print(buffer);
+					Debug.d(TAG, "----------------------");
+	//addbylk0625	
+		 	    	columnTransferSmallend(buffer);
+		///			columnTransferBigend(buffer);
+//					Debug.print(buffer);
+					Debug.e(TAG, "-====columnTransferSmallend----------");
+			
+				//	if( (int)(height)==76)
+				//	{	Debug.e(TAG, "-====columnTransferSmallend1111111----------");
+						matrix.append(expendTo32Bit(buffer), 0, 4*16);//32高 8行 宽 
+						Debug.e(TAG, "-====columnTransferSmallend1111..2222---------");
+					//}
+					///if( (int)(height)==152)
+					//{								
+					//	matrix.append(expendTo32Bit(buffer), 0, 4*12);//32高 16行 宽 
+					// }
+					
+					Debug.e(TAG, "-====columnTransferSmallend22222----------");
+					
+			//		matrix.append(buffer, 0, 32);	
+					
+				} catch (IOException e) {
+				}			
+				
 			}
-			try {
-				mReader.reset();
-				mReader.skip(offset);
-				mReader.read(buffer);
-				Debug.d(TAG, "----------------------");
-				//Debug.d(TAG, "===>code:"+Integer.toHexString(inCodes[i])+"   offset:"+offset);
-				//Debug.print(buffer);
-				Debug.d(TAG, "----------------------");
-//addbylk0625	
-	 	    	columnTransferSmallend(buffer);
-	///			columnTransferBigend(buffer);
-//				Debug.print(buffer);
-				Debug.e(TAG, "-====columnTransferSmallend----------");
-		
-				if( (int)(height)==76)
-				{	Debug.e(TAG, "-====columnTransferSmallend1111111----------");
-					matrix.append(expendTo32Bit_width8(buffer), 0, 4*6);//32高 8行 宽 
-					Debug.e(TAG, "-====columnTransferSmallend1111..2222---------");
-				}
-				if( (int)(height)==152)
-				{								
-					matrix.append(expendTo32Bit(buffer), 0, 4*12);//32高 16行 宽 
-				}
-				
-				Debug.e(TAG, "-====columnTransferSmallend22222----------");
-				
-		//		matrix.append(buffer, 0, 32);	
-				
-			} catch (IOException e) {
-			}
+
 			
 		}
+		m_matrixlen=matrix.length();
 		return matrix.toByteArray();
 	}
 	
 	public int getDotCount(byte[] dots) {
+		
 		int count = 0;
 		for (int i = 0; i < dots.length; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -151,6 +189,7 @@ public class DotMatrixReader {
 			}
 		}
 		return count;
+		
 	}
 	/**
 	 * 把字库中取出的行点阵转换成列点阵,高字节在前
@@ -263,8 +302,8 @@ public class DotMatrixReader {
 		
 		return bit_32;
 	}
-	
-	private byte[] expendTo32Bit_width8(byte[] DZ_buffer)
+/*	
+	private byte[] expendTo32Bit_width8(byte[] DZ_buffer)getDotMatrix
 	{
 		if (DZ_buffer == null) {
 			return null;
@@ -278,7 +317,7 @@ public class DotMatrixReader {
 		}
 		return bit_32;
 	}	
-	
+	*/
 	
 	/**
 	 * 数字和字符通过ascii码计算字库偏移量

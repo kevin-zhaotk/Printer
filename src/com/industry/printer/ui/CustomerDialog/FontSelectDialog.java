@@ -1,9 +1,18 @@
 package com.industry.printer.ui.CustomerDialog;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.Attributes.Name;
+
 import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
+import com.industry.printer.cache.FontCache;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,10 +69,13 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 	
 	public class FontItemAdapter extends BaseAdapter {
 
+		private static final String FONT_NAME = "title";
+		private static final String FONT_TIPS = "tips";
 		private int position=0;
 		private Holder mHolder;
 		private LayoutInflater mInflater;
-		private String[] mFonts = mContext.getResources().getStringArray(R.array.strFontArray);
+		private List<Map<String, String>> mFonts;
+//		private String[] mFonts = mContext.getResources().getStringArray(R.array.strFontArray);
 		
 		public FontItemAdapter() {
 			mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,7 +83,17 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		}
 		
 		private void init() {
+			String[] name = mContext.getResources().getStringArray(R.array.strFontArray);
+			String[] tips = mContext.getResources().getStringArray(R.array.strFontTipsArray);
 			
+			mFonts = new ArrayList<Map<String,String>>();
+			for (int i = 0; i < name.length; i++) {
+				Map f = new HashMap<String, String>();
+				f.put(FONT_NAME, name[i]);
+				f.put(FONT_TIPS, tips[i]);
+				Debug.d("XXX", "--->title: " + name[i] + " -- tips: " + tips[i]);
+				mFonts.add(f);
+			}
 		}
 		
 		public void setSelect(int pos) {
@@ -80,17 +102,17 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		}
 		
 		public String getSelectedItem() {
-			return mFonts[position];
+			return mFonts.get(position).get(FONT_NAME);
 		}
 		
 		@Override
 		public int getCount() {
-			return mFonts.length;
+			return mFonts.size();
 		}
 
 		@Override
 		public Object getItem(int arg0) {
-			return mFonts[arg0];
+			return mFonts.get(arg0).get(FONT_NAME);
 		}
 
 		@Override
@@ -106,14 +128,15 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 				convertView = mInflater.inflate(R.layout.font_item_layout, null);
 				mHolder = new Holder();
 				mHolder.mText = (TextView) convertView.findViewById(R.id.font);
+				mHolder.mTips = (TextView) convertView.findViewById(R.id.fontTips);
 			}
+			String font = mFonts.get(position).get(FONT_NAME);
+			mHolder.mText.setText(font);
 			
-			mHolder.mText.setText(mFonts[position]);
-			if (position == this.position) {
-				mHolder.mText.setSelected(true);
-			} else {
-				mHolder.mText.setSelected(false);
-			}
+			Typeface tf = FontCache.get(mContext, "fonts/" + font + ".ttf");
+			mHolder.mTips.setTypeface(tf);
+			mHolder.mTips.setText(mFonts.get(position).get(FONT_TIPS));
+			mHolder.mText.setSelected(position == this.position);
 			
 			convertView.setTag(mHolder);
 			return convertView;
@@ -124,6 +147,7 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 	
 	public class Holder {
 		public TextView mText;
+		public TextView mTips;
 	}
 
 	@Override

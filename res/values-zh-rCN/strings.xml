@@ -16,6 +16,8 @@
 	<string name="str_btn_stop">停止</string>
 	<string name="str_btn_clean">清洗</string>
 	<string name="str_btn_open">打开</string>
+	<string name="str_remain_ink">剩余锁值</string>
+	<string name="str_remain_ptimes">打印次数</string>
 	<string name="str_btn_new">新建</string>
 	<string name="str_btn_save">保存</string>
 	<string name="str_btn_saveas">另存为</string>
@@ -69,6 +71,7 @@
 	<string name="txtDefault">text</string>
 	<string name="strDragable">是否拖动</string>
 	<string name="strShow">显示内容</string>
+	<string name="strFontsize">字号</string>
 	<string name="strFont">字体</string>
 	<string name="strLinewidth">线宽</string>
 	<string name="strBits">位数</string>
@@ -85,6 +88,7 @@
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>
 	<string name="strLoading">正在加载请耐心等待...</string>
+	<string name="strCopying">正在拷贝...</string>
 	<string name="strInsertSerial">请插入打印设备</string>
 	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
@@ -95,7 +99,7 @@
 	    <item>-- </item>
 	    <item>38.1 mm 三头</item>
 	    <item>50.8 mm 四头</item>
-	    <item>32点 </item>
+	    <item>7点 </item>
 	    <item>16点 </item>
 	    <item>-- </item>
 	    <item>一寸喷头 </item>
@@ -126,6 +130,29 @@
 	    <item>9</item>
 	</string-array>
 	
+	<string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ 字体</item>
+	    <item>1B+ 字体</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ 字体</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ 字体</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
+	</string-array>
+	
 	<string-array name="strFontFile">
 	    <item>WelldrawH000</item>
 	</string-array>
@@ -143,6 +170,7 @@
 	    <item>CODE_128</item>
 	    <item>CODE_39</item>
 	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
 	
@@ -208,7 +236,7 @@
 	<string name="object_text">文本对象</string>
 	<string name="object_realtime">实时时间对象</string>
 	<string name="object_counter">计数器对象</string>
-	<string name="object_bar">条形码对象</string>
+	<string name="object_bar">条形码</string>
 	<string name="object_pic">图形对象</string>
 	<string name="object_julian">儒略日对象</string>
 	<string name="object_line">直线对象</string>
@@ -216,7 +244,10 @@
 	<string name="object_ellipse">椭圆对象</string>
 	<string name="object_shift">班次对象</string>
 	<string name="object_second">实时时间秒</string>
+	<string name="object_charHour">字符小时</string>
 	<string name="object_msg_name">信息名称</string>
+	<string name="object_qr">二维码</string>
+	<string name="object_dynamic_qr">动态二维码</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.保留</string>
 	<string name="strPrSpeedname">01.打印频率</string>
@@ -471,7 +502,7 @@
 	<string name="str_textview_param14">14.2 头镜像</string>
 	<string name="str_textview_param15">15.1 头倒置</string>
 	<string name="str_textview_param16">16.2 头倒置</string>
-	<string name="str_textview_param17">17.条码文件</string>
+	<string name="str_textview_param17">17.保留</string>
 	<string name="str_textview_param18">18.计数器</string>
 	<string name="str_textview_param19">19.3 头偏移</string>
 	<string name="str_textview_param20">20.4 头偏移</string>
@@ -702,4 +733,25 @@
 	
 	<string name="str_toast_no_qrfile">沒有找到 QR.txt或QR.csv</string>
 	<string name="str_barcode_end">QR.txt已經打印結束</string>
+	<string name="str_recover_print">recover last print</string>
+	
+	<string name="str_net_devname">设备名称</string>
+	<string name="str_net_ipaddr">IP地址</string>
+	<string name="str_net_stat">在线状态</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">计数</string>
+	<string name="str_net_int">墨水</string>
+	<string name="str_net_commands">命令</string>
+	<string name="str_net_back">返回</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">连接</string>
+	
+	<string name="str_tip_nothing">~ 没有找到图片!!!</string>
+	<string name="str_no_permission">权限不足</string>
+	<string name="str_flush_tips">将会覆盖原有系统设置信息，确定?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

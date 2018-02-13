@@ -1,61 +1,46 @@
 package com.industry.printer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
-import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.widget.Toast;
 
-import com.industry.printer.FileFormat.SystemConfigFile;
+//addbylk_1_25/30_begin
+import java.util.ArrayList;
+import java.util.Vector;
+//addbylk_1_25/30_end
 import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
+import com.industry.printer.exception.PermissionDeniedException;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.GraphicObject;
 import com.industry.printer.object.JulianDayObject;
+import com.industry.printer.object.LetterHourObject;
 import com.industry.printer.object.MessageObject;
-import com.industry.printer.object.ObjectsFromString;
-import com.industry.printer.object.RealtimeDate;
-import com.industry.printer.object.RealtimeHour;
-import com.industry.printer.object.RealtimeMinute;
-import com.industry.printer.object.RealtimeMonth;
 import com.industry.printer.object.RealtimeObject;
-import com.industry.printer.object.RealtimeYear;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.object.TextObject;
-import com.industry.printer.object.TlkObject;
+import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.object.data.BitmapWriter;
-
-
-import java.io.BufferedInputStream;  
-import java.io.BufferedOutputStream;  
-import java.io.DataInputStream;  
-import java.io.DataOutputStream;  
-import java.io.FileInputStream;  
-import java.io.FileOutputStream;  
 
 /**
  * MessageTask包含多个object
@@ -64,19 +49,6 @@ import java.io.FileOutputStream;
  */
 public class MessageTask {
 
-
-	private File mFile;
-	private FileInputStream mFStream;
-	
-	private MessageTask mTask;
- 
-
-	
-	public byte[] bin;
-	public ByteArrayInputStream mCacheStream;
-	
-	
-	
 	private static final String TAG = MessageTask.class.getSimpleName();
 	public static final String MSG_PREV_IMAGE = "/1.bmp";
 	private Context mContext;
@@ -86,30 +58,71 @@ public class MessageTask {
 
 	public int mType;
 	private int mIndex;
-	public SystemConfigFile mSysconfig; //addbylk0618
+	
+	private SaveTask mSaveTask;
+	private Handler mCallback; 
+	
 	public MessageTask(Context context) {
 		mName="";
 		mContext = context;
 		mObjects = new ArrayList<BaseObject>();
-		mSysconfig = SystemConfigFile.getInstance(mContext);//addbylk0618
 	}
 	
 	/**
 	 * 通过tlk文件解析构造出Task
+	 * @param tlk  tlk path, absolute path
+	 * @param name
+	 */
+	public MessageTask(Context context, String tlk, String name) {
+		this(context);
+		if (tlk == null || TextUtils.isEmpty(tlk)) {
+			return;
+		}
+		String tlkPath="";
+		File file = new File(tlk);
+		setName(name);
+		TLKFileParser parser = new TLKFileParser(context, mName);
+		parser.setTlk(tlk);
+		try {
+			parser.parse(context, this, mObjects);
+		} catch (PermissionDeniedException e) {
+			ToastUtil.show(mContext, R.string.str_no_permission);
+		}
+		mDots = parser.getDots();
+	}
+	
+	/**
+	 * 通过tlk名稱解析构造出Task
+	 * @param context
 	 * @param tlk
 	 */
 	public MessageTask(Context context, String tlk) {
 		this(context);
-		String tlkPath="";
-		if (tlk.startsWith(ConfigPath.getTlkPath())) {
+		Debug.d(TAG, "--->tlk: " + tlk);
+		String path = ""; 
+		if (tlk.startsWith(File.separator)) {
 			File file = new File(tlk);
 			setName(file.getName());
+			path = file.getParent();
 		} else {
 			setName(tlk);
 		}
 		
 		TLKFileParser parser = new TLKFileParser(context, mName);
-		parser.parse(context, this, mObjects);                                      
+		try {
+			parser.parse(context, this, mObjects);
+			if (tlk.startsWith(File.separator)) {
+				parser.setTlk(path);
+			}
+		} catch (PermissionDeniedException e) {
+			((MainActivity)context).runOnUiThread(new  Runnable() {
+				@Override
+				public void run() {
+					ToastUtil.show(mContext, R.string.str_no_permission);
+				}
+			});
+			
+		}
 		mDots = parser.getDots();
 	}
 	
@@ -118,13 +131,13 @@ public class MessageTask {
 	 * @param tlk tlk信息名称
 	 * @param content 树莓3上编辑的字符串内容
 	 */
-	public MessageTask(Context context, String tlk, String content) {
-		this(context);
-		String tlkPath="";
-		setName(tlk);
-		
-		mObjects = ObjectsFromString.makeObjs(mContext, content);
-	}
+//	public MessageTask(Context context, String tlk, String content) {
+//		this(context);
+//		String tlkPath="";
+//		setName(tlk);
+//		
+//		mObjects = ObjectsFromString.makeObjs(mContext, content);
+//	}
 	/**
 	 * set Task name
 	 * @param name
@@ -236,19 +249,21 @@ public class MessageTask {
 		return true;
 	}
 	
-	public void saveVarBin() 
-	{
-		int N=mSysconfig.getParam(42);//设置 43
-		if( N==0)
-		{		
-			if (mObjects == null || mObjects.size() <= 0) {
-				return;
-			}
-			for (BaseObject object : mObjects) {
-				if( 
+	public void saveVarBin() {
+		if (mObjects == null || mObjects.size() <= 0) {
+			return;
+		}
+		MessageObject msgObj = getMsgObject();
+		float scaleW = getScale(msgObj.getType());
+		float scaleH = getScaleH(msgObj.getType());
+		int h = getHeight(msgObj.getType());
+		
+		for (BaseObject object : mObjects) {
+				if(      // 去掉这个需要在下面添加东西 
 					//	(object instanceof RealtimeObject) ||
 						(object instanceof JulianDayObject) || (object instanceof ShiftObject)	)
-				{
+			{
+					// addbylk_1_9/30_begin
 					if(PlatformInfo.isBufferFromDotMatrix()!=0) {
 						
 						object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),object.mHeight,object.mWidth);
@@ -257,83 +272,37 @@ public class MessageTask {
 						Debug.e(TAG, "===mDots += object.drawVarBitmap()     "  );	
 						mDots += object.drawVarBitmap();
 					}
-				} else if (object instanceof BarcodeObject && object.getSource() == true) 
-				{
-					int dots = ((BarcodeObject) object).getDotcount();
-					MessageObject msg = getMsgObject();
-					if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST 
-							|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH ) {
-						mDots += dots * 2;
-					} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL 
-							|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST ) {
-						mDots += dots * 2 * 4;
-					} else {
-						mDots += dots/2;
-					}
-					
+					// addbylk_1_9/30_end
+			} else if ((object instanceof LetterHourObject)) {
+				mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
+			} else if (object instanceof BarcodeObject && object.getSource() == true) {
+				int dots = ((BarcodeObject) object).getDotcount();
+				MessageObject msg = getMsgObject();
+				if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST 
+						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH ) {
+					mDots += dots * 2;
+				} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL 
+						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST ) {
+					mDots += dots * 2 * 4;
+				} else {
+					mDots += dots/2;
 				}
-			}
-		}else
-		{
-			if (mObjects == null || mObjects.size() <= 0) {
-				return;
-			}
-			for (BaseObject object : mObjects) {
 				
-				if( // (object instanceof RealtimeObject) ||
-						(object instanceof CounterObject) ||(object instanceof JulianDayObject) || (object instanceof ShiftObject)	
-						)
-				{
-					if(PlatformInfo.isBufferFromDotMatrix()!=0) {
-						object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),object.mHeight,object.mWidth);
-					} else {
-						Debug.e(TAG, "=============mDots += object.drawVarBitmapN(N+1)    "  );
-					     mDots += object.drawVarBitmapN(N+1);
-					}
-				} else if (object instanceof BarcodeObject && object.getSource() == true) {
-					int dots = ((BarcodeObject) object).getDotcount();
-					MessageObject msg = getMsgObject();
-					if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST 
-							|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH ) {
-						mDots += dots * 2;
-					} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL 
-							|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST ) {
-						mDots += dots * 2 * 4;
-					} else {
-						mDots += dots/2;
-					}
-					
-				}
-			}	
-		}
-	}	
- 
-	
-	public void saveBin() 
-	{
-		int N=mSysconfig.getParam(42);//设置 43
-		Debug.e(TAG, "-saveBin 00000" + N);
-		if( N==0)
-		{		Debug.e(TAG, "-saveBin 11111" + N);
-			if (PlatformInfo.isBufferFromDotMatrix()!=0) 
-			{
-				saveBinDotMatrix();
-			} else 
-			{
-				saveObjectBin();
 			}
 		}
-		else
-		{		Debug.e(TAG, "-saveBin 22222" + N);
-			if (PlatformInfo.isBufferFromDotMatrix()!=0) 
-			{	Debug.e(TAG, "-saveBin 33333333333333" + N);
-				saveBinDotMatrix();
-			} else 
-			{	Debug.e(TAG, "-saveBin 444444444444444" + N);
-				saveObjectBinN(N+1);
-			}			
-			
+	}
+	
+	public void saveBin() {
+	    // addbylk_11_6/30_begin
+		if (PlatformInfo.isBufferFromDotMatrix()!=0) 
+		{
+			saveBinDotMatrix();
+		} else 
+		{
+			saveObjectBin();
 		}
+		// addbylk_11_6/30_end
+		
 	}
 	
 	/**
@@ -356,7 +325,7 @@ public class MessageTask {
 		float div = (float) (2.0/getHeads());
 		
 		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
-		Debug.e(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
+		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
 		for(BaseObject o:mObjects)
@@ -369,17 +338,18 @@ public class MessageTask {
 				// o.drawVarBitmap();
 			}
 			else if(o instanceof RealtimeObject)
-			{		
-				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext);
+			{
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext, 1, 1);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				BinFromBitmap.recyleBitmap(t);
- 
 			} else if(o instanceof JulianDayObject) {
 				// o.drawVarBitmap();
 			} else if (o instanceof BarcodeObject && o.getSource()) {
 				
 			} else if(o instanceof ShiftObject)	{
 				// o.drawVarBitmap();
+			} else if (o instanceof LetterHourObject) {
+				
 			} else if (o instanceof BarcodeObject) {
 				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
@@ -389,8 +359,6 @@ public class MessageTask {
 					can.drawBitmap(t, o.getX(), o.getY(), p);
 				}
 			} else {
-				//o.mWidth=64;
-				//o.mHeight=16;
 				Bitmap t = o.getScaledBitmap(mContext);
 				can.drawBitmap(t, o.getX(), o.getY(), p);
 				// BinFromBitmap.recyleBitmap(t);
@@ -398,7 +366,7 @@ public class MessageTask {
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
 		/**
-		 * 爲了兼容128點，152點和376點高的三種列高信息，需要計算等比例縮放比例
+		 * 爲了兼容128點，152點和384點高的三種列高信息，需要計算等比例縮放比例
 		 */
 		float dots = 152;///SystemConfigFile.getInstance(mContext).getParam(39);
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
@@ -441,183 +409,26 @@ public class MessageTask {
 			bitmap = b;
 		}else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3  ) )
 		{ //add by lk 170418
-			bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() , 128, true);
-			Bitmap b = Bitmap.createBitmap( bitmap.getWidth() , 128, Bitmap.Config.ARGB_8888);
-			can.setBitmap(b);
-			can.drawColor(Color.WHITE); 
-			can.drawBitmap(bitmap, 0, 0, p);
-			bitmap.recycle();
-			bitmap = b;
-  		//add by lk 170418 end	
-			
-			
-			
-			
-		}
-		// 生成bin文件
-		BinFileMaker maker = new BinFileMaker(mContext);
-		mDots = maker.extract(bitmap);
-		
-		// 保存bin文件
-		maker.save(ConfigPath.getBinAbsolute(mName));
-		
-		return ;
-	}
-	
-	public byte Bin[];
-	/**
-	 * 使用系统字库，生成bitmap，然后通过灰度化和二值化之后提取点阵生成buffer
-	 * @param f
-	 */
-	private void saveObjectBinN(int N)
-	{	
-		Debug.e(TAG, "=====================d00000000000=");
-		int width=0;
-		Paint p=new Paint();
-		if(mObjects==null || mObjects.size() <= 0)
-			return ;
-		for(BaseObject o:mObjects)
-		{
-			if (o instanceof MessageObject) {
-				continue;
-			}
-			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
-		}
-		float div = (float) (2.0);
-		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
-		Debug.e(TAG, "=====================drawAllBmp width="+width+", height="+Configs.gDots);
-		Canvas can = new Canvas(bmp);
-		can.drawColor(Color.WHITE);
-		for(BaseObject o:mObjects)
-		{
-			if((o instanceof MessageObject)	)
-				continue;
-			
-			if(o instanceof CounterObject)
-			{
-				// o.drawVarBitmap();
-			}
-			else if(o instanceof RealtimeObject)
-			{
-					Bitmap t = ((RealtimeObject)o).getBgBitmapN(mContext,N);
-					can.drawBitmap(t, o.getX(), o.getY(), p);
-					BinFromBitmap.recyleBitmap(t);				
-			} else if(o instanceof JulianDayObject) {
-				// o.drawVarBitmap();
-			} else if (o instanceof BarcodeObject && o.getSource()) {
-				
-			} else if(o instanceof ShiftObject)	{
-				// o.drawVarBitmap();
-			} else if (o instanceof BarcodeObject) {
-				Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
-				can.drawBitmap(t, o.getX(), o.getY(), p);
-			} else if (o instanceof GraphicObject) {
-				Bitmap t = ((GraphicObject) o).getScaledBitmap(mContext);
-				if (t != null) {
-					can.drawBitmap(t, o.getX(), o.getY(), p);
-				}
-			} else {
-				Bitmap t = o.getScaledBitmap(mContext);
-				can.drawBitmap(t, o.getX(), o.getY(), p);
-				// BinFromBitmap.recyleBitmap(t);
-			}
-		//can.drawText(mContent, 0, height-30, mPaint);
-		}
-		/**
-		 * 爲了兼容128點，152點和376點高的三種列高信息，需要計算等比例縮放比例
-		 */
-		// float dots = 152;///SystemConfigFile.getInstance(mContext).getParam(39);
-
-	//	Debug.d(TAG, "+++dots=" + dots);
-		// float prop = dots/Configs.gDots;
-	//	Debug.d(TAG, "+++prop=" + prop);
- 
-	//	Debug.d(TAG, "--->div=" + div + "  h=" + bmp.getHeight() + "  prop = " + prop);
-		
-		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div ), (int) (bmp.getHeight() ), true);
-
-
-			bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()*N, bitmap.getHeight(), true);
-			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+			bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), 128, true);
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 128, Bitmap.Config.ARGB_8888);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			can.drawBitmap(bitmap, 0, 0, p);
 			bitmap.recycle();
 			bitmap = b;
-						
-
+  		//add by lk 170418 end						
+		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		mDots = maker.extract(bitmap);
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
-	////////////////////////////////////////////////////////////////////////////
-		int ret=0;
-		int len=0;
-		
-		///读入	
-			File	mFile = new File(ConfigPath.getBinAbsolute(mName) );
-			try {
-				mFStream = new FileInputStream(mFile);
-				bin = new byte[mFStream.available()];
-				mFStream.read(bin);
-				mFStream.close();
-				Debug.d(TAG, "--->buffer.size=" + bin.length);
-			//	resolve();
-			} catch (Exception e) {
-				Debug.d(TAG, ""+e.getMessage());
-			}
-		
-	        //修改
-	        
-	        int w=(bin[0]&0xff)<<16 | (bin[1]&0xff)<<8 | (bin[2]&0xff);
-			Debug.e(TAG, "w=============================" +w+bin[2]+ bin[1] +bin[0]   ); 
-			Debug.e(TAG, "w=============================" + ((bin[0]&0xff)<<16)    ); 	
-			Debug.e(TAG, "w=============================" + ((bin[1]&0xff)<<8)    ); 				
-			Debug.e(TAG, "w=============================" + ((bin[2]&0xff))    ); 				
-			w=(int)(w/N);
-			
-	        int h=(bin[3]&0xff)<<16 | (bin[4]&0xff)<<8 | (bin[5]&0xff);
-			Debug.e(TAG, "h=============================" +h+bin[5]+ bin[4] +bin[3]   );
-			h=h*N;        
- 
-	
-			bin[2] = (byte) (w & 0x0ff);
-			bin[1] = (byte) ((w>>8) & 0x0ff);
-			bin[0] = (byte) ((w>>16) & 0x0ff);
-	    	
-	    	 
-			bin[5] = (byte) (h & 0x0ff);
-			bin[4] = (byte) ((h>>8) & 0x0ff);
-			bin[3] = (byte) ((h>>16) & 0x0ff);	
-		
-		     //保存	
-	    	try{
-	    		File file = new File(ConfigPath.getBinAbsolute(mName)  );
-	    		FileOutputStream fs = new FileOutputStream(ConfigPath.getBinAbsolute(mName)   );
-	    		ByteArrayOutputStream barr = new ByteArrayOutputStream();
-	    		//barr.write(head);
-	    		barr.write(bin,0,bin.length);
-	    		barr.writeTo(fs);
-	    		fs.flush();
-	    		fs.close();
-	    		barr.close();
-	    	}catch(Exception e)
-	    	{
-	    		Debug.d(TAG, "Exception: "+e.getMessage());
-	    		return ;
-	    	}
-	        ///////////////////////////////////////////////
-		
-
-	}	
-	
-	
-	
-	/**
-	 * 从16*16的点阵字库中提取点阵，生成打印buffer
+		return ;
+	}
+		/** addbylk_1_001_begin
+	 * 从16*16的点阵字库中提取点阵，生成打印buffer 
+	 *  变量用“3”填充 
 	 * @param f
 	 */
 	private void saveBinDotMatrix() {
@@ -640,31 +451,21 @@ public class MessageTask {
 			if (o instanceof MessageObject) {
 				continue;
 			} 		
-			
-			if(o instanceof TextObject )
-			{
-				content = o.getContent();
-				fleftwidthall +=  content.length()* (16*9.5) ;//得到 最大 宽度 项目  作为 整体 宽度 
-			
-			}else
-			{
+
 			fleftwidthall = (fleftwidthall > o.getXEnd() ? fleftwidthall : o.getXEnd());//得到 最大 宽度 项目  作为 整体 宽度 
 			Debug.e(TAG, "1===== leftwidth"+leftwidthall  +"o.getXEnd"+  o.getXEnd() );	
-			}
-	
-
-		
+				
 		}
 
 		 leftwidthall=(int)( (fleftwidthall)/9.5+0.5 );		
 		leftwidthall= leftwidthall<16?16:leftwidthall; //总宽度  不少于 一个 字符 				
-		leftwidthall+=19;	//尾部 多加  16+3列 		
+		leftwidthall+=6;	//尾部 多加  16+3列 		
 		Debug.e(TAG, "===== leftwidth"+leftwidthall   );	
 		
 		 g_1binbits  =new byte [4* (leftwidthall) ]; //32高4字节 ×宽 
 		 
-		int  leftwidth =2; 
-		int leftmov=3; 
+	//	int  leftwidth =2; 
+		int leftmov=1; 
 		for(BaseObject o:mObjects)
 		{
 			if((o instanceof MessageObject)	)
@@ -672,19 +473,8 @@ public class MessageTask {
 				continue;
 			}
 			
-			if(o instanceof CounterObject)
-			{
-				// content += o.getContent();
-				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-				if( o.mHeight==76)
-				{						 
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
-				}else if( o.mHeight==152)
-				{
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
-				}	
-			}
-			else if(o instanceof RealtimeObject)
+
+			 if(o instanceof RealtimeObject)
 			{
 			//	Bitmap t = ((RealtimeObject)o).getBgBitmapN(mContext,N);
 			//	can.drawBitmap(t, o.getX(), o.getY(), p);
@@ -692,47 +482,7 @@ public class MessageTask {
 				       //  9999-99-99
 
 				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-				
-				 
-			//	Debug.e(TAG, "--->realtime: " + content);
-				/*
-				content ="  -  -  ";// o.getContent();				
-				height = o.mHeight;
-				width = o.mWidth; 
-				
-			    Debug.e(TAG, "====DZ_buffer 000="+height+ width);
-		  	   mDots = maker.extract(content,height,width);
-			
-								 
-				byte[] bit_32 = new byte[ mDots ];//字模高  × 字模宽 
-				 Debug.e(TAG, "====DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
-				 bit_32 = maker.getBuffer() ;	
-			 	
-				 if( height ==76)
-				 {
-					for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
-					{
-							int objcew=  ((int)(o.mXcor /10 )*4 );
-							g_1binbits[(i +   objcew ) ] = bit_32[i];
-							g_1binbits[(i+1 + objcew  ) ] = bit_32[i+1];
-							g_1binbits[(i+2 + objcew ) ] = bit_32[i+2];
-							g_1binbits[(i+3 + objcew  ) ] = bit_32[i+3];						
-					}
-				 }
-				 if( height ==120)
-				 {
-					for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
-					{
-							int objcew=  ((int)(o.mXcor /10 )*4 );
-							g_1binbits[(i +   objcew ) ] = bit_32[i];
-							g_1binbits[(i+1 + objcew  ) ] = bit_32[i+1];
-							g_1binbits[(i+2 + objcew ) ] = bit_32[i+2];
-							g_1binbits[(i+3 + objcew  ) ] = bit_32[i+3];
 							
-					}
-				 }	
-				 */
-				
 				Debug.e(TAG, " ======000000000000000"   );
 				String substr=null;
 				char[] var;		
@@ -744,22 +494,29 @@ public class MessageTask {
 					{ 
 						content=	substr = ((TextObject)rtSub).getContent();
 						 Debug.e(TAG, " ======111" + substr );	
-						
+						 Debug.e(TAG, "====mDots "+mDots );		
 						//content ="  -  -  ";// o.getContent();				
 						height = rtSub.mHeight;
 						width = rtSub.mWidth; 
-						
+					    //
+						String s3="3";
+						  mDots+= maker.extract(s3,height,width)*3;
+						  
 					    Debug.e(TAG, "====DZ_buffer 000="+height+ width);
-				  	   mDots = maker.extract(substr,height,width);
-					
-										 
-						byte[] bit_32 = new byte[ mDots ];//字模高  × 字模宽 
-						 Debug.e(TAG, "====DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
+				 // 	   mDots+= 
+					    maker.extract(substr,height,width);
+					    
+
+					    
+						byte[] bit_32 = new byte[ maker.getBuffer().length ];//字模高  × 字模宽 
+						 Debug.e(TAG, "====00DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
+						 Debug.e(TAG, "====11DZ_buffer 111=maker.getBuffer().length "+maker.getmatrixlen(substr,height,width) );
+						 Debug.e(TAG, "====22DZ_buffer 111=maker.getBuffer().length "+mDots );
+			 
 						 bit_32 = maker.getBuffer() ;	
 					 	
 						 
-						 if( height ==76)
-						 { 		 //Y 移动 		
+						 	//Y 移动 		i+ "==="+bit_32.length 
 							 int objtop =  ((int)(rtSub.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
 							 Debug.e(TAG, " ====objtop" + objtop );	
 							 int len= bit_32.length; 	
@@ -801,87 +558,36 @@ public class MessageTask {
 									g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
 									g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];						
 							}
-						 }
-						 if( height ==152)
-						 {
-							 //Y 移动 		
-							 int objtop =  ((int)(rtSub.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
-							 Debug.e(TAG, " ====objtop" + objtop );	
-							 int len= bit_32.length; 	
-							int[] isrc=null;
-			    			int tempint=0;
-			    			isrc  =new int  [len ]; //32高4字节 ×宽 
-			    	    	for( int i2=0;i2<len/4;i2++)
-			    	    	{
-			    	    		tempint =(int) ( bit_32[i2*4+1 ] );//1
-			    	    		isrc[i2]=(tempint<<24)&0xff000000;   
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4 ] );//0
-			    	    		isrc[i2]|= (tempint<<16)&0x00ff0000;   
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4+3 ] );//3
-			    	    		isrc[i2]|= (tempint<<8)&0x0000ff00;    
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4+2 ] );//2
-			    	    		isrc[i2]|= tempint      &0x000000ff;   
-			    	    		
-			    	    		isrc[i2]= isrc[i2]<<objtop;
-			    	    	}
-			    	    	
-			    	    	for( int i2=0;i2<len/4;i2++)
-			    	    	{
-			    	    		bit_32[i2*4+1] =(byte) ( (isrc[i2] >>24)&0x000000ff ); 			    	    		
-			    	    		bit_32[i2*4+0]=(byte) ( (isrc[i2] >>16)&0x000000ff ); 			    	    		
-			    	    		bit_32[i2*4+3]=(byte) ( (isrc[i2] >>8)&0x0000000ff  ); 
-			    	    		bit_32[i2*4+2]=(byte) ( isrc[i2 ] &    0x0000000ff      );			    	    		    	    		
-			    	    	} 
-			    	    	// Y end 							 
-							for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
-							{
-								int objcew=  ((int)(rtSub.mXcor/9.5+0.5))*4;
-								   objcew += leftmov*4 ;
-									g_1binbits[(i +   objcew ) ] |= bit_32[i];
-									g_1binbits[(i+1 + objcew  ) ] |= bit_32[i+1];
-									g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
-									g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];								
-							}
-						 }	
+					 
+
 					}
-					if( rtSub.mHeight==76)
-					{						 
-						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.8);
-					}else if( rtSub.mHeight==152)
-					{
-						 leftwidth += (int)((rtSub.mXcor_end-rtSub.mXcor)/8.1);				
-					}	
+
 
 				}	
 					 			
 			}
+			 else if(o instanceof CounterObject)
+				{
+					String s3="3";
+					  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*5;//5位计数器 类型 
+					// content += o.getContent();
+					o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
+
+				}
 			else if(o instanceof JulianDayObject)
 			{
+
+				String s3="3";
+				  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*3;//			
 			//	content += o.getContent();
-				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-				if( o.mHeight==76)
-				{						 
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
-				}else if( o.mHeight==152)
-				{
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
-				}
-				
+				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);					
 			}
 			else if(o instanceof ShiftObject)
 			{
+				String s3="3";
+				  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*3;					
 				// content += o.getContent();
 				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-				if( o.mHeight==76)
-				{						 
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
-				}else if( o.mHeight==152)
-				{
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
-				}	
 			}
 			else if(o instanceof TextObject )
 			{
@@ -890,7 +596,8 @@ public class MessageTask {
 				width = o.mWidth; 
 				
 			  Debug.e(TAG, "====DZ_buffer 000="+height+ width);
-			  mDots = maker.extract(content,height,width);
+			//  mDots+=
+			  maker.extract(content,height,width);
 			  Debug.e(TAG, "====DZ_buffer 111="+ mDots  );
 								 
 			 byte[] bit_32 = new byte[ maker.getBuffer().length ];//字模高  × 字模宽 
@@ -899,9 +606,7 @@ public class MessageTask {
 		    Debug.e(TAG, "====DZ_buffer 222=");
 	
 	  
-			 if( height ==76) 
-			 {
-				 //Y 移动 		
+				 //Y方向移动 代码块 开始		
 				 int objtop =  ((int)(o.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
 				 Debug.e(TAG, " ====objtop" + objtop );	
 				 int len= bit_32.length; 	
@@ -932,82 +637,37 @@ public class MessageTask {
     	    		bit_32[i2*4+3]=(byte) ( (isrc[i2] >>8)&0x0000000ff  ); 
     	    		bit_32[i2*4+2]=(byte) ( isrc[i2 ] &    0x0000000ff      );			    	    		    	    		
     	    	} 
-    	    	// Y end 				 
-				for (int i = 0; i < bit_32.length-1; i+=4) //压缩掉的 列 数 8 
+    	    	// Y方向移动 代码块结束  				 
+				for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
 				{
-						Debug.e(TAG, "====DZ_buffer.length-76=");
+						Debug.e(TAG, "=x===DZ_buffer.length-76="+i+ "==="+bit_32.length  );
 						int objcew=  ((int)(o.mXcor/9.5+0.5))*4;
-						  objcew += leftmov*4;
+						Debug.e(TAG, "=x1===DZ_buffer.length-76="+objcew );		
+						 objcew += leftmov*4;
+						Debug.e(TAG, "=x2===DZ_buffer.length-76="+objcew );
 						g_1binbits[(i +   objcew ) ] |= bit_32[i];
 						g_1binbits[(i+1 + objcew  ) ] |= bit_32[i+1];
 						g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
-						g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];						
-				}
-			 }
-			 if( height ==152)
-			 {
-				 //Y 移动 		
-				 int objtop =  ((int)(o.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
-				 Debug.e(TAG, " ====objtop" + objtop );	
-				 int len= bit_32.length; 	
-				int[] isrc=null;
-    			int tempint=0;
-    			isrc  =new int  [len ]; //32高4字节 ×宽 
-    	    	for( int i2=0;i2<len/4;i2++)
-    	    	{
-    	    		tempint =(int) ( bit_32[i2*4+1 ] );//1
-    	    		isrc[i2]=(tempint<<24)&0xff000000;   
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4 ] );//0
-    	    		isrc[i2]|= (tempint<<16)&0x00ff0000;   
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4+3 ] );//3
-    	    		isrc[i2]|= (tempint<<8)&0x0000ff00;    
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4+2 ] );//2
-    	    		isrc[i2]|= tempint      &0x000000ff;   
-    	    		
-    	    		isrc[i2]= isrc[i2]<<objtop;
-    	    	}
-    	    	
-    	    	for( int i2=0;i2<len/4;i2++)
-    	    	{
-    	    		bit_32[i2*4+1]=(byte) ( (isrc[i2] >>24)&0x000000ff ); 			    	    		
-    	    		bit_32[i2*4+0]=(byte) ( (isrc[i2] >>16)&0x000000ff ); 			    	    		
-    	    		bit_32[i2*4+3]=(byte) ( (isrc[i2] >>8)&0x0000000ff  ); 
-    	    		bit_32[i2*4+2]=(byte) ( isrc[i2 ] &    0x0000000ff      );			    	    		    	    		
-    	    	} 
-    	    	// Y end 				 
-				for (int i = 0; i < bit_32.length-1; i+=4) //压缩掉的 列 数 8 
-				{
-						Debug.e(TAG, "====DZ_buffer.length-152="+ bit_32.length+"="+i+"="+ (leftwidth*4 ) );
-						int objcew=  ((int)(o.mXcor/9.5+0.5))*4;
-						  objcew += leftmov*4;
-						g_1binbits[(i +   objcew ) ] |= bit_32[i];
-						g_1binbits[(i+1 + objcew  ) ] |= bit_32[i+1];
-						g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
-						g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];
+						g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];	
+						Debug.e(TAG, "=x2===DZ_buffer.length-76="+objcew ); 
 						
 				}
-			 }	
-				if( o.mHeight==76)
-				{						 
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.8);
-				}else if( o.mHeight==152)
-				{
-					 leftwidth += (int)((o.mXcor_end-o.mXcor)/8.1);				
-				}	
+				Debug.e(TAG, " ==========99991111111111111111"   );	
  	 
 				 				
 			}
-		
-		//can.drawText(mContent, 0, height-30, mPaint);
+				Debug.e(TAG, " ==========99992222222222222222222"   );	
+ 
 		}
-		Debug.e(TAG, " ======9999" + leftwidth  );	
+		
+		Debug.e(TAG, " ==========999933333333333333333"   );	
+		
+ 
 		//	maker.setBuffer(g_1binbits);
 			// 保存bin文件
-			maker.saveBin(ConfigPath.getTlkDir(mName) + "/1.bin",g_1binbits,32);	
-			
+			maker.saveBin(ConfigPath.getTlkDir(mName) + "/1.bin",g_1binbits, 32);	
+			mDots+=getDotCount(g_1binbits);
+			 	Debug.e(TAG, " =====getDotCount：   " + mDots  );			
 		for(BaseObject o:mObjects)
 		{
 			if((o instanceof MessageObject)	) {
@@ -1018,10 +678,254 @@ public class MessageTask {
 		
 		return ;
 	}
+	// addbylk_1_001_end
+	
+	/* 统计内存块中，所有点的数量  
+	 * 
+	 */
+	//addbylk_1_003_begin
+	public int getDotCount(byte[] dots) {
+		
+		int count = 0;
+		for (int i = 0; i < dots.length; i++) {
+			for (int j = 0; j < 8; j++) {
+				if ((dots[i] & (0x01<< j)) > 0)
+				{
+					count++;
+				}
+			}
+		}
+		return count;
+		
+	}
+	//addbylk_1_003_end
+	private void saveBinNoScale() {
+		int width=0;
+		Paint p=new Paint();
+		if(mObjects==null || mObjects.size() <= 1)
+			return ;
+		for(BaseObject o:mObjects)
+		{
+			if (o instanceof MessageObject) {
+				continue;
+			}
+			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+		}
+		/*計算得到的width爲152點陣對應的寬度，要根據噴頭類型轉換成實際寬度 */
+		MessageObject msgObj = getMsgObject();
+		float scaleW = getScale(msgObj.getType());
+		float scaleH = getScaleH(msgObj.getType());
+		//實際寬度
+		int bWidth = (int) (width * scaleW);
+		int bHeight = getHeight(msgObj.getType());
+		Bitmap bmp = Bitmap.createBitmap(bWidth , bHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "drawAllBmp width=" + bWidth + ", height=" + bHeight);
+		Canvas can = new Canvas(bmp);
+		can.drawColor(Color.WHITE);
+		for(BaseObject o:mObjects)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			
+			if((o instanceof CounterObject)
+					|| (o instanceof JulianDayObject)
+					|| (o instanceof BarcodeObject && o.getSource())
+					|| (o instanceof ShiftObject)
+					|| (o instanceof LetterHourObject))
+			{
+				// o.drawVarBitmap();
+			}
+			else if(o instanceof RealtimeObject) {
+				Bitmap t = ((RealtimeObject)o).getBgBitmap(mContext, scaleW, scaleH);
+				can.drawBitmap(t, (int)(o.getX() * scaleW), o.getY() * scaleH, p);
+				BinFromBitmap.recyleBitmap(t);
+			} else if (o instanceof BarcodeObject) {
+				// Bitmap t = ((BarcodeObject) o).getScaledBitmap(mContext);
+				Debug.d(TAG, "--->save height=" + o.getHeight() + " scaleH = " + scaleH);
+				int h = (int)(o.getHeight() * scaleH);
+				Debug.d(TAG, "--->save height=" + h);
+				h = h%2 == 0? h : h + 1; 
+				int w = (int) (o.getWidth() * scaleW);
+				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), w, h, o.getFont());
+				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
+			} else if (o instanceof GraphicObject) {
+				int h = (int)(o.getHeight() * scaleH);
+				int w = (int) (o.getWidth() * scaleW);
+				Bitmap t = ((GraphicObject) o).makeBinBitmap(mContext, null, w, h, null);
+				if (t != null) {
+					Debug.d(TAG, "---> w= " + t.getWidth() + " h= " + t.getHeight());
+					Debug.d(TAG, "---> x= " + o.getX() * scaleW + " y= " + o.getY() * scaleH);
+					can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
+				}
+			} else {
+				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
+				can.drawBitmap(t, (int)(o.getX() * scaleW), (int)(o.getY() * scaleH), p);
+				// BinFromBitmap.recyleBitmap(t);
+			}
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		// 生成bin文件
+		BinFileMaker maker = new BinFileMaker(mContext);
+		mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true));
+		// 保存bin文件
+		maker.save(ConfigPath.getBinAbsolute(mName));
+	}
+	
+	/**
+	 * 从16*16的点阵字库中提取点阵，生成打印buffer
+	 * @param f
+	 */
+	/*
+	private void saveBinDotMatrix() {
+		if(mObjects==null || mObjects.size() <= 0)
+			return ;
+		
+		String content="";
+		for(BaseObject o:mObjects)
+		{
+			if((o instanceof MessageObject)	)
+				continue;
+			
+			if(o instanceof CounterObject)
+			{
+				content += o.getContent();
+			}
+			else if(o instanceof RealtimeObject)
+			{
+				content += o.getContent();
+				Debug.d(TAG, "--->realtime: " + content);
+			}
+			else if(o instanceof JulianDayObject)
+			{
+				content += o.getContent();
+			}
+			else if(o instanceof ShiftObject)
+			{
+				content += o.getContent();
+			}
+			else
+			{
+				content += o.getContent();
+			}
+		//can.drawText(mContent, 0, height-30, mPaint);
+		}
+		// 生成bin文件
+		BinFileMaker maker = new BinFileMaker(mContext);
+		mDots = maker.extract(content);
+		// 保存bin文件
+		maker.save(ConfigPath.getTlkDir(mName) + "/1.bin");
+		for(BaseObject o:mObjects)
+		{
+			if((o instanceof MessageObject)	) {
+				((MessageObject) o).setDotCount(mDots);
+				break;
+			}
+		}
+		
+		return ;
+	}
+*/
+//	public void savePreview() {
+//		int width=0;
+//		Paint p=new Paint();
+//		if(mObjects==null || mObjects.size() <= 0)
+//			return ;
+//		for(BaseObject o:mObjects)
+//		{
+//			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
+//		}
+//
+//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+//		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
+//		Canvas can = new Canvas(bmp);
+//		can.drawColor(Color.WHITE);
+//						
+//		String content="";
+//
+//		for(BaseObject o:mObjects)
+//		{
+//			if (o instanceof MessageObject) {
+//				continue;
+//			}
+//			
+//			if(o instanceof CounterObject)
+//			{						
+//		//	o.setContent2(str_new_content)		;
+//				Bitmap  t  = o.getpreviewbmp();
+//
+//				if (t== null) {
+//					continue;
+//					}
+//				
+//					can.drawBitmap(t, o.getX(), o.getY(), p);			
+//			}
+//
+//			else if(o instanceof RealtimeObject)
+//			{	Debug.e(TAG, "RealtimeObject");		
+//				Bitmap  t  = o.getpreviewbmp();
+//
+//				if (t== null) {
+//					continue;
+//					}
+//				can.drawBitmap(t, o.getX(), o.getY(), p);				
+//			}			
+//			else if(o instanceof JulianDayObject)
+//			{
+//				Bitmap  t  = o.getpreviewbmp();
+//
+//				if (t== null) {
+//					continue;
+//					}
+//				can.drawBitmap(t, o.getX(), o.getY(), p);				
+//			}else if(o instanceof TextObject)
+//			{
+//				Bitmap  t  = o.getpreviewbmp();
+//
+//				if (t== null) {
+//					continue;
+//					}
+//				can.drawBitmap(t, o.getX(), o.getY(), p);				
+//			}	
+//					
+//			/*	
+//				TextObject
+//			{
+//				Bitmap t  = o.getScaledBitmap(mContext);
+//					if (t== null) {
+//					continue;
+//				}	
+//				can.drawBitmap(t, o.getX(), o.getY(), p);
+//			
+//			}*/
+//			
+//			/*	
+//			else if(o instanceof ShiftObject)
+//			{
+//				content += o.getContent();
+//			}
+//			*/
+//
+//		//can.drawText(mContent, 0, height-30, mPaint);	
+//			
+//		//	if(o instanceof CounterObject)
+//		//	{
+//		//		o.setContent("lkaa");//mContext="liukun";
+//		//	}	
+//			
+//		///	String o.setContent2("lkaa");//mContext="liukun";
+//			
+//		}
+//		// Bitmap.createScaledBitmap();
+//		float scale = bmp.getHeight() / 100;
+//		width = (int) (width / scale);
+//		
+//		width=width/2; //addbylk 减半输出 
+//		
+//		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
+//		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
+//	}
 
-
-	public void savePreview()
-	{
+	public void savePreview() {
 		int width=0;
 		Paint p=new Paint();
 		if(mObjects==null || mObjects.size() <= 0)
@@ -1037,96 +941,88 @@ public class MessageTask {
 		can.drawColor(Color.WHITE);
 
 		String content="";
-
+		Bitmap t = null;
 		for(BaseObject o:mObjects)
 		{
-		if (o instanceof MessageObject) {
-		continue;
-		}
-
-		if(o instanceof CounterObject)
-		{
-//			o.setContent2(str_new_content)	 ;
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-
-		else if(o instanceof RealtimeObject)
-		{	Debug.e(TAG, "RealtimeObject");
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-		else if(o instanceof JulianDayObject)
-		{
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}else if(o instanceof TextObject)
-		{
-		Bitmap  t  = o.getpreviewbmp();
-
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-		}
-		else //addbylk
-		{
-		Bitmap t = o.getScaledBitmap(mContext);
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-
-
-		}
-
-		/*
-		TextObject
-		{
-		Bitmap t  = o.getScaledBitmap(mContext);
-		if (t== null) {
-		continue;
-		}
-		can.drawBitmap(t, o.getX(), o.getY(), p);
-
-		}*/
-
-		/*
-		else if(o instanceof ShiftObject)
-		{
-		content += o.getContent();
-		}
-		*/
-
-		//can.drawText(mContent, 0, height-30, mPaint);
-
-//			if(o instanceof CounterObject)
-//			{
-//			 o.setContent("lkaa");//mContext="liukun";
+			t = null;
+			if (o instanceof MessageObject) {
+				continue;
+			}
+			t  = o.getpreviewbmp();
+			if (t == null) {
+				t = o.getScaledBitmap(mContext);
+				Debug.d(TAG, "++++++++++++++++++>bmp: " + t);
+				if (t== null) {
+					continue;
+				}
+			}
+			if (t == null) {
+				continue;
+			}
+			can.drawBitmap(t, o.getX(), o.getY(), p);
+			/*if(o instanceof CounterObject)
+			{
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if(o instanceof RealtimeObject) {	
+				Debug.e(TAG, "RealtimeObject");
+				t  = o.getpreviewbmp();	
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if(o instanceof JulianDayObject) {
+				t  = o.getpreviewbmp();	
+				if (t== null) {
+					continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if(o instanceof TextObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			} else if (o instanceof GraphicObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				
+			} else if (o instanceof WeekOfYearObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				
+			} else if (o instanceof WeekOfYearObject) {
+				t  = o.getpreviewbmp();
+				if (t== null) {
+				continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+				
+			} else {//addbylk
+				t = o.getScaledBitmap(mContext);
+				Debug.d(TAG, "++++++++++++++++++>bmp: " + t);
+				if (t== null) {
+					continue;
+				}
+				can.drawBitmap(t, o.getX(), o.getY(), p);
+			}*/
+//			if (t != null) {
+//				BinFromBitmap.recyleBitmap(t);
 //			}
-
-		///	String o.setContent2("lkaa");//mContext="liukun";
-
 		}
 		// Bitmap.createScaledBitmap();
-		float scale = bmp.getHeight() / 100;
+		float scale = bmp.getHeight() / 100f;
 		width = (int) (width / scale);
-
-		width=width/2; //addbylk 减半输出 
-
+		Debug.d(TAG, "---> +++++++ height = " + bmp.getHeight() + "   scale = " + scale);
 		Bitmap nBmp = Bitmap.createScaledBitmap(bmp, width, 100, false);
 		BitmapWriter.saveBitmap(nBmp, ConfigPath.getTlkDir(getName()), "1.bmp");
 	}
@@ -1136,43 +1032,37 @@ public class MessageTask {
 	private void saveExtras() {
 		for (BaseObject object : getObjects()) {
 			if (object instanceof GraphicObject) {
-				String source = ConfigPath.getPictureDir() + ((GraphicObject)object).getImage();
-				String dst = getPath() + "/" + ((GraphicObject)object).getImage();
-				Debug.d(TAG, "--->source: " + source);
-				Debug.d(TAG, "--->dst: " + dst);
-				// if file is exist, dont copy again
-				File file = new File(dst);
-				if (file.exists()) {
-					continue;
-				} else {
-					FileUtil.copyFile(source, dst);
-					((GraphicObject)object).setImage(dst);
-				}
+				((GraphicObject) object).afterSave();
 			}
 		}
 	}
 
-	public void save() {
-		 
-		Debug.e(TAG, "-11111111111111 " );
-		resetIndexs();
-		//保存1.TLK文件
-		  saveTlk(mContext);
-		//保存1.bin文件
-	 	saveBin();
-		Debug.e(TAG, "-2222222222 " );	
-		//保存其他必要的文件
-	  	saveExtras();
-		Debug.e(TAG, "-1333333333333 " );	
-		//保存vx.bin文件
-	 	saveVarBin();
-		Debug.e(TAG, "-444444444444 " );	
-		//保存1.TLK文件
-		saveTlk(mContext);
-		Debug.e(TAG, "-1444444444444444" );			
-		//保存1.bmp文件
-		savePreview();
-	 
+	public void save(Handler handler) {
+		
+//		resetIndexs();
+//		//保存1.TLK文件
+//		// saveTlk(mContext);
+//		//保存1.bin文件
+//		saveBin();
+//		
+//		//保存其他必要的文件
+//		saveExtras();
+//		
+//		//保存vx.bin文件
+//		saveVarBin();
+//		
+//		//保存1.TLK文件
+//		saveTlk(mContext);
+//				
+//		//保存1.bmp文件
+//		savePreview();
+		mCallback = handler;
+		if (mSaveTask != null) {
+			Debug.e(TAG, "--->There is already a save task running");
+			return;
+		}
+		mSaveTask = new SaveTask();
+		mSaveTask.execute((Void[])null);
 	}
 	
 	private void resetIndexs() {
@@ -1231,6 +1121,15 @@ public class MessageTask {
 		}
 		return height;
 	}
+	
+	public int getHeadType() {
+		int height = 1;
+		MessageObject obj = getMsgObject();
+		if (obj == null) {
+			return MessageType.MESSAGE_TYPE_12_7;
+		}
+		return obj.getType();
+	}
 
 	public String getPreview() {
 		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
@@ -1244,6 +1143,114 @@ public class MessageTask {
 		return 4f/getHeads();
 	}
 
+	public static float getScale(int type) {
+		float scale = 1f;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 1f;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128f/152f;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128f/152f * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 3f;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 4f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 4f;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
+	
+
+	public static float getScaleH(int type) {
+		float scale = 1f;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 1f;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128f/152f;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128f/152f * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 3f;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 4f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 2f;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 4f;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
+	
+	public static int getHeight(int type) {
+		int scale = 152;
+		switch (type) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+			scale = 152;
+			break;
+		case MessageType.MESSAGE_TYPE_25_4:
+			scale = 152 * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_16_3:
+			scale = 128;
+			break;
+		case MessageType.MESSAGE_TYPE_33:
+			scale = 128 * 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			scale = 152 * 3;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			scale = 152 * 4;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+			scale = 320;
+			break;
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			scale = 640;
+			break;
+		default:
+			break;
+		}
+		return scale;
+	}
 	
 	public static class MessageType {
 		public static final int MESSAGE_TYPE_12_7 	= 0;
@@ -1253,12 +1260,71 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
+//	    addbylk_1_26/30_begin 		
 		public static final int MESSAGE_TYPE_HZK_16_8  = 7;
-		public static final int MESSAGE_TYPE_HZK_16_16  = 8;				
+		public static final int MESSAGE_TYPE_HZK_16_16  = 8;	
+//		addbylk_1_26/30_end 	
 		public static final int MESSAGE_TYPE_1_INCH = 9; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 12; //320點每列的噴頭,雙頭
+		public static final int MESSAGE_TYPE_9MM = 13; //9mm head, copy6 times for print
 	}
 	
+	
+	public class SaveTask extends AsyncTask<Void, Void, Void>{
+
+		@Override
+		protected Void doInBackground(Void... params) {
+		//	resetIndexs();
+			//保存1.TLK文件
+			// saveTlk(mContext);
+			//保存1.bin文件
+			/*		
+			saveBin();
+	
+			//保存其他必要的文件
+			saveExtras();
+			
+			//保存vx.bin文件
+			saveVarBin();
+			
+			//保存1.TLK文件
+			saveTlk(mContext);
+					
+			//保存1.bmp文件
+			savePreview();
+			*/
+			//
+			
+			
+			mDots=0; //清楚 dot值 addbylk 
+			
+			Debug.e(TAG, "-11111111111111 " );
+			resetIndexs();
+
+ 
+		 	saveBin();
+			Debug.e(TAG, "-2222222222 " );	
+			//保存其他必要的文件
+		  	saveExtras();
+			Debug.e(TAG, "-1333333333333 " );	
+			//保存vx.bin文件
+		 	saveVarBin();
+			Debug.e(TAG, "-444444444444 " );	
+			//保存1.TLK文件
+			saveTlk(mContext);
+			Debug.e(TAG, "-1444444444444444" );			
+			//保存1.bmp文件
+			savePreview();
+			return null;
+		}
+		@Override
+        protected void onPostExecute(Void result) {
+			if (mCallback != null) {
+				mCallback.sendEmptyMessage(EditTabSmallActivity.HANDLER_MESSAGE_SAVE_SUCCESS);
+				mSaveTask = null;
+			}
+		}
+	}
 }

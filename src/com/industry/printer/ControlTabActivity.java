@@ -1,28 +1,52 @@
 package com.industry.printer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.friendlyarm.AndroidSDK.GPIOEnum;
 import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.Socket_Server.Network;
+import com.industry.printer.Socket_Server.Paths_Create;
+import com.industry.printer.Socket_Server.Printer_Database;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.PreferenceConstants;
 import com.industry.printer.Utils.PrinterDBHelper;
 import com.industry.printer.Utils.RFIDAsyncTask;
 import com.industry.printer.Utils.SystemPropertiesProxy;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
@@ -42,30 +66,36 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.R;
-
-// import com.softwinner.Gpio;
+import com.industry.printer.ControlTabActivity.ServerThread;
+import com.industry.printer.ControlTabActivity.Service;
 
 import android.R.bool;
 import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Bitmap.Config;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,7 +113,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+// import android.os.SystemProperties;
+import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
 	public static final String TAG="ControlTabActivity";
@@ -132,6 +163,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public BinInfo mBg;
 	BroadcastReceiver mReceiver;
 	public Handler mCallback;
+
+	private boolean mFlagAlarming = false;
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
@@ -238,8 +271,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public static final int MESSAGE_RFID_ALARM = 13;
 	
+	public static final int MESSAGE_RECOVERY_PRINT = 16;
 	
-	
+	public static final int MESSAGE_OPEN_MSG_SUCCESS = 17;
 	/**
 	 * the bitmap for preview
 	 */
@@ -272,6 +306,32 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public byte[] mPreviewBuffer;
 	
 	private boolean mFeatureCorrect = false;
+	//Socket___________________________________________________________________________________________
+		private Network Net;//checking net;
+		private String hostip,aimip;// ip addr
+		private Handler myHandler=null;//rec infor prpcess handle
+		private String Commands="";// command word;
+		private static final int PORT =3550; // port number;
+		private volatile ServerSocket server=null; //socket service object
+		private ExecutorService mExecutorService = null; //hnadle ExecutorService
+		private List<Socket> mList = new ArrayList<Socket>(); //socket list
+		private volatile boolean flag= true;// status flag
+		private String PrnComd="";//printing word
+		private Printer_Database Querydb;// database class
+		private Paths_Create Paths=new Paths_Create();//get and creat path class
+		private String AddPaths;//create paths
+		private String Scounts;//add counter
+		private Stack<String> StrInfo_Stack  = new Stack<String>();// str stack infor
+		private PackageInfo pi; //system infor pack
+		private StringBuffer sb = new StringBuffer(); //str area word
+		private HashMap<String, String> map = new HashMap<String, String>();//map area word
+		private int PrinterFlag=0;
+		private int SendFileFlag=0;
+		private int CleanFlag=0;
+		private int StopFlag=0;
+		private Socket Gsocket;  
+		
+		//Socket___________________________________________________________________________________________
 	
 	public ControlTabActivity() {
 		//mMsgTitle = (ExtendMessageTitleFragment)fragment;
@@ -297,7 +357,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mObjList = new ArrayList<BaseObject>();
 		mContext = this.getActivity();
 		mSysconfig = SystemConfigFile.getInstance(mContext);
-
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REOPEN_SERIAL);
 		filter.addAction(ACTION_CLOSE_SERIAL);
@@ -376,40 +435,36 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mSysconfig.getParam(31) == 1) {
 			mCounter = 0;
 		}
-		
-		  ///////////////////////////////////////////////////////////// 						//addbylk
-			if(mSysconfig.getParam(30)==7)//16*8点 
-			{				Debug.e(TAG, "111===>onclick");
-			   PlatformInfo.SetDotMatrixType(1);				   
-			}
-			else if(mSysconfig.getParam(30)==8)//16×16点 
-			{				Debug.e(TAG, "222===>onclick");
-			   PlatformInfo.SetDotMatrixType(2);
-			} 
-			else
-			{				Debug.e(TAG, "=333==>onclick");
-				  PlatformInfo.SetDotMatrixType(0);			
-			}	
-			///////////////////////////////////////////////////////////////////		
-		
 		/***PG1 PG2杈撳嚭鐘舵�佷负 0x11锛屾竻闆舵ā寮�**/
 		FpgaGpioOperation.clean();
 		
 		//Debug.d(TAG, "===>loadMessage");
 		// 閫氳繃鐩戝惉绯荤粺骞挎挱鍔犺浇
-		loadMessage();
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		boolean loading = p.getBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, false);
+		/**
+		 * if crash happened when load the last message, don`t load it again
+		 * avoid endless loop of crash
+		 */
+		if (!loading) {
+			loadMessage();
+		}
+		
 		
 		/****鍒濆鍖朢FID****/
 		mRfidManager = RFIDManager.getInstance(mContext);
 		mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		
 		refreshCount();
+		SocketBegin();// Beging Socket service start;
+		Querydb=new Printer_Database(mContext);
 	}
 	
 	public void onConfigureChanged() {
 		if (mMsgTask != null) {
 			mMsgFile.setText(mMsgTask.getName());
 		}
+		int heads = 1;
 		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
 		mTvStop.setText(R.string.str_btn_stop);
@@ -418,6 +473,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mTVPrinting.setText(R.string.str_state_printing);
 		mTVStopped.setText(R.string.str_state_stopped);
 		mtvInk.setText(R.string.str_state_inklevel);
+		if (mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0) {
+			heads = mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS);
+		} else {
+			heads = mSysconfig.getHeads();
+		}
+		Debug.d(TAG, "--->onConfigChanged: " + heads + "   -- " + RFIDManager.TOTAL_RFID_DEVICES);
+		if (heads > RFIDManager.TOTAL_RFID_DEVICES) {
+			mRfidManager = RFIDManager.getInstance(mContext,true);
+			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
+		}
 	}
 	
 	private void setupViews() {
@@ -436,29 +501,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	public void loadMessage() {
-		/*从U盘中读取系统设置，解析*/
-		mSysconfig = SystemConfigFile.getInstance(mContext);		
-		  ///////////////////////////////////////////////////////////// 						//addbylk
-			if(mSysconfig.getParam(30)==7)//16*8点 
-			{				Debug.e(TAG, "111===>onclick");
-			   PlatformInfo.SetDotMatrixType(1);				   
-			}
-			else if(mSysconfig.getParam(30)==8)//16×16点 
-			{				Debug.e(TAG, "222===>onclick");
-			   PlatformInfo.SetDotMatrixType(2);
-			} 
-			else
-			{				Debug.e(TAG, "=333==>onclick");
-				  PlatformInfo.SetDotMatrixType(0);			
-			}	
-			///////////////////////////////////////////////////////////////////		
-		
 		String f = mSysconfig.getLastMsg();
-		Debug.d(TAG, "===>load message: " + f);
+		Debug.d(TAG, "===>load message: " + f );
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
-			
 		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", f);
@@ -469,7 +516,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	private void switchRfid() {
 		mRfid += 1;
-		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= mSysconfig.getHeads()) {
+		int heads = mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0 ? mSysconfig.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) : mSysconfig.getHeads();
+		if (mRfid >= RFIDManager.TOTAL_RFID_DEVICES || mRfid >= heads) {
 			mRfid = 0;
 		}
 		Debug.d(TAG, "--->switchRfid to: " + mRfid);
@@ -513,6 +561,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mInkZero = true;
 			mHandler.removeMessages(MESSAGE_RFID_LOW);
 			mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
+		} else {
+			mFlagAlarming = false;
 		}
 		refreshVoltage();
 		refreshPulse();
@@ -617,11 +667,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			switch(msg.what)
 			{
 				case MESSAGE_OPEN_TLKFILE:		//
-					Debug.e(TAG, "====================================open tlk :"   );
-					
 					progressDialog();
+					
 					mObjPath = msg.getData().getString("file", null);
-					Debug.d(TAG, "=========open tlk22 :" + mObjPath );
+					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
 						break;
@@ -630,8 +679,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
 					//parseTlk(f);
 					//initBgBuffer();
-					///鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇 
-					mMsgTask = new MessageTask(mContext, mObjPath);
+					new Thread(){
+						@Override
+						public void run() {
+							/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
+							mMsgTask = new MessageTask(mContext, mObjPath);
+							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
+						}
+					}.start();
+					break;
+				case MESSAGE_OPEN_MSG_SUCCESS:
+					
+					sendToRemote(mContext.getString(R.string.str_prepared));
 					mObjList = mMsgTask.getObjects();
 					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 					//String preview = parser.getContentAbatract();
@@ -649,13 +708,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
 					mPreBitmap = mDTransThread.mDataTask.getPreview();
-					///濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�
+					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
 //					if (mPreBitmap.getWidth() > 1280) {
 //						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
 //						BinFromBitmap.recyleBitmap(mPreBitmap);
 //						mPreBitmap = b;
 //					}
 					//mMsgPreImg.setImageBitmap(mPreBitmap);
+				//	dispPreview(mPreBitmap);
+					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
+					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					/*从U盘中读取系统设置，解析*/
 					mSysconfig = SystemConfigFile.getInstance(mContext);		
 					  ///////////////////////////////////////////////////////////// 						//addbylk
@@ -673,16 +735,18 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						{				Debug.e(TAG, "=333==>onclick");
 							  PlatformInfo.SetDotMatrixType(0);	
 								dispPreview(mPreBitmap);
-						}
-						
-
-					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
-					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
+						}			
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
-					
+					if("100".equals(PrnComd))	
+					{
+						 msg = mHandler.obtainMessage(MESSAGE_PRINT_START);
+						 mHandler.sendMessage(msg);
+						
+						PrnComd="";
+					}
 					break;
 				case MESSAGE_UPDATE_PRINTSTATE:
 					String text = msg.getData().getString("text");
@@ -716,107 +780,92 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_CHECK_UID:
-					 		
-					DataTask dt1 = mDTransThread.getData();					 
-					char[] buf = dt1.getPrintBuffer();
-					Debug.e(TAG, "==============================>save print bin");
-					ArrayList<String> usbs = ConfigPath.getMountedUsb();
-					if (usbs != null && usbs.size() > 0) {
-						String path = usbs.get(0);
-						File file = new File(path + "/print1.bin");
-					if (file.exists()) {
-							file.delete();
-						}
-						BinCreater.saveBin( path + "/print1.bin", buf, dt1.mBinInfo.getBytesFeed() * 8);
-						Debug.e(TAG, "===========================================>path"+path );	
+					if (mDTransThread != null && mDTransThread.isRunning()) {
+						break;
 					}
-					Debug.e(TAG, "===========================================>path");
-				 
 					//Debug.d(TAG, "--->initDTThread");
 					if (mDTransThread == null) {
 						initDTThread();
+					}
+					if (mDTransThread == null) {
+						ToastUtil.show(mContext, R.string.str_toast_no_message);
+						break;
 					}
 					Debug.d(TAG, "--->prepare buffer");
 					DataTask dt = mDTransThread.getData();
 					mRfidManager.checkUID(dt.getHeads());
 					break;
 				case RFIDManager.MSG_RFID_CHECK_FAIL:
-					Toast.makeText(mContext, "Rfid changed", Toast.LENGTH_SHORT).show();
+					ToastUtil.show(mContext, "Rfid changed");
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
-					Debug.e(TAG, "==============================>MESSAGE_PRINT_START");
-					/**
-					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
-					 */
-			/*		
-					DataTask dt1 = mDTransThread.getData();					 
-					char[] buf = dt1.getPrintBuffer();
-					Debug.e(TAG, "==============================>save print bin");
-					ArrayList<String> usbs = ConfigPath.getMountedUsb();
-					if (usbs != null && usbs.size() > 0) {
-						String path = usbs.get(0);
-						File file = new File(path + "/print1.bin");
-					if (file.exists()) {
-							file.delete();
-						}
-						BinCreater.saveBin( path + "/print1.bin", buf, dt1.mBinInfo.getBytesFeed() * 8);
-						Debug.e(TAG, "===========================================>path"+path );	
-					}
-					Debug.e(TAG, "===========================================>path");
-				*/					
 					
-					//手机  墨水量 低  
-				
+					if (mDTransThread != null && mDTransThread.isRunning()) {
+						break;
+					}
 					if (!checkRfid()) {
-						Toast.makeText(mContext, R.string.str_toast_no_ink, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_ink);
 						return;
 					}
-					
-					
-					 
 					if (mDTransThread != null && mDTransThread.isRunning()) {
-						Toast.makeText(mContext, R.string.str_print_printing, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_print_printing);
 						break;
 					}
 					if (mObjPath == null || mObjPath.isEmpty()) {
-						Toast.makeText(mContext, R.string.str_toast_no_message, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_message);
 						break;
 					}
 					if (!checkQRFile()) {
-						Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
-					///	  娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀�  
+						// Toast.makeText(mContext, R.string.str_toast_no_qrfile, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_no_qrfile);
+						/* 娌掓湁QR.txt鎴朡R.csv鏂囦欢灏卞牨璀� */
 						mHandler.sendEmptyMessage(MESSAGE_RFID_ALARM);
 						break;
+					} else {
+						mFlagAlarming = false;
 					}
 					DataTask task = mDTransThread.getData();
 					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
-						Toast.makeText(mContext, R.string.str_toast_emptycontent, Toast.LENGTH_LONG).show();
+						ToastUtil.show(mContext, R.string.str_toast_emptycontent);
 						break;
 					}
-
-				///	/
-				//	 鍚姩鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
-				//	 1銆佹瘡娆℃墦鍗帮紝  鍏堟竻绌� 锛堣鏂囦欢锛夛紝 鐒跺悗 鍙戣缃�
-				//	  2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
-				//	  3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
-				//	 /
-					///鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞� 
+					/**
+					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
+					 */
+//					char[] buf = dt.getPrintBuffer();
+//					Debug.d(TAG, "--->save print bin");
+//					ArrayList<String> usbs = ConfigPath.getMountedUsb();
+//					if (usbs != null && usbs.size() > 0) {
+//						String path = usbs.get(0);
+//						File file = new File(path + "/print.bin");
+//						if (file.exists()) {
+//							file.delete();
+//						}
+//						BinCreater.saveBin( path + "/print.bin", buf, dt.mBinInfo.getBytesFeed() * 8);
+//					}
+					Debug.d(TAG, "--->clean");
+					/**
+					 * 鍚姩鎵撳嵃鍚庤瀹屾垚鐨勫嚑涓伐浣滐細
+					 * 1銆佹瘡娆℃墦鍗帮紝  鍏堟竻绌� 锛堣鏂囦欢锛夛紝 鐒跺悗 鍙戣缃�
+					 * 2銆佸惎鍔―ataTransfer绾跨▼锛岀敓鎴愭墦鍗癰uffer锛屽苟涓嬪彂鏁版嵁
+					 * 3銆佽皟鐢╥octl鍚姩鍐呮牳绾跨▼锛屽紑濮嬭疆璁璅PGA鐘舵��
+					 */
+					sendToRemote(mContext.getString(R.string.str_print_startok));
+					/*鎵撳嵃杩囩▼涓姝㈠垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_PRINTING);
 					FpgaGpioOperation.clean();
-					Debug.e(TAG, "--->update settings");
+					Debug.d(TAG, "--->update settings");
 					FpgaGpioOperation.updateSettings(mContext, task, FpgaGpioOperation.SETTING_TYPE_NORMAL);
-					Debug.e(TAG, "--->launch thread");
-					///鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙� 
+					Debug.d(TAG, "--->launch thread");
+					/*鎵撳嵃瀵硅薄鍦╫penfile鏃跺凡缁忚缃紝鎵�浠ヨ繖閲岀洿鎺ュ惎鍔ㄦ墦鍗颁换鍔″嵆鍙�*/
 					if (!mDTransThread.launch(mContext)) {
-						Toast.makeText(mContext, R.string.str_toast_no_bin, Toast.LENGTH_LONG);
+						ToastUtil.show(mContext, R.string.str_toast_no_bin);
 						break;
 					}
-					Debug.e(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
-
+					Debug.d(TAG, "--->finish TrheadId=" + Thread.currentThread().getId());
 					// FpgaGpioOperation.init();
-					Toast.makeText(mContext, R.string.str_print_startok, Toast.LENGTH_LONG).show();
-						 			
+					ToastUtil.show(mContext, R.string.str_print_startok);					
 					break;
 				case MESSAGE_PRINT_STOP:
 					/**
@@ -824,17 +873,24 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					 * 1銆佽皟鐢╥octl鍋滄鍐呮牳绾跨▼锛屽仠姝㈣疆璁璅PGA鐘舵��
 					 * 2銆佸仠姝ataTransfer绾跨▼
 					 */
+					if (mDTransThread != null && !mDTransThread.isRunning()) {
+						switchState(STATE_STOPPED);
+						FpgaGpioOperation.clean();
+						break;
+					}
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
 						mDTransThread = null;
 						initDTThread();
 					}
+					sendToRemote(mContext.getString(R.string.str_print_stopok));
 					/*鎵撳嵃浠诲姟鍋滄鍚庡厑璁稿垏鎹㈡墦鍗板璞�*/
 					switchState(STATE_STOPPED);
 					
-					Toast.makeText(mContext, R.string.str_print_stopok, Toast.LENGTH_LONG).show();
+					ToastUtil.show(mContext, R.string.str_print_stopok);
 					FpgaGpioOperation.clean();
+					//rollback();
 					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
@@ -878,6 +934,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					Bundle bd = (Bundle) msg.getData();
 					for (int i=0; i < mSysconfig.getHeads(); i++) {
 						RFIDDevice dev = mRfidManager.getDevice(i);
+						if (dev == null) {
+							break;
+						}
 						if (dev.getLocalInk() <= 0) {
 							ready = false;
 							break;
@@ -887,13 +946,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
 					} else {
 						mHandler.removeMessages(MESSAGE_RFID_ZERO);
+						mFlagAlarming = false;
+						ExtGpio.writeGpio('h', 7, 0);
 					}
 					if (mRfidInit == false) {
 						switchRfid();
 						refreshCount();
 						mRfidInit = true;
-						ExtGpio.writeGpio('h', 7, 0);
-						ExtGpio.writeGpio('b', 11, 0);
 					}
 					break;
 				case RFIDManager.MSG_RFID_WRITE_SUCCESS:
@@ -911,16 +970,23 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ZERO, 2000);
 					break;
 				case MESSAGE_RFID_ALARM:
-					Debug.d(TAG, "--->alarm");
-					ExtGpio.writeGpio('h', 7, 0);
-					ExtGpio.writeGpio('b', 11, 0);
+					mFlagAlarming = true;
+					ExtGpio.writeGpio('h', 7, 1);
 					if (mRfiAlarmTimes++ < 3) {
 						ExtGpio.playClick();
 						mHandler.sendEmptyMessageDelayed(MESSAGE_RFID_ALARM, 150);						
 					} else {
 						mRfiAlarmTimes = 0;
 					}
-					
+					break;
+				case MESSAGE_RECOVERY_PRINT:
+					SharedPreferences preference = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+					boolean pCrash = preference.getBoolean("stat_before_crash", false);
+					if (pCrash) {
+						ToastUtil.show(mContext, R.string.str_recover_print);
+						mHandler.sendEmptyMessageDelayed(MESSAGE_PRINT_START, 2000);
+						preference.edit().putBoolean("stat_before_crash", false).commit();
+					}
 					break;
 				default:
 					break;
@@ -950,60 +1016,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		QRReader reader = QRReader.getInstance(mContext);
 		boolean qrReady = reader.isReady();
+		Debug.d(TAG, "--->checkQRfile = " + qrReady);
 		DataTask task = mDTransThread.getData();
 		for (BaseObject obj : task.getObjList()) {
 			if (!(obj instanceof BarcodeObject)) {
 				continue;
 			}
-			if (!((BarcodeObject) obj).isQRCode() || mSysconfig.getParam(16) == 0) {
+			if (!((BarcodeObject) obj).isQRCode() || !obj.getSource()) {
 				continue;
 			}
 			ready = qrReady;
 		}
 		return ready;
 	}
-	
-	private void dispPreview(Bitmap bmp) {
-		int x=0,y=0;
-		int cutWidth = 0;
-		float scale = 1;
-		Debug.e(TAG, "-===1>dispPreview: " + mllPreview.getHeight());
-		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		Debug.e(TAG, "====2>screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
-		float height = mllPreview.getHeight();
-		scale = (height/bmp.getHeight());
-		Debug.e(TAG, "=====================3scale: " + scale  );	
-		mllPreview.removeAllViews();
-			for (int i = 0;x < bmp.getWidth(); i++)
-			{
-				if (x + 1200 > bmp.getWidth())
-				{
-					cutWidth = bmp.getWidth() - x;
-				} else{
-					cutWidth =1200;
-					
-				}
-				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
-				Debug.e(TAG, "====>child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight()+"_"+cutWidth);
-				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
-				child.recycle();
-				x += cutWidth;
-				ImageView imgView = new ImageView(mContext);
-				imgView.setScaleType(ScaleType.FIT_XY);
-//				if (density == 1) {
-					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
-//				} else {
-//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
-//				}
-				
-				imgView.setBackgroundColor(Color.WHITE);
-				imgView.setImageBitmap(scaledChild);
-				mllPreview.addView(imgView);
-			}
-	}
-
 	private void dispPreviewM(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
@@ -1045,9 +1070,73 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 	}
 		
+	private void dispPreview(Bitmap bmp) {
+		int x=0,y=0;
+		int cutWidth = 0;
+		float scale = 1;
+		if (bmp == null) {
+			return;
+		}
+		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+//		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
+//		DisplayMetrics dm = new DisplayMetrics();
+//		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+//		Debug.d(TAG, "--->screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+		float height = mllPreview.getHeight();
+		scale = (height/bmp.getHeight());
+		mllPreview.removeAllViews();
+			for (int i = 0;x < bmp.getWidth(); i++) {
+				if (x + 1200 > bmp.getWidth()) {
+					cutWidth = bmp.getWidth() - x;
+				} else {
+					cutWidth =1200;
+				}
+				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
+				if (cutWidth * scale < 1 || bmp.getHeight() * scale < 1) {
+					child.recycle();
+					break;
+				}
+				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
+				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
+				child.recycle();
+				Debug.d(TAG, "--->scaledChild  width = " + child.getWidth() + " scale= " + scale);
+				x += cutWidth; 
+				ImageView imgView = new ImageView(mContext);
+				imgView.setScaleType(ScaleType.FIT_XY);
+//				if (density == 1) {
+					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
+//				} else {
+//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
+//				}
+				
+				imgView.setBackgroundColor(Color.WHITE);
+				imgView.setImageBitmap(scaledChild);
+				mllPreview.addView(imgView);
+				// scaledChild.recycle();
+			}
+	}
+	
 	private int mRfiAlarmTimes = 0;
 	private boolean mRfidInit = false;
 	
+	/**
+	 * Counter & dynamic QR objects need a roll-back operation after each print-stop
+	 * because these dynamic objects generate the next value after each single print finished;
+	 * then, if stop printing at that time these values will step forward by "1" to the real value;
+	 * a mistake will happen at the next continue printing
+	 * Deprecated: move to DataTransferThread to do this  
+	 */
+	@Deprecated
+	private void rollback() {
+		if (mMsgTask == null) {
+			return;
+		}
+		for (BaseObject object : mMsgTask.getObjects()) {
+			if (object instanceof CounterObject) {
+				((CounterObject) object).rollback();
+			}
+		}
+	}
 	private void updateCntIfNeed() {
 		for (BaseObject object : mMsgTask.getObjects()) {
 			if (object instanceof CounterObject) {
@@ -1062,6 +1151,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	public void initDTThread() {
 		
+		if (mMsgTask == null) {
+			return;
+		}
 		if (mDTransThread == null) {
 			Debug.d(TAG, "--->Print thread ready");
 			mDTransThread = DataTransferThread.getInstance();
@@ -1096,7 +1188,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.GONE);
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
-				ExtGpio.writeGpio('h', 7, 1);
 				ExtGpio.writeGpio('b', 11, 1);
 				break;
 			case STATE_STOPPED:
@@ -1110,7 +1201,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.VISIBLE);
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
-				ExtGpio.writeGpio('h', 7, 0);
 				ExtGpio.writeGpio('b', 11, 0);
 				break;
 			default:
@@ -1318,15 +1408,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	/**
 	 * the loading dialog
 	 */
-	public ProgressDialog mLoadingDialog;
+	public LoadingDialog mLoadingDialog;
 	public Thread mProgressThread;
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		p.edit().putBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, true).commit();
 		if (mProgressShowing || (mLoadingDialog != null && mLoadingDialog.isShowing())) {
 			return;
 		}
-		mLoadingDialog = ProgressDialog.show(mContext, "", getResources().getString(R.string.strLoading), true,false);
+		mLoadingDialog = LoadingDialog.show(mContext, R.string.strLoading);
 		Debug.d(TAG, "===>show loading");
 		mProgressShowing = true;
 		mProgressThread = new Thread(){
@@ -1353,6 +1445,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public void dismissProgressDialog()
 	{
 		mProgressShowing=false;
+		SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
+		p.edit().putBoolean(PreferenceConstants.LOADING_BEFORE_CRASH, false).commit();
 	}
 	
 	public int currentRfid = 0;
@@ -1364,12 +1458,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			case R.id.StartPrint:
 				//mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 				mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
+//				mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
 				// QRReader reader = QRReader.getInstance(mContext);
 				// Debug.d(TAG, "--->QRdata: " + reader.read());
 				break;
 			case R.id.StopPrint:
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+				mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
 				break;
 			/*娓呮礂鎵撳嵃澶达紙涓�涓壒娈婄殑鎵撳嵃浠诲姟锛夛紝闇�瑕佸崟鐙殑璁剧疆锛氬弬鏁�2蹇呴』涓� 4锛屽弬鏁�4涓�200锛� 鍙傛暟5涓�20锛�*/
 			case R.id.btnFlush:
@@ -1447,6 +1542,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		return false;
 	}
+
+	public boolean isAlarming() {
+		return mFlagAlarming;
+	}
+
+	public boolean isPrinting() {
+		if (mDTransThread != null) {
+			return mDTransThread.isRunning();
+		}
+		return false;
+	}
 	
 	
 	public void setCallback(Handler callback) {
@@ -1469,9 +1575,604 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			
 			@Override
 			public void run() {
-				Toast.makeText(mContext, R.string.str_barcode_end, Toast.LENGTH_LONG).show();	
+				ToastUtil.show(mContext, R.string.str_barcode_end);	
 			}
 		});
 		
 	}
+	
+	
+	private void sendToRemote(String msg) {
+		try {
+			PrintWriter pout = new PrintWriter(new BufferedWriter(  
+                     new OutputStreamWriter(Gsocket.getOutputStream())),true); 
+             pout.println(msg);
+		} catch (Exception e) {
+		}
+		
+	}
+	
+	//Soect_____________________________________________________________________________________________________________________________
+			//通讯 开始
+			private void SocketBegin()
+			{
+				//Net = new Network();
+				int nRet = 0;
+			//	if (!Net.checkNetWork(mContext)) {
+				//	ToastUtil.show(mContext, "没有开启网络...!");
+				//	return;
+			//	}
+				hostip = getLocalIpAddress(); //获取本机
+				
+				
+				ServerThread serverThread=new ServerThread();
+				//flag=true;
+				serverThread.start();//线程开始
+				
+
+				
+		//接收线程处理
+			myHandler =new Handler(){	
+			public void handleMessage(Message msg)
+				{ 
+					if(msg.what==0x1234)
+					{
+						 String ss=msg.obj.toString();
+						// RecInfo(msg.obj.toString());
+					}
+					else
+					{
+					 String ss=msg.obj.toString();
+					}
+				}
+				};
+			}
+			public static String toStringHex(String s) {  
+			    byte[] baKeyword = new byte[s.length() / 2];  
+			    for (int i = 0; i < baKeyword.length; i++) {  
+			        try {  
+			            baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));  
+			        } catch (Exception e) {  
+			            
+			        }  
+			    }  
+			    try {  
+			        s = new String(baKeyword, "utf-8");// UTF-16le:Not  
+			    } catch (Exception e1) {  
+			         
+			    }  
+			    return s;  
+			}  
+			
+			//获取本机地址
+			public static String getLocalIpAddress() {  
+			        try {  
+			            for (Enumeration<NetworkInterface> en = NetworkInterface  
+			                            .getNetworkInterfaces(); en.hasMoreElements();) {  
+			                        NetworkInterface intf = en.nextElement();  
+			                       for (Enumeration<InetAddress> enumIpAddr = intf  
+			                                .getInetAddresses(); enumIpAddr.hasMoreElements();) {  
+			                            InetAddress inetAddress = enumIpAddr.nextElement();  
+			                            if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress()) {  
+			                            return inetAddress.getHostAddress().toString();  
+			                            }  
+			                       }  
+			                    }  
+			                } catch (SocketException ex) {  
+			                    Log.e("WifiPreference IpAddress", ex.toString());  
+			                }  
+			             return null; 
+			 }
+
+			
+			   
+			//Server服务
+		    class ServerThread extends Thread {  
+		          
+		        public void stopServer(){  
+		            try {                
+		                if(server!=null){                   
+		                	server.close();  
+		                    System.out.println("close task successed");    
+		                }  
+		            } catch (IOException e) {               
+		                System.out.println("close task failded");          
+		                }  
+		        }  
+		    public void run() {  
+		              
+		                try {  
+		                	server = new ServerSocket(PORT);  
+		                } catch (IOException e1) {  
+		                    // TODO Auto-generated catch block  
+		                    System.out.println("S2: Error");  
+		                    e1.printStackTrace();  
+		                }  
+		                mExecutorService = Executors.newCachedThreadPool();  //鍒涘缓涓?涓嚎绋嬫睜  
+		                System.out.println("鏈嶅姟鍣ㄥ凡鍚姩...");  
+		                Socket client = null;  
+		                while(flag) {  
+		                    try {  
+		                        System.out.println("S3: Error");  
+		                    client = server.accept(); 
+		                    //client.setSoTimeout(5000);
+		                 //   System.out.println("S4: Error");  
+		                    //鎶婂鎴风鏀惧叆瀹㈡埛绔泦鍚堜腑  
+		                    mList.add(client);  
+		                    mExecutorService.execute(new Service(client)); //鍚姩涓?涓柊鐨勭嚎绋嬫潵澶勭悊杩炴帴  
+		                     }catch ( IOException e) {  
+		                         System.out.println("S1: Error");  
+		                        e.printStackTrace();  
+		                    }  
+		                }  
+		             
+		              
+		        }  
+		    }      
+		    
+		   
+		    //线程池，子线程
+		    class Service implements Runnable {  
+		         private volatile boolean kk=true;  
+		      
+		         private BufferedReader in = null;  
+		         private String msg = "";  
+		           
+		         public Service(Socket socket) {  
+		        	 Gsocket = socket;  
+		             try {  
+		                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));  
+		                 
+		         		 	 
+		         		//map=obtainSimpleInfo(mContext); 
+		         		//msg=map.toString();
+		         		
+		                 //this.sendmsg(Querydb.QuerySqlData("select * from System"));  
+		                 this.sendmsg("connected success!!!");  
+		             } catch (IOException e) {  
+		                 e.printStackTrace();  
+		             }  
+		               
+		         }  
+		  
+		         public void run() {  
+		               
+		                 while(kk) {  
+		                     try {  
+		                        if((msg = in.readLine())!= null) {  
+		                             //100是打印  
+		                          //	msg= toStringHex(msg);  
+		                            if(msg.indexOf("100")>=0) { 
+		                            	if(PrinterFlag==0)
+		                            	{
+		                            		//打印赵工写好了，再测试
+		                            		PrnComd="100";
+		                            	    PrinterFlag=1;
+		                            		StopFlag=1;
+		                            		CleanFlag=0;
+		                            		String[] Apath = msg.split("\\|");
+		                                 	mObjPath= Apath[3];
+		                                 	int nRet=Paths.ListDirFiles( Apath[3]);
+		                                 	//if(nRet==1)
+		                                 	//{
+		                                 	Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		                                 	Bundle bundle = new Bundle();
+		         							bundle.putString("file", mObjPath);  // f表示信息名称
+		         							msg.setData(bundle);
+		         							mHandler.sendMessage(msg);
+		         							msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		         							this.sendmsg(msg+"recv success!");
+		                                 	//}
+		                                 //	else
+		                                 	//{
+		                                 		//this.sendmsg(msg+"recv success!");
+		                                 	//}
+		                            	}
+		                            } 
+		                            else if(msg.indexOf("200")>=0)
+		                            {
+		                            	//200是清洗
+		                            	
+		                            		CleanFlag=1;
+		                            	DataTransferThread thread = DataTransferThread.getInstance();
+		                				thread.purge(mContext);
+		                				this.sendmsg(msg+"recv success!");
+		                            	
+		                            }
+		                            else if(msg.indexOf("300")>=0)
+		                            {
+		                            	//300发文件
+		                            	AddPaths="";
+		                            	if(SendFileFlag==0)//发文件等赵工写好了，再测试
+		                            	{
+		                            		SendFileFlag=1;
+		                            	this.sendmsg(WriteFiles(Gsocket,msg));
+		                            	}
+		                           
+		                            }
+		                            else if(msg.indexOf("400")>=0)
+		                            {
+		                            	//400取计数器
+		                            	for(int i=0;i<7;i++)
+		                            	{
+		                            	sendmsg(mCounter+" |\r\nink|"+mRfidManager.getLocalInk(i));//+"|\r\n"+mMsgTask.getName()+"|\r\n");//获取INK无显示问题，赵工这地方改好，前面注示去掉就OK了
+		                            	this.sendmsg(msg+"recv success!");
+		                            	}
+		                            }
+		                            else if(msg.indexOf("500")>=0)
+		                            {
+		                            	//500停止打印
+		                            	if(StopFlag==1)
+		                            	{
+		                            		StopFlag=0;
+		                            		PrinterFlag=0;
+		                            	mHandler.sendEmptyMessage(MESSAGE_PRINT_STOP);
+		                            	this.sendmsg(msg+"recv success!");
+		                            	
+		                            	}
+		                            }
+		                            else if(msg.indexOf("600")>=0)
+		                            {
+		                           //600字符串长成所需文件
+		                            	
+		                    			String[] strArray = msg.split("\\|");
+		                    			
+		                    			StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
+		                    			/*MessageForPc message = new MessageForPc(mContext,strArray[3]);
+		                    			TextObject text = new TextObject(mContext, strArray[3].length());
+		                    			message.insert(text);
+		                    			message.save();*/
+		                    			this.sendmsg(msg+"recv success!");
+		                            }
+		                            else if(msg.indexOf("700")>=0)
+		                            {
+		                           //600字符串长成所需文件
+		                    			//String[] strArray = msg.split("\\|");
+		                    			
+		                    			//StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
+		                    			/*MessageForPc message = new MessageForPc(mContext,strArray[3]);
+		                    			TextObject text = new TextObject(mContext, strArray[3].length());
+		                    			message.insert(text);
+		                    			message.save();*/
+		                            	//文字生成赵工写好了，再测试
+		                            	MakeTlk(msg);
+		                    			this.sendmsg(msg+"recv success!");
+		                            }
+		                            else if(msg.indexOf("800")>=0)
+		                            {
+		                           //600字符串长成所需文件
+		                    			//String[] strArray = msg.split("\\|");
+		                    			
+		                    			//StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
+		                    			/*MessageForPc message = new MessageForPc(mContext,strArray[3]);
+		                    			TextObject text = new TextObject(mContext, strArray[3].length());
+		                    			message.insert(text);
+		                    			message.save();*/
+		                            	deleteFile(msg);
+		                    			this.sendmsg(msg+"Delete success!");
+		                            }
+		                            else if(msg.indexOf("900")>=0)
+		                            {
+		                           //600字符串长成所需文件
+		                    			//String[] strArray = msg.split("\\|");
+		                    			
+		                    			//StrInfo_Stack.push(strArray[3]);//用堆栈存储收的信息，先进称出;
+		                    			/*MessageForPc message = new MessageForPc(mContext,strArray[3]);
+		                    			TextObject text = new TextObject(mContext, strArray[3].length());
+		                    			message.insert(text);
+		                    			message.save();*/
+		                            	deleteDirectory(msg);
+		                    			this.sendmsg(msg+"Delete success!");
+		                            }
+		                            else {  
+		                                 Message msgLocal = new Message();  
+		                                 msgLocal.what = 0x1234;  
+		                                 msgLocal.obj =msg+"" ;  
+		                                 System.out.println(msgLocal.obj.toString());  
+		                                 System.out.println(msg);  
+		                                 myHandler.sendMessage(msgLocal);  
+		                               
+		                                 this.sendmsg(msg+"command error or Execution execution");  
+		                                    }  
+		                                          
+		                                 }  
+		                 } catch (IOException e) {  
+		                        System.out.println("close");  
+		                        kk=false;  
+		                        // TODO Auto-generated catch block  
+		                        e.printStackTrace(); 
+		                        this.sendmsg(msg+"Socket fail");
+		                        return;
+		                    }  
+		                     
+		                 }  
+		                         
+		             
+		         }  
+		         //向客户端发信息
+		         public void sendmsg(String msg) {  
+		            //System.out.println(msg);
+		        
+		             PrintWriter pout = null;  
+		             try {  
+		                 pout = new PrintWriter(new BufferedWriter(  
+		                         new OutputStreamWriter(Gsocket.getOutputStream())),true);  
+		                 pout.println(msg);  
+		             }catch (IOException e) {  
+		                 e.printStackTrace();  
+		             }  
+		      }  
+		       
+
+		}  
+		//获取设备信息
+		    private HashMap<String, String> obtainSimpleInfo(Context context){
+				//HashMap<String, String> map = new HashMap<String, String>();
+				PackageManager mPackageManager = context.getPackageManager();
+				PackageInfo mPackageInfo = null;
+				try {
+					mPackageInfo = mPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+				} catch (NameNotFoundException e) {
+					e.printStackTrace();
+				}
+				 PackageManager pm = mContext.getPackageManager();
+			        try {
+						pi = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
+					} catch (NameNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+			   
+			       
+
+			        
+			 
+				map.put("versionName", mPackageInfo.versionName);
+				map.put("versionCode", "_" + mPackageInfo.versionCode);
+				map.put("Build_version", "_" + Build.VERSION.RELEASE);
+				
+				map.put("CPU ABI", "_" + Build.CPU_ABI);
+			    map.put("Vendor", "_" + Build.MANUFACTURER);
+				map.put("MODEL", "_" + Build.MODEL);
+				map.put("SDK_INT", "_" + Build.VERSION.SDK_INT);
+				map.put("PRODUCT", "_" +  Build.PRODUCT);
+				
+				return map;
+			}
+			//接收信息，并写文件	
+			private String WriteFiles(Socket socket,String msg ) {
+				
+		        if (socket == null)
+		        {
+		            return "";
+		        }
+		       
+		        InputStream in=null; 
+		        
+		        try {
+		            //
+		 
+		        	String savePath=msg.substring(msg.indexOf("/")+1,msg.lastIndexOf("/"));
+
+		        	String[] Apath = savePath.split("\\/");
+		        	 
+		        	String TmpFiles=msg.substring(msg.lastIndexOf("/"));
+		        	TmpFiles=TmpFiles.substring(TmpFiles.indexOf("/")+1,TmpFiles.indexOf("|"));
+
+		        	String TmpsavePath= Paths.CreateDir(msg);
+		        	       
+		        
+		        	savePath=TmpsavePath+TmpFiles;
+				 InputStream inb=null; 
+				 AddPaths="";
+			        	inb = socket.getInputStream();
+				    	
+			        	
+			        	
+				FileOutputStream file = new FileOutputStream(savePath, false);
+				
+				byte[] buffer = new byte[8192];
+				
+				int size = -1;
+				
+				
+				  while (true) {
+		              int read = 0;
+		              if (inb != null) {
+		                  read = inb.read(buffer);
+		              }
+		              //passedlen += read;
+		              if (read == -1) {
+		                  break;
+		              }
+		              //下面进度条本为图形界面的prograssBar做的，这里如果是打文件，可能会重复打印出一些相同的百分比
+		              //System.out.println("文件接收了" +  (passedlen * 100/ len) + "%\n");
+		              file.write(buffer, 0, read);
+		          }
+		         
+				
+				
+				
+				/*try{
+				while ((size = inb.read(buffer)) != -1){
+					file.write(buffer, 0 ,size);
+				}
+				}
+				catch(Exception e)
+				{
+				file.close();
+				}*/
+				file.close();
+				file.flush();
+				//socket.close();
+				//dataStream.close();
+				//data.close();
+				//SendMessage(0, "1188.rar" + "鎺ユ敹瀹屾垚");
+				//socket.close();
+			}catch(Exception e){
+				//SendMessage(0, "鎺ユ敹閿欒:\n" + e.getMessage());
+			}
+		        SendFileFlag=0;
+		 return "File Recv success";
+	}
+	private void MakeTlk(String msg)
+	{
+		String tlk =msg.substring(msg.indexOf("/"), msg.lastIndexOf("/"));
+		String Name=tlk.substring(msg.indexOf("/"),tlk.lastIndexOf("/"));
+		Name=Name.substring(Name.lastIndexOf("/")+1);
+		tlk=tlk.replace("msg", "MSG");
+				MessageForPc message = new MessageForPc(mContext, tlk,Name);
+				message.reCreate(mContext);
+	}
+	public boolean deleteFile(String filePath) {
+		//delete file
+		//getPath2();
+	    File file = new File(filePath.substring(filePath.indexOf("/"), filePath.lastIndexOf("/")));
+	    //file.setExecutable(true,false); 
+	   // file.setReadable(true,false); 
+	    //file.setWritable(true,false);
+	    if(file.exists()) {
+	    if(file.isFile()){
+	       file.delete();
+	       System.gc();
+	       return true; 
+	        }
+	       
+	}
+	    return false;
+	}
+	    /**
+	     * 删除文件夹以及目录下的文件
+	     * @param   filePath 被删除目录的文件路径
+	     * @return  目录删除成功返回true，否则返回false
+	     */
+	    public boolean deleteDirectory(String filePath) {
+	    boolean flag = false;
+	        //如果filePath不以文件分隔符结尾，自动添加文件分隔符
+	    filePath=filePath.substring(filePath.indexOf("/"), filePath.lastIndexOf("/"));
+	        if (!filePath.endsWith(File.separator)) {
+	            filePath = filePath + File.separator;
+	        }
+	        File dirFile = new File(filePath);
+	        if (!dirFile.exists() || !dirFile.isDirectory()) {
+	            return false;
+	        }
+	        flag = true;
+	        File[] files = dirFile.listFiles();
+	        //遍历删除文件夹下的所有文件(包括子目录)
+	        for (int i = 0; i < files.length; i++) {
+	            if (files[i].isFile()) {
+	            //删除子文件
+	                flag = DeleteFolderFile(files[i].getAbsolutePath());
+	                if (!flag) break;
+	            } else {
+	            //删除子目录
+	                flag = deleteDirectory(files[i].getAbsolutePath());
+	                if (!flag) break;
+	            }
+	        }
+	        if (!flag) return false;
+	        //删除当前空目录
+	        return dirFile.delete();
+	    }
+
+	    /**
+	     *  根据路径删除指定的目录或文件，无论存在与否
+	     *@param filePath  要删除的目录或文件
+	     *@return 删除成功返回 true，否则返回 false。
+	     */
+	    public boolean DeleteFolder(String filePath) {
+	    File file = new File(filePath);
+	        if (!file.exists()) {
+	            return false;
+	        } else {
+	            if (file.isFile()) {
+	            // 为文件时调用删除文件方法
+	                return DeleteFolderFile(filePath);
+	            } else {
+	            // 为目录时调用删除目录方法
+	                return deleteDirectory(filePath);
+	            }
+	        }
+	    }
+	    public boolean  DeleteFolderFile(String filePath) {
+	    	//delete file
+	    	//getPath2();
+	        File file = new File(filePath);
+	        //file.setExecutable(true,false); 
+	       // file.setReadable(true,false); 
+	        //file.setWritable(true,false);
+	        if(file.exists()) {
+	        if(file.isFile()){
+	           file.delete();
+	           System.gc();
+	           return true; 
+	            }
+	           
+	    }
+	        return false;
+	    }
+	    public String getPath2() {
+			String sdcard_path = null;
+			String sd_default = Environment.getExternalStorageDirectory()
+					.getAbsolutePath();
+			Log.d("text", sd_default);
+			if (sd_default.endsWith("/")) {
+				sd_default = sd_default.substring(0, sd_default.length() - 1);
+			}
+			// 得到路径
+			try {
+				Runtime runtime = Runtime.getRuntime();
+				Process proc = runtime.exec("mount");
+				InputStream is = proc.getInputStream();
+				InputStreamReader isr = new InputStreamReader(is);
+				String line;
+				BufferedReader br = new BufferedReader(isr);
+				while ((line = br.readLine()) != null) {
+					if (line.contains("secure"))
+						continue;
+					if (line.contains("asec"))
+						continue;
+					if (line.contains("fat") && line.contains("/mnt/")) {
+						String columns[] = line.split(" ");
+						if (columns != null && columns.length > 1) {
+							if (sd_default.trim().equals(columns[1].trim())) {
+								continue;
+							}
+							sdcard_path = columns[1];
+						}
+					} else if (line.contains("fuse") && line.contains("/mnt/")) {
+						String columns[] = line.split(" ");
+						if (columns != null && columns.length > 1) {
+							if (sd_default.trim().equals(columns[1].trim())) {
+								continue;
+							}
+							sdcard_path = columns[1];
+						}
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Log.d("text", sdcard_path);
+			return sdcard_path;
+		}
+
+	    public void onComplete() {
+			String msg=mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mMsgTask.getName()+"\r\n";
+			Debug.d(TAG, "--->onComplete: msg = " + msg);
+			PrintWriter pout = null;  
+//	        try {
+//	            pout = new PrintWriter(new BufferedWriter(  
+//	                   new OutputStreamWriter(Gsocket.getOutputStream())),true);  
+//	             pout.println(msg);  
+//	         }catch (IOException e) {  
+//	             e.printStackTrace();  
+//	         }  
+		}
+	//Socket________________________________________________________________________________________________________________________________
+	
 }
+

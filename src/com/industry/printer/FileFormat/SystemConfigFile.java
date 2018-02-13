@@ -73,7 +73,7 @@ public class SystemConfigFile{
 	public static final String PH_SETTING_RESERVED_40 = "_10040";
 	public static final String PH_SETTING_RESERVED_41 = "_10041";
 	public static final String PH_SETTING_RESERVED_42 = "_10042";
-	public static final String PH_SETTING_RESERVED_43 = "_10043";
+	public static final String PH_SETTING_RESERVED_43 = "_10043"; 	// 实际的打印喷头数量
 	public static final String PH_SETTING_RESERVED_44 = "_10044";
 	public static final String PH_SETTING_RESERVED_45 = "_10045";
 	public static final String PH_SETTING_RESERVED_46 = "_10046";
@@ -99,6 +99,8 @@ public class SystemConfigFile{
 	public static final String LAST_MESSAGE = "message";
 	
 	public static final int INDEX_DAY_START = 35;
+	
+	public static final int INDEX_SPECIFY_HEADS = 42;
 	/*
 	 * 目前參數使用情況：
 	 * 1、參數1~24：分配給FPGA
@@ -138,16 +140,16 @@ public class SystemConfigFile{
 		FileReader reader=null;
 		BufferedReader br = null;
 		String tag;
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			Debug.d(TAG, "--->no usb storage mounted");
-			return false;
-		}
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			Debug.d(TAG, "--->no usb storage mounted");
+//			return false;
+//		}
 		/*
 		 * use this first usb as default 
 		 */
-		Debug.d(TAG, "--->usb root path:" + paths.get(0));
-		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.SYSTEM_CONFIG_XML);
+		//Debug.d(TAG, "--->usb root path:" + paths.get(0));
+		XmlInputStream inStream = new XmlInputStream(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
 			Debug.d(TAG, "--->read system_config file fail");
@@ -430,17 +432,17 @@ public class SystemConfigFile{
 	
 	public void saveConfig() {
 		
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			Debug.d(TAG, "===>saveConfig error");
-			return ;
-		}
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			Debug.d(TAG, "===>saveConfig error");
+//			return ;
+//		}
 		
 		/*
 		 * use the first usb as the default device
 		 */
-		String dev = paths.get(0);
-		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+//		String dev = paths.get(0);
+		File dir = new File(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 		if (!dir.exists()) {
 			if(dir.mkdirs() == false)
 				return;
@@ -575,7 +577,7 @@ public class SystemConfigFile{
 		list.add(tag1);
 		tag1 = new XmlTag(PH_SETTING_RESERVED_64, String.valueOf(mParam[63]));
 		list.add(tag1);
-		XmlOutputStream stream = new XmlOutputStream(dev+Configs.SYSTEM_CONFIG_XML);
+		XmlOutputStream stream = new XmlOutputStream(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_XML);
 		stream.write(list);
 		stream.close();
 	}
@@ -651,12 +653,12 @@ public class SystemConfigFile{
 	public String getLastMsg() {
 		
 		String tag;
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty()) {
-			return null;
-		}
-		Debug.d(TAG, "===>path:"+paths.get(0));
-		XmlInputStream inStream = new XmlInputStream(paths.get(0)+Configs.LAST_MESSAGE_XML);
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty()) {
+//			return null;
+//		}
+//		Debug.d(TAG, "===>path:"+paths.get(0));
+		XmlInputStream inStream = new XmlInputStream(Configs.CONFIG_PATH_FLASH + Configs.LAST_MESSAGE_XML);
 		List<XmlTag> list = inStream.read();
 		if (list == null) {
 			inStream.close();
@@ -676,9 +678,12 @@ public class SystemConfigFile{
 	
 	public void saveLastMsg(String name) {
 		
-		ArrayList<String> paths = ConfigPath.getMountedUsb();
-		if (paths == null || paths.isEmpty() || name == null) {
-			Debug.d(TAG, "===>saveConfig error");
+//		ArrayList<String> paths = ConfigPath.getMountedUsb();
+//		if (paths == null || paths.isEmpty() || name == null) {
+//			Debug.d(TAG, "===>saveConfig error");
+//			return ;
+//		}
+		if (name == null) {
 			return ;
 		}
 		File file = new File(name);
@@ -686,8 +691,8 @@ public class SystemConfigFile{
 		/*
 		 * use the first usb as the default device
 		 */
-		String dev = paths.get(0);
-		File dir = new File(dev+Configs.SYSTEM_CONFIG_DIR);
+//		String dev = paths.get(0);
+		File dir = new File(Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 		if (!dir.exists()) {
 			if(dir.mkdirs() == false)
 				return;
@@ -695,7 +700,7 @@ public class SystemConfigFile{
 		ArrayList<XmlTag> list = new ArrayList<XmlTag>();
 		XmlTag tag1 = new XmlTag(LAST_MESSAGE, file.getName());
 		list.add(tag1);
-		XmlOutputStream stream = new XmlOutputStream(dev+Configs.LAST_MESSAGE_XML);
+		XmlOutputStream stream = new XmlOutputStream(Configs.CONFIG_PATH_FLASH + Configs.LAST_MESSAGE_XML);
 		stream.write(list);
 		
 	}
@@ -1043,7 +1048,6 @@ public class SystemConfigFile{
 		case MessageType.MESSAGE_TYPE_50_8:
 			heads = 4;
 			break;
-
 		default:
 			break;
 		}

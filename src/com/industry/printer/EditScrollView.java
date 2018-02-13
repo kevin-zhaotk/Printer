@@ -101,10 +101,10 @@ public class EditScrollView extends View {
 		}
 		// p.setColor(0x000000);
 		
-		Debug.d(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
+		Debug.e(TAG, "--->scrollx: " + scrollx + ",  mScreenW: " + mScreenW);
 		for(BaseObject obj : mTask.getObjects())
 		{
-			Debug.d(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent());
+			Debug.e(TAG, "index=" + obj.getIndex() + "  c: " + obj.getContent());
 			/* 只有当cursor选中时才显示十字标线  */
 			if(obj instanceof MessageObject) {
 				if (!obj.getSelected()) {
@@ -129,15 +129,16 @@ public class EditScrollView extends View {
 //				continue;
 //			}
 			if(mContext == null)
-				Debug.d(TAG, "$$$$$$$$$$context=null");
+				Debug.e(TAG, "$$$$$$$$$$context=null");
 			
 			Bitmap bitmap = obj.getScaledBitmap(mContext);
 			if (bitmap == null) {
-				Debug.d(TAG, "--->obj: " + obj.getContent());
+				Debug.e(TAG, "--->obj: " + obj.getContent());
 				continue;
 			}
-			// canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
-			dispImg(canvas, bitmap, obj.getX(), obj.getY());
+			Debug.e(TAG, "--->obj: " + obj.getContent() +"x"+obj.getX());		
+			 canvas.drawBitmap(bitmap, obj.getX(), obj.getY(), p);
+		//	dispImg(canvas, bitmap, obj.getX(), obj.getY());
 			if (obj.getSelected()) {
 				p.setStyle(Style.STROKE);
 				canvas.drawRect(new RectF(obj.getX(), obj.getY(), obj.getXEnd(), obj.getYEnd()), p);

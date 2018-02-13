@@ -21,6 +21,7 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.StringUtil;
+import com.industry.printer.exception.PermissionDeniedException;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.LetterHourObject;
 
@@ -37,6 +38,7 @@ public class TLKFileParser  extends TlkFile{
 	
 	public TLKFileParser(Context context, String file) {
 		super(context, file);
+		Debug.d(TAG, "--->file: " + file);
 	}
 	
 	/*
@@ -99,10 +101,10 @@ public class TLKFileParser  extends TlkFile{
 		}
 	}
 	*/
-	public void parse(Context context, MessageTask task, ArrayList<BaseObject> objlist)
+	public void parse(Context context, MessageTask task, ArrayList<BaseObject> objlist) throws PermissionDeniedException
 	{
 		int i;
-		BaseObject pObj;
+		BaseObject pObj = null;
 		mContext = context;
 		if(objlist == null) {
 			Debug.d(TAG, "objlist is null");
@@ -110,11 +112,14 @@ public class TLKFileParser  extends TlkFile{
 		}
 		objlist.clear();
 		File file = new File(mPath);
-		if(file.isDirectory() || !file.exists())
+		if(file.isDirectory())
 		{
-			Debug.d(TAG, "File:" + mPath + " is directory or not exist");
+			Debug.d(TAG, "File:" + mPath + " is directory");
 			return;
+		} else if (!file.exists()) {
+			Debug.d(TAG, "File:" + mPath + " is not exist");
 		}
+		Debug.e(TAG, "==========>begin parse tlk");
 		try{
 			 InputStream instream = new FileInputStream(file); 
 			 if(instream != null)
@@ -124,7 +129,7 @@ public class TLKFileParser  extends TlkFile{
                  String line;
                  
                  while (( line = buffreader.readLine()) != null) {
-                     Debug.d(TAG, "line="+line);
+                     //Debug.d(TAG, "line="+line);
                      if (StringUtil.isEmpty(line.trim())) {
 						continue;
 					}
@@ -133,6 +138,7 @@ public class TLKFileParser  extends TlkFile{
                     	 continue;
                      }
                      objlist.add(pObj);
+                     Debug.d(TAG, "--->objlist size= " + objlist.size());
                      if(pObj instanceof RealtimeObject)
                      {
                     	 i = ((RealtimeObject) pObj).mSubObjs.size();
@@ -142,7 +148,7 @@ public class TLKFileParser  extends TlkFile{
                     		 while(StringUtil.isEmpty(line)) {
 								line = buffreader.readLine();
 							}
-                    		 Debug.d(TAG, "line="+line);
+                    		 // Debug.d(TAG, "line="+line);
                     		 BaseObject obj =  ((RealtimeObject) pObj).mSubObjs.get(j);
                     		 parseSubObject(obj, line);
                     	 }
@@ -150,10 +156,14 @@ public class TLKFileParser  extends TlkFile{
                  }
                  instream.close();
 			 }
-		}catch(Exception e)
+		}catch(IOException e)
 		{
 			Debug.d(TAG, "parse error: "+e.getMessage());
+			if (e.getMessage().contains("Permission denied")) {
+				throw new PermissionDeniedException();
+			}
 		}
+		Debug.e(TAG, "<==========end parse tlk");
 	}
 	
 	private void parseSubObject(BaseObject object, String str) {
@@ -169,17 +179,17 @@ public class TLKFileParser  extends TlkFile{
 			object.setX(StringUtil.parseInt(attr[2])/(2*mProportion));
 			object.setWidth(StringUtil.parseInt(attr[4])/(2 * mProportion)-StringUtil.parseInt(attr[2])/(2 * mProportion));
 		} else {
-			Log.d(TAG, "--->x = " + (StringUtil.parseInt(attr[2]) / mProportion));
+			Debug.d(TAG, "--->x = " + (StringUtil.parseInt(attr[2]) / mProportion));
 			object.setX(StringUtil.parseInt(attr[2]) / mProportion);
 			object.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);
-			Log.d(TAG, "--->xEnd = " + object.getXEnd());
+			Debug.d(TAG, "--->xEnd = " + object.getXEnd());
 		}
 		
 	}
 	
 	public BaseObject parseLine(MessageTask task, String str)
 	{
-		Log.d(TAG, "*************************");
+		Debug.d(TAG, "*************************");
 		BaseObject obj = null;
 		String [] attr = str.split("\\^",0);
 		if (attr == null || attr.length != 22) {
@@ -187,7 +197,19 @@ public class TLKFileParser  extends TlkFile{
 		}
 		
 		Debug.d(TAG, "attr[1]="+attr[1]);
-		if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
+		if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
+		{
+			obj = new MessageObject(mContext, 0);
+			/*参数8表示打印头类型*/
+			int type = Integer.parseInt(attr[8]);
+			((MessageObject)obj).setType(type);
+
+			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
+			mDots = Integer.parseInt(attr[13]);
+			
+			setDotsPerClm(type);
+		}
+		else if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
 				||BaseObject.OBJECT_TYPE_QR.equals(attr[1]))	//barcode
 		{
 			obj = new BarcodeObject(mContext, 0);
@@ -200,14 +222,16 @@ public class TLKFileParser  extends TlkFile{
 				} else {
 					((BarcodeObject) obj).setCode("QR");
 				}
-				
+				((BarcodeObject) obj).setContent(attr[21]);
 			} else {
 				((BarcodeObject) obj).setCode(Integer.parseInt(attr[9]));
+				((BarcodeObject) obj).setContent(attr[12]);
+				((BarcodeObject) obj).setTextsize(Integer.parseInt(attr[21]));
 			}
 			int isShow = Integer.parseInt(attr[11]);
 			((BarcodeObject) obj).setShow(isShow==0?false:true); 
-			((BarcodeObject) obj).setContent(attr[12]);
 			int source = Integer.parseInt(attr[13]);
+			Debug.d(TAG, "--->source = " + source);
 			obj.setSource(source == 1);
 		}
 		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
@@ -239,18 +263,7 @@ public class TLKFileParser  extends TlkFile{
 			((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
 			((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
 		}
-		else if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
-		{
-			obj = new MessageObject(mContext, 0);
-			/*参数8表示打印头类型*/
-			int type = Integer.parseInt(attr[8]);
-			((MessageObject)obj).setType(type);
-
-			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
-			mDots = Integer.parseInt(attr[13]);
-			
-			setDotsPerClm(type);
-		}
+		
 		else if(BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))			//rect
 		{
 			obj = new RectObject(mContext, 0);
@@ -291,6 +304,10 @@ public class TLKFileParser  extends TlkFile{
 		} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(attr[1])) {
 			obj = new LetterHourObject(mContext, 0);
 			
+		} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(attr[1])) {
+			obj = new WeekOfYearObject(mContext);
+		} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(attr[1])) {
+			obj = new WeekDayObject(mContext);
 		} else
 		{
 			Debug.d(TAG, "Unknown object type: "+attr[1]);
@@ -300,14 +317,16 @@ public class TLKFileParser  extends TlkFile{
 		// 设置object的task
 		obj.setTask(task);
 		Debug.d(TAG, "--->proportion = " + mProportion);
-		if(obj != null && !(obj instanceof MessageObject) )
+		if(!(obj instanceof MessageObject))
 		{
 			try {
 				
 			obj.setIndex(Integer.parseInt(attr[0]));
 			if((obj instanceof CounterObject)||
 					obj instanceof JulianDayObject ||
-					obj instanceof ShiftObject)
+					obj instanceof ShiftObject ||
+					obj instanceof WeekOfYearObject ||
+					obj instanceof WeekDayObject)
 			{
 				obj.setX(StringUtil.parseInt(attr[2])/mProportion);
 				obj.setWidth(StringUtil.parseInt(attr[4])/mProportion-StringUtil.parseInt(attr[2])/mProportion);
@@ -327,14 +346,10 @@ public class TLKFileParser  extends TlkFile{
 				Debug.d(TAG, "e: " + e.getCause());
 			}
 		}
-		Debug.d(TAG, "--->line295:" + obj.toString());
-		Debug.d(TAG, "index = "+obj.getIndex());
-		Debug.d(TAG, "x = "+obj.getX());
-		Debug.d(TAG, "y = "+obj.getY());
-		Debug.d(TAG, "x end = "+obj.getXEnd());
-		Debug.d(TAG, "y end = "+obj.getYEnd());
-		Debug.d(TAG, "dragable = "+obj.getDragable());
-		Debug.d(TAG, "*************************");
+		
+		if (obj instanceof MessageObject) {
+			obj.setContent(attr[21]);
+		}
 		return obj;
 	}
 	

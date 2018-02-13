@@ -55,6 +55,10 @@
     <string name="str_btn_setTime">Zaman Ayarı</string>
     <string name="str_btn_image">Logo</string>
     <string name="str_goto">git</string>
+    
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
+	
     <!-- object info table -->
     <string name="strWidth">Genişlik</string>
     <string name="strHigh">Yükseklik</string>
@@ -66,6 +70,7 @@
     <string name="txtDefault">mesaj</string>
     <string name="strDragable">Sürüklenebilir</string>
     <string name="strShow">Göster</string>
+	<string name="strFontsize">Font Size</string>
     <string name="strFont">Yazı tipi</string>
     <string name="strLinewidth">Satır Genişliği</string>
     <string name="strBits">Rakamlar</string>
@@ -82,6 +87,7 @@
     <string name="strUpgradeNoApk">Yükseltme dosyası yok!!!</string>
     <string name="strSaving">kaydediliyor, lütfen bekleyin...</string>
     <string name="strLoading">yükleniyor, lütfen bekleyin...</string>
+    <string name="strCopying">Copying, attendere prego...</string>
     <string name="strInsertSerial">Lütfen cihazı bağlayın...</string>
     <string name="strReinsertSerial">Hata, lütfen cihazı yenden bağlayın</string>
 
@@ -93,7 +99,7 @@
         <item>33 mm Xaar dual</item>
         <item>38.1 mm HP Triple</item>
         <item>50.8 mm HP quadruple</item>
-        <item>32dot</item>
+        <item>7dot</item>
         <item>16dot</item>
         <item>--</item>
         <item>25.4mm fast</item>
@@ -122,6 +128,30 @@
         <item>8</item>
         <item>9</item>
     </string-array>
+    
+    <string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ font</item>
+	    <item>1B+ font</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ font</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ font</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
+	</string-array>
+	
     <string-array name="strFontFile">
         <item>WelldrawH000</item>
     </string-array>
@@ -134,12 +164,13 @@
 
     <string-array name="strCodeArray">
         <item>EAN8</item>
-        <item>EAN13</item>
-        <item>EAN128</item>
-        <item>CODE_128</item>
-        <item>CODE_39</item>
-        <item>UPC_A</item>
-        <item>QR</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
+	    <item>ITF_14</item>
+	    <item>QR</item>
     </string-array>
 
     <string name="strBarsource">Data</string>
@@ -211,7 +242,10 @@
     <string name="object_ellipse">Elips</string>
     <string name="object_shift">Vardiya</string>
     <string name="object_second">Dakika</string>
+    <string name="object_charHour">AlphaHour</string>
     <string name="object_msg_name">Konu</string>
+    <string name="object_qr">QRCode</string>
+    <string name="object_dynamic_qr">DynamicQR</string>
     <!-- Settings frame -->
     <string name="strParam0">00.Ayrılmış</string>
     <string name="strPrSpeedname">01.Hız</string>
@@ -282,7 +316,7 @@
     <string name="strResvname40">40.Ayrılmış</string>
     <string name="strResvname41">41.Ayrılmış</string>
     <string name="strResvname42">42.Ayrılmış</string>
-    <string name="strResvname43">43.Ayrılmış</string>
+    <string name="strResvname43">43.Pens</string>
     <string name="strResvname44">44.Ayrılmış</string>
     <string name="strResvname45">45.Ayrılmış</string>
     <string name="strResvname46">46.Ayrılmış</string>
@@ -443,7 +477,7 @@
     <string name="str_textview_param14">14.Kalem2 Aynalanmış</string>
     <string name="str_textview_param15">15.Kalem1 Ters</string>
     <string name="str_textview_param16">16.Kalem2 Ters</string>
-    <string name="str_textview_param17">17.Kalemler</string>
+    <string name="str_textview_param17">17.Ayrılmış</string>
     <string name="str_textview_param18">18.Sayıcı</string>
     <string name="str_textview_param19">19.Kalem3 Mahsup</string>
     <string name="str_textview_param20">20.Kalem4 Mahsup</string>
@@ -469,7 +503,7 @@
     <string name="str_textview_param40">40.Ayrılmış</string>
     <string name="str_textview_param41">41.Ayrılmış</string>
     <string name="str_textview_param42">42.Ayrılmış</string>
-    <string name="str_textview_param43">43.Ayrılmış</string>
+    <string name="str_textview_param43">43.Pens</string>
     <string name="str_textview_param44">44.Ayrılmış</string>
     <string name="str_textview_param45">45.Ayrılmış</string>
     <string name="str_textview_param46">46.Ayrılmış</string>
@@ -542,7 +576,7 @@
         <item>40. Ayrılmış</item>
         <item>41. Ayrılmış</item>
         <item>42. Ayrılmış</item>
-        <item>43. Ayrılmış</item>
+        <item>43. Pens</item>
         <item>44. Ayrılmış</item>
         <item>45. Ayrılmış</item>
         <item>46. Ayrılmış</item>
@@ -662,4 +696,26 @@
     <string name="str_cnt_max">Son</string>
 
     <string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+    <string name="str_recover_print">recover last print</string>
+    
+    
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
 </resources>

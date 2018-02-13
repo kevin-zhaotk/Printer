@@ -19,18 +19,23 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 
 	public static final String OBJECT_TYPE = "ObjType";
 	public static final String OBJECT_FORMAT = "ObjFormat";
+	public static final String OBJECT_SOURCE = "ObjSource";
 	
 	private Context 	mContext;
 	public Button 	mText;
 	public Button 	mRTime;
 	public Button 	mCounter;
 	public Button	mBarcode;
+	public Button	mBarcodeV;
 	public Button	mJulian;
 	public Button	mGraphic;
 	public Button	mLine;
 	public Button	mRect;
 	public Button	mEllipse;
 	public Button 	mHour;
+	public Button 	mWoy;
+	public Button 	mWday;
+	
 	public Message		mDismissMsg;
 	
 	public ObjectInsertDialog(Context context) {
@@ -56,10 +61,14 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		
 		mBarcode = (Button) findViewById(R.id.objinsert_barcode);
 		mBarcode.setOnClickListener(this);
-		/*
+		
+		mBarcodeV = (Button) findViewById(R.id.objinsert_barcode_var);
+		mBarcodeV.setOnClickListener(this);
+		
+		
 		mGraphic = (Button) findViewById(R.id.objinsert_graphic);
 		mGraphic.setOnClickListener(this);
-		
+/*		
 		mLine = (Button) findViewById(R.id.objinsert_line);
 		mLine.setOnClickListener(this);
 		
@@ -74,6 +83,13 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 		
 		mHour = (Button) findViewById(R.id.objinsert_hour);
 		mHour.setOnClickListener(this);
+		
+		mWoy = (Button) findViewById(R.id.objinsert_week_year);
+		mWoy.setOnClickListener(this);
+
+		mWday = (Button) findViewById(R.id.objinsert_week_day);
+		mWday.setOnClickListener(this);
+		
 	}
 
 	@Override
@@ -97,6 +113,11 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_BARCODE);
 				mDismissMsg.setData(bundle);
 				break;
+			case R.id.objinsert_barcode_var:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_BARCODE);
+				bundle.putBoolean(OBJECT_SOURCE, true);
+				mDismissMsg.setData(bundle);
+				break;
 			case R.id.objinsert_julian:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_JULIAN);
 				mDismissMsg.setData(bundle);
@@ -106,11 +127,21 @@ public class ObjectInsertDialog extends Dialog implements android.view.View.OnCl
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_LETTERHOUR);
 				mDismissMsg.setData(bundle);
 				break;
-				/*
+				
 			case R.id.objinsert_graphic:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_GRAPHIC);
 				mDismissMsg.setData(bundle);
 				break;
+			case R.id.objinsert_week_year:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_WEEKOFYEAR);
+				mDismissMsg.setData(bundle);
+				break;
+			case R.id.objinsert_week_day:
+				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_WEEKDAY);
+				mDismissMsg.setData(bundle);
+				
+				break;
+/*
 			case R.id.objinsert_line:
 				bundle.putString(OBJECT_TYPE, BaseObject.OBJECT_TYPE_LINE);
 				mDismissMsg.setData(bundle);

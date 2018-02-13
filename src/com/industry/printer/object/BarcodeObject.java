@@ -10,6 +10,10 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.EAN13Writer;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
+import com.google.zxing.qrcode.encoder.Encoder;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
@@ -38,11 +42,13 @@ import android.widget.TextView;
 
 public class BarcodeObject extends BaseObject {
 
+	private static final int QUIET_ZONE_SIZE = 4;
+	private static final int STROKE_WIDTH = 3;
+	
 	public String mFormat;
 	public int mCode;
 	public boolean mShow;
-	/*内容来源 是否U盤*/
-	public boolean mSource;
+	public int mTextSize;
 	
 	public Bitmap mBinmap;
 	
@@ -54,6 +60,7 @@ public class BarcodeObject extends BaseObject {
 		// TODO Auto-generated constructor stub
 		mShow = true;
 		mCode = 3;
+		mTextSize = 20;
 		mFormat="CODE_128";
 		setContent("123456789");
 		mWidth=0;
@@ -62,6 +69,7 @@ public class BarcodeObject extends BaseObject {
 
 	public void setCode(String code)
 	{
+		
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		if ("EAN8".equals(code)) {
 			mCode = 0;
@@ -75,6 +83,8 @@ public class BarcodeObject extends BaseObject {
 			mCode = 5;
 		} else if ("ITF_14".equals(code)) {
 			mCode = 6;
+		} else if ("UPC_A".equals(code)) {
+			mCode = 7;
 		} else if ("QR".equals(code)) {
 			mCode = 0;
 			mId = BaseObject.OBJECT_TYPE_QR;
@@ -105,6 +115,9 @@ public class BarcodeObject extends BaseObject {
 		} else if (code == 6) {
 			mCode = 6;
 			mFormat = "ITF_14";
+		} else if (code == 7) {
+			mCode = 7;
+			mFormat = "UPC_A";
 		}
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		isNeedRedraw = true;
@@ -128,11 +141,48 @@ public class BarcodeObject extends BaseObject {
 		return mShow;
 	}
 	
+	public void setTextsize(int size) {
+		if (size == mTextSize) {
+			return;
+		}
+		if (size > 0 && size < 100) {
+			mTextSize = size;
+			isNeedRedraw = true;
+		}
+	}
+	
+	public int getTextsize() {
+		return mTextSize;
+	}
 	@Override
 	public void setContent(String content)
 	{
 		mContent=content;
 		isNeedRedraw = true;
+	}
+	
+	@Override
+	public void setSource(boolean dynamic) {
+		mSource  = dynamic;
+		if (dynamic) {
+			mName = mContext.getString(R.string.object_dynamic_qr);
+		} else {
+			mName = mContext.getString(R.string.object_bar);
+		}
+	}
+	
+	@Override
+	public String getTitle() {
+		if (is2D()) {
+			if (mSource) {
+				mName = mContext.getString(R.string.object_dynamic_qr);
+			} else {
+				mName = mContext.getString(R.string.object_qr);
+			}
+		} else {
+			mName = mFormat + " " + mContext.getString(R.string.object_bar);
+		}
+		return mName;
 	}
 	
 	private static final String CODE = "utf-8"; 
@@ -143,49 +193,42 @@ public class BarcodeObject extends BaseObject {
 		}
 		
 		isNeedRedraw = false;
-		BitMatrix matrix=null;
-		int margin = 0;
-		try {
-			MultiFormatWriter writer = new MultiFormatWriter();
-			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
-            hints.put(EncodeHintType.CHARACTER_SET, CODE);
-            // hints.put(EncodeHintType.MARGIN, margin);
-            BarcodeFormat format = getBarcodeFormat(mFormat);
-            
-			if(!is2D())
-			{
-				if (mWidth <= 0) {
-					mWidth = mContent.length() * 70;
-				}
-
-	            /* 条形码的宽度设置:每个数字占70pix列  */
-				if ("EAN13".equals(mFormat)) {
-					matrix = writer.encode(checkSum(),
-					        format, (int)mWidth, (int)(mHeight - 30), null);
-	            
-				} else if ("EAN8".equals(mFormat)) {
-					matrix = writer.encode(checkLen(),
-					        format, (int)mWidth, (int)(mHeight - 30), null);
-	            
-				} else {
-					matrix = writer.encode(mContent,
-					        format, (int)mWidth, (int)(mHeight - 30), null);
-				}
-	            
-			} else {
-				if (mWidth <= 0) {
-					mWidth = mHeight;
-				}
-				Debug.d(TAG, "--->content = " + mContent);
-				matrix = writer.encode(mContent,
-						format, (int)mWidth, (int)mHeight, hints);
-				matrix = deleteWhite(matrix);
+		if (!is2D()) {
+			if (mWidth <= 0) {
+				mWidth = mContent.length() * 70;
 			}
+			mBitmap = draw(mContent, (int)mWidth, (int)mHeight);
+		} else {
+			mWidth = mHeight;
+			mBitmap = drawQR(mContent, (int)mWidth, (int)mHeight);
+		}
+		// mBitmap = draw(mContent, (int)mWidth, (int)mHeight);
+		setWidth(mWidth);
+		return mBitmap;
+	}
+	
+	
+	@Override
+	public Bitmap getpreviewbmp() {
+		return mBitmap;
+	}
+
+	@Override
+	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
+		if (is2D()) {
+			return drawQR(content, ctW, ctH);
+		} else {
+			return draw(content, ctW, ctH);
+		}
+	}
+	
+	private Bitmap drawQR(String content, int w, int h) {
+		try {
+			BitMatrix matrix = encode(content, w, h, null);
 			int tl[] = matrix.getTopLeftOnBit();
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
-			Debug.d(TAG, "mWidth="+mWidth+", width="+width + "   height=" + height);
-			setWidth(width);
+			Debug.d("BarcodeObject", "mWidth="+ w +", width="+width + "   height=" + height);
 			int[] pixels = new int[width * height];
 			for (int y = 0; y < height; y++) 
 			{
@@ -200,37 +243,183 @@ public class BarcodeObject extends BaseObject {
 				}
 			}
 			/* 条码/二维码的四个边缘空出20像素作为白边 */
-			mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			
-			mBitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-			if (is2D()) {
-				mBitmap = Bitmap.createScaledBitmap(mBitmap, (int)mHeight, (int)mHeight, false);
-				setWidth(mHeight);
+			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+			return bitmap;
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	
+	private Bitmap draw(String content, int w, int h) {
+		BitMatrix matrix=null;
+		int margin = 0;
+		if (h <= mTextSize) {
+			h = mTextSize + 10;
+		}
+		Paint paint = new Paint();
+		Debug.d("BarcodeObject", "--->draw w : " + w + "  h: " + h);
+		try {
+			MultiFormatWriter writer = new MultiFormatWriter();
+			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
+            hints.put(EncodeHintType.CHARACTER_SET, CODE);
+            // hints.put(EncodeHintType.MARGIN, margin);
+            BarcodeFormat format = getBarcodeFormat(mFormat);
+            
+            Debug.d(TAG, "--->content: " + mContent + "   format:" + mFormat);
+            /* 条形码的宽度设置:每个数字占70pix列  */
+			if ("EAN13".equals(mFormat)) {
+				content = checkSum();
+				matrix = writer.encode(content,
+				        format, w, h - mTextSize - 5, null);
+				
+			} else if ("EAN8".equals(mFormat)) {
+				content = checkLen(8);
+				matrix = writer.encode(content,
+				        format, w, h- mTextSize- 5, null);
+            
+			} else if ("ITF_14".equals(mFormat)) {
+				content = checkLen(14);
+				matrix = writer.encode(content,
+				        format, w, h- mTextSize- 5, null);
+            
+			} else {
+				matrix = writer.encode(content,
+				        format, w, h - mTextSize- 5, null);
 			}
-			// mBinmap = Bitmap.createBitmap(mBitmap);
-			/*if content need to show, draw it*/
-			if(mShow && !is2D())
+            
+			int tl[] = matrix.getTopLeftOnBit();
+			int width = matrix.getWidth();
+			int height = matrix.getHeight();
+			Debug.d("BarcodeObject", "mWidth="+ w +", width="+width + "   height=" + height);
+			// setWidth(width);
+			int[] pixels = new int[width * height];
+			for (int y = 0; y < height; y++) 
+			{
+				for (int x = 0; x < width; x++) 
+				{
+					if (matrix.get(x, y)) 
+					{
+						pixels[y * width + x] = 0xff000000;
+					} else {
+						pixels[y * width + x] = 0xffffffff;
+					}
+				}
+			}
+			/* 条码/二维码的四个边缘空出20像素作为白边 */
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+			
+			if ("ITF_14".equals(mFormat)) {
+				Canvas cvs = new Canvas(bitmap);
+				paint.setStrokeWidth(STROKE_WIDTH * 2);
+				cvs.drawLine(/* top */  0, STROKE_WIDTH, bitmap.getWidth(), STROKE_WIDTH, paint);
+				cvs.drawLine(/* left */ STROKE_WIDTH, 0, STROKE_WIDTH, bitmap.getHeight(), paint);
+				cvs.drawLine(/* right */bitmap.getWidth() - STROKE_WIDTH, 0, bitmap.getWidth() - STROKE_WIDTH, bitmap.getHeight(), paint);
+				cvs.drawLine(/* bottom*/0, bitmap.getHeight() - STROKE_WIDTH,bitmap.getWidth(), bitmap.getHeight() - STROKE_WIDTH, paint);
+			}
+			if(mShow)
 			{
 				// 用於生成bin的bitmap
-				Bitmap bmp = Bitmap.createBitmap(width, height+15, Config.ARGB_8888);
-				Bitmap code = createCodeBitmapFromDraw(mContent, width-tl[0]*2, 15);
+				Bitmap bmp = Bitmap.createBitmap(width, h, Config.ARGB_8888);
+				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, mTextSize + 5);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
 				//BinCreater.saveBitmap(code, "barcode.png");
 				Canvas can = new Canvas(bmp);
-				can.drawBitmap(mBitmap, 0, 0, mPaint);
-				can.drawBitmap(code, tl[0], height, mPaint);
-				BinFromBitmap.recyleBitmap(mBitmap);
+				can.drawBitmap(bitmap, 0, 0, paint);
+				can.drawBitmap(code, tl[0], height, paint);
+				BinFromBitmap.recyleBitmap(bitmap);
 				BinFromBitmap.recyleBitmap(code);
-				mBitmap = bmp;
+				bitmap = bmp;
 			}
 			
-			return mBitmap;
+			return bitmap;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	public BitMatrix encode(String contents, int width, int height, Map<EncodeHintType, ?> hints)
+            throws WriterException {
+
+        if (contents.isEmpty()) {
+            throw new IllegalArgumentException("Found empty contents");
+        }
+
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("Requested dimensions are too small: " + width + 'x' + height);
+        }
+
+        ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
+        int quietZone = QUIET_ZONE_SIZE;
+        if (hints != null) {
+            ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel) hints.get(EncodeHintType.ERROR_CORRECTION);
+            if (requestedECLevel != null) {
+                errorCorrectionLevel = requestedECLevel;
+            }
+            Integer quietZoneInt = (Integer) hints.get(EncodeHintType.MARGIN);
+            if (quietZoneInt != null) {
+                quietZone = quietZoneInt;
+            }
+        }
+
+        QRCode code = Encoder.encode(contents, errorCorrectionLevel, hints);
+        return renderResult(code, width, height, quietZone);
+    }
+
+    // Note that the input matrix uses 0 == white, 1 == black, while the output
+    // matrix uses
+    // 0 == black, 255 == white (i.e. an 8 bit greyscale bitmap).
+    //修改如下代码
+    private static BitMatrix renderResult(QRCode code, int width, int height, int quietZone) {
+        ByteMatrix input = code.getMatrix();
+        if (input == null) {
+            throw new IllegalStateException();
+        }
+        int inputWidth = input.getWidth();
+        int inputHeight = input.getHeight();
+        int qrWidth = inputWidth ;
+        int qrHeight = inputHeight;
+        int outputWidth = Math.max(width, qrWidth);
+        int outputHeight = Math.max(height, qrHeight);
+
+        int multiple = Math.min(outputWidth / qrWidth, outputHeight / qrHeight);
+        // Padding includes both the quiet zone and the extra white pixels to
+        // accommodate the requested
+        // dimensions. For example, if input is 25x25 the QR will be 33x33
+        // including the quiet zone.
+        // If the requested size is 200x160, the multiple will be 4, for a QR of
+        // 132x132. These will
+        // handle all the padding from 100x100 (the actual QR) up to 200x160.
+
+        int leftPadding = (outputWidth - (inputWidth * multiple)) / 2;
+        int topPadding = (outputHeight - (inputHeight * multiple)) / 2;
+
+        if(leftPadding >= 0 ) {
+            outputWidth = outputWidth - 2 * leftPadding ;
+            leftPadding = 0;
+        }
+        if(topPadding >= 0) {
+            outputHeight = outputHeight - 2 * topPadding;
+            topPadding = 0;
+        }
+
+        BitMatrix output = new BitMatrix(outputWidth, outputHeight);
+
+        for (int inputY = 0, outputY = topPadding; inputY < inputHeight; inputY++, outputY += multiple) {
+            // Write the contents of this row of the barcode
+            for (int inputX = 0, outputX = leftPadding; inputX < inputWidth; inputX++, outputX += multiple) {
+                if (input.get(inputX, inputY) == 1) {
+                    output.setRegion(outputX, outputY, multiple, multiple);
+                }
+            }
+        }
+
+        return output;
+    }
 	
 	public Bitmap getPrintBitmap(int totalW, int totalH, int w, int h, int y) {
 		BitMatrix matrix=null;
@@ -305,7 +494,7 @@ public class BarcodeObject extends BaseObject {
 	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
 		Paint paint = new Paint(); 
 		
-		paint.setTextSize(10);
+		paint.setTextSize(mTextSize);
 		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
@@ -317,7 +506,7 @@ public class BarcodeObject extends BaseObject {
 		int left = (int) ((perPix - numWid)/2);
 		for (int i = 0; i < content.length(); i++) {
 			String n = content.substring(i, i+1);
-			canvas.drawText(n, i*perPix + left, 10, paint);
+			canvas.drawText(n, i*perPix + left, mTextSize, paint);
 		}
 		return bitmap;
 	}
@@ -379,7 +568,7 @@ public class BarcodeObject extends BaseObject {
 			return BarcodeFormat.UPC_E;
 		} else if ("UPC_A".equals(format)) {
 			return BarcodeFormat.UPC_A;
-		} else if ("ITF".equals(format)) {
+		} else if ("ITF_14".equals(format)) {
 			return BarcodeFormat.ITF;
 		} else if ("RSS14".equals(format)) {
 			return BarcodeFormat.RSS_14;
@@ -404,7 +593,7 @@ public class BarcodeObject extends BaseObject {
         int[] rec = matrix.getEnclosingRectangle();
         int resWidth = rec[2] + 1;
         int resHeight = rec[3] + 1;
-
+        Debug.d("BarcodeObject", "--->deleteWhite: " + resWidth + " " + resHeight );
         BitMatrix resMatrix = new BitMatrix(resWidth, resHeight);
         resMatrix.clear();
         for (int i = 0; i < resWidth; i++) {
@@ -415,6 +604,8 @@ public class BarcodeObject extends BaseObject {
         }
         return resMatrix;
     }
+	
+	
 	
 	/**
 	 * 計算EAN13的校驗和
@@ -439,8 +630,9 @@ public class BarcodeObject extends BaseObject {
 		} else {
 			code = mContent; 
 		}
+		Debug.d(TAG, "--->content: " + mContent);
 		mContent = code;
-		
+		Debug.d(TAG, "--->code: " + code);
 		for (int i = 0; i < code.length(); i++) {
 			if (i%2 == 0) {
 				odd += Integer.parseInt(code.substring(i, i+1));
@@ -454,7 +646,9 @@ public class BarcodeObject extends BaseObject {
 		if (sum >= 10) {
 			sum = 0;
 		}
+		Debug.d(TAG, "--->sum: " + sum);
 		code += sum;
+		Debug.d(TAG, "--->code: " + code);
 		return code;
 	}
 	
@@ -462,14 +656,14 @@ public class BarcodeObject extends BaseObject {
 	 * EAN8只支持8位長度
 	 * @return
 	 */
-	private String checkLen() {
+	private String checkLen(int dstLen) {
 		int len = mContent.length();
-		if (len < 8) {
-			for (int i = 0; i < 8 - len; i++) {
+		if (len < dstLen) {
+			for (int i = 0; i < dstLen - len; i++) {
 				mContent += "0";
 			}
-		} else if (mContent.length() > 8) {
-			return mContent.substring(0, 8);
+		} else if (mContent.length() > dstLen) {
+			return mContent.substring(0, dstLen);
 		}
 		return mContent;
 	}
@@ -478,23 +672,90 @@ public class BarcodeObject extends BaseObject {
 	{
 		int dots = SystemConfigFile.getInstance(mContext).getParam(39);
 		float prop = dots/Configs.gDots;
-		String str="";
+		
+		StringBuilder builder = new StringBuilder(mId);
+		if (BaseObject.OBJECT_TYPE_QR.equalsIgnoreCase(mId)) {
+			builder.append("^")
+				.append(BaseObject.floatToFormatString(getX()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getY()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getXEnd()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getYEnd()*2*prop, 5))
+				.append("^")
+				.append(BaseObject.intToFormatString(0, 1))
+				.append("^")
+				.append(BaseObject.boolToFormatString(mDragable, 3))
+				.append("^")
+				.append("000^000^000^000^000^")
+				.append(BaseObject.boolToFormatString(mSource, 8))
+				.append("^")
+				.append("00000000^00000000^00000000^00000000^00000000^00000000^00000000^")
+				.append(mContent);
+		} else {
+			builder.append("^")
+			.append(BaseObject.floatToFormatString(getX()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getY()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getXEnd()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.floatToFormatString(getYEnd()*2*prop, 5))
+			.append("^")
+			.append(BaseObject.intToFormatString(0, 1))
+			.append("^")
+			.append(BaseObject.boolToFormatString(mDragable, 3))
+			.append("^")
+			.append(BaseObject.floatToFormatString(mContent.length(), 3))
+			.append("^")
+			.append(mCode)
+			.append("^")
+			.append("000^")
+			.append(BaseObject.boolToFormatString(mShow, 3))
+			.append("^")
+			.append(BaseObject.boolToFormatString(mShow, 3))
+			.append("^")
+			
+			.append(mContent)
+			.append("^")
+			.append("00000000^00000000^00000000^0000^0000^")
+			.append(mFont)
+			.append("^000^")
+			.append(BaseObject.intToFormatString(mTextSize, 3));
+		}
+		
+		String str = builder.toString();
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
-		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
-		str += BaseObject.intToFormatString(0, 1)+"^";
-		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-		str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
-		str += mCode +"^";
-		str += "000^";
-		str += BaseObject.boolToFormatString(mShow, 3)+"^";
-		str += mContent+"^";
-		str += BaseObject.boolToFormatString(mSource, 8) + "^";
-		str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000^000";
+//		if (BaseObject.OBJECT_TYPE_QR.equalsIgnoreCase(mId)) {
+//			str += mId+"^";
+//			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+//			str += BaseObject.intToFormatString(0, 1)+"^";
+//			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//			str += "000^000^000^000^000^";
+//			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+//			str += "00000000^00000000^00000000^00000000^00000000^00000000^00000000" + "^";
+//			str += mContent;
+//		} else {
+//			str += mId+"^";
+//			str += BaseObject.floatToFormatString(getX()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getY()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getXEnd()*2*prop, 5)+"^";
+//			str += BaseObject.floatToFormatString(getYEnd()*2*prop, 5)+"^";
+//			str += BaseObject.intToFormatString(0, 1)+"^";
+//			str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//			str += BaseObject.floatToFormatString(mContent.length(), 3)+"^";
+//			str += mCode +"^";
+//			str += "000^";
+//			str += BaseObject.boolToFormatString(mShow, 3)+"^";
+//			str += mContent+"^";
+//			str += BaseObject.boolToFormatString(mSource, 8) + "^";
+//			str += "00000000^00000000^00000000^0000^0000^" + mFont + "^000" + "^";
+//			str += BaseObject.intToFormatString(mTextSize, 3);
+//		}
 		System.out.println("file string ["+str+"]");
 		return str;
 	}

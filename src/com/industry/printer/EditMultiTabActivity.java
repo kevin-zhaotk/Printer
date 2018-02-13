@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
+import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageSaveDialog;
 import com.industry.printer.ui.CustomerDialog.ObjectInfoDialog;
@@ -31,10 +32,9 @@ import com.industry.printer.object.RealtimeObject;
 import com.industry.printer.object.RectObject;
 import com.industry.printer.object.ShiftObject;
 import com.industry.printer.object.TextObject;
+import com.industry.printer.ui.MessageDisplayManager;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -84,6 +84,8 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	public Context mContext;
 	public EditScrollView mObjView;
 	public HorizontalScrollView mHScroll;
+	public MessageDisplayManager mMsgManager;
+	public RelativeLayout mRelatively;
 	
 	public String mObjName;
 	public MessageTask mMsgTask;
@@ -466,6 +468,13 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 	 */
 	public static final int HANDLER_MESSAGE_DISMISSDIALOG=4;
 	
+	/**
+	 * HANDLER_MESSAGE_SAVE_SUCCESS 
+	 * this message will be sent out when MessageTask Async save-task run success
+	 */
+	public static final int HANDLER_MESSAGE_SAVE_SUCCESS = 10;
+	
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {  
 			//	String f;
@@ -497,8 +506,12 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
             		mMsgTask.setName(mObjName);
             		mMsgTask.createTaskFolderIfNeed();
             		
-            		mMsgTask.save();
+            		mMsgTask.save(mHandler);
            			
+            		dismissProgressDialog();
+            		OnPropertyChanged(false);
+            		break;
+            	case HANDLER_MESSAGE_SAVE_SUCCESS:
             		dismissProgressDialog();
             		OnPropertyChanged(false);
             		break;
@@ -596,12 +609,12 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 		return -1;
 	}
 	
-	public ProgressDialog mProgressDialog;
+	public LoadingDialog mProgressDialog;
 	public Thread mProgressThread;
 	public boolean mProgressShowing;
 	public void progressDialog()
 	{
-		mProgressDialog = ProgressDialog.show(mContext, "", getView().getResources().getString(R.string.strSaving), true,false);
+		mProgressDialog = LoadingDialog.show(mContext, R.string.strSaving);
 		mProgressShowing = true;
 		
 		mProgressThread = new Thread(){

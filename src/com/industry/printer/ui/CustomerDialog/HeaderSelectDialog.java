@@ -111,7 +111,7 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 			if (convertView != null) {
 				mHolder = (Holder) convertView.getTag();
 			} else {
-				convertView = mInflater.inflate(R.layout.font_item_layout, null);
+				convertView = mInflater.inflate(R.layout.header_item_layout, null);
 				mHolder = new Holder();
 				mHolder.mText = (TextView) convertView.findViewById(R.id.font);
 			}

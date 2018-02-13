@@ -323,10 +323,18 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				Debug.e(TAG, "------ACTION_DOWN"+ arg1.getX());	
 				mdownx=arg1.getX();
 				mdowny=arg1.getY();
+				
 				break;
 			case MotionEvent.ACTION_MOVE:
-				Debug.e(TAG, "------ACTION_MOVE"+ arg1.getX());					
-
+				Debug.e(TAG, "------ACTION_MOVE"+ arg1.getX());	
+				curX=arg1.getX();
+				curY=arg1.getY();
+				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
+				{
+					mFileAdapter.Scroll( (int)( mdownx-curX ) );
+					mFileAdapter.notifyDataSetChanged();
+				}
+				mdownx = curX;
 				break;
 			case MotionEvent.ACTION_UP:
 				Debug.e(TAG, "------ACTION_UP"+ arg1.getX());					
@@ -336,19 +344,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				
 				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
 				{
-					/*
-					if( curX>mdownx )
-					{
-						mFileAdapter.Scroll(1);
-					}
-					else
-					{
-						mFileAdapter.Scroll(2);			
-					}
-					*/
-					mFileAdapter.Scroll( (int)( mdownx-curX ) );			
-					
-				mHandler.sendEmptyMessage(MSG_LOADED);					
+					return true;
 				}
 				
 				

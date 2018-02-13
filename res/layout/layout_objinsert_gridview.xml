@@ -2,7 +2,7 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:columnCount="3"
+    android:columnCount="4"
     android:orientation="horizontal"
 	android:background="#436EEE"
 	>
@@ -48,6 +48,16 @@
             android:button="@null"
 	        android:layout_gravity="center"
             />
+    
+     <Button 
+            android:id="@+id/objinsert_barcode_var"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/style_barcode_var"
+            android:button="@null"
+	        android:layout_gravity="center"
+            />
         
     <Button 
             android:id="@+id/objinsert_julian"
@@ -67,7 +77,7 @@
             android:button="@null"
 	        android:layout_gravity="center"
             />
-    <!-- 
+    
     <Button
             android:id="@+id/objinsert_graphic"
             android:layout_width="130dp"
@@ -77,7 +87,28 @@
             android:button="@null"
 	        android:layout_gravity="center"
             />
-        
+    
+    
+    <Button
+            android:id="@+id/objinsert_week_year"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/style_weekofyear"
+            android:button="@null"
+	        android:layout_gravity="center"
+            />
+    
+    <Button
+            android:id="@+id/objinsert_week_day"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/style_weekday"
+            android:button="@null"
+	        android:layout_gravity="center"
+            />
+<!--        
     <Button
             android:id="@+id/objinsert_line"
             android:layout_width="130dp"

@@ -124,48 +124,7 @@ public class DataTask {
 		return true;
 	}
 	
-	/*
-	
-	public boolean prepareBackgroudBuffer()
-	{
-		 
-		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask.getHeads());
-		if (mBinInfo == null) {
-			Debug.e(TAG, "--->binInfo null");
-			return false;
-		}
-		Debug.e(TAG, "1================ = " + mBgBuffer.length);
-		if (PlatformInfo.isBufferFromDotMatrix()!=0) 
-		{	
-			Debug.e(TAG, "=2================ " + mBgBuffer.length);	
-			
-			byte[]	mBufferBytes = new byte[mBinInfo.mBuffer.length];
-			char[]	mBufferChars = new char[(mBinInfo.mBuffer.length)/2+2];
-			
-			mBufferBytes=mBinInfo.mBuffer;
-			Debug.e(TAG, "3================= " + mBgBuffer.length);
-	    	//把byte[]存为char[]
-	    	for(int i = 0; i < mBufferChars.length-1; i++) {
-	    		Debug.e(TAG, "4=================  " + mBgBuffer.length);
-	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
-    	}
-		
 
-		BinInfo.overlap(mBgBuffer, mBufferChars, 1 , mBinInfo.getCharsFeed());
-		}
-		else 
-			{
-				mBgBuffer = mBinInfo.getBgBuffer();
-			
-			}
-		Debug.e(TAG, "--->bgbuffer = " + mBgBuffer.length);
-		if (mBgBuffer == null) {
-			return false;
-		}
-		mPrintBuffer = new char[mBinInfo.mBuffer.length/2];
-		return true;
-	}
-	*/
 	public char[] getPrintBuffer() {
 		return getPrintBuffer(false);
 	}
@@ -175,6 +134,7 @@ public class DataTask {
 		try {
 			cReader.read(mPrintBuffer);
 			if (isNeedRefresh()) {
+				// addbylk_1_2/30_begin
 				if (PlatformInfo.isBufferFromDotMatrix()!=0) 
 				{
 					refreshVariablesM(isPreview);
@@ -183,6 +143,7 @@ public class DataTask {
 				{				
 					refreshVariables(isPreview);
 				}
+				// addbylk_1_2/30_end
 				
 			}
 		} catch (IOException e) {
@@ -211,6 +172,7 @@ public class DataTask {
 		Debug.d(TAG, "--->buffer = " + mBuffer.length);
 		return mBuffer;
 	}
+
 
 	//addylk forM
 	public void refreshVariablesM(boolean prev)	
@@ -302,12 +264,12 @@ public class DataTask {
 				} 
 				else if(rtSub instanceof RealtimeHour)
 				{
-				//	substr = ((RealtimeHour)rtSub).getContent();
+					substr = ((RealtimeHour)rtSub).getContent();
 					Debug.e(TAG, " ======4444"   );	
 				} 
 				else if(rtSub instanceof RealtimeMinute)
 				{
-				//	substr = ((RealtimeMinute)rtSub).getContent();
+					substr = ((RealtimeMinute)rtSub).getContent();
 					Debug.e(TAG, " ======55555"   );	
 				}
 				else if(rtSub instanceof TextObject  )
@@ -401,8 +363,7 @@ public class DataTask {
 		}
 		else if(o instanceof ShiftObject)
 		{
-	 
- 				
+	 			
 			
 			char[]  var;
 			/*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
@@ -522,7 +483,6 @@ public class DataTask {
 	
 	return ;
 }
-	
 	
 	
 	public void refreshVariables(boolean prev)

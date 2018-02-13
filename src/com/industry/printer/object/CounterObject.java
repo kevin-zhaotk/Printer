@@ -5,6 +5,8 @@ import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.data.BinFromBitmap;
+import com.industry.printer.cache.FontCache;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -174,7 +176,7 @@ public class CounterObject extends BaseObject {
 		}
 		else	//decrease
 		{
-			if(mValue-mStepLen < mMax || mValue > mMin)
+			if(mValue-mStepLen < mMin)
 				mValue=mMax;
 			else
 				mValue -= mStepLen;
@@ -185,25 +187,71 @@ public class CounterObject extends BaseObject {
 		return value;
 	}
 	
+	public void rollback() {
+		if(!mDirection)	//increase
+		{
+			if(mValue+mStepLen > mMax || mValue < mMin)
+				mValue=mMin;
+			else
+				mValue += mStepLen;
+		}
+		else	//decrease
+		{
+			if(mValue-mStepLen < mMin)
+				mValue=mMax;
+			else
+				mValue -= mStepLen;
+		}
+		setContent( BaseObject.intToFormatString(mValue, mBits));
+		Debug.d(TAG, "rollback mContent="+mContent+", mValue="+mValue);
+	}
+	
 	public String toString()
 	{
 		float prop = getProportion();
-		String str="";
+		StringBuilder builder = new StringBuilder(mId);
+		builder.append("^")
+				.append(BaseObject.floatToFormatString(getX()*prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getY()*2 * prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getXEnd() * prop, 5))
+				.append("^")
+				.append(BaseObject.floatToFormatString(getYEnd()*2 * prop, 5))
+				.append("^")
+				.append(BaseObject.intToFormatString(0, 1))
+				.append("^")
+				.append(BaseObject.boolToFormatString(mDragable, 3))
+				.append("^")
+				.append(BaseObject.intToFormatString(mBits, 3))
+				.append("^")
+				.append("000^000^000^000^")
+				.append(BaseObject.intToFormatString(mMax, 8))
+				.append("^")
+				.append(BaseObject.intToFormatString(mMin, 8))
+				.append("^")
+				.append(BaseObject.intToFormatString(Integer.parseInt(mContent) , 8))
+				.append("^")
+				.append("00000000^0000^0000^")
+				.append(mFont)
+				.append("^000^000");
+				
+				
+		String str = builder.toString();
 		//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-		str += mId+"^";
-		str += BaseObject.floatToFormatString(getX()*prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
-		str += BaseObject.floatToFormatString(getXEnd() * prop, 5)+"^";
-		//str += BaseObject.floatToFormatString(getY() + (getYEnd()-getY())*2, 5)+"^";
-		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
-		str += BaseObject.intToFormatString(0, 1)+"^";
-		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
-		str += BaseObject.intToFormatString(mBits, 3)+"^";
-		str += "000^000^000^000^";
-		str += BaseObject.intToFormatString(mMax, 8)+"^";
-		str += BaseObject.intToFormatString(mMin, 8)+"^";
-		str += BaseObject.intToFormatString(Integer.parseInt(mContent) , 8)+"^";
-		str += "00000000^0000^0000^" + mFont + "^000^000";
+//		str += mId+"^";
+//		str += BaseObject.floatToFormatString(getX()*prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getY()*2 * prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getXEnd() * prop, 5)+"^";
+//		str += BaseObject.floatToFormatString(getYEnd()*2 * prop, 5)+"^";
+//		str += BaseObject.intToFormatString(0, 1)+"^";
+//		str += BaseObject.boolToFormatString(mDragable, 3)+"^";
+//		str += BaseObject.intToFormatString(mBits, 3)+"^";
+//		str += "000^000^000^000^";
+//		str += BaseObject.intToFormatString(mMax, 8)+"^";
+//		str += BaseObject.intToFormatString(mMin, 8)+"^";
+//		str += BaseObject.intToFormatString(Integer.parseInt(mContent) , 8)+"^";
+//		str += "00000000^0000^0000^" + mFont + "^000^000";
 		System.out.println("counter string ["+str+"]");
 		return str;
 	}
@@ -228,7 +276,7 @@ public class CounterObject extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());
@@ -242,23 +290,25 @@ public class CounterObject extends BaseObject {
 		FontMetrics fm = mPaint.getFontMetrics();
 		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
 	 
-		String str_new_content="";
-		mContent =	mContent.replace('0', 'c');	
+		String str_new_content = mContent;
+		str_new_content =	str_new_content.replace('0', 'c');	
 		
-		mContent =	mContent.replace('1', 'c');	
-		mContent =	mContent.replace('2', 'c');	
-		mContent =	mContent.replace('3', 'c');	
-		mContent =	mContent.replace('4', 'c');	
-		mContent =	mContent.replace('5', 'c');	
-		mContent =	mContent.replace('6', 'c');	
-		mContent =	mContent.replace('7', 'c');	
-		mContent =	mContent.replace('8', 'c');	
-		mContent =	mContent.replace('9', 'c');	
+		str_new_content =	str_new_content.replace('1', 'c');	
+		str_new_content =	str_new_content.replace('2', 'c');	
+		str_new_content =	str_new_content.replace('3', 'c');	
+		str_new_content =	str_new_content.replace('4', 'c');	
+		str_new_content =	str_new_content.replace('5', 'c');	
+		str_new_content =	str_new_content.replace('6', 'c');	
+		str_new_content =	str_new_content.replace('7', 'c');	
+		str_new_content =	str_new_content.replace('8', 'c');	
+		str_new_content =	str_new_content.replace('9', 'c');	
 		
 		
-		mCan.drawText(mContent , 0, mHeight-fm.descent, mPaint);
+		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
-		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	
+		Bitmap result = Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+		BinFromBitmap.recyleBitmap(bitmap);
+		return result;
 	}	
 	
 }

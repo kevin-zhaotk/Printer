@@ -6,14 +6,53 @@
     android:background="#436eee" >
 
     
-    <include layout="@layout/edit_view"
+    <!--<include layout="@layout/edit_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttons"
         android:layout_above="@+id/buttons_1"
         android:layout_marginTop="10dp"
-        />
+        />-->
+<!--
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background" >
 
+        <RelativeLayout
+            android:id="@+id/edit_view"
+            android:layout_width="36000000dp"                 
+            android:layout_height="152dp" >
+
+        </RelativeLayout>
+    </HorizontalScrollView>
+    -->
+        <HorizontalScrollView
+    android:id="@+id/scrollView1"
+    android:layout_width="36000000dp"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
+        
+        <RelativeLayout
+            android:id="@+id/edit_view"
+            android:layout_width="36000000dp"                 
+            android:layout_height="152dp" 
+            >
+            
+           <View
+        android:layout_width="3000000dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="153px"
+        android:background="@color/black"
+        />       
+            
+        </RelativeLayout>
+    </HorizontalScrollView>
+    
+    
 	<include layout="@layout/edit_small_button" 
         android:id="@+id/buttons_1"
         android:layout_width="match_parent"

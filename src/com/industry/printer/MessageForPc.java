@@ -74,10 +74,11 @@ public class MessageForPc {
 	 * 保存打印信息，生成tlk和bin文件
 	 */
 	public void save() {
-		mTask.save();
+		mTask.save(null);
 	}
 	
 	public void reCreate(Context context) {
-		mTask.save(); 
+		mTask.createTaskFolderIfNeed();
+		mTask.save(null); 
 	}
 }

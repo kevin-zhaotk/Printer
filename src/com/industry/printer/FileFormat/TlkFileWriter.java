@@ -31,18 +31,22 @@ public class TlkFileWriter extends TlkFile{
 		int i=1;
 		FileWriter fw=null;
 		BufferedWriter bw=null;
-		Debug.d(TAG, "=====>saveObjFile path="+mPath);
+		Debug.e(TAG, "=====>saveObjFile path="+mPath);
 		
 		File tlk = new File(mPath);
 		ArrayList<BaseObject> objs = mTask.getObjects();
 		
 		try {
 			if(!tlk.exists() && !tlk.createNewFile()){
-				Debug.d(TAG, "create error "+tlk.getPath());
+				Debug.e(TAG, "create error "+tlk.getPath());
 				return;
 			}
 			fw = new FileWriter(tlk);
 			bw = new BufferedWriter(fw);
+			Debug.e(TAG, "=====>FileWriter=");
+			Debug.e(TAG, "=====>FileWriter=");			
+			
+			
 			for(BaseObject o : objs)
 			{
 				if(o instanceof RealtimeObject)

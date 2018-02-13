@@ -44,6 +44,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,6 +64,9 @@ import android.widget.TextView;
 import com.industry.printer.MessageTask.MessageType;
 
 public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener {
+	
+	
+	
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -166,6 +170,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				Bundle d = msg.getData();
 				String size = d.getString("height");
 				mHighEdit.setText(size);
+				 // addbylk_1_17/30_begin
 				String font1 ="4";				
 				if(size.compareTo("16")==0 )//addbylk
 				{ Debug.e(TAG, "===11= " + size);	
@@ -185,7 +190,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				if (view == mFont) {
 				view.setText(font1);
 				}
-		    	 Debug.e(TAG, "==== " + size);				
+				 // addbylk_1_17/30_end			
 				break;
 			}
 		}
@@ -197,6 +202,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		mObject = obj;
 		initAdapter();
 	}
+
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +293,40 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 		    mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 		    mContent = (EditText)findViewById(R.id.cntEdit);
+		  ///  mContent.setHorizontallyScrolling(true); 
+		    
+		    mContent.setOnKeyListener(new View.OnKeyListener() 
+		    {		
+				@Override
+				//屏蔽输入回车符 
+				 // addbylk_1_18/30_begin
+				public boolean onKey(View arg0, int arg1, KeyEvent arg2) 
+				{
+					Debug.e(TAG, "----------------->unknow view"+ arg1 );
+					Debug.e(TAG, "----------------->unknow view"+ arg2  );
+					Debug.e(TAG, "----------------->unknow view"+ KeyEvent.KEYCODE_NUMPAD_ENTER );
+					Debug.e(TAG, "----------------->unknow view"+ KeyEvent.KEYCODE_ENTER );			
+					Debug.e(TAG, "----------------->unknow view"+ arg2.getKeyCode() );								 				
+					// TODO Auto-generated method stub
+					if(arg2.getKeyCode()==KeyEvent.KEYCODE_ENTER  )
+					{	
+						arg1=0;
+						Debug.e(TAG, "-=====-->unknow view OK" );
+						return true;
+						
+					}
+					return false;
+				}
+				 // addbylk_1_18/30_end
+			});
+ 
+		    
+		    
+		    
+		    
+		    
+		    
+		    
 		    mFont = (TextView) findViewById(R.id.fontSpin);
 		    mFont.setOnClickListener(this);
 		    mHeightType = (CheckBox) findViewById(R.id.height_type);
@@ -350,6 +390,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     fillObjInfo();
 	     selfInfoEnable();
 
+	   //ok按钮 处理 函数 6
 	     mOk.setOnClickListener(new View.OnClickListener(){
 	    	 
 				@Override
@@ -443,7 +484,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
 						
-						
+					     Debug.e(TAG, "==========mok ");
 						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)
@@ -456,12 +497,16 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				}
 				
 			});
-	     
-	     mCancel.setOnClickListener(new View.OnClickListener() {
+
+	    
+		 //Cancel按钮 处理 函数 	
+	     mCancel.setOnClickListener(new View.OnClickListener()
+	     {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+			     Debug.e(TAG, "==========mCancel ");
 				dismiss();
 			}
 		});
@@ -488,7 +533,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	 {
 		 mObject = obj;
 	 }
-	 
+	 // xxx/30
+	 public BaseObject getObject() {
+		 return mObject;
+	 } 
+	 //  xxx/30
 	 private void fillObjInfo()
 	 {
 		 int i=0;
@@ -500,18 +549,16 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mPrinter.setText(((MessageObject) mObject).getPrinterName());
 			}
 			else
-			{
+			{				 
+				// addbylk_1_20/30_begin
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
-
-					mHighEdit.setText(mObject.getDisplayHeight());
-
-
+				mHighEdit.setText(mObject.getDisplayHeight());
 				mFont.setText(mObject.getFont());			
 				mHeight_O.setText(String.valueOf(mObject.getHeight()));			
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()*2));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
-				
+			    // addbylk_1_20/30_end				
 				
 				if(mObject instanceof RealtimeObject)
 				{
@@ -578,25 +625,21 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			Debug.d(TAG, ">>>>>disable content");
 			mContent.setEnabled(false);
 		}
+		// addbylk_1_4/30_begin
 		if (PlatformInfo.isBufferFromDotMatrix()!=0)  
 		{	
-			float alpha =0.2f;	
-			
+			float alpha =0.2f;			
 			mFont.setEnabled(false); 
-
-			mFont.setAlpha(alpha);
-			
+			mFont.setAlpha(alpha);		
 			mHeight_O.setEnabled(false);		
-			mHeight_O.setAlpha(alpha);
-			
-			mHighUnit.setText("dot");
-			
+			mHeight_O.setAlpha(alpha);		
+			mHighUnit.setText("dot");		
 		}
 		else
 		{
 			mHighUnit.setText("mm");
 		}
-		
+		// addbylk_1_4/30_end	
 		
 	}
 	 
@@ -795,7 +838,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			Debug.d(TAG, "--->unknow view");
 		}
 	}
-
+	 // addbylk_1_19/30_begin
 	@Override
 	public void onCheckedChanged(CompoundButton view, boolean checked) {
 		if (view == mSourceCB) {
@@ -811,4 +854,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			}
 		}
 	}
+	 // addbylk_1_19/30_end
 }
+

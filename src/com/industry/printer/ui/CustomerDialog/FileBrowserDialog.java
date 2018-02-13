@@ -17,6 +17,7 @@ import com.industry.printer.R.layout;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
 
@@ -274,15 +275,18 @@ public class FileBrowserDialog extends CustomerDialogBase {
 					}
 				}
 			});
-	        for (String p : paths) {
-	        	if (p.contains(Configs.USB_ROOT_PATH)) {
-	        		mUsbStorage.setEnabled(true);
-	        		mUsbStorage.setTextColor(Color.BLACK);
-	        	} else if (p.contains(Configs.USB_ROOT_PATH2)) {
-	        		mUsbStorage2.setEnabled(true);
-	        		mUsbStorage2.setTextColor(Color.BLACK);
-	        	}
-	        }
+	        if (paths != null && paths.size() > 0) {
+	        	for (String p : paths) {
+		        	if (p.contains(Configs.USB_ROOT_PATH)) {
+		        		mUsbStorage.setEnabled(true);
+		        		mUsbStorage.setTextColor(Color.BLACK);
+		        	} else if (p.contains(Configs.USB_ROOT_PATH2)) {
+		        		mUsbStorage2.setEnabled(true);
+		        		mUsbStorage2.setTextColor(Color.BLACK);
+		        	}
+		        }
+			}
+	        
 	        Debug.d(TAG, "===>onCreate 1");
 	        fileOpen(new File(mCurPath));
 //	        mSDCard = (RadioButton) findViewById(R.id.radio_sdcard);
@@ -322,7 +326,7 @@ public class FileBrowserDialog extends CustomerDialogBase {
 		 if(files == null)
 		 {
 			 Debug.d(TAG, "Please plugin a USB device ");
-			 Toast.makeText(getContext(), "Please plugin a USB device ", Toast.LENGTH_LONG);
+			 ToastUtil.show(getContext(), "Please plugin a USB device ");
 			 mFileList.setAdapter(mFileAdapter);
 			return;
 		 }

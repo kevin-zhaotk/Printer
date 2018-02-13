@@ -45,13 +45,17 @@ public class RfidTask implements RfidCallback{
 		clearStat();
 		RFIDManager manager = RFIDManager.getInstance(mContext);
 		RFIDDevice dev = manager.getDevice(mIndex);
-		dev.addLisetener(this);
+		if (dev != null) {
+			dev.addLisetener(this);
+		}
 	}
 	
 	public void onUnload() {
 		RFIDManager manager = RFIDManager.getInstance(mContext);
 		RFIDDevice dev = manager.getDevice(mIndex);
-		dev.removeListener(this);
+		if (dev != null) {
+			dev.removeListener(this);
+		}
 	}
 	/**
 	 * 清除状态，为下次写入做准备
@@ -61,8 +65,9 @@ public class RfidTask implements RfidCallback{
 		mState = STATE_IDLE;
 		RFIDManager manager = RFIDManager.getInstance(mContext);
 		RFIDDevice dev = manager.getDevice(mIndex);
-		dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
-		
+		if (dev != null) {
+			dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+		}
 	}
 	
 	public int getStat() {
@@ -84,6 +89,9 @@ public class RfidTask implements RfidCallback{
 		
 		mState = STATE_PROCESSING;
 		Debug.d(TAG, "--->dev.state= " + dev.getState());
+		if (dev == null) {
+			return ;
+		}
 		switch (dev.getState()) {
 			case RFIDDevice.STATE_RFID_CONNECTED:
 				if(RFIDDevice.isNewModel) {
