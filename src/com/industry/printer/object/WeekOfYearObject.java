@@ -3,6 +3,7 @@ package com.industry.printer.object;
 import java.util.Calendar;
 
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.cache.FontCache;
 
 import android.content.Context;
@@ -28,7 +29,7 @@ public class WeekOfYearObject extends BaseObject{
 	private void init() {
 		Calendar calendar = Calendar.getInstance();
 		int week = calendar.get(Calendar.WEEK_OF_YEAR);
-		setContent(String.valueOf(week));
+		setContent(BaseObject.intToFormatString(week, 2));
 		Debug.d(TAG, "--->week of year: " + week);
 	}
 	
@@ -36,7 +37,7 @@ public class WeekOfYearObject extends BaseObject{
 	public String getContent() {
 		Calendar calendar = Calendar.getInstance();
 		int week = calendar.get(Calendar.WEEK_OF_YEAR);
-		mContent = String.valueOf(week);
+		mContent = BaseObject.intToFormatString(week, 2);
 		return mContent;
 	}
 	
