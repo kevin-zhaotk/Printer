@@ -342,19 +342,21 @@ public static final String TAG="SettingsTabActivity";
 				// FpgaGpioOperation.updateSettings(mContext);
 				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
 				// device.read();
-				if(mSysconfig.getParam(30)==7)
-				{				Debug.i(TAG, "111===>onclick");
-				   PlatformInfo.SetDotMatrixType(1);
-				   
-				}else if(mSysconfig.getHeads()==8)
-				{				Debug.i(TAG, "222===>onclick");
+				// addbylk_1_1/30_begin ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+				if(mSysconfig.getParam(30)==7)//16*8点 
+				{				Debug.e(TAG, "111===>onclick");
+				   PlatformInfo.SetDotMatrixType(1);				   
+				}
+				else if(mSysconfig.getParam(30)==8)//16×16点 
+				{				Debug.e(TAG, "222===>onclick");
 				   PlatformInfo.SetDotMatrixType(2);
 				} 
 				else
 				{				Debug.i(TAG, "=333==>onclick");
 					  PlatformInfo.SetDotMatrixType(0);			
 				}
-				Debug.i(TAG, "===>onclick: " + mSysconfig.getParam(30));
+				Debug.i(TAG, "===>onclick");;
+				//addbylk_1_1/30_end ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();

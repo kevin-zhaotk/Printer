@@ -391,18 +391,109 @@ public class BinInfo {
     		len = dst.length - x*high;
     		//return;
     	}
+		// addbylk_1_6/30_begin
     	int  matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
     		if (x*high + i < 0) {
 				continue;
 			}
-    		if (matrix==1) {
+    		if (matrix!=0) {
     			dst[x*high + i] = src[i];
     		} else {
     			dst[x*high + i] |= src[i];
     		}
     	}
+		// addbylk_1_6/30_end
+    }
+    /**
+     * 疊加方式2  addbylk
+     * @param dst
+     * @param src
+     * @param x
+     * @param high
+     */
+    
+    public static void overlap(char[] dst, char[] src,int offsetx , int offsety,int dsthigh ,int high)
+    {
+    	int len = src.length;
+    	
+    //	if(dst.length < offsetx*high + src.length)
+    //	{
+ //   		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);
+    //		len = dst.length - offsetx*high;
+    		//return;
+    //	}
+    	
+    			int[] isrc=null;
+    			int tempint=0;
+    			isrc  =new int  [len ]; //32高4字节 ×宽 
+    	    	for( int i2=0;i2<len/2;i2++)
+    	    	{
+    	    		tempint =(int) ( src[i2*2 ] );
+    	    		isrc[i2]=(tempint<<16)&0xffff0000;   
+    	    		
+    	    		tempint =(int) ( src[i2*2+1 ] );
+    	    		isrc[i2]|= tempint&0x0000ffff;     	
+    	    		
+    	    		isrc[i2]= isrc[i2]<<offsety;
+    	    	}
+    	    	
+    	    	for( int i2=0;i2<len/2;i2++)
+    	    	{
+    	    		src[i2*2]=(char) ( (isrc[i2] >>16)&0x0000ffff ); 
+    	    		src[i2*2+1]=  (char) (isrc[i2 ] & 0x0000ffff);		
+    	    	} 	
+    	     	
+    	
+
+    			// addbylk_1_7/30_begin		    	
+		    	int  matrix = PlatformInfo.isBufferFromDotMatrix();
+		    	///  单一  X 方向 移动   
+		    	for(int i=0; i< len; i++)
+		    	{
+		    		if (offsetx*high + i < 0) {
+						continue;
+					}
+		    		if (matrix!=0) {
+		    			dst[offsetx*high + i] |= src[i];
+		    		} else {
+		    			dst[offsetx*high + i] |= src[i];
+		    		}
+		    	}
+				// addbylk_1_7/30_end
+		    	
+    	
+    	
+   /* 	
+    	int dstlen=dst.length;
+		int[] idst=null;
+		int tempint=0;
+    	idst  =new int  [dstlen ]; //32高4字节 ×宽 
+    	for( int i2=0;i2<dstlen/2;i2++)
+    	{
+    		tempint =(int) ( dst[i2*2 ] );
+    		idst[i2]=(tempint<<16)&0xffff0000;   
+    		
+    		tempint =(int) ( dst[i2*2+1 ] );
+    		idst[i2]|= tempint&0x0000ffff; 
+    		//idst[i2]|=idst[i2];   
+    		
+    		 idst[i2]= idst[i2]<<1;//offsety;
+    		Debug.e(TAG, "====" + idst[i2] );
+    	}
+    	
+    	for( int i2=0;i2<dstlen/2;i2++)
+    	{
+    		dst[i2*2]=(char) ( (idst[i2] >>16)&0x0000ffff ); 
+    		dst[i2*2+1]=  (char) (idst[i2 ] & 0x0000ffff);		
+    	  		
+  
+    		Debug.e(TAG, "====" + dst[i2] );
+    	} 	
+   */ 	
+    	
+    	
     }
     
     /**

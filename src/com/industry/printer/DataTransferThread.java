@@ -69,6 +69,18 @@ public class DataTransferThread extends Thread {
 	public DataTransferThread() {
 	}
 	
+	 
+    public static void sort(char[] in){  
+        char temp;  
+        for(int i=in.length-1; i>=0; i--){  
+            for(int j=0; j<=i-1; j++){  
+                temp =in[j];  
+                in[j]=in[j+1];  
+                in[j+1]=temp;  
+            }  
+        }  
+    }  
+	
 	/**
 	 * 数据更新机制：
 	 * 每次发送数据时同时触发一个delay 10s的handler
@@ -83,16 +95,236 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		long last = 0;
 		/*逻辑要求，必须先发数据*/
-		buffer = getPrintBuffer();
+		buffer = mDataTask.getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
-//		ArrayList<String> usbs = ConfigPath.getMountedUsb();
-//		if (usbs != null && usbs.size() > 0) {
-//			String path = usbs.get(0);
-//			path = path + "/print.bin";
-//			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
-//		}
-		// save the print.bin to /mnt/sdcard/
-		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+	
+			SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+			int nDirection=  config.getParam(1) ;//  02.打印方向
+			int ninvert1   =  config.getParam(14);// 15.1 头倒置
+			int ninvert2   =  config.getParam(15);// 16.2 头倒置			
+			
+			int nmirrorimage1  =  config.getParam(12);// 13.1 头镜像 
+			int nmirrorimage2  =  config.getParam(13);// 14.2 头镜像			
+			int nmirrorimage3  =  config.getParam(20);// 21.3 头镜像
+			int nmirrorimage4  =  config.getParam(21);// 22.4 头镜像 			
+			//每列30像素
+			
+			if(nDirection==1)
+			{
+				//char 类型站2个字节 
+				char[] trans1 = new char [  buffer.length ]; //新建一个缓冲数据
+				//每列2个字节			
+				for (int irow = 0; irow < buffer.length-2; irow+=2)
+				{
+						trans1[buffer.length-1-irow-1] = buffer[irow] ;     //每列的第一个字节
+						trans1[buffer.length-1-irow-1+1] = buffer[irow+1] ;	//每列的第二个字节							
+							
+				}			
+				for (int irow = 0; irow < buffer.length; irow++)
+				{
+						buffer[irow] = trans1[irow] ;
+				}	
+			}//
+			//addbylk_2_1/3_begin↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓				
+			if(ninvert1==1 && ninvert2!=1 )
+			{
+			Debug.e(TAG, "===================="+ buffer.length );	
+				char[] trans12 = new char [  buffer.length ];
+				
+				//每列2个字节
+				for (int irow = 0; irow < buffer.length-2; irow+=2)
+				{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+						  //处理每列的第一个字节：按位颠倒大小端					
+						char char_new=0; 	
+		
+				        char_new |=  (char) ( (buffer[irow] >>6)&0x1 );  
+				        char_new |=  (char) ( (buffer[irow] >>4)&0x2 );  
+				        char_new |=  (char) ( (buffer[irow] >>2)&0x4 );  				        
+				        char_new |=  (char) ( (buffer[irow] ) &0x8 );  				        		        
+				        char_new |=  (char) ( (buffer[irow] <<2) &0x10 );  
+				        char_new |=  (char) ( (buffer[irow] <<4) &0x20 );
+				        char_new |=  (char) ( (buffer[irow] <<6) &0x40 );	
+				        
+				        char_new |=(char) ( buffer[irow] & 0x80  );							
+				        char_new |=(char) ( buffer[irow] & 0x100  ) ; //每列的第一个字节的前7位 复制到缓冲中  其他的不拷贝维持原样
+				        char_new |=(char) ( buffer[irow] & 0x200  ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x400  ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x800 ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x1000 ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x2000 ) ; 
+				        char_new |=(char) ( buffer[irow] & 0x4000 ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x8000 ) ;  					        
+				        
+				        trans12[irow] =  char_new ; 				        						
+						trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化			 						
+				}			
+				for (int irow = 0; irow < buffer.length; irow++)
+				{
+						buffer[irow] = trans12[irow] ;
+						Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+				}	
+			}
+						
+			if(ninvert1!=1 && ninvert2==1)
+			{
+			Debug.e(TAG, "===================="+ buffer.length );	
+				char[] trans12 = new char [  buffer.length ];
+				
+				//每列2个字节
+				for (int irow = 0; irow < buffer.length-2; irow+=2)
+				{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+						  //处理每列的第一个字节：按位颠倒大小端											
+			    			       
+						char char_new=0; 		
+
+				        char_new |=(char) ( buffer[irow] & 0x1  ) ; 
+				        char_new |=(char) ( buffer[irow] & 0x2) ;  
+				        char_new |=(char) ( buffer[irow] & 0x4 ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x8 ) ;  
+				        char_new |=(char) ( buffer[irow] & 0x10) ;  
+				        char_new |=(char) ( buffer[irow] & 0x20 ) ; 
+				        char_new |=(char) ( buffer[irow] & 0x40 ) ;  
+				        
+				        char_new |=  (char) ( (buffer[irow] >>6)&0x100 );  
+				        char_new |=  (char) ( (buffer[irow] >>4)&0x200 );  
+				        char_new |=  (char) ( (buffer[irow] >>2)&0x400 );  				        
+				        char_new |=  (char) ( (buffer[irow] ) &0x800 );  				        		        
+				        char_new |=  (char) ( (buffer[irow] <<2) &0x1000 );  
+				        char_new |=  (char) ( (buffer[irow] <<4) &0x2000 );
+				        char_new |=  (char) ( (buffer[irow] <<6) &0x4000 );	
+
+				        
+				        trans12[irow] =  char_new ; 
+				        						
+						trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+				       						
+				}			
+				for (int irow = 0; irow < buffer.length; irow++)
+				{
+						buffer[irow] = trans12[irow] ;
+						Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+				}	
+			}
+						
+			if(ninvert1==1 && ninvert2==1)// 功能：16高的头倒置 触发条件： 15.1 头倒置 16.2 头倒置 同时打开
+			{
+			Debug.e(TAG, "===================="+ buffer.length );	
+				char[] trans12 = new char [  buffer.length ];
+				
+				//每列2个字节
+				for (int irow = 0; irow < buffer.length-2; irow+=2)
+				{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+		
+			      //   16位颠倒代码 				       
+						char char_new=0; 		
+
+				        char_new |=  (char) ( (buffer[irow] >>15)&0x01 );  
+				        char_new |=  (char) ( (buffer[irow] >>13)&0x02 );  
+				        char_new |=  (char) ( (buffer[irow] >>11)&0x04 );  				        
+				        char_new |=  (char) ( (buffer[irow] >>9) &0x08 );  				        		        
+				        char_new |=  (char) ( (buffer[irow] >>7) &0x10 );  
+				        char_new |=  (char) ( (buffer[irow] >>5) &0x20 );
+				        char_new |=  (char) ( (buffer[irow] >>3) &0x40 );				        
+				        char_new |=  (char) ( (buffer[irow] >>1) &0x80 );
+				        				        
+				        char_new |=  (char) ( (buffer[irow] <<15)&0x8000 );  
+				        char_new |=  (char) ( (buffer[irow] <<13)&0x4000 );  
+				        char_new |=  (char) ( (buffer[irow] <<11)&0x2000 );  				        
+				        char_new |=  (char) ( (buffer[irow] <<9) &0x1000 );  				        		        
+				        char_new |=  (char) ( (buffer[irow] <<7) &0x800 );  
+				        char_new |=  (char) ( (buffer[irow] <<5) &0x400 );
+				        char_new |=  (char) ( (buffer[irow] <<3) &0x200 );				        
+				        char_new |=  (char) ( (buffer[irow] <<1) &0x100 );
+
+				        
+				        trans12[irow] =  char_new ; 
+				        						
+						trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+				       						
+				}			
+				for (int irow = 0; irow < buffer.length; irow++)
+				{
+						buffer[irow] = trans12[irow] ;
+						Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+				}	
+			}							
+			//addbylk_2_1/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+			
+			
+			if( nmirrorimage1==1) ///一头镜像 
+			{
+				//char 类型站2个字节 
+				char[] trans1 = new char [  buffer.length ]; //新建一个缓冲数据
+				
+				for (int irow = 0; irow < buffer.length; irow++)  //先复制 
+				{
+						 trans1[irow] = buffer[irow] ;
+				}	
+				//每列2个字节			
+				for (int irow = 0; irow < (int)(buffer.length/2)-2; irow+=2)
+				{
+
+				        char char_new_left=0; 							
+				        char char_new_right=0; 	
+				        char char_new_tmp=0; 				        
+	 			       	
+				        char_new_left =	buffer[irow];			
+						char_new_left |=(char) ( buffer[irow] & 0x1 ) ; //每列的第一个字节的前7位 复制到缓冲中  其他的不拷贝维持原样
+						char_new_left |=(char) ( buffer[irow] & 0x2) ;  
+						char_new_left |=(char) ( buffer[irow] & 0x4) ;  
+						char_new_left |=(char) ( buffer[irow] & 0x8 ) ;  
+						char_new_left |=(char) ( buffer[irow] & 0x10 ) ;  
+						char_new_left |=(char) ( buffer[irow] & 0x20 ) ; 
+						char_new_left |=(char) ( buffer[irow] & 0x40 ) ;  
+					//	trans1[buffer.length-1-irow-1] |=(char) ( buffer[irow] & 0x100 ) ;  
+	 		
+				        
+				      //  char_new_right =   trans1[buffer.length-1-irow-1] =  char_new;
+						
+				        char_new_right =(char)  buffer[buffer.length-1-irow-1]    ; 	
+				        
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x1 ) ; //每列的第一个字节的前7位 复制到缓冲中  其他的不拷贝维持原样
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x2 ) ;  
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x4 ) ;  
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x8 ) ;  
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x10 ) ;  
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x20 ) ; 
+				        char_new_right |=(char) ( buffer[buffer.length-1-irow-1] & 0x40 ) ; 
+				        
+				        
+				        char_new_tmp =char_new_left;
+				        char_new_left= char_new_right;				        
+				        char_new_right = char_new_tmp;	
+				        
+				        char_new_right = (char)(  char_new_right | 0x00ff) ; //不变的像素全1供后面 或 处理
+				        char_new_left =   (char)(  char_new_left | 0x00ff) ;				        
+				        
+
+						trans1[irow]  = (char) (trans1[irow] | 0xff00 ); //删除原有像素 否则会 与原有像素重合哦
+						trans1[buffer.length-1-irow-1]  = (char) (trans1[buffer.length-1-irow-1] |0xff00) ;	//每列的第二个字节					        
+						
+								
+						trans1[irow] &= char_new_left ;       //每列的第一个字节					
+						trans1[buffer.length-1-irow-1] &= char_new_right ;	//每列的第二个字节					        
+				        
+						
+				}			
+				for (int irow = 0; irow < buffer.length; irow++) //把缓冲复制回原BUFF
+				{
+						buffer[irow] = trans1[irow] ;
+				}	
+			}//		
+		
+	
+		
+			
+		
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		if (usbs != null && usbs.size() > 0) {
+			String path = usbs.get(0);
+			path = path + "/print.bin";
+			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		}
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		last = SystemClock.currentThreadTimeMillis();
@@ -101,6 +333,7 @@ public class DataTransferThread extends Thread {
 		while(mRunning == true) {
 			
 			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+			
 			int writable = FpgaGpioOperation.pollState();
 			// writable = 1;
 			if (writable == 0) { //timeout
@@ -109,7 +342,150 @@ public class DataTransferThread extends Thread {
 				mInterval = SystemClock.currentThreadTimeMillis() - last;
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
-				
+				buffer = mDataTask.getPrintBuffer();
+				if(nDirection==1)
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans2 = new char [  buffer.length ];
+					
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{
+					//	Debug.e(TAG, "000============"+ buffer.length );	
+							trans2[buffer.length-1-irow-1] = buffer[irow] ;
+							trans2[buffer.length-1-irow-1+1] = buffer[irow+1] ;						
+								
+					}
+					Debug.e(TAG, "11111===================="+ buffer.length );				
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans2[irow] ;
+					}	
+				}
+				//addbylk_2_2/3_begin↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓			
+				if(ninvert1==1 && ninvert2!=1 )
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+							  //处理每列的第一个字节：按位颠倒大小端					
+							char char_new=0; 	
+			
+					        char_new |=  (char) ( (buffer[irow] >>6)&0x1 );  
+					        char_new |=  (char) ( (buffer[irow] >>4)&0x2 );  
+					        char_new |=  (char) ( (buffer[irow] >>2)&0x4 );  				        
+					        char_new |=  (char) ( (buffer[irow] ) &0x8 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<2) &0x10 );  
+					        char_new |=  (char) ( (buffer[irow] <<4) &0x20 );
+					        char_new |=  (char) ( (buffer[irow] <<6) &0x40 );	
+					        
+					        char_new |=(char) ( buffer[irow] & 0x80  );							
+					        char_new |=(char) ( buffer[irow] & 0x100  ) ; //每列的第一个字节的前7位 复制到缓冲中  其他的不拷贝维持原样
+					        char_new |=(char) ( buffer[irow] & 0x200  ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x400  ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x800 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x1000 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x2000 ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x4000 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x8000 ) ;  					        
+					        
+					        trans12[irow] =  char_new ; 				        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化			 						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}
+							
+				if(ninvert1!=1 && ninvert2==1)
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+							  //处理每列的第一个字节：按位颠倒大小端											
+				      //  16位颠倒代码 				       
+							char char_new=0; 		
+
+					        char_new |=(char) ( buffer[irow] & 0x1  ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x2) ;  
+					        char_new |=(char) ( buffer[irow] & 0x4 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x8 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x10) ;  
+					        char_new |=(char) ( buffer[irow] & 0x20 ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x40 ) ;  
+					        
+					        char_new |=  (char) ( (buffer[irow] >>6)&0x100 );  
+					        char_new |=  (char) ( (buffer[irow] >>4)&0x200 );  
+					        char_new |=  (char) ( (buffer[irow] >>2)&0x400 );  				        
+					        char_new |=  (char) ( (buffer[irow] ) &0x800 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<2) &0x1000 );  
+					        char_new |=  (char) ( (buffer[irow] <<4) &0x2000 );
+					        char_new |=  (char) ( (buffer[irow] <<6) &0x4000 );	
+
+					        
+					        trans12[irow] =  char_new ; 
+					        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+					       						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}
+							
+				if(ninvert1==1 && ninvert2==1)// 功能：16高的头倒置 触发条件： 15.1 头倒置 16.2 头倒置 同时打开
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+			
+				      //   16位颠倒代码 				       
+							char char_new=0; 		
+
+					        char_new |=  (char) ( (buffer[irow] >>15)&0x01 );  
+					        char_new |=  (char) ( (buffer[irow] >>13)&0x02 );  
+					        char_new |=  (char) ( (buffer[irow] >>11)&0x04 );  				        
+					        char_new |=  (char) ( (buffer[irow] >>9) &0x08 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] >>7) &0x10 );  
+					        char_new |=  (char) ( (buffer[irow] >>5) &0x20 );
+					        char_new |=  (char) ( (buffer[irow] >>3) &0x40 );				        
+					        char_new |=  (char) ( (buffer[irow] >>1) &0x80 );
+					        				        
+					        char_new |=  (char) ( (buffer[irow] <<15)&0x8000 );  
+					        char_new |=  (char) ( (buffer[irow] <<13)&0x4000 );  
+					        char_new |=  (char) ( (buffer[irow] <<11)&0x2000 );  				        
+					        char_new |=  (char) ( (buffer[irow] <<9) &0x1000 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<7) &0x800 );  
+					        char_new |=  (char) ( (buffer[irow] <<5) &0x400 );
+					        char_new |=  (char) ( (buffer[irow] <<3) &0x200 );				        
+					        char_new |=  (char) ( (buffer[irow] <<1) &0x100 );
+
+					        
+					        trans12[irow] =  char_new ; 
+					        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+					       						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}							
+				//addbylk_2_2/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//////////////////↑↑↑↑
+	
 				if (!mDataTask.isReady) {
 					mRunning = false;
 					if (mCallback != null) {
@@ -119,10 +495,12 @@ public class DataTransferThread extends Thread {
 				}
 				// Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				buffer = getPrintBuffer();
 				last = SystemClock.currentThreadTimeMillis();
 				countDown();
+				
 				mInkListener.onCountChanged();
+				
+		//addbylk170918		
 				mScheduler.schedule();
 				if (mCallback != null) {
 					mCallback.onComplete();
@@ -133,6 +511,149 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				//在此处发生打印数据，同时
 				buffer = mDataTask.getPrintBuffer();
+				if(nDirection==1)
+				{
+				Debug.e(TAG, "333===================="+ buffer.length );	
+					char[] trans3 = new char [  buffer.length ];
+					
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{
+					//	Debug.e(TAG, "000============"+ buffer.length );	
+							trans3[buffer.length-1-irow-1] = buffer[irow] ;
+							trans3[buffer.length-1-irow-1+1] = buffer[irow+1] ;						
+								
+					}
+					Debug.e(TAG, "444===================="+ buffer.length );				
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans3[irow] ;
+					}	
+				}
+							
+				//addbylk_2_2/3_begin↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓			
+				if(ninvert1==1 && ninvert2!=1 )
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+							  //处理每列的第一个字节：按位颠倒大小端					
+							char char_new=0; 	
+			
+					        char_new |=  (char) ( (buffer[irow] >>6)&0x1 );  
+					        char_new |=  (char) ( (buffer[irow] >>4)&0x2 );  
+					        char_new |=  (char) ( (buffer[irow] >>2)&0x4 );  				        
+					        char_new |=  (char) ( (buffer[irow] ) &0x8 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<2) &0x10 );  
+					        char_new |=  (char) ( (buffer[irow] <<4) &0x20 );
+					        char_new |=  (char) ( (buffer[irow] <<6) &0x40 );	
+					        
+					        char_new |=(char) ( buffer[irow] & 0x80  );							
+					        char_new |=(char) ( buffer[irow] & 0x100  ) ; //每列的第一个字节的前7位 复制到缓冲中  其他的不拷贝维持原样
+					        char_new |=(char) ( buffer[irow] & 0x200  ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x400  ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x800 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x1000 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x2000 ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x4000 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x8000 ) ;  					        
+					        
+					        trans12[irow] =  char_new ; 				        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化			 						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}
+							
+				if(ninvert1!=1 && ninvert2==1)
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+							  //处理每列的第一个字节：按位颠倒大小端											
+				      //  16位颠倒代码 				       
+							char char_new=0; 		
+
+					        char_new |=(char) ( buffer[irow] & 0x1  ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x2) ;  
+					        char_new |=(char) ( buffer[irow] & 0x4 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x8 ) ;  
+					        char_new |=(char) ( buffer[irow] & 0x10) ;  
+					        char_new |=(char) ( buffer[irow] & 0x20 ) ; 
+					        char_new |=(char) ( buffer[irow] & 0x40 ) ;  
+					        
+					        char_new |=  (char) ( (buffer[irow] >>6)&0x100 );  
+					        char_new |=  (char) ( (buffer[irow] >>4)&0x200 );  
+					        char_new |=  (char) ( (buffer[irow] >>2)&0x400 );  				        
+					        char_new |=  (char) ( (buffer[irow] ) &0x800 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<2) &0x1000 );  
+					        char_new |=  (char) ( (buffer[irow] <<4) &0x2000 );
+					        char_new |=  (char) ( (buffer[irow] <<6) &0x4000 );	
+
+					        
+					        trans12[irow] =  char_new ; 
+					        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+					       						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}
+							
+				if(ninvert1==1 && ninvert2==1)// 功能：16高的头倒置 触发条件： 15.1 头倒置 16.2 头倒置 同时打开
+				{
+				Debug.e(TAG, "===================="+ buffer.length );	
+					char[] trans12 = new char [  buffer.length ];
+					
+					//每列2个字节
+					for (int irow = 0; irow < buffer.length-2; irow+=2)
+					{Debug.e(TAG, "====================trans12"+ trans12[irow] );
+			
+				      //   16位颠倒代码 				       
+							char char_new=0; 		
+
+					        char_new |=  (char) ( (buffer[irow] >>15)&0x01 );  
+					        char_new |=  (char) ( (buffer[irow] >>13)&0x02 );  
+					        char_new |=  (char) ( (buffer[irow] >>11)&0x04 );  				        
+					        char_new |=  (char) ( (buffer[irow] >>9) &0x08 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] >>7) &0x10 );  
+					        char_new |=  (char) ( (buffer[irow] >>5) &0x20 );
+					        char_new |=  (char) ( (buffer[irow] >>3) &0x40 );				        
+					        char_new |=  (char) ( (buffer[irow] >>1) &0x80 );
+					        				        
+					        char_new |=  (char) ( (buffer[irow] <<15)&0x8000 );  
+					        char_new |=  (char) ( (buffer[irow] <<13)&0x4000 );  
+					        char_new |=  (char) ( (buffer[irow] <<11)&0x2000 );  				        
+					        char_new |=  (char) ( (buffer[irow] <<9) &0x1000 );  				        		        
+					        char_new |=  (char) ( (buffer[irow] <<7) &0x800 );  
+					        char_new |=  (char) ( (buffer[irow] <<5) &0x400 );
+					        char_new |=  (char) ( (buffer[irow] <<3) &0x200 );				        
+					        char_new |=  (char) ( (buffer[irow] <<1) &0x100 );
+
+					        
+					        trans12[irow] =  char_new ; 
+					        						
+							trans12[irow+1] = buffer[irow+1] ;      //处理每列的第二个字节：不变化
+					       						
+					}			
+					for (int irow = 0; irow < buffer.length; irow++)
+					{
+							buffer[irow] = trans12[irow] ;
+							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
+					}	
+				}								
+				//addbylk_2_3/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
@@ -145,7 +666,6 @@ public class DataTransferThread extends Thread {
 			}
 			//Debug.d(TAG, "===>kernel buffer empty, fill it");
 			//TO-DO list 下面需要把打印数据下发
-			
 		}
 		rollback();
 		

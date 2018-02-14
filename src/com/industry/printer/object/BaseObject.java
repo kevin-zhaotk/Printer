@@ -249,6 +249,89 @@ public class BaseObject{
 		mBitmapSelected = draw();
 	}
 	
+	
+	
+	/*
+	private Bitmap draw() {
+		Bitmap bitmap;
+		Paint paint = new Paint();
+		mPaint.setTextSize(152); // (getfeed());
+		mPaint.setAntiAlias(true); //去除锯齿  
+		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+//		try {
+	//		AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
+		//	if (fd != null) {
+			//	fd.close();
+			//} else {
+			//	mFont = DEFAULT_FONT;
+		//	}
+		//} catch (Exception e) {
+		//	mFont = DEFAULT_FONT;
+	//	}
+		
+	//	String f = "fonts/"+mFont+".ttf";
+		//if (!new File("file://android_assets/" + f).exists()) {
+		//	mFont = DEFAULT_FONT;
+	//	}
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			paint.setTextSize(mHeight);
+			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+		
+		int width = (int)mPaint.measureText(getContent());
+		int rWidth = (int)paint.measureText(getContent());
+		if (width <= 0) {
+			width = 10;
+		}
+		if (rWidth <= 0) {
+			rWidth = 10;
+		}
+		
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width + "  rWidth = " + rWidth);
+		if (mWidth == 0) {
+			setWidth(rWidth);
+		}
+		
+		
+		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
+        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
+		mCan.drawText(mContent, 0, 152 - fm.descent, mPaint);
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			setWidth(width * 1.25f);
+//		}
+		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	}
+	
+	*/
+	
+    public static int getTextWidth(Paint paint, String str) {  
+        int iRet = 0;  
+        if (str != null && str.length() > 0) {  
+            int len = str.length();  
+            float[] widths = new float[len];  
+            paint.getTextWidths(str, widths);  
+            for (int j = 0; j < len; j++) {  
+                iRet += (int) Math.ceil(widths[j]);  
+            }  
+        }  
+        return iRet;  
+    } 
 	private Bitmap draw() {
 		Bitmap bitmap;
 		Paint paint = new Paint();
@@ -551,17 +634,22 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFromBitmap.recyleBitmap(bg);
 	}
-	
-	public void generateVarbinFromMatrix(String f) {
+	//addbylk_6_24/30_begin
+	public void generateVarbinFromMatrix(String f,float height,float width) {
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract("0123456789");
+		maker.extract("0123456789",height,width);
 		maker.save(f + getVarBinFileName());
 	}
-	
+	// addbylk_6_24/30_end
 	
 	public Canvas getCanvas()
 	{
 		return mCan;
+	}
+	public void setHeight(String size)
+	{
+		float height = mTask.getMsgObject().getPixels(size);
+		setHeight(height);
 	}
 	
 	public void setHeight(float size)
@@ -591,12 +679,6 @@ public class BaseObject{
 //			width = width * 1.25f;
 //		}
 		setWidth(width);
-	}
-	
-	public void setHeight(String size)
-	{
-		float height = mTask.getMsgObject().getPixels(size);
-		setHeight(height);
 	}
 	
 	public String getDisplayHeight() {

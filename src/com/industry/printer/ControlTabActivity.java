@@ -728,6 +728,24 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					dispPreview(mPreBitmap);
 					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
+					/*从U盘中读取系统设置，解析*/
+					mSysconfig = SystemConfigFile.getInstance(mContext);		
+					  ///////////////////////////////////////////////////////////// 						//addbylk
+						if(mSysconfig.getParam(30)==7)//16*8点 
+						{				Debug.e(TAG, "111===>onclick");
+						   PlatformInfo.SetDotMatrixType(1);	
+							dispPreviewM(mPreBitmap);
+						}
+						else if(mSysconfig.getParam(30)==8)//16×16点 
+						{				Debug.e(TAG, "222===>onclick");
+						   PlatformInfo.SetDotMatrixType(2);
+							dispPreviewM(mPreBitmap);
+						} 
+						else
+						{				Debug.e(TAG, "=333==>onclick");
+							  PlatformInfo.SetDotMatrixType(0);	
+								dispPreview(mPreBitmap);
+						}			
 					refreshCount();
 					mMsgFile.setText(mMsgTask.getName());
 					mSysconfig.saveLastMsg(mObjPath);
@@ -1033,7 +1051,47 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		return ready;
 	}
-	
+	private void dispPreviewM(Bitmap bmp) {
+		int x=0,y=0;
+		int cutWidth = 0;
+		float scale = 1;
+		Debug.e(TAG, "-===1>dispPreview: " + mllPreview.getHeight());
+		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Debug.e(TAG, "====2>screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+		float height = mllPreview.getHeight();
+		scale = (height/bmp.getHeight()*2);
+		Debug.e(TAG, "=====================3scale: " + scale  );	
+		mllPreview.removeAllViews();
+			for (int i = 0;x < bmp.getWidth(); i++)
+			{
+				if (x + 1200 > bmp.getWidth())
+				{
+					cutWidth = bmp.getWidth() - x;
+				} else{
+					cutWidth =1200;
+					
+				}
+				Bitmap child = Bitmap.createBitmap(bmp, x, 0, cutWidth, bmp.getHeight());
+				Debug.e(TAG, "====>child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight()+"_"+cutWidth);
+				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale*3), (int) (bmp.getHeight() * scale), true);
+				child.recycle();
+				x += cutWidth;
+				ImageView imgView = new ImageView(mContext);
+				imgView.setScaleType(ScaleType.FIT_XY);
+//				if (density == 1) {
+					imgView.setLayoutParams(new LayoutParams(scaledChild.getWidth(),scaledChild.getHeight()));
+//				} else {
+//					imgView.setLayoutParams(new LayoutParams(cutWidth,LayoutParams.MATCH_PARENT));
+//				}
+				
+				imgView.setBackgroundColor(Color.WHITE);
+				imgView.setImageBitmap(scaledChild);
+				mllPreview.addView(imgView);
+			}
+	}
+		
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
