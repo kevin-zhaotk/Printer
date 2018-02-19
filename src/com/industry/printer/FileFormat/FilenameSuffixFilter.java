@@ -21,8 +21,8 @@ public class FilenameSuffixFilter implements FilenameFilter {
 	@Override
 	public boolean accept(File dir, String filename) {
 		// TODO Auto-generated method stub
-		Debug.d("FilenameSuffixFilter", "dir="+dir.toString());
-		Debug.d("FilenameSuffixFilter", new File(dir,filename).toString()+" is directory?"+new File(dir,filename).isDirectory());
+		//Debug.d("FilenameSuffixFilter", "dir="+dir.toString());
+		//Debug.d("FilenameSuffixFilter", new File(dir,filename).toString()+" is directory?"+new File(dir,filename).isDirectory());
 		if(new File(dir,filename).isDirectory())
 			return true;
 		if(mSuffix==null || filename==null || !filename.toLowerCase().endsWith(mSuffix))

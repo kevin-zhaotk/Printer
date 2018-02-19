@@ -647,7 +647,7 @@ public class PHSettingFragment extends Fragment implements OnItemSelectedListene
 	
 	private String getEncoder(int index) {
 		String entries[] = mContext.getResources().getStringArray(R.array.encoder_item_entries);
-		Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
+		// Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
 		if (entries == null || entries.length <= 0) {
 			return null;
 		}

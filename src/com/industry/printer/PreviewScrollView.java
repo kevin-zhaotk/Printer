@@ -109,7 +109,7 @@ public class PreviewScrollView extends View {
 	{
 		if(bit==null || bit.length<=0)
 		{
-			Debug.d(TAG,"##########bit.length="+bit.length);
+			// Debug.d(TAG,"##########bit.length="+bit.length);
 			return null;
 		}
 		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);

@@ -7,6 +7,7 @@ import com.industry.printer.Utils.Debug;
 
 import android.R.integer;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 
@@ -48,6 +49,9 @@ public class ObjectsFromString {
 		Debug.d(TAG, "===>str: "+str);
 		String[] objStrings = str.split(SPLITOR);
 		for (String s:objStrings) {
+			if (TextUtils.isEmpty(s)) {
+				continue;
+			}
 			if (s.startsWith(COUNTER_FLAG)) { //计数器对象
 				Log.d(TAG, "===>counter: "+s);
 				int count = s.length() - 3;

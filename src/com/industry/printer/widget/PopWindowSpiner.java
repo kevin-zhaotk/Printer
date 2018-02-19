@@ -83,7 +83,9 @@ public class PopWindowSpiner extends PopupWindow implements OnItemClickListener,
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Debug.d(TAG, "--->onItemclick");
-		dismiss();
+		if (isShowing()) {
+			dismiss();
+		}
 		if (mItemClickListener != null) {
 			mItemClickListener.onItemClick(position);
 		}

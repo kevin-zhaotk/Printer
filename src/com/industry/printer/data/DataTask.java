@@ -176,10 +176,11 @@ public class DataTask {
 		char[] var;
 		if(mObjList==null || mObjList.isEmpty())
 			return;
+		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
-		float div = (float) (2.0/mTask.getHeads());
+		float div = (float) (2.0/heads);
 		MessageObject msg = mTask.getMsgObject();
-		Debug.d(TAG, "+++++type:" + msg.getType());
+		// Debug.d(TAG, "+++++type:" + msg.getType());
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
 			scaleW = 1;

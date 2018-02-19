@@ -369,7 +369,7 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
 
 			Debug.d(TAG, "=====get curobj");
 			BaseObject obj = getCurObj();
-			Debug.d(TAG, "=====obj:"+obj.mId);
+			Debug.d(TAG, "=====obj:"+ (obj == null ?  "" : obj.mId));
 			mObjView.beginDraw();
 			mObjView.invalidate();
 			if(obj != null){

@@ -102,6 +102,11 @@ public class CommonSelectDialog extends Dialog implements android.view.View.OnCl
 		}
 		
 		public String getSelectedItem() {
+			if (mItems == null || mItems.length <= 0) {
+				return "unknow";
+			} else if (mItems.length <= position) {
+				position = 0;
+			}
 			return mItems[position];
 		}
 		
@@ -112,6 +117,9 @@ public class CommonSelectDialog extends Dialog implements android.view.View.OnCl
 
 		@Override
 		public Object getItem(int arg0) {
+			if (mItems == null || mItems.length <= arg0) {
+				return null;
+			}
 			return mItems[arg0];
 		}
 
@@ -131,7 +139,7 @@ public class CommonSelectDialog extends Dialog implements android.view.View.OnCl
 				mHolder.mTips = (TextView) convertView.findViewById(R.id.fontTips);
 			}
 			
-			mHolder.mText.setText(mItems[position]);
+			mHolder.mText.setText(position >= mItems.length ? "" : mItems[position]);
 			mHolder.mText.setSelected(position == this.position);
 			
 			convertView.setTag(mHolder);

@@ -21,7 +21,7 @@ public class RFIDManager implements RfidCallback{
 	
 	private static final String TAG = RFIDManager.class.getSimpleName();
 	
-	private static RFIDManager	mInstance=null;
+	private static volatile RFIDManager	mInstance=null;
 	private List<RFIDDevice> mRfidDevices = new ArrayList<RFIDDevice>();
 	private int mCurrent=0;
 	private int mLiveHeads = 1;
@@ -131,8 +131,12 @@ public class RFIDManager implements RfidCallback{
 	}
 	public static RFIDManager getInstance(Context ctx) {
 		if (mInstance == null) {
-			Debug.d(TAG, "--->new RfidManager");
-			mInstance = new RFIDManager(ctx);
+			synchronized (RFIDManager.class) {
+				if (mInstance == null) {
+					Debug.d(TAG, "--->new RfidManager");
+					mInstance = new RFIDManager(ctx);
+				}
+			}
 		}
 		return mInstance;
 	}

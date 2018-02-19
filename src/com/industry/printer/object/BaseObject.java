@@ -41,6 +41,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -151,9 +152,9 @@ public class BaseObject{
 		setHeight(Configs.gDots);
 		setLineWidth(5);
 		setContent("text");
-		
+
 		mVBuffer = new HashMap<String, byte[]>();
-		
+
 	}
 
 	private void initName() {
@@ -431,13 +432,18 @@ public class BaseObject{
 	}
 	public int drawVarBitmap()
 	{
+		if (TextUtils.isEmpty(mContent)) {
+			return 0;
+		}
+		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
+
 		int dots = 0;
 		//mPaint.setTextSize(mHeight);
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		FontMetrics fm = mPaint.getFontMetrics();
-		float wDiv = (float) (2.0/mTask.getHeads());
+		float wDiv = (float) (2.0/heads);
 		MessageObject msg = mTask.getMsgObject();
 		/*對320高的buffer進行單獨處理*/
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
@@ -517,6 +523,9 @@ public class BaseObject{
 	 */
 	public void generateVarBuffer()
 	{
+		if (TextUtils.isEmpty(mContent)) {
+			return;
+		}
 		//mPaint.setTextSize(mHeight);
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
@@ -816,11 +825,18 @@ public class BaseObject{
 	{
 		int n=0;
 		Debug.d(TAG, "===>getBufferFromContent id="+mId+", content="+mContent);
+		if (mVBuffer == null) {
+			return new byte[152];
+		}
 		int lenth=mVBuffer.get("0").length;
 		ByteArrayBuffer buffer = new ByteArrayBuffer(mContent.length()*lenth);
 		Debug.d(TAG, "--->Arraybuffer len="+buffer.length());
 		for(int i=0;i<mContent.length(); i++){
-			n = Integer.parseInt(mContent.substring(i, i+1));
+			try {
+				n = Integer.parseInt(mContent.substring(i, i + 1));
+			} catch (Exception e) {
+				n = 1;
+			}
 			byte[] b=mVBuffer.get(String.valueOf(n));
 			buffer.append(b, 0, b.length);
 		}

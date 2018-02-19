@@ -40,10 +40,14 @@ public class ShiftObject extends BaseObject {
 				time==null || 
 				!checkNum(time) )
 			return;
-		 int i = Integer.parseInt(time);
-		 if(i <0 || i > 2400)
-			 return;
-		mShifts[shift] = Integer.parseInt(time);
+		try {
+			int i = Integer.parseInt(time);
+			if (i < 0 || i > 2400)
+				return;
+			mShifts[shift] = Integer.parseInt(time);
+		} catch (Exception e) {
+			return;
+		}
 		Debug.d(TAG, "--->shift: " + shift + "---time: " + time);
 	}
 	
@@ -125,7 +129,12 @@ public class ShiftObject extends BaseObject {
 		int i=0,index=0;
 		Debug.d(TAG,"getScaledBitmap  mWidth="+mWidth+", mHeight="+mHeight);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HHmm");
-		int date = Integer.parseInt(dateFormat.format(new Date()));
+		int date = 0;
+		try {
+			date = Integer.parseInt(dateFormat.format(new Date()));
+		} catch (Exception e) {
+			Debug.e(TAG, "--->" + e.getMessage());
+		}
 		Debug.d(TAG, "date="+date);
 		for(i=0; i<5; i++)
 		{

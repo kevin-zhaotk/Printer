@@ -790,8 +790,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			return;
 		}
 		mMin.setText("0");
-		int max = (int) Math.pow(10, Integer.parseInt(mDigits.getText().toString())) - 1;
-		mMax.setText(String.valueOf(max));
+		try {
+			int max = (int) Math.pow(10, Integer.parseInt(mDigits.getText().toString())) - 1;
+			mMax.setText(String.valueOf(max));
+		} catch (Exception e) {}
 	}
 
 	@Override

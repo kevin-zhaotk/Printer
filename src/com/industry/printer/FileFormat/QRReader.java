@@ -15,6 +15,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 /**
  * 從QR.data文件中讀取二維碼數據
@@ -34,11 +35,15 @@ public class QRReader {
 	
 	FileOutputStream mWriter;
 	
-	private static QRReader mInstance;
+	private static volatile QRReader mInstance;
 	
 	public static QRReader getInstance(Context ctx) {
 		if (mInstance == null) {
-			mInstance = new QRReader(ctx);
+			synchronized (QRReader.class) {
+				if (mInstance == null) {
+					mInstance = new QRReader(ctx);
+				}
+			}
 		}
 		return mInstance;
 	}
@@ -106,6 +111,9 @@ public class QRReader {
 		
 		try {
 			String line = mReader.readLine();
+			if (TextUtils.isEmpty(line)) {
+				return null;
+			}
 			int index = line.indexOf(",");
 			Debug.d("XXX", "--->line: " + line);
 			String content = line.substring(index + 1);

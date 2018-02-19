@@ -31,6 +31,9 @@ public class TlkFileParser {
 			{
 				
 				String[] line = s.split("\\^");
+				if (line == null) {
+					break;
+				}
 				int index = Integer.parseInt(line[1]);
 				if((index >= 1 && index <= 16)||(index >=21 && index <=24))	
 				{

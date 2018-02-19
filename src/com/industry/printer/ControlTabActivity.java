@@ -113,7 +113,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;
 import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
@@ -1038,7 +1038,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
-		if (bmp == null) {
+		if (bmp == null || bmp.getHeight() == 0 || bmp.getWidth() == 0) {
 			return;
 		}
 		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
@@ -1106,7 +1106,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			if (object instanceof CounterObject) {
 				Message msg = new Message();
 				msg.what = MainActivity.UPDATE_COUNTER;
-				msg.arg1 = Integer.valueOf(((CounterObject) object).getContent());
+				try {
+					msg.arg1 = Integer.valueOf(((CounterObject) object).getContent());
+				} catch (Exception e) {
+					break;
+				}
 				mCallback.sendMessage(msg);
 				break;
 			}
@@ -1711,6 +1715,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            		StopFlag=1;
 		                            		CleanFlag=0;
 		                            		String[] Apath = msg.split("\\|");
+		                            		if (Apath == null || Apath.length < 4) {
+		                            			continue;
+											}
 		                                 	mObjPath= Apath[3];
 		                                 	int nRet=Paths.ListDirFiles( Apath[3]);
 		                                 	//if(nRet==1)

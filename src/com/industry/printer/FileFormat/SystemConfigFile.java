@@ -156,174 +156,178 @@ public class SystemConfigFile{
 			return false;
 		}
 		for (XmlTag t : list) {
-			tag = t.getKey();
-			if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
-				mParam[0] = Integer.parseInt(t.getValue());
-				mParam[0] = checkParam(1, mParam[0]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
-				mParam[1] = Integer.parseInt(t.getValue());
-				mParam[1] = checkParam(2, mParam[1]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_DELAY)) {
-				mParam[2] = Integer.parseInt(t.getValue());
-				mParam[2] = checkParam(3, mParam[2]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_LOW_DELAY)) {
-				mParam[3] = Integer.parseInt(t.getValue());
+			try {
+				tag = t.getKey();
+				if (tag.equalsIgnoreCase(PH_SETTING_ENCODER)) {
+					mParam[0] = Integer.parseInt(t.getValue());
+					mParam[0] = checkParam(1, mParam[0]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_MODE)) {
+					mParam[1] = Integer.parseInt(t.getValue());
+					mParam[1] = checkParam(2, mParam[1]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_DELAY)) {
+					mParam[2] = Integer.parseInt(t.getValue());
+					mParam[2] = checkParam(3, mParam[2]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_LOW_DELAY)) {
+					mParam[3] = Integer.parseInt(t.getValue());
 				/*光电延时 0-65535 默认值100*/
-				mParam[3] = checkParam(4, mParam[3]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_PHOOUTPUT_PERIOD)) {
-				mParam[4] = Integer.parseInt(t.getValue());
+					mParam[3] = checkParam(4, mParam[3]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_PHOOUTPUT_PERIOD)) {
+					mParam[4] = Integer.parseInt(t.getValue());
 				/*字宽(毫秒） 下发FPGA-S5 0-65535*/
-				mParam[4] = checkParam(5, mParam[4]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_TIMED_PERIOD)) {
-				mParam[5] = Integer.parseInt(t.getValue());
-				mParam[5] = checkParam(6, mParam[5]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_PULSE)) {
-				mParam[6] = Integer.parseInt(t.getValue());
+					mParam[4] = checkParam(5, mParam[4]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_TIMED_PERIOD)) {
+					mParam[5] = Integer.parseInt(t.getValue());
+					mParam[5] = checkParam(6, mParam[5]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_TRIGER_PULSE)) {
+					mParam[6] = Integer.parseInt(t.getValue());
 				/*列间脉冲 下发FPGA- S7	1-50*/
-				mParam[6] = checkParam(7, mParam[6]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_LENFIXED_PULSE)) {
-				mParam[7] = Integer.parseInt(t.getValue());
+					mParam[6] = checkParam(7, mParam[6]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_LENFIXED_PULSE)) {
+					mParam[7] = Integer.parseInt(t.getValue());
 				/*定长脉冲 下发FPGA-S8 	1-65535*/
-				mParam[7] = checkParam(8, mParam[7]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_DELAY_PULSE)) {
-				mParam[8] = Integer.parseInt(t.getValue());
+					mParam[7] = checkParam(8, mParam[7]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_DELAY_PULSE)) {
+					mParam[8] = Integer.parseInt(t.getValue());
 				/*脉冲延时 下发FPGA-S9 	1-65535*/
-				mParam[8] = checkParam(9, mParam[8]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
-				mParam[9] = Integer.parseInt(t.getValue());
+					mParam[8] = checkParam(9, mParam[8]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_HIGH_LEN)) {
+					mParam[9] = Integer.parseInt(t.getValue());
 				/*墨点大小 200-2000 默认值800*/
-				mParam[9] = checkParam(10, mParam[9]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
-				mParam[10] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
-				mParam[11] = Integer.parseInt(t.getValue());
-				mParam[11] = checkParam(12, mParam[11]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_13)) {
-				mParam[12] = Integer.parseInt(t.getValue());
-				mParam[12] = checkParam(13, mParam[12]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_14)) {
-				mParam[13] = Integer.parseInt(t.getValue());
-				mParam[13] = checkParam(14, mParam[13]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_15)) {
-				mParam[14] = Integer.parseInt(t.getValue());
-				mParam[14] = checkParam(15, mParam[14]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_16)) {
-				mParam[15] = Integer.parseInt(t.getValue());
+					mParam[9] = checkParam(10, mParam[9]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_11)) {
+					mParam[10] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_12)) {
+					mParam[11] = Integer.parseInt(t.getValue());
+					mParam[11] = checkParam(12, mParam[11]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_13)) {
+					mParam[12] = Integer.parseInt(t.getValue());
+					mParam[12] = checkParam(13, mParam[12]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_14)) {
+					mParam[13] = Integer.parseInt(t.getValue());
+					mParam[13] = checkParam(14, mParam[13]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_15)) {
+					mParam[14] = Integer.parseInt(t.getValue());
+					mParam[14] = checkParam(15, mParam[14]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_16)) {
+					mParam[15] = Integer.parseInt(t.getValue());
 				/*加重 0-9 默认值0*/
-				mParam[15] = checkParam(16, mParam[15]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
-				mParam[16] = Integer.parseInt(t.getValue());
-				mParam[16] = checkParam(17, mParam[16]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
-				mParam[17] = Integer.parseInt(t.getValue());
-				mParam[17] = checkParam(18, mParam[17]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_19)) {
-				mParam[18] = Integer.parseInt(t.getValue());
-				mParam[18] = checkParam(19, mParam[18]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_20)) {
-				mParam[19] = Integer.parseInt(t.getValue());
-				mParam[19] = checkParam(20, mParam[19]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_21)) {
-				mParam[20] = Integer.parseInt(t.getValue());
-				mParam[20] = checkParam(21, mParam[20]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_22)) {
-				mParam[21] = Integer.parseInt(t.getValue());
-				mParam[21] = checkParam(22, mParam[21]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_23)) {
-				mParam[22] = Integer.parseInt(t.getValue());
-				mParam[23] = checkParam(23, mParam[22]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_24)) {
-				mParam[23] = Integer.parseInt(t.getValue());
-				mParam[23] = checkParam(24, mParam[23]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_25)) {
-				mParam[24] = Integer.parseInt(t.getValue());
-				mParam[24] = checkParam(25, mParam[24]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_26)) {
-				mParam[25] = Integer.parseInt(t.getValue());
-				mParam[25] = checkParam(26, mParam[25]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_27)) {
-				mParam[26] = Integer.parseInt(t.getValue());
-				mParam[26] = checkParam(27, mParam[26]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_28)) {
-				mParam[27] = Integer.parseInt(t.getValue());
-				mParam[27] = checkParam(28, mParam[27]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_29)) {
-				mParam[28] = Integer.parseInt(t.getValue());
-				mParam[28] = checkParam(29, mParam[28]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_30)) {
-				mParam[29] = Integer.parseInt(t.getValue());
-				mParam[29] = checkParam(30, mParam[29]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_31)) {
-				mParam[30] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_32)) {
-				mParam[31] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_33)) {
-				mParam[32] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_34)) {
-				mParam[33] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_35)) {
-				mParam[34] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_36)) {
-				mParam[35] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_37)) {
-				mParam[36] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_38)) {
-				mParam[37] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_39)) {
-				mParam[38] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_40)) {
-				mParam[39] = Integer.parseInt(t.getValue());
-				mParam[39] = checkParam(40, mParam[39]);
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_41)) {
-				mParam[40] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_42)) {
-				mParam[41] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_43)) {
-				mParam[42] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_44)) {
-				mParam[43] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_45)) {
-				mParam[44] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_46)) {
-				mParam[45] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_47)) {
-				mParam[46] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_48)) {
-				mParam[47] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_49)) {
-				mParam[48] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_50)) {
-				mParam[49] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_51)) {
-				mParam[50] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_52)) {
-				mParam[51] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_53)) {
-				mParam[52] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_54)) {
-				mParam[53] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_55)) {
-				mParam[54] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_56)) {
-				mParam[55] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_57)) {
-				mParam[56] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_58)) {
-				mParam[57] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_59)) {
-				mParam[58] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_60)) {
-				mParam[59] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_61)) {
-				mParam[60] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_62)) {
-				mParam[61] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_63)) {
-				mParam[62] = Integer.parseInt(t.getValue());
-			} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_64)) {
-				mParam[63] = Integer.parseInt(t.getValue());
-			} 
-			Debug.d(TAG, "===>tag key:"+tag+", value:"+t.getValue());
+					mParam[15] = checkParam(16, mParam[15]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_17)) {
+					mParam[16] = Integer.parseInt(t.getValue());
+					mParam[16] = checkParam(17, mParam[16]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_18)) {
+					mParam[17] = Integer.parseInt(t.getValue());
+					mParam[17] = checkParam(18, mParam[17]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_19)) {
+					mParam[18] = Integer.parseInt(t.getValue());
+					mParam[18] = checkParam(19, mParam[18]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_20)) {
+					mParam[19] = Integer.parseInt(t.getValue());
+					mParam[19] = checkParam(20, mParam[19]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_21)) {
+					mParam[20] = Integer.parseInt(t.getValue());
+					mParam[20] = checkParam(21, mParam[20]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_22)) {
+					mParam[21] = Integer.parseInt(t.getValue());
+					mParam[21] = checkParam(22, mParam[21]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_23)) {
+					mParam[22] = Integer.parseInt(t.getValue());
+					mParam[23] = checkParam(23, mParam[22]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_24)) {
+					mParam[23] = Integer.parseInt(t.getValue());
+					mParam[23] = checkParam(24, mParam[23]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_25)) {
+					mParam[24] = Integer.parseInt(t.getValue());
+					mParam[24] = checkParam(25, mParam[24]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_26)) {
+					mParam[25] = Integer.parseInt(t.getValue());
+					mParam[25] = checkParam(26, mParam[25]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_27)) {
+					mParam[26] = Integer.parseInt(t.getValue());
+					mParam[26] = checkParam(27, mParam[26]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_28)) {
+					mParam[27] = Integer.parseInt(t.getValue());
+					mParam[27] = checkParam(28, mParam[27]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_29)) {
+					mParam[28] = Integer.parseInt(t.getValue());
+					mParam[28] = checkParam(29, mParam[28]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_30)) {
+					mParam[29] = Integer.parseInt(t.getValue());
+					mParam[29] = checkParam(30, mParam[29]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_31)) {
+					mParam[30] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_32)) {
+					mParam[31] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_33)) {
+					mParam[32] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_34)) {
+					mParam[33] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_35)) {
+					mParam[34] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_36)) {
+					mParam[35] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_37)) {
+					mParam[36] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_38)) {
+					mParam[37] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_39)) {
+					mParam[38] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_40)) {
+					mParam[39] = Integer.parseInt(t.getValue());
+					mParam[39] = checkParam(40, mParam[39]);
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_41)) {
+					mParam[40] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_42)) {
+					mParam[41] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_43)) {
+					mParam[42] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_44)) {
+					mParam[43] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_45)) {
+					mParam[44] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_46)) {
+					mParam[45] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_47)) {
+					mParam[46] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_48)) {
+					mParam[47] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_49)) {
+					mParam[48] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_50)) {
+					mParam[49] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_51)) {
+					mParam[50] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_52)) {
+					mParam[51] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_53)) {
+					mParam[52] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_54)) {
+					mParam[53] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_55)) {
+					mParam[54] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_56)) {
+					mParam[55] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_57)) {
+					mParam[56] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_58)) {
+					mParam[57] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_59)) {
+					mParam[58] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_60)) {
+					mParam[59] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_61)) {
+					mParam[60] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_62)) {
+					mParam[61] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_63)) {
+					mParam[62] = Integer.parseInt(t.getValue());
+				} else if (tag.equalsIgnoreCase(PH_SETTING_RESERVED_64)) {
+					mParam[63] = Integer.parseInt(t.getValue());
+				}
+				Debug.d(TAG, "===>tag key:" + tag + ", value:" + t.getValue());
+			} catch ( Exception e) {
+				continue;
+			}
 		}
 		inStream.close();
 		return true;

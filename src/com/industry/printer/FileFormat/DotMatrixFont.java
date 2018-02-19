@@ -314,6 +314,9 @@ public class DotMatrixFont {
 			s = mReader.readLine();
 			s = s.trim().substring(2).trim();
 			String head[] = s.split("x");
+			if (head == null) {
+				return 0;
+			}
 			columns = Integer.parseInt(head[0]);
 			//Debug.d(TAG, "##################columns = "+columns);
 			mReader.close();

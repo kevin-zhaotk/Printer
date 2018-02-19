@@ -62,7 +62,7 @@ public class RFIDDevice implements RfidCallback{
 	 ***********************/
 	public static final String TAG = RFIDDevice.class.getSimpleName();
 	
-	public static RFIDDevice mRfidDevice;
+	public static volatile RFIDDevice mRfidDevice;
 	//串口节点
 	// public static final String SERIAL_INTERFACE = "/dev/ttyS3";
 	
@@ -226,7 +226,11 @@ public class RFIDDevice implements RfidCallback{
 	
 	public static RFIDDevice getInstance() {
 		if (mRfidDevice == null) {
-			mRfidDevice = new RFIDDevice();
+			synchronized (RFIDDevice.class) {
+				if (mRfidDevice == null) {
+					mRfidDevice = new RFIDDevice();
+				}
+			}
 		}
 		return mRfidDevice;
 	}
@@ -467,7 +471,7 @@ public class RFIDDevice implements RfidCallback{
 		}
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		buffer.append(blk);
-		buffer.append(content, 0, content.length);
+		buffer.append(content, 0, content == null ? 0 : content.length);
 		RFIDData data = new RFIDData(RFID_CMD_MIFARE_WRITE_BLOCK, buffer.toByteArray());
 		
 		RFIDAsyncTask.execute(mFd, data, this);
@@ -497,8 +501,8 @@ public class RFIDDevice implements RfidCallback{
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		buffer.append(0x00);
 		buffer.append(blk);
-		buffer.append(key, 0, key.length);
-		buffer.append(content, 0, content.length);
+		buffer.append(key, 0, key == null ? 0 : key.length);
+		buffer.append(content, 0, content == null ? 0 : content.length);
 		RFIDData data = new RFIDData(RFID_CMD_WRITE_VERIFY, buffer.toByteArray());
 		RFIDAsyncTask.execute(mFd, data, this);
 		// writeCmd(data, true);

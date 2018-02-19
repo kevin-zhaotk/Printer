@@ -257,7 +257,7 @@ public class MessageListAdater extends BaseAdapter {
 			 Canvas mCan;
 			mCan = new Canvas(Bmp_bak);
 			//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
-			int iwidth=bmp_disk.getWidth();
+			int iwidth = bmp_disk == null ? 0 : bmp_disk.getWidth();
 			if(bmp_disk.getWidth()>1500)
 			{
 				iwidth=1500;
@@ -362,7 +362,9 @@ public class MessageListAdater extends BaseAdapter {
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
-		
+		if (bmp == null || bmp.getWidth() == 0 || bmp.getHeight() == 0) {
+			return;
+		}
 		float scale = (float)DimenssionConvertion.dip2px(mContext, 100)/bmp.getHeight();
 		mHolder.mllPreview.removeAllViews();
 		Debug.e(TAG, "-===================-->width= " + bmp.getWidth() + "  scale============================= " + scale);

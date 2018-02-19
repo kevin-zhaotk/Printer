@@ -40,8 +40,14 @@ public class ClientThread extends Thread {
 	 */
 	void connect() {
 		key = true;
+		int port = 8888;
+		try {
+			port = Integer.parseInt(Socket_Control_Activity.sPORT);
+		} catch (Exception e) {
+			Debug.e(TAG, "--->" + e.getMessage());
+		}
 		socketAddress = new InetSocketAddress(Socket_Control_Activity.sIP
-				.toString(), Integer.parseInt(Socket_Control_Activity.sPORT));
+				.toString(), port);
 		socket = new Socket();
 
 		try {

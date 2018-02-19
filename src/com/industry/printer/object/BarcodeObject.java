@@ -34,6 +34,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup.LayoutParams;
@@ -463,7 +464,11 @@ public class BarcodeObject extends BaseObject {
 	}
 
 	protected Bitmap createCodeBitmapFromTextView(String contents,int width,int height, boolean isBin) {
-		float div = (float) (4.0/mTask.getHeads());
+		int heads = mTask.getHeads();
+		if (heads == 0) {
+			heads = 1;
+		}
+		float div = (float) (4.0/heads);
 		Debug.d(TAG, "===>width=" + width);
 		width = (int) (width/div);
 		TextView tv=new TextView(mContext);
@@ -489,6 +494,9 @@ public class BarcodeObject extends BaseObject {
 	}
 	
 	protected Bitmap createCodeBitmapFromDraw(String content, int width, int height) {
+		if (TextUtils.isEmpty(content)) {
+			return null;
+		}
 		Paint paint = new Paint(); 
 		
 		paint.setTextSize(height - 5);
@@ -631,12 +639,15 @@ public class BarcodeObject extends BaseObject {
 		mContent = code;
 		Debug.d(TAG, "--->code: " + code);
 		for (int i = 0; i < code.length(); i++) {
-			if (i%2 == 0) {
-				odd += Integer.parseInt(code.substring(i, i+1));
-			} else {
-				even += Integer.parseInt(code.substring(i, i+1));
+			try {
+				if (i%2 == 0) {
+					odd += Integer.parseInt(code.substring(i, i+1));
+				} else {
+					even += Integer.parseInt(code.substring(i, i+1));
+				}
+			} catch (Exception e){
+				Debug.e(TAG, "--->" + e.getMessage());
 			}
-			
 		}
 		int temp = odd + even * 3;
 		int sum = 10 - temp%10;

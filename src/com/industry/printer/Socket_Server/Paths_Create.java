@@ -19,6 +19,10 @@ public String getSDPath() {
 				sdDir = Environment.getExternalStorageDirectory();// 閼惧嘲褰囩捄鐔烘窗
 			}
 
+			if (sdDir == null) {
+				return "";
+			}
+
 			File destDir = new File(sdDir.toString() + "/Printer/");
 
 			if (!destDir.exists()) {

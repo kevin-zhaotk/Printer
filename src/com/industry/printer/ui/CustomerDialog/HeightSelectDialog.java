@@ -89,7 +89,10 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 		}
 		
 		public String getSelectedItem() {
-			return mFonts[position];
+			if (mFonts == null || mFonts.length <= 0) {
+				return "";
+			}
+			return position > mFonts.length ? mFonts[0]: mFonts[position];
 		}
 		
 		@Override
@@ -99,7 +102,10 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 
 		@Override
 		public Object getItem(int arg0) {
-			return mFonts[arg0];
+			if (mFonts == null || mFonts.length <= 0) {
+				return "";
+			}
+			return (arg0 > mFonts.length ? null: mFonts[arg0]);
 		}
 
 		@Override
@@ -119,7 +125,7 @@ public class HeightSelectDialog extends Dialog implements android.view.View.OnCl
 				mHolder.mExtra.setVisibility(View.GONE);
 			}
 			
-			mHolder.mText.setText(mFonts[position]);
+			mHolder.mText.setText(position >= mFonts.length?  "" : mFonts[position]);
 			if (position == this.position) {
 				mHolder.mText.setSelected(true);
 			} else {

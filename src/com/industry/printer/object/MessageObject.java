@@ -53,7 +53,10 @@ public class MessageObject extends BaseObject {
 	
 	public String getPrinterName() {
 		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
-		return printer[mType];
+		if (printer == null || printer.length == 0) {
+			return "";
+		}
+		return mType >= printer.length ? printer[0] : printer[mType];
 	}
 	
 	public void setDotCount(int count) {

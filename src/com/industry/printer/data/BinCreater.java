@@ -55,6 +55,9 @@ public class BinCreater {
     public void swap()
     {
     	byte tmp;
+    	if (mBinBits == null || mBinBits.length <= 0) {
+    		return;
+		}
     	int bytes = mHeight%8==0?mHeight/8:mHeight/8+1;
     	int width = mBinBits.length/bytes;
     	for(int i=0;i<mBinBits.length/2; i++)
@@ -109,6 +112,9 @@ public class BinCreater {
     
     public boolean byte2bit(int height)
     {
+    	if (mBmpBytes == null) {
+    		return false;
+		}
     	//int width= mBmpBytes.length/880;
     	int rows=mBmpBytes.length/height;
     	if(mBmpBytes == null || mBinBits==null || mBinBits.length < mBmpBytes.length/8)

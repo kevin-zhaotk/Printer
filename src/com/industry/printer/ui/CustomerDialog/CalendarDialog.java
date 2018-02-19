@@ -84,19 +84,23 @@ public class CalendarDialog extends Dialog {
 				// TODO Auto-generated method stub
 				Calendar c = Calendar.getInstance();
 				check();
-				c.set( Integer.parseInt(mYear.getText().toString()), 
-						Integer.parseInt(mMonth.getText().toString()) -1, 
-						Integer.parseInt(mDate.getText().toString()),
-						Integer.parseInt(mHour.getText().toString()),
-						Integer.parseInt(mMinute.getText().toString()));
-				long when = c.getTimeInMillis();
-				
-				Debug.d(TAG, "===>setDate");
-		        if (when / 1000 < Integer.MAX_VALUE) {
-		            SystemClock.setCurrentTimeMillis(when);
-		        }
-		        RTCDevice rtcDevice = RTCDevice.getInstance(getContext());
-		        rtcDevice.syncSystemTimeToRTC(getContext());
+				try {
+					c.set(Integer.parseInt(mYear.getText().toString()),
+							Integer.parseInt(mMonth.getText().toString()) - 1,
+							Integer.parseInt(mDate.getText().toString()),
+							Integer.parseInt(mHour.getText().toString()),
+							Integer.parseInt(mMinute.getText().toString()));
+					long when = c.getTimeInMillis();
+
+					Debug.d(TAG, "===>setDate");
+					if (when / 1000 < Integer.MAX_VALUE) {
+						SystemClock.setCurrentTimeMillis(when);
+					}
+					RTCDevice rtcDevice = RTCDevice.getInstance(getContext());
+					rtcDevice.syncSystemTimeToRTC(getContext());
+				} catch (Exception e) {
+					Debug.e(TAG, "--->" + e.getMessage());
+				}
 				dismiss();
 			}
 		});
@@ -116,35 +120,39 @@ public class CalendarDialog extends Dialog {
 	 */
 	
 	private void check() {
-		int year = Integer.parseInt(mYear.getText().toString());
-		if (year > 2100 || year <1970) {
-			year = 1970;
-			mYear.setText(String.valueOf(year));
+		try {
+			int year = Integer.parseInt(mYear.getText().toString());
+			if (year > 2100 || year < 1970) {
+				year = 1970;
+				mYear.setText(String.valueOf(year));
+			}
+			int month = Integer.parseInt(mMonth.getText().toString());
+			if (month > 12 || month < 1) {
+				month = 1;
+				mMonth.setText(String.valueOf(month - 1));
+			}
+			int date = Integer.parseInt(mDate.getText().toString());
+			if (date > 31 || date < 1) {
+				date = 1;
+				mDate.setText(String.valueOf(date));
+			}
+
+			int hour = Integer.parseInt(mHour.getText().toString());
+			if (hour < 0 || hour >= 24) {
+				hour = 0;
+				mHour.setText(String.valueOf(hour));
+			}
+			int minute = Integer.parseInt(mMinute.getText().toString());
+
+			if (minute < 0 || minute >= 60) {
+				minute = 0;
+				mMinute.setText(String.valueOf(minute));
+			}
+			Calendar c = Calendar.getInstance();
+			c.set(year, month, date, hour, minute);
+		} catch (Exception e) {
+			Debug.e(TAG, "--->" + e.getMessage());
 		}
-		int month = Integer.parseInt(mMonth.getText().toString());
-		if (month > 12 || month < 1) {
-			month = 1;
-			mMonth.setText(String.valueOf(month-1));
-		}
-		int date = Integer.parseInt(mDate.getText().toString());
-		if (date > 31 || date < 1) {
-			date = 1;
-			mDate.setText(String.valueOf(date));
-		}
-		
-		int hour = Integer.parseInt(mHour.getText().toString());
-		if (hour < 0 || hour >= 24) {
-			hour = 0;
-			mHour.setText(String.valueOf(hour));
-		}
-		int minute = Integer.parseInt(mMinute.getText().toString());
-		
-		if (minute < 0 || minute >= 60) {
-			minute = 0;
-			mMinute.setText(String.valueOf(minute));
-		}
-		Calendar c = Calendar.getInstance();
-		c.set(year, month, date,hour, minute);
 	}
 
 	
