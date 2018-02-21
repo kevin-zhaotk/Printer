@@ -84,6 +84,7 @@
 	<string name="strShift5">班次5</string>
 	<string name="strInfoname">信息</string>
 	<string name="strHeadType">喷头</string>
+	<string name="strHeadResolution">高清</string>
 	<string name="strUpgradeConfirm">确认要更新？</string>
 	<string name="strUpgradeNoApk">U盘上没发现升级包！！！</string>
 	<string name="strSaving">正在保存请耐心等待...</string>

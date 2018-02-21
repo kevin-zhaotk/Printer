@@ -10,6 +10,7 @@ public class MessageObject extends BaseObject {
 
 	public int mDots;
 	public int mType;
+	public boolean mHighResolution;
 	
 	public static final int PIXELS_PER_MM = 12;
 	public static final float[] mBaseList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 
@@ -26,6 +27,7 @@ public class MessageObject extends BaseObject {
 		String name = (String)context.getResources().getString(R.string.object_msg_name);
 		mContent = name;
 		mType = 0;
+		mHighResolution = false;
 	}
 	
 	public void setType(int i)
@@ -51,6 +53,18 @@ public class MessageObject extends BaseObject {
 		return mType;
 	}
 	
+	public void setHighResolution(boolean resolution) {
+		mHighResolution = resolution;
+	}
+	
+	public void setHighResolution(int resolution) {
+		mHighResolution = resolution == 0 ? false : true;
+	}
+	
+	public boolean getResolution() {
+		return mHighResolution;
+	}
+	
 	public String getPrinterName() {
 		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
 		if (printer == null || printer.length == 0) {
@@ -71,7 +85,9 @@ public class MessageObject extends BaseObject {
 		builder.append("^")
 				.append("00000^00000^00000^00000^0^000^")
 				.append(BaseObject.intToFormatString(mType,3))
-				.append("^000^000^000^000^")
+				.append("^")
+				.append(BaseObject.boolToFormatString(mHighResolution, 3))
+				.append("^000^000^000^")
 				.append(BaseObject.intToFormatString(mDots*2, 7))
 				.append("^00000000^00000000^00000000^0000^0000^0000^000^")
 				.append(mContent);
@@ -111,6 +127,11 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
+		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
+			// size = new String[mBaseList_16.length];
+			for (int i = 0; i < size.length; i++) {
+				size[i] = String.valueOf(mBaseList[i]);
+			}
 		}
 		return size;
 	}
@@ -135,6 +156,8 @@ public class MessageObject extends BaseObject {
 			return h/4;
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			return h*12.7f/16.3f;
+		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
+			return h;
 		}
 		return h;
 	}
@@ -167,6 +190,8 @@ public class MessageObject extends BaseObject {
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			h = size/PIXELS_PER_MM * 1.3f;
 			
+		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
+			h = size/PIXELS_PER_MM;
 		} else {
 			h = size/PIXELS_PER_MM;
 		}

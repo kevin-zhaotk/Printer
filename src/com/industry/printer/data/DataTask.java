@@ -190,6 +190,10 @@ public class DataTask {
 			scaleW = 0.5f;
 			scaleH = 0.25f;
 		}
+		/**if high resolution message, do not divide width by 2 */
+		if (msg.getResolution()) {
+			scaleW = scaleW/2;
+		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)

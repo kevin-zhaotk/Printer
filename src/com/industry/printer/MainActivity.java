@@ -648,7 +648,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					public void call() {
 						Debug.d(TAG, "--->complete");
 						mProgressDialog.dismiss();
-						QRReader.reInstance(this);
+						QRReader.reInstance(MainActivity.this);
 						//ToastUtil.show(mContext, "finished!!!");
 					}
 				});
@@ -733,7 +733,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			public void call() {
 				Debug.d(TAG, "--->complete");
 				mProgressDialog.dismiss();
-				QRReader.reInstance(this);
+				QRReader.reInstance(MainActivity.this);
 				// ToastUtil.show(mContext, "finished!!!");
 			}
 		});

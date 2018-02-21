@@ -403,8 +403,12 @@ public class BaseObject{
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)(mWidth * scaleW/mContent.length());
-		/** divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
-		singleW = singleW / 2;
+		/** if message isn`t high resolution, divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
+		MessageObject msgObj = mTask.getMsgObject();
+		if (!msgObj.getResolution()) {
+			singleW = singleW / 2;
+		}
+		
 		Debug.d(TAG, "--->singleW=" + singleW);
 		
 		/* 最終生成v.bin使用的bitmap */

@@ -1038,10 +1038,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		int x=0,y=0;
 		int cutWidth = 0;
 		float scale = 1;
-		if (bmp == null || bmp.getHeight() == 0 || bmp.getWidth() == 0) {
+		if (bmp == null) {
 			return;
 		}
-		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+		
 //		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
 //		DisplayMetrics dm = new DisplayMetrics();
 //		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);

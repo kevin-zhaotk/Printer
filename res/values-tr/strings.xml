@@ -83,6 +83,7 @@
     <string name="strShift5">Variya5</string>
     <string name="strInfoname">Bilgi</string>
     <string name="strHeadType">KalemTipi</string>
+    <string name="strHeadResolution">Resolution</string>
     <string name="strUpgradeConfirm">Yükseltmek istiyor musunuz?</string>
     <string name="strUpgradeNoApk">Yükseltme dosyası yok!!!</string>
     <string name="strSaving">kaydediliyor, lütfen bekleyin...</string>

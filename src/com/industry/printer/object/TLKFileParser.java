@@ -204,7 +204,8 @@ public class TLKFileParser  extends TlkFile{
 			/*参数8表示打印头类型*/
 				int type = Integer.parseInt(attr[8]);
 				((MessageObject) obj).setType(type);
-
+				int resolution = Integer.parseInt(attr[9]);
+				((MessageObject) obj).setHighResolution(resolution);
 				((MessageObject) obj).setDotCount(Integer.parseInt(attr[13]));
 				mDots = Integer.parseInt(attr[13]);
 

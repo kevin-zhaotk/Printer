@@ -107,7 +107,8 @@ public class BinFromBitmap extends BinCreater {
     {
     	int k=0;
     	Bitmap bmp;
-		if (map == null || map.length < columns * row) {
+    	Debug.d(TAG, "--->length = " + map.length + " columns = " + columns + "  row = " + row);
+		if (map == null || map.length < columns * row/16) {
 			return null;
 		}
     	int grey =0;
