@@ -113,7 +113,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.SystemProperties;
+// import android.os.SystemProperties; //addbylk 
 import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {

@@ -65,7 +65,7 @@ public class MessageObject extends BaseObject {
 		mDots = count;
 	}
 
-	
+	/*
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder(mId);
@@ -86,7 +86,32 @@ public class MessageObject extends BaseObject {
 		Debug.d(TAG, "file string ["+str+"]");
 		return str;
 	}
-	
+	*/
+	public String toString()  //addbylk xxx/30
+	{			String str="";
+		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
+		{
+
+			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+			str += mId+"^";
+			str += "00000^00000^00000^00000^0^000^";
+			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+			str += BaseObject.intToFormatString(mDots*220, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+			Debug.d(TAG, "file string ["+str+"]");
+		}
+		else
+		{
+			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
+			str += mId+"^";
+			str += "00000^00000^00000^00000^0^000^";
+			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+			str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+			Debug.d(TAG, "file string ["+str+"]");		
+		
+		}
+		
+		return str;
+	}
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
 		Debug.d(TAG, "--->getDisplayFSList mType = " + mType);

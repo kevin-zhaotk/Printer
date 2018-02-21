@@ -19,6 +19,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.cache.FontCache;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
@@ -332,7 +333,7 @@ public class BaseObject{
         }  
         return iRet;  
     } 
-	private Bitmap draw() {
+	private Bitmap draw2() {
 		Bitmap bitmap;
 		Paint paint = new Paint();
 		mPaint.setTextSize(152); // (getfeed());
@@ -364,11 +365,21 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}
 		Debug.d(TAG,"--->getBitmap font = " + mFont);
-		try {
-			paint.setTextSize(mHeight);
-			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-		} catch (Exception e) {}
+
+		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk xxx/30
+		{	
+				try {
+				mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			} catch (Exception e) {}
+			
+		}else
+		{
+			try {
+				paint.setTextSize(mHeight);
+				paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+				mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+			} catch (Exception e) {}		
+		}
 		
 		int width = (int)mPaint.measureText(getContent());
 		int rWidth = (int)paint.measureText(getContent());
@@ -386,7 +397,7 @@ public class BaseObject{
 		
 		
 		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
+		Debug.e(TAG,"==.ttf--->getBitmap width="+ mWidth +", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
@@ -397,6 +408,72 @@ public class BaseObject{
 //		}
 		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
 	}
+	
+	private Bitmap draw() {
+		Bitmap bitmap;
+		mPaint.setTextSize(getfeed());
+		mPaint.setAntiAlias(true); //去除锯齿  
+		mPaint.setFilterBitmap(true); //对位图进行滤波处理
+		/*try {
+			AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
+			if (fd != null) {
+				fd.close();
+			} else {
+				mFont = DEFAULT_FONT;
+			}
+		} catch (Exception e) {
+			mFont = DEFAULT_FONT;
+		}*/
+		/*String f = "fonts/"+mFont+".ttf";
+		if (!new File("file://android_assets/" + f).exists()) {
+			mFont = DEFAULT_FONT;
+		}*/
+		boolean isCorrect = false;
+		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+		for (String font : mFonts) {
+			if (font.equals(mFont)) {
+				isCorrect = true;
+				break;
+			}
+		}
+		if (!isCorrect) {
+			mFont = DEFAULT_FONT;
+		}
+		try {
+			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+		} catch (Exception e) {}
+
+		int width = (int)mPaint.measureText(getContent());
+		
+		//addbylk 由于7.TTF字库 中文 单个字符 生成 tLK 为 300 而不时 304  特别 在此 做出 宽度 补偿 
+	/*
+		for(int x=0;x<getContent().length();x++)
+		{
+			if (! isAscii( getContent().charAt(x) ) )
+				{
+				width+=2;
+				}
+			
+		}
+		*/
+		
+		Debug.e(TAG, "===--->content: " + getContent() + "  width=" + width);
+		if (mWidth == 0) {
+			setWidth(width);
+		}
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.e(TAG,"===--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
+        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
+		mCan.drawText(mContent, 0, mHeight-fm.descent, mPaint);
+//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
+//			setWidth(width * 1.25f);
+//		}
+		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	}
+	
 	
 	/**
 	 * draw content to a bitmap
@@ -967,6 +1044,16 @@ public class BaseObject{
 		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
 	}
 	public int getfeed() {
-		return (int)mHeight;
+		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
+		{
+			Debug.e(TAG, " =====1mHeight = "  );			
+			return (int)(mHeight/10 * 11);
+
+		}
+		else 
+		{		  return (int)mHeight;
+
+		}
+		
 	}
 }
