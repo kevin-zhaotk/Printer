@@ -50,11 +50,15 @@ public class QRReader {
 	
 	public static QRReader reInstance(Context ctx) {
 		mInstance = null;
-		mInstance = new QRReader(ctx);
+		synchronized (QRReader.class) {
+			if (mInstance == null) {
+				mInstance = new QRReader(ctx);
+			}
+		}
 		return mInstance;
 	}
 	
-	public QRReader(Context ctx) {
+	private QRReader(Context ctx) {
 		mContext = ctx;
 		init();
 	}
