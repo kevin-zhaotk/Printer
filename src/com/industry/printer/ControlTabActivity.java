@@ -1034,6 +1034,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		return ready;
 	}
 	
+	private void measureScreen() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		Debug.d(TAG, "--->screen width: " + dm.widthPixels + " height: " + dm.heightPixels + "  dpi= " + dm.densityDpi);
+	}
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;

@@ -393,7 +393,14 @@ public class DataTask {
 		}
 		Debug.d(TAG, "--->type=" + type);
 		for (int i = 0; i < type; i++) {
-			buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			/**
+			 * for 'Nova' header, shift & mirror is forbiden; 
+			 */
+			if (((MessageObject)object).getType() == MessageType.MESSAGE_TYPE_NOVA) {
+				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), SegmentBuffer.DIRECTION_NORMAL, 0));
+			} else {
+				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			}
 		}
 		
 		/*计算转换后的buffer总列数*/

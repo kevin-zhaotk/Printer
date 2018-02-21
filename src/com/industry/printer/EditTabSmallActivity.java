@@ -259,6 +259,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		/*initialize the object list spinner*/
 
 		initAdapter();
+		
+		
 	}
 	
 	
@@ -781,6 +783,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onSave() {
+		Debug.d(TAG, "--->screen width: " + mRelatively.getMeasuredWidth() + " height: " + mRelatively.getMeasuredHeight());
 		if(!isPropertyChanged())
 			return;
 		if(!TextUtils.isEmpty(mObjName))

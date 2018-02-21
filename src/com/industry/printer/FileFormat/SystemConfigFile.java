@@ -1058,6 +1058,9 @@ public class SystemConfigFile{
 		case MessageType.MESSAGE_TYPE_HZK_32_32:
 			heads = 1;
 			break;
+		case MessageType.MESSAGE_TYPE_NOVA:
+			heads = 6;
+			break;
 		default:
 			break;
 		}
