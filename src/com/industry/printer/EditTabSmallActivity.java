@@ -3,6 +3,7 @@ package com.industry.printer;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.R;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.YuvImage;
@@ -128,6 +129,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private PopWindowAdapter mNameAdapter;
 	private RelativeLayout mShowInfo;
 	
+	private HorizontalScrollView mEditLayout;
+	
 	
 	public EditTabSmallActivity() {
 		
@@ -149,6 +152,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		super.onActivityCreated(savedInstanceState);
 
 		mContext = getActivity();
+		
+		mEditLayout = (HorizontalScrollView) getView().findViewById(R.id.edit_layout);
 
 		mBtnNew = (RelativeLayout) getView().findViewById(R.id.btn_new);
 		mBtnNew.setOnClickListener(this);
