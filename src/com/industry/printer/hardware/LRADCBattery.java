@@ -26,7 +26,12 @@ public class LRADCBattery {
 		if (power == null) {
 			return 0;
 		}
-		int state = Integer.parseInt(power);
+		int state = 0;
+		try {
+			state = Integer.parseInt(power);
+		} catch (Exception e) {
+
+		}
 		return state;
 	}
 	

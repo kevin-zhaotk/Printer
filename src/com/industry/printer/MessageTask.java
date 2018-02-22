@@ -321,7 +321,7 @@ public class MessageTask {
 			}
 			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
-		float div = (float) (2.0/getHeads());
+		float div = (float) (2.0/(getHeads() == 0 ? 1 : getHeads()));
 		
 		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
@@ -770,7 +770,12 @@ public class MessageTask {
 		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true));
+		/** if high resolution, keep original width */
+		if (msgObj.getResolution()) {
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true));
+		} else {
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true));
+		}
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 	}
@@ -1273,6 +1278,7 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL_FAST = 12; //320點每列的噴頭,雙頭
 		public static final int MESSAGE_TYPE_9MM = 13; //9mm head, copy6 times for print
+		public static final int MESSAGE_TYPE_NOVA = 14;
 	}
 	
 	

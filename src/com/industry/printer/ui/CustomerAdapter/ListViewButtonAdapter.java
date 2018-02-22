@@ -245,8 +245,10 @@ public class ListViewButtonAdapter extends BaseAdapter {
 		if(file.isDirectory())
 		{
 			File[] childs = file.listFiles();
-			if(childs==null || childs.length==0)
+			if(childs==null || childs.length==0) {
 				file.delete();
+				return;
+			}
 			for(int i=0;i<childs.length;i++)
 			{
 				delete(childs[i]);

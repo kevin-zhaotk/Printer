@@ -3,6 +3,7 @@ package com.industry.printer.ui.CustomerDialog;
 import java.util.zip.Inflater;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.ChecksumException;
 import com.google.zxing.common.StringUtils;
 import com.google.zxing.maxicode.MaxiCodeReader;
 import com.industry.printer.R;
@@ -137,6 +138,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private EditText mTextsize;
 	
 	public EditText mMsg;
+	public CheckBox mMsgResolution;
 	public TextView mPrinter;
 	
 	public EditText m_MM ; 
@@ -255,8 +257,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     {
 	    	 this.setContentView(R.layout.msg_info);
 	    	 mMsg = (EditText) findViewById(R.id.msgNameEdit);
+	    	 mMsgResolution = (CheckBox) findViewById(R.id.resolution);
 	    	 mPrinter = (TextView) findViewById(R.id.headTypeSpin);
 	    	 mPrinter.setOnClickListener(this);
+	    	 mMsgResolution.setOnCheckedChangeListener(this);
 	     } else if (mObject instanceof LetterHourObject) {
 	    	this.setContentView(R.layout.obj_info_julian); 
 	     } else if (mObject instanceof WeekOfYearObject
@@ -401,6 +405,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						{
 							mObject.setContent(mMsg.getText().toString());
 							((MessageObject) mObject).setType(mPrinter.getText().toString());
+							((MessageObject) mObject).setHighResolution(mMsgResolution.isChecked());
 							dismiss();
 							return;
 						}
@@ -846,6 +851,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mHeight_O.setEnabled(false);
 				mHighEdit.setEnabled(true);
 			}
+		} else if (view == mMsgResolution) {
+			//if ()
 		}
 	}
 
@@ -862,8 +869,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			return;
 		}
 		mMin.setText("0");
-		int max = (int) Math.pow(10, Integer.parseInt(mDigits.getText().toString())) - 1;
-		mMax.setText(String.valueOf(max));
+		try {
+			int max = (int) Math.pow(10, Integer.parseInt(mDigits.getText().toString())) - 1;
+			mMax.setText(String.valueOf(max));
+		} catch (Exception e) {}
 	}
 
 	@Override

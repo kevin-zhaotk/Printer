@@ -41,7 +41,7 @@ public class DataTransferThread extends Thread {
 	
 	public static boolean mRunning;
 	
-	public static DataTransferThread mInstance;
+	public static volatile DataTransferThread mInstance;
 	
 	private Context mContext;
 	
@@ -59,9 +59,12 @@ public class DataTransferThread extends Thread {
 	
 	public static DataTransferThread getInstance() {
 		if(mInstance == null) {
+			synchronized (DataTransferThread.class) {
+				if (mInstance == null) {
+					mInstance = new DataTransferThread();
+				}
+			}
 			Debug.d(TAG, "===>new thread");
-			mInstance = new DataTransferThread();
-			
 		}
 		return mInstance;
 	}

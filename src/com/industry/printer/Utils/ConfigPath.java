@@ -43,6 +43,9 @@ public class ConfigPath {
 					continue;
 				}
 				String items[] = line.split(" ");
+				if (items == null || items.length < 2) {
+					continue;
+				}
 				mPaths.add(items[1]);
 				line = reader.readLine();
 			}

@@ -91,7 +91,7 @@ public class PopWindowAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder)convertView.getTag();
 		}
-		holder.mTextView.setText(mItems.get(position));
+		holder.mTextView.setText(position >= mItems.size() ? "" : mItems.get(position));
 		return convertView;
 	}
 

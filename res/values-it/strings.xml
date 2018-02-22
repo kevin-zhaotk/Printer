@@ -82,6 +82,7 @@
     <string name="strShift5">Sposta5</string>
     <string name="strInfoname">Obj.</string>
     <string name="strHeadType">Tipo penna</string>
+    <string name="strHeadResolution">Resolution</string>
     <string name="strUpgradeConfirm">Aggiornare?</string>
     <string name="strUpgradeNoApk">Nessun file presente!</string>
     <string name="strSaving"> attendere prego...</string>
@@ -104,6 +105,8 @@
         <item>25.4mm fast ONE INCH</item>
         <item>--</item>
         <item>25.4mm x2 fast</item>
+        <item>9mm</item>
+        <item>nova</item>
     </string-array>
     <string-array name="strFontArray">
         <item>0T+</item>

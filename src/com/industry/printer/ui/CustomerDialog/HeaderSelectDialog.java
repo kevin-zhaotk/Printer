@@ -87,7 +87,7 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 		}
 		
 		public String getSelectedItem() {
-			return mFonts[position];
+			return (position >= mFonts.length ? "" : mFonts[position]);
 		}
 		
 		public int getSelected() {
@@ -101,7 +101,7 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 
 		@Override
 		public Object getItem(int arg0) {
-			return mFonts[arg0];
+			return (arg0 >= mFonts.length ? null :mFonts[arg0]);
 		}
 
 		@Override
@@ -119,7 +119,7 @@ public class HeaderSelectDialog extends Dialog implements android.view.View.OnCl
 				mHolder.mText = (TextView) convertView.findViewById(R.id.font);
 			}
 			
-			mHolder.mText.setText(mFonts[position]);
+			mHolder.mText.setText(position >= mFonts.length ? "" : mFonts[position]);
 			if (position == this.position) {
 				mHolder.mText.setSelected(true);
 			} else {

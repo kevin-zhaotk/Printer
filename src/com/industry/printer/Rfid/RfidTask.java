@@ -88,7 +88,7 @@ public class RfidTask implements RfidCallback{
 		RFIDDevice dev = manager.getDevice(mIndex);
 		
 		mState = STATE_PROCESSING;
-		Debug.d(TAG, "--->dev.state= " + dev.getState());
+		Debug.d(TAG, "--->dev.state= " + (dev == null ? "" : dev.getState()));
 		if (dev == null) {
 			return ;
 		}

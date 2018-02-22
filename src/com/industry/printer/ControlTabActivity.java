@@ -113,7 +113,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-// import android.os.SystemProperties; //addbylk 
 import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
@@ -1051,6 +1050,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		return ready;
 	}
+
 	private void dispPreviewM(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
@@ -1092,6 +1092,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			}
 	}
 		
+
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
 		int cutWidth = 0;
@@ -1099,7 +1100,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (bmp == null) {
 			return;
 		}
-		Debug.d(TAG, "--->dispPreview: " + mllPreview.getHeight());
+		
 //		String product = SystemPropertiesProxy.get(mContext, "ro.product.name");
 //		DisplayMetrics dm = new DisplayMetrics();
 //		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -1164,7 +1165,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			if (object instanceof CounterObject) {
 				Message msg = new Message();
 				msg.what = MainActivity.UPDATE_COUNTER;
-				msg.arg1 = Integer.valueOf(((CounterObject) object).getContent());
+				try {
+					msg.arg1 = Integer.valueOf(((CounterObject) object).getContent());
+				} catch (Exception e) {
+					break;
+				}
 				mCallback.sendMessage(msg);
 				break;
 			}
@@ -1769,6 +1774,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                            		StopFlag=1;
 		                            		CleanFlag=0;
 		                            		String[] Apath = msg.split("\\|");
+		                            		if (Apath == null || Apath.length < 4) {
+		                            			continue;
+											}
 		                                 	mObjPath= Apath[3];
 		                                 	int nRet=Paths.ListDirFiles( Apath[3]);
 		                                 	//if(nRet==1)

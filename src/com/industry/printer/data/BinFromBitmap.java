@@ -73,9 +73,11 @@ public class BinFromBitmap extends BinCreater {
     {
     	int k=0;
     	Bitmap bmp;
-    	
-		Debug.d(TAG, "map[0]="+map[0]+",map[1]="+map[1]+", map[2]="+map[2]);
-		Debug.d(TAG, "map[3]="+map[3]+",map[4]="+map[4]+", map[5]="+map[5]);
+    	if (map == null || map.length < 16) {
+    		return null;
+		}
+		// Debug.d(TAG, "map[0]="+map[0]+",map[1]="+map[1]+", map[2]="+map[2]);
+		// Debug.d(TAG, "map[3]="+map[3]+",map[4]="+map[4]+", map[5]="+map[5]);
     	int grey =0;
     	int columns =  (map[0]&0xff) << 16 | (map[1] & 0xff)<<8 | (map[2]&0xff);
     	int row = (map[3]&0xff) << 16 | (map[4] & 0xff)<<8 | (map[5]&0xff);
@@ -105,7 +107,10 @@ public class BinFromBitmap extends BinCreater {
     {
     	int k=0;
     	Bitmap bmp;
-
+    	Debug.d(TAG, "--->length = " + map.length + " columns = " + columns + "  row = " + row);
+		if (map == null || map.length < columns * row/16) {
+			return null;
+		}
     	int grey =0;
     	int pixels[] = new int[columns*row];
     	Debug.d(TAG, "columns = "+columns+", row="+row);
@@ -121,11 +126,11 @@ public class BinFromBitmap extends BinCreater {
     			pixels[j*columns+i] = 0xff<<24 | grey <<16 | grey<<8 | grey;
     		}
     	}
-    	Debug.d(TAG, "===============");
+//    	Debug.d(TAG, "===============");
     	bmp = Bitmap.createBitmap(pixels, columns, row, Config.ARGB_8888);
-    	Debug.d(TAG, "===============000000");
+//    	Debug.d(TAG, "===============000000");
     	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
-    	Debug.d(TAG, "===============111111");
+//    	Debug.d(TAG, "===============111111");
     	return Bitmap.createScaledBitmap(bmp, columns, 150, true);
     }
 

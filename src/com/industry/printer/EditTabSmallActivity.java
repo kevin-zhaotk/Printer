@@ -259,6 +259,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		/*initialize the object list spinner*/
 
 		initAdapter();
+		
+		
 	}
 	
 	
@@ -977,6 +979,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onSave() {
+		Debug.d(TAG, "--->screen width: " + mRelatively.getMeasuredWidth() + " height: " + mRelatively.getMeasuredHeight());
 		if(!isPropertyChanged())
 			return;
 		if(!TextUtils.isEmpty(mObjName))
@@ -1077,7 +1080,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private void onDelete(BaseObject obj) {
 		// TODO Auto-generated method stub
 		// BaseObject obj = getCurObj();
-		Debug.d(TAG, "--->onDelete: " + obj.getId());
+		Debug.d(TAG, "--->onDelete: " + (obj == null ? "" : obj.getId()));
 		if(obj == null || obj instanceof MessageObject)
 			return;
 //		mMsgTask.removeObject(obj);

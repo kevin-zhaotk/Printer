@@ -83,6 +83,7 @@
     <string name="strShift5">Variya5</string>
     <string name="strInfoname">Bilgi</string>
     <string name="strHeadType">KalemTipi</string>
+    <string name="strHeadResolution">Resolution</string>
     <string name="strUpgradeConfirm">Yükseltmek istiyor musunuz?</string>
     <string name="strUpgradeNoApk">Yükseltme dosyası yok!!!</string>
     <string name="strSaving">kaydediliyor, lütfen bekleyin...</string>
@@ -105,6 +106,8 @@
         <item>25.4mm fast  ONE INCH</item>
         <item>-- </item>
         <item>25.4mm x2 fast</item>
+        <item>9mm</item>
+        <item>Nova</item>
     </string-array>
     <string-array name="strFontArray">
         <item>0T+</item>

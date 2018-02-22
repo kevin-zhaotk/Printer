@@ -196,6 +196,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	}
 	
 	public void setParam(int param, int value) {
+		if (mSettingItems == null ||param >= mSettingItems.length) {
+			return;
+		}
 		mSettingItems[param].setValue(value);
 		mSysconfig.setParam(param, value);
 		notifyDataSetChanged();
@@ -495,7 +498,7 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	}
 	private String getEntry(int id,int index) {
 		String entries[] = mContext.getResources().getStringArray(id);
-		Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
+		// Debug.d(TAG, "--->getEncoder:entries[" + index + "]=" + entries[index]);
 		if (entries == null || entries.length <= 0) {
 			return null;
 		}
@@ -527,6 +530,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		if (view != null) {
 			position = (Integer)view.getTag();
 		} else {
+			return;
+		}
+		if (mSettingItems == null ||position >= mSettingItems.length) {
 			return;
 		}
 		if (mSettingItems[position].mType == ItemType.TYPE_NONE) {
@@ -588,7 +594,9 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 		TextView view = mSpiner.getAttachedView();
 		int position = (Integer) view.getTag();
 		String value = null;
-		
+		if (mSettingItems == null ||position >= mSettingItems.length) {
+			return;
+		}
 		mSettingItems[position].setValue(index);
 		mSysconfig.setParam(position, mSettingItems[position].getValue());
 		value = mSettingItems[position].getDisplayValue();
@@ -629,12 +637,14 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 			int pos = (Integer) mEditText.getTag();
 			
 			Debug.d(TAG, "===>afterTextChanged, position=" + mEditText.getTag());
-			
+			if (mSettingItems == null ||pos >= mSettingItems.length) {
+				return;
+			}
 			if (mSettingItems[pos].mType != ItemType.TYPE_NONE) {
 				return;
 			}
 			mSettingItems[pos].mValue = arg0.toString();
-			Debug.d(TAG, "--->param=" + mSettingItems[pos].getDisplayValue());
+//			Debug.d(TAG, "--->param=" + mSettingItems[pos].getDisplayValue());
 			mSysconfig.setParam(pos, getValueFromEditText(arg0));
 		}
 		@Override
@@ -673,8 +683,13 @@ public class SettingsListAdapter extends BaseAdapter implements OnClickListener,
 	}
 	
 	private int getValue(PopWindowAdapter adapter, int index) {
-		int v = Integer.parseInt((String) adapter.getItem(index));
-		return v;
+		try {
+			int v = Integer.parseInt((String) adapter.getItem(index));
+			return v;
+		} catch (Exception e) {
+			Debug.e(TAG, "--->" + e.getMessage());
+			return 0;
+		}
 	}
 	
 }

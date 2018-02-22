@@ -210,6 +210,12 @@ public class CounterObject extends BaseObject {
 	{
 		float prop = getProportion();
 		StringBuilder builder = new StringBuilder(mId);
+		int v = 0;
+		try {
+			v = Integer.parseInt(mContent);
+		} catch ( Exception e) {
+
+		}
 		builder.append("^")
 				.append(BaseObject.floatToFormatString(getX()*prop, 5))
 				.append("^")
@@ -230,7 +236,7 @@ public class CounterObject extends BaseObject {
 				.append("^")
 				.append(BaseObject.intToFormatString(mMin, 8))
 				.append("^")
-				.append(BaseObject.intToFormatString(Integer.parseInt(mContent) , 8))
+				.append(BaseObject.intToFormatString( v, 8))
 				.append("^")
 				.append("00000000^0000^0000^")
 				.append(mFont)

@@ -13,15 +13,19 @@ public class SortComparator implements java.lang.Comparable<SortComparator> {
         return s;
     }
     public int compareTo(SortComparator o) {
-        String ss = o.getS();
-        String ss_string = ss.replaceAll("[\\d]+", "");
-        String s_string = s.replaceAll("[\\d]+", "");
-        if(s_string.compareTo(ss_string) != 0) {
-            return s_string.compareTo(ss_string);
-        }else {
-            int s_int = Integer.parseInt(s.replaceAll("[\\D]+", ""));
-            int ss_int = Integer.parseInt(ss.replaceAll("[\\D]+", ""));
-            return s_int - ss_int;
+        try {
+            String ss = o.getS();
+            String ss_string = ss.replaceAll("[\\d]+", "");
+            String s_string = s.replaceAll("[\\d]+", "");
+            if (s_string.compareTo(ss_string) != 0) {
+                return s_string.compareTo(ss_string);
+            } else {
+                int s_int = Integer.parseInt(s.replaceAll("[\\D]+", ""));
+                int ss_int = Integer.parseInt(ss.replaceAll("[\\D]+", ""));
+                return s_int - ss_int;
+            }
+        } catch (Exception e) {
+            return 0;
         }
     }
     

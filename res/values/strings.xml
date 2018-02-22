@@ -84,6 +84,7 @@
 	<string name="strShift5">Shift5</string>
 	<string name="strInfoname">Object</string>
 	<string name="strHeadType">PenType</string>
+	<string name="strHeadResolution">Resolution</string>
 	<string name="strUpgradeConfirm">Do upgrade?</string>
 	<string name="strUpgradeNoApk">No Upgrade file!!!</string>
 	<string name="strSaving">saving, please wait...</string>
@@ -105,6 +106,8 @@
 	    <item>25.4mm fast ONE INCH</item>
 	    <item>--</item>
 	    <item>25.4mm x2 fast</item>
+	    <item>9mm</item>
+	    <item>nova</item>
 	</string-array>
 	
 	<string-array name="strFontArray">

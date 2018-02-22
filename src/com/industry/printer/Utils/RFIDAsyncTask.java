@@ -7,7 +7,7 @@ import com.industry.printer.hardware.RFIDDevice;
 
 public class RFIDAsyncTask implements Runnable {
 
-	public static RFIDAsyncTask mInstance;
+	public static volatile RFIDAsyncTask mInstance;
 	private int mFd;
 	private RFIDData mCmd;
 	private RfidCallback mCallback;
@@ -15,7 +15,11 @@ public class RFIDAsyncTask implements Runnable {
 	
 	public static RFIDAsyncTask execute(int fd, RFIDData data, RfidCallback callback) {
 		if (mInstance == null) {
-			mInstance = new RFIDAsyncTask(fd, data, callback);
+			synchronized (RFIDAsyncTask.class) {
+				if (mInstance == null) {
+					mInstance = new RFIDAsyncTask(fd, data, callback);
+				}
+			}
 		} else {
 			mInstance.put(fd, data, callback);
 		}

@@ -88,6 +88,9 @@ public class RTCDevice {
 		}
 		Debug.d(TAG, "--->NVRAM out = " + out);
 		String[] bytes = out.split("/r/n");
+		if (bytes == null || bytes.length < 8) {
+			return 0;
+		}
 		Debug.d(TAG, "---> NVRAM Counter <---");
 		Debug.d(TAG, bytes[3]);
 		Debug.d(TAG, bytes[4]);

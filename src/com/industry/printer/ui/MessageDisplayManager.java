@@ -59,7 +59,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mImageMap.clear();
         mShadow.setImageResource(R.drawable.msg_bg_selected);
         mShadow.setVisibility(View.GONE);
-        mContainer.addView(mShadow);
+        if (mShadow != null) {
+            mContainer.addView(mShadow);
+        }
     }
 
     public void fill(MessageTask task) {

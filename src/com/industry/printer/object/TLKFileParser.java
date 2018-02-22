@@ -197,123 +197,114 @@ public class TLKFileParser  extends TlkFile{
 		}
 		
 		Debug.d(TAG, "attr[1]="+attr[1]);
-		if(BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))		//msg name
-		{
-			obj = new MessageObject(mContext, 0);
+		try {
+			if (BaseObject.OBJECT_TYPE_MsgName.equals(attr[1]))        //msg name
+			{
+				obj = new MessageObject(mContext, 0);
 			/*参数8表示打印头类型*/
-			int type = Integer.parseInt(attr[8]);
-			((MessageObject)obj).setType(type);
+				int type = Integer.parseInt(attr[8]);
+				((MessageObject) obj).setType(type);
+				int resolution = Integer.parseInt(attr[9]);
+				((MessageObject) obj).setHighResolution(resolution);
+				((MessageObject) obj).setDotCount(Integer.parseInt(attr[13]));
+				mDots = Integer.parseInt(attr[13]);
 
-			((MessageObject)obj).setDotCount(Integer.parseInt(attr[13]));
-			mDots = Integer.parseInt(attr[13]);
-			
-			setDotsPerClm(type);
-		}
-		else if(BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
-				||BaseObject.OBJECT_TYPE_QR.equals(attr[1]))	//barcode
-		{
-			obj = new BarcodeObject(mContext, 0);
-			if (BaseObject.OBJECT_TYPE_QR.equals(attr[1])) {
-				int code = Integer.parseInt(attr[9]);
-				if (code == 0) {
-					((BarcodeObject) obj).setCode("QR");
-				} else if(code == 1) {
-					((BarcodeObject) obj).setCode("DM");
+				setDotsPerClm(type);
+			} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
+					|| BaseObject.OBJECT_TYPE_QR.equals(attr[1]))    //barcode
+			{
+				obj = new BarcodeObject(mContext, 0);
+				if (BaseObject.OBJECT_TYPE_QR.equals(attr[1])) {
+					int code = Integer.parseInt(attr[9]);
+					if (code == 0) {
+						((BarcodeObject) obj).setCode("QR");
+					} else if (code == 1) {
+						((BarcodeObject) obj).setCode("DM");
+					} else {
+						((BarcodeObject) obj).setCode("QR");
+					}
+					((BarcodeObject) obj).setContent(attr[21]);
 				} else {
-					((BarcodeObject) obj).setCode("QR");
+					((BarcodeObject) obj).setCode(Integer.parseInt(attr[9]));
+					((BarcodeObject) obj).setContent(attr[12]);
+					((BarcodeObject) obj).setTextsize(Integer.parseInt(attr[21]));
 				}
-				((BarcodeObject) obj).setContent(attr[21]);
+				int isShow = Integer.parseInt(attr[11]);
+				((BarcodeObject) obj).setShow(isShow == 0 ? false : true);
+				int source = Integer.parseInt(attr[13]);
+				Debug.d(TAG, "--->source = " + source);
+				obj.setSource(source == 1);
+			} else if (BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))        //cnt
+			{
+				obj = new CounterObject(mContext, 0);
+				((CounterObject) obj).setBits(Integer.parseInt(attr[8]));
+				((CounterObject) obj).setRange(Integer.parseInt(attr[14]), Integer.parseInt(attr[13]));
+				SystemConfigFile conf = SystemConfigFile.getInstance(mContext);
+				((CounterObject) obj).setValue(conf.getParam(17));
+			} else if (BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))    //ellipse
+			{
+				obj = new EllipseObject(mContext, 0);
+				((EllipseObject) obj).setLineWidth(Integer.parseInt(attr[8]));
+				((EllipseObject) obj).setLineType(Integer.parseInt(attr[9]));
+			} else if (BaseObject.OBJECT_TYPE_GRAPHIC.equals(attr[1]))    //graphic
+			{
+				obj = new GraphicObject(mContext, 0);
+				((GraphicObject) obj).setImage(getDirectory() + "/" + attr[12]);
+			} else if (BaseObject.OBJECT_TYPE_JULIAN.equals(attr[1]))        //julian day
+			{
+				obj = new JulianDayObject(mContext, 0);
+			} else if (BaseObject.OBJECT_TYPE_LINE.equals(attr[1]))            //line
+			{
+				obj = new LineObject(mContext, 0);
+				((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
+				((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
+			} else if (BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))            //rect
+			{
+				obj = new RectObject(mContext, 0);
+				((RectObject) obj).setLineWidth(Integer.parseInt(attr[8]));
+				((RectObject) obj).setLineType(Integer.parseInt(attr[9]));
+
+			} else if (BaseObject.OBJECT_TYPE_RT.equals(attr[1]))                //realtime
+			{
+				Debug.d(TAG, "Real time object");
+				obj = new RealtimeObject(mContext, 0);
+				((RealtimeObject) obj).setFormat(attr[21]);
+				((RealtimeObject) obj).setOffset(Integer.parseInt(attr[13]));
+			} else if (BaseObject.OBJECT_TYPE_TEXT.equals(attr[1]))            //text
+			{
+				obj = new TextObject(mContext, 0);
+				try {
+					obj.setContent(new String(attr[21].getBytes(), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else if (BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1])) {
+				obj = new RTSecondObject(mContext, 0);
+			} else if (BaseObject.OBJECT_TYPE_SHIFT.equals(attr[1])) {
+				Debug.d(TAG, "--->shift object");
+				obj = new ShiftObject(mContext, 0);
+				((ShiftObject) obj).setBits(Integer.parseInt(attr[8]));
+				((ShiftObject) obj).setShift(0, attr[13]);
+
+				for (int i = 0; i < 4; i++) {
+					// int time = Integer.parseInt(attr[13 + i]);
+					((ShiftObject) obj).setShift(i, attr[13 + i]);
+					((ShiftObject) obj).setValue(i, attr[9 + i]);
+				}
+			} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(attr[1])) {
+				obj = new LetterHourObject(mContext, 0);
+
+			} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(attr[1])) {
+				obj = new WeekOfYearObject(mContext);
+			} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(attr[1])) {
+				obj = new WeekDayObject(mContext);
 			} else {
-				((BarcodeObject) obj).setCode(Integer.parseInt(attr[9]));
-				((BarcodeObject) obj).setContent(attr[12]);
-				((BarcodeObject) obj).setTextsize(Integer.parseInt(attr[21]));
+				Debug.d(TAG, "Unknown object type: " + attr[1]);
+				return null;
 			}
-			int isShow = Integer.parseInt(attr[11]);
-			((BarcodeObject) obj).setShow(isShow==0?false:true); 
-			int source = Integer.parseInt(attr[13]);
-			Debug.d(TAG, "--->source = " + source);
-			obj.setSource(source == 1);
-		}
-		else if(BaseObject.OBJECT_TYPE_CNT.equals(attr[1]))		//cnt
-		{
-			obj = new CounterObject(mContext, 0);
-			((CounterObject) obj).setBits(Integer.parseInt(attr[8]));
-			((CounterObject) obj).setRange(Integer.parseInt(attr[14]),Integer.parseInt(attr[13]));
-			SystemConfigFile conf = SystemConfigFile.getInstance(mContext);
-			((CounterObject) obj).setValue(conf.getParam(17));
-		}
-		else if(BaseObject.OBJECT_TYPE_ELLIPSE.equals(attr[1]))	//ellipse
-		{
-			obj = new EllipseObject(mContext, 0);
-			((EllipseObject) obj).setLineWidth(Integer.parseInt(attr[8]));
-			((EllipseObject) obj).setLineType(Integer.parseInt(attr[9]));
-		}
-		else if(BaseObject.OBJECT_TYPE_GRAPHIC.equals(attr[1]))	//graphic
-		{
-			obj = new GraphicObject(mContext, 0);
-			((GraphicObject)obj).setImage(getDirectory()+ "/" +attr[12]);
-		}
-		else if(BaseObject.OBJECT_TYPE_JULIAN.equals(attr[1]))		//julian day
-		{
-			obj = new JulianDayObject(mContext, 0);
-		}
-		else if(BaseObject.OBJECT_TYPE_LINE.equals(attr[1]))			//line
-		{
-			obj = new LineObject(mContext, 0);
-			((LineObject) obj).setLineWidth(Integer.parseInt(attr[8]));
-			((LineObject) obj).setLineType(Integer.parseInt(attr[9]));
-		}
-		
-		else if(BaseObject.OBJECT_TYPE_RECT.equals(attr[1]))			//rect
-		{
-			obj = new RectObject(mContext, 0);
-			((RectObject) obj).setLineWidth(Integer.parseInt(attr[8]));
-			((RectObject) obj).setLineType(Integer.parseInt(attr[9]));
-			
-		}
-		else if(BaseObject.OBJECT_TYPE_RT.equals(attr[1]))				//realtime
-		{
-			Debug.d(TAG, "Real time object");
-			obj = new RealtimeObject(mContext, 0);
-			((RealtimeObject) obj).setFormat(attr[21]);
-			((RealtimeObject)obj).setOffset(Integer.parseInt(attr[13]));
-		}
-		else if(BaseObject.OBJECT_TYPE_TEXT.equals(attr[1]))			//text
-		{
-			obj = new TextObject(mContext, 0);
-			try {
-				obj.setContent(new String(attr[21].getBytes(), "UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
-		else if(BaseObject.OBJECT_TYPE_RT_SECOND.equals(attr[1]))
-		{
-			obj = new RTSecondObject(mContext, 0);
-		} else if (BaseObject.OBJECT_TYPE_SHIFT.equals(attr[1])) {
-			Debug.d(TAG, "--->shift object");
-			obj = new ShiftObject(mContext, 0);
-			((ShiftObject)obj).setBits(Integer.parseInt(attr[8]));
-			((ShiftObject)obj).setShift(0, attr[13]);
-			
-			for (int i = 0; i < 4; i++) {
-				// int time = Integer.parseInt(attr[13 + i]);
-				((ShiftObject)obj).setShift(i, attr[13 + i]);
-				((ShiftObject)obj).setValue(i, attr[9 + i]);
-			}
-		} else if (BaseObject.OBJECT_TYPE_LETTERHOUR.equalsIgnoreCase(attr[1])) {
-			obj = new LetterHourObject(mContext, 0);
-			
-		} else if (BaseObject.OBJECT_TYPE_WEEKOFYEAR.equalsIgnoreCase(attr[1])) {
-			obj = new WeekOfYearObject(mContext);
-		} else if (BaseObject.OBJECT_TYPE_WEEKDAY.equalsIgnoreCase(attr[1])) {
-			obj = new WeekDayObject(mContext);
-		} else
-		{
-			Debug.d(TAG, "Unknown object type: "+attr[1]);
+		} catch (Exception e) {
 			return null;
 		}
-		
 		// 设置object的task
 		obj.setTask(task);
 		Debug.d(TAG, "--->proportion = " + mProportion);

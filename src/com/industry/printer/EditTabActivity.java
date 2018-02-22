@@ -331,7 +331,9 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 	
 	public static BaseObject getCurObj()
 	{
-	
+		if (mObjs == null) {
+			return null;
+		}
 		for(BaseObject obj : mObjs)
 		{
 			if(obj.getSelected())

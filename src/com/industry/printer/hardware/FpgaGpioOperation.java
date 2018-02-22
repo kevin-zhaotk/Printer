@@ -101,11 +101,15 @@ public class FpgaGpioOperation {
 	public final static String TAG = FpgaGpioOperation.class.getSimpleName();
 	
 	
-	public static FpgaGpioOperation mInstance;
+	public static volatile FpgaGpioOperation mInstance;
 	
 	public static FpgaGpioOperation getInstance() {
 		if (mInstance == null) {
-			mInstance = new FpgaGpioOperation();
+			synchronized (FpgaGpioOperation.class) {
+				if (mInstance == null) {
+					mInstance = new FpgaGpioOperation();
+				}
+			}
 		}
 		return mInstance;
 	}

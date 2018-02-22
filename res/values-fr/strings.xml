@@ -85,6 +85,7 @@
 	<string name="strShift5">Déménagement 5</string>
 	<string name="strInfoname">Objet</string>
 	<string name="strHeadType">Type de stylo</string>
+	<string name="strHeadResolution">Resolution</string>
 	<string name="strUpgradeConfirm">Faites la mise à niveau?</string>
 	<string name="strUpgradeNoApk">Aucun fichier de mise à jour!</string>
 	<string name="strSaving">Enregistrement, en cours</string>
@@ -105,7 +106,9 @@
 	    <item>--</item>
 	    <item>25.4mm fast ONE INCH</item>
 	    <item>--</item>
-	    <item>25.4mm x2 fast</item>	    
+	    <item>25.4mm x2 fast</item>
+	    <item>9mm</item>
+	    <item>nova</item> 
 	</string-array>
 	
 	<string-array name="strFontArray">

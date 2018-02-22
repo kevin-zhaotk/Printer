@@ -499,10 +499,11 @@ public class DataTask {
 		char[] var;
 		if(mObjList==null || mObjList.isEmpty())
 			return;
+		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
-		float div = (float) (2.0/mTask.getHeads());
+		float div = (float) (2.0/heads);
 		MessageObject msg = mTask.getMsgObject();
-		Debug.d(TAG, "+++++type:" + msg.getType());
+		// Debug.d(TAG, "+++++type:" + msg.getType());
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			div = 1;
 			scaleW = 1;
@@ -511,6 +512,10 @@ public class DataTask {
 			div = 0.5f;
 			scaleW = 0.5f;
 			scaleH = 0.25f;
+		}
+		/**if high resolution message, do not divide width by 2 */
+		if (msg.getResolution()) {
+			scaleW = scaleW/2;
 		}
 		Debug.d(TAG, "-----objlist size="+mObjList.size());
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
@@ -711,7 +716,14 @@ public class DataTask {
 		}
 		Debug.d(TAG, "--->type=" + type);
 		for (int i = 0; i < type; i++) {
-			buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			/**
+			 * for 'Nova' header, shift & mirror is forbiden; 
+			 */
+			if (((MessageObject)object).getType() == MessageType.MESSAGE_TYPE_NOVA) {
+				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), SegmentBuffer.DIRECTION_NORMAL, 0));
+			} else {
+				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			}
 		}
 		
 		/*计算转换后的buffer总列数*/
