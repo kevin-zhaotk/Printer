@@ -158,14 +158,14 @@ public class MessageObject extends BaseObject {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
 		 //addbylk_1_14/30_begin
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )
-		{	size = new String[mBaseList_16_8.length];
+		} else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 ) {
+			size = new String[mBaseList_16_8.length];
 			for (int i = 0; i < size.length; i++) {
 				size[i] =  String.valueOf((int)mBaseList_16_8[i]); 
 			}			 		 
 		 		
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )
-		{	size = new String[mBaseList_16_10.length];
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 ) {
+			size = new String[mBaseList_16_10.length];
 			for (int i = 0; i < size.length; i++) {
 			size[i] = String.valueOf((int)mBaseList_16_10[i]); 
 			}		
