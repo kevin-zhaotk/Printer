@@ -185,7 +185,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
 		}
         
         lp.height = (int)object.getHeight();
-        mContainer.addView(image, 0,lp);
+        mContainer.addView(image, -1,lp);
         mImageMap.put(object, image);
         image.setTag(object);
         image.setOnTouchListener(this);
@@ -241,5 +241,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
     	mShadow.setVisibility(View.VISIBLE);
     	mShadow.setLayoutParams(lp);
     }
+    
+    
     
 }
