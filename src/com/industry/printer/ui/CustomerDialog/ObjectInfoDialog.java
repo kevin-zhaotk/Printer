@@ -407,6 +407,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 							((MessageObject) mObject).setType(mPrinter.getText().toString());
 							((MessageObject) mObject).setHighResolution(mMsgResolution.isChecked());
 							dismiss();
+							if(mPListener != null)
+								mPListener.onClick();
 							return;
 						}
 						

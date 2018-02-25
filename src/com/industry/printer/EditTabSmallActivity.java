@@ -3,7 +3,6 @@ package com.industry.printer;
 import java.io.File;
 import java.util.ArrayList;
 
-import android.R;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.YuvImage;
@@ -331,6 +330,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			BaseObject obj = (BaseObject) msg.obj;
 			// replace background with correct one if mesageobject`s head type changed
 			if (obj instanceof MessageObject) {
+				Debug.d(TAG, "====== type: " + ((MessageObject) obj).getType());
 				switch (((MessageObject) obj).getType()) {
 					case MessageTask.MessageType.MESSAGE_TYPE_12_7:
 					case MessageTask.MessageType.MESSAGE_TYPE_12_7_S:
@@ -353,10 +353,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 					case MessageTask.MessageType.MESSAGE_TYPE_16_3:
 					case MessageTask.MessageType.MESSAGE_TYPE_HZK_16_8:
 					case MessageTask.MessageType.MESSAGE_TYPE_HZK_16_16:
-						mEditLayout.setBackgroundResource(R.drawable.background_1);
+						mEditLayout.setBackgroundResource(R.drawable.background);
 						break;
 					default:
-						mEditLayout.setBackgroundResource(R.drawable.background_1);
+						mEditLayout.setBackgroundResource(R.drawable.background);
 						break;
 				}
 			}
