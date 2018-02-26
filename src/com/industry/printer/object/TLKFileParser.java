@@ -137,6 +137,15 @@ public class TLKFileParser  extends TlkFile{
                      if (pObj == null) {
                     	 continue;
                      }
+                     /** The first object must be MessageObject, create a default one otherwise */
+                     if (objlist.size() == 0 && !(pObj instanceof MessageObject) ) {
+                    	MessageObject msg = new MessageObject(context, 0);
+                    	int type = SystemConfigFile.getInstance(context).getParam(30);
+         				msg.setType(type);
+         				//((MessageObject) obj).setDotCount(Integer.parseInt(attr[13]));
+         				// mDots = Integer.parseInt(attr[13]);
+         				objlist.add(msg);
+                     }
                      objlist.add(pObj);
                      Debug.d(TAG, "--->objlist size= " + objlist.size());
                      if(pObj instanceof RealtimeObject)
