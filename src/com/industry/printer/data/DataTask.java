@@ -515,10 +515,11 @@ public class DataTask {
 		}
 		/**if high resolution message, do not divide width by 2 */
 		if (msg.getResolution()) {
+			Debug.d(TAG, "--->High Resolution");
 			scaleW = scaleW/2;
 			div = div/2;
 		}
-		Debug.d(TAG, "-----objlist size="+mObjList.size());
+		Debug.d(TAG, "-----scaleW = " + scaleW + " div = " + div);
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)
 		{
@@ -598,7 +599,7 @@ public class DataTask {
 					var = info.getVarBuffer(substr);
 					//BinCreater.saveBin("/mnt/usbhost1/v" + o.getIndex() + ".bin", var, info.mBytesPerHFeed*8);
 					BinInfo.overlap(mPrintBuffer, var, (int)(rtSub.getX()/div), info.getCharsFeed());
-					// Debug.d(TAG, "--->real x=" + rtSub.getX()+ ", div-x=" + rtSub.getX()/div );
+					Debug.d(TAG, "--->real x=" + rtSub.getX()/div );
 				}
 				
 			}

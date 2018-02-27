@@ -592,6 +592,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
 
+		FileUtil.deleteFolder(Configs.QR_LAST);
 		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.SYSTEM_CONFIG_DIR)
 				.flatMap(new Func1<String, Observable<Map<String, String>>>() {
 
@@ -618,7 +619,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					@Override
 					public Observable<Void> call(Map<String, String> arg0) {
 						try {
-							FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
+							FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
 							
 						} catch (Exception e) {
 							// TODO: handle exception

@@ -596,7 +596,9 @@ public class BaseObject{
 	}
 	public int drawVarBitmap()
 	{
+		Debug.d(TAG, "***************begin  id: " + mId + " index:  " + mIndex);
 		if (TextUtils.isEmpty(mContent)) {
+			Debug.d(TAG, "--->drawVarBitmap = " + mContent);
 			return 0;
 		}
 		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
@@ -619,12 +621,12 @@ public class BaseObject{
 		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
 		Canvas can = new Canvas(bmp);
 		
-		Debug.d(TAG, "--->id = " + mId + " Width=" + mWidth);
+		// Debug.d(TAG, "--->id = " + mId + " Width=" + mWidth);
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
-		Debug.d(TAG, "--->singleW=" + singleW);
+		//Debug.d(TAG, "--->singleW=" + singleW);
 		singleW = (int) (singleW/wDiv);
-		Debug.d(TAG, "--->singleW/div=" + singleW);
+		//Debug.d(TAG, "--->singleW/div=" + singleW);
 		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots * mTask.getHeads(), Bitmap.Config.ARGB_8888);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
@@ -673,7 +675,7 @@ public class BaseObject{
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
 		dots = maker.extract(gBmp);
-		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
+		Debug.d(TAG, "***************id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);

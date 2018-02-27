@@ -221,6 +221,18 @@ public class RealtimeObject extends BaseObject {
 	}
 
 	@Override
+	public int drawVarBitmap() {
+		int dot = 0;
+		for (BaseObject o : mSubObjs) {
+			if (o instanceof TextObject) {
+				continue;
+			}
+			dot += o.drawVarBitmap();
+		}
+		return dot;
+	}
+	
+	@Override
 	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
 		int dot = 0;
 		for(BaseObject o : mSubObjs)
