@@ -51,7 +51,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mTask = task;
         mShadow = new ImageView(mContext);
         
-        mImageMap = new HashMap<>();
+        mImageMap = new HashMap<BaseObject, ViewGroup>();
         reset();
     }
 
@@ -191,10 +191,15 @@ public class MessageDisplayManager implements View.OnTouchListener {
 
     private ViewGroup drawEach(BaseObject object, Bitmap bmp) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.edit_image_layout, null);
-        LinearLayout.LayoutParams param = (LinearLayout.LayoutParams) layout.getLayoutParams();
-        param.width = (int) object.getWidth();
-        param.height = (int) object.getHeight();
+        // LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.edit_image_layout, null);
+        // ViewGroup.LayoutParams param = layout.getLayoutParams();
+        LinearLayout layout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams((int)object.getWidth(), (int)object.getHeight());
+        
+        Debug.d(TAG, "--->w: " + param.width);
+//        param.width = (int) object.getWidth();
+//        param.height = (int) object.getHeight();
+        layout.setOrientation(LinearLayout.HORIZONTAL); 
         layout.setLayoutParams(param);
 
         for (int w = 0; w < bmp.getWidth(); ) {
@@ -205,11 +210,11 @@ public class MessageDisplayManager implements View.OnTouchListener {
                 wd = bmp.getWidth() - w;
             }
             ImageView image = new ImageView(mContext);
-            Bitmap b = Bitmap.createBitmap(bmp, w, 0, 1200, bmp.getHeight());
+            Bitmap b = Bitmap.createBitmap(bmp, w, 0, wd, bmp.getHeight());
 
             image.setScaleType(ScaleType.FIT_XY);
             image.setImageBitmap(b);
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
             p.weight = 1;
             w = w + wd;
             layout.addView(image, -1, p);
@@ -244,7 +249,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         for(BaseObject obj : objects)
         {
             if (obj.getSelected()) {
-                ImageView view = mImageMap.get(obj);
+                ViewGroup view = mImageMap.get(obj);
                 obj.setSelected(false);
             }
 
