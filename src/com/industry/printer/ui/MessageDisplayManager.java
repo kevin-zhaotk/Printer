@@ -4,13 +4,17 @@ import android.R.integer;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.opengl.Visibility;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 
@@ -39,7 +43,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
      */
     private ImageView mShadow;
 
-    private HashMap<BaseObject, ImageView> mImageMap;
+    private HashMap<BaseObject, ViewGroup> mImageMap;
 
     public MessageDisplayManager(Context ctx, ViewGroup container, MessageTask task) {
         mContext = ctx;
@@ -47,7 +51,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mTask = task;
         mShadow = new ImageView(mContext);
         
-        mImageMap = new HashMap<BaseObject, ImageView>();
+        mImageMap = new HashMap<>();
         reset();
     }
 
@@ -102,7 +106,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         if (!mImageMap.containsKey(object)) {
             return;
         }
-        ImageView view = mImageMap.get(object);
+        ViewGroup view = mImageMap.get(object);
         mImageMap.remove(object);
         mContainer.removeView(view);
         mTask.removeObject(object);
@@ -128,7 +132,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         if (!mImageMap.containsKey(object)) {
             return;
         }
-        ImageView view = mImageMap.get(object);
+        ViewGroup view = mImageMap.get(object);
 //        mImageMap.remove(object);
 //        mContainer.removeView(view);
 //
@@ -149,7 +153,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         if (!mImageMap.containsKey(object)) {
             return;
         }
-        ImageView view = mImageMap.get(object);
+        ViewGroup view = mImageMap.get(object);
         mImageMap.remove(object);
         mContainer.removeView(view);
         draw(object);
@@ -164,34 +168,54 @@ public class MessageDisplayManager implements View.OnTouchListener {
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.leftMargin = (int)object.getX();
         lp.topMargin = (int) object.getY();
-        ImageView image = new ImageView(mContext);
-        
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
-        Bitmap bmp = object.getScaledBitmap(mContext);
-        
-        image.setImageBitmap(bmp);
 
-//        if (object.getSelected()) {
-//        	image.setBackgroundResource(R.drawable.msg_bg_selected);
-//        	
-//        } else {
-//            image.setBackgroundResource(R.drawable.msg_bg_unselected);
-//        }
+
+//        ImageView image = new ImageView(mContext);
+//
+//        image.setScaleType(ImageView.ScaleType.FIT_XY);
+        Bitmap bmp = object.getScaledBitmap(mContext);
+//
+//        image.setImageBitmap(bmp);
+
+        ViewGroup vg = drawEach(object, bmp);
         /** width&height must be reseted after object bitmap drawed success */
-        if (object.getWidth() >= 4096) {
-        	lp.width = 4096;
-		} else {
-			lp.width = (int)object.getWidth();
-		}
-        
+
         lp.height = (int)object.getHeight();
-        mContainer.addView(image, -1,lp);
-        mImageMap.put(object, image);
-        image.setTag(object);
-        image.setOnTouchListener(this);
+        mContainer.addView(vg, -1,lp);
+        mImageMap.put(object, vg);
+        vg.setTag(object);
+        vg.setOnTouchListener(this);
         showSelectRect(lp.leftMargin, lp.topMargin, lp.width, lp.height);
     }
 
+
+    private ViewGroup drawEach(BaseObject object, Bitmap bmp) {
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.edit_image_layout, null);
+        LinearLayout.LayoutParams param = (LinearLayout.LayoutParams) layout.getLayoutParams();
+        param.width = (int) object.getWidth();
+        param.height = (int) object.getHeight();
+        layout.setLayoutParams(param);
+
+        for (int w = 0; w < bmp.getWidth(); ) {
+            int wd = 0;
+            if (w + 1500 < bmp.getWidth()) {
+                wd = 1200;
+            } else {
+                wd = bmp.getWidth() - w;
+            }
+            ImageView image = new ImageView(mContext);
+            Bitmap b = Bitmap.createBitmap(bmp, w, 0, 1200, bmp.getHeight());
+
+            image.setScaleType(ScaleType.FIT_XY);
+            image.setImageBitmap(b);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            p.weight = 1;
+            w = w + wd;
+            layout.addView(image, -1, p);
+        }
+        return layout;
+    }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         BaseObject object = (BaseObject)view.getTag();
