@@ -682,10 +682,11 @@ public class DataTransferThread extends Thread {
 				DataTask task = new DataTask(context, null);
 				Debug.e(TAG, "--->task: " + task);
 				char[] buffer = task.preparePurgeBuffer();
+				Debug.e(TAG, "--->buffer len: " + buffer.length);
 				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
 				try {
-					Thread.sleep(500);
+					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

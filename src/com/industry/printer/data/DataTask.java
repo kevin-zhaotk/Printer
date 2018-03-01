@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.lang.System;
 
 import android.R.bool;
 import android.R.integer;
@@ -800,12 +801,19 @@ public class DataTask {
 		try {
 			stream = mContext.getAssets().open("purge/single.bin");
 			mBinInfo = new BinInfo(stream, 1);
-			mBgBuffer = mBinInfo.getBgBuffer();
+			char[] buffer = mBinInfo.getBgBuffer();
 			stream.close();
+			char[] rb = new char[buffer.length * 12];
+			for(int i = 0; i < 12; i++) {
+				System.arraycopy(buffer, 0, rb, i * buffer.length, buffer.length -1);
+			}
+			return rb;
+//			return buffer;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return mBgBuffer;
+		
+		return null;
 	}
 	
 	public int getHeads() {
