@@ -401,6 +401,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			object.setSelected(true);
 			return object;
 		}
+		Debug.d(TAG, "--->getcurobj null");
 		return null;
 	}
 
@@ -941,7 +942,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			//	break;
 				
 			//addbylk_1_21/30_end
-
+				break;
 			case R.id.btn_cursor:
 				onCursorPressed();
 				break;
@@ -957,7 +958,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	public boolean onTouch(View v, MotionEvent event) {
 		switch (v.getId()) {
 		case R.id.editView:
-			onObjectTouch(event);
+			// onObjectTouch(event);
 			break;
 		case R.id.btn_left:
 			onLeftTouch(event);
@@ -1140,18 +1141,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		onShowInfo(object);
 	}
 	
-	private boolean onObjectTouch(MotionEvent event) {
-		Debug.d(TAG, "onTouch x="+event.getX()+", y="+event.getY());
-		int ret = getTouchedObj(event.getX(), event.getY());
-		if(ret != -1)
-		{
-			ExtGpio.playClick();
-			mMsgManager.setSelect(ret);
-
-		}
-		return false;
-	}
-	
+//	private boolean onObjectTouch(MotionEvent event) {
+//		Debug.d(TAG, "onTouch x="+event.getX()+", y="+event.getY());
+//		int ret = getTouchedObj(event.getX(), event.getY());
+//		if(ret != -1)
+//		{
+//			ExtGpio.playClick();
+//			mMsgManager.setSelect(ret);
+//
+//		}
+//		return false;
+//	}
+//	
 	
 	private void leftKeyPressed()
 	{
@@ -1399,7 +1400,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private void onCursorPressed() {
 		/*顯示十字線時選中第一個對象，即MessageObject對象*/
 		MessageObject o = mMsgTask.getMsgObject();
-		
+		Debug.d(TAG, "--->onCursorPressed");
 		/*如果當前選中的不是cursor或者cursor的座標爲（0,0） 重置座標*/
 		if (!o.getSelected() || o.getX() == 0 || o.getY() == 0) {
 			/* 光标显示在ScrollView中间  */
