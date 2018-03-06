@@ -14,6 +14,8 @@
 	<string name="str_btn_stop">Stop</string>
 	<string name="str_btn_clean">Purga</string>
 	<string name="str_btn_open">Abrir</string>
+	<string name="str_remain_ink">Ink</string>
+	<string name="str_remain_ptimes">Total</string>
 	<string name="str_btn_new">Nuevo</string>
 	<string name="str_btn_save">Guardar</string>
 	<string name="str_btn_saveas">Guardar como</string>
@@ -85,17 +87,67 @@
 	<string name="strInsertSerial">Conecta dispositivo</string>
 	<string name="strReinsertSerial">Error, reconecte dispositivo</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP head</item>
-	    <item>12.7 mm HP standard</item>
+	    <item>12.7 mm HP fast</item>
+	    <item>--</item>
 	    <item>25.4 mm HP dual</item>
 	    <item>16.3 mm Xaar head</item>
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>7dot</item>
+	    <item>16dot</item>
+	    <item>--</item>
+	    <item>25.4mm fast ONE INCH</item>
+	    <item>--</item>
+	    <item>25.4mm x2 fast</item>
+	    <item>9mm</item>
+	    <item>nova</item>
 	</string-array>
 	
 	<string-array name="strFontArray">
-	    <item>WelldrawH000</item>
+	    <item>0T+</item>
+	    <item>1+</item>
+	    <item>1B+</item>
+	    <item>1B2</item>
+	    <item>1BS</item>
+	    <item>1T</item>
+	    <item>2+</item>
+	    <item>2B</item>
+	    <item>2i</item>
+	    <item>3+</item>
+	    <item>3B</item>
+	    <item>3i</item>
+	    <item>3T</item>
+	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>6B</item>
+	    <item>7</item>
+	    <item>8</item>
+	    <item>9</item>
+	</string-array>
+	
+	<string-array name="strFontTipsArray">
+	    <item>0T+ font</item>
+	    <item>1+ font</item>
+	    <item>1B+ font</item>
+	    <item>1B2 font</item>
+	    <item>1BS font</item>
+	    <item>1T font</item>
+	    <item>2+ font</item>
+	    <item>2B font</item>
+	    <item>2i font</item>
+	    <item>3+ font</item>
+	    <item>3B font</item>
+	    <item>3i font</item>
+	    <item>3T font</item>
+	    <item>4 font</item>
+	    <item>5 font</item>
+	    <item>6 font</item>
+	    <item>6B font</item>
+	    <item>7 font</item>
+	    <item>8 font</item>
+	    <item>9 font</item>
 	</string-array>
 	
 	<string-array name="strFontFile">
@@ -108,9 +160,17 @@
 	</string-array>
 	<string name="strCode">Tipo codigo</string>
 	<string-array name="strCodeArray">
+	    <item>EAN8</item>
+	    <item>EAN13</item>
 	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
 	</string-array>
+	
+	<string name="strBarsource">Data</string>
 	
 	<string-array name="strLineArray">
 	    <item>Linea solida</item>
@@ -125,14 +185,15 @@
 	
 	<string name="strRtFmt">Formato</string>
 	<string-array name="strTimeFormat">
-	    <item>YYYY-MM-DD</item>
-	    <item>MM-DD-YYYY</item>
 	    <item>YY-MM-DD</item>
 	    <item>MM-DD-YY</item>
-	    <item>YYYY/MM/DD</item>
-	    <item>MM/DD/YYYY</item>
 	    <item>YY/MM/DD</item>
 	    <item>MM/DD/YY</item>
+	    <item>DD/MM/YY</item>
+	    <item>YY</item>
+	    <item>MM</item>
+	    <item>DD</item>
+	    <item>HH:NN</item>
 	</string-array>
 	
 	<string-array name="strarrayCounter">
@@ -148,7 +209,9 @@
 	
 	<string-array name="strarrayFontSize">
 	    <item>1 mm</item>
+	    <item>1.5 mm</item>
 	    <item>2 mm</item>
+	    <item>2.5 mm</item>
 	    <item>3 mm</item>
 	    <item>4 mm</item>
 	    <item>5 mm</item>
@@ -179,7 +242,12 @@
 	<string name="object_ellipse">Ellipse</string>
 	<string name="object_shift">Cambio</string>
 	<string name="object_second">Segundo</string>
+	<string name="object_weekofyear">WeekOfYear</string>
+	<string name="object_weekday">WeekDay</string>
+	<string name="object_charHour">AlphaHour</string>
 	<string name="object_msg_name">Mensaje</string>
+	<string name="object_qr">QRCode</string>
+	<string name="object_dynamic_qr">DynamicQR</string>
 	<!-- Settings frame -->
 	<string name="strParam0">00.Reserved</string>
 	<string name="strPrSpeedname">01.Velocidad</string>
@@ -578,6 +646,10 @@
 	    <item>2</item>
 	    <item>3</item>
 	    <item>4</item>
+	    <item>5</item>
+	    <item>6</item>
+	    <item>7</item>
+	    <item>8</item>
 	</string-array>
 	
 	
@@ -590,6 +662,12 @@
 	    <item>Off</item>
 	    <item>Pen</item>
 	    <item>Port</item>
+	</string-array>
+	
+	<string-array name="message_dots">
+	    <item>128</item>
+	    <item>152</item>
+	    <item>384</item>
 	</string-array>
 	
 	<string name="str_time_unit_0_1v">0.1V</string>
@@ -648,4 +726,39 @@
 	
 	<string name="str_cnt_min">Inicio</string>
 	<string name="str_cnt_max">FIN</string>
+	<string name="str_loading">loading...</string>
+	
+	<string name="str_toast_no_qrfile">no QR.txt or QR.csv</string>
+	<string name="str_barcode_end">Barcode file is end</string>
+	<string name="str_recover_print">recover last print</string>
+	
+	<string name="str_net_devname">Device</string>
+	<string name="str_net_ipaddr">IP addr</string>
+	<string name="str_net_stat">State</string>
+	<string name="str_net_number">Number</string>
+	<string name="str_net_counts">Counts</string>
+	<string name="str_net_int">Ink</string>
+	<string name="str_net_commands">Commands</string>
+	<string name="str_net_back">Back</string>
+	<string name="str_net_one">1</string>
+	<string name="str_net_hundred">100</string>
+	<string name="str_net_thousand">1000</string>
+	<string name="str_net_connect">Connect</string>
+	
+	
+	<string name="str_tip_nothing">~ There is no picture !!!</string>
+	<string name="str_no_permission">Permission denied for access the files</string>
+	
+	<string name="str_message_tips">Message %s already exist, overwrite it?</string>
+	
+	<string name="str_flush_tips">Will Overwrite the settings, Confirm?</string>
+	
+	<string name="str_build_tlk_start">start building tlk... </string>
+	<string name="str_prepared">TLK parse success!!!</string>
+	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	<string name="str_build_tlk_ok">build TLK success</string>
+	<string name="str_build_tlk_fail">build TLK failed</string>
+	
+	<string name="str_tlk_opening">tlk parsing...</string>
+	<string name="str_print_thread_create_err">print thread creation failed...</string>
 </resources>
