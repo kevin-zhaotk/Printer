@@ -924,25 +924,25 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				break;
 			case R.id.btn_right:
 				rightKeyPressed();
-
+				break;
 				// 屏蔽缩放按键 	
 			//addbylk_1_21/30_begin
 				
-			//case R.id.btn_zoomIn:
-			//	onZoomInPressed();
-			//	break;
-			//case R.id.btn_zoomOut:
-			//	onZoomOutPressed();
-			//	break;
-			//case R.id.wide_btn:
-			//	onWidePressed();
-			//	break;
-			//case R.id.narrow_btn:
-			//	onNarrowPressed();
-			//	break;
+			case R.id.btn_zoomIn:
+				onZoomInPressed();
+				break;
+			case R.id.btn_zoomOut:
+				onZoomOutPressed();
+				break;
+			case R.id.wide_btn:
+				onWidePressed();
+				break;
+			case R.id.narrow_btn:
+				onNarrowPressed();
+				break;
 				
 			//addbylk_1_21/30_end
-				break;
+				
 			case R.id.btn_cursor:
 				onCursorPressed();
 				break;
