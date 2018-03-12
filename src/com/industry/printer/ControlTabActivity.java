@@ -37,6 +37,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Socket_Server.Network;
 import com.industry.printer.Socket_Server.Paths_Create;
 import com.industry.printer.Socket_Server.Printer_Database;
+import com.industry.printer.Socket_Server.StreamTool;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -62,6 +63,7 @@ import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TlkObject;
+import com.industry.printer.ui.CustomerDialog.MessageGroupsortDialog;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
@@ -275,6 +277,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_OPEN_MSG_SUCCESS = 17;
 	
 	public static final int MESSAGE_RFID_OFF_H7 = 18;
+
+	public static final int MESSAGE_OPEN_GROUP = 19;
 	/**
 	 * the bitmap for preview
 	 */
@@ -299,7 +303,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	/**
 	 * 褰撳墠鎵撳嵃浠诲姟
 	 */
-	public MessageTask mMsgTask;
+	public List<MessageTask> mMsgTask = new ArrayList<>();
 	/**
 	 * preview buffer
 	 * 	you should use this buffer for preview
@@ -460,11 +464,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		SocketBegin();// Beging Socket service start;
 		Querydb=new Printer_Database(mContext);
 	}
-	
-	public void onConfigureChanged() {
+
+	private String opendTlks() {
+		StringBuilder name = new StringBuilder();
 		if (mMsgTask != null) {
-			mMsgFile.setText(mMsgTask.getName());
+			for (MessageTask task : mMsgTask) {
+				name.append(task.getName());
+				name.append("^");
+			}
+			name.deleteCharAt(name.length() - 1);
+
 		}
+	}
+	public void onConfigureChanged() {
+		mMsgFile.setText(opendTlks());
 		int heads = 1;
 		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
@@ -677,7 +690,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_OPEN_TLKFILE:		//
 					progressDialog();
 					
-					mObjPath = msg.getData().getString("file", null);
+					mObjPath = msg.getData().getString("file");
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
@@ -687,28 +700,50 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
 					//parseTlk(f);
 					//initBgBuffer();
-					new Thread(){
+					mMsgTask.clear();
+					new Thread() {
 						@Override
 						public void run() {
+							mMsgTask.clear();
 							/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
-							mMsgTask = new MessageTask(mContext, mObjPath);
+							if (mObjPath.startsWith("Group-")) {   // group messages
+								List<String> paths = MessageTask.parseGroup(mObjPath);
+								for (String path : paths) {
+									MessageTask task = new MessageTask(mContext, path);
+									mMsgTask.add(task);
+								}
+							} else {
+								MessageTask task = new MessageTask(mContext, mObjPath);
+								mMsgTask.add(task);
+							}
 							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
 						}
 					}.start();
 					sendToRemote(mContext.getString(R.string.str_tlk_opening));
 					break;
+				case MESSAGE_OPEN_GROUP:
+					ArrayList<String> files = msg.getData().getStringArrayList("file");
+					MessageGroupsortDialog dialog = new MessageGroupsortDialog(mContext, files);
+					dialog.setOnPositiveClickedListener(new OnPositiveListener() {
+						@Override
+						public void onClick() {
+
+						}
+
+						@Override
+						public void onClick(String content) {
+							// save group information & send message to handle opening
+							Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+							Bundle b = new Bundle();
+							b.putString("file", content);
+							msg.sendToTarget();
+						}
+					});
+					break;
 				case MESSAGE_OPEN_MSG_SUCCESS:
 					
 					sendToRemote(mContext.getString(R.string.str_prepared));
-					mObjList = mMsgTask.getObjects();
-					//TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
-					//String preview = parser.getContentAbatract();
-					String preview = mMsgTask.getAbstract();
-					if (preview == null) {
-						preview = getString(R.string.str_message_no_content);
-					}
-					// mMsgPreview.setText(new SpanableStringFormator(mObjList));
-					// mMsgPreImg.setImageURI(Uri.parse("file://" + mMsgTask.getPreview()));
+
 					if (mPreBitmap != null) {
 						BinFromBitmap.recyleBitmap(mPreBitmap);
 					}
@@ -716,7 +751,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					initDTThread();
 					Debug.d(TAG, "--->init thread ok");
 					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
-					mPreBitmap = mDTransThread.mDataTask.getPreview();
+					mPreBitmap = mDTransThread.mDataTask.get(0).getPreview();
 					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
 //					if (mPreBitmap.getWidth() > 1280) {
 //						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
@@ -746,7 +781,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 								dispPreview(mPreBitmap);
 						}			
 					refreshCount();
-					mMsgFile.setText(mMsgTask.getName());
+					mMsgFile.setText(opendTlks());
+
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
 					if("100".equals(PrnComd))	
@@ -801,8 +837,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					Debug.d(TAG, "--->prepare buffer");
-					DataTask dt = mDTransThread.getData();
-					mRfidManager.checkUID(dt.getHeads());
+					List<DataTask> dt = mDTransThread.getData();
+					int heads = 1;
+					if (dt != null && dt.size() > 0) {
+						heads = dt.get(0).getHeads();
+					}
+					mRfidManager.checkUID(heads);
 					break;
 				case RFIDManager.MSG_RFID_CHECK_FAIL:
 					ToastUtil.show(mContext, "Rfid changed");
@@ -839,12 +879,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					} else {
 						mFlagAlarming = false;
 					}
-					DataTask task = mDTransThread.getData();
-					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
-						ToastUtil.show(mContext, R.string.str_toast_emptycontent);
-						sendToRemote("error: " + mContext.getString(R.string.str_toast_emptycontent));
-						break;
-					}
+					List<DataTask> tasks = mDTransThread.getData();
+					DataTask task = tasks.get(0);
+//					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
+//						ToastUtil.show(mContext, R.string.str_toast_emptycontent);
+//						sendToRemote("error: " + mContext.getString(R.string.str_toast_emptycontent));
+//						break;
+//					}
 					/**
 					 * 娴嬭瘯buffer鐢熸垚鏄惁姝ｇ‘锛屾寜鎵撳嵃鎸夐挳鎶婃墦鍗板唴瀹逛繚瀛樺埌u鐩�
 					 */
@@ -1019,7 +1060,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mDTransThread == null) {
 			return true;
 		}
-		DataTask task = mDTransThread.getData();
+		//DataTask task = mDTransThread.getData();
 		int heads = SystemConfigFile.getInstance(mContext).getHeads();// task.getHeads();
 		for (int i = 0; i < heads; i++) {
 			float ink = mRfidManager.getLocalInk(i);
@@ -1038,7 +1079,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		QRReader reader = QRReader.getInstance(mContext);
 		boolean qrReady = reader.isReady();
 		Debug.d(TAG, "--->checkQRfile = " + qrReady);
-		DataTask task = mDTransThread.getData();
+		DataTask task = mDTransThread.getCurData();
 		for (BaseObject obj : task.getObjList()) {
 			if (!(obj instanceof BarcodeObject)) {
 				continue;
@@ -1154,14 +1195,19 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mMsgTask == null) {
 			return;
 		}
-		for (BaseObject object : mMsgTask.getObjects()) {
+		int index = mDTransThread.getIndex();
+		MessageTask task = mMsgTask.get(index);
+		for (BaseObject object : task.getObjects()) {
 			if (object instanceof CounterObject) {
 				((CounterObject) object).rollback();
 			}
 		}
 	}
 	private void updateCntIfNeed() {
-		for (BaseObject object : mMsgTask.getObjects()) {
+		int index = mDTransThread.getIndex();
+		MessageTask task = mMsgTask.get(index);
+
+		for (BaseObject object : task.getObjects()) {
 			if (object instanceof CounterObject) {
 				Message msg = new Message();
 				msg.what = MainActivity.UPDATE_COUNTER;
@@ -1192,7 +1238,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mDTransThread.initDataBuffer(mContext, mMsgTask);
 		// TLKFileParser parser = new TLKFileParser(mContext, mObjPath);
 		// 璁剧疆dot count
-		mDTransThread.setDotCount(mMsgTask.getDots());
+		mDTransThread.setDotCount(mMsgTask);
 		// 璁剧疆UI鍥炶皟
 		mDTransThread.setOnInkChangeListener(this);
 		
@@ -1500,16 +1546,22 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					@Override
 					public void onClick() {
-						String f = MessageBrowserDialog.getSelected();
-						if (f==null || f.isEmpty()) {
+						ArrayList<String> f = MessageBrowserDialog.getSelected();
+						if (f==null || f.size() == 0) {
 							return;
 						}
+						/** 如果选择内容为多个，表示需要新建组 */
 						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+						if (f.size() > 1) {
+							msg = mHandler.obtainMessage(MESSAGE_OPEN_GROUP);
+						}
 
 						Bundle bundle = new Bundle();
-						bundle.putString("file", f);
+						bundle.putStringArrayList("file", f);
+						// bundle.putString("file", f);
 						msg.setData(bundle);
 						mHandler.sendMessage(msg);
+
 					}
 
 					@Override
@@ -1682,7 +1734,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			                       }  
 			                    }  
 			                } catch (SocketException ex) {  
-			                    Log.e("WifiPreference IpAddress", ex.toString());  
+			                    Debug.e("WifiPreference IpAddress", ex.toString());
 			                }  
 			             return null; 
 			 }
@@ -2193,7 +2245,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 
 	    public void onComplete() {
-			String msg=mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mMsgTask.getName()+"\r\n";
+			String msg=mCounter+" \r\nink"+mRfidManager.getLocalInk(0)+"\r\n"+mObjPath+"\r\n";
 			Debug.d(TAG, "--->onComplete: msg = " + msg);
 			PrintWriter pout = null;  
 //	        try {

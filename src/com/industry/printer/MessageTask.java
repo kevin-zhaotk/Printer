@@ -1,6 +1,13 @@
 package com.industry.printer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -16,6 +23,7 @@ import android.widget.Toast;
 
 //addbylk_1_25/30_begin
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 //addbylk_1_25/30_end
 import com.industry.printer.FileFormat.TlkFileWriter;
@@ -1315,5 +1323,48 @@ public class MessageTask {
 				mSaveTask = null;
 			}
 		}
+	}
+
+	public static void saveGroup(String name, String contents) {
+		File dir = new File(ConfigPath.getTlkDir(name));
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			Debug.d(TAG, "create dir error "+dir.getPath());
+			return ;
+		}
+		File tlk = new File(dir, "1.TLK");
+		try {
+			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tlk));
+			writer.write(contents);
+			writer.flush();
+			writer.close();
+
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	public static List<String> parseGroup(String name) {
+		File file = new File(ConfigPath.getTlkDir(name) + "t.TLK");
+		if (!file.exists()) {
+			return null;
+		}
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String content = reader.readLine();
+			String[] group = content.split("^");
+			if (group == null) {
+				return null;
+			}
+			ArrayList<String> gl = new ArrayList<>();
+			for (int i = 0; i < group.length; i++) {
+				gl.add(group[i]);
+			}
+			return gl;
+		} catch (Exception e) {
+
+		}
+		return null;
 	}
 }

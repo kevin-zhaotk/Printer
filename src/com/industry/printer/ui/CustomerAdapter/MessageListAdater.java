@@ -2,8 +2,10 @@ package com.industry.printer.ui.CustomerAdapter;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.industry.printer.BinInfo;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,6 +79,7 @@ public class MessageListAdater extends BaseAdapter {
 		// ImageView	mImage;
 		LinearLayout mllPreview;
 		ImageView	mMark;
+		ImageView	mCheck;
 	}
 	
 	/**
@@ -114,7 +118,14 @@ public class MessageListAdater extends BaseAdapter {
 	 */
 	private int mSelected;
 	
-	private int[] mSCroll;	
+	private int[] mSCroll;
+
+	/**
+	 * multi select mode
+	 */
+	private boolean mMultiMode = false;
+
+	private Map<String, Boolean> mMultiSelected = new HashMap<>();
 	
 	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
@@ -163,9 +174,25 @@ public class MessageListAdater extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return arg0;
 	}
-	
+
+	public void setMode(boolean multi) {
+		mMultiMode = multi;
+	}
+
 	public void setSelected(int position) {
-		mSelected = position;
+		if (mMultiMode) {
+			if (mMultiSelected.containsKey(String.valueOf(position))) {
+				mMultiSelected.remove(String.valueOf(position));
+			} else {
+				mMultiSelected.put(String.valueOf(position), true);
+			}
+		} else {
+			mSelected = position;
+		}
+	}
+
+	public Map<String, Boolean> getSelected() {
+		return mMultiSelected;
 	}
 
 	@Override
@@ -184,9 +211,10 @@ public class MessageListAdater extends BaseAdapter {
 			// mHolder.mImage = (ImageView) convertView.findViewById(mViewIDs[1]);
 			mHolder.mllPreview = (LinearLayout) convertView.findViewById(mViewIDs[1]);
 			mHolder.mMark = (ImageView) convertView.findViewById(mViewIDs[2]);
+			mHolder.mCheck = (ImageView) convertView.findViewById(R.id.check_state);
 			convertView.setTag(mHolder);
 		}
-		
+
 		HashMap<String, Object> item = (HashMap<String, Object>) mCntList.get(position);
 		
 		String title = (String) item.get(mKeys[0]);
@@ -295,57 +323,59 @@ public class MessageListAdater extends BaseAdapter {
 		
 
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
-		if(position == mSelected)
-		{
-					try
-					{  
-						bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
-						String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
-					   Debug.e(TAG, "===="+path);			
-					    File file =new File(path);
-						if( file.exists() )
-						{
-							bmp_disk=BitmapFactory.decodeFile(path);
-							Debug.e(TAG, path);
-						}
+		if (mMultiMode) {
+			mHolder.mCheck.setVisibility(View.VISIBLE);
+			if (mMultiSelected.containsKey(String.valueOf(position))) {
+				mHolder.mCheck.setImageResource(R.drawable.checked);
+			} else {
+				mHolder.mCheck.setImageResource(R.drawable.check_nor);
+			}
+		} else {
+			if (position == mSelected) {
+				try {
+					bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+					String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
+					Debug.e(TAG, "====" + path);
+					File file = new File(path);
+					if (file.exists()) {
+						bmp_disk = BitmapFactory.decodeFile(path);
+						Debug.e(TAG, path);
 					}
-					catch (Exception e)
-					{
-						
-					}
-					Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
-					 Paint mPaint;
-					 mPaint = new Paint();
-					 
-					 Canvas mCan;
-					mCan = new Canvas(Bmp_bak);
-					//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
-					int iwidth=bmp_disk.getWidth();
-					if(bmp_disk.getWidth()>1500)
-					{
-						iwidth=1500;
-					}
-					
-					WindowManager wManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-					int width = wManager.getDefaultDisplay().getWidth();
-					if (width >= bmp_disk.getWidth()) {
-						mSCroll[position] = 0;
-					} else if (mSCroll[position] + width > bmp_disk.getWidth()) {
-						mSCroll[position] = bmp_disk.getWidth() - width;
-					}
-					 mCan.drawBitmap(bmp_disk, new Rect(mSCroll[position], 0, iwidth+mSCroll[position], 100), new Rect(0, 0, iwidth, 100), null);
-					   Debug.e(TAG, "mSCroll mSCroll=2222=============="+mSCroll[position]);	
-					mPreviews.put(title, Bmp_bak);			 
-				 
-					
-			Debug.d(TAG, "---blue");
-			mHolder.mMark.setVisibility(View.VISIBLE);
-		}
-		else {
-		//	mSCroll[position]=0;
-			 
-			Debug.d(TAG, "---transparent");
-			mHolder.mMark.setVisibility(View.GONE);
+				} catch (Exception e) {
+
+				}
+				Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+				Paint mPaint;
+				mPaint = new Paint();
+
+				Canvas mCan;
+				mCan = new Canvas(Bmp_bak);
+				//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
+				int iwidth = bmp_disk.getWidth();
+				if (bmp_disk.getWidth() > 1500) {
+					iwidth = 1500;
+				}
+
+				WindowManager wManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+				int width = wManager.getDefaultDisplay().getWidth();
+				if (width >= bmp_disk.getWidth()) {
+					mSCroll[position] = 0;
+				} else if (mSCroll[position] + width > bmp_disk.getWidth()) {
+					mSCroll[position] = bmp_disk.getWidth() - width;
+				}
+				mCan.drawBitmap(bmp_disk, new Rect(mSCroll[position], 0, iwidth + mSCroll[position], 100), new Rect(0, 0, iwidth, 100), null);
+				Debug.e(TAG, "mSCroll mSCroll=2222==============" + mSCroll[position]);
+				mPreviews.put(title, Bmp_bak);
+
+
+				Debug.d(TAG, "---blue");
+				mHolder.mMark.setVisibility(View.VISIBLE);
+			} else {
+				//	mSCroll[position]=0;
+
+				Debug.d(TAG, "---transparent");
+				mHolder.mMark.setVisibility(View.GONE);
+			}
 		}
 	 	dispPreview(Bmp_bak);	
 		return convertView;
@@ -457,5 +487,5 @@ public class MessageListAdater extends BaseAdapter {
 		
 	}
 
-	
+
 }

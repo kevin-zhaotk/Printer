@@ -59,4 +59,14 @@
 	    android:background="@drawable/message_selector"
 	    android:visibility="gone"	    
 	    />
+
+	<ImageView
+		android:id="@+id/check_state"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/check_nor"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="20dp"
+		android:layout_centerVertical="true"
+		/>
 </RelativeLayout>    

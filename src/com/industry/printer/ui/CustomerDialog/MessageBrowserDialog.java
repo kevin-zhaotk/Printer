@@ -2,10 +2,12 @@ package com.industry.printer.ui.CustomerDialog;
  
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
  
@@ -48,7 +50,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener, TextWatcher {
+public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener, OnTouchListener, OnScrollListener, TextWatcher {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
@@ -64,7 +66,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		
 		public EditText		  mSearch;
-		public static String mTitle;
+		private static ArrayList<String> mTitles;
 		
 		public ListView mMessageList;
 		public View mVSelected;
@@ -75,6 +77,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public MessageListAdater mFileAdapter;
 		public LinkedList<Map<String, Object>> mContent;
 		public LinkedList<Map<String, Object>> mFilterContent;
+
+	/**
+	 * multi select
+	 */
+	private boolean mMode = false;
 		
 		private static final int MSG_FILTER_CHANGED = 1;
 		private static final int MSG_LOADED = 2;
@@ -152,6 +159,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mSearch.addTextChangedListener(this);
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
+			mMessageList.setOnItemLongClickListener(this);
 			 
 			 mMessageList.setOnTouchListener(this);
 			 mMessageList.setOnScrollListener(this);
@@ -159,6 +167,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 
 			 mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
 			 mLoading = (ImageView) findViewById(R.id.loading_img);
+
+			mTitles.clear();
 			 loadMessages();
 			 
 			 setupViews();
@@ -178,7 +188,15 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void onClick(View arg0) {
 			switch (arg0.getId()) {
 				case R.id.btn_ok_message_list:
-					
+					mTitles.clear();
+					if (mMode) {
+						Map<String, Boolean> selected = mFileAdapter.getSelected();
+						for (String key : selected.keySet()) {
+
+							Map<String, Object> item = mContent.get(Integer.parseInt(key));
+							mTitles.add((String) item.get("title"));
+						}
+					}
 					dismiss();
 					if (pListener != null) {
 						pListener.onClick();
@@ -208,10 +226,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			Map<String, Object> selected = mContent.get(position);
 			mFileAdapter.setSelected(position);
 			mFileAdapter.notifyDataSetChanged();
-			mTitle = (String) selected.get("title");
+			if (!mMode) {
+				mTitles.clear();
+				mTitles.add((String) selected.get("title"));
+			}
 			//addbylk
 		//	mMessageList.setAdapter(mFileAdapter);
-			mFileAdapter.notifyDataSetChanged();
 			/*
 			if(mVSelected == null)
 			{
@@ -226,8 +246,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			}*/
 			
 		}
-		
-		@SuppressWarnings("unchecked")
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+		mMode = true;
+		mFileAdapter.setMode(mMode);
+		mFileAdapter.notifyDataSetChanged();
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
 		public void loadMessages()
 		{
 			showLoading();
@@ -304,11 +332,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mLoadingLy.setVisibility(View.GONE);
 		}
 		
-		public static String getSelected() {
-			if (mTitle == null) {
-				return "";
+		public static ArrayList<String> getSelected() {
+
+			if (mTitles == null) {
+				return new ArrayList<>();
 			} else {
-				return mTitle;
+				return mTitles;
 			}
 		}
 

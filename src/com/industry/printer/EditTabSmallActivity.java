@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -497,7 +498,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             switch (msg.what) {   
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+ MessageBrowserDialog.getSelected());
-            		mObjName = MessageBrowserDialog.getSelected();
+            		List<String> objects = MessageBrowserDialog.getSelected();
+					mObjName = objects.get(0);
             		if (mObjName == null || mObjName.isEmpty()) {
 						break;
 					}

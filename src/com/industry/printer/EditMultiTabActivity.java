@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Vector;
 
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
@@ -483,7 +484,8 @@ public class EditMultiTabActivity extends Fragment implements OnClickListener, O
             	case HANDLER_MESSAGE_OPEN:		//open
             		progressDialog();
             		Debug.d(TAG, "open file="+ MessageBrowserDialog.getSelected());
-            		mObjName = MessageBrowserDialog.getSelected();
+					List<String> objects = MessageBrowserDialog.getSelected();
+					mObjName = objects.get(0);
             		if (mObjName == null || mObjName.isEmpty()) {
 						break;
 					}
