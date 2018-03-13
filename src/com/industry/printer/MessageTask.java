@@ -1357,7 +1357,7 @@ public class MessageTask {
 			if (group == null) {
 				return null;
 			}
-			ArrayList<String> gl = new ArrayList<>();
+			ArrayList<String> gl = new ArrayList<String>();
 			for (int i = 0; i < group.length; i++) {
 				gl.add(group[i]);
 			}

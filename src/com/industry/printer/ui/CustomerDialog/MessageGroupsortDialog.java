@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
 
@@ -21,23 +26,28 @@ import java.util.Map;
  * Created by kevin on 2018/3/8.
  */
 
-public class MessageGroupsortDialog extends CustomerDialogBase implements View.OnClickListener {
+public class MessageGroupsortDialog extends CustomerDialogBase implements View.OnClickListener, OnItemClickListener {
 
     private ImageButton mUp;
     private ImageButton mDown;
-    private ImageButton mOk;
+    private RelativeLayout mOk;
     private ListView    mListview;
     private MessageListAdater mFileAdapter;
-    LinkedList<Map<String, Object>> tlkList = new LinkedList<>();
+    
+    private int mSelected = -1;
+    
+    LinkedList<Map<String, Object>> tlkList = new LinkedList<Map<String, Object>>();
 
     public MessageGroupsortDialog(Context context, ArrayList<String> tlks) {
-        super(context);
+        super(context, R.style.Dialog_Fullscreen);
 
         if (tlks != null) {
             for (String t : tlks) {
-                Map<String, Object> m = new HashMap<>();
+                Map<String, Object> m = new HashMap<String, Object>();
                 m.put("title", t);
+                tlkList.add(m);
             }
+            
         }
         mFileAdapter = new MessageListAdater(context,
                 tlkList,
@@ -55,17 +65,19 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.group_sort_layout);
 
         mDown = (ImageButton) findViewById(R.id.move_down);
         mDown.setOnClickListener(this);
         mUp = (ImageButton) findViewById(R.id.move_up);
         mUp.setOnClickListener(this);
-        mOk = (ImageButton) findViewById(R.id.ok);
+        mOk = (RelativeLayout) findViewById(R.id.ok);
         mOk.setOnClickListener(this);
 
         mListview = (ListView) findViewById(R.id.message_listview);
         mListview.setAdapter(mFileAdapter);
+        mListview.setOnItemClickListener(this);
         // mListview.setOnItemSelectedListener();
     }
 
@@ -73,21 +85,27 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.move_up:
-                int pos = mListview.getSelectedItemPosition();
-                if (pos > 0) {
-                    Map<String, Object> m = tlkList.remove(pos);
-                    tlkList.add(pos - 1, m);
+                Debug.d("XXX", "--->up mSelected: " + mSelected);
+                if (mSelected > 0) {
+                    Map<String, Object> m = tlkList.remove(mSelected);
+                    mSelected = mSelected - 1;
+                    tlkList.add(mSelected, m);
+                    mFileAdapter.setSelected(mSelected);
+                    mFileAdapter.notifyDataSetChanged();
                 }
-                mFileAdapter.notifyDataSetChanged();
+                
                 break;
 
             case R.id.move_down:
-                int p = mListview.getSelectedItemPosition();
-                if (p < mListview.getCount()) {
-                    Map<String, Object> m = tlkList.remove(p);
-                    tlkList.add(p + 1, m);
+            	Debug.d("XXX", "--->down mSelected: " + mSelected);
+                if (mSelected >= 0 && mSelected < mListview.getCount() - 1) {
+                    Map<String, Object> m = tlkList.remove(mSelected);
+                    mSelected += 1;
+                    tlkList.add(mSelected, m);
+                    mFileAdapter.setSelected(mSelected);
+                    mFileAdapter.notifyDataSetChanged();
                 }
-                mFileAdapter.notifyDataSetChanged();
+                
                 break;
 
             case R.id.ok:
@@ -108,5 +126,12 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
                 break;
 
         }
+    }
+    
+    @Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    	mFileAdapter.setSelected(position);
+    	mFileAdapter.notifyDataSetChanged();
+    	mSelected = position;
     }
 }

@@ -303,7 +303,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	/**
 	 * 褰撳墠鎵撳嵃浠诲姟
 	 */
-	public List<MessageTask> mMsgTask = new ArrayList<>();
+	public List<MessageTask> mMsgTask = new ArrayList<MessageTask>();
 	/**
 	 * preview buffer
 	 * 	you should use this buffer for preview
@@ -473,8 +473,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				name.append("^");
 			}
 			name.deleteCharAt(name.length() - 1);
-
+			return name.toString();
 		}
+		return null;
 	}
 	public void onConfigureChanged() {
 		mMsgFile.setText(opendTlks());
@@ -722,6 +723,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					sendToRemote(mContext.getString(R.string.str_tlk_opening));
 					break;
 				case MESSAGE_OPEN_GROUP:
+					Debug.d(TAG, "--->group");
 					ArrayList<String> files = msg.getData().getStringArrayList("file");
 					MessageGroupsortDialog dialog = new MessageGroupsortDialog(mContext, files);
 					dialog.setOnPositiveClickedListener(new OnPositiveListener() {
@@ -739,6 +741,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 							msg.sendToTarget();
 						}
 					});
+					dialog.show();
 					break;
 				case MESSAGE_OPEN_MSG_SUCCESS:
 					
@@ -1552,12 +1555,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						}
 						/** 如果选择内容为多个，表示需要新建组 */
 						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+						Bundle bundle = new Bundle();
 						if (f.size() > 1) {
 							msg = mHandler.obtainMessage(MESSAGE_OPEN_GROUP);
+							bundle.putStringArrayList("file", f);
+						} else {
+							bundle.putString("file", f.get(0));
 						}
 
-						Bundle bundle = new Bundle();
-						bundle.putStringArrayList("file", f);
 						// bundle.putString("file", f);
 						msg.setData(bundle);
 						mHandler.sendMessage(msg);

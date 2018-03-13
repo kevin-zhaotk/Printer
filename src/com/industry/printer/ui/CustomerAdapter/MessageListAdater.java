@@ -125,7 +125,7 @@ public class MessageListAdater extends BaseAdapter {
 	 */
 	private boolean mMultiMode = false;
 
-	private Map<String, Boolean> mMultiSelected = new HashMap<>();
+	private Map<String, Boolean> mMultiSelected = new HashMap<String, Boolean>();
 	
 	private Map<String, Bitmap> mPreviews = new HashMap<String, Bitmap>();
 	
@@ -322,7 +322,7 @@ public class MessageListAdater extends BaseAdapter {
 	*/
 		
 
-		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected);
+		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected + "  MultiMode = " + mMultiMode);
 		if (mMultiMode) {
 			mHolder.mCheck.setVisibility(View.VISIBLE);
 			if (mMultiSelected.containsKey(String.valueOf(position))) {

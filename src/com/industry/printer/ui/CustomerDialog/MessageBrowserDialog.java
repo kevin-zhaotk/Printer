@@ -120,6 +120,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mFilterContent = new LinkedList<Map<String, Object>>();
 			isTop = false;
 			isBottom = false;
+			mTitles = new ArrayList<String>();
 			mFileAdapter = new MessageListAdater(context, 
 					mContent, 
 					R.layout.message_item_layout, 
@@ -249,6 +250,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+		Debug.d(TAG, "--->onItemLongClick: " + i);
 		mMode = true;
 		mFileAdapter.setMode(mMode);
 		mFileAdapter.notifyDataSetChanged();
@@ -335,7 +337,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public static ArrayList<String> getSelected() {
 
 			if (mTitles == null) {
-				return new ArrayList<>();
+				return new ArrayList<String>();
 			} else {
 				return mTitles;
 			}
