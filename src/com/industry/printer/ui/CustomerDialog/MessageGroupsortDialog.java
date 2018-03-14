@@ -114,7 +114,7 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
                     Map<String, Object> m = tlkList.get(i);
                     String name = (String) m.get("title");
                     result.append(name);
-                    if (i != 0) result.append("^");
+                    if (i != tlkList.size() - 1) result.append("^");
                 }
                 /* save group */
                 String group = "Group-1";

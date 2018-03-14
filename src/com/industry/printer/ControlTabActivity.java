@@ -734,10 +734,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 
 						@Override
 						public void onClick(String content) {
+							Debug.d(TAG, "--->group: " + content);
 							// save group information & send message to handle opening
 							Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 							Bundle b = new Bundle();
 							b.putString("file", content);
+							msg.setData(b);
 							msg.sendToTarget();
 						}
 					});

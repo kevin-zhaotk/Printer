@@ -1346,7 +1346,7 @@ public class MessageTask {
 	}
 
 	public static List<String> parseGroup(String name) {
-		File file = new File(ConfigPath.getTlkDir(name) + "t.TLK");
+		File file = new File(ConfigPath.getTlkDir(name) + "/1.TLK");
 		if (!file.exists()) {
 			return null;
 		}
