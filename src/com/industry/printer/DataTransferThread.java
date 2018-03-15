@@ -100,7 +100,9 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		buffer = mDataTask.getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
-	
+		int type = mDataTask.getHeadType();
+		
+		
 			SystemConfigFile config = SystemConfigFile.getInstance(mContext);
 			int nDirection=  config.getParam(1) ;//  02.打印方向
 			int ninvert1   =  config.getParam(14);// 15.1 头倒置
@@ -111,7 +113,7 @@ public class DataTransferThread extends Thread {
 			int nmirrorimage3  =  config.getParam(20);// 21.3 头镜像
 			int nmirrorimage4  =  config.getParam(21);// 22.4 头镜像 			
 			//每列30像素
-			
+			if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {	
 			if(nDirection==1)
 			{
 				//char 类型站2个字节 
@@ -317,9 +319,7 @@ public class DataTransferThread extends Thread {
 						buffer[irow] = trans1[irow] ;
 				}	
 			}//		
-		
-	
-		
+		}
 			
 		
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
@@ -346,6 +346,8 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
 				buffer = mDataTask.getPrintBuffer();
+				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
+					
 				if(nDirection==1)
 				{
 				Debug.e(TAG, "===================="+ buffer.length );	
@@ -486,7 +488,8 @@ public class DataTransferThread extends Thread {
 							buffer[irow] = trans12[irow] ;
 							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
 					}	
-				}							
+				}
+				}
 				//addbylk_2_2/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//////////////////↑↑↑↑
 	
 				if (!mDataTask.isReady) {
@@ -514,6 +517,8 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				//在此处发生打印数据，同时
 				buffer = mDataTask.getPrintBuffer();
+				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
+					
 				if(nDirection==1)
 				{
 				Debug.e(TAG, "333===================="+ buffer.length );	
@@ -655,7 +660,8 @@ public class DataTransferThread extends Thread {
 							buffer[irow] = trans12[irow] ;
 							Debug.e(TAG, "====================trans12 buffer="+ buffer[irow] );
 					}	
-				}								
+				}
+				}
 				//addbylk_2_3/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 				Debug.d(TAG, "===>buffer size="+buffer.length);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);

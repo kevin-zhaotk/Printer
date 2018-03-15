@@ -973,10 +973,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			onDownTouch(event);
 			break;
 		case R.id.btn_zoomOut:
-			// onZoomOutXTouch(event);
+			onZoomOutTouch(event);
 			break;
 		case R.id.btn_zoomIn:
-			// onZoomInXTouch(event);
+			onZoomInTouch(event);
 			break;
 		case R.id.wide_btn:
 			onWideTouch(event);
@@ -1312,6 +1312,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		msg.sendToTarget();
 	}
 	
+	private boolean onZoomInTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOM_IN_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			mKeyRepeatHandler.removeMessages(ZOOM_IN_KEY);
+		}
+		return false;
+	}
+	
 	private void onZoomOutPressed() {
 		BaseObject obj = getCurObj();
 		if(obj == null)
@@ -1329,6 +1341,18 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		Message msg = mObjRefreshHandler.obtainMessage(OBJECT_UPDATE);
 		msg.obj = obj;
 		msg.sendToTarget();
+	}
+	
+	private boolean onZoomOutTouch(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOM_OUT_KEY, 800);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP)
+		{
+			mKeyRepeatHandler.removeMessages(ZOOM_OUT_KEY);
+		}
+		return false;
 	}
 	
 	private boolean onWideTouch(MotionEvent event) {
@@ -1452,11 +1476,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 					break;
 				case ZOOM_IN_KEY:
 					Debug.d(TAG, "zoom x  in key pressed");
-					// zoomInXKeyPressed();
+					onZoomInPressed();
 					break;
 				case ZOOM_OUT_KEY:
 					Debug.d(TAG, "zoom x out key pressed");
-					// zoomOutXKeyPressed();
+					onZoomOutPressed();
 					break;
 				case WIDE_KEY:
 					Debug.d(TAG, "zoom x out key pressed");
