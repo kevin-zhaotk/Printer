@@ -321,13 +321,17 @@ public class DataTransferThread extends Thread {
 			}//		
 		}
 			
-		
+		/* save print.bin to mounted usb device
 		ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
 			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 		}
+		*/
+		// save print.bin to /mnt/sdcard/ folder
+		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 		last = SystemClock.currentThreadTimeMillis();
