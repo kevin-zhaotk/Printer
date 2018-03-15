@@ -64,7 +64,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         mShadow.setImageResource(R.drawable.msg_bg_selected);
         mShadow.setVisibility(View.GONE);
         if (mShadow != null) {
-            mContainer.addView(mShadow);
+            mContainer.addView(mShadow, 0);
         }
     }
 
@@ -262,15 +262,16 @@ public class MessageDisplayManager implements View.OnTouchListener {
     }
 
     private void showSelectRect(int x, int y, int w, int h) {
+    	// mContainer.removeView(mShadow);
     	RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mShadow.getLayoutParams();
     	lp.width = w;
     	lp.height = h;
     	lp.leftMargin = x;
     	lp.topMargin = y;
+    	// mContainer.addView(mShadow, 0, lp);
     	mShadow.setVisibility(View.VISIBLE);
     	mShadow.setLayoutParams(lp);
+    	mShadow.bringToFront();
     }
-    
-    
     
 }
