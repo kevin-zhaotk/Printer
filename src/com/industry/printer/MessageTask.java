@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -60,6 +61,7 @@ public class MessageTask {
 
 	private static final String TAG = MessageTask.class.getSimpleName();
 	public static final String MSG_PREV_IMAGE = "/1.bmp";
+	public static final String MSG_PREV_IMAGE2 = "/2.bmp";
 	private Context mContext;
 	private int mDots=0; 
 	private String mName;
@@ -1149,7 +1151,23 @@ public class MessageTask {
 	}
 
 	public String getPreview() {
-		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
+		String messageFolder = ConfigPath.getTlkDir(mName);
+		String previewBmp = messageFolder + MSG_PREV_IMAGE ;
+		File bmp2 = new File(messageFolder, MSG_PREV_IMAGE2);
+		if (bmp2.exists()) {
+			previewBmp = messageFolder + MSG_PREV_IMAGE2;
+		}
+		return previewBmp;
+	}
+	
+	public static String getPreview(String name) {
+		String messageFolder = ConfigPath.getTlkDir(name);
+		String previewBmp = messageFolder + MSG_PREV_IMAGE ;
+		File bmp2 = new File(messageFolder, MSG_PREV_IMAGE2);
+		if (bmp2.exists()) {
+			previewBmp = messageFolder + MSG_PREV_IMAGE2;
+		}
+		return previewBmp;
 	}
 	
 	public String getPath() {
@@ -1342,18 +1360,36 @@ public class MessageTask {
 		} catch (Exception e) {
 
 		}
+		Debug.d("XXX", "--->contents: " + contents);
+		String[] msgs = contents.split("\\^");
+		Bitmap bmp = Bitmap.createBitmap(msgs.length * 150, 100, Config.ARGB_8888);
+		Canvas canvas = new Canvas(bmp);
+		canvas.drawColor(Color.WHITE);
+		int index = 0;
+		Paint paint = new Paint();
+		paint.setTextSize(50);
+		paint.setStrokeWidth(2);
+		paint.setFakeBoldText(true);
+		for (String msg : msgs) {
+			Debug.d("XXX", "--->msg: " + msg);
+			canvas.drawText(msg, index*200+20, 60, paint);
+			canvas.drawLine(200*(index+1), 20, 200*(index+1), 80, paint);
+			index++;
+		}
+		BitmapWriter.saveBitmap(bmp, dir.getAbsolutePath(), "1.bmp");
 
 	}
 
 	public static List<String> parseGroup(String name) {
-		File file = new File(ConfigPath.getTlkDir(name) + "/1.TLK");
+		Debug.d(TAG, "--->parseGroup: " + name);
+		File file = new File(ConfigPath.getTlkDir(name), "1.TLK");
 		if (!file.exists()) {
 			return null;
 		}
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String content = reader.readLine();
-			String[] group = content.split("^");
+			String[] group = content.split("\\^");
 			if (group == null) {
 				return null;
 			}

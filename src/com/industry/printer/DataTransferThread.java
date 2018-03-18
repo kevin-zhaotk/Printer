@@ -754,6 +754,9 @@ public class DataTransferThread extends Thread {
 		if (t != null) {
 			t.interrupt();
 		}
+		if (mScheduler == null) {
+			return;
+		}
 		mScheduler.doAfterPrint();
 	}
 	

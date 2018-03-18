@@ -70,6 +70,7 @@ import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListe
 import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
+import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog.OpenFrom;
 import com.industry.printer.R;
 import com.industry.printer.ControlTabActivity.ServerThread;
 import com.industry.printer.ControlTabActivity.Service;
@@ -755,8 +756,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					//鏂规1锛氫粠bin鏂囦欢鐢熸垚buffer
 					initDTThread();
 					Debug.d(TAG, "--->init thread ok");
-					// mPreBitmap = BitmapFactory.decodeFile(mMsgTask.getPreview());
-					mPreBitmap = mDTransThread.mDataTask.get(0).getPreview();
+					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
+					// mPreBitmap = mDTransThread.mDataTask.get(0).getPreview();
+					
 					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
 //					if (mPreBitmap.getWidth() > 1280) {
 //						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
@@ -786,7 +788,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 								dispPreview(mPreBitmap);
 						}			
 					refreshCount();
-					mMsgFile.setText(opendTlks());
+					mMsgFile.setText(mObjPath);
 
 					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
@@ -1167,8 +1169,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				}
 				Debug.d(TAG, "-->child: " + child.getWidth() + "  " + child.getHeight() + "   view h: " + mllPreview.getHeight());
 				Bitmap scaledChild = Bitmap.createScaledBitmap(child, (int) (cutWidth*scale), (int) (bmp.getHeight() * scale), true);
-				child.recycle();
-				Debug.d(TAG, "--->scaledChild  width = " + child.getWidth() + " scale= " + scale);
+				//child.recycle();
+				//Debug.d(TAG, "--->scaledChild  width = " + child.getWidth() + " scale= " + scale);
 				x += cutWidth; 
 				ImageView imgView = new ImageView(mContext);
 				imgView.setScaleType(ScaleType.FIT_XY);
@@ -1546,7 +1548,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				thread.purge(mContext);
 				break;
 			case R.id.btnBinfile:
-				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext);
+				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext, OpenFrom.OPEN_PRINT);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override
@@ -1662,7 +1664,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		});
 		
 	}
-	
 	
 	private void sendToRemote(String msg) {
 		try {

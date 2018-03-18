@@ -13,10 +13,13 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
+import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -117,7 +120,7 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
                     if (i != tlkList.size() - 1) result.append("^");
                 }
                 /* save group */
-                String group = "Group-1";
+                String group = "Group-" + getSuffix();
                 MessageTask.saveGroup(group, result.toString());
                 if (pListener != null) {
                     pListener.onClick(group);
@@ -133,5 +136,36 @@ public class MessageGroupsortDialog extends CustomerDialogBase implements View.O
     	mFileAdapter.setSelected(position);
     	mFileAdapter.notifyDataSetChanged();
     	mSelected = position;
+    }
+    
+    private int getSuffix() {
+    	File dir = new File(ConfigPath.getTlkPath());
+    	String[] files = dir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name != null && name.startsWith("Group-")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
+    	if (files == null || files.length <= 0) {
+			return 1;
+		}
+    	int max = 0;
+    	for (String file : files) {
+    		if (file.length()<= 6){
+    			continue;
+    		}
+    		try {
+    			int cur = Integer.valueOf(file.substring(6));
+    			max = max <= cur ? cur: max;
+    		} catch (Exception e) {
+				// 
+			}
+			
+ 		}
+    	return max+1;
     }
 }

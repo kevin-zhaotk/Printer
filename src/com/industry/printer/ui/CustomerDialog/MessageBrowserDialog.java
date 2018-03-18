@@ -2,6 +2,7 @@ package com.industry.printer.ui.CustomerDialog;
  
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -82,11 +83,18 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	 * multi select
 	 */
 	private boolean mMode = false;
+	private OpenFrom mFrom;
 		
 		private static final int MSG_FILTER_CHANGED = 1;
 		private static final int MSG_LOADED = 2;
 
 		private static final int MSG_REF = 3;
+		
+		
+		public enum OpenFrom {
+			OPEN_EDIT,
+			OPEN_PRINT
+		}
 		
 		public Handler mHandler = new Handler() {
 			@Override
@@ -114,7 +122,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		public MessageBrowserDialog(Context context) {
 			super(context, R.style.Dialog_Fullscreen);
-			
+			mFrom = OpenFrom.OPEN_EDIT;
 			mVSelected = null;
 			mContent = new LinkedList<Map<String, Object>>();
 			mFilterContent = new LinkedList<Map<String, Object>>();
@@ -131,6 +139,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
 			LinearInterpolator lin = new LinearInterpolator();
 			mOperating.setInterpolator(lin);
+		}
+		
+		public MessageBrowserDialog(Context context, OpenFrom from) {
+			this(context);
+			mFrom = from;
 		}
 		
 		@Override
@@ -160,7 +173,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mSearch.addTextChangedListener(this);
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
-			mMessageList.setOnItemLongClickListener(this);
+			 if (mFrom == OpenFrom.OPEN_PRINT) {
+				 mMessageList.setOnItemLongClickListener(this);
+			}
+			
 			 
 			 mMessageList.setOnTouchListener(this);
 			 mMessageList.setOnScrollListener(this);
@@ -189,8 +205,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void onClick(View arg0) {
 			switch (arg0.getId()) {
 				case R.id.btn_ok_message_list:
-					mTitles.clear();
 					if (mMode) {
+						mTitles.clear();
 						Map<String, Boolean> selected = mFileAdapter.getSelected();
 						for (String key : selected.keySet()) {
 
@@ -274,7 +290,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					Debug.d(TAG, "--->load message begin");
 					File rootpath = new File(tlkPath);
 					// File[] Tlks = rootpath.listFiles();
-					String[] Tlks = rootpath.list();
+					String[] Tlks = rootpath.list(new FilenameFilter() {
+						
+						@Override
+						public boolean accept(File arg0, String arg1) {
+							if (mFrom == OpenFrom.OPEN_EDIT && arg1.startsWith("Group-")) {
+								return false;
+							}
+							return true;
+						}
+					});
 					if (Tlks == null) {
 						return ;
 					}
@@ -285,6 +310,15 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 									{
 										int cp1 = 0;
 										int cp2 = 0;
+										if (((String)arg0).startsWith("Group-") || ((String)arg1).startsWith("Group-") ) {
+											if(((String)arg0).startsWith("Group-") && !((String)arg1).startsWith("Group-") ) {
+												return -1;
+											} else if(!((String)arg0).startsWith("Group-") && ((String)arg1).startsWith("Group-") ) {
+												return 1;
+											} else {
+												return 0;
+											}
+										}
 										try {
 									    	cp1 = Integer.parseInt((String) arg0);
 									    	cp2 = Integer.parseInt((String) arg1);
