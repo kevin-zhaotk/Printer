@@ -425,7 +425,8 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
         			break;
             	case HANDLER_MESSAGE_OPEN:		//open
             		Debug.d(TAG, "open file="+MessageBrowserDialog.getSelected());
-            		mObjName = MessageBrowserDialog.getSelected();
+					List<String> objects = MessageBrowserDialog.getSelected();
+					mObjName = objects.get(0);
             		if (mObjName == null || mObjName.isEmpty()) {
 						break;
 					}

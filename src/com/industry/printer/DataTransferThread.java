@@ -1,6 +1,7 @@
 package com.industry.printer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import android.R.color;
@@ -50,7 +51,9 @@ public class DataTransferThread extends Thread {
 	
 	private int mcountdown = 0;
 	/**打印数据buffer**/
-	public DataTask mDataTask;
+	public List<DataTask> mDataTask;
+	/* task index currently printing */
+	private int mIndex;
 	RfidScheduler	mScheduler;
 	private static long mInterval = 0;
 	private int mThreshold;
@@ -98,9 +101,9 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		long last = 0;
 		/*逻辑要求，必须先发数据*/
-		buffer = mDataTask.getPrintBuffer();
+		buffer = mDataTask.get(mIndex).getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
-		int type = mDataTask.getHeadType();
+		int type = mDataTask.get(mIndex).getHeadType();
 		
 		
 			SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -326,11 +329,11 @@ public class DataTransferThread extends Thread {
 		if (usbs != null && usbs.size() > 0) {
 			String path = usbs.get(0);
 			path = path + "/print.bin";
-			BinCreater.saveBin(path, buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+			BinCreater.saveBin(path, buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
 		}
 		*/
 		// save print.bin to /mnt/sdcard/ folder
-		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		// BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
 		
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
@@ -349,9 +352,11 @@ public class DataTransferThread extends Thread {
 				mInterval = SystemClock.currentThreadTimeMillis() - last;
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
-				buffer = mDataTask.getPrintBuffer();
+				
+				buffer = mDataTask.get(mIndex).getPrintBuffer();
+				
 				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
-					
+		
 				if(nDirection==1)
 				{
 				Debug.e(TAG, "===================="+ buffer.length );	
@@ -496,7 +501,7 @@ public class DataTransferThread extends Thread {
 				}
 				//addbylk_2_2/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//////////////////↑↑↑↑
 	
-				if (!mDataTask.isReady) {
+				if (!mDataTask.get(mIndex).isReady) {
 					mRunning = false;
 					if (mCallback != null) {
 						mCallback.OnFinished(CODE_BARFILE_END);
@@ -515,14 +520,16 @@ public class DataTransferThread extends Thread {
 				if (mCallback != null) {
 					mCallback.onComplete();
 				}
+				next();
 			}
 			
 			if(mNeedUpdate == true) {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				//在此处发生打印数据，同时
-				buffer = mDataTask.getPrintBuffer();
+
+				buffer = mDataTask.get(mIndex).getPrintBuffer();
 				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
-					
+		
 				if(nDirection==1)
 				{
 				Debug.e(TAG, "333===================="+ buffer.length );	
@@ -683,6 +690,14 @@ public class DataTransferThread extends Thread {
 		rollback();
 		
 	}
+
+	private void next() {
+		mIndex++;
+		if (mIndex >= mDataTask.size()) {
+			mIndex = 0;
+		}
+
+	}
 	
 	public void purge(final Context context) {
 		ThreadPoolManager.mThreads.execute(new Runnable() {
@@ -718,6 +733,7 @@ public class DataTransferThread extends Thread {
 	
 	public boolean launch(Context ctx) {
 		mRunning = true;
+
 		DataTransferThread thread = getInstance();
 		Debug.d(TAG, "--->thread : " + thread.isRunning());
 		if (!isBufferReady || mDataTask == null) {
@@ -751,6 +767,9 @@ public class DataTransferThread extends Thread {
 		if (t != null) {
 			t.interrupt();
 		}
+		if (mScheduler == null) {
+			return;
+		}
 		mScheduler.doAfterPrint();
 	}
 	
@@ -773,35 +792,64 @@ public class DataTransferThread extends Thread {
 		}
 	};
 	
-	public void initDataBuffer(Context context, MessageTask task) {
+//	public void initDataBuffer(Context context, MessageTask task) {
+//		if (mDataTask == null) {
+//			mDataTask = new DataTask(context, task);
+//		} else {
+//			mDataTask.setTask(task);
+//		}
+//		Debug.d(TAG, "--->prepare buffer");
+//
+//		isBufferReady = mDataTask.prepareBackgroudBuffer();
+//	}
+
+	public void initDataBuffer(Context context, List<MessageTask> task) {
 		if (mDataTask == null) {
-			mDataTask = new DataTask(context, task);
-		} else {
-			mDataTask.setTask(task);
+			mDataTask = new ArrayList<DataTask>();
+		}
+		mIndex = 0;
+		mDataTask.clear();
+		for (MessageTask t : task) {
+			DataTask data = new DataTask(mContext, t);
+			mDataTask.add(data);
 		}
 		Debug.d(TAG, "--->prepare buffer");
-		
-		isBufferReady = mDataTask.prepareBackgroudBuffer();
+
+		for (DataTask tk : mDataTask) {
+			isBufferReady |= tk.prepareBackgroudBuffer();
+		}
 	}
-	
-	public DataTask getData() {
+
+
+	public List<DataTask> getData() {
 		return mDataTask;
 	}
+
+	public DataTask getCurData() {
+		return mDataTask.get(mIndex);
+	}
+
+	public int getIndex() {
+		return mIndex;
+	}
 																																																																																																																
-	public void setDotCount(int count) {
-		if (mDataTask == null) {
-			return;
+	public void setDotCount(List<MessageTask> messages) {
+		for (int i = 0; i < mDataTask.size(); i++) {
+			DataTask t = mDataTask.get(i);
+			if (messages.size() <= i) {
+				break;
+			}
+			t.setDots(messages.get(i).getDots());
 		}
-		mDataTask.setDots(count);
 		mcountdown = getInkThreshold();
 	}
 	
-	public int getDotCount() {
-		if (mDataTask == null) {
+	public int getDotCount(DataTask task) {
+		if (task == null) {
 			return 1;
 		}
 			
-		return mDataTask.getDots();
+		return task.getDots();
 	}
 	
 	/**
@@ -830,7 +878,7 @@ public class DataTransferThread extends Thread {
 	 */
 	public int getInkThreshold() {
 		int bold = 1;
-		if (getDotCount() <= 0) {
+		if (getDotCount(mDataTask.get(mIndex)) <= 0) {
 			return 1;
 		}
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -839,11 +887,15 @@ public class DataTransferThread extends Thread {
 		} else {
 			bold = config.getParam(2)/150;
 		}
-		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount() * bold);
+		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount(mDataTask.get(mIndex)) * bold);
 	}
 	
 	public int getHeads() {
-		return mDataTask.getHeads();
+
+		if (mDataTask != null && mDataTask.size() > 0) {
+			return mDataTask.get(0).getHeads();
+		}
+		return 1;
 	}
 	/**
 	 * 打印間隔0~100ms（每秒鐘打印 > 20次），爲高速打印，每個打印間隔只執行1步操作
@@ -889,42 +941,44 @@ public class DataTransferThread extends Thread {
 	public static final int CODE_BARFILE_END = 1;
 	public static final int CODE_NO_BARFILE = 2;
 	
-	private char[] getPrintBuffer() {
-		char[] buffer;
-		int htype = mDataTask.getHeads();
-		// specific process for 9mm header
-		if (htype == MessageType.MESSAGE_TYPE_9MM) {
-			int columns = mDataTask.getBufferColumns();
-			int h = mDataTask.getBufferHeightFeed();
-			char[] b1 = mDataTask.getPrintBuffer();
-			char[] b2 = mDataTask.getPrintBuffer();
-			char[] b3 = mDataTask.getPrintBuffer();
-			char[] b4 = mDataTask.getPrintBuffer();
-			char[] b5 = mDataTask.getPrintBuffer();
-			char[] b6 = mDataTask.getPrintBuffer();
-			buffer = new char[columns * h * 6];
-			for (int i = 0; i < columns; i++) {
-				System.arraycopy(b1, i * h, buffer, i * h *6, h);
-				System.arraycopy(b2, i * h, buffer, i * h * (6 + 1), h);
-				System.arraycopy(b3, i * h, buffer, i * h * (6 + 2), h);
-				System.arraycopy(b4, i * h, buffer, i * h * (6 + 3), h);
-				System.arraycopy(b5, i * h, buffer, i * h * (6 + 4), h);
-				System.arraycopy(b6, i * h, buffer, i * h * (6 + 5), h);
-			}
-		} else {
-			buffer = mDataTask.getPrintBuffer();
-		}
-		return buffer;
-	}
+//	private char[] getPrintBuffer() {
+//		char[] buffer;
+//		int htype = getHeads();
+//		// specific process for 9mm header
+//		if (htype == MessageType.MESSAGE_TYPE_9MM) {
+//			int columns = mDataTask.getBufferColumns();
+//			int h = mDataTask.getBufferHeightFeed();
+//			char[] b1 = mDataTask.getPrintBuffer();
+//			char[] b2 = mDataTask.getPrintBuffer();
+//			char[] b3 = mDataTask.getPrintBuffer();
+//			char[] b4 = mDataTask.getPrintBuffer();
+//			char[] b5 = mDataTask.getPrintBuffer();
+//			char[] b6 = mDataTask.getPrintBuffer();
+//			buffer = new char[columns * h * 6];
+//			for (int i = 0; i < columns; i++) {
+//				System.arraycopy(b1, i * h, buffer, i * h *6, h);
+//				System.arraycopy(b2, i * h, buffer, i * h * (6 + 1), h);
+//				System.arraycopy(b3, i * h, buffer, i * h * (6 + 2), h);
+//				System.arraycopy(b4, i * h, buffer, i * h * (6 + 3), h);
+//				System.arraycopy(b5, i * h, buffer, i * h * (6 + 4), h);
+//				System.arraycopy(b6, i * h, buffer, i * h * (6 + 5), h);
+//			}
+//		} else {
+//			buffer = mDataTask.getPrintBuffer();
+//		}
+//		return buffer;
+//	}
 	
 	private void rollback() {
 		
-		if (mDataTask == null || mDataTask.getObjList() == null) {
+		if (mDataTask == null) {
 			return;
 		}
-		for (BaseObject object : mDataTask.getObjList()) {
-			if (object instanceof CounterObject) {
-				((CounterObject) object).rollback();
+		for (DataTask task : mDataTask) {
+			for (BaseObject object : task.getObjList()) {
+				if (object instanceof CounterObject) {
+					((CounterObject) object).rollback();
+				}
 			}
 		}
 	}

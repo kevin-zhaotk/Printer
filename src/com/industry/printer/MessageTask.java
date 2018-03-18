@@ -1,10 +1,18 @@
 package com.industry.printer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +24,7 @@ import android.widget.Toast;
 
 //addbylk_1_25/30_begin
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 //addbylk_1_25/30_end
 import com.industry.printer.FileFormat.TlkFileWriter;
@@ -52,6 +61,7 @@ public class MessageTask {
 
 	private static final String TAG = MessageTask.class.getSimpleName();
 	public static final String MSG_PREV_IMAGE = "/1.bmp";
+	public static final String MSG_PREV_IMAGE2 = "/2.bmp";
 	private Context mContext;
 	private int mDots=0; 
 	private String mName;
@@ -1141,7 +1151,23 @@ public class MessageTask {
 	}
 
 	public String getPreview() {
-		return ConfigPath.getTlkDir(mName) + MSG_PREV_IMAGE;
+		String messageFolder = ConfigPath.getTlkDir(mName);
+		String previewBmp = messageFolder + MSG_PREV_IMAGE ;
+		File bmp2 = new File(messageFolder, MSG_PREV_IMAGE2);
+		if (bmp2.exists()) {
+			previewBmp = messageFolder + MSG_PREV_IMAGE2;
+		}
+		return previewBmp;
+	}
+	
+	public static String getPreview(String name) {
+		String messageFolder = ConfigPath.getTlkDir(name);
+		String previewBmp = messageFolder + MSG_PREV_IMAGE ;
+		File bmp2 = new File(messageFolder, MSG_PREV_IMAGE2);
+		if (bmp2.exists()) {
+			previewBmp = messageFolder + MSG_PREV_IMAGE2;
+		}
+		return previewBmp;
 	}
 	
 	public String getPath() {
@@ -1315,5 +1341,66 @@ public class MessageTask {
 				mSaveTask = null;
 			}
 		}
+	}
+
+	public static void saveGroup(String name, String contents) {
+		File dir = new File(ConfigPath.getTlkDir(name));
+		if(!dir.exists() && !dir.mkdirs())
+		{
+			Debug.d(TAG, "create dir error "+dir.getPath());
+			return ;
+		}
+		File tlk = new File(dir, "1.TLK");
+		try {
+			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tlk));
+			writer.write(contents);
+			writer.flush();
+			writer.close();
+
+		} catch (Exception e) {
+
+		}
+		Debug.d("XXX", "--->contents: " + contents);
+		String[] msgs = contents.split("\\^");
+		Bitmap bmp = Bitmap.createBitmap(msgs.length * 150, 100, Config.ARGB_8888);
+		Canvas canvas = new Canvas(bmp);
+		canvas.drawColor(Color.WHITE);
+		int index = 0;
+		Paint paint = new Paint();
+		paint.setTextSize(50);
+		paint.setStrokeWidth(2);
+		paint.setFakeBoldText(true);
+		for (String msg : msgs) {
+			Debug.d("XXX", "--->msg: " + msg);
+			canvas.drawText(msg, index*200+20, 60, paint);
+			canvas.drawLine(200*(index+1), 20, 200*(index+1), 80, paint);
+			index++;
+		}
+		BitmapWriter.saveBitmap(bmp, dir.getAbsolutePath(), "1.bmp");
+
+	}
+
+	public static List<String> parseGroup(String name) {
+		Debug.d(TAG, "--->parseGroup: " + name);
+		File file = new File(ConfigPath.getTlkDir(name), "1.TLK");
+		if (!file.exists()) {
+			return null;
+		}
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String content = reader.readLine();
+			String[] group = content.split("\\^");
+			if (group == null) {
+				return null;
+			}
+			ArrayList<String> gl = new ArrayList<String>();
+			for (int i = 0; i < group.length; i++) {
+				gl.add(group[i]);
+			}
+			return gl;
+		} catch (Exception e) {
+
+		}
+		return null;
 	}
 }

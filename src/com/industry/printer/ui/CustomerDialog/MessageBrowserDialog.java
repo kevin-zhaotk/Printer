@@ -2,10 +2,13 @@ package com.industry.printer.ui.CustomerDialog;
  
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
  
@@ -48,7 +51,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, OnTouchListener, OnScrollListener, TextWatcher {
+public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener, OnTouchListener, OnScrollListener, TextWatcher {
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
@@ -64,7 +67,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		
 		public EditText		  mSearch;
-		public static String mTitle;
+		private static ArrayList<String> mTitles;
 		
 		public ListView mMessageList;
 		public View mVSelected;
@@ -75,11 +78,23 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public MessageListAdater mFileAdapter;
 		public LinkedList<Map<String, Object>> mContent;
 		public LinkedList<Map<String, Object>> mFilterContent;
+
+	/**
+	 * multi select
+	 */
+	private boolean mMode = false;
+	private OpenFrom mFrom;
 		
 		private static final int MSG_FILTER_CHANGED = 1;
 		private static final int MSG_LOADED = 2;
 
 		private static final int MSG_REF = 3;
+		
+		
+		public enum OpenFrom {
+			OPEN_EDIT,
+			OPEN_PRINT
+		}
 		
 		public Handler mHandler = new Handler() {
 			@Override
@@ -107,12 +122,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		
 		public MessageBrowserDialog(Context context) {
 			super(context, R.style.Dialog_Fullscreen);
-			
+			mFrom = OpenFrom.OPEN_EDIT;
 			mVSelected = null;
 			mContent = new LinkedList<Map<String, Object>>();
 			mFilterContent = new LinkedList<Map<String, Object>>();
 			isTop = false;
 			isBottom = false;
+			mTitles = new ArrayList<String>();
 			mFileAdapter = new MessageListAdater(context, 
 					mContent, 
 					R.layout.message_item_layout, 
@@ -123,6 +139,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
 			LinearInterpolator lin = new LinearInterpolator();
 			mOperating.setInterpolator(lin);
+		}
+		
+		public MessageBrowserDialog(Context context, OpenFrom from) {
+			this(context);
+			mFrom = from;
 		}
 		
 		@Override
@@ -152,6 +173,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 mSearch.addTextChangedListener(this);
 			 mMessageList = (ListView) findViewById(R.id.message_listview);
 			 mMessageList.setOnItemClickListener(this);
+			 if (mFrom == OpenFrom.OPEN_PRINT) {
+				 mMessageList.setOnItemLongClickListener(this);
+			}
+			
 			 
 			 mMessageList.setOnTouchListener(this);
 			 mMessageList.setOnScrollListener(this);
@@ -159,6 +184,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 
 			 mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
 			 mLoading = (ImageView) findViewById(R.id.loading_img);
+
+			mTitles.clear();
 			 loadMessages();
 			 
 			 setupViews();
@@ -178,7 +205,15 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public void onClick(View arg0) {
 			switch (arg0.getId()) {
 				case R.id.btn_ok_message_list:
-					
+					if (mMode) {
+						mTitles.clear();
+						Map<String, Boolean> selected = mFileAdapter.getSelected();
+						for (String key : selected.keySet()) {
+
+							Map<String, Object> item = mContent.get(Integer.parseInt(key));
+							mTitles.add((String) item.get("title"));
+						}
+					}
 					dismiss();
 					if (pListener != null) {
 						pListener.onClick();
@@ -208,10 +243,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			Map<String, Object> selected = mContent.get(position);
 			mFileAdapter.setSelected(position);
 			mFileAdapter.notifyDataSetChanged();
-			mTitle = (String) selected.get("title");
+			if (!mMode) {
+				mTitles.clear();
+				mTitles.add((String) selected.get("title"));
+			}
 			//addbylk
 		//	mMessageList.setAdapter(mFileAdapter);
-			mFileAdapter.notifyDataSetChanged();
 			/*
 			if(mVSelected == null)
 			{
@@ -226,8 +263,17 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			}*/
 			
 		}
-		
-		@SuppressWarnings("unchecked")
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+		Debug.d(TAG, "--->onItemLongClick: " + i);
+		mMode = true;
+		mFileAdapter.setMode(mMode);
+		mFileAdapter.notifyDataSetChanged();
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
 		public void loadMessages()
 		{
 			showLoading();
@@ -244,7 +290,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					Debug.d(TAG, "--->load message begin");
 					File rootpath = new File(tlkPath);
 					// File[] Tlks = rootpath.listFiles();
-					String[] Tlks = rootpath.list();
+					String[] Tlks = rootpath.list(new FilenameFilter() {
+						
+						@Override
+						public boolean accept(File arg0, String arg1) {
+							if (mFrom == OpenFrom.OPEN_EDIT && arg1.startsWith("Group-")) {
+								return false;
+							}
+							return true;
+						}
+					});
 					if (Tlks == null) {
 						return ;
 					}
@@ -255,6 +310,15 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 									{
 										int cp1 = 0;
 										int cp2 = 0;
+										if (((String)arg0).startsWith("Group-") || ((String)arg1).startsWith("Group-") ) {
+											if(((String)arg0).startsWith("Group-") && !((String)arg1).startsWith("Group-") ) {
+												return -1;
+											} else if(!((String)arg0).startsWith("Group-") && ((String)arg1).startsWith("Group-") ) {
+												return 1;
+											} else {
+												return 0;
+											}
+										}
 										try {
 									    	cp1 = Integer.parseInt((String) arg0);
 									    	cp2 = Integer.parseInt((String) arg1);
@@ -304,11 +368,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			mLoadingLy.setVisibility(View.GONE);
 		}
 		
-		public static String getSelected() {
-			if (mTitle == null) {
-				return "";
+		public static ArrayList<String> getSelected() {
+
+			if (mTitles == null) {
+				return new ArrayList<String>();
 			} else {
-				return mTitle;
+				return mTitles;
 			}
 		}
 
