@@ -354,7 +354,10 @@ public class DataTransferThread extends Thread {
 				mNeedUpdate = false;
 				
 				buffer = mDataTask.get(mIndex).getPrintBuffer();
-				
+				if (buffer == null) {
+					next();
+					continue;
+				}
 				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
 		
 				if(nDirection==1)
@@ -878,6 +881,11 @@ public class DataTransferThread extends Thread {
 	 */
 	public int getInkThreshold() {
 		int bold = 1;
+		if (mDataTask.size() == 0) {
+			return 0;
+		} else if (mIndex >= mDataTask.size()) {
+			mIndex = 0;
+		}
 		if (getDotCount(mDataTask.get(mIndex)) <= 0) {
 			return 1;
 		}

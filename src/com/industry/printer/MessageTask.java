@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Paint.FontMetrics;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -1362,18 +1363,25 @@ public class MessageTask {
 		}
 		Debug.d("XXX", "--->contents: " + contents);
 		String[] msgs = contents.split("\\^");
-		Bitmap bmp = Bitmap.createBitmap(msgs.length * 150, 100, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(msgs.length * 500, 100, Config.ARGB_8888);
+		
 		Canvas canvas = new Canvas(bmp);
 		canvas.drawColor(Color.WHITE);
 		int index = 0;
 		Paint paint = new Paint();
-		paint.setTextSize(50);
+		paint.setTextSize(40);
 		paint.setStrokeWidth(2);
 		paint.setFakeBoldText(true);
+		FontMetrics fm = paint.getFontMetrics();
+		int x = 0;
 		for (String msg : msgs) {
+			x += 50;
+			
+			int w = (int)paint.measureText(msg);
 			Debug.d("XXX", "--->msg: " + msg);
-			canvas.drawText(msg, index*200+20, 60, paint);
-			canvas.drawLine(200*(index+1), 20, 200*(index+1), 80, paint);
+			canvas.drawText(msg, x, 60, paint);
+			x += w + 50;
+			canvas.drawLine(x, 20, x, 80, paint);
 			index++;
 		}
 		BitmapWriter.saveBitmap(bmp, dir.getAbsolutePath(), "1.bmp");
@@ -1395,6 +1403,10 @@ public class MessageTask {
 			}
 			ArrayList<String> gl = new ArrayList<String>();
 			for (int i = 0; i < group.length; i++) {
+				File f = new File(ConfigPath.getTlkDir(group[i]));
+				if (!f.exists()) {
+					continue;
+				}
 				gl.add(group[i]);
 			}
 			return gl;

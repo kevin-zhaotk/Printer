@@ -324,11 +324,15 @@ public class MessageListAdater extends BaseAdapter {
 
 		Debug.d(TAG, "--->getview position= "+ position + "  -- selected=" + mSelected + "  MultiMode = " + mMultiMode);
 		if (mMultiMode) {
-			mHolder.mCheck.setVisibility(View.VISIBLE);
-			if (mMultiSelected.containsKey(String.valueOf(position))) {
-				mHolder.mCheck.setImageResource(R.drawable.checked);
+			if (title.startsWith("Group-")) {
+				mHolder.mCheck.setVisibility(View.GONE);
 			} else {
-				mHolder.mCheck.setImageResource(R.drawable.check_nor);
+				mHolder.mCheck.setVisibility(View.VISIBLE);
+				if (mMultiSelected.containsKey(String.valueOf(position))) {
+					mHolder.mCheck.setImageResource(R.drawable.checked);
+				} else {
+					mHolder.mCheck.setImageResource(R.drawable.check_nor);
+				}
 			}
 		} else {
 			if (position == mSelected) {

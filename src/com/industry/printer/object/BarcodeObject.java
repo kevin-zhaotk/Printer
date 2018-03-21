@@ -1,5 +1,6 @@
 package com.industry.printer.object;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -363,7 +364,11 @@ public class BarcodeObject extends BaseObject {
                 quietZone = quietZoneInt;
             }
         }
-
+        try {
+        	contents = new String(contents.getBytes("UTF-8"), "ISO-8859-1");
+        } catch (UnsupportedEncodingException e) {
+			Debug.d(TAG, "--->e: " + e.getMessage());
+		}
         QRCode code = Encoder.encode(contents, errorCorrectionLevel, hints);
         return renderResult(code, width, height, quietZone);
     }

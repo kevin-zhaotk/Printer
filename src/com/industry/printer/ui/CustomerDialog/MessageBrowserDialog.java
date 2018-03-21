@@ -209,9 +209,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 						mTitles.clear();
 						Map<String, Boolean> selected = mFileAdapter.getSelected();
 						for (String key : selected.keySet()) {
-
+							
 							Map<String, Object> item = mContent.get(Integer.parseInt(key));
-							mTitles.add((String) item.get("title"));
+							String title = (String) item.get("title");
+							if (title.startsWith("Group-")) {
+								continue;
+							}
+							mTitles.add(title);
 						}
 					}
 					dismiss();
@@ -246,6 +250,16 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			if (!mMode) {
 				mTitles.clear();
 				mTitles.add((String) selected.get("title"));
+			} else {
+				String title = (String) selected.get("title");
+				if (title == null || title.startsWith("Group-")) {
+					return;
+				}
+				if (mTitles.contains(title)) {
+					mTitles.remove(title);
+				} else {
+					mTitles.add(title);
+				}
 			}
 			//addbylk
 		//	mMessageList.setAdapter(mFileAdapter);
@@ -267,7 +281,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 		Debug.d(TAG, "--->onItemLongClick: " + i);
+		Map<String, Object> item = (Map<String, Object>) mFileAdapter.getItem(i);
+		
 		mMode = true;
+		mTitles.clear();
 		mFileAdapter.setMode(mMode);
 		mFileAdapter.notifyDataSetChanged();
 		return true;
