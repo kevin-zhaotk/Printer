@@ -1202,7 +1202,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mMsgTask == null) {
 			return;
 		}
-		int index = mDTransThread.getIndex();
+		int index = mDTransThread.index();
 		MessageTask task = mMsgTask.get(index);
 		for (BaseObject object : task.getObjects()) {
 			if (object instanceof CounterObject) {
@@ -1211,7 +1211,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 	}
 	private void updateCntIfNeed() {
-		int index = mDTransThread.getIndex();
+		int index = mDTransThread.index();
 		MessageTask task = mMsgTask.get(index);
 
 		for (BaseObject object : task.getObjects()) {

@@ -86,13 +86,13 @@
 	<string name="strInsertSerial">Prosím, připojte zařízení...</string>
 	<string name="strReinsertSerial">Chyba, prosím, připojte zařízení znovu</string>
 	<string-array name="strPrinterArray">
-	    <item>12.7 mm HP fast</item>
-	    <item>--</item>
-	    <item>25.4 mm HP dual</item>
-	    <item>16.3 mm Xaar head</item>
-	    <item>33 mm Xaar dual</item>
-	    <item>38.1 mm HP Triple</item>
-	    <item>50.8 mm HP quadruple</item>
+	    <item>12,7 mm HP hlava</item>
+	    <item>12,7 mm HP standardní</item>
+	    <item>25,4 mm HP duální</item>
+	    <item>16,3 mm Xaar hlava</item>
+	    <item>33 mm Xaar dvojitá</item>
+	    <item>38,1 mm HP trojitá</item>
+	    <item>50,8 mm HP čtverná</item>
 	    <item>7dot</item>
 	    <item>16dot</item>
 	    <item>--</item>

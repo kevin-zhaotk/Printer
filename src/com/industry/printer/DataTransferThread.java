@@ -101,9 +101,10 @@ public class DataTransferThread extends Thread {
 		char[] buffer;
 		long last = 0;
 		/*逻辑要求，必须先发数据*/
-		buffer = mDataTask.get(mIndex).getPrintBuffer();
+		int index = index();
+		buffer = mDataTask.get(index).getPrintBuffer();
 		Debug.d(TAG, "--->runing getBuffer ok");
-		int type = mDataTask.get(mIndex).getHeadType();
+		int type = mDataTask.get(index).getHeadType();
 		
 		
 			SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -353,7 +354,7 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				mNeedUpdate = false;
 				
-				buffer = mDataTask.get(mIndex).getPrintBuffer();
+				buffer = mDataTask.get(index()).getPrintBuffer();
 				if (buffer == null) {
 					next();
 					continue;
@@ -504,7 +505,7 @@ public class DataTransferThread extends Thread {
 				}
 				//addbylk_2_2/3_end↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//////////////////↑↑↑↑
 	
-				if (!mDataTask.get(mIndex).isReady) {
+				if (!mDataTask.get(index()).isReady) {
 					mRunning = false;
 					if (mCallback != null) {
 						mCallback.OnFinished(CODE_BARFILE_END);
@@ -530,7 +531,7 @@ public class DataTransferThread extends Thread {
 				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 				//在此处发生打印数据，同时
 
-				buffer = mDataTask.get(mIndex).getPrintBuffer();
+				buffer = mDataTask.get(index()).getPrintBuffer();
 				if (type == MessageType.MESSAGE_TYPE_HZK_16_8 ||  type == MessageType.MESSAGE_TYPE_HZK_16_16 || type == MessageType.MESSAGE_TYPE_9MM) {
 		
 				if(nDirection==1)
@@ -694,12 +695,15 @@ public class DataTransferThread extends Thread {
 		
 	}
 
-	private void next() {
+	private synchronized void next() {
 		mIndex++;
 		if (mIndex >= mDataTask.size()) {
 			mIndex = 0;
 		}
-
+	}
+	
+	public synchronized int index() {
+		return mIndex;
 	}
 	
 	public void purge(final Context context) {
@@ -829,13 +833,9 @@ public class DataTransferThread extends Thread {
 	}
 
 	public DataTask getCurData() {
-		return mDataTask.get(mIndex);
+		return mDataTask.get(index());
 	}
 
-	public int getIndex() {
-		return mIndex;
-	}
-																																																																																																																
 	public void setDotCount(List<MessageTask> messages) {
 		for (int i = 0; i < mDataTask.size(); i++) {
 			DataTask t = mDataTask.get(i);
@@ -881,12 +881,8 @@ public class DataTransferThread extends Thread {
 	 */
 	public int getInkThreshold() {
 		int bold = 1;
-		if (mDataTask.size() == 0) {
-			return 0;
-		} else if (mIndex >= mDataTask.size()) {
-			mIndex = 0;
-		}
-		if (getDotCount(mDataTask.get(mIndex)) <= 0) {
+		int index = index();
+		if (getDotCount(mDataTask.get(index)) <= 0) {
 			return 1;
 		}
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -895,7 +891,7 @@ public class DataTransferThread extends Thread {
 		} else {
 			bold = config.getParam(2)/150;
 		}
-		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount(mDataTask.get(mIndex)) * bold);
+		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount(mDataTask.get(index)) * bold);
 	}
 	
 	public int getHeads() {

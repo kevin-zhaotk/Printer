@@ -505,7 +505,11 @@ public class BaseObject{
 		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
-		canvas.drawText(content, 0, ctH-fm.descent, paint);
+		int adjust = (int)fm.descent;
+		if (adjust < 4) {
+			adjust = 4;
+		}
+		canvas.drawText(content, 0, ctH-adjust, paint);
 		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
 		
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
