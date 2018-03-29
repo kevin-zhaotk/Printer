@@ -784,6 +784,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 					src.put("dest", usbs.get(0) + arg0);
 				} else {
+					FileUtil.deleteFolder(usbs.get(0) + "/print.bin");
 					src.put("source", "/mnt/sdcard/print.bin");
 					src.put("dest", usbs.get(0) + "/print.bin");
 				}

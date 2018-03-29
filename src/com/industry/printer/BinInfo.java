@@ -14,6 +14,7 @@ import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
@@ -82,20 +83,17 @@ public class BinInfo {
 	public int mVarCount;
 	
 	public BinInfo(String file) {
-		this(file, 1);
+		this(file, null);
 		Debug.d(TAG, "===>binFile: " + file);
 	}
 	
-	public BinInfo(String file, int type, int varCount) {
+	public BinInfo(String file, MessageTask task, int varCount) {
 		mColumn = 0;
 		mVarCount = varCount;
 		mBufferBytes = null;
 		mBufferChars = null;
-		if (type <=0 || type > 4) {
-			mType = 1;
-		} else {
-			mType = type;
-		}
+		mTask = task;
+		mType = task != null ? task.getHeads() : 1;
 		/**读取文件头信息**/
 		
 		mFile = new File(file);
@@ -111,9 +109,9 @@ public class BinInfo {
 		}
 	}
 	
-	public BinInfo(String file, int type)
+	public BinInfo(String file, MessageTask task)
 	{
-		this(file, type, 10);
+		this(file, task, 10);
 	}
 	
 	public BinInfo(InputStream stream, int type) {
@@ -210,6 +208,25 @@ public class BinInfo {
 		}
 	}
 	
+	/**
+	 * extract real print buffer from 1.bin file
+	 * 1.bin is a 600dpi resolution based buffer, each kind of print-header should extract print buffer   
+	 */
+	private synchronized char[] extract() {
+		int hType = mTask == null ? MessageType.MESSAGE_TYPE_12_7_S : mTask.getHeadType();
+		if (hType == MessageType.MESSAGE_TYPE_12_7)	{
+    		char[] rBuffer = new char[mBufferChars.length/4];
+    		for (int j = 0; j < rBuffer.length; j++) {
+    			int curRow = j / mCharsPerHFeed;
+				rBuffer[j] = mBufferChars[4*curRow*mCharsPerHFeed + j%mCharsPerHFeed];
+			}
+    		Debug.d(TAG, "--->rBuffer.length: " + rBuffer.length);
+    		return rBuffer;
+    	} else {
+    		return mBufferChars;
+    	}
+		
+	}
 	public int getCharsPerColumn() {
 		return mCharsPerColumn;
 	}
@@ -253,15 +270,17 @@ public class BinInfo {
 			int feed = (mNeedFeed==true?mColumn*mType : 0);
 			mBufferBytes = new byte[mLength + feed];
 			mBufferChars = new char[(mLength + feed)/2];
-			if(mBufferBytes == null || mBufferChars == null)
+			if(mBufferBytes == null || mBufferChars == null) {
+				Debug.e(TAG, "--->null");
 				return null;
+			}
+				
 			// int bytesPer = mBytesPerColumn + (mNeedFeed==true? mType : 0);
 			/** 从当前位置读取mBytesPerH个字节到背景buffer中，由于需要处理多头情况，所以要注意在每个头的列尾要注意补偿问题（双字节对齐）*/
 			for(int i=0; i < mColumn; i++) {
 				for (int j = 0; j < mType; j++) {
 					mCacheStream.read(mBufferBytes, i*mBytesFeed + j*mBytesPerHFeed, mBytesPerH);
 				}
-				
 			}
 	    	//mFStream.close();
 			/* 如果是奇数列在每列最后添加一个byte */
@@ -270,12 +289,14 @@ public class BinInfo {
 	    	for(int i = 0; i < mBufferChars.length; i++) {
 	    		mBufferChars[i] = (char) (((char)(mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
 	    	}
+	    	// 根据喷头类型抽取实际的打印buffer
+	    	
 		} catch (Exception e) {
-			e.printStackTrace();
+			Debug.d(TAG, "--->e: " + e.getMessage());
 		} finally {
 			
 		}
-    	return mBufferChars; // bmp.createScaledBitmap(bmp, columns, 150, true);
+    	return extract(); // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     
     public synchronized char[] getVarBuffer(String var)
@@ -321,7 +342,7 @@ public class BinInfo {
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
-    	return mBufferChars;
+    	return extract();
     }
     
     /*班次變量特殊處理，生成v.bin時固定爲兩位有效位，如果shift的bit爲1，那前面補0，
@@ -357,7 +378,7 @@ public class BinInfo {
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
-    	return mBufferChars;
+    	return extract();
     }
     
     

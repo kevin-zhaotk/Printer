@@ -18,6 +18,7 @@ import com.industry.printer.Rfid.RfidTask;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
@@ -103,7 +104,7 @@ public class DataTransferThread extends Thread {
 		/*逻辑要求，必须先发数据*/
 		int index = index();
 		buffer = mDataTask.get(index).getPrintBuffer();
-		Debug.d(TAG, "--->runing getBuffer ok");
+		Debug.d(TAG, "--->runing getBuffer ok: " + buffer.length);
 		int type = mDataTask.get(index).getHeadType();
 		
 		
@@ -333,8 +334,9 @@ public class DataTransferThread extends Thread {
 			BinCreater.saveBin(path, buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
 		}
 		*/
+		FileUtil.deleteFolder("/mnt/sdcard/print.bin");
 		// save print.bin to /mnt/sdcard/ folder
-		// BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.getInfo().mBytesPerHFeed*8*mDataTask.getHeads());
+		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
 		
 		Debug.e(TAG, "--->write data");
 		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
@@ -820,7 +822,7 @@ public class DataTransferThread extends Thread {
 			DataTask data = new DataTask(mContext, t);
 			mDataTask.add(data);
 		}
-		Debug.d(TAG, "--->prepare buffer");
+		Debug.d(TAG, "--->prepare buffer: " + mDataTask.size());
 
 		for (DataTask tk : mDataTask) {
 			isBufferReady |= tk.prepareBackgroudBuffer();

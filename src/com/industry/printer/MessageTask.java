@@ -1184,7 +1184,7 @@ public class MessageTask {
 		switch (type) {
 		case MessageType.MESSAGE_TYPE_12_7:
 		case MessageType.MESSAGE_TYPE_12_7_S:
-			scale = 1f;
+			scale = 4f;
 			break;
 		case MessageType.MESSAGE_TYPE_25_4:
 			scale = 2f;
