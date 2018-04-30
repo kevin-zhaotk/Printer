@@ -341,6 +341,8 @@ public class TLKFileParser  extends TlkFile{
 			
 			obj.setHeight(StringUtil.parseInt(attr[5])/(2*mProportion)-StringUtil.parseInt(attr[3])/(2*mProportion));
 			obj.setDragable(Boolean.parseBoolean(attr[7]));
+			Debug.d(TAG, "--->attr[111] = " + attr[11]);
+			obj.setReverse(StringUtil.parseBool(attr[11]));
 			obj.setFont(attr[19]);
 			} catch (Exception e) {
 				Debug.d(TAG, "e: " + e.getCause());

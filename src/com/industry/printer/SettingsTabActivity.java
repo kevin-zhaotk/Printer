@@ -14,6 +14,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ReflectCaller;
+import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
@@ -21,6 +22,8 @@ import com.industry.printer.hardware.PWMAudio;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.SettingsListAdapter;
 import com.industry.printer.ui.CustomerDialog.CalendarDialog;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.PasswordDialog;
 
 import android.R.integer;
 import android.app.Fragment;
@@ -334,29 +337,20 @@ public static final String TAG="SettingsTabActivity";
 				mListView.smoothScrollBy(300, 2);
 				break;
 			case R.id.btn_setting_ok:
-				Debug.d(TAG, "===>onclick");
-				mAdapter.checkParams();
-				mAdapter.notifyDataSetChanged();
-				mSysconfig.saveConfig();
-				((MainActivity) getActivity()).onConfigChange();
-				// FpgaGpioOperation.updateSettings(mContext);
-				//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
-				// device.read();
-				// addbylk_1_1/30_begin ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-				if(mSysconfig.getParam(30)==7)//16*8点 
-				{				Debug.e(TAG, "111===>onclick");
-				   PlatformInfo.SetDotMatrixType(1);				   
-				}
-				else if(mSysconfig.getParam(30)==8)//16×16点 
-				{				Debug.e(TAG, "222===>onclick");
-				   PlatformInfo.SetDotMatrixType(2);
-				} 
-				else
-				{				Debug.i(TAG, "=333==>onclick");
-					  PlatformInfo.SetDotMatrixType(0);			
-				}
-				Debug.i(TAG, "===>onclick");;
-				//addbylk_1_1/30_end ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+				PasswordDialog pdialog = new PasswordDialog(mContext);
+				pdialog.setOnPositiveClickedListener(new OnPositiveListener() {
+
+					@Override
+					public void onClick() {
+						saveParam();
+					}
+
+					@Override
+					public void onClick(String content) {
+						saveParam();
+					}
+				});
+				pdialog.show();
 				break;
 			case R.id.btn_setting_cancel:
 				// mPHSettings.reloadSettings();
@@ -415,5 +409,29 @@ public static final String TAG="SettingsTabActivity";
 				break;
 		}
 		return false;
+	}
+	
+	private void saveParam() {
+		Debug.d(TAG, "===>onclick");
+		mAdapter.checkParams();
+		mAdapter.notifyDataSetChanged();
+		mSysconfig.saveConfig();
+		((MainActivity) getActivity()).onConfigChange();
+		// FpgaGpioOperation.updateSettings(mContext);
+		//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
+		// device.read();
+		if(mSysconfig.getParam(30)==7)
+		{				Debug.i(TAG, "111===>onclick");
+		   PlatformInfo.SetDotMatrixType(1);
+		   
+		}else if(mSysconfig.getHeads()==8)
+		{				Debug.i(TAG, "222===>onclick");
+		   PlatformInfo.SetDotMatrixType(2);
+		} 
+		else
+		{				Debug.i(TAG, "=333==>onclick");
+			  PlatformInfo.SetDotMatrixType(0);			
+		}
+		Debug.i(TAG, "===>onclick: " + mSysconfig.getParam(30));
 	}
 }

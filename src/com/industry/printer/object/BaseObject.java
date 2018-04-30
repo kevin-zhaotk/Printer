@@ -28,6 +28,7 @@ import com.industry.printer.data.DotMatrixReader;
 import com.industry.printer.data.InternalCodeCalculater;
 import com.industry.printer.object.data.BitmapWriter;
 
+import android.R.bool;
 import android.R.color;
 import android.R.integer;
 import android.content.Context;
@@ -102,6 +103,8 @@ public class BaseObject{
 	public int mDotsPerClm;
 	/*内容来源 是否U盤*/
 	public boolean mSource;
+	
+	protected boolean mReverse;
 	/* 
 	 * 是否需要重新绘制bitmap 
 	 * 需要重新绘制bitmap的几种情况：1、宽高变化；2、字体修改； 3，内容变化
@@ -144,6 +147,7 @@ public class BaseObject{
 		mDragable = true;
 		isNeedRedraw = true;
 		mSource = false;
+		mReverse = false;
 		// 參數40：列高
 		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		mFont = DEFAULT_FONT;
@@ -251,163 +255,13 @@ public class BaseObject{
 		mBitmapSelected = draw();
 	}
 	
-	
-	
-	/*
-	private Bitmap draw() {
-		Bitmap bitmap;
-		Paint paint = new Paint();
-		mPaint.setTextSize(152); // (getfeed());
-		mPaint.setAntiAlias(true); //去除锯齿  
-		mPaint.setFilterBitmap(true); //对位图进行滤波处理
-//		try {
-	//		AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
-		//	if (fd != null) {
-			//	fd.close();
-			//} else {
-			//	mFont = DEFAULT_FONT;
-		//	}
-		//} catch (Exception e) {
-		//	mFont = DEFAULT_FONT;
-	//	}
-		
-	//	String f = "fonts/"+mFont+".ttf";
-		//if (!new File("file://android_assets/" + f).exists()) {
-		//	mFont = DEFAULT_FONT;
-	//	}
-		boolean isCorrect = false;
-		// Debug.d(TAG,"--->getBitmap font = " + mFont);
-		for (String font : mFonts) {
-			if (font.equals(mFont)) {
-				isCorrect = true;
-				break;
-			}
-		}
-		if (!isCorrect) {
-			mFont = DEFAULT_FONT;
-		}
-		try {
-			paint.setTextSize(mHeight);
-			paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-			mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-		} catch (Exception e) {}
-		
-		int width = (int)mPaint.measureText(getContent());
-		int rWidth = (int)paint.measureText(getContent());
-		if (width <= 0) {
-			width = 10;
-		}
-		if (rWidth <= 0) {
-			rWidth = 10;
-		}
-		
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width + "  rWidth = " + rWidth);
-		if (mWidth == 0) {
-			setWidth(rWidth);
-		}
-		
-		
-		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+ mWidth +", mHeight="+mHeight);
-		mCan = new Canvas(bitmap);
-		FontMetrics fm = mPaint.getFontMetrics();
-		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
-        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
-		mCan.drawText(mContent, 0, 152 - fm.descent, mPaint);
-//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
-//			setWidth(width * 1.25f);
-//		}
-		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	public void setReverse(boolean reverse) {
+		Debug.d(TAG, "--->setReverse: " + reverse);
+		mReverse = reverse;
 	}
 	
-	*/
-	
-    public static int getTextWidth(Paint paint, String str) {  
-        int iRet = 0;  
-        if (str != null && str.length() > 0) {  
-            int len = str.length();  
-            float[] widths = new float[len];  
-            paint.getTextWidths(str, widths);  
-            for (int j = 0; j < len; j++) {  
-                iRet += (int) Math.ceil(widths[j]);  
-            }  
-        }  
-        return iRet;  
-    } 
-	private Bitmap draw2() {
-		Bitmap bitmap;
-		Paint paint = new Paint();
-		mPaint.setTextSize(152); // (getfeed());
-		mPaint.setAntiAlias(true); //去除锯齿  
-		mPaint.setFilterBitmap(true); //对位图进行滤波处理
-		/*try {
-			AssetFileDescriptor fd = mContext.getAssets().openFd("fonts/"+mFont+".ttf");
-			if (fd != null) {
-				fd.close();
-			} else {
-				mFont = DEFAULT_FONT;
-			}
-		} catch (Exception e) {
-			mFont = DEFAULT_FONT;
-		}*/
-		/*String f = "fonts/"+mFont+".ttf";
-		if (!new File("file://android_assets/" + f).exists()) {
-			mFont = DEFAULT_FONT;
-		}*/
-		boolean isCorrect = false;
-		Debug.d(TAG,"--->getBitmap font = " + mFont);
-		for (String font : mFonts) {
-			if (font.equals(mFont)) {
-				isCorrect = true;
-				break;
-			}
-		}
-		if (!isCorrect) {
-			mFont = DEFAULT_FONT;
-		}
-		Debug.d(TAG,"--->getBitmap font = " + mFont);
-
-		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk xxx/30
-		{	
-				try {
-				mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
-			} catch (Exception e) {}
-			
-		}else
-		{
-			try {
-				paint.setTextSize(mHeight);
-				paint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-				mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
-			} catch (Exception e) {}		
-		}
-		
-		int width = (int)mPaint.measureText(getContent());
-		int rWidth = (int)paint.measureText(getContent());
-		if (width <= 0) {
-			width = 10;
-		}
-		if (rWidth <= 0) {
-			rWidth = 10;
-		}
-		
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width + "  rWidth = " + rWidth);
-		if (mWidth == 0) {
-			setWidth(rWidth);
-		}
-		
-		
-		bitmap = Bitmap.createBitmap(width , 152, Bitmap.Config.ARGB_8888);
-		Debug.e(TAG,"==.ttf--->getBitmap width="+ mWidth +", mHeight="+mHeight);
-		mCan = new Canvas(bitmap);
-		FontMetrics fm = mPaint.getFontMetrics();
-		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
-        // float tY = (y - getFontHeight(p))/2+getFontLeading(p);
-		mCan.drawText(mContent, 0, 152 - fm.descent, mPaint);
-//		if (mHeight <= 4 * MessageObject.PIXELS_PER_MM) {
-//			setWidth(width * 1.25f);
-//		}
-		return bitmap;//Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);
+	public boolean getReverse() {
+		return mReverse;
 	}
 	
 	private Bitmap draw() {
@@ -441,7 +295,7 @@ public class BaseObject{
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "fonts/"+mFont+".ttf"));
+			mPaint.setTypeface(FontCache.getFromExternal(mFont+".ttf"));
 		} catch (Exception e) {}
 
 		int width = (int)mPaint.measureText(getContent());
@@ -497,7 +351,7 @@ public class BaseObject{
 		boolean isCorrect = false;
 		
 		try {
-			paint.setTypeface(FontCache.get(ctx, "fonts/"+font+".ttf"));
+			paint.setTypeface(FontCache.getFromExternal(font + ".ttf"));
 		} catch (Exception e) {
 			
 		}
@@ -523,7 +377,7 @@ public class BaseObject{
 	{
 		//mPaint.setColor(Color.RED);
 		//Debug.d(TAG,"getBitmap mContent="+mContent);
-		mPaint.setTypeface(FontCache.get(context, "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
@@ -553,7 +407,7 @@ public class BaseObject{
 		paint.setFilterBitmap(true); //对位图进行滤波处理
 		
 		try {
-			paint.setTypeface(FontCache.get(ctx, "fonts/"+mFont+".ttf"));
+			paint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {
 			
 		}
@@ -730,22 +584,17 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		BinFromBitmap.recyleBitmap(bg);
 	}
-	//addbylk_6_24/30_begin
-	public void generateVarbinFromMatrix(String f,float height,float width) {
+	
+	public void generateVarbinFromMatrix(String f) {
 		BinFileMaker maker = new BinFileMaker(mContext);
-		maker.extract("0123456789",height,width);
+		maker.extract("0123456789");
 		maker.save(f + getVarBinFileName());
 	}
-	// addbylk_6_24/30_end
+	
 	
 	public Canvas getCanvas()
 	{
 		return mCan;
-	}
-	public void setHeight(String size)
-	{
-		float height = mTask.getMsgObject().getPixels(size);
-		setHeight(height);
 	}
 	
 	public void setHeight(float size)
@@ -775,6 +624,12 @@ public class BaseObject{
 //			width = width * 1.25f;
 //		}
 		setWidth(width);
+	}
+	
+	public void setHeight(String size)
+	{
+		float height = mTask.getMsgObject().getPixels(size);
+		setHeight(height);
 	}
 	
 	public String getDisplayHeight() {
@@ -885,7 +740,7 @@ public class BaseObject{
 			return;
 		mFont = font;
 		try {
-		mPaint.setTypeface(FontCache.get(mContext, "fonts/"+mFont+".ttf"));
+		mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);
@@ -1073,7 +928,7 @@ public class BaseObject{
 		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
 		{
 			Debug.e(TAG, " =====1mHeight = "  );			
-			return (int)(mHeight/10 * 11);
+			return (int)(mHeight);
 
 		}
 		else 

@@ -63,6 +63,7 @@
     <string name="strWidth">Genişlik</string>
     <string name="strHigh">Yükseklik</string>
     <string name="strHightype">Stepwise</string>
+    <string name="strReverse">Reverse</string>
     <string name="strXcor">X-Cor</string>
     <string name="strYcor">Y-Cor</string>
     <string name="strCnt">İçerik</string>
@@ -94,7 +95,7 @@
 
     <string-array name="strPrinterArray">
         <item>12.7 mm HP head</item>
-        <item>--</item>
+        <item>12.7 mm HP standard</item>
         <item>25.4 mm HP dual</item>
         <item>16.3 mm Xaar head</item>
         <item>33 mm Xaar dual</item>
@@ -723,4 +724,7 @@
 	
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	
+	<string name="password_title">Please Enter Password</string>
+	
 </resources>

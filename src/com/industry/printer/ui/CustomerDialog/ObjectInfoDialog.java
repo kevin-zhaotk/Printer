@@ -7,14 +7,12 @@ import com.google.zxing.ChecksumException;
 import com.google.zxing.common.StringUtils;
 import com.google.zxing.maxicode.MaxiCodeReader;
 import com.industry.printer.R;
-import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.R.array;
 import com.industry.printer.R.id;
 import com.industry.printer.R.layout;
 import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
-import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
@@ -52,7 +50,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
@@ -71,12 +68,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.industry.printer.MessageTask.MessageType;
-
-public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, TextWatcher, OnTouchListener, IOnItemClickListener, OnCheckedChangeListener {
-	
-	
-	
+public class ObjectInfoDialog extends Dialog implements android.view.View.OnClickListener, IOnItemClickListener, OnCheckedChangeListener
+	, OnTouchListener, TextWatcher {
 	
 	public static final String TAG="ObjectInfoDialog";
 	public OnPositiveBtnListener mPListener;
@@ -136,12 +129,12 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	private ScrollView mScroll;
 	public TextView mLineType;
 	private EditText mTextsize;
+	private CheckBox mReverse;
+
 	
 	public EditText mMsg;
 	public CheckBox mMsgResolution;
 	public TextView mPrinter;
-	
-	public EditText m_MM ; 
 	/*
 	 * 
 	 */
@@ -176,27 +169,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				Bundle d = msg.getData();
 				String size = d.getString("height");
 				mHighEdit.setText(size);
-				 // addbylk_1_17/30_begin
-				String font1 ="4";				
-				if(size.compareTo("16")==0 )//addbylk
-				{ Debug.e(TAG, "===11= " + size);	
-				//	Bundle data = msg.getData();
-					 font1 = "7";
-					mFont.setText(font1);	
-					mHeight_O.setText(String.valueOf(152.0f));		
-				}
-				if(size.compareTo("7")==0  )
-				{ Debug.e(TAG, "====22 " + size);	
-				//	Bundle data = msg.getData();
-					  font1 = "4";
-					mFont.setText(font1);
-					mHeight_O.setText(String.valueOf(76.0f));	
-				}	
-				TextView view = mSpiner.getAttachedView();
-				if (view == mFont) {
-				view.setText(font1);
-				}
-				 // addbylk_1_17/30_end			
 				break;
 			}
 		}
@@ -281,7 +253,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 //	 	mWidthView 	= (TextView) findViewById(R.id.widthView);
 //	 	mWidthUnit 	= (TextView) findViewById(R.id.widthUnitView);
 //	 	mHighView 		= (TextView) findViewById(R.id.highView);
-	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
+//	 	mHighUnit 		= (TextView) findViewById(R.id.highUnitView);
 //	 	mCntView 		= (TextView) findViewById(R.id.cntView);
 //	 	mFontView 		= (TextView) findViewById(R.id.fontView);
 //	 	mRtfmtView 	= (TextView) findViewById(R.id.rtFmtView);
@@ -303,39 +275,14 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		    mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 		    mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 		    mContent = (EditText)findViewById(R.id.cntEdit);
-		  ///  mContent.setHorizontallyScrolling(true); 
-		    
-		    mContent.setOnKeyListener(new View.OnKeyListener() 
-		    {		
-				@Override
-				//屏蔽输入回车符 
-				 // addbylk_1_18/30_begin
-				public boolean onKey(View arg0, int arg1, KeyEvent arg2) 
-				{
-					Debug.e(TAG, "----------------->unknow view"+ arg1 );
-					Debug.e(TAG, "----------------->unknow view"+ arg2  );
-					Debug.e(TAG, "----------------->unknow view"+ KeyEvent.KEYCODE_NUMPAD_ENTER );
-					Debug.e(TAG, "----------------->unknow view"+ KeyEvent.KEYCODE_ENTER );			
-					Debug.e(TAG, "----------------->unknow view"+ arg2.getKeyCode() );								 				
-					// TODO Auto-generated method stub
-					if(arg2.getKeyCode()==KeyEvent.KEYCODE_ENTER  )
-					{	
-						arg1=0;
-						Debug.e(TAG, "-=====-->unknow view OK" );
-						return true;
-						
-					}
-					return false;
-				}
-				 // addbylk_1_18/30_end
-			});
- 		    
 		    mFont = (TextView) findViewById(R.id.fontSpin);
 		    mFont.setOnClickListener(this);
 		    mHeightType = (CheckBox) findViewById(R.id.height_type);
 		    mHeightType.setOnCheckedChangeListener(this);
 		    mHeight_O = (EditText) findViewById(R.id.highEdit_o);
-		     
+		    mReverse = (CheckBox) findViewById(R.id.reverse_cb);
+		    mReverse.setOnCheckedChangeListener(this);
+		    
 		    if (mObject instanceof RealtimeObject) {
 		    	mRtFormat = (TextView) findViewById(R.id.rtFormat);
 			    mRtFormat.setOnClickListener(this);
@@ -487,7 +434,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						
 						String font = mFont.getText().toString();
 						mObject.setFont(font);
-						
+						mObject.setReverse(mReverse.isChecked());
 						Debug.d(TAG, "--->redraw: " + mObject.isNeedDraw());
 						//mObjRefreshHandler.sendEmptyMessage(0);
 					}catch(NumberFormatException e)
@@ -555,7 +502,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mXcorEdit.setText(String.valueOf((int)mObject.getX()*2));
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
-				
+				mReverse.setChecked(mObject.getReverse());
 				mFont.setText(mObject.getFont());
 				if(mObject instanceof RealtimeObject)
 				{
@@ -624,21 +571,6 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			Debug.d(TAG, ">>>>>disable content");
 			mContent.setEnabled(false);
 		}
-		// addbylk_1_4/30_begin
-		if (PlatformInfo.isBufferFromDotMatrix()!=0)  
-		{	
-			float alpha =0.2f;			
-			mFont.setEnabled(false); 
-			mFont.setAlpha(alpha);		
-			mHeight_O.setEnabled(false);		
-			mHeight_O.setAlpha(alpha);		
-			mHighUnit.setText("dot");		
-		}
-		else
-		{
-			mHighUnit.setText("mm");
-		}
-		// addbylk_1_4/30_end	
 		
 	}
 	 
@@ -855,6 +787,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			}
 		} else if (view == mMsgResolution) {
 			//if ()
+		} else if (view == mReverse) {
 		}
 	}
 

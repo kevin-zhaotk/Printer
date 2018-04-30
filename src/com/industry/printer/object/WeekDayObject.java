@@ -63,7 +63,7 @@ public class WeekDayObject extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			Paint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
+			Paint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)Paint.measureText("D");

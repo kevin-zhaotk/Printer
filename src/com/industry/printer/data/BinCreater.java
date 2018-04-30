@@ -18,9 +18,6 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.widget.Toast;
 
-
-// addbylk_1_24/30_begin
-
 public class BinCreater {
 	
 	public static final String TAG="BinCreater";
@@ -48,15 +45,10 @@ public class BinCreater {
 		return 0;
 	}
 	
-	public int extract(String text,float height,float width) {
+	public int extract(String text) {
 		Debug.e(TAG, "--->please Override this Method in Child class");
 		return 0;
 	}
-	
-	public int getmatrixlen(String text,float height,float width) {
-		Debug.e(TAG, "--->please Override this Method in Child class");
-		return 0;
-	}	
     /*
      * height - pixes per column
      */
@@ -79,7 +71,7 @@ public class BinCreater {
     
     public static void saveBitmap(Bitmap bmp, String picName)
     {
-    	File f = new File(Configs.USB_ROOT_PATH, picName);
+    	File f = new File(Configs.CONFIG_PATH_FLASH, picName);
     	//File f = new File("/storage/external_storage/sda1", picName);
     	if(f.exists())
     	{
@@ -278,55 +270,6 @@ public class BinCreater {
 		}
     	return true;
     }
-
-    /**
-     * 保存bin文件
-     * @param f bin文件存放路径
-     * @param dots 点阵buffer
-     * @param single bin文件单列高度，单位bit
-     * @return 保存成功返回true，保存失败返回false
-     */
-    public static boolean saveBin(String f, byte[] dots,int dotslen, int single) {
-    	int bytesPerCol = 0;
-    	bytesPerCol = single%8==0? single/8 : (single/8+1);
-    	int columns = dotslen/bytesPerCol;
-    	Debug.d(TAG, "--->saveBin columns:" + columns);
-    	try {
-    		
-    		File file = new File(f);
-    		Debug.d(TAG, "--->saveBin f:" + file.getAbsoluteFile());
-    		if (!file.exists() && !file.createNewFile()) {
-				Debug.d(TAG, "===>error: create bin file failed");
-				return false;
-			}
-			FileOutputStream stream = new FileOutputStream(file);
-			byte head[]=new byte[16];
-	    	head[2] = (byte) (columns & 0x0ff);
-	    	head[1] = (byte) ((columns>>8) & 0x0ff);
-	    	head[0] = (byte) ((columns>>16) & 0x0ff);
-	    	
-	    	/*save width of single element*/
-	    	head[5] = (byte) (single & 0x0ff);
-	    	head[4] = (byte) ((single>>8) & 0x0ff);
-	    	head[3] = (byte) ((single>>16) & 0x0ff);
-	    	stream.write(head);
-			stream.write(dots);
-			stream.flush();
-			stream.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
-			return false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Debug.d(TAG, "===>saveBin err:"+e.getMessage());
-			return false;
-		}
-    	return true;
-    }
-    
-    
-    
     
     /**
      * 保存bin文件
@@ -419,4 +362,3 @@ public class BinCreater {
     	return true;
     }
 }
-//addbylk_1_24/30_end

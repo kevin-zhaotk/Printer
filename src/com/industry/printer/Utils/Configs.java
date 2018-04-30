@@ -159,6 +159,10 @@ public class Configs {
 	 */
 	public static  final String TLK_PATH_FLASH = CONFIG_PATH_FLASH + "/MSG";
 	
+	public static final String FONT_DIR = CONFIG_PATH_FLASH + "/fonts";
+	
+	public static final String FONT_ZIP_FILE = "Well.Ftt";
+	
 	public static SystemConfigFile mSysconfig;
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 

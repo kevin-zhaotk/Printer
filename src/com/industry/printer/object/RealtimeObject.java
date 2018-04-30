@@ -375,19 +375,18 @@ public class RealtimeObject extends BaseObject {
 		return mContent;
 	}
 	
-	//addbylk_1_25/30_begin
 	
-	@Override 
-	public void generateVarbinFromMatrix(String f,float height,float width) {
+	@Override
+	public void generateVarbinFromMatrix(String f) {
 		for (BaseObject object : getSubObjs()) {
 			if (object.mId.equals(BaseObject.OBJECT_TYPE_TEXT)) {
 				continue;
 			}
-			object.generateVarbinFromMatrix(f,height,width);
+			object.generateVarbinFromMatrix(f);
 			
 		}
 	}
-	//addbylk_1_25/30_end	
+	
 	/**
 	 * 设置当前object所在的Task
 	 * @param task

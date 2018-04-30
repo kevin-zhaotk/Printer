@@ -3,12 +3,9 @@ package com.industry.printer.object;
 import android.content.Context;
 
 import com.industry.printer.MessageTask.MessageType;
-import com.industry.printer.MessageTask;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
-
-import android.content.Context;
 
 public class MessageObject extends BaseObject {
 
@@ -22,8 +19,7 @@ public class MessageObject extends BaseObject {
 	public static final float[] mBaseList_16 = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 
 											7, 7.5f, 8, 8.5f, 9, 9.5f, 10, 10.5f, 11, 11.5f, 12, 12.5f, 
 											13, 13.5f, 14, 14.5f, 15, 15.5f, 16, 16.3f};
-	public static final float[] mBaseList_16_8 = {7};
-	public static final float[] mBaseList_16_10 = {7, 16 };
+	
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -157,19 +153,11 @@ public class MessageObject extends BaseObject {
 			for (int i = 0; i < size.length; i++) {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
-		 //addbylk_1_14/30_begin
-		} else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 ) {
-			size = new String[mBaseList_16_8.length];
-			for (int i = 0; i < size.length; i++) {
-				size[i] =  String.valueOf((int)mBaseList_16_8[i]); 
-			}			 		 
-		 		
+
+		} else  if ( mType == MessageType.MESSAGE_TYPE_HZK_32_32 ) {
+				
 		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 ) {
-			size = new String[mBaseList_16_10.length];
-			for (int i = 0; i < size.length; i++) {
-			size[i] = String.valueOf((int)mBaseList_16_10[i]); 
-			}		
-		 //addbylk_1_14/30_end	
+					
 		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
 			// size = new String[mBaseList_16.length];
 			for (int i = 0; i < size.length; i++) {
@@ -199,21 +187,17 @@ public class MessageObject extends BaseObject {
 			return h/4;
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			return h*12.7f/16.3f;
-		}		 // addbylk_1_15/30_begin
+		}
 		else if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 喷头类型  
 		{
 			if( h==7)
-			{		Debug.e(TAG, "===========h==7   //强制 76 "  );
-				return 6.33333333333f;//152/12/2;	 //强制 76			
+			{				
 			}
 			else
-			{	Debug.e(TAG, "===========h==7   //强制 152 "  );
-				return 12.66666666f;///152/12/;  //强制 152
+			{	
 			}
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 )//addbylk
+		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_32_32 )//addbylk
 		{
-			Debug.e(TAG, "=====MESSAGE_TYPE_HZK_16_8 //强制 76	 "  );
-			return 6.33333333333f;//152/12/2;	      //强制 76			
 		 // addbylk_1_15/30_end
 		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
 			return h;
@@ -260,22 +244,6 @@ public class MessageObject extends BaseObject {
 				break;
 			}
 		}
-		 // addbylk_1_16/30_begin
-		if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 喷头类型 
-		{		Debug.e(TAG, "====--->size: " + size);
-			if( size==76.0)
-			{
-				return "7"; 	
-			}
-			else
-			{
-				return "16"; 
-			}
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_8 ) 
-		{
-			 return "7"; 			
-		}			
-		 // addbylk_1_16/30_end
 		return String.valueOf(h);
 	}
 }

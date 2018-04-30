@@ -1,5 +1,7 @@
 package com.industry.printer.ui.CustomerDialog;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,9 @@ import java.util.Map;
 import java.util.jar.Attributes.Name;
 
 import com.industry.printer.R;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.cache.FontCache;
 
 import android.app.Dialog;
@@ -30,6 +34,7 @@ import android.widget.TextView;
 
 public class FontSelectDialog extends Dialog implements android.view.View.OnClickListener, OnItemClickListener {
 
+	private static final String TAG = FontSelectDialog.class.getSimpleName(); 
 	private Context mContext;
 	private GridView mFontlist;
 	private FontItemAdapter mAdapter;
@@ -83,15 +88,16 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		}
 		
 		private void init() {
-			String[] name = mContext.getResources().getStringArray(R.array.strFontArray);
-			String[] tips = mContext.getResources().getStringArray(R.array.strFontTipsArray);
+			// String[] name = mContext.getResources().getStringArray(R.array.strFontArray);
+			// String[] tips = mContext.getResources().getStringArray(R.array.strFontTipsArray);
+			String[] name = loadFonts();
 			
 			mFonts = new ArrayList<Map<String,String>>();
 			for (int i = 0; i < name.length; i++) {
 				Map f = new HashMap<String, String>();
 				f.put(FONT_NAME, name[i]);
-				f.put(FONT_TIPS, tips[i]);
-				Debug.d("XXX", "--->title: " + name[i] + " -- tips: " + tips[i]);
+				f.put(FONT_TIPS, name[i] + " font");
+				Debug.d("XXX", "--->title: " + name[i]);
 				mFonts.add(f);
 			}
 		}
@@ -132,8 +138,8 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 			}
 			String font = mFonts.get(position).get(FONT_NAME);
 			mHolder.mText.setText(font);
-			
-			Typeface tf = FontCache.get(mContext, "fonts/" + font + ".ttf");
+			Debug.d(TAG, "--->font: " + font);
+			Typeface tf = FontCache.getFromExternal(font + ".ttf");
 			mHolder.mTips.setTypeface(tf);
 			mHolder.mTips.setText(mFonts.get(position).get(FONT_TIPS));
 			mHolder.mText.setSelected(position == this.position);
@@ -174,4 +180,26 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 	}
 
 	
+	
+	private String[] loadFonts() {
+		File dir = new File(Configs.FONT_DIR);
+		File[] fonts = dir.listFiles(new FileFilter() {
+			
+			@Override
+			public boolean accept(File arg0) {
+				if (arg0.getAbsolutePath().endsWith(".ttf")) {
+					return true;
+				}
+				return false;
+			}
+		});
+		if (fonts == null || fonts.length <= 0) {
+			return null;
+		}
+		String[] fontName = new String[fonts.length];
+		for (int i = 0; i < fontName.length; i++) {
+			fontName[i] = FileUtil.getFileNameNoEx(fonts[i].getName());
+		}
+		return fontName;
+	}
 }

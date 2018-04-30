@@ -1,7 +1,10 @@
 package com.industry.printer;
 
+import java.io.File;
+
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 
@@ -14,6 +17,7 @@ import android.view.Window;
 
 public class WelcomeActivity extends Activity {
 	
+	private static final String TAG = WelcomeActivity.class.getSimpleName(); 
 	private Context mContext;
 	
 	@SuppressWarnings("deprecation")
@@ -27,6 +31,7 @@ public class WelcomeActivity extends Activity {
 		Configs.initConfigs(mContext);
 		
 		if (!upgrade()) {
+			asyncInit();
 			Intent intent = new Intent();
 			intent.setClass(this, MainActivity.class);
 			startActivity(intent);
@@ -51,5 +56,19 @@ public class WelcomeActivity extends Activity {
 			return installer.silentUpgrade();
 		}
 		return false;
+	}
+	
+	private void asyncInit() {
+		// copy font to /mnt/sdcard directory
+		File font = new File(Configs.FONT_DIR);
+		if (!font.exists()) {
+			font.mkdirs();
+		}
+		
+		File[] subFiles = font.listFiles();
+		Debug.d(TAG, "--->asyncInit  font.length= " + subFiles.length);
+		if (subFiles.length <= 0) {
+			FileUtil.releaseAssets(this, "fonts", Configs.CONFIG_PATH_FLASH);
+		}
 	}
 }

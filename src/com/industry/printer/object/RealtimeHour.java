@@ -54,7 +54,7 @@ public class RealtimeHour extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(FontCache.get(mContext, "fonts/" + mFont + ".ttf"));
+			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 

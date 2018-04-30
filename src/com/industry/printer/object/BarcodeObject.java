@@ -214,7 +214,7 @@ public class BarcodeObject extends BaseObject {
 	
 	@Override
 	public Bitmap getpreviewbmp() {
-		return mBitmap;
+		return Bitmap.createScaledBitmap(mBitmap, (int) mWidth, (int) mHeight, false);
 	}
 
 	@Override
@@ -240,9 +240,9 @@ public class BarcodeObject extends BaseObject {
 				{
 					if (matrix.get(x, y)) 
 					{
-						pixels[y * width + x] = 0xff000000;
+						pixels[y * width + x] = mReverse ? 0xffffffff : 0xff000000;
 					} else {
-						pixels[y * width + x] = 0xffffffff;
+						pixels[y * width + x] = mReverse ? 0xff000000 : 0xffffffff;
 					}
 				}
 			}
@@ -420,7 +420,6 @@ public class BarcodeObject extends BaseObject {
                 }
             }
         }
-
         return output;
     }
 	
@@ -730,7 +729,11 @@ public class BarcodeObject extends BaseObject {
 				.append("^")
 				.append(BaseObject.boolToFormatString(mDragable, 3))
 				.append("^")
-				.append("000^000^000^000^000^")
+				.append("000^000^000^")
+				.append(BaseObject.boolToFormatString(mReverse, 3))
+				.append("^")
+				.append("000")
+				.append("^")
 				.append(BaseObject.boolToFormatString(mSource, 8))
 				.append("^")
 				.append("00000000^00000000^00000000^00000000^00000000^00000000^00000000^")

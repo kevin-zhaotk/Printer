@@ -1,38 +1,29 @@
 package com.industry.printer;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.Paint.FontMetrics;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-//addbylk_1_25/30_begin
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-//addbylk_1_25/30_end
 import com.industry.printer.FileFormat.TlkFileWriter;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinFileMaker;
@@ -276,16 +267,12 @@ public class MessageTask {
 					|| (object instanceof WeekOfYearObject)
 					|| (object instanceof WeekDayObject))
 			{
-					// addbylk_1_9/30_begin
-					if(PlatformInfo.isBufferFromDotMatrix()!=0) {
-						
-						object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),object.mHeight,object.mWidth);
-						Debug.e(TAG, ConfigPath.getTlkDir(mName)   );						
-					} else {
-						Debug.e(TAG, "===mDots += object.drawVarBitmap()     "  );	
-						mDots += object.drawVarBitmap();
-					}
-					// addbylk_1_9/30_end
+				if(PlatformInfo.isBufferFromDotMatrix()==1) {
+					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
+				} else {
+					// mDots += object.drawVarBitmap();
+					mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
+				}
 			} else if ((object instanceof LetterHourObject)) {
 				mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
 			} else if (object instanceof BarcodeObject && object.getSource() == true) {
@@ -306,7 +293,7 @@ public class MessageTask {
 	}
 	
 	public void saveBin() {
-		if (PlatformInfo.isBufferFromDotMatrix()!=0) {
+		if (PlatformInfo.isBufferFromDotMatrix()==1) {
 			saveBinDotMatrix();
 		} else {
 			// saveObjectBin();
@@ -436,279 +423,7 @@ public class MessageTask {
 		
 		return ;
 	}
-		/** addbylk_1_001_begin
-	 * 从16*16的点阵字库中提取点阵，生成打印buffer 
-	 *  变量用“3”填充 
-	 * @param f
-	 */
-	private void saveBinDotMatrix() {
-		if(mObjects==null || mObjects.size() <= 0)
-			return ;
-		
-		String content="";
-		float  height=0;
-		float  width=0;
-		byte [] g_1binbits=null;
-		int     g_1bincol_from_tlk=0;
-		// 生成bin文件
-		BinFileMaker maker = new BinFileMaker(mContext);
-		
-	 
-		int leftwidthall =0;
-		float fleftwidthall=0;
-		for(BaseObject o:mObjects)
-		{
-			if (o instanceof MessageObject) {
-				continue;
-			} 		
-
-			fleftwidthall = (fleftwidthall > o.getXEnd() ? fleftwidthall : o.getXEnd());//得到 最大 宽度 项目  作为 整体 宽度 
-			Debug.e(TAG, "1===== leftwidth"+leftwidthall  +"o.getXEnd"+  o.getXEnd() );	
-				
-		}
-
-		 leftwidthall=(int)( (fleftwidthall)/9.5+0.5 );		
-		leftwidthall= leftwidthall<16?16:leftwidthall; //总宽度  不少于 一个 字符 				
-		leftwidthall+=6;	//尾部 多加  16+3列 		
-		Debug.e(TAG, "===== leftwidth"+leftwidthall   );	
-		
-		 g_1binbits  =new byte [4* (leftwidthall) ]; //32高4字节 ×宽 
-		 
-	//	int  leftwidth =2; 
-		int leftmov=1; 
-		for(BaseObject o:mObjects)
-		{
-			if((o instanceof MessageObject)	)
-			{
-				continue;
-			}
-			
-
-			 if(o instanceof RealtimeObject)
-			{
-			//	Bitmap t = ((RealtimeObject)o).getBgBitmapN(mContext,N);
-			//	can.drawBitmap(t, o.getX(), o.getY(), p);
-			//	BinFromBitmap.recyleBitmap(t);
-				       //  9999-99-99
-
-				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-							
-				Debug.e(TAG, " ======000000000000000"   );
-				String substr=null;
-				char[] var;		
-				Vector<BaseObject> rt = ((RealtimeObject) o).getSubObjs();
-				
-				for(BaseObject rtSub : rt)
-				{							
-					if(rtSub instanceof TextObject)
-					{ 
-						content=	substr = ((TextObject)rtSub).getContent();
-						 Debug.e(TAG, " ======111" + substr );	
-						 Debug.e(TAG, "====mDots "+mDots );		
-						//content ="  -  -  ";// o.getContent();				
-						height = rtSub.mHeight;
-						width = rtSub.mWidth; 
-					    //
-						String s3="3";
-						  mDots+= maker.extract(s3,height,width)*3;
-						  
-					    Debug.e(TAG, "====DZ_buffer 000="+height+ width);
-				 // 	   mDots+= 
-					    maker.extract(substr,height,width);
-					    
-
-					    
-						byte[] bit_32 = new byte[ maker.getBuffer().length ];//字模高  × 字模宽 
-						 Debug.e(TAG, "====00DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
-						 Debug.e(TAG, "====11DZ_buffer 111=maker.getBuffer().length "+maker.getmatrixlen(substr,height,width) );
-						 Debug.e(TAG, "====22DZ_buffer 111=maker.getBuffer().length "+mDots );
-			 
-						 bit_32 = maker.getBuffer() ;	
-					 	
-						 
-						 	//Y 移动 		i+ "==="+bit_32.length 
-							 int objtop =  ((int)(rtSub.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
-							 Debug.e(TAG, " ====objtop" + objtop );	
-							 int len= bit_32.length; 	
-							int[] isrc=null;
-			    			int tempint=0;
-			    			isrc  =new int  [len ]; //32高4字节 ×宽 
-			    	    	for( int i2=0;i2<len/4;i2++)
-			    	    	{
-			    	    		tempint =(int) ( bit_32[i2*4+1 ] );//1
-			    	    		isrc[i2]=(tempint<<24)&0xff000000;   
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4 ] );//0
-			    	    		isrc[i2]|= (tempint<<16)&0x00ff0000;   
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4+3 ] );//3
-			    	    		isrc[i2]|= (tempint<<8)&0x0000ff00;    
-			    	    		
-			    	    		tempint =(int) ( bit_32[i2*4+2 ] );//2
-			    	    		isrc[i2]|= tempint      &0x000000ff;   
-			    	    		
-			    	    		isrc[i2]= isrc[i2]<<objtop;
-			    	    	}
-			    	    	
-			    	    	for( int i2=0;i2<len/4;i2++)
-			    	    	{
-			    	    		bit_32[i2*4+1]=(byte) ( (isrc[i2] >>24)&0x000000ff ); 			    	    		
-			    	    		bit_32[i2*4+0]=(byte) ( (isrc[i2] >>16)&0x000000ff ); 			    	    		
-			    	    		bit_32[i2*4+3]=(byte) ( (isrc[i2] >>8)&0x0000000ff  ); 
-			    	    		bit_32[i2*4+2]=(byte) ( isrc[i2 ] &    0x0000000ff      );			    	    		    	    		
-			    	    	} 
-			    	    	// Y end 
-	    	    	
-							for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
-							{
-								int objcew=  ((int)(rtSub.mXcor/9.5+0.5))*4;
-								   objcew += leftmov*4 ;
-									g_1binbits[(i +   objcew ) ] |= bit_32[i];
-									g_1binbits[(i+1 + objcew  ) ]|= bit_32[i+1];
-									g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
-									g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];						
-							}
-					 
-
-					}
-
-
-				}	
-					 			
-			}
-			 else if(o instanceof CounterObject)
-				{
-					String s3="3";
-					  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*5;//5位计数器 类型 
-					// content += o.getContent();
-					o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-
-				}
-			else if(o instanceof JulianDayObject)
-			{
-
-				String s3="3";
-				  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*3;//			
-			//	content += o.getContent();
-				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);					
-			}
-			else if(o instanceof ShiftObject)
-			{
-				String s3="3";
-				  mDots+= maker.extract(s3,o.mHeight,o.mWidth)*3;					
-				// content += o.getContent();
-				o.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName),o.mHeight,o.mWidth);
-			}
-			else if(o instanceof TextObject )
-			{
-				content = o.getContent();
-				height = o.mHeight;
-				width = o.mWidth; 
-				
-			  Debug.e(TAG, "====DZ_buffer 000="+height+ width);
-			//  mDots+=
-			  maker.extract(content,height,width);
-			  Debug.e(TAG, "====DZ_buffer 111="+ mDots  );
-								 
-			 byte[] bit_32 = new byte[ maker.getBuffer().length ];//字模高  × 字模宽 
-			 Debug.e(TAG, "====DZ_buffer 111=maker.getBuffer().length "+maker.getBuffer().length );
-	    	 bit_32 = maker.getBuffer() ;	
-		    Debug.e(TAG, "====DZ_buffer 222=");
 	
-	  
-				 //Y方向移动 代码块 开始		
-				 int objtop =  ((int)(o.mYcor/9.5+0.5)); // Y 移动 坐标 数值 
-				 Debug.e(TAG, " ====objtop" + objtop );	
-				 int len= bit_32.length; 	
-				int[] isrc=null;
-    			int tempint=0;
-    			isrc  =new int  [len ]; //32高4字节 ×宽 
-    	    	for( int i2=0;i2<len/4;i2++)
-    	    	{
-    	    		tempint =(int) ( bit_32[i2*4+1 ] );//1
-    	    		isrc[i2]=(tempint<<24)&0xff000000;   
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4 ] );//0
-    	    		isrc[i2]|= (tempint<<16)&0x00ff0000;   
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4+3 ] );//3
-    	    		isrc[i2]|= (tempint<<8)&0x0000ff00;    
-    	    		
-    	    		tempint =(int) ( bit_32[i2*4+2 ] );//2
-    	    		isrc[i2]|= tempint &0x000000ff;   
-    	    		
-    	    		isrc[i2]= isrc[i2]<<objtop;
-    	    	}
-    	    	
-    	    	for( int i2=0;i2<len/4;i2++)
-    	    	{
-    	    		bit_32[i2*4+1]=(byte) ( (isrc[i2] >>24)&0x000000ff ); 			    	    		
-    	    		bit_32[i2*4+0]=(byte) ( (isrc[i2] >>16)&0x000000ff ); 			    	    		
-    	    		bit_32[i2*4+3]=(byte) ( (isrc[i2] >>8)&0x0000000ff  ); 
-    	    		bit_32[i2*4+2]=(byte) ( isrc[i2 ] &    0x0000000ff      );			    	    		    	    		
-    	    	} 
-    	    	// Y方向移动 代码块结束  				 
-				for (int i = 0; i < bit_32.length; i+=4) //压缩掉的 列 数 8 
-				{
-						Debug.e(TAG, "=x===DZ_buffer.length-76="+i+ "==="+bit_32.length  );
-						int objcew=  ((int)(o.mXcor/9.5+0.5))*4;
-						Debug.e(TAG, "=x1===DZ_buffer.length-76="+objcew );		
-						 objcew += leftmov*4;
-						Debug.e(TAG, "=x2===DZ_buffer.length-76="+objcew );
-						g_1binbits[(i +   objcew ) ] |= bit_32[i];
-						g_1binbits[(i+1 + objcew  ) ] |= bit_32[i+1];
-						g_1binbits[(i+2 + objcew ) ] |= bit_32[i+2];
-						g_1binbits[(i+3 + objcew  ) ] |= bit_32[i+3];	
-						Debug.e(TAG, "=x2===DZ_buffer.length-76="+objcew ); 
-						
-				}
-				Debug.e(TAG, " ==========99991111111111111111"   );	
- 	 
-				 				
-			}
-				Debug.e(TAG, " ==========99992222222222222222222"   );	
- 
-		}
-		
-		Debug.e(TAG, " ==========999933333333333333333"   );	
-		
- 
-		//	maker.setBuffer(g_1binbits);
-			// 保存bin文件
-			maker.saveBin(ConfigPath.getTlkDir(mName) + "/1.bin",g_1binbits, 32);	
-			mDots+=getDotCount(g_1binbits);
-			 	Debug.e(TAG, " =====getDotCount：   " + mDots  );			
-		for(BaseObject o:mObjects)
-		{
-			if((o instanceof MessageObject)	) {
-				((MessageObject) o).setDotCount(mDots);
-				break;
-			}
-		}
-		
-		return ;
-	}
-	// addbylk_1_001_end
-	
-	/* 统计内存块中，所有点的数量  
-	 * 
-	 */
-	//addbylk_1_003_begin
-	public int getDotCount(byte[] dots) {
-		
-		int count = 0;
-		for (int i = 0; i < dots.length; i++) {
-			for (int j = 0; j < 8; j++) {
-				if ((dots[i] & (0x01<< j)) > 0)
-				{
-					count++;
-				}
-			}
-		}
-		return count;
-		
-	}
-	//addbylk_1_003_end
 	private void saveBinNoScale() {
 		int width=0;
 		Paint p=new Paint();
@@ -762,7 +477,9 @@ public class MessageTask {
 				if (t == null) {
 					continue;
 				}
+				BinFromBitmap.saveBitmap(bmp, "barcode.png");
 				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
+				BinFromBitmap.saveBitmap(bmp, "barcode_1.png");
 			} else if (o instanceof GraphicObject) {
 				int h = (int)(o.getHeight() * scaleH);
 				int w = (int) (o.getWidth() * scaleW);
@@ -795,7 +512,6 @@ public class MessageTask {
 	 * 从16*16的点阵字库中提取点阵，生成打印buffer
 	 * @param f
 	 */
-	/*
 	private void saveBinDotMatrix() {
 		if(mObjects==null || mObjects.size() <= 0)
 			return ;
@@ -844,7 +560,7 @@ public class MessageTask {
 		
 		return ;
 	}
-*/
+
 //	public void savePreview() {
 //		int width=0;
 //		Paint p=new Paint();
@@ -979,6 +695,7 @@ public class MessageTask {
 			if (t == null) {
 				continue;
 			}
+			Debug.d(TAG, "--->preview w : " + t.getWidth() + ",  h = " + t.getHeight() + ",  x = " + o.getX() + " , y = " + o.getY());
 			can.drawBitmap(t, o.getX(), o.getY(), p);
 			/*if(o instanceof CounterObject)
 			{
@@ -1183,6 +900,8 @@ public class MessageTask {
 		float scale = 1f;
 		switch (type) {
 		case MessageType.MESSAGE_TYPE_12_7:
+			scale = 1f;
+			break;
 		case MessageType.MESSAGE_TYPE_12_7_S:
 			scale = 4f;
 			break;
@@ -1296,10 +1015,8 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
-//	    addbylk_1_26/30_begin 		
-		public static final int MESSAGE_TYPE_HZK_16_8  = 7;
-		public static final int MESSAGE_TYPE_HZK_16_16  = 8;	
-//		addbylk_1_26/30_end 	
+		public static final int MESSAGE_TYPE_HZK_16_16  = 7;
+		public static final int MESSAGE_TYPE_HZK_32_32  = 8;				
 		public static final int MESSAGE_TYPE_1_INCH = 9; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭
@@ -1317,7 +1034,6 @@ public class MessageTask {
 			//保存1.TLK文件
 			// saveTlk(mContext);
 			//保存1.bin文件
-			mDots=0; //清楚 dot值 addbylk 
 			saveBin();
 			
 			//保存其他必要的文件

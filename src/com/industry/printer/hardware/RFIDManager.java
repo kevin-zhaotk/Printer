@@ -164,8 +164,8 @@ public class RFIDManager implements RfidCallback{
 		} catch (Exception e) {
 		}
 		
-		if (mRfidDevices.size() == 0) {
-			
+		if (mRfidDevices.size() != TOTAL_RFID_DEVICES) {
+			mRfidDevices.clear();
 			for (int i = 0; i < TOTAL_RFID_DEVICES; i++) {
 				RFIDDevice device = new RFIDDevice();
 				mRfidDevices.add(device);

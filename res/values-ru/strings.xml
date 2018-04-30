@@ -62,6 +62,7 @@
 	<string name="strWidth">Ширина</string>
 	<string name="strHigh">Высота</string>
 	<string name="strHightype">Stepwise</string>
+	<string name="strReverse">Reverse</string>
 	<string name="strXcor">X-Cor</string>
 	<string name="strYcor">Y-Cor</string>
 	<string name="strCnt">Содержание</string>

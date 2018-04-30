@@ -64,6 +64,7 @@
 	<string name="strWidth">宽</string>
 	<string name="strHigh">高</string>
 	<string name="strHightype">位置</string>	
+	<string name="strReverse">反相</string>
 	<string name="strXcor">X坐标</string>
 	<string name="strYcor">Y坐标</string>
 	<string name="strCnt">内容</string>
@@ -94,7 +95,7 @@
 	<string name="strReinsertSerial">打印出错，请重新插拔打印设备</string>
 	<string-array name="strPrinterArray">
 	    <item>12.7 mm </item>
-	    <item>-- </item>
+	    <item>12.7 mm HP standard</item>
 	    <item>25.4 mm 双头</item>
 	    <item>16.3 mm Xaar128</item>
 	    <item>-- </item>
@@ -760,4 +761,7 @@
 	<string name="str_message_tips">信息%s已经存在，是否覆盖?</string>
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	
+	<string name="password_title">请输入密码</string>
+	
 </resources>

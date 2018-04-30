@@ -93,7 +93,7 @@
 
     <string-array name="strPrinterArray">
         <item>12.7 mm testa HP</item>
-        <item>--</item>
+        <item>12.7 mm HP standard</item>
         <item>25.4 mm testa doppia HP</item>
         <item>16.3 mm testa Xaar</item>
         <item>33 mm testa doppia Xaar</item>
@@ -723,4 +723,7 @@
 	
 	<string name="str_prepared">TLK parse success!!!</string>
 	<string name="str_prepare_fail">TLK parse failed!!!</string>
+	
+	<string name="password_title">Please Enter Password</string>
+	
 </resources>
