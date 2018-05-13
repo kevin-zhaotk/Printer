@@ -6,7 +6,12 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
 import android.graphics.YuvImage;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -338,6 +343,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 					case MessageTask.MessageType.MESSAGE_TYPE_1_INCH:
 					case MessageTask.MessageType.MESSAGE_TYPE_1_INCH_FAST:
 						mEditLayout.setBackgroundResource(R.drawable.background);
+						Debug.d(TAG, "====== w: " + mEditLayout.getMeasuredWidth() +  "   h:" + mEditLayout.getMeasuredHeight());
 						break;
 					case MessageTask.MessageType.MESSAGE_TYPE_25_4:
 					case MessageTask.MessageType.MESSAGE_TYPE_33:
@@ -352,8 +358,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						mEditLayout.setBackgroundResource(R.drawable.background_4);
 						break;
 					case MessageTask.MessageType.MESSAGE_TYPE_16_3:
-					case MessageTask.MessageType.MESSAGE_TYPE_HZK_32_32:
-					case MessageTask.MessageType.MESSAGE_TYPE_HZK_16_16:
+					case MessageTask.MessageType.MESSAGE_TYPE_16_DOT:
 						mEditLayout.setBackgroundResource(R.drawable.background);
 						break;
 					default:
@@ -361,6 +366,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						break;
 				}
 			}
+			Debug.d(TAG, "--->msg: " + msg.what);
 			switch (msg.what) {
 
 				case OBJECT_INSERT:
@@ -408,6 +414,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 
 	public void setCurObj(int i)
 	{
+		Debug.d(TAG, "--->setCurObj: " + i);
 		ArrayList<BaseObject> objects = mMsgTask.getObjects();
 		if(i >= objects.size())
 			return;
@@ -935,14 +942,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onInsertObject(BaseObject object) {
-		//mMsgTask.addObject(object);
-//		mMsgManager.add(object);
-		
-		/**
-		 * display object info dialog 
-		 */
-		// mObjRefreshHandler.sendMessage(msg);
-		//setCurObj(i)
+		Debug.d(TAG, "--->onInsertObject: " + mMsgTask);
 		object.setTask(mMsgTask);
 		onShowInfo(object);
 	}

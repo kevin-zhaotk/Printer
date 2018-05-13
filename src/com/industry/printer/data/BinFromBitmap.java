@@ -19,19 +19,29 @@ import android.graphics.Bitmap.Config;
  */
 public class BinFromBitmap extends BinCreater {
 	
-	public int mDots=0;
+	public int mDots[]= new int[8];
+	
 
+	public BinFromBitmap() {
+		super();
+		init();
+	}
+	
+	private void init() {
+		for (int i = 0; i < mDots.length; i++) {
+			mDots[i] = 0;
+		}
+	}
 	/**
 	 * 这个函数没有对bmp原图进行高度缩放，所以，得到的buffer列高与原图高度一致
 	 * 如果要处理列高比较大（如110点的列高）的原图最好对源bmp进行缩放，然后做点阵提取操作
 	 * @param bmp
 	 */
 	@Override
-	public int extract(Bitmap bmp) {
-		mDots = 0;
+	public int[] extract(Bitmap bmp, int head) {
     	mWidth = bmp.getWidth();         
         mHeight = bmp.getHeight(); 
-        
+        mHeighEachHead = mHeight / head;
         int []pixels = new int[mWidth * mHeight]; 
         // BinCreater.saveBitmap(bmp, "bar_extract.png");
         // 计算每列占的字节数
@@ -55,13 +65,13 @@ public class BinFromBitmap extends BinCreater {
                 grey = (int)((float) red * 0.3 + (float)green * 0.59 + (float)blue * 0.11);
                 // System.out.print("  " + grey);
                 // pixels[mWidth * i + j] = grey>128? 0x0:0xffffff;
-                if(grey>128)
+                
+                if(grey > 176)
                 	mBinBits[j*colEach+i/8] &= ~(0x01<<(i%8));
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
-                	mDots++;
+                	mDots[i/mHeighEachHead]++;
                 }
-                
             }
             // System.out.println();
         }

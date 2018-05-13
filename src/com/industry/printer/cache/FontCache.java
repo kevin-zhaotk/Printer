@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Typeface;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.HashMap;
 
 import com.industry.printer.Utils.Configs;
+import com.industry.printer.Utils.FileUtil;
 import com.printer.corelib.Debug;
 
 /**
@@ -43,4 +45,26 @@ public class FontCache {
             return tf;
         }
     }
+	
+	public static String[] getFonts() {
+		File dir = new File(Configs.FONT_DIR);
+		File[] fonts = dir.listFiles(new FileFilter() {
+			
+			@Override
+			public boolean accept(File arg0) {
+				if (arg0.getAbsolutePath().endsWith(".ttf")) {
+					return true;
+				}
+				return false;
+			}
+		});
+		if (fonts == null || fonts.length <= 0) {
+			return null;
+		}
+		String[] fontName = new String[fonts.length];
+		for (int i = 0; i < fontName.length; i++) {
+			fontName[i] = FileUtil.getFileNameNoEx(fonts[i].getName());
+		}
+		return fontName;
+	}
 }

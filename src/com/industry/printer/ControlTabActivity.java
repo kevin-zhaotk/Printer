@@ -473,7 +473,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				name.append(task.getName());
 				name.append("^");
 			}
-			name.deleteCharAt(name.length() - 1);
+			if (name.length() > 0) {
+				name.deleteCharAt(name.length() - 1);
+			}
 			return name.toString();
 		}
 		return null;
@@ -595,7 +597,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		RFIDDevice device = mRfidManager.getDevice(mRfid);
 		if (device != null && mDTransThread != null) {
 			count = device.getLocalInk() - 1;
-			count = count * mDTransThread.getInkThreshold() + mDTransThread.getCount();
+			count = count * mDTransThread.getInkThreshold(0) + mDTransThread.getCount();
 		}
 		if (count < 0) {
 			count = 0;
@@ -1587,7 +1589,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (mDTransThread == null) {
 			return;
 		}
-		mDTransThread.refreshCount();
+		mDTransThread.initCount();
 		refreshCount();
 	}
 	

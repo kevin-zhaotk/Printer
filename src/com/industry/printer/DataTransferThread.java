@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import android.R.color;
+import android.R.integer;
 import android.app.PendingIntent.OnFinished;
 import android.content.Context;
 import android.os.Handler;
@@ -50,7 +51,7 @@ public class DataTransferThread extends Thread {
 	public boolean mNeedUpdate=false;
 	private boolean isBufferReady = false;
 	
-	private int mcountdown = 0;
+	private int mcountdown[];
 	/**打印数据buffer**/
 	public List<DataTask> mDataTask;
 	/* task index currently printing */
@@ -307,47 +308,67 @@ public class DataTransferThread extends Thread {
 			if (messages.size() <= i) {
 				break;
 			}
-			t.setDots(messages.get(i).getDots());
+			int[] dots = messages.get(i).getDots();
+			int totalDot = 0;
+			for (int j = 0; j < dots.length; j++) {
+				totalDot += dots[j];
+			}
+			t.setDots(totalDot);
+			t.setDotsEach(dots);
 		}
-		mcountdown = getInkThreshold();
+		initCount();
 	}
 	
-	public int getDotCount(DataTask task) {
+	public int getDotCount(DataTask task, int head) {
 		if (task == null) {
 			return 1;
 		}
 			
-		return task.getDots();
+		return task.getDots(head);
 	}
 	
+	
+	public void initCount() {
+		if (mcountdown == null) {
+			mcountdown = new int[8];
+		} else {
+			for (int i = 0; i < mcountdown.length; i++) {
+				mcountdown[i] = 0;
+			}
+		}
+		for (int i = 0; i < mcountdown.length; i++) {
+			mcountdown[i] = getInkThreshold(i);
+		}
+	}
 	/**
 	 * 倒计数，当计数倒零时表示墨水量需要减1，同时倒计数回归
 	 * @return true 墨水量需要减1； false 墨水量不变
 	 */
-	private boolean countDown() {
-		mcountdown--;
-		if (mcountdown <= 0) {
-			// 赋初值
-			mcountdown = getInkThreshold();
-			mInkListener.onInkLevelDown();
-			return true;
+	private void countDown() {
+		for (int i = 0; i < mScheduler.count(); i++) {
+			mcountdown[i]--;
+			if (mcountdown[i] <= 0) {
+				// 赋初值
+				mcountdown[i] = getInkThreshold(i);
+				mInkListener.onInkLevelDown();
+			}
 		}
-		return false;
 	}
 	
 	public int getCount() {
 		
-		return mcountdown;
+		return mcountdown[0];
 	}
 	
 	/**
 	 * 通过dot count计算RFID减1的阀值
+	 * @param head 喷头索引
 	 * @return
 	 */
-	public int getInkThreshold() {
+	public int getInkThreshold(int head) {
 		int bold = 1;
 		int index = index();
-		if (getDotCount(mDataTask.get(index)) <= 0) {
+		if (getDotCount(mDataTask.get(index), head) <= 0) {
 			return 1;
 		}
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -356,7 +377,7 @@ public class DataTransferThread extends Thread {
 		} else {
 			bold = config.getParam(2)/150;
 		}
-		return Configs.DOTS_PER_PRINT*getHeads()/(getDotCount(mDataTask.get(index)) * bold);
+		return Configs.DOTS_PER_PRINT/(getDotCount(mDataTask.get(index), head) * bold);
 	}
 	
 	public int getHeads() {
@@ -385,9 +406,6 @@ public class DataTransferThread extends Thread {
 		}
 	}
 
-	public void refreshCount() {
-		mcountdown = getInkThreshold();
-	}
 	
 	private Callback mCallback;
 	

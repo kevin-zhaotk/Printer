@@ -7,6 +7,7 @@ import com.google.zxing.ChecksumException;
 import com.google.zxing.common.StringUtils;
 import com.google.zxing.maxicode.MaxiCodeReader;
 import com.industry.printer.R;
+import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.R.array;
 import com.industry.printer.R.id;
 import com.industry.printer.R.layout;
@@ -14,6 +15,7 @@ import com.industry.printer.R.string;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.StringUtil;
+import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -169,6 +171,11 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				Bundle d = msg.getData();
 				String size = d.getString("height");
 				mHighEdit.setText(size);
+				if (size.equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+					mFont.setText("4");
+				} else if (size.equalsIgnoreCase(MessageObject.mDotSizes[1])) {
+					mFont.setText("7");
+				} 
 				break;
 			}
 		}
@@ -270,16 +277,19 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		
 		    mWidthEdit = (EditText)findViewById(R.id.widthEdit);
 		    mHighEdit = (TextView)findViewById(R.id.highEdit);
+		    mHeight_O = (EditText) findViewById(R.id.highEdit_o);
 		    mHighEdit.setOnClickListener(this);
-		    
+			
 		    mXcorEdit = (EditText)findViewById(R.id.xCorEdit);
 		    mYcorEdit = (EditText)findViewById(R.id.yCorEdit);
 		    mContent = (EditText)findViewById(R.id.cntEdit);
 		    mFont = (TextView) findViewById(R.id.fontSpin);
-		    mFont.setOnClickListener(this);
+		    if (!mObject.fixedFont()) {
+		    	mFont.setOnClickListener(this);
+			}
 		    mHeightType = (CheckBox) findViewById(R.id.height_type);
 		    mHeightType.setOnCheckedChangeListener(this);
-		    mHeight_O = (EditText) findViewById(R.id.highEdit_o);
+		    
 		    mReverse = (CheckBox) findViewById(R.id.reverse_cb);
 		    mReverse.setOnCheckedChangeListener(this);
 		    
@@ -338,13 +348,17 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	     mCancel = (Button) findViewById(R.id.btn_objinfo_cnl);
 	     fillObjInfo();
 	     selfInfoEnable();
-
+//	     mOk.setClickable(false);
 	     mOk.setOnClickListener(new View.OnClickListener(){
 	    	 
 				@Override
 				public void onClick(View v) {
 					if (mObject == null) {
 						dismiss();
+					}
+					if (mContent != null && mContent.getText().toString().isEmpty()) {
+						ToastUtil.show(mContext, "Content is empty");
+						return;
 					}
 					try{
 						
@@ -496,6 +510,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			}
 			else
 			{
+				Debug.d(TAG, "--->fillObjInfo");
 				mWidthEdit.setText(String.valueOf((int)mObject.getWidth()) );
 				mHighEdit.setText(mObject.getDisplayHeight());
 				mHeight_O.setText(String.valueOf(mObject.getHeight()));
@@ -503,6 +518,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mYcorEdit.setText(String.valueOf((int)mObject.getY()*2));
 				mContent.setText(String.valueOf(mObject.getContent()));
 				mReverse.setChecked(mObject.getReverse());
+				
 				mFont.setText(mObject.getFont());
 				if(mObject instanceof RealtimeObject)
 				{
@@ -618,6 +634,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		
 		// String[] heights = mContext.getResources().getStringArray(R.array.strarrayFontSize);
 		if (mObject != null) {
+			Debug.d(TAG, "--->initAdapter: " + mObject);
 			MessageObject msg = mObject.getTask().getMsgObject();
 			String[] heights = msg.getDisplayFSList();
 			for (String height : heights) {
@@ -819,4 +836,5 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		
 	}
+
 }

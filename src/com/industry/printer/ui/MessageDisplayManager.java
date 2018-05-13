@@ -66,6 +66,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
         if (mShadow != null) {
             mContainer.addView(mShadow, 0);
         }
+//        mShadow.setLayoutParams(new RelativeLayout.LayoutParams(150, 150));
     }
 
     public void fill(MessageTask task) {

@@ -90,7 +90,7 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		private void init() {
 			// String[] name = mContext.getResources().getStringArray(R.array.strFontArray);
 			// String[] tips = mContext.getResources().getStringArray(R.array.strFontTipsArray);
-			String[] name = loadFonts();
+			String[] name = FontCache.getFonts();
 			
 			mFonts = new ArrayList<Map<String,String>>();
 			for (int i = 0; i < name.length; i++) {
@@ -179,27 +179,4 @@ public class FontSelectDialog extends Dialog implements android.view.View.OnClic
 		mAdapter.setSelect(position);
 	}
 
-	
-	
-	private String[] loadFonts() {
-		File dir = new File(Configs.FONT_DIR);
-		File[] fonts = dir.listFiles(new FileFilter() {
-			
-			@Override
-			public boolean accept(File arg0) {
-				if (arg0.getAbsolutePath().endsWith(".ttf")) {
-					return true;
-				}
-				return false;
-			}
-		});
-		if (fonts == null || fonts.length <= 0) {
-			return null;
-		}
-		String[] fontName = new String[fonts.length];
-		for (int i = 0; i < fontName.length; i++) {
-			fontName[i] = FileUtil.getFileNameNoEx(fonts[i].getName());
-		}
-		return fontName;
-	}
 }

@@ -65,7 +65,7 @@ public class BarcodeObject extends BaseObject {
 		mCode = 3;
 		mTextSize = 20;
 		mFormat="CODE_128";
-		setContent("123456789");
+		setContent("");
 		mWidth=0;
 		
 	}
@@ -460,10 +460,10 @@ public class BarcodeObject extends BaseObject {
 		return bg;
 	}
 	
-	public int getDotcount() {
+	public int[] getDotcount() {
 		Bitmap bmp = getScaledBitmap(mContext);
 		BinFileMaker maker = new BinFileMaker(mContext);
-		int dots = maker.extract(bmp);
+		int[] dots = maker.extract(bmp, mTask.getHeads());
 		return dots;
 	}
 

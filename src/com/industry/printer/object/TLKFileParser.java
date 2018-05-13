@@ -33,12 +33,14 @@ public class TLKFileParser  extends TlkFile{
 	
 	public static final String TAG="TLKFileParser";
 	
-	private int mDots = 0;
+	private int mDots[];
 	private float mProportion = 1;
 	
 	public TLKFileParser(Context context, String file) {
 		super(context, file);
+		mDots = new int[8];
 		Debug.d(TAG, "--->file: " + file);
+		
 	}
 	
 	/*
@@ -216,8 +218,15 @@ public class TLKFileParser  extends TlkFile{
 				int resolution = Integer.parseInt(attr[9]);
 				((MessageObject) obj).setHighResolution(resolution);
 				((MessageObject) obj).setDotCount(Integer.parseInt(attr[13]));
-				mDots = Integer.parseInt(attr[13]);
-
+				mDots[0] = Integer.parseInt(attr[10]);
+				mDots[1] = Integer.parseInt(attr[11]);
+				mDots[2] = Integer.parseInt(attr[12]);
+				mDots[3] = Integer.parseInt(attr[14]);
+				mDots[4] = Integer.parseInt(attr[15]);
+				mDots[5] = Integer.parseInt(attr[16]);
+				mDots[6] = Integer.parseInt(attr[17]);
+				mDots[7] = Integer.parseInt(attr[18]);
+				((MessageObject) obj).setDotCountPer(mDots);
 				setDotsPerClm(type);
 			} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
 					|| BaseObject.OBJECT_TYPE_QR.equals(attr[1]))    //barcode
@@ -312,6 +321,7 @@ public class TLKFileParser  extends TlkFile{
 				return null;
 			}
 		} catch (Exception e) {
+			Debug.e(TAG, "--->parseLine: " + e.getMessage());
 			return null;
 		}
 		// 设置object的task
@@ -414,7 +424,7 @@ public class TLKFileParser  extends TlkFile{
 		return content;
 	}
 	
-	public int getDots() {
+	public int[] getDots() {
 		return mDots;
 	}
 	

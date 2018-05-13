@@ -1,17 +1,23 @@
 package com.industry.printer.object;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Wrapper;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.apache.http.util.ByteArrayBuffer;
 
-import com.google.zxing.common.BitMatrix;
-import com.industry.printer.MainActivity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.FontMetrics;
+import android.graphics.Rect;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
 import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.R;
@@ -19,34 +25,9 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
-import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.cache.FontCache;
-import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
 import com.industry.printer.data.BinFromBitmap;
-import com.industry.printer.data.DotMatrixReader;
-import com.industry.printer.data.InternalCodeCalculater;
-import com.industry.printer.object.data.BitmapWriter;
-
-import android.R.bool;
-import android.R.color;
-import android.R.integer;
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Paint.FontMetrics;
-import android.graphics.Typeface;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.View;
 
 public class BaseObject{
 	public static final String TAG="BaseObject";
@@ -122,9 +103,7 @@ public class BaseObject{
 	/**
 	 * supported fonts
 	 */
-	public static final String[] mFonts = {"0T+", "1+", "1B+", "1B2", "1BS",
-											"1T", "2+", "2B", "2i", "3+", "3B",
-											"3i", "3T", "4", "5", "6", "6B", "7","8", "9"};
+	public static String[] mFonts = FontCache.getFonts();
 	
 	public BaseObject(Context context, String id, float x)
 	{
@@ -150,13 +129,13 @@ public class BaseObject{
 		mReverse = false;
 		// 參數40：列高
 		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
-		mFont = DEFAULT_FONT;
+		setHeight(Configs.gDots);
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
-		setHeight(Configs.gDots);
+		// setHeight(Configs.gDots);
 		setLineWidth(5);
-		setContent("text");
+		setContent("");
 
 		mVBuffer = new HashMap<String, byte[]>();
 
@@ -285,6 +264,7 @@ public class BaseObject{
 		}*/
 		boolean isCorrect = false;
 		// Debug.d(TAG,"--->getBitmap font = " + mFont);
+//		String[] mFonts = FontCache.getFonts();
 		for (String font : mFonts) {
 			if (font.equals(mFont)) {
 				isCorrect = true;
@@ -294,30 +274,22 @@ public class BaseObject{
 		if (!isCorrect) {
 			mFont = DEFAULT_FONT;
 		}
+		mFont = verifyFont();
+		Debug.d(TAG,"--->draw font = " + mFont +"  h: " + mHeight);
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont+".ttf"));
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			Debug.d(TAG, "--->e: " + e.getMessage());
+		}
 
 		int width = (int)mPaint.measureText(getContent());
-		
-		//addbylk 由于7.TTF字库 中文 单个字符 生成 tLK 为 300 而不时 304  特别 在此 做出 宽度 补偿 
-	/*
-		for(int x=0;x<getContent().length();x++)
-		{
-			if (! isAscii( getContent().charAt(x) ) )
-				{
-				width+=2;
-				}
-			
-		}
-		*/
-		
-		Debug.e(TAG, "===--->content: " + getContent() + "  width=" + width);
+	
+		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
 			setWidth(width);
 		}
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.e(TAG,"===--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		Debug.e(TAG,"===--->getBitmap width=" + mWidth + ", mHeight=" + mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		// Debug.e(TAG, "--->asent: " + fm.ascent + ",  bottom: " + fm.bottom + ", descent: " + fm.descent + ", top: " + fm.top);
@@ -345,6 +317,7 @@ public class BaseObject{
 		}
 		Bitmap bitmap;
 		Paint paint = new Paint();
+//		paint.setColor(Color.BLACK);
 		paint.setTextSize(ctH);
 		paint.setAntiAlias(true); //去除锯齿  
 		paint.setFilterBitmap(true); //对位图进行滤波处理
@@ -357,15 +330,15 @@ public class BaseObject{
 		}
 		int width = (int)paint.measureText(content);
 		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG, "--->bmp: " + bitmap.getWidth() +  "  " + bitmap.getHeight());
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
 		int adjust = (int)fm.descent;
-		if (adjust < 4) {
+		if (adjust < 4 && ctH > 32) {
 			adjust = 4;
 		}
 		canvas.drawText(content, 0, ctH-adjust, paint);
 		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
-		
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
 	
@@ -398,7 +371,7 @@ public class BaseObject{
 	 * @return
 	 */
 	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
-		int dots = 0;
+		int dots[] = new int[1];
 		int singleW;
 		Paint paint = new Paint();
 		int height = (int) (mHeight * scaleH);
@@ -423,7 +396,7 @@ public class BaseObject{
 		singleW = (int)(mWidth * scaleW/mContent.length());
 		/** if message isn`t high resolution, divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
 		MessageObject msgObj = mTask.getMsgObject();
-		if (!msgObj.getResolution()) {
+		if (!msgObj.getResolution() && msgObj.getType() != MessageType.MESSAGE_TYPE_16_DOT) {
 			singleW = singleW / 2;
 		}
 		
@@ -443,14 +416,14 @@ public class BaseObject{
 		BinFromBitmap.recyleBitmap(bmp);
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
-		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), dstH, false));
+		dots = maker.extract(Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), dstH, false), 1);
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
 		/*根據變量內容的實際長度計算點數*/
-		dots = (dots* getContent().length()/10) + 1;
-		return dots;
+		dots[0] = (dots[0]* getContent().length()/10) + 1;
+		return dots[0];
 	}
 	public int drawVarBitmap()
 	{
@@ -461,7 +434,7 @@ public class BaseObject{
 		}
 		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
 
-		int dots = 0;
+		int[] dots = new int[1];
 		//mPaint.setTextSize(mHeight);
 		int singleW; //the width value of each char
 		int height = (int)mPaint.getTextSize();
@@ -532,14 +505,14 @@ public class BaseObject{
 		}		//addbylk 170418 end
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
-		dots = maker.extract(gBmp);
+		dots = maker.extract(gBmp, 1);
 		Debug.d(TAG, "***************id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
 		/*根據變量內容的實際長度計算點數*/
-		dots = (dots* getContent().length()/10) + 1;
-		return dots;
+		dots[0] = (dots[0] * getContent().length()/10) + 1;
+		return dots[0];
 	}
 	/**
 	 * generateVarBuffer - generate the variable bin buffer, Contained in the HashMap
@@ -575,7 +548,7 @@ public class BaseObject{
 			mCan.drawBitmap(b, 0, getY(), mPaint);
 			// Bitmap scaledBg = Bitmap.createScaledBitmap(bg, singleW, Configs.gDots, true);
 			BinFileMaker maker = new BinFileMaker(mContext);
-			maker.extract(bmp);
+			maker.extract(bmp, 1);
 			//byte[] buffer = new byte[BinCreater.mBmpBits.length];
 			byte[] buffer = Arrays.copyOf(maker.getBuffer(), maker.getBuffer().length);
 			BinFromBitmap.recyleBitmap(b);
@@ -608,9 +581,33 @@ public class BaseObject{
 		}
 		
 		mHeight = size;
-		Debug.d(TAG, "--->height=" + mHeight);
+		tuningHeightOfSpecialHeadtype();
 		mYcor_end = mYcor + mHeight;
+		Debug.d(TAG, "--->id " + mId  + "  height=" + mHeight + "   yEnd= " + mYcor_end);
 		isNeedRedraw = true;
+		
+	}
+	
+	/**
+	 * 根据不同喷头类型处理一些需要特殊对待的尺寸
+	 */
+	private void tuningHeightOfSpecialHeadtype() {
+		if (mTask == null) {
+			return;
+		}
+		int type = mTask.getHeadType();
+		switch (type) {
+			case MessageType.MESSAGE_TYPE_16_DOT:
+				Debug.d(TAG, "--->display H = " + getDisplayHeight() + "   mHeight: " + mHeight);
+				if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+					mHeight = 152/2;
+				} else {
+					mHeight = 152;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 	
 	public void resizeByHeight() {
@@ -633,6 +630,7 @@ public class BaseObject{
 	}
 	
 	public String getDisplayHeight() {
+		Debug.d(TAG, "--->getDisplayHeight: " + mHeight);
 		return mTask.getMsgObject().getDisplayFs(mHeight);
 	}
 	
@@ -677,6 +675,7 @@ public class BaseObject{
 	{
 		mYcor = y;
 		mYcor_end = mYcor + mHeight;
+		Debug.d(TAG, "--->height=" + mHeight + "   yEnd= " + mYcor_end);
 	}
 	
 	public float getY()
@@ -686,6 +685,7 @@ public class BaseObject{
 	
 	public float getYEnd()
 	{
+		Debug.d(TAG, "--->height=" + mHeight + "   yEnd= " + mYcor_end);
 		return mYcor_end;
 	}
 	
@@ -740,7 +740,7 @@ public class BaseObject{
 			return;
 		mFont = font;
 		try {
-		mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
+			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
 		isNeedRedraw = true;
 		Debug.d(TAG, "--->setFont: " + mFont);
@@ -748,6 +748,7 @@ public class BaseObject{
 	
 	public String getFont()
 	{
+		mFont = verifyFont();
 		return mFont;
 	}
 	public void setLineWidth(int width)
@@ -889,6 +890,19 @@ public class BaseObject{
 	 */
 	public void setTask(MessageTask task) {
 		mTask = task;
+		if (task == null || mTask == task) {
+			return ;
+		}
+		int type = mTask.getHeadType();
+		switch (type) {
+			case MessageType.MESSAGE_TYPE_16_DOT:
+				setHeight(152/2);
+				mFont = MessageObject.mDotSizes[0];
+				break;
+			default:
+				setHeight(Configs.gDots);
+				break;
+		}
 	}
 	
 	/**
@@ -896,6 +910,7 @@ public class BaseObject{
 	 * @return MessageTask
 	 */
 	public MessageTask getTask() {
+		Debug.d(TAG, "--->getTask: " + mTask);
 		return mTask;
 	}
 	
@@ -904,8 +919,7 @@ public class BaseObject{
 	}
 	
 	public float getProportion() {
-		int dots = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
-		return dots/Configs.gDots;
+		return 1;
 	}
 	
 	protected void meature() {
@@ -925,16 +939,70 @@ public class BaseObject{
 		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
 	}
 	public int getfeed() {
-		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
-		{
-			Debug.e(TAG, " =====1mHeight = "  );			
-			return (int)(mHeight);
-
+		return (int)mHeight;
+	}
+	
+	
+	
+	/**
+	 * ajust font library if print-head is either 16-dot or 32-dot
+	 * if print-head 16-dot: font-4 is bound to 7dot object, font-7 is bound to 16dot object
+	 * @return
+	 */
+	private String verifyFont() {
+		Debug.d(TAG, "--->verifyFont: " + mFont);
+		int type = mTask.getHeadType();
+		String font = "";
+		switch (type) {
+			case MessageType.MESSAGE_TYPE_16_DOT:
+				if (getHeight() <= 76) {
+					font = "4";
+				} else {
+					font = "7";
+				}
+				break;
+			default:
+				font = mFont;
+				break;
 		}
-		else 
-		{		  return (int)mHeight;
+		Debug.d(TAG, "--->verifyFont: " + mFont);
+		return font;
+	}
+	
+	/**
+	 * 判断是否可以修改字库，16点和32点的喷头目前是固定字库：7点对象 - 4.ttf / 16点对象 - 7.ttf
+	 * @return
+	 */
+	public boolean fixedFont() {
+		int type = mTask.getHeadType();
+		boolean isFixed = false;
+		switch (type) {
+			case MessageType.MESSAGE_TYPE_32_DOT:
+			case MessageType.MESSAGE_TYPE_16_DOT:
+				isFixed = true;
+				break;
+			default:
+				isFixed = false;
+				break;
+		}
+		return isFixed;
+	}
 
+	/**
+	 * 判断当前对象的宽高是否可修改
+	 * @return
+	 */
+	public boolean whChangable() {
+		MessageObject msg = mTask.getMsgObject();
+		if (msg == null) {
+			return false;
 		}
 		
+		int type = msg.getType();
+		if (type == MessageType.MESSAGE_TYPE_16_DOT || type == MessageType.MESSAGE_TYPE_32_DOT) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 }

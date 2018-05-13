@@ -35,14 +35,16 @@ public class BinCreater {
 	public int mHeight;
 	public int mWidth;
 	
+	public int mHeighEachHead;
+	
 	public BinCreater() {
 		mHeight = 0;
 		mWidth = 0;
 	}
 	
-	public int extract(Bitmap bitmap) {
+	public int[] extract(Bitmap bitmap, int head) {
 		Debug.e(TAG, "--->please Override this Method in Child class");
-		return 0;
+		return null;
 	}
 	
 	public int extract(String text) {

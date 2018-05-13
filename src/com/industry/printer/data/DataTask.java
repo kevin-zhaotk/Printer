@@ -68,7 +68,8 @@ public class DataTask {
 	public char[] mPrintBuffer;
 	public char[] mBuffer;
 	
-	private int mDots;
+	private int mDots = 0;
+	private int[] mDotsEach = new int[8];
 	
 	public boolean isReady = true;
 	
@@ -101,6 +102,7 @@ public class DataTask {
 		if (task != null) {
 			mObjList = task.getObjects();
 		}
+		
 		mDots = 0;
 		mVarBinList = new HashMap<BaseObject, BinInfo>();
 	}
@@ -190,6 +192,8 @@ public class DataTask {
 			div = 0.5f;
 			scaleW = 0.5f;
 			scaleH = 0.25f;
+		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_16_DOT) {
+			div = 152f/16f;
 		}
 		/**if high resolution message, do not divide width by 2 */
 		if (msg.getResolution()) {
@@ -350,8 +354,28 @@ public class DataTask {
 		mDots = dots;
 	}
 	
+	public void setDotsEach(int[] dots) {
+		if (dots == null) {
+			return;
+		}
+		for (int i = 0; i < dots.length; i++) {
+			if (mDotsEach.length <= i) {
+				break;
+			}
+			mDotsEach[i] = dots[i];
+		}
+	}
+	
+	
 	public int getDots() {
 		return mDots;
+	}
+	
+	public int getDots(int index) {
+		if (index >= mDotsEach.length) {
+			return 0;
+		}
+		return mDotsEach[index];
 	}
 	
 	public boolean isNeedRefresh() {

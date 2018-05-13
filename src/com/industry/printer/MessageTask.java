@@ -55,7 +55,7 @@ public class MessageTask {
 	public static final String MSG_PREV_IMAGE = "/1.bmp";
 	public static final String MSG_PREV_IMAGE2 = "/2.bmp";
 	private Context mContext;
-	private int mDots=0; 
+	private int mDots[]; 
 	private String mName;
 	private ArrayList<BaseObject> mObjects;
 
@@ -200,7 +200,7 @@ public class MessageTask {
 	 * 此API只对树莓小板系统有效
 	 * @return
 	 */
-	public int getDots() {
+	public int[] getDots() {
 		return mDots;
 	}
 	
@@ -234,7 +234,8 @@ public class MessageTask {
 		for(BaseObject o:mObjects)
 		{
 			if((o instanceof MessageObject)	) {
-				((MessageObject) o).setDotCount(mDots);
+				((MessageObject) o).setDotCountPer(mDots);
+				((MessageObject) o).setDotCount(dotTotal());
 				break;
 			}
 		}
@@ -271,27 +272,72 @@ public class MessageTask {
 					object.generateVarbinFromMatrix(ConfigPath.getTlkDir(mName));
 				} else {
 					// mDots += object.drawVarBitmap();
-					mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
+					int dot = object.makeVarBin(mContext, scaleW, scaleH, h);
+					dealDot(dot);
 				}
 			} else if ((object instanceof LetterHourObject)) {
-				mDots += object.makeVarBin(mContext, scaleW, scaleH, h);
+				int dot = object.makeVarBin(mContext, scaleW, scaleH, h);
+				dealDot(dot);
 			} else if (object instanceof BarcodeObject && object.getSource() == true) {
-				int dots = ((BarcodeObject) object).getDotcount();
+				int dots[] = ((BarcodeObject) object).getDotcount();
 				MessageObject msg = getMsgObject();
 				if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST 
 						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH ) {
-					mDots += dots * 2;
+					dealDot(dots, 2);
 				} else if (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL 
 						|| msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST ) {
-					mDots += dots * 2 * 4;
+					dealDot(dots, 2 * 4);
 				} else {
-					mDots += dots/2;
+					dealDot(dots, 0.5f);
 				}
 				
 			}
 		}
 	}
 	
+	private int dotTotal() {
+		int dots = 0;
+		for (int i = 0; i < mDots.length; i++) {
+			dots += mDots[i];
+		}
+		return dots;
+	}
+
+	private void dealDot(int[] dots, float multiple) {
+		for (int i = 0; i < dots.length; i++) {
+			mDots[i] += dots[i] * multiple;
+		}	
+	}
+	
+	private void dealDot(int dots) {
+		MessageObject msgObj = getMsgObject();
+		switch (msgObj.getHeadCount()) {
+			case 1:
+				mDots[0] += dots;
+				break;
+			case 2:
+				mDots[0] += dots/2;
+				mDots[1] += dots/2;
+				break;
+			case 3:
+				mDots[0] += dots/3;
+				mDots[1] += dots/3;
+				mDots[2] += dots/3;
+				break;
+			case 4:
+				for (int i = 0; i < 4; i++) {
+					mDots[i] += dots/4;
+				}
+				break;
+			case 8:
+				for (int i = 0; i < 8; i++) {
+					mDots[i] += dots/8;
+				}
+				break;		
+			default:
+				break;
+		}
+	}
 	public void saveBin() {
 		if (PlatformInfo.isBufferFromDotMatrix()==1) {
 			saveBinDotMatrix();
@@ -417,7 +463,7 @@ public class MessageTask {
 		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		mDots = maker.extract(bitmap);
+		mDots = maker.extract(bitmap, msg.getHeadCount());
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
@@ -440,6 +486,7 @@ public class MessageTask {
 		MessageObject msgObj = getMsgObject();
 		float scaleW = getScale(msgObj.getType());
 		float scaleH = getScaleH(msgObj.getType());
+		Debug.d(TAG, "drawAllBmp scaleW = " + scaleW + ", scaleH = " + scaleH);
 		//實際寬度
 		int bWidth = (int) (width * scaleW);
 		int bHeight = getHeight(msgObj.getType());
@@ -477,9 +524,9 @@ public class MessageTask {
 				if (t == null) {
 					continue;
 				}
-				BinFromBitmap.saveBitmap(bmp, "barcode.png");
+				// BinFromBitmap.saveBitmap(bmp, "barcode.png");
 				can.drawBitmap(t, o.getX() * scaleW, o.getY() * scaleH, p);
-				BinFromBitmap.saveBitmap(bmp, "barcode_1.png");
+				// BinFromBitmap.saveBitmap(bmp, "barcode_1.png");
 			} else if (o instanceof GraphicObject) {
 				int h = (int)(o.getHeight() * scaleH);
 				int w = (int) (o.getWidth() * scaleW);
@@ -491,18 +538,24 @@ public class MessageTask {
 				}
 			} else {
 				Bitmap t = o.makeBinBitmap(mContext, o.getContent(), (int)(o.getWidth() * scaleW), (int)(o.getHeight() * scaleH), o.getFont());
-				can.drawBitmap(t, (int)(o.getX() * scaleW), (int)(o.getY() * scaleH), p);
+				if (t != null) {
+					can.drawBitmap(t, (int)(o.getX() * scaleW), (int)(o.getY() * scaleH), p);
+				} else {
+					Debug.d(TAG, "--->bitmap null");
+				}
+				
 				// BinFromBitmap.recyleBitmap(t);
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
+		BinFromBitmap.saveBitmap(bmp, getName()+".png");
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		/** if high resolution, keep original width */
-		if (msgObj.getResolution()) {
-			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true));
+		if (msgObj.getResolution() || (getHeadType() == MessageType.MESSAGE_TYPE_16_DOT)) {
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true), msgObj.getHeadCount());
 		} else {
-			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true));
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true), msgObj.getHeadCount());
 		}
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
@@ -547,13 +600,14 @@ public class MessageTask {
 		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		mDots = maker.extract(content);
+		MessageObject msg = getMsgObject();
+		mDots[0] = maker.extract(content);
 		// 保存bin文件
 		maker.save(ConfigPath.getTlkDir(mName) + "/1.bin");
 		for(BaseObject o:mObjects)
 		{
 			if((o instanceof MessageObject)	) {
-				((MessageObject) o).setDotCount(mDots);
+				((MessageObject) o).setDotCount(mDots[0]);
 				break;
 			}
 		}
@@ -928,6 +982,9 @@ public class MessageTask {
 		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
 			scale = 4f;
 			break;
+		case MessageType.MESSAGE_TYPE_16_DOT:
+			scale = 16f/152;
+			break;
 		default:
 			break;
 		}
@@ -965,6 +1022,9 @@ public class MessageTask {
 		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
 			scale = 4f;
 			break;
+		case MessageType.MESSAGE_TYPE_16_DOT:
+			scale = 16f/152;
+			break;
 		default:
 			break;
 		}
@@ -1001,6 +1061,9 @@ public class MessageTask {
 		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
 			scale = 640;
 			break;
+		case MessageType.MESSAGE_TYPE_16_DOT:
+			scale = 32;
+			break;
 		default:
 			break;
 		}
@@ -1015,8 +1078,8 @@ public class MessageTask {
 		public static final int MESSAGE_TYPE_33	   	= 4;
 		public static final int MESSAGE_TYPE_38_1  	= 5;
 		public static final int MESSAGE_TYPE_50_8  	= 6;
-		public static final int MESSAGE_TYPE_HZK_16_16  = 7;
-		public static final int MESSAGE_TYPE_HZK_32_32  = 8;				
+		public static final int MESSAGE_TYPE_16_DOT  = 8;
+		public static final int MESSAGE_TYPE_32_DOT  = 7;				
 		public static final int MESSAGE_TYPE_1_INCH = 9; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_FAST = 10; //320點每列的噴頭
 		public static final int MESSAGE_TYPE_1_INCH_DUAL = 11; //320點每列的噴頭,雙頭

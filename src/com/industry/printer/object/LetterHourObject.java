@@ -87,7 +87,7 @@ public class LetterHourObject extends BaseObject {
 	
 	@Override
 	public int makeVarBin(Context ctx, float scaleW, float scaleH, int dstH) {
-		int dots = 0;
+		int dots[];
 		int singleW;
 		Paint paint = new Paint();
 		int height = (int) (mHeight * scaleH);
@@ -128,14 +128,14 @@ public class LetterHourObject extends BaseObject {
 		BinFromBitmap.recyleBitmap(bmp);
 		
 		BinFileMaker maker = new BinFileMaker(mContext);
-		dots = maker.extract(gBmp);
+		dots = maker.extract(gBmp, 1);
 		Debug.d(TAG, "--->id: " + mId + " index:  " + mIndex);
 		maker.save(ConfigPath.getVBinAbsolute(mTask.getName(), mIndex));
 		//
 		BinFromBitmap.recyleBitmap(gBmp);
 		/*根據變量內容的實際長度計算點數*/
-		dots = (dots* getContent().length()/24) + 1;
-		return dots;
+		dots[0] = (dots[0]* getContent().length()/24) + 1;
+		return dots[0];
 	}
 	
 

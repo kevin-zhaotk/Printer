@@ -30,11 +30,11 @@ public class BinFileMaker {
 		}
 	}
 	
-	public int  extract(Bitmap bmp) {
+	public int[]  extract(Bitmap bmp, int heads) {
 		if (mBinCreater == null) {
 			init();
 		}
-		return mBinCreater.extract(bmp);
+		return mBinCreater.extract(bmp, heads);
 	}
 	
 	public int extract(String text) {

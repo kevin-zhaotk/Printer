@@ -139,7 +139,7 @@ public class BinInfo {
 	public BinInfo(Context ctx, Bitmap bmp) {
 		BinFileMaker m = new BinFileMaker(ctx);
 		// BinCreater.saveBitmap(bmp, "bar.png");
-		m.extract(bmp);
+		m.extract(bmp, 1);
 		mBuffer = m.getBuffer();
 		ByteArrayBuffer buffer = new ByteArrayBuffer(0);
 		byte[] header = new byte[BinCreater.RESERVED_FOR_HEADER];

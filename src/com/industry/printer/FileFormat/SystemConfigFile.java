@@ -1052,11 +1052,11 @@ public class SystemConfigFile{
 		case MessageType.MESSAGE_TYPE_50_8:
 			heads = 4;
 			break;
-		case MessageType.MESSAGE_TYPE_HZK_16_16:
+		case MessageType.MESSAGE_TYPE_16_DOT:
 			heads = 1;
 			break;
-		case MessageType.MESSAGE_TYPE_HZK_32_32:
-			heads = 1;
+		case MessageType.MESSAGE_TYPE_32_DOT:
+			heads = 2;
 			break;
 		case MessageType.MESSAGE_TYPE_NOVA:
 			heads = 6;

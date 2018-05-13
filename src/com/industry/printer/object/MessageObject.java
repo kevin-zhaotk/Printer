@@ -9,7 +9,8 @@ import com.industry.printer.Utils.PlatformInfo;
 
 public class MessageObject extends BaseObject {
 
-	public int mDots;
+	public int mDots = 0;
+	public int[] mDotPer = new int[8];
 	public int mType;
 	public boolean mHighResolution;
 	
@@ -20,6 +21,10 @@ public class MessageObject extends BaseObject {
 											7, 7.5f, 8, 8.5f, 9, 9.5f, 10, 10.5f, 11, 11.5f, 12, 12.5f, 
 											13, 13.5f, 14, 14.5f, 15, 15.5f, 16, 16.3f};
 	
+	
+	public static final String[] mDotSizes = {
+		"7x6" , "16x12"
+	};
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -49,9 +54,47 @@ public class MessageObject extends BaseObject {
 		}
 	}
 
-	
+	private void initDotCount() {
+		mDots = 0;
+		for (int i = 0; i < mDotPer.length; i++) {
+			mDotPer[i] = 0;
+		}
+	}
 	public int getType() {
 		return mType;
+	}
+	
+	
+	public int getHeadCount() {
+		int headCount = 1;
+		switch (mType) {
+		case MessageType.MESSAGE_TYPE_12_7:
+		case MessageType.MESSAGE_TYPE_12_7_S:
+		case MessageType.MESSAGE_TYPE_16_3:
+		case MessageType.MESSAGE_TYPE_1_INCH:
+		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
+		case MessageType.MESSAGE_TYPE_16_DOT:
+		case MessageType.MESSAGE_TYPE_9MM:
+		case MessageType.MESSAGE_TYPE_NOVA:
+			 headCount = 1;
+			break;
+		case MessageType.MESSAGE_TYPE_32_DOT:
+		case MessageType.MESSAGE_TYPE_25_4:
+		case MessageType.MESSAGE_TYPE_33:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
+		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
+			headCount = 2;
+			break;
+		case MessageType.MESSAGE_TYPE_38_1:
+			headCount = 3;
+			break;
+		case MessageType.MESSAGE_TYPE_50_8:
+			headCount = 4;
+			break;
+		default:
+			break;
+		}
+		return headCount;
 	}
 	
 	public void setHighResolution(boolean resolution) {
@@ -75,7 +118,16 @@ public class MessageObject extends BaseObject {
 	}
 	
 	public void setDotCount(int count) {
-		mDots = count;
+		mDots = count;		
+	}
+	
+	public void setDotCountPer(int[] count) {
+		for (int i = 0; i < count.length; i++) {
+			if (mDotPer.length < i) {
+				break;
+			}
+			mDotPer[i] = count[i];
+		}
 	}
 
 	/*
@@ -103,30 +155,65 @@ public class MessageObject extends BaseObject {
 	}
 	*/
 	public String toString()  //addbylk xxx/30
-	{			String str="";
+	{			
+		String str="";
+		StringBuilder builder = new StringBuilder(mId);
 		if(PlatformInfo.isBufferFromDotMatrix()!=0) //adfbylk
 		{
 
-			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-			str += mId+"^";
-			str += "00000^00000^00000^00000^0^000^";
-			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
-			str += BaseObject.intToFormatString(mDots*220, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
-			Debug.d(TAG, "file string ["+str+"]");
+//			str += mId+"^";
+//			str += "00000^00000^00000^00000^0^000^";
+//			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+//			str += BaseObject.intToFormatString(mDots*220, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+//			Debug.d(TAG, "file string ["+str+"]");
+//			
+			builder.append("^");
+			builder.append("00000^00000^00000^00000^0^000^")
+				.append(BaseObject.intToFormatString(mType,3))
+				.append("^000^000^000^000^")
+				.append(BaseObject.intToFormatString(mDots * 2, 7))
+				.append("^00000000^00000000^00000000^0000^0000^0000^000^")
+				.append(mContent);
 		}
 		else
 		{
-			//str += BaseObject.intToFormatString(mIndex, 3)+"^";
-			str += mId+"^";
-			str += "00000^00000^00000^00000^0^000^";
-			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
-			str += BaseObject.intToFormatString(mDots*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
-			Debug.d(TAG, "file string ["+str+"]");		
-		
+//			str += mId+"^";
+//			str += "00000^00000^00000^00000^0^000^";
+//			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
+//			str += BaseObject.intToFormatString(dotCount()*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
+//			Debug.d(TAG, "file string ["+str+"]");		
+			builder.append("00000^00000^00000^00000^0^000^")
+				.append(BaseObject.intToFormatString(mType,3))
+				.append("^000^")
+				.append(intToFormatString(mDotPer[0], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[1], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[2], 7))
+				.append("^")
+				.append(BaseObject.intToFormatString(mDots*2, 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[3], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[4], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[5], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[6], 7))
+				.append("^")
+				.append(intToFormatString(mDotPer[7], 7))
+				.append("^0000^000^")
+				.append(mContent);
 		}
 		
-		return str;
+		return builder.toString();
 	}
+	
+	
+	/**
+	 * 根据喷头类型返回支持的字号
+	 * @return
+	 */
 	public String[] getDisplayFSList() {
 		String[] size = new String[mBaseList.length];
 		Debug.d(TAG, "--->getDisplayFSList mType = " + mType);
@@ -154,10 +241,11 @@ public class MessageObject extends BaseObject {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
 
-		} else  if ( mType == MessageType.MESSAGE_TYPE_HZK_32_32 ) {
-				
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 ) {
-					
+		} else  if ( mType == MessageType.MESSAGE_TYPE_16_DOT || mType == MessageType.MESSAGE_TYPE_32_DOT) {
+			size = new String[mDotSizes.length];
+			for (int i = 0; i < size.length; i++) {
+				size[i] = mDotSizes[i];
+			}
 		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
 			// size = new String[mBaseList_16.length];
 			for (int i = 0; i < size.length; i++) {
@@ -167,6 +255,14 @@ public class MessageObject extends BaseObject {
 		return size;
 	}
 	
+	/**
+	 * 根据喷头类型和高度计算实际的字号
+	 * 点阵字库单独处理：实际高度bit
+	 * 		如： 7bit点阵，	计算得到的实际字号是  152
+	 * 			 16bit点阵，	计算得到的实际字号是  304
+	 * @param size
+	 * @return
+	 */
 	public float getRealFontsize(String size) {
 		float h=1;
 		Debug.d(TAG, "--->size: " + size);
@@ -188,17 +284,17 @@ public class MessageObject extends BaseObject {
 		} else if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			return h*12.7f/16.3f;
 		}
-		else if ( mType == MessageType.MESSAGE_TYPE_HZK_16_16 )//addbylk 喷头类型  
+		else if ( mType == MessageType.MESSAGE_TYPE_16_DOT )//addbylk 喷头类型  
 		{
-			if( h==7)
-			{				
-			}
-			else
-			{	
-			}
-		}else  if ( mType == MessageType.MESSAGE_TYPE_HZK_32_32 )//addbylk
+			if (size.equalsIgnoreCase("7x6")) {
+				h = 6.4f;
+			} else if (size.equalsIgnoreCase("16x12")) {
+				h = 12.7f;
+			}  
+			
+		}else  if ( mType == MessageType.MESSAGE_TYPE_32_DOT )//addbylk
 		{
-		 // addbylk_1_15/30_end
+		
 		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
 			return h;
 		}
@@ -207,12 +303,14 @@ public class MessageObject extends BaseObject {
 	
 	public int getPixels(String size) {
 		float h = getRealFontsize(size);
+		
 		return (int)(h * PIXELS_PER_MM);
 	}
 	
 	public String getDisplayFs(float size) {
 		float h = 0;
 		int type = 1;
+		Debug.d(TAG, "--->getDisplayFs: " + size);
 		float[] sizelist;
 		if (mType == MessageType.MESSAGE_TYPE_16_3) {
 			sizelist= mBaseList_16;
@@ -235,6 +333,13 @@ public class MessageObject extends BaseObject {
 			
 		} else if (mType == MessageType.MESSAGE_TYPE_NOVA) {
 			h = size/PIXELS_PER_MM;
+		} else if (mType == MessageType.MESSAGE_TYPE_16_DOT || mType == MessageType.MESSAGE_TYPE_32_DOT) {
+			if (size <= 152/2) {
+				return mDotSizes[0]; 
+			} else {
+				return mDotSizes[1];
+			}
+			
 		} else {
 			h = size/PIXELS_PER_MM;
 		}
