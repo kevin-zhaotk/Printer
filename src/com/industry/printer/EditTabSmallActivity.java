@@ -530,8 +530,6 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());
             		mObjName = MessageSaveDialog.getTitle();
             		createfile=true;
-            	case HANDLER_MESSAGE_SAVE:    //save
-            		Debug.d(TAG, "--->save");
             		if (checkMsg(mObjName)) {
             			ConfirmDialog dialog = new ConfirmDialog(mContext, String.format(getString(R.string.str_message_tips), mObjName));
             			dialog.setListener(new DialogListener (){
@@ -548,8 +546,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             			dialog.show();
             		} else {
             			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
-            			
             		}
+            		break;
+            	case HANDLER_MESSAGE_SAVE:    //save
+            		Debug.d(TAG, "--->save");
+           			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
             		break;
             	case HANDLER_MESSAGE_SAVE_CONFIRM:
             		progressDialog();

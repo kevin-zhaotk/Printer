@@ -52,6 +52,8 @@ public class WelcomeActivity extends Activity {
 	
 	private boolean upgrade() {
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
+			File font = new File(Configs.FONT_DIR);
+			font.delete();
 			PackageInstaller installer = PackageInstaller.getInstance(this);
 			return installer.silentUpgrade();
 		}

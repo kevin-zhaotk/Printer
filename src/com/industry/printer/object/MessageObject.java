@@ -182,7 +182,7 @@ public class MessageObject extends BaseObject {
 //			str += BaseObject.intToFormatString(mType,3) + "^000^000^000^000^";
 //			str += BaseObject.intToFormatString(dotCount()*2, 7)+"^00000000^00000000^00000000^0000^0000^0000^000^"+mContent;
 //			Debug.d(TAG, "file string ["+str+"]");		
-			builder.append("00000^00000^00000^00000^0^000^")
+			builder.append("^00000^00000^00000^00000^0^000^")
 				.append(BaseObject.intToFormatString(mType,3))
 				.append("^000^")
 				.append(intToFormatString(mDotPer[0], 7))
