@@ -18,6 +18,8 @@ import android.text.format.Time;
 
 public class RealtimeDate extends BaseObject {
 
+	private static final String TAG = RealtimeDate.class.getSimpleName();
+
 	public int mOffset;
 	public RealtimeObject mParent;
 	
@@ -120,20 +122,7 @@ public class RealtimeDate extends BaseObject {
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
-		
-		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
-			setWidth(width);
-		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
-		mCan = new Canvas(bitmap);
-		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
-	
-		
-		 
+
 		String str_new_content="";
 		str_new_content =	mContent;	
 		
@@ -147,7 +136,16 @@ public class RealtimeDate extends BaseObject {
 		str_new_content =	str_new_content.replace('7', 'D');	
 		str_new_content =	str_new_content.replace('8', 'D');	
 		str_new_content =	str_new_content.replace('9', 'D');	
-		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
+		// Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);
+
+		int width = (int)mPaint.measureText(str_new_content);//addbylk
+
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		mPaint.setColor(Color.BLUE);
+
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	

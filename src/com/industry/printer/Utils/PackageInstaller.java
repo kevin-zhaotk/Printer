@@ -72,6 +72,10 @@ public class PackageInstaller {
 			e.printStackTrace();
 		}
 		PackageInfo pInfo = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+		if (pInfo == null) {
+			Debug.e(TAG, "===>package info ");
+			return false;
+		}
 		int newVersion = pInfo.versionCode;
 		Debug.d(TAG, "===>curVer:" + curVersion + ",  newVer:" + newVersion);
 		if (curVersion == newVersion) {

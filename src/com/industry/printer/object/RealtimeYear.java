@@ -150,22 +150,7 @@ public class RealtimeYear extends BaseObject {
 		try {
 			Paint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
-		
-		int width = (int)Paint.measureText(getContent());
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
-			setWidth(width);
-		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
-	 
-		Canvas can = new Canvas(bitmap);
-		FontMetrics fm = Paint.getFontMetrics();
-		
-		Paint.setColor(Color.BLUE); 
-	
-		
-		 
+
 		String str_new_content="";
 		str_new_content =	mContent;	
 		
@@ -179,7 +164,18 @@ public class RealtimeYear extends BaseObject {
 		str_new_content =	str_new_content.replace('7', 'Y');	
 		str_new_content =	str_new_content.replace('8', 'Y');	
 		str_new_content =	str_new_content.replace('9', 'Y');	
-		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
+		//Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);
+
+		int width = (int)Paint.measureText(str_new_content);
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+
+		Canvas can = new Canvas(bitmap);
+		FontMetrics fm = Paint.getFontMetrics();
+
+		Paint.setColor(Color.BLUE);
+
 		can.drawText(str_new_content , 0, mHeight-fm.descent, Paint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	

@@ -27,7 +27,9 @@
     
     <style name="Dialog_Fullscreen"> 
 		<item name="android:windowFullscreen">true</item> 
-		<item name="android:windowNoTitle">true</item> 
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:background">#436EEE</item>
+
 	</style>
  <style name="textSmallBlack">
         <item name="android:layout_width">wrap_content</item>

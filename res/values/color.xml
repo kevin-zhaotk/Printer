@@ -7,6 +7,7 @@
 	<color name="red">#ff0000</color>
 	<color name="gray">#8E8E8E</color>
 	<color name="transparent">#00000000</color>
+	<color name="background_bl">#000000</color>
 	<color name="UnitText">#080808</color>
 	<color name="message_abstract_color">#000000</color>
 	<color name="message_selected_color">#436EEE</color>
@@ -14,6 +15,6 @@
 	<drawable name="transparent">#00000000</drawable>
 	<drawable name="line_gray">#77b3b3b3</drawable>
 	<drawable name="gray_frame">#c8c7cc</drawable>
-	   <drawable name="gray_text">#666666</drawable>
-	    <drawable name="black">#000000</drawable>
+	<drawable name="gray_text">#666666</drawable>
+	<drawable name="black">#000000</drawable>
 </resources>

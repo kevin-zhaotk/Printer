@@ -285,7 +285,8 @@ public class BaseObject{
 		int width = (int)mPaint.measureText(getContent());
 	
 		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
+		int type = mTask != null? mTask.getHeadType() : MessageType.MESSAGE_TYPE_12_7;
+		if (mWidth == 0 || type == MessageType.MESSAGE_TYPE_16_DOT) {
 			setWidth(width);
 		}
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
@@ -319,7 +320,7 @@ public class BaseObject{
 		Paint paint = new Paint();
 //		paint.setColor(Color.BLACK);
 		paint.setTextSize(ctH);
-		paint.setAntiAlias(true); //去除锯齿  
+		paint.setAntiAlias(true); //去除锯齿
 		paint.setFilterBitmap(true); //对位图进行滤波处理
 		boolean isCorrect = false;
 		
@@ -329,8 +330,12 @@ public class BaseObject{
 			
 		}
 		int width = (int)paint.measureText(content);
+//
+//		Rect rect = new Rect();
+//		paint.getTextBounds(getContent(), 0, getContent().length(), rect);
+//		int w = getTextWidth(paint, getContent());
 		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG, "--->bmp: " + bitmap.getWidth() +  "  " + bitmap.getHeight());
+		Debug.d(TAG, "--->bmp: " + bitmap.getWidth() +  "  " + bitmap.getHeight() );
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
 		int adjust = (int)fm.descent;
@@ -338,10 +343,28 @@ public class BaseObject{
 			adjust = 4;
 		}
 		canvas.drawText(content, 0, ctH-adjust, paint);
+		int head = mTask.getHeadType();
 		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
+		if (head == MessageType.MESSAGE_TYPE_16_DOT) {
+			return bitmap;
+		}
+
 		return Bitmap.createScaledBitmap(bitmap, ctW, ctH, true);
 	}
-	
+
+	public static int getTextWidth(Paint paint, String str) {
+		int iRet = 0;
+		if (str != null && str.length() > 0) {
+			int len = str.length();
+			float[] widths = new float[len];
+			paint.getTextWidths(str, widths);
+			for (int j = 0; j < len; j++) {
+				iRet += (int) Math.ceil(widths[j]);
+			}
+		}
+		return iRet;
+	}
+
 	private int getfeedsent() {
 		return (int)(mHeight/10 * 11/20 + 1);
 	}

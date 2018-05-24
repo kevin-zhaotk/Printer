@@ -115,21 +115,7 @@ public class RealtimeMonth extends BaseObject {
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
 		} catch (Exception e) {}
-		
-		int width = (int)mPaint.measureText(getContent());
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
-			setWidth(width);
-		}
-		Debug.d(TAG, "2===== " + getContent() );
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
-		mCan = new Canvas(bitmap);
-		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE); 
-		Debug.d(TAG, "3===== " + getContent() );
-		
-		 
+
 		String str_new_content="";
 		str_new_content =	mContent;	
 		
@@ -142,8 +128,19 @@ public class RealtimeMonth extends BaseObject {
 		str_new_content =	str_new_content.replace('6', 'M');	
 		str_new_content =	str_new_content.replace('7', 'M');	
 		str_new_content =	str_new_content.replace('8', 'M');	
-		str_new_content =	str_new_content.replace('9', 'M');	
-		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
+		str_new_content =	str_new_content.replace('9', 'M');
+
+
+		int width = (int)mPaint.measureText(str_new_content);
+		Debug.d(TAG, "--->content: " + str_new_content + "  width=" + width);
+		
+//		Debug.d(TAG, "2===== " + getContent() );
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		mPaint.setColor(Color.BLUE);
+
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	

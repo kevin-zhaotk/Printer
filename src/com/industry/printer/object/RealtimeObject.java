@@ -439,11 +439,11 @@ public class RealtimeObject extends BaseObject {
 		
 		bitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Bitmap.Config.ARGB_8888);
 		mCan = new Canvas(bitmap);
-		Log.d(TAG, "++++>" + getX() + "   " + getXEnd() + "  width=" + bitmap.getWidth());
+		Log.d(TAG, "++++>x: " + getX() + "   " + getXEnd() + "  width=" + bitmap.getWidth());
 		for(BaseObject o : mSubObjs)
 		{
-			Debug.e(TAG, "============>id:" + o.mId + ", x=" + (o.getX() - getX()));
 			Bitmap b = o.getpreviewbmp();
+			Debug.e(TAG, "============>id:" + o.mId + ", x=" + o.getX() + "  width = " + b.getWidth());
 			mCan.drawBitmap(b, o.getX()-getX(), 0, mPaint);
 		}
 		return bitmap;
