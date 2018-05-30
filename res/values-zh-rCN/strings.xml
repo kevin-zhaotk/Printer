@@ -753,6 +753,8 @@
 	<string name="str_net_hundred">100</string>
 	<string name="str_net_thousand">1000</string>
 	<string name="str_net_connect">连接</string>
+	<string name="str_net_tips">提示</string>
+	<string name="str_net_textview">TextView</string>
 	
 	<string name="str_tip_nothing">~ 没有找到图片!!!</string>
 	<string name="str_no_permission">权限不足</string>
