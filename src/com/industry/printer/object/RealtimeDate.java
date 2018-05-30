@@ -120,7 +120,7 @@ public class RealtimeDate extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
+			mPaint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
 
 		String str_new_content="";

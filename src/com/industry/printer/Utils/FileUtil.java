@@ -44,6 +44,9 @@ public class FileUtil {
 	// 复制文件   
 	public static void copyFile(File sourceFile,File targetFile) throws IOException{  
 		
+		if (targetFile.exists()) {
+			targetFile.delete();
+		}
 		Debug.d(TAG, "--->copyFile: " + sourceFile + "-- to --> " + targetFile);
         // 新建文件输入流并对它进行缓冲   
         FileInputStream input = new FileInputStream(sourceFile);  

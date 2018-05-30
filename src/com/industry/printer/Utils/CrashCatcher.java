@@ -1,11 +1,17 @@
 package com.industry.printer.Utils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.industry.printer.DataTransferThread;
+import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.SettingsTabActivity;
 
 public class CrashCatcher implements UncaughtExceptionHandler {
@@ -44,7 +50,49 @@ public class CrashCatcher implements UncaughtExceptionHandler {
 			SharedPreferences p = mContext.getSharedPreferences(SettingsTabActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
 			p.edit().putBoolean(PreferenceConstants.PRINTING_BEFORE_CRASH, true).commit();
 		}
+		ArrayList<String> usbs = ConfigPath.getMountedUsb();
+		if (usbs == null && usbs.size() == 0) {
+			return;
+		}
+		
+		FileWriter fw = null;
+		File log = new File(usbs.get(0) + "/log-" + getTimeString() + ".txt");
+		try {
+			fw = new FileWriter(log);
+			fw.write(PlatformInfo.getVersionName(mContext));
+			fw.append("\n");
+			fw.append(arg1.getMessage());
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			Debug.e(TAG, e.getMessage());
+		} finally {
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (IOException e) {
+					Debug.e(TAG, e.getMessage());
+				}
+				
+			}
+		}
+		
 		mDefaultHandler.uncaughtException(thread, arg1);
+	}
+
+	private String getTimeString() {
+		Calendar calendar = Calendar.getInstance();
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append(calendar.get(Calendar.YEAR))
+				.append(StringUtil.formatTo(calendar.get(Calendar.MONTH), 2))
+				.append(StringUtil.formatTo(calendar.get(Calendar.DATE), 2))
+				.append(StringUtil.formatTo(calendar.get(Calendar.HOUR_OF_DAY), 2))
+				.append(StringUtil.formatTo(calendar.get(Calendar.MINUTE), 2))
+				.append(StringUtil.formatTo(calendar.get(Calendar.SECOND), 2))
+				.append(StringUtil.formatTo(calendar.get(Calendar.MILLISECOND), 4));
+
+		return builder.toString();
 	}
 
 }

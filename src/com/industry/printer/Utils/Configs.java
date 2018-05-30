@@ -163,6 +163,8 @@ public class Configs {
 	
 	public static final String FONT_ZIP_FILE = "Well.Ftt";
 	
+	public static final String FONT_DIR_USB = "/ft";
+	
 	public static SystemConfigFile mSysconfig;
 	/**
 	 * initConfigs initiallize the system configs,such as dots and fixed rows 

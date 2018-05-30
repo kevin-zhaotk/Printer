@@ -63,7 +63,7 @@ public class WeekOfYearObject extends BaseObject{
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			Paint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
+			Paint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
 		String str_new_content="W";	
 		for (int i = 1; i < mContent.length(); i++) {

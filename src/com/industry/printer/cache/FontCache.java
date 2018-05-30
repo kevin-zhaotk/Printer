@@ -52,10 +52,11 @@ public class FontCache {
 			
 			@Override
 			public boolean accept(File arg0) {
-				if (arg0.getAbsolutePath().endsWith(".ttf")) {
-					return true;
-				}
-				return false;
+//				if (arg0.getAbsolutePath().endsWith(".ttf")) {
+//					return true;
+//				}
+//				return false;
+				return true;
 			}
 		});
 		if (fonts == null || fonts.length <= 0) {

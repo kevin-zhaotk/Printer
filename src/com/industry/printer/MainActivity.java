@@ -67,12 +67,14 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
+import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.Utils.ZipUtil;
 import com.industry.printer.hardware.ExtGpio;
 import com.industry.printer.hardware.FpgaGpioOperation;
 import com.industry.printer.hardware.PWMAudio;
+import com.industry.printer.object.BaseObject;
 import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
 import com.industry.printer.ui.CustomerDialog.DialogListener;
 import com.industry.printer.ui.CustomerDialog.ImportDialog;
@@ -244,6 +246,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 	}
 	
 	public void drawObjects()
@@ -619,8 +626,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 							src.put("tips", "Importing System configs");
 						} else if (Configs.FONT_DIR.equals(arg0)) {
-							src.put("source",usbs.get(0) + File.separator + Configs.FONT_ZIP_FILE);
-							src.put("dest", Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE);
+							src.put("source",usbs.get(0) + Configs.FONT_DIR_USB);
+							src.put("dest", Configs.FONT_DIR);
 							src.put("tips", "Importing font library");
 						}
 						Debug.d(TAG, "--->flatMap");
@@ -634,11 +641,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 						try {
 							mProgressDialog.setMessage(arg0.get("tips"));
 							FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
-							String dest = arg0.get("dest");
-							if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
-								mProgressDialog.setMessage("Unzipp...");
-								ZipUtil.UnZipFolder(Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE, Configs.CONFIG_PATH_FLASH);
-							}
+//							String dest = arg0.get("dest");
+//							if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
+//								mProgressDialog.setMessage("Unzipp...");
+//								ZipUtil.UnZipFolder(Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE, Configs.CONFIG_PATH_FLASH);
+//							}
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
@@ -719,8 +726,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					src.put("source",usbs.get(0) + arg0);
 					src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 				} else if (Configs.FONT_DIR.equals(arg0)) {
-					src.put("source",usbs.get(0) + File.separator + Configs.FONT_ZIP_FILE);
-					src.put("dest", Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE);
+					src.put("source",usbs.get(0) + Configs.FONT_DIR_USB);
+					src.put("dest", Configs.FONT_DIR);
 				}
 				Debug.d(TAG, "--->flatMap");
 				return Observable.just(src);
@@ -732,10 +739,10 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
 				FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
-				String dest = arg0.get("dest");
-				if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
-					ZipUtil.UnZipFolder(Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE, Configs.CONFIG_PATH_FLASH);
-				}
+//				String dest = arg0.get("dest");
+//				if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
+//					ZipUtil.UnZipFolder(Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE, Configs.CONFIG_PATH_FLASH);
+//				}
 				} catch (Exception e) {
 					// TODO: handle exception
 				}

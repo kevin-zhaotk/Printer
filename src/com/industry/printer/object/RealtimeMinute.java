@@ -54,7 +54,7 @@ public class RealtimeMinute extends BaseObject {
 			mFont = DEFAULT_FONT;
 		}
 		try {
-			mPaint.setTypeface(FontCache.getFromExternal(mFont + ".ttf"));
+			mPaint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
 		
 		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 

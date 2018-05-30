@@ -31,7 +31,7 @@ public class WelcomeActivity extends Activity {
 		Configs.initConfigs(mContext);
 		
 		if (!upgrade()) {
-			asyncInit();
+			// asyncInit();
 			Intent intent = new Intent();
 			intent.setClass(this, MainActivity.class);
 			startActivity(intent);
@@ -52,7 +52,7 @@ public class WelcomeActivity extends Activity {
 	
 	private boolean upgrade() {
 		if (PlatformInfo.PRODUCT_SMFY_SUPER3.equals(PlatformInfo.getProduct())) {
-			FileUtil.deleteFolder(Configs.FONT_DIR);
+			//FileUtil.deleteFolder(Configs.FONT_DIR);
 			PackageInstaller installer = PackageInstaller.getInstance(this);
 			return installer.silentUpgrade();
 		}

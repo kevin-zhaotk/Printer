@@ -23,6 +23,7 @@ import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.SettingsListAdapter;
 import com.industry.printer.ui.CustomerDialog.CalendarDialog;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
+import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnNagitiveListener;;
 import com.industry.printer.ui.CustomerDialog.PasswordDialog;
 
 import android.R.integer;
@@ -349,6 +350,13 @@ public static final String TAG="SettingsTabActivity";
 					@Override
 					public void onClick(String content) {
 						saveParam();
+					}
+				});
+				pdialog.setOnNagitiveClickedListener(new OnNagitiveListener() {
+					
+					@Override
+					public void onClick() {
+						reloadSettings();
 					}
 				});
 				pdialog.show();

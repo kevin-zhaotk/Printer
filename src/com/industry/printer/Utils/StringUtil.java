@@ -49,4 +49,30 @@ public class StringUtil {
 			return false;
 		}
 	}
+
+	public static boolean equalCareCase(String v1, String v2) {
+		if (v1 == null || v2 == null) {
+			return false;
+		}
+
+		if (v1.equals(v2)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static String formatTo(int i, int length) {
+		StringBuilder builder = new StringBuilder(String.valueOf(i));
+		if (builder.length() >= length) {
+			return builder.toString();
+		} else {
+			int miss = length - builder.length();
+			for (int j = 0; j < miss; j++) {
+				builder.insert(0, 0);
+			}
+			
+		}
+		return builder.toString();
+	}
 }

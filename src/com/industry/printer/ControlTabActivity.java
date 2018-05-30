@@ -466,6 +466,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		Querydb=new Printer_Database(mContext);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Debug.e(TAG, "--->onResume");
+	}
+
 	private String opendTlks() {
 		StringBuilder name = new StringBuilder();
 		if (mMsgTask != null) {

@@ -18,7 +18,7 @@ import com.printer.corelib.Debug;
 
 public class PasswordDialog extends CustomerDialogBase implements View.OnClickListener {
 
-	public static final String PASSWORD = "1024";
+	public static final String PASSWORD = "ok";
 	
 	private Button mOk;
 	private Button mCancel;
