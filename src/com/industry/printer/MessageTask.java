@@ -234,6 +234,11 @@ public class MessageTask {
 		for(BaseObject o:mObjects)
 		{
 			if((o instanceof MessageObject)	) {
+				if (getHeadType() == MessageType.MESSAGE_TYPE_16_DOT || getHeadType() == MessageType.MESSAGE_TYPE_32_DOT) {
+					for (int i = 0; i < mDots.length; i++) {
+						mDots[i] = mDots[i] * 200;
+					}
+				}
 				((MessageObject) o).setDotCountPer(mDots);
 				((MessageObject) o).setDotCount(dotTotal());
 				break;

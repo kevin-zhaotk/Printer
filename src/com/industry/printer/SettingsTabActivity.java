@@ -344,7 +344,7 @@ public static final String TAG="SettingsTabActivity";
 					@Override
 					public void onClick() {
 						saveParam();
-						ToastUtil.show(mContext, "Save Success");
+						ToastUtil.show(mContext, R.string.toast_save_success);
 					}
 
 					@Override

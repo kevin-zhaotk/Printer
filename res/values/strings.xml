@@ -772,6 +772,8 @@
 	<string name="str_net_connect">Connect</string>
 	<string name="str_net_tips">Hint</string>
 	<string name="str_net_textview">TextView</string>
+	<string name="str_net_ipdefault">192.168.1.101</string>
+	
 	
 	<string name="str_tip_nothing">~ There is no picture !!!</string>
 	<string name="str_no_permission">Permission denied for access the files</string>
@@ -791,4 +793,9 @@
 	
 	<string name="password_title">Please Enter Password</string>
 	
+	<!-- Toast -->
+	<string name="toast_save_success">Save Success</string>
+	<string name="toast_plug_usb">Please plugin a USB device</string>
+	<string name="toast_passwd_error">password chech fail!!!</string>
+	<string name="toast_content_empty">Content shouldn`t be empty</string>
 </resources>

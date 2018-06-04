@@ -157,6 +157,10 @@ public class Configs {
 	/**
 	 * TLK path on flash
 	 */
+	public static String Devic_Number_Path; //device numb path;
+	public static String Devic_File_Path; //device numb path;
+	public static String Device_Printer_Path;//print File path;
+	
 	public static  final String TLK_PATH_FLASH = CONFIG_PATH_FLASH + "/MSG";
 	
 	public static final String FONT_DIR = CONFIG_PATH_FLASH + "/fonts";

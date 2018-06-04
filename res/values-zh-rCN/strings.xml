@@ -766,4 +766,9 @@
 	
 	<string name="password_title">请输入密码</string>
 	
+	<!-- Toast -->
+	<string name="toast_save_success">保存成功</string>
+	<string name="toast_plug_usb">请插入U盘</string>
+	<string name="toast_passwd_error">密码错误!!!</string>
+	<string name="toast_content_empty">内容不能为空</string>
 </resources>

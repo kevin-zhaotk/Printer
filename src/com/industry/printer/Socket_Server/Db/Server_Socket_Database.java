@@ -12,7 +12,7 @@ public class Server_Socket_Database {
 	
 	/** 数据库名 */
 	private static final String SDCARD_ROOT = Environment.getExternalStorageDirectory().toString();
-	public static final String DB_NAME =SDCARD_ROOT+"/printer/"+ "printer.db"; 
+	public static final String DB_NAME =SDCARD_ROOT+"/MSG/"+ "printer.db"; 
 	
 	private static SQLiteDatabase db; 
 	private static Server_Socket_Create_Table dbManager;
@@ -71,7 +71,7 @@ public class Server_Socket_Database {
 	}
 	
 	
-	public boolean InsertData(String Sql,String QureySql)
+	public boolean InsertData(String InsertSql,String UpDAtaSql,String QuerySql)
 	{
 		if(db == null || !db.isOpen()) {
 			db = dbManager.getWritableDatabase();
@@ -79,7 +79,7 @@ public class Server_Socket_Database {
 		boolean result = true;
 		try
 		{
-			Cursor cr=AllData_SqlData(QureySql);
+			Cursor cr=AllData_SqlData(QuerySql);
 			if(cr.getCount()>0)
 			{
 				//ContentValues values = new ContentValues();
@@ -88,12 +88,12 @@ public class Server_Socket_Database {
 				//String[] whereArgs={"1","2"};   
 				//update("device_info",values,whereClause,whereArgs);
 				//String sql = "update stu_table set snumber = 654321 where id = 1";   
-				db.execSQL(QureySql);  
+				db.execSQL(UpDAtaSql);  
 				return true;
 			}
 			else
 			{
-			db.execSQL(Sql);
+			db.execSQL(InsertSql);
 			result = true;
 			}
 		}catch(Exception e)

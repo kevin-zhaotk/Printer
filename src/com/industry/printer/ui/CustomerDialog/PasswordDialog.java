@@ -52,7 +52,7 @@ public class PasswordDialog extends CustomerDialogBase implements View.OnClickLi
 					}
 					dismiss();
 				} else {
-					ToastUtil.show(getContext(), "password chech fail!!!");
+					ToastUtil.show(getContext(), R.string.toast_passwd_error);
 					mPasswd.setText("");
 				}
 			}

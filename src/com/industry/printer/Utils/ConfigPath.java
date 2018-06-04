@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import com.industry.printer.Socket_Server.Db.Server_Socket_Database;
 import com.industry.printer.Utils.PlatformInfo;
 
 import android.R.integer;
@@ -107,11 +108,16 @@ public class ConfigPath {
 		}
 		return paths.get(0)+Configs.TLK_FILE_SUB_PATH;
 		*/
-		File tlkDir = new File(Configs.TLK_PATH_FLASH);
+		//Db = new Server_Socket_Database(null);
+		//wangjing
+		File tlkDir = new File(Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/");
 		if (!tlkDir.exists() || !tlkDir.isDirectory()) {
 			tlkDir.mkdirs();
 		}
-		return  Configs.TLK_PATH_FLASH;
+		//Fill_Infor(Configs.Devic_Number_Path,Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/"+Configs.Devic_File_Path+"/");
+		Configs.Device_Printer_Path=Configs.Devic_Number_Path+"/"+Configs.Devic_File_Path+"/";
+		return  Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/";
+		
 	}
 	
 	public static String getTxtPath() {

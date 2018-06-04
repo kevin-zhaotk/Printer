@@ -17,18 +17,17 @@ public class Server_Socket_Create_Table extends SQLiteOpenHelper {
 		DbDatabase.execSQL("CREATE TABLE  IF NOT EXISTS " + "device_info" + " (" + "_id"
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," 
         		+ "device_id" + " TEXT,"
-        		+ "device_counts" + " TEXT,"
+        		+ "device_print_counts" + " TEXT,"
         		+ "device_ink" + " TEXT,"
                 + "device_ip" + " TEXT," 
                 + "device_port" + " TEXT"
                 + ");");
-	/*DbDatabase.execSQL("CREATE TABLE  IF NOT EXISTS " + "User" + " (" + "_id"
+	DbDatabase.execSQL("CREATE TABLE  IF NOT EXISTS " + "printer_info" + " (" + "_id"
             + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-    		+ "User_Account" + " TEXT,"
-            + "User_Password" + " TEXT," 
-            + "User_Date" + " TEXT,"
-            + "User_Flag" + " TEXT" 
-            + ");");*/
+    		+ "device_id" + " TEXT,"
+            + "printer_path" + " TEXT,"
+            + "printer_status" + " TEXT" 
+            + ");");
 	//2014.11.3MAJINXIN修改
 	/*DbDatabase.execSQL("CREATE TABLE  IF NOT EXISTS " + "Bank" + " (" + "_id"
             + " INTEGER PRIMARY KEY AUTOINCREMENT," 

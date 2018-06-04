@@ -600,7 +600,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		
 		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs.size() <= 0) {
-			ToastUtil.show(mContext, "Please insert USB device");
+			ToastUtil.show(mContext, R.string.toast_plug_usb);
 			return;
 		}
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
@@ -703,7 +703,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private void msgImport() {
 		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs.size() <= 0) {
-			ToastUtil.show(mContext, "Please insert USB device");
+			ToastUtil.show(mContext, R.string.toast_plug_usb);
 			return;
 		}
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
@@ -803,7 +803,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private void msgExport() {
 		final ArrayList<String> usbs = ConfigPath.getMountedUsb();
 		if (usbs.size() <= 0) {
-			ToastUtil.show(mContext, "Please insert USB device");
+			ToastUtil.show(mContext, R.string.toast_plug_usb);
 			return;
 		}
 		

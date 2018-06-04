@@ -326,7 +326,7 @@ public class FileBrowserDialog extends CustomerDialogBase {
 		 if(files == null)
 		 {
 			 Debug.d(TAG, "Please plugin a USB device ");
-			 ToastUtil.show(getContext(), "Please plugin a USB device ");
+			 ToastUtil.show(getContext(), R.string.toast_plug_usb);
 			 mFileList.setAdapter(mFileAdapter);
 			return;
 		 }
