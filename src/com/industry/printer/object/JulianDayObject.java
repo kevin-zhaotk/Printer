@@ -100,8 +100,8 @@ public class JulianDayObject extends BaseObject {
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
-		
-		int width = (int)mPaint.measureText(getContent());
+		String str_new_content = "DAY";
+		int width = (int)mPaint.measureText(str_new_content);
 		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
 			setWidth(width);
@@ -111,14 +111,7 @@ public class JulianDayObject extends BaseObject {
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		mPaint.setColor(Color.BLUE);// 
-	
 		
-		 
-		String str_new_content="";
-		str_new_content=getContent();
-		
-		str_new_content =	 "DAY" 	;
-		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	

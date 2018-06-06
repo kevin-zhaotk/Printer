@@ -771,4 +771,16 @@
 	<string name="toast_plug_usb">请插入U盘</string>
 	<string name="toast_passwd_error">密码错误!!!</string>
 	<string name="toast_content_empty">内容不能为空</string>
+	
+	<string name="tips_import_message">正在导入信息...</string>
+	<string name="tips_import_resource">正在导入资源文件...</string>
+	<string name="tips_import_sysconf">正在导入系统配置...</string>
+	<string name="tips_import_font">正在导入字库...</string>
+	
+	<string name="tips_export_message">正在导出信息...</string>
+	<string name="tips_export_sysconf">正在导出系统配置...</string>
+	<string name="tips_export_resource">正在导出资源文件...</string>
+	
+	
+	
 </resources>

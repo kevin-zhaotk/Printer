@@ -798,4 +798,15 @@
 	<string name="toast_plug_usb">Please plugin a USB device</string>
 	<string name="toast_passwd_error">password chech fail!!!</string>
 	<string name="toast_content_empty">Content shouldn`t be empty</string>
+	
+	<string name="tips_import_message">Importing messages</string>
+	<string name="tips_import_resource">Importing resources</string>
+	<string name="tips_import_sysconf">Importing System configs</string>
+	<string name="tips_import_font">Importing font library</string>
+	
+	<string name="tips_export_message">Exporting messages</string>
+	<string name="tips_export_sysconf">Exporting System configs</string>
+	<string name="tips_export_resource">Exporting resources</string>
+	
+	
 </resources>

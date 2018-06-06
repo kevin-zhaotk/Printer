@@ -119,21 +119,25 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_weight="1"
+		android:layout_marginTop="15dp"
 	    >
 	    <CheckBox
 		    android:id="@+id/reverse_cb"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+			style="@style/CheckboxTheme"
 		    android:layout_marginLeft="150dp"
+			android:paddingLeft="20dp"
+			android:paddingRight="20dp"
 		    android:checked="false"
 		    />
 		
 	    <TextView
 	        android:id="@+id/tv_reverse"
-	        android:layout_width="@dimen/settingsItemLength"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="10dp"
-	        android:layout_alignBaseline="@id/reverse_cb"
+			android:layout_alignBaseline="@id/reverse_cb"
 	        android:textSize="30sp"
 	        android:text="@string/strReverse"
 	        android:textColor="#000000"
@@ -145,6 +149,7 @@
 	    android:id="@+id/height_type_ly" 
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
+		android:layout_marginTop="15dp"
 	    android:layout_weight="1"
 	    >
 	    <CheckBox
@@ -152,12 +157,15 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="150dp"
+			android:paddingLeft="15dp"
+			android:paddingRight="15dp"
+			style="@style/CheckboxTheme"
 		    android:checked="false"
 		    />
 		
 	    <TextView
 	        android:id="@+id/tv_height_type"
-	        android:layout_width="@dimen/settingsItemLength"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginLeft="10dp"
 	        android:layout_alignBaseline="@id/height_type"

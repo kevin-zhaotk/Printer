@@ -110,14 +110,15 @@ public class ConfigPath {
 		*/
 		//Db = new Server_Socket_Database(null);
 		//wangjing
-		File tlkDir = new File(Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/");
+		// File tlkDir = new File(Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/");
+		File tlkDir = new File(Configs.TLK_PATH_FLASH);
 		if (!tlkDir.exists() || !tlkDir.isDirectory()) {
 			tlkDir.mkdirs();
 		}
 		//Fill_Infor(Configs.Devic_Number_Path,Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/"+Configs.Devic_File_Path+"/");
-		Configs.Device_Printer_Path=Configs.Devic_Number_Path+"/"+Configs.Devic_File_Path+"/";
-		return  Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/";
-		
+		// Configs.Device_Printer_Path=Configs.Devic_Number_Path+"/"+Configs.Devic_File_Path+"/";
+		// return  Configs.TLK_PATH_FLASH+"/"+Configs.Devic_Number_Path+"/";
+		return  Configs.TLK_PATH_FLASH;
 	}
 	
 	public static String getTxtPath() {

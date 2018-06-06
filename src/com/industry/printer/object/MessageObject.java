@@ -171,7 +171,7 @@ public class MessageObject extends BaseObject {
 			builder.append("00000^00000^00000^00000^0^000^")
 				.append(BaseObject.intToFormatString(mType,3))
 				.append("^000^000^000^000^")
-				.append(BaseObject.intToFormatString(mDots * 2, 7))
+				.append(BaseObject.intToFormatString(mDots, 7))
 				.append("^00000000^00000000^00000000^0000^0000^0000^000^")
 				.append(mContent);
 		}
@@ -191,7 +191,7 @@ public class MessageObject extends BaseObject {
 				.append("^")
 				.append(intToFormatString(mDotPer[2], 7))
 				.append("^")
-				.append(BaseObject.intToFormatString(mDots*2, 7))
+				.append(BaseObject.intToFormatString(mDots, 7))
 				.append("^")
 				.append(intToFormatString(mDotPer[3], 7))
 				.append("^")

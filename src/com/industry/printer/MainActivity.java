@@ -26,6 +26,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import android.R.bool;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.FragmentTransaction;
@@ -49,6 +50,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
@@ -119,6 +121,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private RelativeLayout mPgFore;
 	
 	private LoadingDialog mProgressDialog;
+	
+	private boolean mScreensaveMode = false;
 	
 	private TextView IP_address;// localhost ip
 	static {
@@ -431,6 +435,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public static final int NET_CONNECTED = 3;
 	public static final int NET_DISCONNECTED = 4;
 	
+	public static final int ENTER_SCREENSAVE_MODE = 5;
+	
 	public Handler mHander = new Handler(){
 		
 		public void handleMessage(Message msg) {
@@ -466,7 +472,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			case NET_DISCONNECTED:
 				IP_address.setText("");
 				break;
-				
+			case ENTER_SCREENSAVE_MODE:
+				setScreenBrightness(true);
 			default:
 				break;
 			}
@@ -487,7 +494,16 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	}
 
 	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			Debug.d(TAG, "--->dispatch down event");
+			setScreenBrightness(false);
+		}
+		return super.dispatchTouchEvent(event);
+	}
+	@Override
 	public boolean onTouch(View view, MotionEvent event) {
+		Debug.d(TAG, "--->onTouch");
 		switch(view.getId()) {
 		case R.id.btn_control:
 		case R.id.btn_edit:
@@ -498,6 +514,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		default:
 			break;
 		}
+		
 		return false;
 	}
 
@@ -515,6 +532,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			break;
 		case R.id.msg_tranfer:
 			showImportDialog();
+			// setScreenBrightness(50);
 			break;
 		default:
 			break;
@@ -616,19 +634,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 						if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
 							src.put("source",usbs.get(0) + arg0);
 							src.put("dest", Configs.TLK_PATH_FLASH);
-							src.put("tips", "Importing messages");
+							src.put("tips", MainActivity.this.getString(R.string.tips_import_message));
 						} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
 							src.put("source",usbs.get(0) + arg0);
 							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
-							src.put("tips", "Importing resources");
+							src.put("tips", MainActivity.this.getString(R.string.tips_import_resource));
 						} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
 							src.put("source",usbs.get(0) + arg0);
 							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
-							src.put("tips", "Importing System configs");
+							src.put("tips", MainActivity.this.getString(R.string.tips_import_sysconf));
 						} else if (Configs.FONT_DIR.equals(arg0)) {
 							src.put("source",usbs.get(0) + Configs.FONT_DIR_USB);
 							src.put("dest", Configs.FONT_DIR);
-							src.put("tips", "Importing font library");
+							src.put("tips", MainActivity.this.getString(R.string.tips_import_font));
 						}
 						Debug.d(TAG, "--->flatMap");
 						return Observable.just(src);
@@ -719,15 +737,19 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
 					src.put("source",usbs.get(0) + arg0);
 					src.put("dest", Configs.TLK_PATH_FLASH);
+					src.put("tips", MainActivity.this.getString(R.string.tips_import_message));
 				} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
 					src.put("source",usbs.get(0) + arg0);
 					src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
+					src.put("tips", MainActivity.this.getString(R.string.tips_import_resource));
 				} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
 					src.put("source",usbs.get(0) + arg0);
 					src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+					src.put("tips", MainActivity.this.getString(R.string.tips_import_sysconf));
 				} else if (Configs.FONT_DIR.equals(arg0)) {
 					src.put("source",usbs.get(0) + Configs.FONT_DIR_USB);
 					src.put("dest", Configs.FONT_DIR);
+					src.put("tips", MainActivity.this.getString(R.string.tips_import_font));
 				}
 				Debug.d(TAG, "--->flatMap");
 				return Observable.just(src);
@@ -738,7 +760,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			@Override
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
-				FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
+					mProgressDialog.setMessage(arg0.get("tips"));
+					FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
 //				String dest = arg0.get("dest");
 //				if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
 //					ZipUtil.UnZipFolder(Configs.CONFIG_PATH_FLASH + File.separator + Configs.FONT_ZIP_FILE, Configs.CONFIG_PATH_FLASH);
@@ -818,12 +841,15 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
 					src.put("source",Configs.TLK_PATH_FLASH);
 					src.put("dest", usbs.get(0) + arg0);
+					src.put("tips", MainActivity.this.getString(R.string.tips_export_message));
 				} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
 					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 					src.put("dest", usbs.get(0) + arg0);
+					src.put("tips", MainActivity.this.getString(R.string.tips_export_resource));
 				} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
 					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
 					src.put("dest", usbs.get(0) + arg0);
+					src.put("tips", MainActivity.this.getString(R.string.tips_export_sysconf));
 				} else {
 					FileUtil.deleteFolder(usbs.get(0) + "/print.bin");
 					src.put("source", "/mnt/sdcard/print.bin");
@@ -838,7 +864,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			@Override
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
-				FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
+					mProgressDialog.setMessage(arg0.get("tips"));
+					FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -905,6 +932,25 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		PrinterBroadcastReceiver mReceiver = new PrinterBroadcastReceiver(mHander);
 		mContext.registerReceiver(mReceiver, filter);
 		
+	}
+	
+	private void setScreenBrightness(boolean save) {
+		if (save == false) {
+			mHander.removeMessages(ENTER_SCREENSAVE_MODE);
+			mHander.sendEmptyMessageDelayed(ENTER_SCREENSAVE_MODE, 10 * 1000);
+		} else {
+			mHander.removeMessages(ENTER_SCREENSAVE_MODE);
+		}
+		if (mScreensaveMode == save) {
+			return;
+		}
+		mScreensaveMode = save;
+		int brightness = mScreensaveMode ? (int)(255 * 0.6) : 255;
+		Window window = getWindow();
+		WindowManager.LayoutParams localLP = window.getAttributes();
+		float f = brightness / 255.0f;
+		localLP.screenBrightness = f;
+		window.setAttributes(localLP);
 	}
 	// locahost ip
 	public static String getLocalIpAddress() {  
