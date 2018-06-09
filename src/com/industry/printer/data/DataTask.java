@@ -351,6 +351,7 @@ public class DataTask {
 	
 	
 	public void setDots(int dots) {
+		Debug.d(TAG, "--->dotcount: " + dots);
 		mDots = dots;
 	}
 	
@@ -358,7 +359,9 @@ public class DataTask {
 		if (dots == null) {
 			return;
 		}
+		
 		for (int i = 0; i < dots.length; i++) {
+			Debug.d(TAG, "--->setDotsEach: dots[" + i + "]=" + dots[i]);
 			if (mDotsEach.length <= i) {
 				break;
 			}
@@ -372,6 +375,7 @@ public class DataTask {
 	}
 	
 	public int getDots(int index) {
+		Debug.d(TAG, "--->getDots: " + mDotsEach[index]);
 		if (index >= mDotsEach.length) {
 			return 0;
 		}

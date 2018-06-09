@@ -25,6 +25,7 @@ import com.industry.printer.exception.PermissionDeniedException;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.LetterHourObject;
 
+import android.R.bool;
 import android.R.integer;
 import android.content.Context;
 import android.util.Log;
@@ -226,6 +227,7 @@ public class TLKFileParser  extends TlkFile{
 				mDots[5] = Integer.parseInt(attr[16]);
 				mDots[6] = Integer.parseInt(attr[17]);
 				mDots[7] = Integer.parseInt(attr[18]);
+				adjustDotCount(Integer.parseInt(attr[13]));
 				((MessageObject) obj).setDotCountPer(mDots);
 				setDotsPerClm(type);
 			} else if (BaseObject.OBJECT_TYPE_BARCODE.equals(attr[1])
@@ -466,5 +468,23 @@ public class TLKFileParser  extends TlkFile{
 			mProportion = 1.0f;			
 		}
 		return mProportion;
+	}
+	
+	
+	private void adjustDotCount(int dots) {
+		boolean isZero = true;
+		for (int i = 0; i < mDots.length; i++) {
+			if (mDots[i] > 0) {
+				isZero = false;
+				break;
+			}
+		}
+		
+		if (isZero) {
+			for (int i = 0; i < mDots.length; i++) {
+				mDots[i] = dots;
+			}
+		}
+		return;
 	}
 }

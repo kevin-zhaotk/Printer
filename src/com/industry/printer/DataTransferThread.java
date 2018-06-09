@@ -321,6 +321,7 @@ public class DataTransferThread extends Thread {
 	
 	public int getDotCount(DataTask task, int head) {
 		if (task == null) {
+			Debug.e(TAG, "---> task is null");
 			return 1;
 		}
 			
@@ -368,7 +369,10 @@ public class DataTransferThread extends Thread {
 	public int getInkThreshold(int head) {
 		int bold = 1;
 		int index = index();
-		if (getDotCount(mDataTask.get(index), head) <= 0) {
+		int dotCount = getDotCount(mDataTask.get(index), head);
+		// Debug.d(TAG, "--->getInkThreshold  head: " + head + "   index = " + index + " dataTask: " + mDataTask.size());
+		Debug.d(TAG, "--->dotCount: " + dotCount + "  bold=" + bold);
+		if (dotCount <= 0) {
 			return 1;
 		}
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
@@ -377,7 +381,8 @@ public class DataTransferThread extends Thread {
 		} else {
 			bold = config.getParam(2)/150;
 		}
-		return Configs.DOTS_PER_PRINT/(getDotCount(mDataTask.get(index), head) * bold);
+		Debug.d(TAG, "--->dotCount: " + dotCount + "  bold=" + bold);
+		return Configs.DOTS_PER_PRINT/(dotCount * bold);
 	}
 	
 	public int getHeads() {

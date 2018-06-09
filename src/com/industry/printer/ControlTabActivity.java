@@ -507,6 +507,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mRfidManager = RFIDManager.getInstance(mContext,true);
 			mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 1000);
 		}
+		onConfigChange();
 	}
 	
 	private void setupViews() {
@@ -1592,7 +1593,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	
 	public void onConfigChange() {
-		if (mDTransThread == null) {
+		if (mDTransThread == null || mDTransThread.isRunning()) {
 			return;
 		}
 		mDTransThread.initCount();

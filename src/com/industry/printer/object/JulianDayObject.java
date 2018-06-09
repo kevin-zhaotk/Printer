@@ -111,7 +111,7 @@ public class JulianDayObject extends BaseObject {
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
 		mPaint.setColor(Color.BLUE);// 
-		
+
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	
 		return Bitmap.createScaledBitmap(bitmap, (int)mWidth, (int)mHeight, false);	

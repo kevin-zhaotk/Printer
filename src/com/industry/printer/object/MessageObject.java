@@ -122,7 +122,9 @@ public class MessageObject extends BaseObject {
 	}
 	
 	public void setDotCountPer(int[] count) {
+		Debug.d(TAG, "--->setDotCountPer: " + count.length);
 		for (int i = 0; i < count.length; i++) {
+			Debug.d(TAG, "--->setDotCountPer: count[" + i + "]=" + count[i]);
 			if (mDotPer.length < i) {
 				break;
 			}
