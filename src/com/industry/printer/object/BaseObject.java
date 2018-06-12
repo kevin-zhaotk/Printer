@@ -130,6 +130,9 @@ public class BaseObject{
 		// 參數40：列高
 		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		setHeight(Configs.gDots);
+		if (mFonts != null && mFonts.length > 0) {
+			mFont = mFonts[0];
+		}
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);
