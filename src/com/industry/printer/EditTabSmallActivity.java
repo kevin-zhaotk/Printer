@@ -53,6 +53,7 @@ import com.industry.printer.object.WeekDayObject;
 import com.industry.printer.object.WeekOfYearObject;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter;
 import com.industry.printer.ui.CustomerAdapter.PopWindowAdapter.IOnItemClickListener;
+import com.industry.printer.ui.CustomerDialog.ButtonExtendDialog;
 import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
@@ -135,7 +136,8 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	private RelativeLayout mShowInfo;
 	
 	private HorizontalScrollView mEditLayout;
-	
+
+	private boolean saveAndPrint = false;
 	
 	public EditTabSmallActivity() {
 		
@@ -499,7 +501,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	public static final int HANDLER_MESSAGE_SAVE_CONFIRM = 7;
 	
 	Handler mHandler = new Handler(){
-		public void handleMessage(Message msg) {  
+		public void handleMessage(final Message msg) {
 			//	String f;
 			boolean createfile=false;
             switch (msg.what) {   
@@ -530,13 +532,13 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		Debug.d(TAG, "save as file="+MessageSaveDialog.getTitle());
             		mObjName = MessageSaveDialog.getTitle();
             		createfile=true;
+                    saveAndPrint = msg.getData().getBoolean("saveAndPrint", false);
             		if (checkMsg(mObjName)) {
             			ConfirmDialog dialog = new ConfirmDialog(mContext, String.format(getString(R.string.str_message_tips), mObjName));
             			dialog.setListener(new DialogListener (){
             				@Override
             				public void onConfirm() {
             					mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
-            					
             				}
             				@Override
             				public void onCancel() {
@@ -550,8 +552,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             		break;
             	case HANDLER_MESSAGE_SAVE:    //save
             		Debug.d(TAG, "--->save");
+                    saveAndPrint = msg.getData().getBoolean("saveAndPrint", false);
            			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE_CONFIRM);
-            		break;
+                	break;
             	case HANDLER_MESSAGE_SAVE_CONFIRM:
             		progressDialog();
             		if (mObjName == null || mMsgTask == null) {
@@ -568,6 +571,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             	case HANDLER_MESSAGE_SAVE_SUCCESS:
             		dismissProgressDialog();
             		OnPropertyChanged(false);
+            		Debug.d(TAG, "--->save success");
+            		// if save & print operation
+                    if (saveAndPrint) {
+                        ((MainActivity) getActivity()).onSaveAndPrint(mObjName);
+                    }
             		break;
             	case HANDLER_MESSAGE_IMAGESELECT:		//select image
             		
@@ -835,7 +843,23 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 			return;
 		if(!TextUtils.isEmpty(mObjName))
 		{
-			mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
+            ButtonExtendDialog dialog = new ButtonExtendDialog(getActivity());
+            dialog.setListener(new ButtonExtendDialog.IListener() {
+                @Override
+                public void onSave() {
+                    mHandler.sendEmptyMessage(HANDLER_MESSAGE_SAVE);
+                }
+
+                @Override
+                public void onSaveAndPrint() {
+                    Message  message = mHandler.obtainMessage(HANDLER_MESSAGE_SAVE);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("saveAndPrint", true);
+                    message.setData(bundle);
+                    message.sendToTarget();
+                }
+            });
+
 			return;
 		}
 		onSaveAs();
@@ -856,6 +880,16 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 				
 			}
 		});
+		dialog.setOnExtraClickedListener(new CustomerDialogBase.OnExtraListener() {
+            @Override
+            public void onClick() {
+                Message  message = mHandler.obtainMessage(HANDLER_MESSAGE_SAVEAS);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("startAndPrint", true);
+                message.setData(bundle);
+                message.sendToTarget();
+            }
+        });
 		dialog.show();
 	}
 

@@ -15,6 +15,7 @@ public class MessageSaveDialog extends CustomerDialogBase implements android.vie
 	
 	public Button mConfirm;
 	public Button mCancel;
+	public Button mSaveAndPrint;
 	public EditText mTitleEdit;
 	public static String mTitle;
 	
@@ -33,7 +34,10 @@ public class MessageSaveDialog extends CustomerDialogBase implements android.vie
 		 
 		 mCancel = (Button) findViewById(R.id.btn_message_cancel);
 		 mCancel.setOnClickListener(this);
-		 
+
+		 mSaveAndPrint = (Button) findViewById(R.id.btn_save_print);
+		 mSaveAndPrint.setOnClickListener(this);
+
 		 mTitleEdit = (EditText) findViewById(R.id.et_message_title);
 	}
 
@@ -54,6 +58,15 @@ public class MessageSaveDialog extends CustomerDialogBase implements android.vie
 				dismiss();
 				if (nListener != null) {
 					nListener.onClick();
+				}
+				break;
+			case R.id.btn_save_print:
+				mTitle = mTitleEdit.getEditableText().toString();
+				if (mTitle == null || mTitle.isEmpty())
+					break;
+				dismiss();
+				if (eListener != null) {
+					eListener.onClick();
 				}
 				break;
 			default:

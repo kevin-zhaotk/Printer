@@ -20,6 +20,7 @@
 	<string name="str_remain_ptimes">打印次数</string>
 	<string name="str_btn_new">新建</string>
 	<string name="str_btn_save">保存</string>
+	<string name="str_btn_saveprint">保存&#038;打印</string>
 	<string name="str_btn_saveas">另存为</string>
 	<string name="str_btn_prerecord">上翻</string>
 	<string name="str_btn_nextrecord">下翻</string>

@@ -20,6 +20,7 @@
 	<string name="str_remain_ptimes">Total</string>
 	<string name="str_btn_new">New</string>
 	<string name="str_btn_save">Save</string>
+	<string name="str_btn_saveprint">Save&#038;Print</string>
 	<string name="str_btn_cancel">Cancel</string>
 	<string name="str_ip_add">Ip Add</string>
 	<string name="str_device_number">Device:</string>

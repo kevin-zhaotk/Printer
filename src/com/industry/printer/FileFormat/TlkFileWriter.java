@@ -31,7 +31,6 @@ public class TlkFileWriter extends TlkFile{
 
 	public void write() {
 		int i=1;
-		FileWriter fw=null;
 		BufferedWriter bw=null;
 		Debug.d(TAG, "=====>saveObjFile path="+mPath);
 		
@@ -73,7 +72,7 @@ public class TlkFileWriter extends TlkFile{
 			}
 			bw.flush();
 			bw.close();
-			fw.close();
+			//fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

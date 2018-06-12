@@ -1,5 +1,0 @@
-1. feature: display current state in a dialog when preparing printing;
-    loading tlk, check ink, start;
-
-2. delete temp pngs being created during debug stage
-3. gray level adjust to 210

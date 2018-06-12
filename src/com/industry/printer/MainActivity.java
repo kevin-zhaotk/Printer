@@ -59,6 +59,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -92,7 +93,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	private String mLanguage;
 	
 	TabHost mTab;
-	
+
+	private RadioGroup mTabGroup;
 	public RadioButton	mRadioCtl;
 	public RadioButton	mRadioSet;
 	public RadioButton	mRadioEdit;
@@ -158,7 +160,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 //	                    inputManager.setInputMethod(getApplicationContext(), inputMethodInfo.getId());
 //	            }
 //	    }
-	    
+        mTabGroup = (RadioGroup) findViewById(R.id.tab_group);
 	    mRadioCtl = (RadioButton) findViewById(R.id.btn_control);
 	    mRadioCtl.setOnCheckedChangeListener(this);
 	    mRadioCtl.setOnTouchListener(this);
@@ -425,6 +427,22 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 				break;
 		}
 		fts.commit();
+	}
+
+	/**
+	 * 保存并打印信息
+	 * @param message
+	 */
+	public void onSaveAndPrint(String message) {
+	    Debug.d(TAG, "--->onSaveAndPrint");
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.hide(mEditSmallTab);
+        transaction.show(mControlTab);
+        transaction.commit();
+        mRadioEdit.setChecked(false);
+        mRadioSet.setChecked(false);
+        mRadioCtl.setChecked(true);
+        mControlTab.loadAndPrint(message);
 	}
 	
 	

@@ -12,7 +12,7 @@ public class CustomerDialogBase extends Dialog {
 	 */
 	public OnPositiveListener pListener;
 	public OnNagitiveListener nListener;
-	
+	public OnExtraListener eListener;
 	
 	public CustomerDialogBase(Context context) {
 		super(context);
@@ -37,7 +37,9 @@ public class CustomerDialogBase extends Dialog {
 		 void onClick();
 	 }
 	 
-	 
+	public interface OnExtraListener {
+	 	void onClick();
+	}
 	 /**
 	  * setOnPositiveClickedListener - set the positive button listener for further deal with
 	  * @param listener the listener callback
@@ -47,7 +49,11 @@ public class CustomerDialogBase extends Dialog {
 	 {
 		 pListener = listener;
 	 }
-	 
+
+	 public void setOnExtraClickedListener(OnExtraListener listener) {
+	 	eListener = listener;
+	 }
+
 	 /**
 	  * setOnNagitiveClickedListener - set the Nagitive button listener for further deal with
 	  * @param listener  the listener callback
