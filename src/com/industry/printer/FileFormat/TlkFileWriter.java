@@ -2,8 +2,10 @@ package com.industry.printer.FileFormat;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import com.industry.printer.MessageTask;
@@ -41,8 +43,9 @@ public class TlkFileWriter extends TlkFile{
 				Debug.d(TAG, "create error "+tlk.getPath());
 				return;
 			}
-			fw = new FileWriter(tlk);
-			bw = new BufferedWriter(fw);
+//			fw = new FileWriter(tlk);
+
+			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tlk), "UTF-8"));
 			for(BaseObject o : objs)
 			{
 				if(o instanceof RealtimeObject)

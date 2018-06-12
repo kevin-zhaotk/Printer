@@ -66,7 +66,7 @@ public class BinFromBitmap extends BinCreater {
                 // System.out.print("  " + grey);
                 // pixels[mWidth * i + j] = grey>128? 0x0:0xffffff;
                 
-                if(grey > 190)
+                if(grey > 210)
                 	mBinBits[j*colEach+i/8] &= ~(0x01<<(i%8));
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);

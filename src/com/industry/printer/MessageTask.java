@@ -553,7 +553,7 @@ public class MessageTask {
 			}
 		//can.drawText(mContent, 0, height-30, mPaint);
 		}
-		BinFromBitmap.saveBitmap(bmp, getName()+".png");
+//		BinFromBitmap.saveBitmap(bmp, getName()+".png");
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		/** if high resolution, keep original width */
