@@ -537,7 +537,22 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		msg.setData(bundle);
 		mHandler.sendMessageDelayed(msg, 1000);
 	}
-	
+
+	/**
+	 * load tlk and print it after load success
+	 * @param message
+	 */
+	public void loadAndPrint(String message) {
+		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		Bundle bundle = new Bundle();
+		bundle.putString("file", message);
+		bundle.putBoolean("printAfterLoad", true);
+		msg.setData(bundle);
+		mHandler.sendMessageDelayed(msg, 1000);
+
+	}
+
+
 	public void reloadSettingAndMessage() {
 		mSysconfig.init();
 		loadMessage();
@@ -702,6 +717,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					progressDialog();
 					
 					mObjPath = msg.getData().getString("file");
+					final boolean printAfterLoad = msg.getData().getBoolean("printAfterLoad", false);
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
@@ -728,6 +744,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 								mMsgTask.add(task);
 							}
 							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
+							if (printAfterLoad) {
+								mHandler.sendEmptyMessageDelayed(MESSAGE_PRINT_CHECK_UID, 1000);
+							}
 						}
 					}.start();
 					sendToRemote(mContext.getString(R.string.str_tlk_opening));
