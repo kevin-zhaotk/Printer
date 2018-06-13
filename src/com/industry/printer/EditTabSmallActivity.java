@@ -859,7 +859,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
                     message.sendToTarget();
                 }
             });
-
+			dialog.show();
 			return;
 		}
 		onSaveAs();
@@ -885,7 +885,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
             public void onClick() {
                 Message  message = mHandler.obtainMessage(HANDLER_MESSAGE_SAVEAS);
                 Bundle bundle = new Bundle();
-                bundle.putBoolean("startAndPrint", true);
+                bundle.putBoolean("saveAndPrint", true);
                 message.setData(bundle);
                 message.sendToTarget();
             }

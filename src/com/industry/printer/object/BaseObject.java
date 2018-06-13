@@ -130,9 +130,21 @@ public class BaseObject{
 		// 參數40：列高
 		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		setHeight(Configs.gDots);
+		boolean findFont = false;
 		if (mFonts != null && mFonts.length > 0) {
-			mFont = mFonts[0];
+			for (String font : mFonts) {
+				if (DEFAULT_FONT.equalsIgnoreCase(font)) {
+					mFont = DEFAULT_FONT;
+					break;
+				}
+			}
+			if (!findFont) {
+				mFont = mFonts[0];
+			}
+		} else {
+			mFont = DEFAULT_FONT;
 		}
+
 		initPaint();
 		setSelected(true);	
 		Debug.d(TAG, "--->new baseobject: " + isNeedRedraw);

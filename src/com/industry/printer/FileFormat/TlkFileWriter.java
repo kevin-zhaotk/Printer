@@ -45,6 +45,7 @@ public class TlkFileWriter extends TlkFile{
 //			fw = new FileWriter(tlk);
 
 			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tlk), "UTF-8"));
+
 			for(BaseObject o : objs)
 			{
 				if(o instanceof RealtimeObject)
@@ -58,6 +59,7 @@ public class TlkFileWriter extends TlkFile{
 						// System.out.println("******"+BaseObject.intToFormatString(i, 3)+"^"+so.toString());
 						bw.write(BaseObject.intToFormatString(i, 3)+"^"+so.toString());
 						bw.newLine();
+
 						so.setIndex(i++);
 					}
 				}
