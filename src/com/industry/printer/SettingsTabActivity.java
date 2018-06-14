@@ -11,6 +11,7 @@ import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.KZFileObserver;
 import com.industry.printer.Utils.PackageInstaller;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ReflectCaller;
@@ -192,6 +193,14 @@ public static final String TAG="SettingsTabActivity";
 		mListView.setAdapter(mAdapter);
 		//transaction.commit();
 		// setupViews();
+
+		PrinterApplication application = (PrinterApplication) mContext.getApplicationContext();
+		application.registerCallback("system_config.xml", new KZFileObserver.KZFileObserverInterface() {
+			@Override
+			public void onChanged() {
+				reloadSettings();
+			}
+		});
 	}
 	
 	private void setupViews() {
@@ -424,8 +433,12 @@ public static final String TAG="SettingsTabActivity";
 		Debug.d(TAG, "===>onclick");
 		mAdapter.checkParams();
 		mAdapter.notifyDataSetChanged();
+
+		PrinterApplication application = (PrinterApplication) mContext.getApplicationContext();
+		application.pauseFileListener();
 		mSysconfig.saveConfig();
 		((MainActivity) getActivity()).onConfigChange();
+		application.resumeFileListener();
 		// FpgaGpioOperation.updateSettings(mContext);
 		//FpgaGpioOperation device = FpgaGpioOperation.getInstance();
 		// device.read();
