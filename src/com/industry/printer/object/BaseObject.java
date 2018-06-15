@@ -131,10 +131,14 @@ public class BaseObject{
 		mDotsPerClm = 152;//SystemConfigFile.getInstance(mContext).getParam(39);
 		setHeight(Configs.gDots);
 		boolean findFont = false;
+		Debug.d(TAG, "--->fonts: " + mFonts);
 		if (mFonts != null && mFonts.length > 0) {
 			for (String font : mFonts) {
+				Debug.d(TAG, "--->font: " + font);
 				if (DEFAULT_FONT.equalsIgnoreCase(font)) {
+					Debug.d(TAG, "--->font match: " + font);
 					mFont = DEFAULT_FONT;
+					findFont = true;
 					break;
 				}
 			}
