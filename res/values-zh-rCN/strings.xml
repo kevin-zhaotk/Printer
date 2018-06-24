@@ -772,7 +772,7 @@
 	<string name="toast_plug_usb">请插入U盘</string>
 	<string name="toast_passwd_error">密码错误!!!</string>
 	<string name="toast_content_empty">内容不能为空</string>
-	
+	<string name="toast_rfid_changed">锁值发生变化</string>
 	<string name="tips_import_message">正在导入信息...</string>
 	<string name="tips_import_resource">正在导入资源文件...</string>
 	<string name="tips_import_sysconf">正在导入系统配置...</string>

@@ -34,11 +34,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.usb.UsbManager;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -214,6 +216,14 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		
 		initView();
 		Configs.initConfigs(mContext);
+		String sDev = DeviceInfosr(mContext);
+		if (sDev.indexOf("SoftwinerEvb") <= 0) {
+			Intent intent = new Intent(getApplicationContext(), Socket_Control_Activity.class);
+			startActivityForResult(intent, 0);
+		}
+		if (sDev.indexOf("SoftwinerEvb") >= 0) {
+			btn_Other.setVisibility(View.GONE);
+		}
 		
 		 btn_Other.setOnClickListener(new OnClickListener() {
 
@@ -1005,4 +1015,35 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 	public void setDevNo(String no) {
 		IP_address.setText(getLocalIpAddress() + " - Dev: " + no);
 	}
+
+	public String DeviceInfosr(Context context){
+
+		PackageManager mPackageManager = context.getPackageManager();
+		PackageInfo mPackageInfo = null;
+		try {
+			mPackageInfo = mPackageManager.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		PackageManager pm = mContext.getPackageManager();
+		try {
+			mPackageInfo = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
+		} catch (PackageManager.NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String sDeviceInfor="versionName:"+ mPackageInfo.versionName;
+		sDeviceInfor+=" versionCode:" + mPackageInfo.versionCode;
+		sDeviceInfor+=" Build_version:" + Build.VERSION.RELEASE;
+
+		sDeviceInfor+=" CPU ABI:"+Build.CPU_ABI;
+		sDeviceInfor+=" Vendor:"+ Build.MANUFACTURER;
+		sDeviceInfor+=" MODEL:"+ Build.MODEL;
+		sDeviceInfor+=" SDK_INT:" + Build.VERSION.SDK_INT;
+		sDeviceInfor+=" PRODUCT:" +  Build.PRODUCT;
+
+		return sDeviceInfor;
+	}
+
 }

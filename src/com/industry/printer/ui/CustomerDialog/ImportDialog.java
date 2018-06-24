@@ -8,7 +8,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 public class ImportDialog extends Dialog implements android.view.View.OnClickListener{
 
@@ -16,6 +18,8 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 	private ImageButton mImport;
 	private ImageButton mExport;
 	private ImageButton mFlush;
+	private RelativeLayout mCancel;
+	private Button mBtncl;
 	
 	private IListener mListener;
 	
@@ -35,10 +39,14 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 		mImport = (ImageButton) findViewById(R.id.ib_import);
 		mExport = (ImageButton) findViewById(R.id.ib_export);
 		mFlush = (ImageButton) findViewById(R.id.ib_flush);
-		
+		mCancel = (RelativeLayout) findViewById(R.id.cancel);
+		mBtncl = (Button) findViewById(R.id.btn_cancel);
+
 		mImport.setOnClickListener(this);
 		mExport.setOnClickListener(this);
 		mFlush.setOnClickListener(this);
+		mCancel.setOnClickListener(this);
+		mBtncl.setOnClickListener(this);
 	}
 
 
@@ -65,6 +73,10 @@ public class ImportDialog extends Dialog implements android.view.View.OnClickLis
 				if (mListener != null) {
 					mListener.onFlush();
 				}
+				break;
+			case R.id.cancel:
+			case R.id.btn_cancel:
+				dismiss();
 				break;
 			default:
 				break;	

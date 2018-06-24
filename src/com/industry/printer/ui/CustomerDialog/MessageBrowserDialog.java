@@ -55,8 +55,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 
 		private final String TAG = MessageBrowserDialog.class.getSimpleName();
 		
-		public RelativeLayout mConfirm;
-		public RelativeLayout mCancel;
+		public TextView mConfirm;
+		public TextView mCancel;
 		public RelativeLayout mPagePrev;
 		public RelativeLayout mPageNext;
 		public TextView 	mDelete;
@@ -154,10 +154,10 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 			 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			 this.setContentView(R.layout.message_list_layout);
 			 
-			 mConfirm = (RelativeLayout) findViewById(R.id.btn_ok_message_list);
+			 mConfirm = (TextView) findViewById(R.id.btn_ok_message_list);
 			 mConfirm.setOnClickListener(this);
 			 
-			 mCancel = (RelativeLayout) findViewById(R.id.btn_cancel_message_list);
+			 mCancel = (TextView) findViewById(R.id.btn_cancel_message_list);
 			 mCancel.setOnClickListener(this);
 			 
 			 mDelete = (TextView) findViewById(R.id.btn_delete);

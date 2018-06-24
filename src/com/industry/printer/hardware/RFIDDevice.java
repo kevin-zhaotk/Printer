@@ -1325,6 +1325,9 @@ public class RFIDDevice implements RfidCallback{
 				mState = STATE_RFID_MAX_READY;
 			} else if (mState == STATE_RFID_FEATURE_READING) {
 				mFeature = data.getData();
+//				for (int i = 0; i < mFeature.length; i++) {
+//					Debug.d(TAG, "--->feature[" + i + "] = " + mFeature[i]);
+//				}
 				mValid = checkFeatureCode();
 				mState = STATE_RFID_FEATURE_READY;
 			} else if (mState == STATE_RFID_VALUE_READING) {

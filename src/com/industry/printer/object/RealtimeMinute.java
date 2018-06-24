@@ -56,20 +56,7 @@ public class RealtimeMinute extends BaseObject {
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
-		
-		int width = (int)mPaint.measureText(getContent());//addbylk �����ߴ� 
-		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		if (mWidth == 0) {
-			setWidth(width);
-		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
-		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
-		mCan = new Canvas(bitmap);
-		FontMetrics fm = mPaint.getFontMetrics();
-		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ 
-	
-		
-		 
+
 		String str_new_content="";
 		str_new_content =	mContent;	
 		
@@ -82,7 +69,17 @@ public class RealtimeMinute extends BaseObject {
 		str_new_content =	str_new_content.replace('6', 'N');	
 		str_new_content =	str_new_content.replace('7', 'N');	
 		str_new_content =	str_new_content.replace('8', 'N');	
-		str_new_content =	str_new_content.replace('9', 'N');	
+		str_new_content =	str_new_content.replace('9', 'N');
+
+		int width = (int)mPaint.measureText(str_new_content);//addbylk �����ߴ�
+		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
+
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
+		mCan = new Canvas(bitmap);
+		FontMetrics fm = mPaint.getFontMetrics();
+		mPaint.setColor(Color.BLUE);//���� ���� �� λͼ �� Ϊ ��ɫ
+
 		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);			
 		mCan.drawText(str_new_content , 0, mHeight-fm.descent, mPaint);
 	

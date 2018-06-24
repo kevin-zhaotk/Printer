@@ -15,10 +15,8 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,15 +27,12 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.friendlyarm.AndroidSDK.GPIOEnum;
-import com.friendlyarm.AndroidSDK.HardwareControler;
 import com.industry.printer.FileFormat.DotMatrixFont;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Socket_Server.Network;
 import com.industry.printer.Socket_Server.Paths_Create;
 import com.industry.printer.Socket_Server.Printer_Database;
-import com.industry.printer.Socket_Server.StreamTool;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -45,10 +40,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.PreferenceConstants;
 import com.industry.printer.Utils.PrinterDBHelper;
-import com.industry.printer.Utils.RFIDAsyncTask;
-import com.industry.printer.Utils.SystemPropertiesProxy;
 import com.industry.printer.Utils.ToastUtil;
-import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFromBitmap;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.ExtGpio;
@@ -67,15 +59,10 @@ import com.industry.printer.ui.CustomerDialog.MessageGroupsortDialog;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
 import com.industry.printer.ui.CustomerDialog.CustomerDialogBase.OnPositiveListener;
-import com.industry.printer.ui.CustomerDialog.FontSelectDialog;
 import com.industry.printer.ui.CustomerDialog.LoadingDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog;
 import com.industry.printer.ui.CustomerDialog.MessageBrowserDialog.OpenFrom;
-import com.industry.printer.R;
-import com.industry.printer.ControlTabActivity.ServerThread;
-import com.industry.printer.ControlTabActivity.Service;
 
-import android.R.bool;
 import android.app.ActionBar.LayoutParams;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -83,21 +70,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Bitmap.Config;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -105,8 +88,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -115,8 +96,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.preference.Preference;
 
 public class ControlTabActivity extends Fragment implements OnClickListener, InkLevelListener, OnTouchListener, DataTransferThread.Callback {
 	public static final String TAG="ControlTabActivity";
@@ -189,9 +168,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mTVStopped;
 	public TextView mPhotocellState;
 	public TextView mEncoderState;
-	public TextView mPrintState;
-	public TextView mPower;
+//	public TextView mPower;
 	public TextView mPowerV;
+	private ImageView mPowerStat;
 	public TextView mTime;
 	
 	public SystemConfigFile mSysconfig;
@@ -416,8 +395,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mtvInk = (TextView) getView().findViewById(R.id.tv_inkValue);
 		mInkLevel = (TextView) getView().findViewById(R.id.ink_value);
 		mInkLevel2 = (TextView) getView().findViewById(R.id.ink_value2);
-		
-		mPower = (TextView) getView().findViewById(R.id.power_state);
+
+		mPowerStat = (ImageView) getView().findViewById(R.id.power_value);
+//		mPower = (TextView) getView().findViewById(R.id.power_state);
 		mPowerV = (TextView) getView().findViewById(R.id.powerV);
 		mTime = (TextView) getView().findViewById(R.id.time);
 		
@@ -571,7 +551,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	
 	boolean mInkLow = false;
 	boolean mInkZero = false;
-	
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
 	private void refreshInk() {
 		
 		float ink = mRfidManager.getLocalInk(mRfid);
@@ -619,6 +604,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		RFIDDevice device = mRfidManager.getDevice(mRfid);
 		if (device != null && mDTransThread != null) {
 			count = device.getLocalInk() - 1;
+			Debug.d(TAG, "--->count: " + count);
 			count = count * mDTransThread.getInkThreshold(0) + mDTransThread.getCount();
 		}
 		if (count < 0) {
@@ -641,17 +627,23 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			int power = LRADCBattery.getPower();
 			Debug.d(TAG, "--->power: " + power);
 			if (power >= 41) {
-				mPower.setText(String.valueOf(100));
+//				mPower.setText(String.valueOf(100));
+				mPowerStat.setImageResource(R.drawable.battery100);
 			} else if (power >= 38) {
-				mPower.setText(String.valueOf(75));
+//				mPower.setText(String.valueOf(75));
+				mPowerStat.setImageResource(R.drawable.battery75);
 			} else if (power >= 36) {
-				mPower.setText(String.valueOf(50));
+//				mPower.setText(String.valueOf(50));
+				mPowerStat.setImageResource(R.drawable.battery50);
 			} else if (power >= 35) {
-				mPower.setText(String.valueOf(25));
+//				mPower.setText(String.valueOf(25));
+				mPowerStat.setImageResource(R.drawable.battery25);
 			} else if (power >= 33) {
-				mPower.setText(String.valueOf(0));
+//				mPower.setText(String.valueOf(0));
+				mPowerStat.setImageResource(R.drawable.battery0);
 			} else {
-				mPower.setText("--");
+				// mPower.setText("--");
+				mPowerStat.setImageResource(R.drawable.battery0);
 			}
 			//mPowerV.setText(String.valueOf(power));
 			// mTime.setText("0");
@@ -701,7 +693,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 		if (auto) {
 			RFIDDevice device = mRfidManager.getDevice(0);
-			int pulse = device.getFeature(3);
+			int pulse = device.getFeature(5);
+			Debug.d(TAG, "--->pulse: " + pulse);
 			mTime.setText(String.valueOf(pulse));
 		} else {
 			mTime.setText(String.valueOf(mSysconfig.getParam(27)));
@@ -843,6 +836,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case MESSAGE_PRINT_CHECK_UID:
 					if (mDTransThread != null && mDTransThread.isRunning()) {
+						Debug.d(TAG, "--->printing...");
 						break;
 					}
 					//Debug.d(TAG, "--->initDTThread");
@@ -862,11 +856,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mRfidManager.checkUID(heads);
 					break;
 				case RFIDManager.MSG_RFID_CHECK_FAIL:
-					ToastUtil.show(mContext, "Rfid changed");
+					ToastUtil.show(mContext, R.string.toast_rfid_changed);
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
-					
+
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						sendToRemote("error: " + mContext.getString(R.string.str_print_thread_create_err));
 						break;
@@ -956,8 +950,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					FpgaGpioOperation.uninit();
 					if (mDTransThread != null) {
 						mDTransThread.finish();
-						mDTransThread = null;
-						initDTThread();
+//						mDTransThread = null;
+//						initDTThread();
 					}
 					sendToRemote(mContext.getString(R.string.str_print_stopok));
 					/*鎵撳嵃浠诲姟鍋滄鍚庡厑璁稿垏鎹㈡墦鍗板璞�*/
@@ -965,7 +959,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					
 					ToastUtil.show(mContext, R.string.str_print_stopok);
 					FpgaGpioOperation.clean();
-					//rollback();
+//					rollback();
 					/* 濡傛灉鐣跺墠鎵撳嵃淇℃伅涓湁瑷堟暩鍣紝闇�瑕佽閷勭暥鍓嶅�煎埌TLK鏂囦欢涓�*/
 					updateCntIfNeed();
 					
@@ -1208,7 +1202,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			mDTransThread.setCallback(this);
 		}
 		Debug.d(TAG, "--->init");
-		
+
 		// 鍒濆鍖朾uffer
 		mDTransThread.initDataBuffer(mContext, mMsgTask);
 		// TLKFileParser parser = new TLKFileParser(mContext, mObjPath);

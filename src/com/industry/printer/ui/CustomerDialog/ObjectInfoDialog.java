@@ -356,7 +356,7 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 					if (mObject == null) {
 						dismiss();
 					}
-					if (mContent != null && mContent.getText().toString().isEmpty()) {
+					if (mContent.isEnabled() && mContent != null && mContent.getText().toString().isEmpty()) {
 						ToastUtil.show(mContext, R.string.toast_content_empty);
 						return;
 					}

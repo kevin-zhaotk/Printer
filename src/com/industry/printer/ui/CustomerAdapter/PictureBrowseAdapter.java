@@ -65,12 +65,12 @@ public class PictureBrowseAdapter extends BaseAdapter {
 		Debug.d(TAG, "--->checked=" + mChecked + ", pos=" + position);
 		if(mChecked == position)
 		{
-			convertView.setBackgroundColor(Color.YELLOW);
+			convertView.setBackgroundResource(R.drawable.grid_item_selected);
 			convertView.setSelected(true);
 		}
 		else
 		{
-			convertView.setBackgroundColor(Color.WHITE);
+			convertView.setBackgroundResource(R.drawable.grid_item_unselected);
 			convertView.setSelected(false);
 		}
 		mHolder.mImg.setImageURI(Uri.parse(mItems.get(position).getPath()));

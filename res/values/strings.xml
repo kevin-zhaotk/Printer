@@ -799,7 +799,8 @@
 	<string name="toast_plug_usb">Please plugin a USB device</string>
 	<string name="toast_passwd_error">password chech fail!!!</string>
 	<string name="toast_content_empty">Content shouldn`t be empty</string>
-	
+	<string name="toast_rfid_changed">Rfid changed</string>
+
 	<string name="tips_import_message">Importing messages</string>
 	<string name="tips_import_resource">Importing resources</string>
 	<string name="tips_import_sysconf">Importing System configs</string>
