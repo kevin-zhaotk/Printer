@@ -652,7 +652,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 		mProgressDialog = LoadingDialog.show(this, R.string.strCopying);
 		
 		FileUtil.deleteFolder(Configs.QR_LAST);
-		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.SYSTEM_CONFIG_DIR, Configs.FONT_DIR)
+		Observable.just(Configs.SYSTEM_CONFIG_MSG_PATH, Configs.PICTURE_SUB_PATH, Configs.QR_DIR, Configs.FONT_DIR)
 				.flatMap(new Func1<String, Observable<Map<String, String>>>() {
 
 					@Override
@@ -667,9 +667,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 							src.put("source",usbs.get(0) + arg0);
 							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 							src.put("tips", MainActivity.this.getString(R.string.tips_import_resource));
-						} else if ( Configs.SYSTEM_CONFIG_DIR.equals(arg0)) {
+						} else if ( Configs.QR_DIR.equals(arg0)) {
 							src.put("source",usbs.get(0) + arg0);
-							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR);
+							src.put("dest", Configs.CONFIG_PATH_FLASH + Configs.SYSTEM_CONFIG_DIR + Configs.QR_DIR);
 							src.put("tips", MainActivity.this.getString(R.string.tips_import_sysconf));
 						} else if (Configs.FONT_DIR.equals(arg0)) {
 							src.put("source",usbs.get(0) + Configs.FONT_DIR_USB);

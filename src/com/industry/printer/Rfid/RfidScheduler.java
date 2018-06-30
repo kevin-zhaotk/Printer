@@ -136,6 +136,7 @@ public class RfidScheduler {
 				mManager.switchRfid(mCurrent);
 				Debug.e(TAG, "--->sync inklevel after print finish...");
 				while(running && mCurrent < mRfidTasks.size()) {
+					Debug.d(TAG, "--->mCurrent: " + mCurrent + "  size=" + mRfidTasks.size());
 					try {
 						if (last != mCurrent) {
 							last = mCurrent;

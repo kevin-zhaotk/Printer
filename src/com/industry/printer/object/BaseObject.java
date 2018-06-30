@@ -366,7 +366,7 @@ public class BaseObject{
 		FontMetrics fm = paint.getFontMetrics();
 		int adjust = (int)fm.descent;
 		if (adjust < 4 && ctH > 32) {
-			adjust = 4;
+			adjust = 6;
 		}
 		canvas.drawText(content, 0, ctH-adjust, paint);
 		int head = mTask.getHeadType();

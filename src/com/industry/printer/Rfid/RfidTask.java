@@ -128,6 +128,9 @@ public class RfidTask implements RfidCallback{
 				mState = STATE_SYNCED;
 				dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
 				break;
+			case RFIDDevice.STATE_RFID_UUID_READY:
+				dev.setState(RFIDDevice.STATE_RFID_CONNECTED);
+				break;
 			default:
 				break;
 		}

@@ -188,6 +188,7 @@ public class CounterObject extends BaseObject {
 	}
 	
 	public void rollback() {
+		Debug.d(TAG, "--->rollback value: " + mValue);
 		if(!mDirection)	//increase
 		{
 			if(mValue+mStepLen > mMax || mValue < mMin)
@@ -203,7 +204,7 @@ public class CounterObject extends BaseObject {
 				mValue -= mStepLen;
 		}
 		setContent( BaseObject.intToFormatString(mValue, mBits));
-		Debug.d(TAG, "rollback mContent="+mContent+", mValue="+mValue);
+		Debug.d(TAG, "--->rollback mContent="+mContent+", mValue="+mValue);
 	}
 	
 	public String toString()

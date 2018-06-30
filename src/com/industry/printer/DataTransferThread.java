@@ -37,7 +37,7 @@ import com.industry.printer.object.CounterObject;
  * @author kevin
  *
  */
-public class DataTransferThread extends Thread {
+public class DataTransferThread {
 	
 	public static final String TAG = DataTransferThread.class.getSimpleName();
 	private static final int MESSAGE_EXCEED_TIMEOUT = 60 * 1000;
@@ -59,6 +59,8 @@ public class DataTransferThread extends Thread {
 	RfidScheduler	mScheduler;
 	private static long mInterval = 0;
 	private int mThreshold;
+
+	private PrintTask mPrinter;
 	
 	private InkLevelListener mInkListener = null;
 	
@@ -85,81 +87,7 @@ public class DataTransferThread extends Thread {
 	 * run函数中一旦检测到数据更新状态变为true，就重新生成buffer并下发
 	 */
 	
-	@Override
-	public void run() {
-		
-		char[] buffer;
-		long last = 0;
-		/*逻辑要求，必须先发数据*/
 
-		int index = index();
-		buffer = mDataTask.get(index).getPrintBuffer();
-		int type = mDataTask.get(index).getHeadType();
-		
-		FileUtil.deleteFolder("/mnt/sdcard/print.bin");
-		// save print.bin to /mnt/sdcard/ folder
-		BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
-		
-		Debug.e(TAG, "--->write data");
-		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-		last = SystemClock.currentThreadTimeMillis();
-		Debug.e(TAG, "--->start print " + mRunning);
-		FpgaGpioOperation.init();
-		while(mRunning == true) {
-			
-			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-			int writable = FpgaGpioOperation.pollState();
-			// writable = 1;
-			if (writable == 0) { //timeout
-			} else if (writable == -1) {
-			} else {
-				mInterval = SystemClock.currentThreadTimeMillis() - last;
-				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
-				mNeedUpdate = false;
-				
-				
-				if (!mDataTask.get(index()).isReady) {
-					mRunning = false;
-					if (mCallback != null) {
-						mCallback.OnFinished(CODE_BARFILE_END);
-					}
-					break;
-				}
-				// Debug.d(TAG, "===>buffer size="+buffer.length);
-				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				
-				last = SystemClock.currentThreadTimeMillis();
-				countDown();
-				mInkListener.onCountChanged();
-				mScheduler.schedule();
-				if (mCallback != null) {
-					mCallback.onComplete();
-				}
-				next();
-				buffer = mDataTask.get(index()).getPrintBuffer();
-			}
-			
-			if(mNeedUpdate == true) {
-				mHandler.removeMessages(MESSAGE_DATA_UPDATE);
-				//在此处发生打印数据，同时
-				buffer = mDataTask.get(index()).getPrintBuffer();
-				Debug.d(TAG, "===>buffer size="+buffer.length);
-				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-				mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
-			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//Debug.d(TAG, "===>kernel buffer empty, fill it");
-			//TO-DO list 下面需要把打印数据下发
-			
-		}
-		rollback();
-		
-	}
 
 	private synchronized void next() {
 		mIndex++;
@@ -207,35 +135,21 @@ public class DataTransferThread extends Thread {
 	public boolean launch(Context ctx) {
 		mRunning = true;
 
-		DataTransferThread thread = getInstance();
-		Debug.d(TAG, "--->thread : " + thread.isRunning());
+		mPrinter = new PrintTask();
 		if (!isBufferReady || mDataTask == null) {
 			return false;
 		}
-		
-		if (mScheduler == null) {
-			mScheduler = new RfidScheduler(mContext);
-		}
-		
-		SystemConfigFile configFile = SystemConfigFile.getInstance(ctx);
-		mScheduler.init();
-		int heads = configFile.getHeads();
-		/**如果是4合2的打印头，需要修改为4头*/
-		heads = configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0 ? configFile.getParam(42) : heads;
-		for (int i = 0; i < heads; i++) {
-			mScheduler.add(new RfidTask(i, mContext));
-		}
-		mScheduler.load();
-		
-		thread.start();
+
+		mPrinter.start();
+//		thread.start();
 		return true;
 	}
 	
 	public void finish() {
 		mRunning = false;
 		
-		DataTransferThread t = mInstance;
-		mInstance = null;
+		PrintTask t = mPrinter;
+		mPrinter = null;
 		mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 		if (t != null) {
 			t.interrupt();
@@ -264,17 +178,6 @@ public class DataTransferThread extends Thread {
 			}
 		}
 	};
-	
-//	public void initDataBuffer(Context context, MessageTask task) {
-//		if (mDataTask == null) {
-//			mDataTask = new DataTask(context, task);
-//		} else {
-//			mDataTask.setTask(task);
-//		}
-//		Debug.d(TAG, "--->prepare buffer");
-//
-//		isBufferReady = mDataTask.prepareBackgroudBuffer();
-//	}
 
 	public void initDataBuffer(Context context, List<MessageTask> task) {
 		if (mDataTask == null) {
@@ -291,6 +194,20 @@ public class DataTransferThread extends Thread {
 		for (DataTask tk : mDataTask) {
 			isBufferReady |= tk.prepareBackgroudBuffer();
 		}
+
+		if (mScheduler == null) {
+			mScheduler = new RfidScheduler(mContext);
+		}
+
+		SystemConfigFile configFile = SystemConfigFile.getInstance(context);
+		mScheduler.init();
+		int heads = configFile.getHeads();
+		/**如果是4合2的打印头，需要修改为4头*/
+		heads = configFile.getParam(SystemConfigFile.INDEX_SPECIFY_HEADS) > 0 ? configFile.getParam(42) : heads;
+		for (int i = 0; i < heads; i++) {
+			mScheduler.add(new RfidTask(i, mContext));
+		}
+		mScheduler.load();
 	}
 
 
@@ -462,7 +379,7 @@ public class DataTransferThread extends Thread {
 //	}
 	
 	private void rollback() {
-		
+		Debug.d(TAG, "--->rollback");
 		if (mDataTask == null) {
 			return;
 		}
@@ -472,6 +389,86 @@ public class DataTransferThread extends Thread {
 					((CounterObject) object).rollback();
 				}
 			}
+		}
+	}
+
+
+	public class PrintTask extends Thread {
+
+		@Override
+		public void run() {
+
+			char[] buffer;
+			long last = 0;
+		/*逻辑要求，必须先发数据*/
+
+			int index = index();
+			buffer = mDataTask.get(index).getPrintBuffer();
+			int type = mDataTask.get(index).getHeadType();
+
+			FileUtil.deleteFolder("/mnt/sdcard/print.bin");
+			// save print.bin to /mnt/sdcard/ folder
+			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
+
+			Debug.e(TAG, "--->write data");
+			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+			last = SystemClock.currentThreadTimeMillis();
+			Debug.e(TAG, "--->start print " + mRunning);
+			FpgaGpioOperation.init();
+			while(mRunning == true) {
+
+				// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+				int writable = FpgaGpioOperation.pollState();
+				// writable = 1;
+				if (writable == 0) { //timeout
+				} else if (writable == -1) {
+				} else {
+					mInterval = SystemClock.currentThreadTimeMillis() - last;
+					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
+					mNeedUpdate = false;
+
+
+					if (!mDataTask.get(index()).isReady) {
+						mRunning = false;
+						if (mCallback != null) {
+							mCallback.OnFinished(CODE_BARFILE_END);
+						}
+						break;
+					}
+					// Debug.d(TAG, "===>buffer size="+buffer.length);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+
+					last = SystemClock.currentThreadTimeMillis();
+					countDown();
+					mInkListener.onCountChanged();
+					mScheduler.schedule();
+					if (mCallback != null) {
+						mCallback.onComplete();
+					}
+					next();
+					buffer = mDataTask.get(index()).getPrintBuffer();
+				}
+
+				if(mNeedUpdate == true) {
+					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
+					//在此处发生打印数据，同时
+					buffer = mDataTask.get(index()).getPrintBuffer();
+					Debug.d(TAG, "===>buffer size="+buffer.length);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+					mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//Debug.d(TAG, "===>kernel buffer empty, fill it");
+				//TO-DO list 下面需要把打印数据下发
+
+			}
+			rollback();
+
 		}
 	}
 }

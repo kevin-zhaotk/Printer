@@ -136,6 +136,7 @@ public class Configs {
 	public static final String QR_DATA = CONFIG_PATH_FLASH + SYSTEM_CONFIG_DIR + "/QRdata/QR.txt";
 	public static final String QR_CSV = CONFIG_PATH_FLASH + SYSTEM_CONFIG_DIR + "/QRdata/QR.csv";
 	public static final String QR_LAST = CONFIG_PATH_FLASH + SYSTEM_CONFIG_DIR + "/QRdata/QRlast.txt";
+	public static final String QR_DIR = "/QRdata";
 	
 	public static final String SYSTEM_CONFIG_MSG_PATH = "/MSG1";
 	/**
