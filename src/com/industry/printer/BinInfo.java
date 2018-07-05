@@ -148,6 +148,7 @@ public class BinInfo {
 		header[2] = (byte) (width & 0x0ff);
     	header[1] = (byte) ((width>>8) & 0x0ff);
     	header[0] = (byte) ((width>>16) & 0x0ff);
+		Debug.d(TAG, "--->header= " + header[0] + "  " + header[1] + "  " + header[2]);
     	// BinCreater.saveBin("/mnt/usbhost0/bar.bin", mBuffer, 19*8);
     	buffer.append(header, 0, header.length);
     	buffer.append(mBuffer, 0, mBuffer.length);
@@ -159,13 +160,13 @@ public class BinInfo {
 		byte[] head = new byte[BinCreater.RESERVED_FOR_HEADER];
 		/*把bin文件内容读入内存*/
 		mCacheStream = new ByteArrayInputStream(mBuffer);
-		Debug.d(TAG, "--->buffer.size=" + mCacheStream.available());
+
 		mCacheStream.read(head, 0, BinCreater.RESERVED_FOR_HEADER);
 		mColumn =  (head[0]&0xff) << 16 | (head[1] & 0xff)<<8 | (head[2]&0xff);
-		
+		Debug.d(TAG, "--->header= " + head[0] + "  " + head[1] + "  " + head[2]);
 		//bin文件总长度
 		mLength = mCacheStream.available();
-		Debug.d(TAG, "--->mLength=" + mLength);
+		Debug.d(TAG, "--->mLength=" + mLength + "  column = " + mColumn);
 		
 		
 		//文件的总字节数/总列数 = 每列的字节数
@@ -214,17 +215,18 @@ public class BinInfo {
 	 */
 	private synchronized char[] extract() {
 		int hType = mTask == null ? MessageType.MESSAGE_TYPE_12_7_S : mTask.getHeadType();
-		if (hType == MessageType.MESSAGE_TYPE_12_7_S)	{
-    		char[] rBuffer = new char[mBufferChars.length/4];
-    		for (int j = 0; j < rBuffer.length; j++) {
-    			int curRow = j / mCharsPerHFeed;
-				rBuffer[j] = mBufferChars[4*curRow*mCharsPerHFeed + j%mCharsPerHFeed];
-			}
-    		Debug.d(TAG, "--->rBuffer.length: " + rBuffer.length);
-    		return rBuffer;
-    	} else {
-    		return mBufferChars;
-    	}
+		return mBufferChars;
+//		if (hType == MessageType.MESSAGE_TYPE_12_7_S)	{
+//    		char[] rBuffer = new char[mBufferChars.length/4];
+//    		for (int j = 0; j < rBuffer.length; j++) {
+//    			int curRow = j / mCharsPerHFeed;
+//				rBuffer[j] = mBufferChars[4*curRow*mCharsPerHFeed + j%mCharsPerHFeed];
+//			}
+//    		Debug.d(TAG, "--->rBuffer.length: " + rBuffer.length);
+//    		return rBuffer;
+//    	} else {
+//    		return mBufferChars;
+//    	}
 		
 	}
 	public int getCharsPerColumn() {

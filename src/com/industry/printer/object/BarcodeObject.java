@@ -65,7 +65,11 @@ public class BarcodeObject extends BaseObject {
 		mCode = 3;
 		mTextSize = 20;
 		mFormat="CODE_128";
-		setContent("");
+		if (mSource == true) {
+			setContent("123456789");
+		} else {
+			setContent("");
+		}
 		mWidth=0;
 		
 	}
@@ -425,6 +429,7 @@ public class BarcodeObject extends BaseObject {
 	
 	public Bitmap getPrintBitmap(int totalW, int totalH, int w, int h, int y) {
 		BitMatrix matrix=null;
+		Debug.d(TAG, "--->getPrintBitmap : totalW = " + totalW + "  w = " + w);
 		MultiFormatWriter writer = new MultiFormatWriter();
 		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
         hints.put(EncodeHintType.CHARACTER_SET, CODE);

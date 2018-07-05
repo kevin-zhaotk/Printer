@@ -581,6 +581,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			mEditTitle.setText(R.string.str_filename_no);
 		}
 		mVerTitle.setText(R.string.app_version);
+
+		mDelete.setText(R.string.str_del);
 	}
 	
 	/**
@@ -685,7 +687,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					@Override
 					public Observable<Void> call(Map<String, String> arg0) {
 						try {
-							mProgressDialog.setMessage(arg0.get("tips"));
+							//mProgressDialog.setMessage(arg0.get("tips"));
 							FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
 //							String dest = arg0.get("dest");
 //							if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
@@ -788,7 +790,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			@Override
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
-					mProgressDialog.setMessage(arg0.get("tips"));
+					//mProgressDialog.setMessage(arg0.get("tips"));
 					FileUtil.copyClean(arg0.get("source"), arg0.get("dest"));
 //				String dest = arg0.get("dest");
 //				if (dest.endsWith(Configs.FONT_ZIP_FILE)) {
@@ -864,6 +866,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 
 			@Override
 			public Observable<Map<String, String>> call(String arg0) {
+				Debug.d(TAG, "--->flatMap: " + arg0);
 				// TODO Auto-generated method stub
 				Map<String, String> src = new HashMap<String, String>();
 				if (Configs.SYSTEM_CONFIG_MSG_PATH.equals(arg0)) {
@@ -871,6 +874,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 					src.put("dest", usbs.get(0) + arg0);
 					src.put("tips", MainActivity.this.getString(R.string.tips_export_message));
 				} else if (Configs.PICTURE_SUB_PATH.equals(arg0)) {
+					Debug.d(TAG, "--->copy pictures");
 					src.put("source", Configs.CONFIG_PATH_FLASH + Configs.PICTURE_SUB_PATH);
 					src.put("dest", usbs.get(0) + arg0);
 					src.put("tips", MainActivity.this.getString(R.string.tips_export_resource));
@@ -892,10 +896,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener, O
 			@Override
 			public Observable<Void> call(Map<String, String> arg0) {
 				try {
-					mProgressDialog.setMessage(arg0.get("tips"));
+					Debug.d(TAG, "--->start copy");
+					//mProgressDialog.setMessage(arg0.get("tips"));
 					FileUtil.copyDirectiory(arg0.get("source"), arg0.get("dest"));
 				} catch (Exception e) {
 					// TODO: handle exception
+					Debug.d(TAG, "--->copy e: " + e.getMessage());
 				}
 				Debug.d(TAG, "--->map");
 				return null;

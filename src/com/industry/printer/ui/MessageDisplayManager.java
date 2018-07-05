@@ -1,6 +1,7 @@
 package com.industry.printer.ui;
 
 import android.R.integer;
+import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,9 +21,9 @@ import android.widget.ImageView.ScaleType;
 
 import com.industry.printer.MessageTask;
 import com.industry.printer.R;
+import com.industry.printer.Utils.Debug;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.MessageObject;
-import com.printer.corelib.Debug;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,7 +162,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
     }
 
     private void draw(BaseObject object) {
-    	Debug.d(TAG, "--->draw");
+    	//Debug.d(TAG, "--->draw: " + mContainer.getMeasuredHeight());
     	if (object instanceof MessageObject) {
             return;
         }
@@ -202,6 +203,9 @@ public class MessageDisplayManager implements View.OnTouchListener {
 //        param.height = (int) object.getHeight();
         layout.setOrientation(LinearLayout.HORIZONTAL); 
         layout.setLayoutParams(param);
+        if (bmp == null) {
+            return layout;
+        }
 
         for (int w = 0; w < bmp.getWidth(); ) {
             int wd = 0;
@@ -216,7 +220,7 @@ public class MessageDisplayManager implements View.OnTouchListener {
             image.setScaleType(ScaleType.FIT_XY);
             image.setImageBitmap(b);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-            p.weight = 1;
+            p.weight = wd/param.width;
             w = w + wd;
             layout.addView(image, -1, p);
         }

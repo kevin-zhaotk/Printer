@@ -226,7 +226,7 @@ public class DataTask {
 				Debug.d(TAG,"--->cover barcode w = " + o.getWidth() + "  h = " + o.getHeight() + " total=" + (mBinInfo.getBytesFeed()*8) + " " + (o.getWidth()/scaleW) + " " + (o.getHeight()/scaleH));
 				// BinCreater.saveBitmap(bmp, "bar.png");
 				BinInfo info = new BinInfo(mContext, bmp);
-				
+
 				BinInfo.overlap(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
 			} else if(o instanceof CounterObject)
 			{

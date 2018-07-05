@@ -832,8 +832,9 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		mMsgManager.removeAll();
 		MessageObject msgObject = new MessageObject(mContext, 0);
 		msgObject.setType(SystemConfigFile.getInstance(mContext).getParam(30));
-		mMsgManager.add(msgObject);
-		mMsgTask.addObject(msgObject);
+		Message message = mObjRefreshHandler.obtainMessage(OBJECT_INSERT);
+		message.obj = msgObject;
+		message.sendToTarget();
 		((MainActivity)mContext).onEditTitleChanged(mContext.getString(R.string.str_filename_no));
 	}
 	

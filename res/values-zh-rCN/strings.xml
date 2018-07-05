@@ -489,8 +489,8 @@
 	<string name="str_page_forward">前翻</string>
 	<string name="str_page_backward">后翻</string>
 	<string name="str_rfid_initfail_notify">卡初始化失败！</string>
-	<string name="str_state_printing">打印运行中</string>
-	<string name="str_state_stopped">打印已停止</string>
+	<string name="str_state_printing">打印中</string>
+	<string name="str_state_stopped">已停止</string>
 	
 <!-- 树莓派3 设置界面相关 -->
 	<string name="str_textview_param1">01.速度</string>
