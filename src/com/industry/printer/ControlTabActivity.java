@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -90,6 +91,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -172,7 +174,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public TextView mPowerV;
 	private ImageView mPowerStat;
 	public TextView mTime;
-	
+
+	private ImageButton mMsgNext;
+	private  ImageButton mMsgPrev;
+
+
 	public SystemConfigFile mSysconfig;
 	/**
 	 * UsbSerial device name
@@ -378,7 +384,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		mBtnOpenfile.setOnClickListener(this);
 		mBtnOpenfile.setOnTouchListener(this);
 		mTvOpen = (TextView) getView().findViewById(R.id.tv_binfile);
-		
+
+		mMsgPrev = (ImageButton) getView().findViewById(R.id.ctrl_btn_up);
+		mMsgNext = (ImageButton) getView().findViewById(R.id.ctrl_btn_down);
+		mMsgPrev.setOnClickListener(this);
+		mMsgNext.setOnClickListener(this);
+
 		setupViews();
 		
 		mTVPrinting = (TextView) getView().findViewById(R.id.tv_printState);
@@ -1230,6 +1241,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.GONE);
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
+
+				mMsgNext.setClickable(false);
+				mMsgPrev.setClickable(false);
 				ExtGpio.writeGpio('b', 11, 1);
 				break;
 			case STATE_STOPPED:
@@ -1243,6 +1257,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTVStopped.setVisibility(View.VISIBLE);
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
+
+				mMsgNext.setClickable(true);
+				mMsgPrev.setClickable(true);
 				ExtGpio.writeGpio('b', 11, 0);
 				break;
 			default:
@@ -1550,10 +1567,138 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 			case R.id.btn_page_backward:
 				mScrollView.smoothScrollBy(400, 0);
 				break;
+			case R.id.ctrl_btn_up:
+				loadMessage(false);
+				break;
+			case R.id.ctrl_btn_down:
+				loadMessage(true);
+				break;
 			default:
 				break;
 		}
 		
+	}
+
+	private void loadMessage(boolean forward) {
+		String msg = null;
+		if (forward) {
+			msg = loadNextMsg();
+		} else {
+			msg = loadNPrevMsg();
+		}
+
+		Message message = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		Bundle bundle = new Bundle();
+		bundle.putString("file", msg);
+		message.setData(bundle);
+		mHandler.sendMessageDelayed(message, 100);
+	}
+
+	private String loadNextMsg() {
+		File msgDir = new File(Configs.TLK_PATH_FLASH);
+		String[] tlks = msgDir.list();
+		Arrays.sort(tlks, new Comparator<String>() {
+			@Override
+			public int compare(String s, String t1) {
+				try {
+					if (s.startsWith("Group-") && t1.startsWith("Group-")) {
+						String g1 = s.substring(6);
+						String g2 = s.substring(6);
+						int gi1 = Integer.parseInt(g1);
+						int gi2 = Integer.parseInt(g2);
+						if (gi1 > gi2) {
+							return 1;
+						} else if (gi1 < gi2) {
+							return -1;
+						} else {
+							return 0;
+						}
+					} else if (s.startsWith("Group-")) {
+						return -1;
+					} else if (t1.startsWith("Group-")) {
+						return 1;
+					} else {
+						int gi1 = Integer.parseInt(s);
+						int gi2 = Integer.parseInt(t1);
+						if (gi1 > gi2) {
+							return 1;
+						} else if (gi1 < gi2) {
+							return -1;
+						} else {
+							return 0;
+						}
+					}
+				} catch (Exception e) {
+					return 0;
+				}
+			}
+		});
+
+		for (int i = 0; i < tlks.length; i++) {
+			String tlk = tlks[i];
+			if (tlk.equalsIgnoreCase(mObjPath)) {
+				if (i + 1 < tlks.length ) {
+					return tlks[i + 1];
+				} else {
+					return tlks[0];
+				}
+			}
+		}
+		return null;
+	}
+
+	private String loadNPrevMsg() {
+		File msgDir = new File(Configs.TLK_PATH_FLASH);
+		String[] tlks = msgDir.list();
+		Arrays.sort(tlks, new Comparator<String>() {
+			@Override
+			public int compare(String s, String t1) {
+
+				try {
+					if (s.startsWith("Group-") && t1.startsWith("Group-")) {
+						String g1 = s.substring(6);
+						String g2 = s.substring(6);
+						int gi1 = Integer.parseInt(g1);
+						int gi2 = Integer.parseInt(g2);
+						if (gi1 > gi2) {
+							return 1;
+						} else if (gi1 < gi2) {
+							return -1;
+						} else {
+							return 0;
+						}
+					} else if (s.startsWith("Group-")) {
+						return -1;
+					} else if (t1.startsWith("Group-")) {
+						return 1;
+					} else {
+						int gi1 = Integer.parseInt(s);
+						int gi2 = Integer.parseInt(t1);
+						if (gi1 > gi2) {
+							return 1;
+						} else if (gi1 < gi2) {
+							return -1;
+						} else {
+							return 0;
+						}
+					}
+				} catch (Exception e) {
+					return 0;
+				}
+			}
+		});
+
+		for (int i = 0; i < tlks.length; i++) {
+			String tlk = tlks[i];
+			if (tlk.equalsIgnoreCase(mObjPath)) {
+				if (i > 0 ) {
+					return tlks[i - 1];
+				} else {
+					return tlks[tlks.length - 1];
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override

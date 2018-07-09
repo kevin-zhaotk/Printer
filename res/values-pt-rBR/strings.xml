@@ -159,8 +159,15 @@
 	</string-array>
 	<string name="strCode">Tipo de código</string>
 	<string-array name="strCodeArray">
-	    <item>ENA128</item>
-	    <item>QR</item>
+		<item>EAN8</item>
+		<item>EAN13</item>
+		<item>EAN128</item>
+		<item>CODE_128</item>
+		<item>CODE_39</item>
+		<item>UPC_A</item>
+		<item>ITF_14</item>
+		<item>QR</item>
+		<item>DM</item>
 	</string-array>
 	
 	<string-array name="strLineArray">

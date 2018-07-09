@@ -427,7 +427,6 @@ public class DataTransferThread {
 					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 					mNeedUpdate = false;
 
-
 					if (!mDataTask.get(index()).isReady) {
 						mRunning = false;
 						if (mCallback != null) {
@@ -435,7 +434,7 @@ public class DataTransferThread {
 						}
 						break;
 					}
-					// Debug.d(TAG, "===>buffer size="+buffer.length);
+					Debug.d(TAG, "===>buffer size="+buffer.length);
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 
 					last = SystemClock.currentThreadTimeMillis();
@@ -446,6 +445,7 @@ public class DataTransferThread {
 						mCallback.onComplete();
 					}
 					next();
+					Debug.d(TAG, "===>buffer getPrintbuffer");
 					buffer = mDataTask.get(index()).getPrintBuffer();
 				}
 

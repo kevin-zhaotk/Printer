@@ -136,9 +136,11 @@ public class DataTask {
 	}
 	
 	public char[] getPrintBuffer(boolean isPreview) {
+		Debug.d(TAG, "--->getPrintBuffer");
 		if (mBgBuffer == null) {
 			return null;
 		}
+		Debug.d(TAG, "--->getPrintBuffer  111" );
 		CharArrayReader cReader = new CharArrayReader(mBgBuffer);
 		try {
 			cReader.read(mPrintBuffer);
@@ -146,17 +148,18 @@ public class DataTask {
 				refreshVariables(isPreview);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Debug.d(TAG, "--->e : " + e.getMessage());
 		}
 		if (isPreview) {
 			return mPrintBuffer;
 		}
-		if (mBinInfo.mBytesPerColumn == 4) {
+		Debug.d(TAG, "--->BytesPerColumn: " + mBinInfo.mBytesPerColumn);
+		if (mBinInfo.mBytesPerColumn == 4)  {
 			evenBitShift();
-		} else {
+		} // else{
 			/*完成平移/列变换得到真正的打印buffer*/
 			rebuildBuffer();
-		}
+		// }
 		//BinCreater.Bin2Bitmap(mPrintBuffer);
 		/*test bin*/
 		/*

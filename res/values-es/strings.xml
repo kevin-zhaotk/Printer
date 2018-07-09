@@ -168,6 +168,7 @@
 	    <item>UPC_A</item>
 	    <item>ITF_14</item>
 	    <item>QR</item>
+		<item>DM</item>
 	</string-array>
 	
 	<string name="strBarsource">Data</string>

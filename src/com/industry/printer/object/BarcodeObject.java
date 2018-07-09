@@ -95,6 +95,8 @@ public class BarcodeObject extends BaseObject {
 		} else if ("QR".equals(code)) {
 			mCode = 0;
 			mId = BaseObject.OBJECT_TYPE_QR;
+		} else if ("DM".equals(code)) {
+			mCode = 8;
 		} else {
 			return;
 		}
@@ -125,6 +127,9 @@ public class BarcodeObject extends BaseObject {
 		} else if (code == 7) {
 			mCode = 7;
 			mFormat = "UPC_A";
+		} else if (code == 8) {
+			mCode = 8;
+			mFormat = "DM";
 		}
 		mId = BaseObject.OBJECT_TYPE_BARCODE;
 		isNeedRedraw = true;
@@ -291,7 +296,7 @@ public class BarcodeObject extends BaseObject {
             content = check();
             matrix = writer.encode(content,
 				        format, w, h - textH- 5, null);
-			            
+
 			int tl[] = matrix.getTopLeftOnBit();
 			int width = matrix.getWidth();
 			int height = matrix.getHeight();
@@ -377,6 +382,9 @@ public class BarcodeObject extends BaseObject {
         return renderResult(code, width, height, quietZone);
     }
 
+    private BitMatrix drasDM() {
+		return null;
+	}
     // Note that the input matrix uses 0 == white, 1 == black, while the output
     // matrix uses
     // 0 == black, 255 == white (i.e. an 8 bit greyscale bitmap).
@@ -555,8 +563,10 @@ public class BarcodeObject extends BaseObject {
 	}
 	
 	private boolean is2D() {
+		Debug.d(TAG, "is2D? " + mFormat);
 		if (mFormat.equalsIgnoreCase("QR")
 				|| mFormat.equalsIgnoreCase("DATA_MATRIX")
+				|| mFormat.equalsIgnoreCase("DM")
 				|| mFormat.equalsIgnoreCase("AZTEC")
 				|| mFormat.equalsIgnoreCase("PDF_417")) {
 			return true;
@@ -596,6 +606,8 @@ public class BarcodeObject extends BaseObject {
 			return BarcodeFormat.AZTEC;
 		} else if ("PDF_417".equals(format)) {
 			return BarcodeFormat.PDF_417;
+		} else if ("DM".equalsIgnoreCase(format)) {
+			return BarcodeFormat.DATA_MATRIX;
 		} else {
 			return BarcodeFormat.CODE_128;
 		}
