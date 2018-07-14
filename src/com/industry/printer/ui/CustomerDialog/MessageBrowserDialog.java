@@ -84,6 +84,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	 */
 	private boolean mMode = false;
 	private OpenFrom mFrom;
+	private String location = null;
+	private int indexForScroll = 0;
 		
 		private static final int MSG_FILTER_CHANGED = 1;
 		private static final int MSG_LOADED = 2;
@@ -108,6 +110,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				case MSG_LOADED:
 					mMessageList.setAdapter(mFileAdapter);
 					mFileAdapter.notifyDataSetChanged();
+					Debug.d(TAG, "--->indexForScroll ： " + indexForScroll);
+					mMessageList.setSelection(indexForScroll);
+					mFileAdapter.setSelected(indexForScroll);
+//					mMessageList.smoothScrollToPosition(indexForScroll);
+//					mMessageList.smoothScrollToPositionFromTop(indexForScroll, 0, 100);
 					hideLoading();
 					break;
 				case MSG_REF:
@@ -144,6 +151,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		public MessageBrowserDialog(Context context, OpenFrom from) {
 			this(context);
 			mFrom = from;
+		}
+
+		public MessageBrowserDialog(Context context, OpenFrom from, String msg) {
+			this(context);
+			mFrom = from;
+			location = msg;
+			Debug.d(TAG, "--->location: " + msg);
 		}
 		
 		@Override
@@ -363,6 +377,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("title", t);
 						mContent.add(map);
+						if (t.equalsIgnoreCase(location)) {
+							indexForScroll = mContent.size() - 1;
+						}
 						mFilterContent.add(map);
 					}
 					// mMessageList.setAdapter(mFileAdapter);

@@ -411,18 +411,26 @@ public class DataTransferThread {
 			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
 
 			Debug.e(TAG, "--->write data");
-			// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+			FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			last = SystemClock.currentThreadTimeMillis();
-			Debug.e(TAG, "--->start print " + mRunning);
-			FpgaGpioOperation.init();
-			while(mRunning == true) {
 
-				// FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
+			FpgaGpioOperation.init();
+			try {
+				Thread.sleep(500);
+			} catch (Exception e) {
+
+			}
+			while(mRunning == true) {
+//				Debug.e(TAG, "--->start print");
+				//FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				int writable = FpgaGpioOperation.pollState();
 				// writable = 1;
 				if (writable == 0) { //timeout
+//					Debug.d(TAG, "--->timeout");
 				} else if (writable == -1) {
+//					Debug.d(TAG, "--->pollstate " + writable);
 				} else {
+//					Debug.d(TAG, "--->FPGA buffer is empty");
 					mInterval = SystemClock.currentThreadTimeMillis() - last;
 					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 					mNeedUpdate = false;

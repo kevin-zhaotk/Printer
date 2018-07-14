@@ -1527,7 +1527,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				thread.purge(mContext);
 				break;
 			case R.id.btnBinfile:
-				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext, OpenFrom.OPEN_PRINT);
+				MessageBrowserDialog dialog = new MessageBrowserDialog(mContext, OpenFrom.OPEN_PRINT, mObjPath);
 				dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 					
 					@Override

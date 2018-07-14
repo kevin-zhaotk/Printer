@@ -208,20 +208,21 @@ public class MessageDisplayManager implements View.OnTouchListener {
         }
 
         for (int w = 0; w < bmp.getWidth(); ) {
-            int wd = 0;
+            float wd = 0f;
             if (w + 1500 < bmp.getWidth()) {
                 wd = 1200;
             } else {
                 wd = bmp.getWidth() - w;
             }
             ImageView image = new ImageView(mContext);
-            Bitmap b = Bitmap.createBitmap(bmp, w, 0, wd, bmp.getHeight());
+            Bitmap b = Bitmap.createBitmap(bmp, w, 0, (int) wd, bmp.getHeight());
 
             image.setScaleType(ScaleType.FIT_XY);
             image.setImageBitmap(b);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
             p.weight = wd/param.width;
-            w = w + wd;
+            w = w + (int) wd;
+            Debug.d(TAG, "--->p.weight= " + p.weight);
             layout.addView(image, -1, p);
         }
         return layout;
