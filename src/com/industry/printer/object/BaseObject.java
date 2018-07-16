@@ -20,6 +20,7 @@ import android.util.Log;
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
 import com.industry.printer.MessageTask.MessageType;
+import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.R;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.ConfigPath;
@@ -445,7 +446,7 @@ public class BaseObject{
 		singleW = (int)(mWidth * scaleW/mContent.length());
 		/** if message isn`t high resolution, divid by 2 because the buffer bitmap is halfed, so the variable buffer should be half too*/
 		MessageObject msgObj = mTask.getMsgObject();
-		if (!msgObj.getResolution() && msgObj.getType() != MessageType.MESSAGE_TYPE_16_DOT) {
+		if (!msgObj.getResolution() && msgObj.getPNozzle() != PrinterNozzle.MESSAGE_TYPE_16_DOT) {
 			singleW = singleW / 2;
 		}
 		

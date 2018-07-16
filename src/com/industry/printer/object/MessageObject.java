@@ -3,6 +3,7 @@ package com.industry.printer.object;
 import android.content.Context;
 
 import com.industry.printer.MessageTask.MessageType;
+import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.R;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
@@ -13,6 +14,8 @@ public class MessageObject extends BaseObject {
 	public int[] mDotPer = new int[8];
 	public int mType;
 	public boolean mHighResolution;
+
+	public PrinterNozzle mPNozzle;
 	
 	public static final int PIXELS_PER_MM = 12;
 	public static final float[] mBaseList = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f, 5, 5.5f, 6, 6.5f, 
@@ -41,14 +44,16 @@ public class MessageObject extends BaseObject {
 		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
 		if(i<0 || i>printer.length)
 			return ;
-		mType = i;
+		// mType = i;
+		mPNozzle = PrinterNozzle.getInstance(i);
 	}
 	
 	public void setType(String type) {
 		String[] printer =	mContext.getResources().getStringArray(R.array.strPrinterArray);
 		for (int i=0; i<printer.length; i++) {
 			if (printer[i].equals(type)) {
-				mType = i;
+				//mType = i;
+				mPNozzle = PrinterNozzle.getInstance(i);
 				break;
 			}
 		}
@@ -60,42 +65,16 @@ public class MessageObject extends BaseObject {
 			mDotPer[i] = 0;
 		}
 	}
+
+	public PrinterNozzle getPNozzle() {
+		return mPNozzle;
+	}
+
 	public int getType() {
 		return mType;
 	}
 	
-	
-	public int getHeadCount() {
-		int headCount = 1;
-		switch (mType) {
-		case MessageType.MESSAGE_TYPE_12_7:
-		case MessageType.MESSAGE_TYPE_12_7_S:
-		case MessageType.MESSAGE_TYPE_16_3:
-		case MessageType.MESSAGE_TYPE_1_INCH:
-		case MessageType.MESSAGE_TYPE_1_INCH_FAST:
-		case MessageType.MESSAGE_TYPE_16_DOT:
-		case MessageType.MESSAGE_TYPE_9MM:
-		case MessageType.MESSAGE_TYPE_NOVA:
-			 headCount = 1;
-			break;
-		case MessageType.MESSAGE_TYPE_32_DOT:
-		case MessageType.MESSAGE_TYPE_25_4:
-		case MessageType.MESSAGE_TYPE_33:
-		case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
-		case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
-			headCount = 2;
-			break;
-		case MessageType.MESSAGE_TYPE_38_1:
-			headCount = 3;
-			break;
-		case MessageType.MESSAGE_TYPE_50_8:
-			headCount = 4;
-			break;
-		default:
-			break;
-		}
-		return headCount;
-	}
+
 	
 	public void setHighResolution(boolean resolution) {
 		mHighResolution = resolution;

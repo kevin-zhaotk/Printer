@@ -316,7 +316,7 @@ public class MessageTask {
 	
 	private void dealDot(int dots) {
 		MessageObject msgObj = getMsgObject();
-		switch (msgObj.getHeadCount()) {
+		switch (msgObj.getPNozzle().mHeads) {
 			case 1:
 				mDots[0] += dots;
 				break;
@@ -468,7 +468,7 @@ public class MessageTask {
 		}
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
-		mDots = maker.extract(bitmap, msg.getHeadCount());
+		mDots = maker.extract(bitmap, msg.getPNozzle().mHeads);
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
 		
@@ -558,9 +558,9 @@ public class MessageTask {
 		BinFileMaker maker = new BinFileMaker(mContext);
 		/** if high resolution, keep original width */
 		if (msgObj.getResolution() || (getHeadType() == MessageType.MESSAGE_TYPE_16_DOT)) {
-			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true), msgObj.getHeadCount());
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true), msgObj.getPNozzle().mHeads);
 		} else {
-			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true), msgObj.getHeadCount());
+			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true), msgObj.getPNozzle().mHeads);
 		}
 		// 保存bin文件
 		maker.save(ConfigPath.getBinAbsolute(mName));
@@ -886,45 +886,21 @@ public class MessageTask {
 	}
 	
 	public int getHeads() {
-		int height = 1;
+
+		int heads = 1;
 		MessageObject obj = getMsgObject();
 		if (obj == null) {
-			return height;
+			return heads;
 		}
-		// Debug.d(TAG, "--->head type: " + obj.getType());
-		switch (obj.getType()) {
-			case MessageType.MESSAGE_TYPE_12_7:
-			case MessageType.MESSAGE_TYPE_12_7_S:
-			case MessageType.MESSAGE_TYPE_16_3:
-			case MessageType.MESSAGE_TYPE_1_INCH:
-			case MessageType.MESSAGE_TYPE_1_INCH_FAST:
-				height = 1;
-				break;
-			case MessageType.MESSAGE_TYPE_25_4:
-			case MessageType.MESSAGE_TYPE_33:
-			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
-			case MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST:
-				height = 2;
-				break;
-			case MessageType.MESSAGE_TYPE_38_1:
-				height = 3;
-				break;
-			case MessageType.MESSAGE_TYPE_50_8:
-				height = 4;
-				break;
-			default:
-				break;
-		}
-		return height;
+		return obj.getPNozzle().mHeads;
 	}
 	
 	public int getHeadType() {
-		int height = 1;
 		MessageObject obj = getMsgObject();
 		if (obj == null) {
 			return MessageType.MESSAGE_TYPE_12_7;
 		}
-		return obj.getType();
+		return obj.getPNozzle().mType;
 	}
 
 	public String getPreview() {

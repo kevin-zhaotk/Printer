@@ -154,11 +154,11 @@ public class DataTask {
 			return mPrintBuffer;
 		}
 		Debug.d(TAG, "--->BytesPerColumn: " + mBinInfo.mBytesPerColumn);
-		if (mBinInfo.mBytesPerColumn == 4)  {
-			evenBitShift();
-		} // else{
+//		if (mBinInfo.mBytesPerColumn == 4)  {
+//			evenBitShift();
+//		} // else{
 			/*完成平移/列变换得到真正的打印buffer*/
-			rebuildBuffer();
+		rebuildBuffer();
 		// }
 		//BinCreater.Bin2Bitmap(mPrintBuffer);
 		/*test bin*/
@@ -187,15 +187,35 @@ public class DataTask {
 		float div = (float) (2.0/heads);
 		MessageObject msg = mTask.getMsgObject();
 		// Debug.d(TAG, "+++++type:" + msg.getType());
-		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
+//		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
+//			div = 1;
+//			scaleW = 1;
+//			scaleH = 0.5f;
+//		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
+//			div = 0.5f;
+//			scaleW = 0.5f;
+//			scaleH = 0.25f;
+//		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_16_DOT) {
+//			div = 152f/16f;
+//		}
+//		/**if high resolution message, do not divide width by 2 */
+//		if (msg.getResolution()) {
+//			Debug.d(TAG, "--->High Resolution");
+//			scaleW = scaleW/2;
+//			div = div/2;
+//		}
+
+		int headType = mTask.getHeadType();
+
+		if (headType == MessageType.MESSAGE_TYPE_1_INCH || headType == MessageType.MESSAGE_TYPE_1_INCH_FAST) {
 			div = 1;
 			scaleW = 1;
 			scaleH = 0.5f;
-		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
+		} else if (headType == MessageType.MESSAGE_TYPE_1_INCH_DUAL || headType == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST) {
 			div = 0.5f;
 			scaleW = 0.5f;
 			scaleH = 0.25f;
-		} else if (msg != null && msg.getType() == MessageType.MESSAGE_TYPE_16_DOT) {
+		} else if (headType == MessageType.MESSAGE_TYPE_16_DOT) {
 			div = 152f/16f;
 		}
 		/**if high resolution message, do not divide width by 2 */
@@ -412,29 +432,40 @@ public class DataTask {
 	 * 对buffer进行左右移动变换，生成真正的打印数据
 	 */
 	public void rebuildBuffer() {
-		BaseObject object = null;
+		MessageObject object = mTask.getMsgObject();;
 		ArrayList<SegmentBuffer> buffers = new ArrayList<SegmentBuffer>();
-		for (BaseObject msg : mTask.getObjects()) {
-			if (msg instanceof MessageObject) {
-				object = msg;
-				break;
-			}
+//		for (BaseObject msg : mTask.getObjects()) {
+//			if (msg instanceof MessageObject) {
+//				object = msg;
+//				break;
+//			}
+//		}
+		if (object == null) {
+			return;
 		}
 		/*分头处理*/
-		int type = 1;
+		int heads = 1;
 		if (object != null) {
-			type = mTask.getHeads();
+			heads = mTask.getHeads();
 		}
-		Debug.d(TAG, "--->type=" + type);
-		for (int i = 0; i < type; i++) {
+		Debug.d(TAG, "--->type=" + heads);
+
+		for (int i = 0; i < heads; i++) {
 			/**
 			 * for 'Nova' header, shift & mirror is forbiden; 
 			 */
-			if (((MessageObject)object).getType() == MessageType.MESSAGE_TYPE_NOVA) {
-				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), SegmentBuffer.DIRECTION_NORMAL, 0));
-			} else {
-				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, type, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+			int revert = 0x00;
+			int shift = object.getPNozzle().shiftEnable ? Configs.getMessageShift(i) : 0;
+			int mirror = object.getPNozzle().mirrorEnable ? Configs.getMessageDir(i) : SegmentBuffer.DIRECTION_NORMAL;
+			if (object.getPNozzle().reverseEnable) {
+
 			}
+//			if (object.getPNozzle().shiftEnable) {
+//				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), SegmentBuffer.DIRECTION_NORMAL, 0));
+//			} else {
+//				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
+//			}
+			buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), mirror, shift, revert));
 		}
 		
 		/*计算转换后的buffer总列数*/
@@ -449,12 +480,13 @@ public class DataTask {
 		/*处理完之后重新合并为一个buffer, 因为涉及到坐标平移，所以不能对齐的段要补0*/
 		for (int j=0; j < columns; j++) {
 			for (SegmentBuffer buffer : buffers) {
-				buffer.readColumn(mBuffer, j, j*hight + buffer.mHight*buffer.mType);
+				buffer.readColumn(mBuffer, j, j*hight + buffer.mHight * buffer.mType);
 			}
 		}
 		
 	}
 	/**
+	 * 双列喷嘴用的，  以后不用了，   替换为旋转逻辑
 	 * 对齐设定, 只针对32Bit × N的buffer，其他buffer不处理
 	 * 1.  原来在buffer的总长度， 增加N 列。 
 	 * 2.原buffer列中第X列，所有偶数bit，   0,2,4。。。 34 bit，  后移到第n+X列。
@@ -464,6 +496,7 @@ public class DataTask {
      * 例如：  没4B 为一列， 
 	 * 第0 列的 的偶数bit （在0-3  字节中，）会 移到 新buffer的第（0+4）= 列的偶数bit， （在16-19Ｂ）。　
 	 */
+	@Deprecated
 	public void evenBitShift() {
 		int shift = Configs.getEvenShift();
 		mBuffer = new char[mPrintBuffer.length + shift  * 2];
