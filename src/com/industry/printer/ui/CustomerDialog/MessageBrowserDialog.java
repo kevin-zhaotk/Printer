@@ -23,6 +23,7 @@ import com.industry.printer.Utils.StringUtil;
 import com.industry.printer.object.TLKFileParser;
 import com.industry.printer.ui.CustomerAdapter.ListViewButtonAdapter;
 import com.industry.printer.ui.CustomerAdapter.MessageListAdater;
+import com.industry.printer.ui.KZListView.KZListView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -53,31 +54,31 @@ import android.widget.TextView;
 
 public class MessageBrowserDialog extends CustomerDialogBase implements android.view.View.OnClickListener, OnItemClickListener, AdapterView.OnItemLongClickListener, OnTouchListener, OnScrollListener, TextWatcher {
 
-		private final String TAG = MessageBrowserDialog.class.getSimpleName();
-		
-		public TextView mConfirm;
-		public TextView mCancel;
-		public RelativeLayout mPagePrev;
-		public RelativeLayout mPageNext;
-		public TextView 	mDelete;
-		public ImageView 	mLoading;
-		public RelativeLayout 	mLoadingLy;
-		
-		private Animation mOperating;
-		
-		
-		public EditText		  mSearch;
-		private static ArrayList<String> mTitles;
-		
-		public ListView mMessageList;
-		public View mVSelected;
-		
-		public boolean isTop;
-		public boolean isBottom;
-		
-		public MessageListAdater mFileAdapter;
-		public LinkedList<Map<String, Object>> mContent;
-		public LinkedList<Map<String, Object>> mFilterContent;
+	private final String TAG = MessageBrowserDialog.class.getSimpleName();
+
+	public TextView mConfirm;
+	public TextView mCancel;
+	public RelativeLayout mPagePrev;
+	public RelativeLayout mPageNext;
+	public TextView mDelete;
+	public ImageView mLoading;
+	public RelativeLayout mLoadingLy;
+
+	private Animation mOperating;
+
+
+	public EditText mSearch;
+	private static ArrayList<String> mTitles;
+
+	public KZListView mMessageList;
+	public View mVSelected;
+
+	public boolean isTop;
+	public boolean isBottom;
+
+	public MessageListAdater mFileAdapter;
+	public LinkedList<Map<String, Object>> mContent;
+	public LinkedList<Map<String, Object>> mFilterContent;
 
 	/**
 	 * multi select
@@ -86,22 +87,22 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	private OpenFrom mFrom;
 	private String location = null;
 	private int indexForScroll = 0;
-		
-		private static final int MSG_FILTER_CHANGED = 1;
-		private static final int MSG_LOADED = 2;
 
-		private static final int MSG_REF = 3;
-		
-		
-		public enum OpenFrom {
-			OPEN_EDIT,
-			OPEN_PRINT
-		}
-		
-		public Handler mHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				switch (msg.what) {
+	private static final int MSG_FILTER_CHANGED = 1;
+	private static final int MSG_LOADED = 2;
+
+	private static final int MSG_REF = 3;
+
+
+	public enum OpenFrom {
+		OPEN_EDIT,
+		OPEN_PRINT
+	}
+
+	public Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
 				case MSG_FILTER_CHANGED:
 					Bundle bundle = msg.getData();
 					String title = bundle.getString("title");
@@ -119,163 +120,162 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 					break;
 				case MSG_REF:
 					mMessageList.setAdapter(mFileAdapter);
-					mFileAdapter.notifyDataSetChanged();	
+					mFileAdapter.notifyDataSetChanged();
 					break;
 				default:
 					break;
-				}
-			}
-		};
-		
-		public MessageBrowserDialog(Context context) {
-			super(context, R.style.Dialog_Fullscreen);
-			mFrom = OpenFrom.OPEN_EDIT;
-			mVSelected = null;
-			mContent = new LinkedList<Map<String, Object>>();
-			mFilterContent = new LinkedList<Map<String, Object>>();
-			isTop = false;
-			isBottom = false;
-			mTitles = new ArrayList<String>();
-			mFileAdapter = new MessageListAdater(context, 
-					mContent, 
-					R.layout.message_item_layout, 
-					new String[]{"title", "abstract", ""}, 
-					// new int[]{R.id.tv_message_title, R.id.tv_message_abstract
-					new int[]{R.id.tv_msg_title, R.id.ll_preview, R.id.image_selected});
-			
-			mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
-			LinearInterpolator lin = new LinearInterpolator();
-			mOperating.setInterpolator(lin);
-		}
-		
-		public MessageBrowserDialog(Context context, OpenFrom from) {
-			this(context);
-			mFrom = from;
-		}
-
-		public MessageBrowserDialog(Context context, OpenFrom from, String msg) {
-			this(context);
-			mFrom = from;
-			location = msg;
-			Debug.d(TAG, "--->location: " + msg);
-		}
-		
-		@Override
-		 protected void onCreate(Bundle savedInstanceState) {
-			Debug.d(TAG, "===>oncreate super");
-			 super.onCreate(savedInstanceState);
-			 Debug.d(TAG, "===>oncreate");
-			 this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			 this.setContentView(R.layout.message_list_layout);
-			 
-			 mConfirm = (TextView) findViewById(R.id.btn_ok_message_list);
-			 mConfirm.setOnClickListener(this);
-			 
-			 mCancel = (TextView) findViewById(R.id.btn_cancel_message_list);
-			 mCancel.setOnClickListener(this);
-			 
-			 mDelete = (TextView) findViewById(R.id.btn_delete);
-			 mDelete.setOnClickListener(this);
-			 
-			 mPagePrev = (RelativeLayout) findViewById(R.id.btn_page_prev);
-			 mPagePrev.setOnClickListener(this);
-			 
-			 mPageNext = (RelativeLayout) findViewById(R.id.btn_page_next);
-			 mPageNext.setOnClickListener(this);
-			 
-			 mSearch = (EditText) findViewById(R.id.et_search);
-			 mSearch.addTextChangedListener(this);
-			 mMessageList = (ListView) findViewById(R.id.message_listview);
-			 mMessageList.setOnItemClickListener(this);
-			 if (mFrom == OpenFrom.OPEN_PRINT) {
-				 mMessageList.setOnItemLongClickListener(this);
-			}
-			
-			 
-			 mMessageList.setOnTouchListener(this);
-			 mMessageList.setOnScrollListener(this);
-			 
-			 
-			 mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
-			 mLoading = (ImageView) findViewById(R.id.loading_img);
-
-			mTitles.clear();
-			 loadMessages();
-			 
-			 setupViews();
-			
-		 }
-		
-		private void setupViews() {
-			if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
-				mPagePrev.setVisibility(View.GONE);
-				mPageNext.setVisibility(View.GONE);
 			}
 		}
-		
-		
+	};
 
-		@Override
-		public void onClick(View arg0) {
-			switch (arg0.getId()) {
-				case R.id.btn_ok_message_list:
-					if (mMode) {
-						mTitles.clear();
-						Map<String, Boolean> selected = mFileAdapter.getSelected();
-						for (String key : selected.keySet()) {
-							
-							Map<String, Object> item = mContent.get(Integer.parseInt(key));
-							String title = (String) item.get("title");
-							if (title.startsWith("Group-")) {
-								continue;
-							}
-							mTitles.add(title);
+	public MessageBrowserDialog(Context context) {
+		super(context, R.style.Dialog_Fullscreen);
+		mFrom = OpenFrom.OPEN_EDIT;
+		mVSelected = null;
+		mContent = new LinkedList<Map<String, Object>>();
+		mFilterContent = new LinkedList<Map<String, Object>>();
+		isTop = false;
+		isBottom = false;
+		mTitles = new ArrayList<String>();
+		mFileAdapter = new MessageListAdater(context,
+				mContent,
+				R.layout.message_item_layout,
+				new String[]{"title", "abstract", ""},
+				// new int[]{R.id.tv_message_title, R.id.tv_message_abstract
+				new int[]{R.id.tv_msg_title, R.id.ll_preview, R.id.image_selected});
+
+		mOperating = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
+		LinearInterpolator lin = new LinearInterpolator();
+		mOperating.setInterpolator(lin);
+	}
+
+	public MessageBrowserDialog(Context context, OpenFrom from) {
+		this(context);
+		mFrom = from;
+	}
+
+	public MessageBrowserDialog(Context context, OpenFrom from, String msg) {
+		this(context);
+		mFrom = from;
+		location = msg;
+		Debug.d(TAG, "--->location: " + msg);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		Debug.d(TAG, "===>oncreate super");
+		super.onCreate(savedInstanceState);
+		Debug.d(TAG, "===>oncreate");
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.setContentView(R.layout.message_list_layout);
+
+		mConfirm = (TextView) findViewById(R.id.btn_ok_message_list);
+		mConfirm.setOnClickListener(this);
+
+		mCancel = (TextView) findViewById(R.id.btn_cancel_message_list);
+		mCancel.setOnClickListener(this);
+
+		mDelete = (TextView) findViewById(R.id.btn_delete);
+		mDelete.setOnClickListener(this);
+
+		mPagePrev = (RelativeLayout) findViewById(R.id.btn_page_prev);
+		mPagePrev.setOnClickListener(this);
+
+		mPageNext = (RelativeLayout) findViewById(R.id.btn_page_next);
+		mPageNext.setOnClickListener(this);
+
+		mSearch = (EditText) findViewById(R.id.et_search);
+		mSearch.addTextChangedListener(this);
+		mMessageList = (KZListView) findViewById(R.id.message_listview);
+		mMessageList.setOnItemClickListener(this);
+		if (mFrom == OpenFrom.OPEN_PRINT) {
+			mMessageList.setOnItemLongClickListener(this);
+		}
+
+
+		mMessageList.setOnTouchListener(this);
+		mMessageList.setOnScrollListener(this);
+
+
+		mLoadingLy = (RelativeLayout) findViewById(R.id.loading);
+		mLoading = (ImageView) findViewById(R.id.loading_img);
+
+		mTitles.clear();
+		loadMessages();
+
+		setupViews();
+
+	}
+
+	private void setupViews() {
+		if (PlatformInfo.PRODUCT_FRIENDLY_4412.equals(PlatformInfo.getProduct())) {
+			mPagePrev.setVisibility(View.GONE);
+			mPageNext.setVisibility(View.GONE);
+		}
+	}
+
+
+	@Override
+	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+			case R.id.btn_ok_message_list:
+				if (mMode) {
+					mTitles.clear();
+					Map<String, Boolean> selected = mFileAdapter.getSelected();
+					for (String key : selected.keySet()) {
+
+						Map<String, Object> item = mContent.get(Integer.parseInt(key));
+						String title = (String) item.get("title");
+						if (title.startsWith("Group-")) {
+							continue;
 						}
+						mTitles.add(title);
 					}
-					dismiss();
-					if (pListener != null) {
-						pListener.onClick();
-					}
-					break;
-				case R.id.btn_cancel_message_list:
-					dismiss();
-					if (nListener != null) {
-						nListener.onClick();
-					}
-					break;
-				case R.id.btn_page_prev:
-					mMessageList.smoothScrollBy(-200, 50);
-					break;
-				case R.id.btn_page_next:
-					mMessageList.smoothScrollBy(200, 50);
-					break;
-				case R.id.btn_delete:
-					mFileAdapter.delete();
-					break;
+				}
+				dismiss();
+				if (pListener != null) {
+					pListener.onClick();
+				}
+				break;
+			case R.id.btn_cancel_message_list:
+				dismiss();
+				if (nListener != null) {
+					nListener.onClick();
+				}
+				break;
+			case R.id.btn_page_prev:
+				mMessageList.smoothScrollBy(-200, 50);
+				break;
+			case R.id.btn_page_next:
+				mMessageList.smoothScrollBy(200, 50);
+				break;
+			case R.id.btn_delete:
+				mFileAdapter.delete();
+				break;
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Debug.d(TAG, "--->onItemClick");
+		Map<String, Object> selected = mContent.get(position);
+		mFileAdapter.setSelected(position);
+		mFileAdapter.notifyDataSetChanged();
+		if (!mMode) {
+			mTitles.clear();
+			mTitles.add((String) selected.get("title"));
+		} else {
+			String title = (String) selected.get("title");
+			if (title == null || title.startsWith("Group-")) {
+				return;
+			}
+			if (mTitles.contains(title)) {
+				mTitles.remove(title);
+			} else {
+				mTitles.add(title);
 			}
 		}
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Debug.d(TAG, "--->onItemClick");
-			Map<String, Object> selected = mContent.get(position);
-			mFileAdapter.setSelected(position);
-			mFileAdapter.notifyDataSetChanged();
-			if (!mMode) {
-				mTitles.clear();
-				mTitles.add((String) selected.get("title"));
-			} else {
-				String title = (String) selected.get("title");
-				if (title == null || title.startsWith("Group-")) {
-					return;
-				}
-				if (mTitles.contains(title)) {
-					mTitles.remove(title);
-				} else {
-					mTitles.add(title);
-				}
-			}
-			//addbylk
+		//addbylk
 		//	mMessageList.setAdapter(mFileAdapter);
 			/*
 			if(mVSelected == null)
@@ -289,14 +289,14 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				view.setBackgroundColor(R.color.message_selected_color);
 				mVSelected = view;
 			}*/
-			
-		}
+
+	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 		Debug.d(TAG, "--->onItemLongClick: " + i);
 		Map<String, Object> item = (Map<String, Object>) mFileAdapter.getItem(i);
-		
+
 		mMode = true;
 		mTitles.clear();
 		mFileAdapter.setMode(mMode);
@@ -305,159 +305,173 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	}
 
 	@SuppressWarnings("unchecked")
-		public void loadMessages()
-		{
-			showLoading();
-			mHandler.post(
-					new Runnable() {
-				
-				@Override
-				public void run() {
-					TLKFileParser parser = new TLKFileParser(getContext(), null);
-					String tlkPath = ConfigPath.getTlkPath();
-					if (tlkPath == null) {
-						return ;
-					}
-					Debug.d(TAG, "--->load message begin");
-					File rootpath = new File(tlkPath);
-					// File[] Tlks = rootpath.listFiles();
-					String[] Tlks = rootpath.list(new FilenameFilter() {
-						
-						@Override
-						public boolean accept(File arg0, String arg1) {
-							if (mFrom == OpenFrom.OPEN_EDIT && arg1.startsWith("Group-")) {
-								return false;
-							}
-							return true;
+	public void loadMessages() {
+		showLoading();
+		mHandler.post(
+				new Runnable() {
+
+					@Override
+					public void run() {
+						TLKFileParser parser = new TLKFileParser(getContext(), null);
+						String tlkPath = ConfigPath.getTlkPath();
+						if (tlkPath == null) {
+							return;
 						}
-					});
-					if (Tlks == null) {
-						return ;
-					}
-					Arrays.sort( Tlks,
-							     new Comparator() 
-										{
-									public int compare(Object arg0, Object arg1)
-									{
+						Debug.d(TAG, "--->load message begin");
+						File rootpath = new File(tlkPath);
+						// File[] Tlks = rootpath.listFiles();
+						String[] Tlks = rootpath.list(new FilenameFilter() {
+
+							@Override
+							public boolean accept(File arg0, String arg1) {
+								if (mFrom == OpenFrom.OPEN_EDIT && arg1.startsWith("Group-")) {
+									return false;
+								}
+								return true;
+							}
+						});
+						if (Tlks == null) {
+							return;
+						}
+						Arrays.sort(Tlks,
+								new Comparator() {
+									public int compare(Object arg0, Object arg1) {
 										int cp1 = 0;
 										int cp2 = 0;
-										if (((String)arg0).startsWith("Group-") || ((String)arg1).startsWith("Group-") ) {
-											if(((String)arg0).startsWith("Group-") && !((String)arg1).startsWith("Group-") ) {
+										if (((String) arg0).startsWith("Group-") || ((String) arg1).startsWith("Group-")) {
+											if (((String) arg0).startsWith("Group-") && !((String) arg1).startsWith("Group-")) {
 												return -1;
-											} else if(!((String)arg0).startsWith("Group-") && ((String)arg1).startsWith("Group-") ) {
+											} else if (!((String) arg0).startsWith("Group-") && ((String) arg1).startsWith("Group-")) {
 												return 1;
 											} else {
 												return 0;
 											}
 										}
 										try {
-									    	cp1 = Integer.parseInt((String) arg0);
-									    	cp2 = Integer.parseInt((String) arg1);
-									    } catch(NumberFormatException e) {
-									    	e.printStackTrace();
-									    }
-									    if (cp1 > cp2) {
-									    	return 1;
-									    } else if(cp1 == cp2) {
-									    	return 0;
-									    }
-									    return -1;
+											cp1 = Integer.parseInt((String) arg0);
+											cp2 = Integer.parseInt((String) arg1);
+										} catch (NumberFormatException e) {
+											e.printStackTrace();
+										}
+										if (cp1 > cp2) {
+											return 1;
+										} else if (cp1 == cp2) {
+											return 0;
+										}
+										return -1;
 									}
 								}
-							);
-					
-					Debug.d(TAG, "--->load message sort ok");
-					for (String t:Tlks) {
-						
-						File file = new File(tlkPath, t);
-						if (!file.isDirectory()) {
-							continue;
+						);
+
+						Debug.d(TAG, "--->load message sort ok");
+						for (String t : Tlks) {
+
+							File file = new File(tlkPath, t);
+							if (!file.isDirectory()) {
+								continue;
+							}
+
+							Map<String, Object> map = new HashMap<String, Object>();
+							map.put("title", t);
+							mContent.add(map);
+							if (t.equalsIgnoreCase(location)) {
+								indexForScroll = mContent.size() - 1;
+							}
+							mFilterContent.add(map);
 						}
-						
-						Map<String, Object> map = new HashMap<String, Object>();
-						map.put("title", t);
-						mContent.add(map);
-						if (t.equalsIgnoreCase(location)) {
-							indexForScroll = mContent.size() - 1;
-						}
-						mFilterContent.add(map);
+						// mMessageList.setAdapter(mFileAdapter);
+						Debug.d(TAG, "--->load message load success");
+						mHandler.sendEmptyMessage(MSG_LOADED);
 					}
-					// mMessageList.setAdapter(mFileAdapter);
-					Debug.d(TAG, "--->load message load success");
-					mHandler.sendEmptyMessage(MSG_LOADED);
 				}
-			}
-					);
-			
-			
-		}
-		
-		private void showLoading() {
-			mLoadingLy.setVisibility(View.VISIBLE);
-			mLoading.startAnimation(mOperating);
-		}
-		
-		private void hideLoading() {
-			mLoading.clearAnimation();
-			mLoadingLy.setVisibility(View.GONE);
-		}
-		
-		public static ArrayList<String> getSelected() {
+		);
 
-			if (mTitles == null) {
-				return new ArrayList<String>();
-			} else {
-				return mTitles;
-			}
-		}
 
-		float mdownx,mdowny;
-		@Override
-		public boolean onTouch(View arg0, MotionEvent arg1) {
-			// TODO Auto-generated method stub
-			
-			float curX,curY;
-			switch( arg1.getAction())
-			{
+	}
+
+	private void showLoading() {
+		mLoadingLy.setVisibility(View.VISIBLE);
+		mLoading.startAnimation(mOperating);
+	}
+
+	private void hideLoading() {
+		mLoading.clearAnimation();
+		mLoadingLy.setVisibility(View.GONE);
+	}
+
+	public static ArrayList<String> getSelected() {
+
+		if (mTitles == null) {
+			return new ArrayList<String>();
+		} else {
+			return mTitles;
+		}
+	}
+
+	private boolean isTouch = true;
+	@Override
+	public boolean onTouch(View arg0, MotionEvent arg1) {
+		switch (arg1.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				Debug.e(TAG, "------ACTION_DOWN"+ arg1.getX());	
-				mdownx=arg1.getX();
-				mdowny=arg1.getY();
-				
+				//mMessageList.dispatchTouchEvent(arg1);
+
 				break;
 			case MotionEvent.ACTION_MOVE:
-				Debug.e(TAG, "------ACTION_MOVE"+ arg1.getX());	
-				curX=arg1.getX();
-				curY=arg1.getY();
-				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
-				{
-					mFileAdapter.Scroll( (int)( mdownx-curX ) );
-					mFileAdapter.notifyDataSetChanged();
-				}
-				mdownx = curX;
-				return false;
-				//break;
+				isTouch =false;
+				break;
 			case MotionEvent.ACTION_UP:
-				Debug.e(TAG, "------ACTION_UP"+ arg1.getX());					
-				curX=arg1.getX();
-				curY=arg1.getY();
-						
-				
-				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
-				{
-					return true;
-				}
-				
-				
-
-				// mFileAdapter.Scroll(1);
-			//	mFileAdapter.notifyDataSetChanged();
-				break;			
-			
-			}
-			
-			return false;
+				isTouch = true;
+				break;
 		}
+		return false;
+	}
+		float mdownx,mdowny;
+//		@Override
+//		public boolean onTouch(View arg0, MotionEvent arg1) {
+//			// TODO Auto-generated method stub
+//
+//			float curX,curY;
+//			switch( arg1.getAction())
+//			{
+//			case MotionEvent.ACTION_DOWN:
+//				Debug.e(TAG, "------ACTION_DOWN"+ arg1.getX());
+//				mdownx=arg1.getX();
+//				mdowny=arg1.getY();
+//
+//				break;
+//			case MotionEvent.ACTION_MOVE:
+//				Debug.e(TAG, "------ACTION_MOVE"+ arg1.getX());
+//				curX=arg1.getX();
+//				curY=arg1.getY();
+//				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
+//				{
+//					mFileAdapter.Scroll( (int)( mdownx-curX ) );
+//					mFileAdapter.notifyDataSetChanged();
+//				}
+//				mdownx = curX;
+//				return false;
+//				//break;
+//			case MotionEvent.ACTION_UP:
+//				Debug.e(TAG, "------ACTION_UP"+ arg1.getX());
+//				curX=arg1.getX();
+//				curY=arg1.getY();
+//
+//
+//				if(( Math.abs(curX-mdownx )  )>  (Math.abs(curY-mdowny ))  )//横向滑动
+//				{
+//					return true;
+//				}
+//
+//
+//
+//				// mFileAdapter.Scroll(1);
+//			//	mFileAdapter.notifyDataSetChanged();
+//				break;
+//
+//			}
+//
+//			return false;
+//		}
 
 		@Override
 		public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int totalItemCount) {

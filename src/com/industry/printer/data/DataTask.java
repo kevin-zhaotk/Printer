@@ -458,6 +458,19 @@ public class DataTask {
 			int shift = object.getPNozzle().shiftEnable ? Configs.getMessageShift(i) : 0;
 			int mirror = object.getPNozzle().mirrorEnable ? Configs.getMessageDir(i) : SegmentBuffer.DIRECTION_NORMAL;
 			if (object.getPNozzle().reverseEnable) {
+				SystemConfigFile sysconf = SystemConfigFile.getInstance(mContext);
+				if (sysconf.getParam(14) > 0) {
+					revert |= 0x01;
+				}
+				if (sysconf.getParam(15) > 0) {
+					revert |= 0x02;
+				}
+				if (sysconf.getParam(20) > 0) {
+					revert |= 0x04;
+				}
+				if (sysconf.getParam(21) > 0) {
+					revert |= 0x08;
+				}
 
 			}
 //			if (object.getPNozzle().shiftEnable) {

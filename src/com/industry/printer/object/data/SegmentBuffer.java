@@ -110,6 +110,7 @@ public class SegmentBuffer {
 	 */
 	public void reverse(int pattern) {
 
+		Debug.d(TAG, "--->reverse: " + pattern);
 		if ((pattern & 0x0f) == 0x00) {
 			return;
 		}
@@ -130,13 +131,14 @@ public class SegmentBuffer {
 			// 1-2头数据
 			if (i % 2 == 0) {
 				// 1-2反转
-				if ((pattern & 0x03) > 0) {
+				if ((pattern & 0x03) == 0x03) {
 					char source = buffer[i];
 					mBuffer.append(revert(source));
 				} else if ((pattern & 0x03) == 0x01) {		//仅1头反转
 					byte low = (byte)(buffer[i] & 0x0ff);
-					char output = (char)(buffer[i] & 0x0ff);
+					char output = (char)(buffer[i] & 0x0ff00);
 					output |= revert(low);
+					Debug.d(TAG, "--->output: " + Integer.toHexString(output));
 					mBuffer.append(output);
 				} else if ((pattern & 0x03) == 0x02) {		//仅2头反转
 					byte high = (byte) ((buffer[i] & 0x0ff00) >> 8);
@@ -148,12 +150,12 @@ public class SegmentBuffer {
 				}
 			} else {	// 3-4头数据
 				// 3-4反转
-				if ((pattern & 0x0C) > 0) {
+				if ((pattern & 0x0C) == 0x0C) {
 					char source = buffer[i];
 					mBuffer.append(revert(source));
 				} else if ((pattern & 0x0C) == 0x04) {		//仅3头反转
 					byte low = (byte)(buffer[i] & 0x0ff);
-					char output = (char)(buffer[i] & 0x0ff);
+					char output = (char)(buffer[i] & 0x0ff00);
 					output |= revert(low);
 					mBuffer.append(output);
 				} else if ((pattern & 0x0C) == 0x08) {		//仅4头反转

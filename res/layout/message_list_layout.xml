@@ -116,7 +116,7 @@
 			    />
 		</RelativeLayout>
     </LinearLayout>
-	<ListView
+	<com.industry.printer.ui.KZListView.KZListView
 	    android:id="@+id/message_listview"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"

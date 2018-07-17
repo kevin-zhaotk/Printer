@@ -39,18 +39,27 @@ public enum PrinterNozzle {
         this.mType = type;
         this.mHeads = heads;
         this.mSegments = segment;
-        if (mType == 14) {
+        switch (mType) {
+            case 8:
+                reverseEnable = true;
+                shiftEnable = true;
+                mirrorEnable = true;
+                break;
             /**
              * for 'Nova' header, shift & mirror is forbiden;
              */
-            shiftEnable = false;
-            mirrorEnable = false;
-            reverseEnable = true;
-        } else {
-            shiftEnable = true;
-            mirrorEnable = true;
-            reverseEnable = false;
+            case 14:
+                shiftEnable = false;
+                mirrorEnable = false;
+                reverseEnable = false;
+                break;
+            default:
+                shiftEnable = true;
+                mirrorEnable = true;
+                reverseEnable = false;
+                break;
         }
+
     }
 
 
