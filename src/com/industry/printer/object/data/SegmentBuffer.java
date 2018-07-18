@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.apache.http.util.CharArrayBuffer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.Utils.Debug;
@@ -168,6 +169,81 @@ public class SegmentBuffer {
 				}
 			}
 		}
+
+	}
+
+	/**
+	 * 螺旋排列
+	 * 1. 由slant 参数控制（这个参数已有，因该是1-30 范围）
+	 * 2.   =1 ，bin 增加 15列， bit0 不动，  bit1 移到下一列（第二列）， bit N 移到第n+1 列
+	 * 3. =2 ，  bin增加16列， bitN移到N+2列。
+	 * 4. =3 ，  bin增加17列， bitN移到N+3列。
+	 * @param shift
+	 */
+	private void spiral(int shift) {
+		if (shift <= 0) {
+			return;
+		}
+//		char[] origin = {
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF,
+//				0xFFFF, 0xFFFF
+//		};
+
+		char[] origin = mBuffer.buffer();
+//		StringBuffer sb = new StringBuffer();
+//		for (int i = 0; i < 2*16; i++) {
+//
+//			for (int j = 0; j < origin.length/2; j++) {
+//				int r = origin[2*j + (i/16)] & (0x0001 << i);
+//				//System.out.print(r > 0 ? 1 : 0);
+//				sb.append(r > 0 ? 1 : 0);
+//				sb.append(" ");
+//			}
+//			Log.i("XXX", sb.toString());
+//			sb.delete(0, sb.length());
+//		}
+		mBuffer = new CharArrayBuffer(origin.length + (14+shift)*2);
+
+		char[] buffer = new char[origin.length + (14+shift)*2];
+		for (int column = 0 ; column < buffer.length/2; column++) { //列数
+			for (int row = 0 ; row < 16; row++) {
+				int index = column - row - shift + 1;
+				if ( index >= 0) {
+					if (index * 2 >= origin.length   || column*2 > buffer.length) {
+						//Log.i("XXX", "--->index=" + index + "  column = " + column + "  row = " + row + "  shift= " + shift);
+						continue;
+					}
+					buffer[column * 2] |= origin[index * 2] & (0x0001 << row);
+				}
+			}
+		}
+//		for (int i = 0; i < 2*16; i++) {
+//			for (int j = 0; j < buffer.length/2; j++) {
+//				int r = buffer[2*j + (i/16)] & (0x0001 << i);
+//				sb.append(r > 0 ? 1 : 0);
+//				sb.append(" ");
+//			}
+//			Log.i("XXX", sb.toString());
+//			sb.delete(0, sb.length());
+//		}
 
 	}
 
