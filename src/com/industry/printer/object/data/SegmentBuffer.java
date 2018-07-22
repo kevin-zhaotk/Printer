@@ -47,7 +47,7 @@ public class SegmentBuffer {
 	}
 
 	public SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch, int direction, int shift) {
-		this(ctx, info, type, heads, ch, direction, shift, 0);
+		this(ctx, info, type, heads, ch, direction, shift, 0, 0);
 	}
 
 	/**
@@ -60,8 +60,9 @@ public class SegmentBuffer {
 	 * @param direction 数据方向
 	 * @param shift  顺移列数
 	 * @param revert 按位反转
+	 * @param rotate 旋转
 	 */
-	public SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch, int direction, int shift, int revert) {
+	private SegmentBuffer(Context ctx, char[] info, int type, int heads, int ch, int direction, int shift, int revert, int rotate) {
 		mType = type;
 		mBuffer = new CharArrayBuffer(0);
 		char feed = 0x0;
@@ -92,6 +93,9 @@ public class SegmentBuffer {
 		mColumns += shift;
 
 		reverse(revert);
+
+		rotate(rotate);
+
 		mRfid = RFIDManager.getInstance(mContext).getDevice(mType);
 	}
 
@@ -180,7 +184,7 @@ public class SegmentBuffer {
 	 * 4. =3 ，  bin增加17列， bitN移到N+3列。
 	 * @param shift
 	 */
-	private void spiral(int shift) {
+	private void rotate(int shift) {
 		if (shift <= 0) {
 			return;
 		}
@@ -207,6 +211,7 @@ public class SegmentBuffer {
 //				0xFFFF, 0xFFFF
 //		};
 
+		mColumns += 15 + shift - 1;
 		char[] origin = mBuffer.buffer();
 //		StringBuffer sb = new StringBuffer();
 //		for (int i = 0; i < 2*16; i++) {
@@ -220,28 +225,35 @@ public class SegmentBuffer {
 //			Log.i("XXX", sb.toString());
 //			sb.delete(0, sb.length());
 //		}
-		mBuffer = new CharArrayBuffer(origin.length + (14+shift)*2);
+//		mBuffer = new CharArrayBuffer(origin.length + (14+shift)*2);
 
+		mBuffer = new CharArrayBuffer(0);
+		Debug.d(TAG, "--->origin.len= " + origin.length + "   shift = " + shift);
 		char[] buffer = new char[origin.length + (14+shift)*2];
 		for (int column = 0 ; column < buffer.length/2; column++) { //列数
 			for (int row = 0 ; row < 16; row++) {
 				int index = column - row - shift + 1;
-				if ( index >= 0) {
-					if (index * 2 >= origin.length   || column*2 > buffer.length) {
-						//Log.i("XXX", "--->index=" + index + "  column = " + column + "  row = " + row + "  shift= " + shift);
-						continue;
-					}
+				if ( index >= 0 && index * 2 < origin.length) {
+					//Debug.d(TAG, "--->index*2= " + index*2 + "   column=" + column*2 + "  row= " + row);
 					buffer[column * 2] |= origin[index * 2] & (0x0001 << row);
+
+				} else {
+//					Debug.d(TAG, "--->index= " + index);
 				}
 			}
+//			Debug.d(TAG, "--->buffer[" + column*2 + "] = " + Integer.toHexString(buffer[column*2]));
+			
 		}
+		mBuffer.append(buffer, 0, buffer.length);
+//		Debug.i(TAG, "array = " + mBuffer.length() + "   buffer = " + buffer.length);
+//		StringBuffer sb = new StringBuffer();
 //		for (int i = 0; i < 2*16; i++) {
 //			for (int j = 0; j < buffer.length/2; j++) {
 //				int r = buffer[2*j + (i/16)] & (0x0001 << i);
 //				sb.append(r > 0 ? 1 : 0);
-//				sb.append(" ");
+//				sb.append("");
 //			}
-//			Log.i("XXX", sb.toString());
+//			Debug.i("XXX", sb.toString());
 //			sb.delete(0, sb.length());
 //		}
 
@@ -311,5 +323,61 @@ public class SegmentBuffer {
 			return 0;
 		}
 		return mBuffer.length()/mHight;
+	}
+
+
+	public static class Builder {
+
+		private Context context;
+		private char[] buffer;
+
+		private int type;
+		private int heads;
+		private int ch;
+		private int direction;
+		private int shift;
+		private int revert;
+		private int rotate;
+
+		public Builder(Context ctx, char[] info) {
+			context = ctx;
+			buffer = info;
+		}
+
+		public Builder type(int type) {
+			this.type = type;
+			return this;
+		}
+
+		public Builder heads(int heads) {
+			this.heads = heads;
+			return this;
+		}
+		public Builder ch(int ch) {
+			this.ch = ch;
+			return this;
+		}
+
+		public Builder direction(int direction) {
+			this.direction = direction;
+			return this;
+		}
+		public Builder shift(int shift) {
+			this.shift = shift;
+			return this;
+		}
+
+		public Builder revert(int revert) {
+			this.revert = revert;
+			return this;
+		}
+		public Builder rotate(int rotate) {
+			this.rotate = rotate;
+			return this;
+		}
+
+		public SegmentBuffer build() {
+			return new SegmentBuffer(context, buffer, type, heads, ch, direction, shift, revert, rotate);
+		}
 	}
 }

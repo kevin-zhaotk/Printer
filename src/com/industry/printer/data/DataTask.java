@@ -457,8 +457,9 @@ public class DataTask {
 			int revert = 0x00;
 			int shift = object.getPNozzle().shiftEnable ? Configs.getMessageShift(i) : 0;
 			int mirror = object.getPNozzle().mirrorEnable ? Configs.getMessageDir(i) : SegmentBuffer.DIRECTION_NORMAL;
+			SystemConfigFile sysconf = SystemConfigFile.getInstance(mContext);
 			if (object.getPNozzle().reverseEnable) {
-				SystemConfigFile sysconf = SystemConfigFile.getInstance(mContext);
+
 				if (sysconf.getParam(14) > 0) {
 					revert |= 0x01;
 				}
@@ -471,14 +472,22 @@ public class DataTask {
 				if (sysconf.getParam(21) > 0) {
 					revert |= 0x08;
 				}
-
 			}
+			int rotate = sysconf.getParam(35);
 //			if (object.getPNozzle().shiftEnable) {
 //				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), SegmentBuffer.DIRECTION_NORMAL, 0));
 //			} else {
 //				buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), Configs.getMessageDir(i), Configs.getMessageShift(i)));
 //			}
-			buffers.add(new SegmentBuffer(mContext, mPrintBuffer, i, heads, mBinInfo.getCharsFeed(), mirror, shift, revert));
+			buffers.add(new SegmentBuffer.Builder(mContext, mPrintBuffer)
+					.type(i)
+					.heads(heads)
+					.ch(mBinInfo.getCharsFeed())
+					.direction(mirror)
+					.shift(shift)
+					.revert(revert)
+					.rotate(rotate)
+					.build());
 		}
 		
 		/*计算转换后的buffer总列数*/

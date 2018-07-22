@@ -189,7 +189,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		mMessageList = (KZListView) findViewById(R.id.message_listview);
 		mMessageList.setOnItemClickListener(this);
 		if (mFrom == OpenFrom.OPEN_PRINT) {
-			mMessageList.setOnItemLongClickListener(this);
+//			mMessageList.setOnItemLongClickListener(this);
+			mDelete.setText(R.string.str_multi_select);
 		}
 
 
@@ -250,7 +251,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mMessageList.smoothScrollBy(200, 50);
 				break;
 			case R.id.btn_delete:
-				mFileAdapter.delete();
+				if (mFrom == OpenFrom.OPEN_PRINT) {
+					switchMultiSelect();
+				} else {
+					mFileAdapter.delete();
+				}
 				break;
 		}
 	}
@@ -292,6 +297,13 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 
 	}
 
+	private void switchMultiSelect() {
+		
+		mMode = !mMode;
+		mTitles.clear();
+		mFileAdapter.setMode(mMode);
+		mFileAdapter.notifyDataSetChanged();
+	}
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 		Debug.d(TAG, "--->onItemLongClick: " + i);

@@ -49,6 +49,7 @@
 	<string name="str_preview">Пред.просмотр</string>
 	
 	<string name="str_del">Удалить</string>
+	<string name="str_multi_select">Group</string>
 	<string name="str_btn_shift">Сдвиг</string>
 	<string name="str_btn_second">Второй</string>
 	

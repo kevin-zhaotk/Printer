@@ -48,6 +48,7 @@
     <string name="str_mvbackward">Geri</string>
     <string name="str_preview">Önizleme</string>
     <string name="str_del">Sil</string>
+    <string name="str_multi_select">Group</string>
     <string name="str_btn_shift">Vardiya</string>
     <string name="str_btn_second">Dakika</string>
     <string name="str_btn_upgrade">Yükselt</string>

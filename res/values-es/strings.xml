@@ -49,6 +49,7 @@
 	<string name="str_preview">Vista previa</string>
 	
 	<string name="str_del">Borrar</string>
+	<string name="str_multi_select">Group</string>
 	<string name="str_btn_shift">Cambio</string>
 	<string name="str_btn_second">Segundo</string>
 	

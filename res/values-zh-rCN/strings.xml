@@ -53,6 +53,7 @@
 	<string name="str_preview">预览</string>
 	
 	<string name="str_del">删除</string>
+	<string name="str_multi_select">多选</string>
 	<string name="str_btn_shift">班次</string>
 	<string name="str_btn_second">秒</string>
 	
