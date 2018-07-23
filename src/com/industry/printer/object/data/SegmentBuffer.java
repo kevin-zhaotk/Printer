@@ -142,13 +142,14 @@ public class SegmentBuffer {
 				} else if ((pattern & 0x03) == 0x01) {		//仅1头反转
 					byte low = (byte)(buffer[i] & 0x0ff);
 					char output = (char)(buffer[i] & 0x0ff00);
-					output |= revert(low);
 					Debug.d(TAG, "--->output: " + Integer.toHexString(output));
+					output |= revert(low) & 0x0ff;
+					Debug.d(TAG, "--->input: 0x" + Integer.toHexString(buffer[i]) +  "   output: 0x" + Integer.toHexString(output));
 					mBuffer.append(output);
 				} else if ((pattern & 0x03) == 0x02) {		//仅2头反转
 					byte high = (byte) ((buffer[i] & 0x0ff00) >> 8);
 					char output = (char) (buffer[i] & 0x0ff);
-					output |= revert(high) << 8;
+					output |= revert(high) << 8 & 0x0ff00;
 					mBuffer.append(output);
 				} else {
 					mBuffer.append(buffer[i]);
@@ -161,12 +162,12 @@ public class SegmentBuffer {
 				} else if ((pattern & 0x0C) == 0x04) {		//仅3头反转
 					byte low = (byte)(buffer[i] & 0x0ff);
 					char output = (char)(buffer[i] & 0x0ff00);
-					output |= revert(low);
+					output |= revert(low) & 0x0ff;
 					mBuffer.append(output);
 				} else if ((pattern & 0x0C) == 0x08) {		//仅4头反转
 					byte high = (byte) ((buffer[i] & 0x0ff00) >> 8);
 					char output = (char) (buffer[i] & 0x0ff);
-					output |= revert(high) << 8;
+					output |= revert(high) << 8 & 0x0ff00;
 					mBuffer.append(output);
 				} else {
 					mBuffer.append(buffer[i]);
@@ -269,27 +270,30 @@ public class SegmentBuffer {
 		byte output = 0;
 		for (int i = 0; i < 7; i++) {
 			if ((source & (0x01 << i)) > 0) {
-				output |= 0x01 << (8 - i);
+				output |= 0x01 << (6 - i);
 			}
 		}
-		return output;
+
+		Debug.d(TAG, "--->revertByte: 0x" + Integer.toHexString(output & 0x0ff));
+		return (byte)(output & 0x0ff);
 	}
 
 	private char revert(char source) {
 		char output = 0;
 		for (int i = 0; i < 16; i++) {
 			if ((source & (0x01 << i)) > 0) {
-				output |= 0x01 << (16 - i);
+				output |= 0x01 << (15 - i);
 			}
 		}
-		return output;
+		Debug.d(TAG, "--->revertChar: 0x" + Integer.toHexString(output & 0x0ffff));
+		return (char)(output&0x0ffff);
 	}
 
 	private int revert(int source) {
 		int output = 0;
 		for (int i = 0; i < 32; i++) {
 			if ((source & (0x01 << i)) > 0) {
-				output |= 0x01 << (32 - i);
+				output |= 0x01 << (31 - i);
 			}
 		}
 		return output;

@@ -70,7 +70,7 @@ public class LetterHourObject extends BaseObject {
 		try {
 			mPaint.setTypeface(FontCache.getFromExternal(mFont));
 		} catch (Exception e) {}
-		int width = (int)mPaint.measureText(getContent());
+		int width = (int)mPaint.measureText("W");
 		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
 		if (mWidth == 0) {
 			setWidth(width);
