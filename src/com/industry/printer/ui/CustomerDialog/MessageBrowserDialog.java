@@ -61,6 +61,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 	public RelativeLayout mPagePrev;
 	public RelativeLayout mPageNext;
 	public TextView mDelete;
+	public TextView mGroup;
 	public ImageView mLoading;
 	public RelativeLayout mLoadingLy;
 
@@ -178,6 +179,12 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		mDelete = (TextView) findViewById(R.id.btn_delete);
 		mDelete.setOnClickListener(this);
 
+		mGroup = (TextView) findViewById(R.id.btn_multi_select);
+		mGroup.setOnClickListener(this);
+		if (mFrom == OpenFrom.OPEN_EDIT) {
+			mGroup.setVisibility(View.GONE);
+		}
+
 		mPagePrev = (RelativeLayout) findViewById(R.id.btn_page_prev);
 		mPagePrev.setOnClickListener(this);
 
@@ -251,6 +258,9 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mMessageList.smoothScrollBy(200, 50);
 				break;
 			case R.id.btn_delete:
+				mFileAdapter.delete();
+				break;
+			case R.id.btn_multi_select:
 				if (mFrom == OpenFrom.OPEN_PRINT) {
 					switchMultiSelect();
 				} else {
