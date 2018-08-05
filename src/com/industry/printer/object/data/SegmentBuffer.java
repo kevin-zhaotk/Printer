@@ -268,13 +268,16 @@ public class SegmentBuffer {
 	private byte revert(byte source) {
 
 		byte output = 0;
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i <= 6; i++) {
 			if ((source & (0x01 << i)) > 0) {
 				output |= 0x01 << (6 - i);
 			}
 		}
+		if ((source & 0x080) > 0) {
+			output |= 0x080;
+		}
 
-		Debug.d(TAG, "--->revertByte: 0x" + Integer.toHexString(output & 0x0ff));
+		//Debug.d(TAG, "--->revertByte: 0x" + Integer.toHexString(output & 0x0ff));
 		return (byte)(output & 0x0ff);
 	}
 

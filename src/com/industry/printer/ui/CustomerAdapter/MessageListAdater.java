@@ -144,8 +144,9 @@ public class MessageListAdater extends BaseAdapter {
 		System.arraycopy(from, 0, mKeys, 0, from.length);
 		System.arraycopy(to, 0, mViewIDs, 0, to.length);
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mSCroll= new int [1024];
-		for(int x=0;x<1024;x++)
+		Debug.d(TAG, "--->size = " + mCntList.size());
+		mSCroll= new int [mCntList.size()];
+		for(int x=0;x<mCntList.size();x++)
 		{
 			mSCroll[x]=0;
 	
@@ -160,6 +161,9 @@ public class MessageListAdater extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
+		if (mSCroll.length != mCntList.size()) {
+			mSCroll = new int[mCntList.size()];
+		}
 		return mCntList.size();
 	}
 
@@ -298,7 +302,7 @@ public class MessageListAdater extends BaseAdapter {
 		//	bmp_disk = Bitmap.createScaledBitmap(bmp_disk);//,bmp_disk.getWidth(), bmp_disk.getHeight() , true);		
 			
 		//	bmp_disk = Bitmap.createScaledBitmap(bmp_disk,1500, 100, true);
-			mPreviews.put(title, Bmp_bak);
+//			mPreviews.put(title, Bmp_bak);
 		}
 
 		 
@@ -369,7 +373,7 @@ public class MessageListAdater extends BaseAdapter {
 				}
 				mCan.drawBitmap(bmp_disk, new Rect(mSCroll[position], 0, iwidth + mSCroll[position], 100), new Rect(0, 0, iwidth, 100), null);
 				Debug.e(TAG, "mSCroll mSCroll=2222==============" + mSCroll[position]);
-				mPreviews.put(title, Bmp_bak);
+//				mPreviews.put(title, Bmp_bak);
 
 
 				Debug.d(TAG, "---blue");

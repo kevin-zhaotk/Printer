@@ -256,6 +256,7 @@ public class DataTransferThread {
 		}
 		for (int i = 0; i < mcountdown.length; i++) {
 			mcountdown[i] = getInkThreshold(i);
+			//Debug.d(TAG, "--->initCount countdown[" + i + "] = " + mcountdown[i]);
 		}
 	}
 	/**
@@ -268,7 +269,7 @@ public class DataTransferThread {
 			if (mcountdown[i] <= 0) {
 				// 赋初值
 				mcountdown[i] = getInkThreshold(i);
-				mInkListener.onInkLevelDown();
+				mInkListener.onInkLevelDown(i);
 			}
 		}
 	}
@@ -442,9 +443,9 @@ public class DataTransferThread {
 						}
 						break;
 					}
-					Debug.d(TAG, "===>buffer size="+buffer.length);
+					Debug.d(TAG, "===>write Data");
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-
+					Debug.d(TAG, "===>write Data finish");
 					last = SystemClock.currentThreadTimeMillis();
 					countDown();
 					mInkListener.onCountChanged();
@@ -455,6 +456,7 @@ public class DataTransferThread {
 					next();
 					Debug.d(TAG, "===>buffer getPrintbuffer");
 					buffer = mDataTask.get(index()).getPrintBuffer();
+					Debug.d(TAG, "===>buffer getPrintbuffer finish");
 				}
 
 				if(mNeedUpdate == true) {

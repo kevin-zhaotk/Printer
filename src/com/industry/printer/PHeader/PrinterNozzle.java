@@ -28,6 +28,7 @@ public enum PrinterNozzle {
     public final boolean shiftEnable;   //是否支持位移
     public final boolean mirrorEnable;  // 是否支持镜像
     public final boolean reverseEnable; // 是否支持反转
+    public final boolean rotateAble;
     /**
      *
      * @param type      喷头类型
@@ -39,11 +40,13 @@ public enum PrinterNozzle {
         this.mType = type;
         this.mHeads = heads;
         this.mSegments = segment;
+
         switch (mType) {
-            case 8:
+            case 8: //大字机
                 reverseEnable = true;
                 shiftEnable = true;
                 mirrorEnable = true;
+                rotateAble = true;
                 break;
             /**
              * for 'Nova' header, shift & mirror is forbiden;
@@ -52,11 +55,13 @@ public enum PrinterNozzle {
                 shiftEnable = false;
                 mirrorEnable = false;
                 reverseEnable = false;
+                rotateAble = false;
                 break;
             default:
                 shiftEnable = true;
                 mirrorEnable = true;
                 reverseEnable = false;
+                rotateAble = false;
                 break;
         }
 

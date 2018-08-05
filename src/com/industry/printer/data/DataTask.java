@@ -23,6 +23,7 @@ import com.industry.printer.MessageTask;
 import com.industry.printer.MessageTask.MessageType;
 import com.industry.printer.FileFormat.QRReader;
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -173,6 +174,47 @@ public class DataTask {
 		/*test bin*/
 		Debug.d(TAG, "--->buffer = " + mBuffer.length);
 		return mBuffer;
+	}
+	
+	private boolean isNeedRebuild() {
+		MessageObject object = mTask.getMsgObject();
+		PrinterNozzle nozzle = object.getPNozzle();
+		for (int i = 0; i < nozzle.mHeads; i++) {
+			int shift = nozzle.shiftEnable ? Configs.getMessageShift(i) : 0;
+			if (shift > 0 ) {
+				return true;
+			}
+			int mirror = nozzle.mirrorEnable ? Configs.getMessageDir(i) : SegmentBuffer.DIRECTION_NORMAL;
+			if (mirror == SegmentBuffer.DIRECTION_REVERS) {
+				return true;
+			}
+
+		}
+		int revert = 0;
+		SystemConfigFile sysconf = SystemConfigFile.getInstance(mContext);
+		if (nozzle.reverseEnable) {
+
+			if (sysconf.getParam(14) > 0) {
+				revert |= 0x01;
+			}
+			if (sysconf.getParam(15) > 0) {
+				revert |= 0x02;
+			}
+			if (sysconf.getParam(20) > 0) {
+				revert |= 0x04;
+			}
+			if (sysconf.getParam(21) > 0) {
+				revert |= 0x08;
+			}
+		}
+		if (revert > 0 ) {
+			return true;
+		}
+		int rotate = nozzle.rotateAble ? sysconf.getParam(35): 0;
+		if (rotate > 0) {
+			return  true;
+		}
+		return false;
 	}
 
 	public void refreshVariables(boolean prev)
@@ -432,6 +474,10 @@ public class DataTask {
 	 * 对buffer进行左右移动变换，生成真正的打印数据
 	 */
 	public void rebuildBuffer() {
+
+		if (!isNeedRebuild()) {
+			mBuffer = mPrintBuffer;
+		}
 		MessageObject object = mTask.getMsgObject();;
 		ArrayList<SegmentBuffer> buffers = new ArrayList<SegmentBuffer>();
 //		for (BaseObject msg : mTask.getObjects()) {

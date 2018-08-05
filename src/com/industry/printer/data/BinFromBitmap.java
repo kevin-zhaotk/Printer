@@ -46,8 +46,8 @@ public class BinFromBitmap extends BinCreater {
         // BinCreater.saveBitmap(bmp, "bar_extract.png");
         // 计算每列占的字节数
         int colEach = mHeight%8==0?mHeight/8:mHeight/8+1;
-        Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
-        
+        //Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
+        Debug.d(TAG, "--->mHeighEachHead: " + mHeighEachHead + "   height= " + mHeight);
         mBinBits = new byte[colEach * mWidth];
         // 将bitmap的每个像素读取到pixels数组中，数组的每个元素对应一个像素值
         bmp.getPixels(pixels, 0, mWidth, 0, 0, mWidth, mHeight); 
@@ -71,11 +71,15 @@ public class BinFromBitmap extends BinCreater {
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
                 	mDots[i/mHeighEachHead]++;
+                	//Debug.d(TAG, "--->i = " + i + "  j = " + j + "   mHeighEachHead = " + mHeighEachHead);
                 }
             }
             // System.out.println();
         }
-        
+
+        for (int i = 0; i < mDots.length; i++) {
+        	Debug.d(TAG, "--->mDots[" + i + "] = " + mDots[i]);
+		}
         return mDots; 
     }
 	

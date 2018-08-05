@@ -200,7 +200,7 @@ public class RFIDDevice implements RfidCallback{
 	// 是否支持符合命令的新模塊
 	public static boolean isNewModel = false;
 	
-	public static List<RfidCallback> mCallbacks = new ArrayList<RFIDAsyncTask.RfidCallback>();
+	private static List<RfidCallback> mCallbacks = new ArrayList<RFIDAsyncTask.RfidCallback>();
 
 	// 当前墨水量
 	private int mCurInkLevel = 0;
@@ -240,6 +240,11 @@ public class RFIDDevice implements RfidCallback{
 		mCurInkLevel = 0;
 		mLastLevel = mCurInkLevel;
 		openDevice();
+	}
+
+	public synchronized List<RfidCallback> getCallbacks() {
+		new Exception().printStackTrace();
+		return mCallbacks;
 	}
 	/*
 	 * 端口连接
@@ -1199,11 +1204,18 @@ public class RFIDDevice implements RfidCallback{
 	}
 	
 	public void addLisetener(RfidCallback callback) {
-		mCallbacks.add(callback);
+		synchronized (RFIDDevice.class) {
+			if (mCallbacks.contains(callback)) {
+				return;
+			}
+			mCallbacks.add(callback);
+		}
 	}
 	
 	public void removeListener(RfidCallback callback) {
-		mCallbacks.remove(callback);
+		synchronized (RFIDDevice.class) {
+			mCallbacks.remove(callback);
+		}
 	}
 	
 	private void parseSearch(RFIDData data) {
@@ -1280,95 +1292,101 @@ public class RFIDDevice implements RfidCallback{
 		byte[] rfid;
 		if (data == null) {
 			Debug.d(TAG, "--->onFinish: data null");
-			for (RfidCallback callback : mCallbacks) {
-				callback.onFinish(data);
+			synchronized (RFIDDevice.class) {
+				for (RfidCallback callback : mCallbacks) {
+					callback.onFinish(data);
+				}
 			}
 			return;
 		}
 		Debug.d(TAG, "--->onFinish: 0x" + Integer.toHexString(data.getCommand()));
-		
+
 		for (int i = 0; i < data.mRealData.length; i++) {
 			System.out.print(data.mRealData[i] + ", ");
 		}
-		
+
 		switch (data.getCommand()) {
-		case RFID_CMD_CONNECT:
-			//
-			setBaudrate(mFd, 115200);
-			Debug.d(TAG, "--->connect rfid");
-			break;
-		case RFID_CMD_SEARCHCARD:
-			Debug.d(TAG, "--->look card finish");
-			parseSearch(data);
-			mState = STATE_RFID_SERACH_OK;
-			break;
-		case RFID_CMD_AUTO_SEARCH:
-			mState = STATE_RFID_CONNECTED;
-			parseAutosearch(data);
-			break;
-		case RFID_CMD_MIFARE_CONFLICT_PREVENTION:
-			parseAutosearch(data);
-			mState = STATE_RFID_AVOIDCONFLICT;
-			break;
-		case RFID_CMD_MIFARE_CARD_SELECT:
-			mState = STATE_RFID_SELECTED;
-			break;
-		case RFID_CMD_MIFARE_READ_BLOCK:
-		case RFID_CMD_READ_VERIFY:
-			if (mState == STATE_RFID_UUID_READING) {
-				mState = STATE_RFID_UUID_READY;
-				break;	
-			}
-			int value = parseRead(data);
-			if (mState == STATE_RFID_MAX_READING) {
-				mInkMax = value;
-				mState = STATE_RFID_MAX_READY;
-			} else if (mState == STATE_RFID_FEATURE_READING) {
-				mFeature = data.getData();
+			case RFID_CMD_CONNECT:
+				//
+				setBaudrate(mFd, 115200);
+				Debug.d(TAG, "--->connect rfid");
+				break;
+			case RFID_CMD_SEARCHCARD:
+				Debug.d(TAG, "--->look card finish");
+				parseSearch(data);
+				mState = STATE_RFID_SERACH_OK;
+				break;
+			case RFID_CMD_AUTO_SEARCH:
+				mState = STATE_RFID_CONNECTED;
+				parseAutosearch(data);
+				break;
+			case RFID_CMD_MIFARE_CONFLICT_PREVENTION:
+				parseAutosearch(data);
+				mState = STATE_RFID_AVOIDCONFLICT;
+				break;
+			case RFID_CMD_MIFARE_CARD_SELECT:
+				mState = STATE_RFID_SELECTED;
+				break;
+			case RFID_CMD_MIFARE_READ_BLOCK:
+			case RFID_CMD_READ_VERIFY:
+				if (mState == STATE_RFID_UUID_READING) {
+					mState = STATE_RFID_UUID_READY;
+					break;
+				}
+				int value = parseRead(data);
+				if (mState == STATE_RFID_MAX_READING) {
+					mInkMax = value;
+					mState = STATE_RFID_MAX_READY;
+				} else if (mState == STATE_RFID_FEATURE_READING) {
+					mFeature = data.getData();
 //				for (int i = 0; i < mFeature.length; i++) {
 //					Debug.d(TAG, "--->feature[" + i + "] = " + mFeature[i]);
 //				}
-				mValid = checkFeatureCode();
-				mState = STATE_RFID_FEATURE_READY;
-			} else if (mState == STATE_RFID_VALUE_READING) {
-				mCurInkLevel = value;
-				mState = STATE_RFID_VALUE_READY;
-			} else if (mState == STATE_RFID_BACKUP_READING) {
-				if (mCurInkLevel <= 0) {
+					mValid = checkFeatureCode();
+					mState = STATE_RFID_FEATURE_READY;
+				} else if (mState == STATE_RFID_VALUE_READING) {
 					mCurInkLevel = value;
+					mState = STATE_RFID_VALUE_READY;
+				} else if (mState == STATE_RFID_BACKUP_READING) {
+					if (mCurInkLevel <= 0) {
+						mCurInkLevel = value;
+					}
+					mState = STATE_RFID_BACKUP_READY;
 				}
-				mState = STATE_RFID_BACKUP_READY;
-			}
-			break;
-		case RFID_CMD_MIFARE_KEY_VERIFICATION:
-			rfid = data.getData();
-			isCorrect(rfid);
-			if (mState == STATE_RFID_MAX_KEY_VERFYING) {
-				mState = STATE_RFID_MAX_KEY_VERFIED;
-			} else if (mState == STATE_RFID_FEATURE_KEY_VERFYING) {
-				mState = STATE_RFID_FEATURE_KEY_VERFYED;
-			} else if (mState == STATE_RFID_VALUE_KEY_VERFYING) {
-				mState = STATE_RFID_VALUE_KEY_VERFYED;
-			} else if (mState == STATE_RFID_BACKUP_KEY_VERFYING) {
-				mState = STATE_RFID_BACKUP_KEY_VERFYED;
-			} else if (mState == STATE_RFID_UUID_KEY_VERFYING) {
-				mState = STATE_RFID_UUID_KEY_VERFYED;
-			}
-			break;
-		case RFID_CMD_MIFARE_WRITE_BLOCK:
-		case RFID_CMD_WRITE_VERIFY:
-			if (mState == STATE_RFID_BACKUP_WRITING) {
-				mState = STATE_RFID_BACKUP_SYNCED;
-			} else if (mState == STATE_RFID_VALUE_WRITING) {
-				mState = STATE_RFID_VALUE_SYNCED;
-			}
-			
-			break;
-		default:
-			break;
+				break;
+			case RFID_CMD_MIFARE_KEY_VERIFICATION:
+				rfid = data.getData();
+				isCorrect(rfid);
+				if (mState == STATE_RFID_MAX_KEY_VERFYING) {
+					mState = STATE_RFID_MAX_KEY_VERFIED;
+				} else if (mState == STATE_RFID_FEATURE_KEY_VERFYING) {
+					mState = STATE_RFID_FEATURE_KEY_VERFYED;
+				} else if (mState == STATE_RFID_VALUE_KEY_VERFYING) {
+					mState = STATE_RFID_VALUE_KEY_VERFYED;
+				} else if (mState == STATE_RFID_BACKUP_KEY_VERFYING) {
+					mState = STATE_RFID_BACKUP_KEY_VERFYED;
+				} else if (mState == STATE_RFID_UUID_KEY_VERFYING) {
+					mState = STATE_RFID_UUID_KEY_VERFYED;
+				}
+				break;
+			case RFID_CMD_MIFARE_WRITE_BLOCK:
+			case RFID_CMD_WRITE_VERIFY:
+				if (mState == STATE_RFID_BACKUP_WRITING) {
+					mState = STATE_RFID_BACKUP_SYNCED;
+				} else if (mState == STATE_RFID_VALUE_WRITING) {
+					mState = STATE_RFID_VALUE_SYNCED;
+				}
+
+				break;
+			default:
+				break;
 		}
-		for (RfidCallback callback : mCallbacks) {
-			callback.onFinish(data);
+
+		synchronized (RFIDDevice.class) {
+			for (RfidCallback callback : mCallbacks) {
+				Debug.d(TAG, "--->callback " + mCallbacks.size());
+				callback.onFinish(data);
+			}
 		}
 	}
 	

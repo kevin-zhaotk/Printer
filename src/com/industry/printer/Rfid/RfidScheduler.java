@@ -205,12 +205,15 @@ public class RfidScheduler {
 	 * 已经处理完的任务
 	 */
 	private void unload(RfidTask task) {
-		
+		task.onUnload();
 	}
 	
 	public void removeAll() {
 		if (mRfidTasks == null) {
 			return;
+		}
+		for (RfidTask task : mRfidTasks) {
+			task.onUnload();
 		}
 		mRfidTasks.clear();
 	}

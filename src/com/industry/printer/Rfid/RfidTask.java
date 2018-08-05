@@ -41,7 +41,7 @@ public class RfidTask implements RfidCallback{
 		mIndex = index;
 	}
 	
-	public void onLoad() {
+	public synchronized void onLoad() {
 		clearStat();
 		RFIDManager manager = RFIDManager.getInstance(mContext);
 		RFIDDevice dev = manager.getDevice(mIndex);
@@ -50,7 +50,7 @@ public class RfidTask implements RfidCallback{
 		}
 	}
 	
-	public void onUnload() {
+	public synchronized void onUnload() {
 		RFIDManager manager = RFIDManager.getInstance(mContext);
 		RFIDDevice dev = manager.getDevice(mIndex);
 		if (dev != null) {

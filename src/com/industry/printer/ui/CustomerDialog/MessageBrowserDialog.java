@@ -195,10 +195,6 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		mSearch.addTextChangedListener(this);
 		mMessageList = (KZListView) findViewById(R.id.message_listview);
 		mMessageList.setOnItemClickListener(this);
-		if (mFrom == OpenFrom.OPEN_PRINT) {
-//			mMessageList.setOnItemLongClickListener(this);
-			mDelete.setText(R.string.str_multi_select);
-		}
 
 
 		mMessageList.setOnTouchListener(this);
@@ -261,11 +257,8 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mFileAdapter.delete();
 				break;
 			case R.id.btn_multi_select:
-				if (mFrom == OpenFrom.OPEN_PRINT) {
-					switchMultiSelect();
-				} else {
-					mFileAdapter.delete();
-				}
+				switchMultiSelect();
+
 				break;
 		}
 	}

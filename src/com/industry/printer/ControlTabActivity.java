@@ -982,10 +982,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					sendToRemote(mContext.getString(R.string.str_print_stopok));
 					break;
 				case MESSAGE_INKLEVEL_CHANGE:
-					
-					for (int i = 0; i < mSysconfig.getHeads(); i++) {
-						mRfidManager.downLocal(i);
-					}
+					int devIndex = msg.arg1;
+					// for (int i = 0; i < mSysconfig.getHeads(); i++) {
+					mRfidManager.downLocal(devIndex);
+					// }
 					/*鎵撳嵃鏅備笉鍐嶅鏅傛洿鏂板ⅷ姘撮噺*/
 					// refreshInk();
 					// mRfidManager.write(mHandler);
@@ -1702,8 +1702,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 
 	@Override
-	public void onInkLevelDown() {
-		mHandler.sendEmptyMessage(MESSAGE_INKLEVEL_CHANGE);
+	public void onInkLevelDown(int device) {
+		Message message = mHandler.obtainMessage();
+		message.arg1 = device;
+		message.what = MESSAGE_INKLEVEL_CHANGE;
+		mHandler.sendMessage(message);
 	}
 
 	@Override
