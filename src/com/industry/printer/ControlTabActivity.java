@@ -105,7 +105,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final String ACTION_REOPEN_SERIAL="com.industry.printer.ACTION_REOPEN_SERIAL";
 	public static final String ACTION_CLOSE_SERIAL="com.industry.printer.ACTION_CLOSE_SERIAL";
 	public static final String ACTION_BOOT_COMPLETE="com.industry.printer.ACTION_BOOT_COMPLETED";
-	
+
+	private int repeatTimes = 10;
+
 	public Context mContext;
 	public ExtendMessageTitleFragment mMsgTitle;
 	public int mCounter;
@@ -1023,6 +1025,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 							break;
 						}
 					}
+
+					if (Configs.IGNORE_RFID) {
+
+						if (repeatTimes <= 0) {
+							mRfidManager.defaultInkForIgnoreRfid();
+							ready = true;
+						} else {
+							repeatTimes--;
+						}
+					}
 					if (!ready) {
 						mHandler.sendEmptyMessageDelayed(RFIDManager.MSG_RFID_INIT, 5000);
 					} else {
@@ -1079,6 +1091,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	};
 	private boolean checkRfid() {
 		boolean ready = true;
+		if (Configs.IGNORE_RFID) {
+			return true;
+		}
 		if (mDTransThread == null) {
 			return true;
 		}
@@ -1515,7 +1530,11 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		// ExtGpio.playClick();
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
+				if (Configs.IGNORE_RFID) {
+					mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
+				} else {
+					mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
+				}
 				break;
 			case R.id.StopPrint:
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);

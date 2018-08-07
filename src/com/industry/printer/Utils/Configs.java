@@ -22,6 +22,15 @@ import com.industry.printer.object.data.SegmentBuffer;
 public class Configs {
 	
 	public static final boolean DEBUG=true;
+
+	/**
+	 * 该版本打印是否需要忽略rfid
+	 * if RFID is ignored, RFID scan  at start-time repeats upto 10 times if scan failed;
+	 * set Rfid value to 370/2 if Rfid is missing;
+	 * skip UID checking after 'print' command triggered before data transfer;
+	 */
+	public static final boolean IGNORE_RFID = false;
+
 	/** 每列的有效点阵数 **/
 	public static int gDots;
 	/** 每列的总字节数 **/

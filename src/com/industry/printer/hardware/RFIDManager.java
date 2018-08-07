@@ -27,6 +27,7 @@ public class RFIDManager implements RfidCallback{
 	private int mLiveHeads = 1;
 	private RFIDDevice mDevice;
 	private Handler mCallback;
+
 	
 	public static int TOTAL_RFID_DEVICES = 8;
 	
@@ -379,5 +380,18 @@ public class RFIDManager implements RfidCallback{
 		mDevice.addLisetener(this);
 		mHandler.sendEmptyMessage(MSG_RFID_CHECK_NEXT);
 		return true;
+	}
+
+
+	public void defaultInkForIgnoreRfid() {
+		for (int i=0; i < mRfidDevices.size(); i++) {
+			RFIDDevice dev = getDevice(i);
+			if (dev == null) {
+				continue;
+			}
+			if (dev.getLocalInk() <= 0) {
+				dev.setLocalInk(185);
+			}
+		}
 	}
 }
