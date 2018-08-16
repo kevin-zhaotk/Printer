@@ -903,7 +903,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onOpen() {
-		MessageBrowserDialog dialog = new MessageBrowserDialog(mContext);
+		MessageBrowserDialog dialog = new MessageBrowserDialog(mContext, MessageBrowserDialog.OpenFrom.OPEN_EDIT, mObjName);
 		dialog.setOnPositiveClickedListener(new OnPositiveListener() {
 			
 			@Override

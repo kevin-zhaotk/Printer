@@ -366,12 +366,12 @@ public class BaseObject{
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
 		int adjust = (int)fm.descent;
-		if (adjust < 4 && ctH > 32) {
-			adjust = 4;
-		}
+//		if (adjust < 4 && ctH > 32) {
+//			adjust = 4;
+//		}
 		canvas.drawText(content, 0, ctH-adjust, paint);
 		int head = mTask.getHeadType();
-		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  width=" + width + "  ctH = " + ctH + " ctW = " + ctW);
+		Debug.d(TAG, "--->content: " + content + "  descent=" + fm.descent + "  ascent= " + fm.ascent + " botom= " + fm.bottom + " top = " + fm.top + " leading = " + fm.leading);
 		if (head == MessageType.MESSAGE_TYPE_16_DOT) {
 			return bitmap;
 		}

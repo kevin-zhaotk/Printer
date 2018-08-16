@@ -71,15 +71,15 @@ public class BinFromBitmap extends BinCreater {
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
                 	mDots[i/mHeighEachHead]++;
-                	//Debug.d(TAG, "--->i = " + i + "  j = " + j + "   mHeighEachHead = " + mHeighEachHead);
+                	Debug.d(TAG, "--->i = " + i + "  j = " + j  + "  mDots[" + (i/mHeighEachHead) + "]=" + mDots[i/mHeighEachHead] + "   mHeighEachHead = " + mHeighEachHead);
                 }
             }
             // System.out.println();
         }
 
-        for (int i = 0; i < mDots.length; i++) {
-        	Debug.d(TAG, "--->mDots[" + i + "] = " + mDots[i]);
-		}
+//        for (int i = 0; i < mDots.length; i++) {
+//        	Debug.d(TAG, "--->mDots[" + i + "] = " + mDots[i]);
+//		}
         return mDots; 
     }
 	

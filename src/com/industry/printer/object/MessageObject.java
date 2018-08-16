@@ -159,6 +159,7 @@ public class MessageObject extends BaseObject {
 		}
 		else
 		{
+			int ratio = (mPNozzle.mType == MessageType.MESSAGE_TYPE_16_DOT || mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) ? 1 : 2 ;
 //			str += mId+"^";
 //			str += "00000^00000^00000^00000^0^000^";
 //			str += BaseObject.intToFormatString(mPNozzle.mType,3) + "^000^000^000^000^";
@@ -167,23 +168,23 @@ public class MessageObject extends BaseObject {
 			builder.append("^00000^00000^00000^00000^0^000^")
 				.append(BaseObject.intToFormatString(mPNozzle.mType,3))
 				.append("^000^")
-				.append(intToFormatString(mDotPer[0] * 2, 7))
+				.append(intToFormatString(mDotPer[0] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[1] * 2, 7))
+				.append(intToFormatString(mDotPer[1] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[2] * 2, 7))
+				.append(intToFormatString(mDotPer[2] * ratio, 7))
 				.append("^")
-				.append(BaseObject.intToFormatString(mDots * 2, 7))
+				.append(BaseObject.intToFormatString(mDots * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[3] * 2, 7))
+				.append(intToFormatString(mDotPer[3] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[4] * 2, 7))
+				.append(intToFormatString(mDotPer[4] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[5] * 2, 7))
+				.append(intToFormatString(mDotPer[5] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[6] * 2, 7))
+				.append(intToFormatString(mDotPer[6] * ratio, 7))
 				.append("^")
-				.append(intToFormatString(mDotPer[7] * 2, 7))
+				.append(intToFormatString(mDotPer[7] * ratio, 7))
 				.append("^0000^000^")
 				.append(mContent);
 		}

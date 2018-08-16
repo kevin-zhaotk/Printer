@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import android.R.integer;
 import android.content.Context;
+import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.os.Message;
 import com.industry.printer.DataTransferThread;
 import com.industry.printer.ThreadPoolManager;
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.RFIDAsyncTask.RfidCallback;
 import com.printer.corelib.RFIDData;
@@ -236,6 +238,9 @@ public class RFIDManager implements RfidCallback{
 			return 0;
 		}
 		int max = device.getMax();
+		if (max <= 0 && Configs.IGNORE_RFID) {
+			max = 370;
+		}
 		float ink = device.getLocalInk();
 		if (max <= 0) {
 			return 0;
@@ -267,6 +272,9 @@ public class RFIDManager implements RfidCallback{
 	public boolean isValid(int dev) {
 		if (dev >= mRfidDevices.size()) {
 			return false;
+		}
+		if (Configs.IGNORE_RFID) {
+			return true;
 		}
 		RFIDDevice device = mRfidDevices.get(dev);
 		return device.isValid();

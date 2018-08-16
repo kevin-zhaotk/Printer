@@ -159,6 +159,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		this(context);
 		mFrom = from;
 		location = msg;
+
 		Debug.d(TAG, "--->location: " + msg);
 	}
 
@@ -207,6 +208,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 		mTitles.clear();
 		loadMessages();
 
+		mTitles.add(location);
 		setupViews();
 
 	}
