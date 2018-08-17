@@ -67,7 +67,7 @@ public class EllipseObject extends BaseObject {
 	public Bitmap getScaledBitmap(Context context)
 	{
 		float adjust = mLineWidth/2;
-		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)mHeight, Configs.BITMAP_CONFIG);
 		mCan = new Canvas(bmp);
 		//mCan.drawRect(0, 0, mWidth, mHeight, mPaint);
 		mCan.drawRoundRect(new RectF(adjust, adjust, mWidth-adjust, mHeight-adjust), mWidth/2, mHeight/2, mPaint);

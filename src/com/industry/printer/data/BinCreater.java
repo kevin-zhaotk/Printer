@@ -70,26 +70,7 @@ public class BinCreater {
 		}
     	
     }
-    
-    public static void saveBitmap(Bitmap bmp, String picName)
-    {
-    	File f = new File(Configs.CONFIG_PATH_FLASH, picName);
-    	//File f = new File("/storage/external_storage/sda1", picName);
-    	if(f.exists())
-    	{
-    		f.delete();
-    	}
-    	try{
-    		FileOutputStream out = new FileOutputStream(f);
-    		bmp.compress(CompressFormat.PNG, 90, out);
-    		out.flush();
-    		out.close();
-    		Debug.d(TAG, "PNG save ok");
-    	}catch(Exception e)
-    	{
-    		Debug.d(TAG, "save failed: "+e.getMessage());
-    	}
-    }
+
     
     public void saveBytes(int[] map, String fileName)
     {

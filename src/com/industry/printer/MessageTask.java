@@ -372,7 +372,7 @@ public class MessageTask {
 		}
 		float div = (float) (2.0/(getHeads() == 0 ? 1 : getHeads()));
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_CONFIG);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
@@ -436,14 +436,14 @@ public class MessageTask {
 		Bitmap bitmap = Bitmap.createScaledBitmap(bmp, (int) (bmp.getWidth()/div * prop), (int) (bmp.getHeight() * getHeads() * prop), true);
 		/*對於320列高的 1 Inch打印頭，不使用參數40的設置*/
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
-			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 320, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 320, Configs.BITMAP_CONFIG);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			can.drawBitmap(bitmap, 0, 0, p);
 			bitmap.recycle();
 			bitmap = b;
 		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
-			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 640, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 640, Configs.BITMAP_CONFIG);
 			// can.setBitmap(b);
 			Canvas c = new Canvas(b);
 			c.drawColor(Color.WHITE);
@@ -458,7 +458,7 @@ public class MessageTask {
 		}else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3  ) )
 		{ //add by lk 170418
 			bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), 128, true);
-			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 128, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), 128, Configs.BITMAP_CONFIG);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			can.drawBitmap(bitmap, 0, 0, p);
@@ -495,7 +495,7 @@ public class MessageTask {
 		//實際寬度
 		int bWidth = (int) (width * scaleW);
 		int bHeight = getHeight(msgObj.getType());
-		Bitmap bmp = Bitmap.createBitmap(bWidth , bHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(bWidth , bHeight, Configs.BITMAP_CONFIG);
 		Debug.d(TAG, "drawAllBmp width=" + bWidth + ", height=" + bHeight);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
@@ -630,7 +630,7 @@ public class MessageTask {
 //			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 //		}
 //
-//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_CONFIG);
 //		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 //		Canvas can = new Canvas(bmp);
 //		can.drawColor(Color.WHITE);
@@ -730,7 +730,7 @@ public class MessageTask {
 		width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_CONFIG);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);
@@ -1123,7 +1123,7 @@ public class MessageTask {
 		}
 		Debug.d("XXX", "--->contents: " + contents);
 		String[] msgs = contents.split("\\^");
-		Bitmap bmp = Bitmap.createBitmap(msgs.length * 500, 100, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(msgs.length * 500, 100, Configs.BITMAP_CONFIG);
 		
 		Canvas canvas = new Canvas(bmp);
 		canvas.drawColor(Color.WHITE);

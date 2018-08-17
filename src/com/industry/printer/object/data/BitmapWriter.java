@@ -53,7 +53,7 @@ public class BitmapWriter {
 		int width = (int)mPaint.measureText(object.getContent());
 		int height = (int)mPaint.getTextSize();
 		
-		Bitmap bmp = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , height, Configs.BITMAP_CONFIG);
 		Canvas mCan = new Canvas(bmp);
 		mCan.drawText(object.getContent(), 0, height-5, mPaint);
 		return bmp;
@@ -66,12 +66,12 @@ public class BitmapWriter {
 		int width = (int)mPaint.measureText("8");
 		int height = (int)mPaint.getTextSize();
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = width;
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, height, Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, height, Configs.BITMAP_CONFIG);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -109,7 +109,7 @@ public class BitmapWriter {
         }
         try{
             FileOutputStream out = new FileOutputStream(f);
-            bmp.compress(CompressFormat.PNG, 90, out);
+            bmp.compress(CompressFormat.WEBP, 90, out);
             out.flush();
             out.close();
             Debug.d(TAG, "PNG save ok");

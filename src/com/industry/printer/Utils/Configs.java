@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.provider.ContactsContract.Directory;
 import android.view.ViewDebug.FlagToString;
@@ -67,6 +68,9 @@ public class Configs {
 	
 	
 	public static final boolean gMakeBinFromBitmap = false;
+
+
+	public static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_4444;
 	
 	/**
 	 * 一个单位的墨水量对应的打点数

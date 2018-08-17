@@ -309,7 +309,7 @@ public class BaseObject{
 		if (mWidth == 0 || type == MessageType.MESSAGE_TYPE_16_DOT) {
 			setWidth(width);
 		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
 		Debug.e(TAG,"===--->getBitmap width=" + mWidth + ", mHeight=" + mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
@@ -361,7 +361,7 @@ public class BaseObject{
 //		Rect rect = new Rect();
 //		paint.getTextBounds(getContent(), 0, getContent().length(), rect);
 //		int w = getTextWidth(paint, getContent());
-		bitmap = Bitmap.createBitmap(width , ctH, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , ctH, Configs.BITMAP_CONFIG);
 		Debug.d(TAG, "--->bmp: " + bitmap.getWidth() +  "  " + bitmap.getHeight() );
 		Canvas canvas = new Canvas(bitmap);
 		FontMetrics fm = paint.getFontMetrics();
@@ -404,7 +404,7 @@ public class BaseObject{
 		int width = (int)mPaint.measureText(getContent());
 		int height = (int)mPaint.getTextSize();
 		
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_CONFIG);
 		Debug.d(TAG,"getBitmap width="+width+", height="+height+ ", mHeight="+mHeight);
 		mCan = new Canvas(bmp);
 		mCan.drawText(mContent, 0, height-30, mPaint);
@@ -439,7 +439,7 @@ public class BaseObject{
 		FontMetrics fm = paint.getFontMetrics();
 		
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
@@ -453,7 +453,7 @@ public class BaseObject{
 		Debug.d(TAG, "--->singleW=" + singleW);
 		
 		/* 最終生成v.bin使用的bitmap */
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, dstH, Configs.BITMAP_CONFIG);
 		Canvas gCan = new Canvas(gBmp);
 		
 		gCan.drawColor(Color.WHITE);	/*white background*/
@@ -499,7 +499,7 @@ public class BaseObject{
 			wDiv = 0.5f;
 		}
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, (int)mHeight, Configs.BITMAP_CONFIG);
 		Canvas can = new Canvas(bmp);
 		
 		// Debug.d(TAG, "--->id = " + mId + " Width=" + mWidth);
@@ -508,7 +508,7 @@ public class BaseObject{
 		//Debug.d(TAG, "--->singleW=" + singleW);
 		singleW = (int) (singleW/wDiv);
 		//Debug.d(TAG, "--->singleW/div=" + singleW);
-		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots * mTask.getHeads(), Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*10, Configs.gDots * mTask.getHeads(), Configs.BITMAP_CONFIG);
 		Canvas gCan = new Canvas(gBmp);
 		gCan.drawColor(Color.WHITE);	/*white background*/
 		for(int i =0; i<=9; i++)
@@ -523,7 +523,7 @@ public class BaseObject{
 		/*對320高的buffer進行單獨處理*/
 		if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_FAST)) {
 			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320, Configs.BITMAP_CONFIG);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			can.drawBitmap(gBmp, 0, 0, mPaint);
@@ -531,7 +531,7 @@ public class BaseObject{
 			gBmp = b;
 		} else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL || msg.getType() == MessageType.MESSAGE_TYPE_1_INCH_DUAL_FAST)) {
 			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 308*2, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320*2, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 320*2, Configs.BITMAP_CONFIG);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			int h = gBmp.getHeight()/2;
@@ -546,7 +546,7 @@ public class BaseObject{
 		}
 		else if (msg != null && (msg.getType() == MessageType.MESSAGE_TYPE_16_3)) { //add by lk 170418
 			gBmp = Bitmap.createScaledBitmap(gBmp, gBmp.getWidth(), 128, true);
-			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 128, Bitmap.Config.ARGB_8888);
+			Bitmap b = Bitmap.createBitmap(gBmp.getWidth(), 128, Configs.BITMAP_CONFIG);
 			can.setBitmap(b);
 			can.drawColor(Color.WHITE);
 			can.drawBitmap(gBmp, 0, 0, mPaint);
@@ -578,14 +578,14 @@ public class BaseObject{
 		int height = (int)mPaint.getTextSize();
 		int width = (int)mPaint.measureText("8");
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, Configs.gDots, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, Configs.gDots, Configs.BITMAP_CONFIG);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
 		singleW = (int)mWidth/mContent.length();
 
 		/*A full-size empty bitmap, width:singleW; height: Configs.gDots*/
-		Bitmap bg = Bitmap.createBitmap(singleW, Configs.gDots, Config.ARGB_8888); 
+		Bitmap bg = Bitmap.createBitmap(singleW, Configs.gDots, Configs.BITMAP_CONFIG); 
 		mCan = new Canvas(bg);
 		
 		for(int i =0; i<=9; i++)
@@ -987,7 +987,7 @@ public class BaseObject{
 	//////addbylk 		 
 	public Bitmap getpreviewbmp()
 	{
-		return  Bitmap.createBitmap(10 , Configs.gDots, Bitmap.Config.ARGB_8888);
+		return  Bitmap.createBitmap(10 , Configs.gDots, Configs.BITMAP_CONFIG);
 	}
 	public int getfeed() {
 		return (int)mHeight;

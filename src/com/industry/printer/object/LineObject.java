@@ -63,7 +63,7 @@ public class LineObject extends BaseObject {
 	@Override
 	public Bitmap getScaledBitmap(Context context)
 	{
-		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)(mHeight>mLineWidth?mHeight:mLineWidth), Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)(mHeight>mLineWidth?mHeight:mLineWidth), Configs.BITMAP_CONFIG);
 		mCan = new Canvas(bmp);
 		//mCan.drawRect(0, 0, mWidth, mHeight, mPaint);
 		mCan.drawLine(0, 0, mWidth, mHeight, mPaint);

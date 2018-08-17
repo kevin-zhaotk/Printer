@@ -1,5 +1,6 @@
 package com.industry.printer.data;
 
+import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
 import android.graphics.Bitmap;
@@ -43,7 +44,6 @@ public class BinFromBitmap extends BinCreater {
         mHeight = bmp.getHeight(); 
         mHeighEachHead = mHeight / head;
         int []pixels = new int[mWidth * mHeight]; 
-        // BinCreater.saveBitmap(bmp, "bar_extract.png");
         // 计算每列占的字节数
         int colEach = mHeight%8==0?mHeight/8:mHeight/8+1;
         //Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
@@ -110,7 +110,7 @@ public class BinFromBitmap extends BinCreater {
     		}
     	}
     	Debug.d(TAG, "===============");
-    	bmp = Bitmap.createBitmap(pixels, columns, row, Config.ARGB_8888);
+    	bmp = Bitmap.createBitmap(pixels, columns, row, Configs.BITMAP_CONFIG);
     	Debug.d(TAG, "===============000000");
     	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
     	Debug.d(TAG, "===============111111");
@@ -141,7 +141,7 @@ public class BinFromBitmap extends BinCreater {
     		}
     	}
 //    	Debug.d(TAG, "===============");
-    	bmp = Bitmap.createBitmap(pixels, columns, row, Config.ARGB_8888);
+    	bmp = Bitmap.createBitmap(pixels, columns, row, Configs.BITMAP_CONFIG);
 //    	Debug.d(TAG, "===============000000");
     	//bmp.setPixels(pixels, 0, columns, 0, 0, columns, row);
 //    	Debug.d(TAG, "===============111111");

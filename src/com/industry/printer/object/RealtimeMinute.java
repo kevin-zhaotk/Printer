@@ -74,7 +74,7 @@ public class RealtimeMinute extends BaseObject {
 		int width = (int)mPaint.measureText(str_new_content);//addbylk �����ߴ�
 		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
 
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();

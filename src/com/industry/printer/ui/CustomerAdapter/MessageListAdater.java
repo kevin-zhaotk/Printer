@@ -268,7 +268,7 @@ public class MessageListAdater extends BaseAdapter {
 		 {
 			try
 			{  
-				bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+				bmp_disk = Bitmap.createBitmap(1500, 100, Configs.BITMAP_CONFIG);
 				String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
 			   Debug.e(TAG, "===="+path);			
 			    File file =new File(path);
@@ -282,7 +282,7 @@ public class MessageListAdater extends BaseAdapter {
 			{
 				
 			}
-			Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+			Bmp_bak = Bitmap.createBitmap(1500, 100, Configs.BITMAP_CONFIG);
 			 Paint mPaint;
 			 mPaint = new Paint();
 			 
@@ -341,7 +341,7 @@ public class MessageListAdater extends BaseAdapter {
 		} else {
 			if (position == mSelected) {
 				try {
-					bmp_disk = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+					bmp_disk = Bitmap.createBitmap(1500, 100, Configs.BITMAP_CONFIG);
 					String path = ConfigPath.getTlkDir(title) + MessageTask.MSG_PREV_IMAGE;
 					Debug.e(TAG, "====" + path);
 					File file = new File(path);
@@ -352,7 +352,7 @@ public class MessageListAdater extends BaseAdapter {
 				} catch (Exception e) {
 
 				}
-				Bmp_bak = Bitmap.createBitmap(1500, 100, Config.ARGB_8888);
+				Bmp_bak = Bitmap.createBitmap(1500, 100, Configs.BITMAP_CONFIG);
 				Paint mPaint;
 				mPaint = new Paint();
 

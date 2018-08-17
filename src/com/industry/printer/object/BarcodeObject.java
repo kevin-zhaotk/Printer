@@ -256,7 +256,7 @@ public class BarcodeObject extends BaseObject {
 				}
 			}
 			/* 条码/二维码的四个边缘空出20像素作为白边 */
-			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 			
 			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 			return bitmap;
@@ -316,7 +316,7 @@ public class BarcodeObject extends BaseObject {
 				}
 			}
 			/* 条码/二维码的四个边缘空出20像素作为白边 */
-			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+			Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 			
 			if ("ITF_14".equals(mFormat)) {
@@ -330,7 +330,7 @@ public class BarcodeObject extends BaseObject {
 			if(mShow)
 			{
 				// 用於生成bin的bitmap
-				Bitmap bmp = Bitmap.createBitmap(width, h, Config.ARGB_8888);
+				Bitmap bmp = Bitmap.createBitmap(width, h, Configs.BITMAP_CONFIG);
 				Bitmap code = createCodeBitmapFromDraw(content, width-tl[0]*2, textH + 5);
 				Debug.d(TAG, "===>code width=" + code.getWidth());
 				//BinCreater.saveBitmap(code, "barcode.png");
@@ -463,9 +463,9 @@ public class BarcodeObject extends BaseObject {
 				}
 			}
 		}
-		Bitmap bg = Bitmap.createBitmap(totalW, totalH, Config.ARGB_8888);
+		Bitmap bg = Bitmap.createBitmap(totalW, totalH, Configs.BITMAP_CONFIG);
 		Canvas canvas = new Canvas(bg);
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		
 		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 		canvas.drawColor(Color.WHITE);
@@ -519,7 +519,7 @@ public class BarcodeObject extends BaseObject {
 		paint.setTextSize(height - 5);
 		paint.setTextScaleX(2);
 		paint.setColor(Color.BLACK);
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		Canvas canvas = new Canvas(bitmap);
 		//每个字符占的宽度
 		int perPix = width/content.length();

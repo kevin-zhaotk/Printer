@@ -543,7 +543,7 @@ public class EditTabActivity extends Fragment implements OnClickListener, OnLong
 //			width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 //		}
 //		
-//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Bitmap.Config.ARGB_8888);
+//		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDotsTotal, Configs.BITMAP_CONFIG);
 //		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDotsTotal);
 //		Canvas can = new Canvas(bmp);
 //		can.drawColor(Color.WHITE);

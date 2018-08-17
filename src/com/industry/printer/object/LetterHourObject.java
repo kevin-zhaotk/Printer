@@ -75,7 +75,7 @@ public class LetterHourObject extends BaseObject {
 		if (mWidth == 0) {
 			setWidth(width);
 		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
@@ -107,7 +107,7 @@ public class LetterHourObject extends BaseObject {
 		FontMetrics fm = paint.getFontMetrics();
 		
 		/*draw Bitmap of single digit*/
-		Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		Canvas can = new Canvas(bmp);
 		
 		/*draw 0-9 totally 10 digits Bitmap*/
@@ -115,7 +115,7 @@ public class LetterHourObject extends BaseObject {
 		Debug.d(TAG, "--->singleW=" + singleW);
 		
 		/* 最終生成v.bin使用的bitmap */
-		Bitmap gBmp = Bitmap.createBitmap(singleW*HOUR_LETTER.length, dstH, Bitmap.Config.ARGB_8888);
+		Bitmap gBmp = Bitmap.createBitmap(singleW*HOUR_LETTER.length, dstH, Configs.BITMAP_CONFIG);
 		Canvas gCan = new Canvas(gBmp);
 		
 		gCan.drawColor(Color.WHITE);	/*white background*/
@@ -170,7 +170,7 @@ public class LetterHourObject extends BaseObject {
 			setWidth(width);
 		}
 		Debug.d(TAG, "2===== " + getContent() );
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();

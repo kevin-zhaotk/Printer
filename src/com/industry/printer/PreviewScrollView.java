@@ -56,7 +56,7 @@ public class PreviewScrollView extends View {
 	
 	public void createBitmap(int w, int h)
 	{
-		mPreBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+		mPreBitmap = Bitmap.createBitmap(w, h, Configs.BITMAP_CONFIG);
 	}
 	
 	public void createBitmap(int[]src, int w, int h)
@@ -65,7 +65,7 @@ public class PreviewScrollView extends View {
 			Debug.d(TAG, "==createBitmap src==null");
 			return;
 		}
-		Bitmap bmp = Bitmap.createBitmap(src, w, h, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(src, w, h, Configs.BITMAP_CONFIG);
 		mPreBitmap = bmp.createScaledBitmap(bmp, w, Configs.gFixedRows, true);
 		BinFromBitmap.recyleBitmap(bmp);
 		//mPreBitmap = Bitmap.createScaledBitmap(mPreBitmap, w, 150, true);
@@ -112,7 +112,7 @@ public class PreviewScrollView extends View {
 			// Debug.d(TAG,"##########bit.length="+bit.length);
 			return null;
 		}
-		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(bit.length/2, 16, Configs.BITMAP_CONFIG);
 		//columns = columns*2;
 		Debug.d(TAG, "***********bmp w="+bmp.getWidth()+", h="+bmp.getHeight());
 		Canvas c = new Canvas(bmp);
@@ -174,7 +174,7 @@ public class PreviewScrollView extends View {
 	
 	public static Bitmap getPicBitmapFrombuffer(int[] bit, Paint p)
 	{
-		Bitmap bmp = Bitmap.createBitmap(128,64, Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap(128,64, Configs.BITMAP_CONFIG);
 		Canvas c = new Canvas(bmp);
 		for(int i=0; i<bit.length; i++)
 		{

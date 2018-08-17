@@ -54,7 +54,7 @@ public class RectObject extends BaseObject {
 	public Bitmap getScaledBitmap(Context context)
 	{
 		float adjust = mLineWidth/2;
-		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)mHeight, Bitmap.Config.ARGB_8888);
+		Bitmap bmp = Bitmap.createBitmap((int)mWidth , (int)mHeight, Configs.BITMAP_CONFIG);
 		mCan = new Canvas(bmp);
 		mCan.drawRect(adjust, adjust, mWidth-adjust, mHeight-adjust, mPaint);
 		//can.drawText("text", 0, 4, p);

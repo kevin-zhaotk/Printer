@@ -135,7 +135,7 @@ public class RealtimeMonth extends BaseObject {
 		Debug.d(TAG, "--->content: " + str_new_content + "  width=" + width);
 		
 //		Debug.d(TAG, "2===== " + getContent() );
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();
