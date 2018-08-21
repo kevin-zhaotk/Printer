@@ -1,6 +1,7 @@
 package com.industry.printer;
 
 import java.io.ByteArrayInputStream;
+import java.io.CharArrayReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.BinFileMaker;
+import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
 
 /**
  * @author zhaotongkai
@@ -32,6 +34,9 @@ public class BinInfo {
 	private FileInputStream mFStream;
 	
 	private MessageTask mTask;
+
+	private ExtendStat mExtend;
+
 	/**bin文件的总列数**/
 	public int mColumn;
 
@@ -81,19 +86,30 @@ public class BinInfo {
 	public ByteArrayInputStream mCacheStream;
 
 	public int mVarCount;
-	
+
 	public BinInfo(String file) {
-		this(file, null);
+		this(file, null, null);
 		Debug.d(TAG, "===>binFile: " + file);
 	}
 	
-	public BinInfo(String file, MessageTask task, int varCount) {
+	public BinInfo(String file, ExtendStat extension) {
+		this(file, null, extension);
+		Debug.d(TAG, "===>binFile: " + file);
+	}
+
+	public BinInfo(String file, MessageTask task, ExtendStat extension)
+	{
+		this(file, task, 10, extension);
+	}
+	
+	public BinInfo(String file, MessageTask task, int varCount, ExtendStat extension) {
 		mColumn = 0;
 		mVarCount = varCount;
 		mBufferBytes = null;
 		mBufferChars = null;
 		mTask = task;
 		mType = task != null ? task.getHeads() : 1;
+		mExtend = extension;
 		/**读取文件头信息**/
 		
 		mFile = new File(file);
@@ -109,10 +125,7 @@ public class BinInfo {
 		}
 	}
 	
-	public BinInfo(String file, MessageTask task)
-	{
-		this(file, task, 10);
-	}
+
 	
 	public BinInfo(InputStream stream, int type) {
 		mColumn = 0;
@@ -207,6 +220,16 @@ public class BinInfo {
 		} else {
 			mColPerElement = 0;
 		}
+
+
+	}
+
+	private boolean isVarBuffer() {
+		if(mFile != null && mFile.getName().contains("v")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -270,6 +293,7 @@ public class BinInfo {
 		try {
 			/*计算整个buffer需要补偿的字节数*/
 			int feed = (mNeedFeed==true?mColumn*mType : 0);
+
 			mBufferBytes = new byte[mLength + feed];
 			mBufferChars = new char[(mLength + feed)/2];
 			if(mBufferBytes == null || mBufferChars == null) {
@@ -298,6 +322,9 @@ public class BinInfo {
 		} finally {
 			
 		}
+		// deal with extension, 1 to 2,4,6,8; 2 to 4, 6, 8;
+		expend();
+
     	return extract(); // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
     
@@ -488,4 +515,35 @@ public class BinInfo {
     		}
     	}
     }
+
+
+    private void expend() {
+    	if (mExtend == null || isVarBuffer()) {
+    		return;
+		}
+		int scale = mExtend.getScale();
+    	if (scale == 1) {
+    		return;
+		}
+
+		char[] buffer = mBufferChars;
+    	mBufferChars = new char[buffer.length * scale];
+		mBytesPerColumn *= scale;
+		mCharsPerColumn *= scale;
+		mBytesFeed *= scale;
+		mCharsFeed *= scale;
+
+		CharArrayReader reader = new CharArrayReader(buffer);
+
+		try {
+			reader.mark(0);
+			for (int i = 0; i < scale; i++) {
+				reader.read(mBufferChars, i * buffer.length, buffer.length);
+				reader.reset();
+			}
+
+		} catch (Exception e) {
+			Debug.d(TAG, "--->e: " + e.getMessage());
+		}
+	}
 }

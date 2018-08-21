@@ -28,6 +28,7 @@ import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
+import com.industry.printer.interceptor.ExtendInterceptor;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -117,8 +118,10 @@ public class DataTask {
 		if (mTask == null) {
 			return false;
 		}
+		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+		ExtendInterceptor.ExtendStat extendStat = interceptor.getExtend();
 		/**记录当前打印的信息路径**/
-		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask);
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask, extendStat);
 		if (mBinInfo == null) {
 			Debug.e(TAG, "--->binInfo null");
 			return false;
@@ -299,7 +302,7 @@ public class DataTask {
 				BinInfo info = mVarBinList.get(o);
 				Debug.d(TAG, "--->object index=" + o.getIndex());
 				if (info == null) {
-					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask);
+					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
@@ -340,7 +343,7 @@ public class DataTask {
 						continue;
 					BinInfo info = mVarBinList.get(rtSub);
 					if (info == null) {
-						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask);
+						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask, null);
 						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
@@ -355,7 +358,7 @@ public class DataTask {
 				String vString = ((JulianDayObject)o).getContent();
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
 					mVarBinList.put(o, varbin);
 				}
 				Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
@@ -369,7 +372,7 @@ public class DataTask {
 				Debug.d(TAG, "--->shift ******: " + shift);
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
 					mVarBinList.put(o, varbin);
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
@@ -378,7 +381,7 @@ public class DataTask {
 			} else if (o instanceof LetterHourObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, 24);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, 24, null);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((LetterHourObject) o).getContent();
@@ -387,7 +390,7 @@ public class DataTask {
 			} else if (o instanceof WeekOfYearObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((WeekOfYearObject) o).getContent();
@@ -396,7 +399,7 @@ public class DataTask {
 			}  else if (o instanceof WeekDayObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((WeekDayObject) o).getContent();
