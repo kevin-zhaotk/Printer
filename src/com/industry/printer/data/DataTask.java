@@ -29,6 +29,7 @@ import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.interceptor.ExtendInterceptor;
+import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -61,6 +62,7 @@ public class DataTask {
 	public ArrayList<BaseObject> mObjList;
 	public MessageTask mTask;
 
+	private ExtendStat mExtendStat;
 	/**
 	 * background buffer
 	 *   used for save the background bin buffer
@@ -104,7 +106,8 @@ public class DataTask {
 		if (task != null) {
 			mObjList = task.getObjects();
 		}
-		
+		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+		mExtendStat = interceptor.getExtend();
 		mDots = 0;
 		mVarBinList = new HashMap<BaseObject, BinInfo>();
 	}
@@ -118,10 +121,9 @@ public class DataTask {
 		if (mTask == null) {
 			return false;
 		}
-		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
-		ExtendInterceptor.ExtendStat extendStat = interceptor.getExtend();
+		
 		/**记录当前打印的信息路径**/
-		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask, extendStat);
+		mBinInfo = new BinInfo(ConfigPath.getBinAbsolute(mTask.getName()), mTask, mExtendStat);
 		if (mBinInfo == null) {
 			Debug.e(TAG, "--->binInfo null");
 			return false;
@@ -130,6 +132,7 @@ public class DataTask {
 		if (mBgBuffer == null) {
 			return false;
 		}
+		
 		Debug.d(TAG, "--->bgbuffer = " + mBgBuffer.length);
 		mPrintBuffer = new char[mBgBuffer.length];
 		return true;
@@ -229,6 +232,8 @@ public class DataTask {
 			return;
 		int heads = mTask.getHeads() == 0 ? 1 : mTask.getHeads();
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+		ExtendStat stat = interceptor.getExtend();
 		float div = (float) (2.0/heads);
 		MessageObject msg = mTask.getMsgObject();
 		// Debug.d(TAG, "+++++type:" + msg.getType());
@@ -269,6 +274,7 @@ public class DataTask {
 			scaleW = scaleW/2;
 			div = div/2;
 		}
+//		div = div/stat.getScale();
 		Debug.d(TAG, "-----scaleW = " + scaleW + " div = " + div);
 		//mPreBitmap = Arrays.copyOf(mBg.mBits, mBg.mBits.length);
 		for(BaseObject o:mObjList)
@@ -293,22 +299,22 @@ public class DataTask {
 				Bitmap bmp = ((BarcodeObject)o).getPrintBitmap((int)(o.getWidth()/scaleW), mBinInfo.getBytesFeed()*8, (int)(o.getWidth()/scaleW), (int)(o.getHeight()/scaleH), (int)o.getY());
 				Debug.d(TAG,"--->cover barcode w = " + o.getWidth() + "  h = " + o.getHeight() + " total=" + (mBinInfo.getBytesFeed()*8) + " " + (o.getWidth()/scaleW) + " " + (o.getHeight()/scaleH));
 				// BinCreater.saveBitmap(bmp, "bar.png");
-				BinInfo info = new BinInfo(mContext, bmp);
+				BinInfo info = new BinInfo(mContext, bmp, mExtendStat);
 
-				BinInfo.overlap(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed());
+				BinInfo.overlap(mPrintBuffer, info.getBgBuffer(), (int)(o.getX()/div), info.getCharsFeed() * stat.getScale());
 			} else if(o instanceof CounterObject)
 			{
 				String str = prev? ((CounterObject) o).getContent() : ((CounterObject) o).getNext();
 				BinInfo info = mVarBinList.get(o);
 				Debug.d(TAG, "--->object index=" + o.getIndex());
 				if (info == null) {
-					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
+					info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, mExtendStat);
 					mVarBinList.put(o, info);
 				}
 				var = info.getVarBuffer(str);
 				// BinCreater.saveBin("/mnt/usbhost1/" + o.getIndex() + ".bin", var, info.getCharsPerHFeed()*16);
 				// Debug.d(TAG, "--->object x=" + o.getX()/div);
-				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed());
+				BinInfo.overlap(mPrintBuffer, var, (int)(o.getX()/div), info.getCharsFeed() * stat.getScale());
 			}
 			else if(o instanceof RealtimeObject)
 			{
@@ -343,7 +349,7 @@ public class DataTask {
 						continue;
 					BinInfo info = mVarBinList.get(rtSub);
 					if (info == null) {
-						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask, null);
+						info = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), rtSub.getIndex()), mTask, mExtendStat);
 						mVarBinList.put(rtSub, info);
 					}
 					var = info.getVarBuffer(substr);
@@ -358,7 +364,7 @@ public class DataTask {
 				String vString = ((JulianDayObject)o).getContent();
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, mExtendStat);
 					mVarBinList.put(o, varbin);
 				}
 				Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
@@ -372,7 +378,7 @@ public class DataTask {
 				Debug.d(TAG, "--->shift ******: " + shift);
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, mExtendStat);
 					mVarBinList.put(o, varbin);
 				}
 				// Debug.d(TAG, "--->real x=" + o.getX()+ ", div-x=" + o.getX()/div );
@@ -381,7 +387,7 @@ public class DataTask {
 			} else if (o instanceof LetterHourObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, 24, null);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, 24, mExtendStat);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((LetterHourObject) o).getContent();
@@ -390,7 +396,7 @@ public class DataTask {
 			} else if (o instanceof WeekOfYearObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, mExtendStat);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((WeekOfYearObject) o).getContent();
@@ -399,7 +405,7 @@ public class DataTask {
 			}  else if (o instanceof WeekDayObject) {
 				BinInfo varbin= mVarBinList.get(o);
 				if (varbin == null) {
-					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, null);
+					varbin = new BinInfo(ConfigPath.getVBinAbsolute(mTask.getName(), o.getIndex()), mTask, mExtendStat);
 					mVarBinList.put(o, varbin);
 				}
 				String t = ((WeekDayObject) o).getContent();

@@ -280,7 +280,7 @@ public class MessageListAdater extends BaseAdapter {
 			}
 			catch (Exception e)
 			{
-				
+				Debug.d(TAG, "--->e:" + e.getMessage());
 			}
 			Bmp_bak = Bitmap.createBitmap(1500, 100, Configs.BITMAP_CONFIG);
 			 Paint mPaint;
@@ -290,9 +290,11 @@ public class MessageListAdater extends BaseAdapter {
 			mCan = new Canvas(Bmp_bak);
 			//mCan.drawBitmap(bmp_disk, 0, 0, mPaint);
 			int iwidth = bmp_disk == null ? 0 : bmp_disk.getWidth();
-			if(bmp_disk.getWidth()>1500)
+			if(iwidth>1500)
 			{
 				iwidth=1500;
+			} else if (iwidth <= 0) {
+				return convertView;
 			}
 			
 			 

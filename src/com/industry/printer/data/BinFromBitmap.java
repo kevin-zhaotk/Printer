@@ -3,6 +3,7 @@ package com.industry.printer.data;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
 
+import android.R.integer;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
@@ -43,20 +44,22 @@ public class BinFromBitmap extends BinCreater {
     	mWidth = bmp.getWidth();         
         mHeight = bmp.getHeight(); 
         mHeighEachHead = mHeight / head;
-        int []pixels = new int[mWidth * mHeight]; 
+//        int []pixels = new int[mWidth * mHeight]; 
         // 计算每列占的字节数
         int colEach = mHeight%8==0?mHeight/8:mHeight/8+1;
         //Debug.d(TAG, "=====width="+mWidth+", height="+mHeight+", colEach="+colEach);
         Debug.d(TAG, "--->mHeighEachHead: " + mHeighEachHead + "   height= " + mHeight);
         mBinBits = new byte[colEach * mWidth];
         // 将bitmap的每个像素读取到pixels数组中，数组的每个元素对应一个像素值
-        bmp.getPixels(pixels, 0, mWidth, 0, 0, mWidth, mHeight); 
+//        bmp.getPixels(pixels, 0, mWidth, 0, 0, mWidth, mHeight); 
         //int alpha = 0x00 << 24;  
         
         // 逐列进行灰度化和二值化处理
         for(int i = 0; i < mHeight; i++)  { 
-            for(int j = 0; j < mWidth; j++) { 
-                int grey = pixels[mWidth * i + j]; 
+        	
+            for(int j = 0; j < mWidth; j++) {
+            	int grey = bmp.getPixel(j, i);
+//                int grey = pixels[mWidth * i + j]; 
                 
                 int red = ((grey  & 0x00FF0000 ) >> 16) & 0x0ff; 
                 int green = ((grey & 0x0000FF00) >> 8) & 0x0ff; 
@@ -71,7 +74,7 @@ public class BinFromBitmap extends BinCreater {
                 else {
                 	mBinBits[j*colEach+i/8] |= 0x01<<(i%8);
                 	mDots[i/mHeighEachHead]++;
-                	Debug.d(TAG, "--->i = " + i + "  j = " + j  + "  mDots[" + (i/mHeighEachHead) + "]=" + mDots[i/mHeighEachHead] + "   mHeighEachHead = " + mHeighEachHead);
+//                	Debug.d(TAG, "--->i = " + i + "  j = " + j  + "  mDots[" + (i/mHeighEachHead) + "]=" + mDots[i/mHeighEachHead] + "   mHeighEachHead = " + mHeighEachHead);
                 }
             }
             // System.out.println();

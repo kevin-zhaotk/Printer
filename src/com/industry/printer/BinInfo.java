@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.apache.http.util.ByteArrayBuffer;
 
 import android.R.integer;
+import android.R.menu;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -36,6 +37,7 @@ public class BinInfo {
 	private MessageTask mTask;
 
 	private ExtendStat mExtend;
+	private boolean isExtended;
 
 	/**bin文件的总列数**/
 	public int mColumn;
@@ -110,6 +112,7 @@ public class BinInfo {
 		mTask = task;
 		mType = task != null ? task.getHeads() : 1;
 		mExtend = extension;
+		isExtended = false;
 		/**读取文件头信息**/
 		
 		mFile = new File(file);
@@ -149,7 +152,8 @@ public class BinInfo {
 		}
 	}
 	
-	public BinInfo(Context ctx, Bitmap bmp) {
+	public BinInfo(Context ctx, Bitmap bmp, ExtendStat extend) {
+		mExtend = extend;
 		BinFileMaker m = new BinFileMaker(ctx);
 		// BinCreater.saveBitmap(bmp, "bar.png");
 		m.extract(bmp, 1);
@@ -322,6 +326,7 @@ public class BinInfo {
 		} finally {
 			
 		}
+		
 		// deal with extension, 1 to 2,4,6,8; 2 to 4, 6, 8;
 		expend();
 
@@ -368,9 +373,15 @@ public class BinInfo {
    		if (mBufferChars == null) {
    			mBufferChars = new char[mBufferBytes.length/2];
    		}
+   		if (mExtend != null && mExtend.getScale() > 1) {
+			mBufferChars = new char[mBufferBytes.length/2];
+		}
+   		Debug.d(TAG, "--->char len = " + mBufferChars.length + "   bytes: " + mBufferBytes.length);
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
+   		expend();
+    	
     	return extract();
     }
     
@@ -407,6 +418,9 @@ public class BinInfo {
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
+    	
+    	expend();
+    	
     	return extract();
     }
     
@@ -441,6 +455,7 @@ public class BinInfo {
     		len = dst.length - x*high;
     		//return;
     	}
+    	Debug.d(TAG, "--->high = " + high);
     	int  matrix = PlatformInfo.isBufferFromDotMatrix();
     	for(int i=0; i< len; i++)
     	{
@@ -518,32 +533,46 @@ public class BinInfo {
 
 
     private void expend() {
-    	if (mExtend == null || isVarBuffer()) {
+    	if (mExtend == null) {
     		return;
 		}
 		int scale = mExtend.getScale();
     	if (scale == 1) {
     		return;
 		}
-
+    	// BinCreater.saveBin("/mnt/sdcard/print_var.bin", mBufferChars, mCharsPerHFeed * 16);
+    	Debug.d(TAG, "--->expend scale : " + scale + " length: " + mBufferChars.length);
 		char[] buffer = mBufferChars;
     	mBufferChars = new char[buffer.length * scale];
-		mBytesPerColumn *= scale;
-		mCharsPerColumn *= scale;
-		mBytesFeed *= scale;
-		mCharsFeed *= scale;
-
+    	
 		CharArrayReader reader = new CharArrayReader(buffer);
 
+		int column = mColumn;
+		if (isVarBuffer()) {
+			column = buffer.length/mCharsFeed;
+		}
 		try {
-			reader.mark(0);
-			for (int i = 0; i < scale; i++) {
-				reader.read(mBufferChars, i * buffer.length, buffer.length);
+			
+			for (int j = 0; j < scale; j++) {
+				reader.mark(0);
+				Debug.d(TAG, "--->j = " + j + "  column = " + column);
+				for (int i = 0; i < column; i++) {
+					reader.read(mBufferChars, (i*scale + j) * mCharsPerHFeed, mCharsPerHFeed);
+				}
 				reader.reset();
 			}
-
+			
 		} catch (Exception e) {
 			Debug.d(TAG, "--->e: " + e.getMessage());
 		}
+		if (!isVarBuffer()) {
+    		mBytesPerColumn *= scale;
+    		mCharsPerColumn *= scale;
+    		mBytesFeed *= scale;
+    		mCharsFeed *= scale;
+    		mCharsPerHFeed *= scale;
+    		mBytesPerHFeed *= scale;
+		}
+//		BinCreater.saveBin("/mnt/sdcard/print_bg1.bin", mBufferChars, mCharsPerHFeed * scale * 16);
 	}
 }

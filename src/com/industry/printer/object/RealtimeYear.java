@@ -5,6 +5,7 @@ import java.util.Calendar;
 import com.industry.printer.FileFormat.SystemConfigFile;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.cache.FontCache;
+import com.industry.printer.Utils.Configs;
 /*
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -3,6 +3,7 @@ package com.industry.printer.interceptor;
 import android.content.Context;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.printer.corelib.Debug;
 
 /**
  *
@@ -92,6 +93,7 @@ public class ExtendInterceptor {
             if (this.equals(NONE)) {
                 return 1;
             } else {
+            	Debug.d("ExtendStat", "--->target: " + target +  "   source: " + source);
                 return target/source;
             }
         }

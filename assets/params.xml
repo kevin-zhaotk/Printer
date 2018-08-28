@@ -147,8 +147,8 @@
 	</param>
 	<param>
 	    <id>26</id>
-		<min>80</min>
-		<max>120</max>
+		<min>70</min>
+		<max>126</max>
 		<default>80</default>
 	</param>
 	<param>

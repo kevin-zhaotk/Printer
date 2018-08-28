@@ -24,6 +24,8 @@ import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.data.BinCreater;
 import com.industry.printer.data.DataTask;
 import com.industry.printer.hardware.FpgaGpioOperation;
+import com.industry.printer.interceptor.ExtendInterceptor;
+import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 
@@ -409,8 +411,13 @@ public class DataTransferThread {
 			int type = mDataTask.get(index).getHeadType();
 
 			FileUtil.deleteFolder("/mnt/sdcard/print.bin");
+			
+			ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+			ExtendStat extend = interceptor.getExtend();
 			// save print.bin to /mnt/sdcard/ folder
-			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads());
+			int cH = mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads();
+			Debug.d(TAG, "--->cH: " + cH);
+			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, cH);
 
 			Debug.e(TAG, "--->write data");
 			FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
