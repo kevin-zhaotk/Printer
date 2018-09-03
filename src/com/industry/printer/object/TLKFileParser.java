@@ -453,6 +453,9 @@ public class TLKFileParser  extends TlkFile{
 			case MessageType.MESSAGE_TYPE_1_INCH_DUAL:
 				dots = 640f;
 				break;
+			case MessageType.MESSAGE_TYPE_32_DOT:
+				dots = 152f;
+				break;
 			default:
 				dots = 152f;
 				break;

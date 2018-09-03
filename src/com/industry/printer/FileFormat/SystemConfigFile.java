@@ -1056,7 +1056,7 @@ public class SystemConfigFile{
 			heads = 1;
 			break;
 		case MessageType.MESSAGE_TYPE_32_DOT:
-			heads = 2;
+			heads = 1;
 			break;
 		case MessageType.MESSAGE_TYPE_NOVA:
 			heads = 6;

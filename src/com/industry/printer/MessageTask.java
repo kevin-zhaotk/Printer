@@ -966,6 +966,9 @@ public class MessageTask {
 		case MessageType.MESSAGE_TYPE_16_DOT:
 			scale = 16f/152;
 			break;
+		case MessageType.MESSAGE_TYPE_32_DOT:
+			scale = 1f;
+			break;
 		default:
 			break;
 		}
@@ -1006,6 +1009,9 @@ public class MessageTask {
 		case MessageType.MESSAGE_TYPE_16_DOT:
 			scale = 16f/152;
 			break;
+		case MessageType.MESSAGE_TYPE_32_DOT:
+			scale = 1f;
+			break;
 		default:
 			break;
 		}
@@ -1044,6 +1050,9 @@ public class MessageTask {
 			break;
 		case MessageType.MESSAGE_TYPE_16_DOT:
 			scale = 32;
+			break;
+		case MessageType.MESSAGE_TYPE_32_DOT:
+			scale = 152;
 			break;
 		default:
 			break;

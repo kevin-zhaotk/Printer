@@ -361,6 +361,7 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 						break;
 					case MessageTask.MessageType.MESSAGE_TYPE_16_3:
 					case MessageTask.MessageType.MESSAGE_TYPE_16_DOT:
+					case MessageTask.MessageType.MESSAGE_TYPE_32_DOT:
 						mEditLayout.setBackgroundResource(R.drawable.background);
 						break;
 					default:

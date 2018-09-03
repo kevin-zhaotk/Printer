@@ -224,10 +224,14 @@ public class MessageObject extends BaseObject {
 				size[i] = String.valueOf(mBaseList_16[i]);
 			}
 
-		} else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_16_DOT || mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
+		} else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_16_DOT) {
 			size = new String[mDotSizes.length];
 			for (int i = 0; i < size.length; i++) {
 				size[i] = mDotSizes[i];
+			}
+		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
+			for (int i = 0; i < size.length; i++) {
+				size[i] = String.valueOf(mBaseList[i]); 
 			}
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_NOVA) {
 			// size = new String[mBaseList_16.length];
@@ -275,9 +279,8 @@ public class MessageObject extends BaseObject {
 				h = 12.7f;
 			}  
 			
-		}else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT )//addbylk
-		{
-		
+		} else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT ) { //addbylk 
+			return h;
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_NOVA) {
 			return h;
 		}
@@ -316,13 +319,15 @@ public class MessageObject extends BaseObject {
 			
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_NOVA) {
 			h = size/PIXELS_PER_MM;
-		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_16_DOT || mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
+		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_16_DOT) {
 			if (size <= 152/2) {
 				return mDotSizes[0]; 
 			} else {
 				return mDotSizes[1];
 			}
 			
+		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
+			h = size/PIXELS_PER_MM;
 		} else {
 			h = size/PIXELS_PER_MM;
 		}
