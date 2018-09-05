@@ -32,6 +32,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
+import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Debug;
 import com.industry.printer.Utils.FileUtil;
@@ -1137,6 +1138,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	
 	
 	private void onZoomInPressed() {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return;
+		}
 		BaseObject obj = getCurObj();
 		if(obj == null)
 			return;
@@ -1156,6 +1161,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private boolean onZoomInTouch(MotionEvent event) {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return false;
+		}
 		if(event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOM_IN_KEY, 800);
@@ -1168,6 +1177,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private void onZoomOutPressed() {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return;
+		}
 		BaseObject obj = getCurObj();
 		if(obj == null)
 			return;
@@ -1187,6 +1200,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private boolean onZoomOutTouch(MotionEvent event) {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return false;
+		}
 		if(event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			mKeyRepeatHandler.sendEmptyMessageDelayed(ZOOM_OUT_KEY, 800);
@@ -1199,6 +1216,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private boolean onWideTouch(MotionEvent event) {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return false;
+		}
 		if(event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			Debug.d(TAG, "======Down button pressed!!");
@@ -1212,6 +1233,10 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return false;
 	}
 	private void onWidePressed() {
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return;
+		}
 		BaseObject object = getCurObj();
 		if (object == null || object instanceof MessageObject) {
 			return;
@@ -1227,6 +1252,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 	}
 	
 	private boolean onNarrowTouch(MotionEvent event) {
+
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return false;
+		}
 		if(event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			Debug.d(TAG, "======Down button pressed!!");
@@ -1240,6 +1270,11 @@ public class EditTabSmallActivity extends Fragment implements OnClickListener, O
 		return false;
 	}
 	private void onNarrowPressed() {
+
+		PrinterNozzle nozzle = mMsgTask.getNozzle();
+		if (!nozzle.editZoomable) {
+			return;
+		}
 		BaseObject object = getCurObj();
 		if (object == null || object instanceof MessageObject) {
 			return;

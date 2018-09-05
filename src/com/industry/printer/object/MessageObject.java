@@ -28,6 +28,10 @@ public class MessageObject extends BaseObject {
 	public static final String[] mDotSizes = {
 		"7x6" , "16x12"
 	};
+
+	public static final String[] mDot_32_Size = {
+			"7x6" , "16x12", "32 Dots"
+	};
 	
 	public MessageObject(Context context,  float x) {
 		super(context, BaseObject.OBJECT_TYPE_MsgName, x);
@@ -230,8 +234,9 @@ public class MessageObject extends BaseObject {
 				size[i] = mDotSizes[i];
 			}
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
+			size = new String[mDot_32_Size.length];
 			for (int i = 0; i < size.length; i++) {
-				size[i] = String.valueOf(mBaseList[i]); 
+				size[i] = mDot_32_Size[i];
 			}
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_NOVA) {
 			// size = new String[mBaseList_16.length];
@@ -279,7 +284,14 @@ public class MessageObject extends BaseObject {
 				h = 12.7f;
 			}  
 			
-		} else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT ) { //addbylk 
+		} else  if ( mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT ) { //addbylk
+			if (size.equalsIgnoreCase("7x6")) {
+				h = 3.2f;
+			} else if (size.equalsIgnoreCase("16x12")) {
+				h = 6.4f;
+			} else {
+				h = 12.7f;
+			}
 			return h;
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_NOVA) {
 			return h;
@@ -327,7 +339,15 @@ public class MessageObject extends BaseObject {
 			}
 			
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
-			h = size/PIXELS_PER_MM;
+
+			if (size == 3.2f * 12) {
+				return mDot_32_Size[0];
+			} else if (size == 6.4f * 12) {
+				return mDot_32_Size[1];
+			} else {
+				return mDot_32_Size[2];
+			}
+
 		} else {
 			h = size/PIXELS_PER_MM;
 		}

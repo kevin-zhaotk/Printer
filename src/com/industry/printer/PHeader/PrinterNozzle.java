@@ -25,6 +25,8 @@ public enum PrinterNozzle {
     public final int mType;
     public final int mHeads;
     public final int mSegments;
+    public final boolean editZoomable; // 编辑状态下是否支持缩放
+
     public final boolean shiftEnable;   //是否支持位移
     public final boolean mirrorEnable;  // 是否支持镜像
     public final boolean reverseEnable; // 是否支持反转
@@ -62,6 +64,18 @@ public enum PrinterNozzle {
                 mirrorEnable = true;
                 reverseEnable = false;
                 rotateAble = false;
+                break;
+        }
+
+        // some features during editing
+        switch (mType) {
+            case 7:
+            case 8:
+            case 9:
+                editZoomable = false;
+                break;
+            default:
+                editZoomable = true;
                 break;
         }
 

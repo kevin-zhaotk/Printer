@@ -173,9 +173,13 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 				mHighEdit.setText(size);
 				if (size.equalsIgnoreCase(MessageObject.mDotSizes[0])) {
 					mFont.setText("4");
+					mFont.setClickable(false);
 				} else if (size.equalsIgnoreCase(MessageObject.mDotSizes[1])) {
 					mFont.setText("7");
-				} 
+					mFont.setClickable(false);
+				} else {
+					mFont.setClickable(true);
+				}
 				break;
 			}
 		}
@@ -784,7 +788,8 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 		} else if (view == mDir) {
 			view.setText((String)mDirAdapter.getItem(index));
 		} else if (view == mHighEdit) {
-			view.setText((String)mHeightAdapter.getItem(index));
+			String height = (String)mHeightAdapter.getItem(index);
+			view.setText(height);
 		} else if (view == mCode) {
 			view.setText((String)mBarFormatAdapter.getItem(index));
 		} else {

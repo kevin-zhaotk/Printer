@@ -306,7 +306,7 @@ public class BaseObject{
 	
 		Debug.e(TAG, "--->content: " + getContent() + "  width=" + width);
 		int type = mTask != null? mTask.getHeadType() : MessageType.MESSAGE_TYPE_12_7;
-		if (mWidth == 0 || type == MessageType.MESSAGE_TYPE_16_DOT) {
+		if (mWidth == 0 || type == MessageType.MESSAGE_TYPE_16_DOT || type == MessageType.MESSAGE_TYPE_32_DOT) {
 			setWidth(width);
 		}
 		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
@@ -650,6 +650,16 @@ public class BaseObject{
 			case MessageType.MESSAGE_TYPE_16_DOT:
 				Debug.d(TAG, "--->display H = " + getDisplayHeight() + "   mHeight: " + mHeight);
 				if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+					mHeight = 152/2;
+				} else {
+					mHeight = 152;
+				}
+				break;
+			case MessageType.MESSAGE_TYPE_32_DOT:
+				Debug.d(TAG, "--->display H = " + getDisplayHeight() + "   mHeight: " + mHeight);
+				if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+					mHeight = 152/4;
+				} else if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[1])) {
 					mHeight = 152/2;
 				} else {
 					mHeight = 152;
@@ -1012,6 +1022,7 @@ public class BaseObject{
 					font = "7";
 				}
 				break;
+
 			default:
 				font = mFont;
 				break;
@@ -1028,13 +1039,21 @@ public class BaseObject{
 		int type = mTask.getHeadType();
 		boolean isFixed = false;
 		switch (type) {
-			case MessageType.MESSAGE_TYPE_32_DOT:
+			// case MessageType.MESSAGE_TYPE_32_DOT:
 			case MessageType.MESSAGE_TYPE_16_DOT:
 				isFixed = true;
 				break;
 			default:
 				isFixed = false;
 				break;
+		}
+
+		if (isFixed) {
+			return isFixed;
+		}
+		String  height = getDisplayHeight();
+		if (MessageObject.mDotSizes[0].equalsIgnoreCase(height) || MessageObject.mDotSizes[1].equalsIgnoreCase(height)) {
+			isFixed = true;
 		}
 		return isFixed;
 	}

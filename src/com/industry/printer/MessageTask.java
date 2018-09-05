@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.industry.printer.FileFormat.TlkFileWriter;
+import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
@@ -903,6 +904,15 @@ public class MessageTask {
 		return obj.getPNozzle().mType;
 	}
 
+	public PrinterNozzle getNozzle() {
+		MessageObject obj = getMsgObject();
+
+		if (obj == null) {
+			return PrinterNozzle.MESSAGE_TYPE_12_7;
+		}
+		return obj.getPNozzle();
+	}
+
 	public String getPreview() {
 		String messageFolder = ConfigPath.getTlkDir(mName);
 		String previewBmp = messageFolder + MSG_PREV_IMAGE ;
@@ -967,7 +977,7 @@ public class MessageTask {
 			scale = 16f/152;
 			break;
 		case MessageType.MESSAGE_TYPE_32_DOT:
-			scale = 1f;
+			scale = 32f/152;
 			break;
 		default:
 			break;
@@ -1010,7 +1020,7 @@ public class MessageTask {
 			scale = 16f/152;
 			break;
 		case MessageType.MESSAGE_TYPE_32_DOT:
-			scale = 1f;
+			scale = 32f/152;
 			break;
 		default:
 			break;
