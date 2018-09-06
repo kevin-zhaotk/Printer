@@ -558,7 +558,7 @@ public class MessageTask {
 		// 生成bin文件
 		BinFileMaker maker = new BinFileMaker(mContext);
 		/** if high resolution, keep original width */
-		if (msgObj.getResolution() || (getHeadType() == MessageType.MESSAGE_TYPE_16_DOT)) {
+		if (msgObj.getResolution() || (getHeadType() == MessageType.MESSAGE_TYPE_16_DOT) || (getHeadType() == MessageType.MESSAGE_TYPE_32_DOT)) {
 			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth, bHeight, true), msgObj.getPNozzle().mHeads);
 		} else {
 			mDots = maker.extract(Bitmap.createScaledBitmap(bmp, bWidth/2, bHeight, true), msgObj.getPNozzle().mHeads);
@@ -1030,6 +1030,7 @@ public class MessageTask {
 	
 	public static int getHeight(int type) {
 		int scale = 152;
+		Debug.d(TAG, "--->getHeight type = " + type);
 		switch (type) {
 		case MessageType.MESSAGE_TYPE_12_7:
 		case MessageType.MESSAGE_TYPE_12_7_S:
@@ -1062,7 +1063,7 @@ public class MessageTask {
 			scale = 32;
 			break;
 		case MessageType.MESSAGE_TYPE_32_DOT:
-			scale = 152;
+			scale = 32;
 			break;
 		default:
 			break;

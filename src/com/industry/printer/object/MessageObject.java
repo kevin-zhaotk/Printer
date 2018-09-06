@@ -340,9 +340,9 @@ public class MessageObject extends BaseObject {
 			
 		} else if (mPNozzle.mType == MessageType.MESSAGE_TYPE_32_DOT) {
 
-			if (size == 3.2f * 12) {
+			if (size == 38) {
 				return mDot_32_Size[0];
-			} else if (size == 6.4f * 12) {
+			} else if (size == 76) {
 				return mDot_32_Size[1];
 			} else {
 				return mDot_32_Size[2];

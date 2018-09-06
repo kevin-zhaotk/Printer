@@ -646,20 +646,21 @@ public class BaseObject{
 			return;
 		}
 		int type = mTask.getHeadType();
+		String dspH = getDisplayHeight();
 		switch (type) {
 			case MessageType.MESSAGE_TYPE_16_DOT:
-				Debug.d(TAG, "--->display H = " + getDisplayHeight() + "   mHeight: " + mHeight);
-				if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+				Debug.d(TAG, "--->display H = " + dspH + "   mHeight: " + mHeight);
+				if (MessageObject.mDotSizes[0].equalsIgnoreCase(dspH)) {
 					mHeight = 152/2;
 				} else {
 					mHeight = 152;
 				}
 				break;
 			case MessageType.MESSAGE_TYPE_32_DOT:
-				Debug.d(TAG, "--->display H = " + getDisplayHeight() + "   mHeight: " + mHeight);
-				if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[0])) {
+				Debug.d(TAG, "--->display H = " + dspH + "   mHeight: " + mHeight);
+				if (MessageObject.mDotSizes[0].equalsIgnoreCase(dspH)) {
 					mHeight = 152/4;
-				} else if (getDisplayHeight().equalsIgnoreCase(MessageObject.mDotSizes[1])) {
+				} else if (MessageObject.mDotSizes[1].equalsIgnoreCase(dspH)) {
 					mHeight = 152/2;
 				} else {
 					mHeight = 152;
