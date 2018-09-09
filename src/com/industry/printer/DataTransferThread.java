@@ -182,6 +182,17 @@ public class DataTransferThread {
 		}
 	};
 
+	public void resetTask(List<MessageTask> task) {
+		synchronized (DataTransferThread.class) {
+			mIndex = 0;
+			mDataTask.clear();
+			for (MessageTask t : task) {
+				DataTask data = new DataTask(mContext, t);
+				mDataTask.add(data);
+			}
+		}
+	}
+
 	public void initDataBuffer(Context context, List<MessageTask> task) {
 		if (mDataTask == null) {
 			mDataTask = new ArrayList<DataTask>();
@@ -444,27 +455,29 @@ public class DataTransferThread {
 					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
 					mNeedUpdate = false;
 
-					if (!mDataTask.get(index()).isReady) {
-						mRunning = false;
-						if (mCallback != null) {
-							mCallback.OnFinished(CODE_BARFILE_END);
+					synchronized (DataTransferThread.class) {
+						if (!mDataTask.get(index()).isReady) {
+							mRunning = false;
+							if (mCallback != null) {
+								mCallback.OnFinished(CODE_BARFILE_END);
+							}
+							break;
 						}
-						break;
+						Debug.d(TAG, "===>write Data");
+						FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length * 2);
+						Debug.d(TAG, "===>write Data finish");
+						last = SystemClock.currentThreadTimeMillis();
+						countDown();
+						mInkListener.onCountChanged();
+						mScheduler.schedule();
+						if (mCallback != null) {
+							mCallback.onComplete();
+						}
+						next();
+						Debug.d(TAG, "===>buffer getPrintbuffer");
+						buffer = mDataTask.get(index()).getPrintBuffer();
+						Debug.d(TAG, "===>buffer getPrintbuffer finish");
 					}
-					Debug.d(TAG, "===>write Data");
-					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
-					Debug.d(TAG, "===>write Data finish");
-					last = SystemClock.currentThreadTimeMillis();
-					countDown();
-					mInkListener.onCountChanged();
-					mScheduler.schedule();
-					if (mCallback != null) {
-						mCallback.onComplete();
-					}
-					next();
-					Debug.d(TAG, "===>buffer getPrintbuffer");
-					buffer = mDataTask.get(index()).getPrintBuffer();
-					Debug.d(TAG, "===>buffer getPrintbuffer finish");
 				}
 
 				if(mNeedUpdate == true) {

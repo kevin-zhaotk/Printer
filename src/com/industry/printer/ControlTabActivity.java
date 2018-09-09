@@ -56,6 +56,8 @@ import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
 import com.industry.printer.object.TlkObject;
+import com.industry.printer.ui.CustomerDialog.ConfirmDialog;
+import com.industry.printer.ui.CustomerDialog.DialogListener;
 import com.industry.printer.ui.CustomerDialog.MessageGroupsortDialog;
 import com.industry.printer.ui.ExtendMessageTitleFragment;
 import com.industry.printer.ui.CustomerAdapter.PreviewAdapter;
@@ -267,6 +269,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public static final int MESSAGE_RFID_OFF_H7 = 18;
 
 	public static final int MESSAGE_OPEN_GROUP = 19;
+
+	public static final int MESSAGE_OPEN_NEXT_MSG_SUCCESS = 20;
+
 	/**
 	 * the bitmap for preview
 	 */
@@ -726,7 +731,12 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					progressDialog();
 					
 					mObjPath = msg.getData().getString("file");
+
 					final boolean printAfterLoad = msg.getData().getBoolean("printAfterLoad", false);
+
+					//load next during printing
+					final boolean printNext = msg.getData().getBoolean("printNext", false);
+
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
@@ -752,10 +762,16 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 								MessageTask task = new MessageTask(mContext, mObjPath);
 								mMsgTask.add(task);
 							}
+							if (printNext) {
+								mHandler.sendEmptyMessage(MESSAGE_OPEN_NEXT_MSG_SUCCESS);
+								return;
+							}
 							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
 							if (printAfterLoad) {
 								mHandler.sendEmptyMessageDelayed(MESSAGE_PRINT_CHECK_UID, 1000);
 							}
+
+
 						}
 					}.start();
 					sendToRemote(mContext.getString(R.string.str_tlk_opening));
@@ -782,6 +798,17 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						}
 					});
 					dialog.show();
+					break;
+				case MESSAGE_OPEN_NEXT_MSG_SUCCESS:
+					mDTransThread.initDataBuffer(mContext, mMsgTask);
+					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
+					dispPreview(mPreBitmap);
+					refreshCount();
+					mMsgFile.setText(mObjPath);
+
+					mSysconfig.saveLastMsg(mObjPath);
+					dismissProgressDialog();
+
 					break;
 				case MESSAGE_OPEN_MSG_SUCCESS:
 					
@@ -1260,8 +1287,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mBtnClean.setEnabled(false);
 				mTvClean.setTextColor(Color.DKGRAY);
 
-				mMsgNext.setClickable(false);
-				mMsgPrev.setClickable(false);
+				// mMsgNext.setClickable(false);
+				// mMsgPrev.setClickable(false);
 				ExtGpio.writeGpio('b', 11, 1);
 				break;
 			case STATE_STOPPED:
@@ -1276,8 +1303,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mBtnClean.setEnabled(true);
 				mTvClean.setTextColor(Color.BLACK);
 
-				mMsgNext.setClickable(true);
-				mMsgPrev.setClickable(true);
+				// mMsgNext.setClickable(true);
+				// mMsgPrev.setClickable(true);
 				ExtGpio.writeGpio('b', 11, 0);
 				break;
 			default:
@@ -1590,10 +1617,29 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mScrollView.smoothScrollBy(400, 0);
 				break;
 			case R.id.ctrl_btn_up:
-				loadMessage(false);
+				ConfirmDialog dlg = new ConfirmDialog(mContext, R.string.message_confirm_printnext);
+				dlg.setListener(new DialogListener() {
+					@Override
+					public void onConfirm() {
+						super.onConfirm();
+						loadMessage(false);
+					}
+
+				});
+				dlg.show();
+
 				break;
 			case R.id.ctrl_btn_down:
-				loadMessage(true);
+				ConfirmDialog dlg1 = new ConfirmDialog(mContext, R.string.message_confirm_printnext);
+				dlg1.setListener(new DialogListener() {
+					@Override
+					public void onConfirm() {
+						super.onConfirm();
+						loadMessage(false);
+					}
+
+				});
+				dlg1.show();
 				break;
 			default:
 				break;

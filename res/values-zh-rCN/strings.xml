@@ -784,7 +784,7 @@
 	<string name="tips_export_message">正在导出信息...</string>
 	<string name="tips_export_sysconf">正在导出系统配置...</string>
 	<string name="tips_export_resource">正在导出资源文件...</string>
-	
-	
-	
+
+
+	<string name="message_confirm_printnext">确定切换打印信息?</string>
 </resources>
