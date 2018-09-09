@@ -370,6 +370,7 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 										} catch (NumberFormatException e) {
 											e.printStackTrace();
 										}
+										//Debug.d(TAG, "--->cp1 = " + cp1 + "  cp2 = " + cp2);
 										if (cp1 > cp2) {
 											return 1;
 										} else if (cp1 == cp2) {

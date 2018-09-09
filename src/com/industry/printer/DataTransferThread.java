@@ -429,6 +429,7 @@ public class DataTransferThread {
 			int cH = mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads();
 			Debug.d(TAG, "--->cH: " + cH);
 			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, cH);
+			// int n=0;
 
 			Debug.e(TAG, "--->write data");
 			FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
@@ -450,6 +451,7 @@ public class DataTransferThread {
 				} else if (writable == -1) {
 //					Debug.d(TAG, "--->pollstate " + writable);
 				} else {
+					// BinCreater.saveBin("/mnt/sdcard/print_" + (n++) + ".bin", buffer, cH);
 //					Debug.d(TAG, "--->FPGA buffer is empty");
 					mInterval = SystemClock.currentThreadTimeMillis() - last;
 					mHandler.removeMessages(MESSAGE_DATA_UPDATE);

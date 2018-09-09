@@ -106,6 +106,7 @@ public class DataTask {
 		if (task != null) {
 			mObjList = task.getObjects();
 		}
+		
 		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
 		mExtendStat = interceptor.getExtend();
 		mDots = 0;

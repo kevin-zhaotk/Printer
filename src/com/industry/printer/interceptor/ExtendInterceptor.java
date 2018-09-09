@@ -3,12 +3,15 @@ package com.industry.printer.interceptor;
 import android.content.Context;
 
 import com.industry.printer.FileFormat.SystemConfigFile;
-import com.printer.corelib.Debug;
+import com.industry.printer.Utils.Debug;
+
 
 /**
  *
  */
 public class ExtendInterceptor {
+	
+	private final static String TAG = ExtendInterceptor.class.getSimpleName();
 
     private static final int EXTEND_PARAM = 37;
     private Context mContext;
@@ -24,6 +27,7 @@ public class ExtendInterceptor {
 
         int base = extend/10;
         int ext = extend%10;
+        Debug.d(TAG, "--->getExtend  base = " + base + "  ext = " + ext);
         if (base < 1 || ext <= 1) {
             // no extension
             return ExtendStat.NONE;
