@@ -52,6 +52,8 @@ import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
+import com.industry.printer.interceptor.ExtendInterceptor;
+import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -152,6 +154,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public Handler mCallback;
 
 	private boolean mFlagAlarming = false;
+	
+	private ExtendStat extendStat = null;
 	
 	public static FileInputStream mFileInputStream;
 	Vector<Vector<TlkObject>> mTlkList;
@@ -878,14 +882,24 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					mHandler.sendEmptyMessageDelayed(MESSAGE_PAOMADENG_TEST, 1000);
 					break;
 				case MESSAGE_PRINT_CHECK_UID:
+					Debug.d(TAG, "--->check uid begin");
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						Debug.d(TAG, "--->printing...");
 						break;
 					}
-					//Debug.d(TAG, "--->initDTThread");
-					if (mDTransThread == null) {
+					Debug.d(TAG, "--->initDTThread");
+					
+					ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+					ExtendStat stat = interceptor.getExtend();
+					boolean statChanged = false;
+					if (stat != extendStat) {
+						statChanged = true;
+						extendStat = stat;
+					}
+					if (mDTransThread == null || statChanged) {
 						initDTThread();
 					}
+					Debug.d(TAG, "--->initDTThread ok");
 					if (mDTransThread == null) {
 						ToastUtil.show(mContext, R.string.str_toast_no_message);
 						break;
@@ -903,7 +917,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
-
+					Debug.d(TAG, "--->print start");
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						sendToRemote("error: " + mContext.getString(R.string.str_print_thread_create_err));
 						break;
@@ -913,6 +927,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						sendToRemote("error: " + mContext.getString(R.string.str_toast_no_ink));
 						return;
 					}
+					Debug.d(TAG, "--->check rfid ok");
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						ToastUtil.show(mContext, R.string.str_print_printing);
 						sendToRemote("error: " + mContext.getString(R.string.str_print_printing));

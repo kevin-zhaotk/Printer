@@ -418,7 +418,9 @@ public class DataTransferThread {
 		/*逻辑要求，必须先发数据*/
 
 			int index = index();
+			Debug.d(TAG, "--->start print printbuffer");
 			buffer = mDataTask.get(index).getPrintBuffer();
+			Debug.d(TAG, "--->start print printbuffer ok");
 			int type = mDataTask.get(index).getHeadType();
 
 			FileUtil.deleteFolder("/mnt/sdcard/print.bin");
@@ -427,7 +429,7 @@ public class DataTransferThread {
 			ExtendStat extend = interceptor.getExtend();
 			// save print.bin to /mnt/sdcard/ folder
 			int cH = mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads();
-			Debug.d(TAG, "--->cH: " + cH);
+			//Debug.d(TAG, "--->cH: " + cH);
 			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, cH);
 			// int n=0;
 

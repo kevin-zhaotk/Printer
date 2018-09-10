@@ -15,9 +15,13 @@ public class ExtendInterceptor {
 
     private static final int EXTEND_PARAM = 37;
     private Context mContext;
-
+    
+    private static ExtendStat lastStat;
+    private boolean changed = false;
+    
+    
     public ExtendInterceptor(Context ctx) {
-        mContext = ctx;
+        mContext = ctx;	
     }
 
 
