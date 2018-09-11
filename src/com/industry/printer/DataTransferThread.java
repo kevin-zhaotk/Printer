@@ -416,9 +416,10 @@ public class DataTransferThread {
 			char[] buffer;
 			long last = 0;
 		/*逻辑要求，必须先发数据*/
-
+			Debug.d(TAG, "--->print run");
 			int index = index();
 			buffer = mDataTask.get(index).getPrintBuffer();
+			Debug.d(TAG, "--->print buffer ready");
 			int type = mDataTask.get(index).getHeadType();
 
 			FileUtil.deleteFolder("/mnt/sdcard/print.bin");

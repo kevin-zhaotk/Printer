@@ -52,6 +52,8 @@ import com.industry.printer.hardware.RFIDDevice;
 import com.industry.printer.hardware.RFIDManager;
 import com.industry.printer.hardware.RTCDevice;
 import com.industry.printer.hardware.UsbSerial;
+import com.industry.printer.interceptor.ExtendInterceptor;
+import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
 import com.industry.printer.object.BarcodeObject;
 import com.industry.printer.object.BaseObject;
 import com.industry.printer.object.CounterObject;
@@ -164,6 +166,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	public boolean isRunning;
 	// public PrintingThread mPrintThread;
 	public DataTransferThread mDTransThread;
+	
+	private ExtendStat extendStat = null;
 	
 	public int mIndex;
 	public TextView mPrintStatus;
@@ -800,6 +804,9 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					dialog.show();
 					break;
 				case MESSAGE_OPEN_NEXT_MSG_SUCCESS:
+					if (mDTransThread == null) {
+						break;
+					}
 					mDTransThread.initDataBuffer(mContext, mMsgTask);
 					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
 					dispPreview(mPreBitmap);
@@ -883,7 +890,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					//Debug.d(TAG, "--->initDTThread");
-					if (mDTransThread == null) {
+					ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+					ExtendStat stat = interceptor.getExtend();
+					boolean statChanged = false;
+					if (stat != extendStat) {
+						statChanged = true;
+						extendStat = stat;
+					}
+					if (mDTransThread == null  || statChanged) {
 						initDTThread();
 					}
 					if (mDTransThread == null) {
@@ -903,7 +917,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					break;
 				case RFIDManager.MSG_RFID_CHECK_SUCCESS:
 				case MESSAGE_PRINT_START: 
-
+					Debug.d(TAG, "--->print start");
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						sendToRemote("error: " + mContext.getString(R.string.str_print_thread_create_err));
 						break;
@@ -913,6 +927,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						sendToRemote("error: " + mContext.getString(R.string.str_toast_no_ink));
 						return;
 					}
+					Debug.d(TAG, "--->check rfid ok");
 					if (mDTransThread != null && mDTransThread.isRunning()) {
 						ToastUtil.show(mContext, R.string.str_print_printing);
 						sendToRemote("error: " + mContext.getString(R.string.str_print_printing));
@@ -933,6 +948,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					} else {
 						mFlagAlarming = false;
 					}
+					Debug.d(TAG, "--->checkQRFile ok");
 					List<DataTask> tasks = mDTransThread.getData();
 					DataTask task = tasks.get(0);
 //					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
@@ -1658,6 +1674,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		Message message = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", msg);
+		bundle.putBoolean("printNext", true);
 		message.setData(bundle);
 		mHandler.sendMessageDelayed(message, 100);
 	}
