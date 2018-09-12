@@ -504,6 +504,11 @@ public class DataTask {
 		if (object != null) {
 			heads = mTask.getHeads();
 		}
+
+		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+		if (interceptor.getExtend() != ExtendStat.NONE) {
+			heads = interceptor.getExtend().activeNozzleCount();
+		}
 		Debug.d(TAG, "--->type=" + heads);
 
 		for (int i = 0; i < heads; i++) {
