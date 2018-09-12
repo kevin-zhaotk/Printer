@@ -807,10 +807,10 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					if (mDTransThread == null) {
 						break;
 					}
-					mDTransThread.initDataBuffer(mContext, mMsgTask);
+					mDTransThread.resetTask(mMsgTask);
 					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
 					dispPreview(mPreBitmap);
-					refreshCount();
+//					refreshCount();
 					mMsgFile.setText(mObjPath);
 
 					mSysconfig.saveLastMsg(mObjPath);
