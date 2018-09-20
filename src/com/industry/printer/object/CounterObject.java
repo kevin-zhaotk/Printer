@@ -19,6 +19,8 @@ import android.util.Log;
 
 public class CounterObject extends BaseObject {
 
+	private static final String TAG_STRING = CounterObject.class.getSimpleName();
+	
 	public int mBits;
 	public boolean mDirection;
 	public int mMax;
