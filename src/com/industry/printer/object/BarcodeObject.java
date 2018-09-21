@@ -10,6 +10,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.datamatrix.DataMatrixWriter;
 import com.google.zxing.oned.EAN13Writer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.ByteMatrix;
@@ -213,7 +214,11 @@ public class BarcodeObject extends BaseObject {
 			mBitmap = draw(mContent, (int)mWidth, (int)mHeight);
 		} else {
 			mWidth = mHeight;
-			mBitmap = drawQR(mContent, (int)mWidth, (int)mHeight);
+			if (mFormat.equalsIgnoreCase("DM") || mFormat.equalsIgnoreCase("DATA_MATRIX")) {
+				return drawDataMatrix(mContent, (int) mWidth, (int) mHeight);
+			} else {
+				mBitmap = drawQR(mContent, (int) mWidth, (int) mHeight);
+			}
 		}
 		// mBitmap = draw(mContent, (int)mWidth, (int)mHeight);
 		setWidth(mWidth);
@@ -229,7 +234,11 @@ public class BarcodeObject extends BaseObject {
 	@Override
 	public Bitmap makeBinBitmap(Context ctx, String content, int ctW, int ctH, String font) {
 		if (is2D()) {
-			return drawQR(content, ctW, ctH);
+			if (mFormat.equalsIgnoreCase("DM") || mFormat.equalsIgnoreCase("DATA_MATRIX")) {
+				return drawDataMatrix(content, ctW, ctH);
+			} else {
+				return drawQR(content, ctW, ctH);
+			}
 		} else {
 			return draw(content, ctW, ctH);
 		}
@@ -263,6 +272,32 @@ public class BarcodeObject extends BaseObject {
 		} catch (Exception e) {
 		}
 		return null;
+	}
+
+	private Bitmap drawDataMatrix(String content, int w, int h) {
+		DataMatrixWriter writer = new DataMatrixWriter();
+		BitMatrix matrix = writer.encode(content, getBarcodeFormat(mFormat), w, h);
+		int width = matrix.getWidth();
+		int height = matrix.getHeight();
+		int[] pixels = new int[width * height];
+
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				if (matrix.get(x, y))
+				{
+					pixels[y * width + x] = mReverse ? 0xffffffff : 0xff000000;
+				} else {
+					pixels[y * width + x] = mReverse ? 0xff000000 : 0xffffffff;
+				}
+			}
+		}
+		/* 条码/二维码的四个边缘空出20像素作为白边 */
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
+
+		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		return bitmap;
 	}
 	
 	private Bitmap draw(String content, int w, int h) {
