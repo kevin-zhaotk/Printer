@@ -1651,7 +1651,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					@Override
 					public void onConfirm() {
 						super.onConfirm();
-						loadMessage(false);
+						loadMessage(true);
 					}
 
 				});

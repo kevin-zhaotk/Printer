@@ -431,7 +431,7 @@ public class DataTransferThread {
 			// save print.bin to /mnt/sdcard/ folder
 			int cH = mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads();
 			Debug.d(TAG, "--->cH: " + cH);
-			// BinCreater.saveBin("/mnt/sdcard/print_" + (testCount++) + ".bin", buffer, cH);
+			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, cH);
 			int n=0;
 
 			Debug.e(TAG, "--->write data");

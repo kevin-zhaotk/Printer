@@ -3,6 +3,8 @@ package com.industry.printer.Utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,26 +57,23 @@ public class CrashCatcher implements UncaughtExceptionHandler {
 			return;
 		}
 		
-		FileWriter fw = null;
 		File log = new File(usbs.get(0) + "/log-" + getTimeString() + ".txt");
+		
 		try {
-			fw = new FileWriter(log);
-			fw.write(PlatformInfo.getVersionName(mContext));
-			fw.append("\n");
-			fw.append(arg1.getMessage());
-			fw.flush();
-			fw.close();
+			PrintWriter pWriter = new PrintWriter(log);
+			arg1.printStackTrace(pWriter);
+			Throwable cause = arg1.getCause();
+			while (cause != null) {
+				cause.printStackTrace(pWriter);
+				cause = cause.getCause();
+			}
+			pWriter.flush();
+			pWriter.close();
+			
 		} catch (IOException e) {
 			Debug.e(TAG, e.getMessage());
 		} finally {
-			if (fw != null) {
-				try {
-					fw.close();
-				} catch (IOException e) {
-					Debug.e(TAG, e.getMessage());
-				}
-				
-			}
+			
 		}
 		
 		mDefaultHandler.uncaughtException(thread, arg1);

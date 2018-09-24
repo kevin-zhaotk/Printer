@@ -71,6 +71,7 @@ public class Configs {
 
 
 	public static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_4444;
+	public static final Bitmap.Config BITMAP_PRE_CONFIG = Bitmap.Config.ARGB_4444;
 	
 	/**
 	 * 一个单位的墨水量对应的打点数

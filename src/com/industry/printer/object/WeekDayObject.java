@@ -72,7 +72,7 @@ public class WeekDayObject extends BaseObject {
 		if (mWidth == 0) {
 			setWidth(width);
 		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_PRE_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 	 
 		Canvas can = new Canvas(bitmap);

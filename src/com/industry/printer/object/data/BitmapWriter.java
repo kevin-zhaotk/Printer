@@ -109,7 +109,7 @@ public class BitmapWriter {
         }
         try{
             FileOutputStream out = new FileOutputStream(f);
-            bmp.compress(CompressFormat.WEBP, 90, out);
+            bmp.compress(CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
             Debug.d(TAG, "PNG save ok");

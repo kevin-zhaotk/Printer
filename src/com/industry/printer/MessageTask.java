@@ -25,6 +25,7 @@ import com.industry.printer.PHeader.PrinterNozzle;
 import com.industry.printer.Utils.ConfigPath;
 import com.industry.printer.Utils.Configs;
 import com.industry.printer.Utils.Debug;
+import com.industry.printer.Utils.FileUtil;
 import com.industry.printer.Utils.PlatformInfo;
 import com.industry.printer.Utils.ToastUtil;
 import com.industry.printer.data.BinFileMaker;
@@ -251,7 +252,10 @@ public class MessageTask {
 	
 	public boolean createTaskFolderIfNeed() {
 		File dir = new File(ConfigPath.getTlkDir(mName));
-		if(!dir.exists() && !dir.mkdirs())
+		if (dir.exists()) {
+			FileUtil.deleteFolder(dir.getAbsolutePath());
+		}
+		if(!dir.mkdirs())
 		{
 			Debug.d(TAG, "create dir error "+dir.getPath());
 			return false;
@@ -731,7 +735,7 @@ public class MessageTask {
 		width = (int)(width > o.getXEnd() ? width : o.getXEnd());
 		}
 
-		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_CONFIG);
+		Bitmap bmp = Bitmap.createBitmap(width , Configs.gDots, Configs.BITMAP_PRE_CONFIG);
 		Debug.d(TAG, "drawAllBmp width="+width+", height="+Configs.gDots);
 		Canvas can = new Canvas(bmp);
 		can.drawColor(Color.WHITE);

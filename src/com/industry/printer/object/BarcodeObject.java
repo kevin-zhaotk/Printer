@@ -276,6 +276,7 @@ public class BarcodeObject extends BaseObject {
 
 	private Bitmap drawDataMatrix(String content, int w, int h) {
 		DataMatrixWriter writer = new DataMatrixWriter();
+		
 		BitMatrix matrix = writer.encode(content, getBarcodeFormat(mFormat), w, h);
 		int width = matrix.getWidth();
 		int height = matrix.getHeight();

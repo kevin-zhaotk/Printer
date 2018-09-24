@@ -9,7 +9,7 @@
 	<string name="ControlTab">Control</string>
 	<string name="manualCtrlTab">Control man</string>
 	<string name="Edit">Editar</string>
-	<string name="Settings">"Configura��es"</string>
+	<string name="Settings">"configuração"</string>
 	<string name="str_btn_start">Iniciar</string>
 	<string name="str_btn_stop">Parar</string>
 	<string name="str_btn_clean">Purga</string>
@@ -22,7 +22,7 @@
 	<string name="str_btn_send">Enviar</string>
 	<string name="str_btn_set">Editar</string>
 	<string name="str_btn_get">Texto</string>
-	<string name="str_btn_print">"Impress�o"</string>
+	<string name="str_btn_print">"Impressão"</string>
 	<string name="str_btn_finish">Terminar</string>
 	<string name="str_btn_header1">Pen1</string>
 	<string name="str_btn_header2">Pen2</string>
@@ -33,17 +33,17 @@
 	<string name="strPhotocellState">Sensor</string>
 	<string name="strEncoderState">Encoder</string>
 	<string name="strPrintstate">Printing：</string>
-	<string name="strPrinting">"Impress�o"</string>
+	<string name="strPrinting">"Impressão"</string>
 	<string name="strPrintok">Pronto</string>
 	<string name="strOn">Ligar</string>
 	<string name="strOff">Desligar</string>
-	<string name="strwaitting">"Impress�o......"</string>
+	<string name="strwaitting">"Impressão......"</string>
 	<string name="str_csvfile">Csv</string>
 	<string name="str_tlkfile">Tlk</string>
 	<string name="str_binfile">Abrir</string>
 	<string name="str_openfile">Abrir...</string>
 	<string name="str_mvforward">Para Frente</string>
-	<string name="str_mvbackward">"Para Tr�s"</string>
+	<string name="str_mvbackward">"Para trás"</string>
 	<string name="str_preview">Visualizar</string>
 	
 	<string name="str_del">Deletar</string>
@@ -70,7 +70,7 @@
 	<string name="strLinewidth">Largura Linha</string>
 	<string name="strBits">Digitos</string>
 	<string name="strImage">Imagem</string>
-	<string name="strDirect">"Dire��o"</string>
+	<string name="strDirect">"Direção"</string>
 	<string name="strShift1">Shift1</string>
 	<string name="strShift2">Shift2</string>
 	<string name="strShift3">Shift3</string>
@@ -79,7 +79,7 @@
 	<string name="strInfoname">Objeto</string>
 	<string name="strHeadType">Pen Tipo</string>
 	<string name="strUpgradeConfirm">Atualizar?</string>
-	<string name="strUpgradeNoApk">"Nenhum arquivo de atualiza��o!!!"</string>
+	<string name="strUpgradeNoApk">"Nenhum arquivo de A aplicação de!!!"</string>
 	<string name="strSaving">Salvando, Aguarde...</string>
 	<string name="strLoading">Carregando, Aguarde...</string>
 	<string name="strInsertSerial">Conecte o dispositivo...</string>
@@ -108,16 +108,23 @@
 	</string-array>
 	<string name="strCode">Tipo Codigo</string>
 	<string-array name="strCodeArray">
-	    <item>ENA128</item>
+	    <item>EAN8</item>
+	    <item>EAN13</item>
+	    <item>EAN128</item>
+	    <item>CODE_128</item>
+	    <item>CODE_39</item>
+	    <item>UPC_A</item>
+	    <item>ITF_14</item>
 	    <item>QR</item>
+		<item>DM</item>
 	</string-array>
 	
 	<string-array name="strLineArray">
 	    <item>Linha Solida</item>
-	    <item>"Linha tra�o"</item>
+	    <item>"Linha pontilhada"</item>
 	    <item>Linha ponto</item>
-	    <item>"Tra�o ponto linha"</item>
-	    <item>"Tra�o ponto ponto linha"</item>
+	    <item>"Traço - Ponto linha"</item>
+	    <item>"Traço ponto ponto linha"</item>
 	</string-array>
 	<string name="strLinetype">Tipo Linha</string>
 	<string name="str_ok">OK</string>
@@ -190,7 +197,7 @@
 	<string name="strTrigger_key">trigger_key</string>
 	<string name="strTriggername">04.Trigger</string>
 	<string name="strTrigger_summary">Trigger Mode</string>
-	<string name="strDirection_key">"Dire��o_key"</string>
+	<string name="strDirection_key">"Direcção_key"</string>
 	<string name="strSyncname">05.Encoder</string>
 	<string name="strDirectionname">05.Sync</string>
 	<string name="strBold">06.Negrito</string>
@@ -339,14 +346,14 @@
 	<string name="str_file_cancel">Cancelar</string>
 	<string name="str_setting_upgrade">Atualizar</string>
 	
-	<string name="str_month">M�s</string>
+	<string name="str_month">"Mês"</string>
 	<string name="str_year">Ano</string>
 	<string name="str_date">Data</string>
 	<string name="str_hour">Hora</string>
 	<string name="str_minute">Minuto</string>
 	<string name="str_format">24-Formato</string>
 	<string name="str_format_24">Sim</string>
-	<string name="str_format_12">N�o</string>
+	<string name="str_format_12">"Não"</string>
 	<string name="cor_unit">dp</string>
 	<string name="font_unit">mm</string>
 	
@@ -416,12 +423,12 @@
 <!-- 树莓派3 设置界面相关 -->
 	
 	<string name="str_textview_param1">01. Velocidade</string>
-	<string name="str_textview_param2">02. Dire��o</string>
-	<string name="str_textview_param3">03. Resolu��o</string> 
+	<string name="str_textview_param2">02. Direcção</string>
+	<string name="str_textview_param3">03. Resolução</string>
 	<string name="str_textview_param4">04. Atraso</string>
 	<string name="str_textview_param5">05. Sensor</string>
 	<string name="str_textview_param6">06. Encoder</string>
-	<string name="str_textview_param7">07. Repetir Impress�o</string>
+	<string name="str_textview_param7">07. Repetir Impressão</string>
 	<string name="str_textview_param8">08. Selecionar Bico</string>
 	<string name="str_textview_param9">09. Diametro polia</string>
 	<string name="str_textview_param10">10. Encoder PPR</string>

@@ -169,7 +169,7 @@ public class RealtimeYear extends BaseObject {
 
 		int width = (int)Paint.measureText(str_new_content);
 		Debug.d(TAG, "--->content: " + getContent() + "  width=" + width);
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_PRE_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 
 		Canvas can = new Canvas(bitmap);
