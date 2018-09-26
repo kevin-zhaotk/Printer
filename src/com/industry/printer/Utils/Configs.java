@@ -32,6 +32,13 @@ public class Configs {
 	 */
 	public static final boolean IGNORE_RFID = false;
 
+	
+	/**
+	 * 开关配置：大字机的特殊版本，buffer宽度x8
+	 */
+	public static final boolean BUFFER_8 = false;
+	
+	
 	/** 每列的有效点阵数 **/
 	public static int gDots;
 	/** 每列的总字节数 **/
