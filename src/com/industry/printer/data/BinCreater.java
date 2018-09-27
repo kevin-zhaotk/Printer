@@ -345,17 +345,5 @@ public class BinCreater {
     	return true;
     }
     
-    public void buffer_8() {
-    	
-    	ByteArrayBuffer bf = new ByteArrayBuffer(mBinBits.length * 8);
-    	int bytesPerCol = mHeight%8==0? mHeight/8 : (mHeight/8+1);
-    	int columns = mBinBits.length/bytesPerCol;
-    	for (int i = 0; i < columns; i++) {
-			 bf.append(mBinBits, bytesPerCol * 8 * i, bytesPerCol);
-			 for (int j = 0; j < bytesPerCol * 7; j++) {
-				bf.append(0);
-			}
-		}
-    	mBinBits = bf.buffer();
-    }
+
 }

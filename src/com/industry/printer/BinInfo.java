@@ -2,6 +2,7 @@ package com.industry.printer;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +31,9 @@ import com.industry.printer.interceptor.ExtendInterceptor.ExtendStat;
  */
 public class BinInfo {
 	public static final String TAG="BinInfo";
-	
+
+	/* column extension ratio, only useful under big dot printer*/
+	private static int columnExtension = 1;
 	private File mFile;
 	private FileInputStream mFStream;
 	
@@ -88,6 +91,7 @@ public class BinInfo {
 	public ByteArrayInputStream mCacheStream;
 
 	public int mVarCount;
+
 
 	public BinInfo(String file) {
 		this(file, null, null);
@@ -328,7 +332,11 @@ public class BinInfo {
 		}
 		
 		// deal with extension, 1 to 2,4,6,8; 2 to 4, 6, 8;
+		// row extension
 		expend();
+
+		// column extension
+		expendColumn(8);
 
     	return extract(); // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
@@ -380,8 +388,12 @@ public class BinInfo {
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
+
+    	// row extension
    		expend();
-    	
+
+    	// column extension
+    	expendColumn(8);
     	return extract();
     }
     
@@ -418,9 +430,12 @@ public class BinInfo {
     	for(int i = 0; i < mBufferChars.length; i++) {
     		mBufferChars[i] = (char) ((char)((mBufferBytes[2*i+1] << 8) & 0x0ff00) | (mBufferBytes[2*i] & 0x0ff)); 
     	}
-    	
+
+    	// row entension
     	expend();
-    	
+
+   		// column extension
+   		expendColumn(8);
     	return extract();
     }
     
@@ -428,6 +443,8 @@ public class BinInfo {
     public static void overlap(byte[] dst, byte[] src, int x, int high)
     {
     	int len = src.length;
+		// column extension, adjust the x coordinate
+		x = x * columnExtension;
     	if(dst.length < x*high +src.length)
     	{
     		Debug.d(TAG, "dst buffer no enough space!!!!");
@@ -449,6 +466,9 @@ public class BinInfo {
     public static void overlap(char[] dst, char[] src, int x, int high)
     {
     	int len = src.length;
+		// column extension, adjust the x coordinate
+		x = x * columnExtension;
+
     	if(dst.length < x*high + src.length)
     	{
     		Debug.d(TAG, "dst buffer no enough space!!!! dst.len=" + dst.length + " , src=" + src.length + " , pos=" + x*high);
@@ -479,6 +499,8 @@ public class BinInfo {
      */
     public static void cover(char[] dst, char[] src, int x, int high) {
     	int len = src.length;
+		// column extension, adjust the x coordinate
+		x = x * columnExtension;
     	Debug.d(TAG, "--->cover: " + dst.length + "  " + x + "  " + high + "  " + src.length);
     	if(dst.length < x*high + src.length)
     	{
@@ -532,7 +554,10 @@ public class BinInfo {
     }
 
 
-    private void expend() {
+	/**
+	 * 1 to multi function
+	 */
+	private void expend() {
     	if (mExtend == null) {
     		return;
 		}
@@ -574,5 +599,30 @@ public class BinInfo {
     		mBytesPerHFeed *= scale;
 		}
 //		BinCreater.saveBin("/mnt/sdcard/print_bg1.bin", mBufferChars, mCharsPerHFeed * scale * 16);
+	}
+
+
+	/**
+	 * expend along horizontal space, 1 column to 2/3 or any columns
+	 * big dot machine
+	 * extend buffer to 8 times filled with 0
+	 */
+	public void expendColumn(int extension) {
+
+		if (!mTask.getNozzle().buffer8Enable || !Configs.BUFFER_8) {
+			columnExtension = 1;
+			return;
+		}
+		CharArrayWriter writer = new CharArrayWriter();
+
+		for (int i = 0; i < mColumn; i++) {
+			writer.write(mBufferChars, mCharsFeed * i, mCharsFeed);
+			for (int j = 0; j < mCharsFeed * (extension - 1); j++) {
+				writer.write(0x00);
+			}
+		}
+		mColumn = mColumn * extension;
+		columnExtension = extension;
+		mBufferChars = writer.toCharArray();
 	}
 }

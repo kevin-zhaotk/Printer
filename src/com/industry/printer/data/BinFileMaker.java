@@ -47,9 +47,7 @@ public class BinFileMaker {
 	
 	
 	public void save(String f) {
-		if (Configs.BUFFER_8) {
-			mBinCreater.buffer_8();
-		}
+
 		mBinCreater.saveBin(f);
 	}
 	

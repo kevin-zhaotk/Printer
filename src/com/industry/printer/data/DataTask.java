@@ -130,6 +130,9 @@ public class DataTask {
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
+		if (mTask.getNozzle().buffer8Enable && Configs.BUFFER_8 == true) {
+			buffer_8();
+		}
 		if (mBgBuffer == null) {
 			return false;
 		}
@@ -672,4 +675,5 @@ public class DataTask {
 		Debug.d(TAG, "--->column=" + mBinInfo.mColumn + ", charperh=" + mBinInfo.mCharsPerHFeed);
 		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsFeed*16);
 	}
+
 }
