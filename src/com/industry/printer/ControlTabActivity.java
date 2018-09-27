@@ -494,7 +494,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
 		mTvStop.setText(R.string.str_btn_stop);
-		mTvOpen.setText(R.string.str_btn_open);
+		mTvOpen.setText(R.string.str_openfile);
 		mTvClean.setText(R.string.str_btn_clean);
 		mTVPrinting.setText(R.string.str_state_printing);
 		mTVStopped.setText(R.string.str_state_stopped);
