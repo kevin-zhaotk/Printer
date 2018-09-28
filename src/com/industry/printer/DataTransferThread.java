@@ -191,6 +191,7 @@ public class DataTransferThread {
 			for (MessageTask t : task) {
 				DataTask data = new DataTask(mContext, t);
 				mDataTask.add(data);
+				data.prepareBackgroudBuffer();
 			}
 		}
 	}
@@ -228,7 +229,9 @@ public class DataTransferThread {
 
 
 	public List<DataTask> getData() {
-		return mDataTask;
+		synchronized (DataTransferThread.class) {
+			return mDataTask;
+		}
 	}
 
 	public DataTask getCurData() {
