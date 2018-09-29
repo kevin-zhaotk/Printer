@@ -609,6 +609,9 @@ public class BinInfo {
 	 */
 	public void expendColumn(int extension) {
 
+		if (mTask == null || mTask.getNozzle() == null) {
+			return;
+		}
 		if (!mTask.getNozzle().buffer8Enable || !Configs.BUFFER_8) {
 			columnExtension = 1;
 			return;
