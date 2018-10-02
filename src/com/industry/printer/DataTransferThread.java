@@ -193,6 +193,7 @@ public class DataTransferThread {
 				mDataTask.add(data);
 				data.prepareBackgroudBuffer();
 			}
+			mNeedUpdate = true;
 		}
 	}
 
