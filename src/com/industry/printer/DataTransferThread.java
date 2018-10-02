@@ -64,6 +64,8 @@ public class DataTransferThread {
 
 	private PrintTask mPrinter;
 	
+	private int testCount = 0;
+	
 	private InkLevelListener mInkListener = null;
 	
 	public static DataTransferThread getInstance() {
@@ -189,8 +191,11 @@ public class DataTransferThread {
 			for (MessageTask t : task) {
 				DataTask data = new DataTask(mContext, t);
 				mDataTask.add(data);
+				data.prepareBackgroudBuffer();
 			}
+			mNeedUpdate = true;
 		}
+		
 	}
 
 	public void initDataBuffer(Context context, List<MessageTask> task) {
@@ -226,7 +231,9 @@ public class DataTransferThread {
 
 
 	public List<DataTask> getData() {
-		return mDataTask;
+		synchronized (DataTransferThread.class) {
+			return mDataTask;
+		}
 	}
 
 	public DataTask getCurData() {
@@ -413,14 +420,16 @@ public class DataTransferThread {
 		@Override
 		public void run() {
 
-			char[] buffer;
+			char[] buffer = null;
 			long last = 0;
-		/*逻辑要求，必须先发数据*/
-
+			/*逻辑要求，必须先发数据*/
+			Debug.d(TAG, "--->print run");
 			int index = index();
 			Debug.d(TAG, "--->start print printbuffer");
 			buffer = mDataTask.get(index).getPrintBuffer();
-			Debug.d(TAG, "--->start print printbuffer ok");
+
+			Debug.d(TAG, "--->print buffer ready");
+
 			int type = mDataTask.get(index).getHeadType();
 
 			FileUtil.deleteFolder("/mnt/sdcard/print.bin");
@@ -431,29 +440,28 @@ public class DataTransferThread {
 			int cH = mDataTask.get(mIndex).getInfo().mBytesPerHFeed*8*mDataTask.get(mIndex).getHeads();
 			//Debug.d(TAG, "--->cH: " + cH);
 			BinCreater.saveBin("/mnt/sdcard/print.bin", buffer, cH);
-			// int n=0;
+			int n=0;
 
 			Debug.e(TAG, "--->write data");
 			FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 			last = SystemClock.currentThreadTimeMillis();
 
 			FpgaGpioOperation.init();
-			try {
-				Thread.sleep(500);
-			} catch (Exception e) {
-
-			}
+			
+			boolean isFirst = true;
 			while(mRunning == true) {
+				
 //				Debug.e(TAG, "--->start print");
 				//FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 				int writable = FpgaGpioOperation.pollState();
 				// writable = 1;
+//				Debug.e(TAG, "--->writable: " + writable);
 				if (writable == 0) { //timeout
 //					Debug.d(TAG, "--->timeout");
 				} else if (writable == -1) {
 //					Debug.d(TAG, "--->pollstate " + writable);
 				} else {
-					// BinCreater.saveBin("/mnt/sdcard/print_" + (n++) + ".bin", buffer, cH);
+//					
 //					Debug.d(TAG, "--->FPGA buffer is empty");
 					mInterval = SystemClock.currentThreadTimeMillis() - last;
 					mHandler.removeMessages(MESSAGE_DATA_UPDATE);
@@ -467,6 +475,17 @@ public class DataTransferThread {
 							}
 							break;
 						}
+//						if (isFirst) {
+//							next();
+//							Debug.d(TAG, "===>buffer getPrintbuffer");
+//							buffer = mDataTask.get(index()).getPrintBuffer();
+//							Debug.d(TAG, "===>buffer getPrintbuffer finish");
+//							isFirst = false;
+//						}
+						Debug.d(TAG, "===>buffer getPrintbuffer");
+						buffer = mDataTask.get(index()).getPrintBuffer();
+						Debug.d(TAG, "===>buffer getPrintbuffer finish");
+						//BinCreater.saveBin("/mnt/sdcard/print_" + (testCount++) + ".bin", buffer, cH);
 						Debug.d(TAG, "===>write Data");
 						FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length * 2);
 						Debug.d(TAG, "===>write Data finish");
@@ -478,9 +497,7 @@ public class DataTransferThread {
 							mCallback.onComplete();
 						}
 						next();
-						Debug.d(TAG, "===>buffer getPrintbuffer");
-						buffer = mDataTask.get(index()).getPrintBuffer();
-						Debug.d(TAG, "===>buffer getPrintbuffer finish");
+						
 					}
 				}
 

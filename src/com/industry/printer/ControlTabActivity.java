@@ -494,7 +494,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		tvMsg.setText(R.string.str_msg_name);
 		mTvStart.setText(R.string.str_btn_print);
 		mTvStop.setText(R.string.str_btn_stop);
-		mTvOpen.setText(R.string.str_btn_open);
+		mTvOpen.setText(R.string.str_openfile);
 		mTvClean.setText(R.string.str_btn_clean);
 		mTVPrinting.setText(R.string.str_state_printing);
 		mTVStopped.setText(R.string.str_state_stopped);
@@ -804,10 +804,13 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					dialog.show();
 					break;
 				case MESSAGE_OPEN_NEXT_MSG_SUCCESS:
-					mDTransThread.initDataBuffer(mContext, mMsgTask);
+					if (mDTransThread == null) {
+						break;
+					}
+					mDTransThread.resetTask(mMsgTask);
 					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
 					dispPreview(mPreBitmap);
-					refreshCount();
+//					refreshCount();
 					mMsgFile.setText(mObjPath);
 
 					mSysconfig.saveLastMsg(mObjPath);
@@ -888,7 +891,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						break;
 					}
 					Debug.d(TAG, "--->initDTThread");
-					
 					ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
 					ExtendStat stat = interceptor.getExtend();
 					boolean statChanged = false;
@@ -948,6 +950,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					} else {
 						mFlagAlarming = false;
 					}
+					Debug.d(TAG, "--->checkQRFile ok");
 					List<DataTask> tasks = mDTransThread.getData();
 					DataTask task = tasks.get(0);
 //					if (task == null || task.getObjList() == null || task.getObjList().size() == 0) {
@@ -1650,7 +1653,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					@Override
 					public void onConfirm() {
 						super.onConfirm();
-						loadMessage(false);
+						loadMessage(true);
 					}
 
 				});
@@ -1673,6 +1676,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		Message message = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", msg);
+		bundle.putBoolean("printNext", true);
 		message.setData(bundle);
 		mHandler.sendMessageDelayed(message, 100);
 	}

@@ -31,6 +31,7 @@ public enum PrinterNozzle {
     public final boolean mirrorEnable;  // 是否支持镜像
     public final boolean reverseEnable; // 是否支持反转
     public final boolean rotateAble;
+    public final boolean buffer8Enable; // buffer 8 times extension Switch
     /**
      *
      * @param type      喷头类型
@@ -71,11 +72,12 @@ public enum PrinterNozzle {
         switch (mType) {
             case 7:
             case 8:
-            case 9:
                 editZoomable = false;
+                buffer8Enable = true;
                 break;
             default:
                 editZoomable = true;
+                buffer8Enable = false;
                 break;
         }
 

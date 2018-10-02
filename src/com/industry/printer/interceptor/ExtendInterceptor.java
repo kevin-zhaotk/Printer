@@ -105,5 +105,13 @@ public class ExtendInterceptor {
                 return target/source;
             }
         }
+
+        /**
+         * real print headers after extension
+         * @return
+         */
+        public int activeNozzleCount() {
+            return target;
+        }
     }
 }

@@ -19,6 +19,8 @@ import android.util.Log;
 
 public class CounterObject extends BaseObject {
 
+	private static final String TAG_STRING = CounterObject.class.getSimpleName();
+	
 	public int mBits;
 	public boolean mDirection;
 	public int mMax;
@@ -291,7 +293,7 @@ public class CounterObject extends BaseObject {
 		if (mWidth == 0) {
 			setWidth(width);
 		}
-		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_CONFIG);
+		bitmap = Bitmap.createBitmap(width , (int)mHeight, Configs.BITMAP_PRE_CONFIG);
 		Debug.d(TAG,"--->getBitmap width="+mWidth+", mHeight="+mHeight);
 		mCan = new Canvas(bitmap);
 		FontMetrics fm = mPaint.getFontMetrics();

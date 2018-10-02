@@ -130,6 +130,7 @@ public class DataTask {
 			return false;
 		}
 		mBgBuffer = mBinInfo.getBgBuffer();
+		
 		if (mBgBuffer == null) {
 			return false;
 		}
@@ -504,6 +505,11 @@ public class DataTask {
 		if (object != null) {
 			heads = mTask.getHeads();
 		}
+
+		ExtendInterceptor interceptor = new ExtendInterceptor(mContext);
+		if (interceptor.getExtend() != ExtendStat.NONE) {
+			heads = interceptor.getExtend().activeNozzleCount();
+		}
 		Debug.d(TAG, "--->type=" + heads);
 
 		for (int i = 0; i < heads; i++) {
@@ -667,4 +673,5 @@ public class DataTask {
 		Debug.d(TAG, "--->column=" + mBinInfo.mColumn + ", charperh=" + mBinInfo.mCharsPerHFeed);
 		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsFeed*16);
 	}
+
 }

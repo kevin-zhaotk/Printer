@@ -437,7 +437,7 @@ public class RealtimeObject extends BaseObject {
 		Debug.e(TAG, "=============--->getScaledBitmap xEnd: " + mXcor_end + " x="+ mXcor + "  height=" + mHeight);
 		// meature();
 		
-		bitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Configs.BITMAP_CONFIG);
+		bitmap = Bitmap.createBitmap((int)(mXcor_end - mXcor) , (int)mHeight, Configs.BITMAP_PRE_CONFIG);
 		mCan = new Canvas(bitmap);
 		Log.d(TAG, "++++>x: " + getX() + "   " + getXEnd() + "  width=" + bitmap.getWidth());
 		for(BaseObject o : mSubObjs)
