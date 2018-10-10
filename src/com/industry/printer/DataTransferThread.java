@@ -508,6 +508,7 @@ public class DataTransferThread {
 					Debug.d(TAG, "===>buffer size="+buffer.length);
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length*2);
 					mHandler.sendEmptyMessageDelayed(MESSAGE_DATA_UPDATE, MESSAGE_EXCEED_TIMEOUT);
+					mNeedUpdate = false;
 				}
 				try {
 					Thread.sleep(10);
