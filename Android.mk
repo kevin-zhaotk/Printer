@@ -22,7 +22,7 @@ include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS)
 
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := zxingcore:libs/zxingcore.jar \
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \
 		corelib:libs/corelibrary.jar \
 		rxjava:libs/rxjava-1.3.4.jar \
 		rxandroid:libs/rxAndroid-1.1.0.jar
