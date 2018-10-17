@@ -100,6 +100,8 @@ public class SystemConfigFile{
 	
 	public static final int INDEX_DAY_START = 35;
 	
+	public static final int INDEX_SLANT = 35;
+	
 	public static final int INDEX_SPECIFY_HEADS = 42;
 	/*
 	 * 目前參數使用情況：
