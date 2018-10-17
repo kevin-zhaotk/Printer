@@ -568,6 +568,9 @@ public class DataTask {
 			}
 		}
 		
+		int slant = SystemConfigFile.getInstance(mContext).getParam(SystemConfigFile.INDEX_SLANT);
+		expendColumn(mBuffer, columns, slant);
+		
 	}
 	/**
 	 * 双列喷嘴用的，  以后不用了，   替换为旋转逻辑
@@ -672,6 +675,59 @@ public class DataTask {
 		// BinCreater.saveBin(path, preview, getInfo().mBytesPerHFeed*8*getHeads());
 		Debug.d(TAG, "--->column=" + mBinInfo.mColumn + ", charperh=" + mBinInfo.mCharsPerHFeed);
 		return BinFromBitmap.Bin2Bitmap(preview, mBinInfo.mColumn, mBinInfo.mCharsFeed*16);
+	}
+
+	/**
+	 * expend along horizontal space, 1 column to 2/3 or any columns
+	 * big dot machine
+	 * extend buffer to 8 times filled with 0
+	 */
+	public void expendColumn(char[] buffer, int columns, int slant) {
+
+		if (mTask == null || mTask.getNozzle() == null || !mTask.getNozzle().buffer8Enable) {
+			return;
+		}
+		int extension = 0;
+		int shift = 0;
+		if (slant - 100 >= 0) {
+			extension = 8;
+			shift = slant - 100;
+		}
+		if (extension <= 0) {
+			return;
+		}
+		// CharArrayWriter writer = new CharArrayWriter();
+
+		int charsPerColumn = buffer.length/columns;
+		int columnH = charsPerColumn * 16;
+		int afterColumns = columns * 8 + (shift > 0 ? (shift - 1 + columnH) : 0);
+		// buffer extend 8 times - a temperary buffer
+		char[] buffer_8 = new char[columns * 8 * charsPerColumn];
+		
+		// the  final extension and shift buffer
+		// mBuffer = new char[afterColumns * charsPerColumn];
+		Debug.d(TAG, "--->charsPerColumn: " + charsPerColumn + "  columnH: " + columnH + "  afterColumns: " + afterColumns + "  buffer.len: " + mBuffer.length);
+		for (int i = 0; i < buffer.length/charsPerColumn; i++) {
+			for (int j = 0; j < charsPerColumn; j++) {
+				buffer_8[i * 8 * charsPerColumn + j] = buffer[i * charsPerColumn + j];
+			}
+		}
+		if (shift == 0) {
+			mBuffer = buffer_8;
+			return;
+		}
+		
+		mBuffer = new char[afterColumns * charsPerColumn];
+		for (int i = 0; i < columns * 8; i++) {
+			for (int j = 0; j < columnH; j++) {
+				int rowShift = shift + j - 1;
+				int bit = j%16;
+				char data = buffer_8[i * charsPerColumn + j/16];
+				if ((data & (0x0001<< bit)) != 0) {
+					mBuffer[(i+rowShift)*charsPerColumn + j/16 ] |= (0x0001<< bit);
+				}	
+			}
+		}		
 	}
 
 }
