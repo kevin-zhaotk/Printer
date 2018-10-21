@@ -559,7 +559,7 @@ public class DataTask {
 			columns = segmentBuffer.getColumns() > columns?segmentBuffer.getColumns():columns;
 			hight = segmentBuffer.mHight * buffers.size();
 		}
-		
+		Debug.d(TAG, "--->columns: " + columns + "  hight: " + hight);
 		mBuffer = new char[columns * hight];
 		/*处理完之后重新合并为一个buffer, 因为涉及到坐标平移，所以不能对齐的段要补0*/
 		for (int j=0; j < columns; j++) {
@@ -569,6 +569,7 @@ public class DataTask {
 		}
 		
 		int slant = SystemConfigFile.getInstance(mContext).getParam(SystemConfigFile.INDEX_SLANT);
+		Debug.d(TAG, "--->slant: " + slant);
 		expendColumn(mBuffer, columns, slant);
 		
 	}
@@ -689,15 +690,15 @@ public class DataTask {
 		}
 		int extension = 0;
 		int shift = 0;
-		if (slant - 100 >= 0) {
+		Debug.d(TAG, "--->slant: " + slant);
+		if (slant >= 100 ) {
 			extension = 8;
 			shift = slant - 100;
-		}
-		if (extension <= 0) {
+		} else {
 			return;
 		}
 		// CharArrayWriter writer = new CharArrayWriter();
-
+		Debug.d(TAG, "--->extension: " + extension + " shift: " + shift);
 		int charsPerColumn = buffer.length/columns;
 		int columnH = charsPerColumn * 16;
 		int afterColumns = columns * 8 + (shift > 0 ? (shift - 1 + columnH) : 0);

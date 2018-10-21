@@ -336,7 +336,7 @@ public class BinInfo {
 		expend();
 
 		// column extension
-		expendColumn(8);
+//		expendColumn(8);
 
     	return extract(); // bmp.createScaledBitmap(bmp, columns, 150, true);
     }
@@ -393,7 +393,7 @@ public class BinInfo {
    		expend();
 
     	// column extension
-    	expendColumn(8);
+//    	expendColumn(8);
     	return extract();
     }
     
@@ -435,7 +435,7 @@ public class BinInfo {
     	expend();
 
    		// column extension
-   		expendColumn(8);
+//   		expendColumn(8);
     	return extract();
     }
     

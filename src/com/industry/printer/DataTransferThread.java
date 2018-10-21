@@ -104,6 +104,7 @@ public class DataTransferThread {
 		return mIndex;
 	}
 	
+
 	public void purge(final Context context) {
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			
@@ -130,6 +131,39 @@ public class DataTransferThread {
 				}
 				FpgaGpioOperation.clean();
 			}
+		});
+	}
+	
+	public void clean(final Context context) {
+		ThreadPoolManager.mThreads.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				DataTask task = new DataTask(context, null);
+				Debug.e(TAG, "--->task: " + task);
+				char[] buffer = task.preparePurgeBuffer();
+				
+				for (int i = 0; i < 20; i++) {
+					Debug.e(TAG, "--->buffer len: " + buffer.length);
+					FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
+					try {
+						Thread.sleep(3000 * 5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					FpgaGpioOperation.clean();
+					FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE2);
+					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
+					try {
+						Thread.sleep(3000 * 5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					FpgaGpioOperation.clean();
+				}
+			}
+			
 		});
 	}
 	

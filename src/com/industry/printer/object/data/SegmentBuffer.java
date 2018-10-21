@@ -93,8 +93,8 @@ public class SegmentBuffer {
 		mColumns += shift;
 
 		reverse(revert);
-
-		rotate(rotate);
+// 旋转功能已废弃
+//		rotate(rotate);
 
 		mRfid = RFIDManager.getInstance(mContext).getDevice(mType);
 	}
