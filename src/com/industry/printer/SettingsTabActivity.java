@@ -404,6 +404,11 @@ public static final String TAG="SettingsTabActivity";
 				CalendarDialog dialog = new CalendarDialog(this.getActivity(), R.layout.calendar_setting);
 				dialog.show();
 				break;
+
+			case R.id.btn_setting_clean:
+				DataTransferThread dThread = DataTransferThread.getInstance();
+				dThread.clean(mContext);
+				break;
 			default :
 				Debug.d(TAG, "===>unknown view clicked");
 				break;
