@@ -841,6 +841,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 					dispPreview(mPreBitmap);
 					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
 					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
+					refreshInk();
 					refreshCount();
 					mMsgFile.setText(mObjPath);
 

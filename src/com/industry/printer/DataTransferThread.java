@@ -227,6 +227,7 @@ public class DataTransferThread {
 				mDataTask.add(data);
 				data.prepareBackgroudBuffer();
 			}
+			setDotCount(task);
 			mNeedUpdate = true;
 		}
 		
