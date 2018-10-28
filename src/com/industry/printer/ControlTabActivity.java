@@ -2133,7 +2133,15 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                    			message.save();*/
 		                            	//文字生成赵工写好了，再测试
 		                            	this.sendmsg(getString(R.string.str_build_tlk_start));
-		                            	MakeTlk(msg);
+		                            	String[] parts = msg.split("\\|");
+		                            	for (int j = 0; j < parts.length; j++) {
+		                            		Debug.d(TAG, "--->parts[" + j + "] = " + parts[j]);
+										}
+		                            	
+		                            	if (parts != null || parts.length > 4) {
+		                            		MakeTlk(parts[3]);
+										}
+//		                            	MakeTlk(parts[3]);
 		                    			this.sendmsg(getString(R.string.str_build_tlk_ok));
 		                            }
 		                            else if(msg.indexOf("800")>=0)
@@ -2322,10 +2330,14 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	}
 	private void MakeTlk(String msg)
 	{
-		String tlk =msg.substring(msg.indexOf("/"), msg.lastIndexOf("/"));
-		String Name=tlk.substring(msg.indexOf("/"),tlk.lastIndexOf("/"));
-		Name=Name.substring(Name.lastIndexOf("/")+1);
-		tlk=tlk.replace("msg", "MSG");
+		Debug.d(TAG, "--->msg: " + msg);
+		File file = new File(msg);
+		if (file == null) {
+			return;
+		}
+		String tlk = file.getAbsolutePath();
+		String Name = file.getParentFile().getName();
+		Debug.d(TAG, "--->tlk: " + tlk + "   Name = " + Name);
 		MessageForPc message = new MessageForPc(mContext, tlk,Name);
 		message.reCreate(mContext);
 	}
