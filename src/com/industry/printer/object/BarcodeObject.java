@@ -229,6 +229,9 @@ public class BarcodeObject extends BaseObject {
 	
 	@Override
 	public Bitmap getpreviewbmp() {
+		if (mBinmap == null || mWidth == 0 || mHeight == 0) {
+			getScaledBitmap(mContext);
+		}
 		return Bitmap.createScaledBitmap(mBitmap, (int) mWidth, (int) mHeight, false);
 	}
 
