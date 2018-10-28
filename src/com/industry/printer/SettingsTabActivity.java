@@ -113,6 +113,7 @@ public static final String TAG="SettingsTabActivity";
 	public RelativeLayout 		mPagePrev;
 	public RelativeLayout 		mPageNext;
 	public RelativeLayout		mTimeset;
+	public RelativeLayout		mClean;
 
 	public Context 			mContext;
 	
@@ -175,6 +176,9 @@ public static final String TAG="SettingsTabActivity";
 		mSettings = (RelativeLayout) getView().findViewById(R.id.btn_system_setting);
 		mSettings.setOnClickListener(this);
 		mSettings.setOnTouchListener(this);
+		
+		mClean = (RelativeLayout) getView().findViewById(R.id.btn_setting_clean);
+		mClean.setOnClickListener(this);
 		
 		//mScrollView = (ScrollView) getView().findViewById(R.id.setting_frame);
 		
@@ -425,6 +429,7 @@ public static final String TAG="SettingsTabActivity";
 			case R.id.btn_setting_upgrade:
 			case R.id.btn_setting_timeset:
 			case R.id.btn_system_setting:
+//			case R.id.btn_setting_clean:
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					PWMAudio.Play();
 				}
