@@ -100,6 +100,7 @@ public class SystemConfigFile{
 	
 	public static final int INDEX_DAY_START = 35;
 	
+	public static final int INDEX_HEAD_TYPE = 30;
 	public static final int INDEX_SLANT = 35;
 	
 	public static final int INDEX_SPECIFY_HEADS = 42;
@@ -1033,8 +1034,8 @@ public class SystemConfigFile{
 	
 	public int getHeads() {
 		int heads = 1;
-		Debug.d(TAG, "--->:getHeads: " + mParam[30]);
-		switch (mParam[30]) {
+		Debug.d(TAG, "--->:getHeads: " + mParam[INDEX_HEAD_TYPE]);
+		switch (mParam[INDEX_HEAD_TYPE]) {
 		case MessageType.MESSAGE_TYPE_12_7:
 		case MessageType.MESSAGE_TYPE_12_7_S:
 		case MessageType.MESSAGE_TYPE_16_3:
