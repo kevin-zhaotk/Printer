@@ -106,13 +106,19 @@ public class DataTransferThread {
 	
 
 	public void purge(final Context context) {
+		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+		final int head = config.getParam(SystemConfigFile.INDEX_HEAD_TYPE);
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				DataTask task = new DataTask(context, null);
 				Debug.e(TAG, "--->task: " + task);
-				char[] buffer = task.preparePurgeBuffer();
+				String purgeFile = "purge/single.bin";
+				if (head == MessageType.MESSAGE_TYPE_16_DOT || head == MessageType.MESSAGE_TYPE_32_DOT) {
+					purgeFile = "purge/bigdot.bin";
+				}
+				char[] buffer = task.preparePurgeBuffer(purgeFile);
 				Debug.e(TAG, "--->buffer len: " + buffer.length);
 				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
 				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
@@ -135,13 +141,19 @@ public class DataTransferThread {
 	}
 	
 	public void clean(final Context context) {
+		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
+		final int head = config.getParam(SystemConfigFile.INDEX_HEAD_TYPE);
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				DataTask task = new DataTask(context, null);
 				Debug.e(TAG, "--->task: " + task);
-				char[] buffer = task.preparePurgeBuffer();
+				String purgeFile = "purge/single.bin";
+				if (head == MessageType.MESSAGE_TYPE_16_DOT || head == MessageType.MESSAGE_TYPE_32_DOT) {
+					purgeFile = "purge/bigdot.bin";
+				}
+				char[] buffer = task.preparePurgeBuffer(purgeFile);
 				
 				for (int i = 0; i < 20; i++) {
 					Debug.e(TAG, "--->buffer len: " + buffer.length);

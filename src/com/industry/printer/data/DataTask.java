@@ -625,10 +625,10 @@ public class DataTask {
 	 * 用於清洗的buffer
 	 * @return
 	 */
-	public char[] preparePurgeBuffer() {
+	public char[] preparePurgeBuffer(String bin) {
 		InputStream stream;
 		try {
-			stream = mContext.getAssets().open("purge/single.bin");
+			stream = mContext.getAssets().open(bin);
 			mBinInfo = new BinInfo(stream, 1);
 			char[] buffer = mBinInfo.getBgBuffer();
 			stream.close();
