@@ -276,6 +276,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 
 	public static final int MESSAGE_OPEN_NEXT_MSG_SUCCESS = 20;
 
+	public static final int MESSAGE_OPEN_PREVIEW = 21;
 	/**
 	 * the bitmap for preview
 	 */
@@ -533,7 +534,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		if (f == null || f.isEmpty() || !new File(ConfigPath.getTlkDir(f)).exists()) {
 			return;
 		}
-		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_PREVIEW);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", f);
 		msg.setData(bundle);
@@ -545,7 +546,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 	 * @param message
 	 */
 	public void loadAndPrint(String message) {
-		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		Message msg = mHandler.obtainMessage(MESSAGE_OPEN_PREVIEW);
 		Bundle bundle = new Bundle();
 		bundle.putString("file", message);
 		bundle.putBoolean("printAfterLoad", true);
@@ -727,35 +728,50 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		}
 	}
 	
+	private boolean messageNew = false;
+	private void setMessage(String message) {
+		mObjPath = message;
+		messageNew = true;
+	}
 	public int testdata=0;
 	public Handler mHandler = new Handler(){
 		public void handleMessage(Message msg) {
 			switch(msg.what)
 			{
-				case MESSAGE_OPEN_TLKFILE:		//
-					progressDialog();
+				case MESSAGE_OPEN_PREVIEW:
+					String tlk = msg.getData().getString("file");
+					setMessage(tlk);
+					if (mPreBitmap != null) {
+						BinFromBitmap.recyleBitmap(mPreBitmap);
+					}
+					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
 					
-					mObjPath = msg.getData().getString("file");
-
+					dispPreview(mPreBitmap);
+					mMsgFile.setText(mObjPath);
+					mSysconfig.saveLastMsg(mObjPath);
 					final boolean printAfterLoad = msg.getData().getBoolean("printAfterLoad", false);
-
-					//load next during printing
+					if (printAfterLoad) {
+						mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
+					}
+					break;
+				case MESSAGE_OPEN_TLKFILE:		//
 					final boolean printNext = msg.getData().getBoolean("printNext", false);
-
+					if (!printNext && !messageNew ) {
+						mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
+						break;
+					}
+					progressDialog();
+					messageNew = false;
 					Debug.d(TAG, "open tlk :" + mObjPath );
 					//startPreview();
 					if (mObjPath == null) {
 						break;
 					}
-					
-					//鏂规2锛氫粠tlk鏂囦欢閲嶆柊缁樺埗鍥剧墖锛岀劧鍚庤В鏋愮敓鎴恇uffer
-					//parseTlk(f);
-					//initBgBuffer();
 					mMsgTask.clear();
 					new Thread() {
 						@Override
 						public void run() {
-							mMsgTask.clear();
+//							mMsgTask.clear();
 							/**鑾峰彇鎵撳嵃缂╃暐鍥撅紝鐢ㄤ簬棰勮灞曠幇**/
 							if (mObjPath.startsWith("Group-")) {   // group messages
 								List<String> paths = MessageTask.parseGroup(mObjPath);
@@ -772,11 +788,6 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 								return;
 							}
 							mHandler.sendEmptyMessage(MESSAGE_OPEN_MSG_SUCCESS);
-							if (printAfterLoad) {
-								mHandler.sendEmptyMessageDelayed(MESSAGE_PRINT_CHECK_UID, 1000);
-							}
-
-
 						}
 					}.start();
 					sendToRemote(mContext.getString(R.string.str_tlk_opening));
@@ -795,7 +806,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 						public void onClick(String content) {
 							Debug.d(TAG, "--->group: " + content);
 							// save group information & send message to handle opening
-							Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+							Message msg = mHandler.obtainMessage(MESSAGE_OPEN_PREVIEW);
 							Bundle b = new Bundle();
 							b.putString("file", content);
 							msg.setData(b);
@@ -821,37 +832,20 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				case MESSAGE_OPEN_MSG_SUCCESS:
 					
 					sendToRemote(mContext.getString(R.string.str_prepared));
-
-					if (mPreBitmap != null) {
-						BinFromBitmap.recyleBitmap(mPreBitmap);
-					}
 					//鏂规1锛氫粠bin鏂囦欢鐢熸垚buffer
 					initDTThread();
 					Debug.d(TAG, "--->init thread ok");
-					mPreBitmap = BitmapFactory.decodeFile(MessageTask.getPreview(mObjPath));
-					// mPreBitmap = mDTransThread.mDataTask.get(0).getPreview();
-					
-					/*濡傛灉鍦栫墖灏哄閬庡ぇ灏辩劇娉曢’绀�*/
-//					if (mPreBitmap.getWidth() > 1280) {
-//						Bitmap b = Bitmap.createBitmap(mPreBitmap, 0, 0, 1280, mPreBitmap.getHeight());
-//						BinFromBitmap.recyleBitmap(mPreBitmap);
-//						mPreBitmap = b;
-//					}
-					//mMsgPreImg.setImageBitmap(mPreBitmap);
-					dispPreview(mPreBitmap);
-					// BinCreater.saveBitmap(mPreBitmap, "prev.png");
-					// mMsgPreImg.setImageURI(Uri.parse("file://" + "/mnt/usbhost0/MSG1/100/1.bmp"));
 					refreshInk();
 					refreshCount();
-					mMsgFile.setText(mObjPath);
-
-					mSysconfig.saveLastMsg(mObjPath);
 					dismissProgressDialog();
+					
+					if (Configs.IGNORE_RFID) {
+						mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
+					} else {
+						mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
+					}
 					if("100".equals(PrnComd))	
-					{
-						 msg = mHandler.obtainMessage(MESSAGE_PRINT_START);
-						 mHandler.sendMessage(msg);
-						
+					{	
 						PrnComd="";
 					}
 					break;
@@ -1302,8 +1296,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTvOpen.setTextColor(Color.DKGRAY);
 				mTVPrinting.setVisibility(View.VISIBLE);
 				mTVStopped.setVisibility(View.GONE);
-				mBtnClean.setEnabled(false);
-				mTvClean.setTextColor(Color.DKGRAY);
+//				mBtnClean.setEnabled(false);
+//				mTvClean.setTextColor(Color.DKGRAY);
 
 				// mMsgNext.setClickable(false);
 				// mMsgPrev.setClickable(false);
@@ -1318,8 +1312,8 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 				mTvOpen.setTextColor(Color.BLACK);
 				mTVPrinting.setVisibility(View.GONE);
 				mTVStopped.setVisibility(View.VISIBLE);
-				mBtnClean.setEnabled(true);
-				mTvClean.setTextColor(Color.BLACK);
+//				mBtnClean.setEnabled(true);
+//				mTvClean.setTextColor(Color.BLACK);
 
 				// mMsgNext.setClickable(true);
 				// mMsgPrev.setClickable(true);
@@ -1578,11 +1572,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		// ExtGpio.playClick();
 		switch (v.getId()) {
 			case R.id.StartPrint:
-				if (Configs.IGNORE_RFID) {
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_START);
-				} else {
-					mHandler.sendEmptyMessage(MESSAGE_PRINT_CHECK_UID);
-				}
+				mHandler.sendEmptyMessage(MESSAGE_OPEN_TLKFILE);
 				break;
 			case R.id.StopPrint:
 				// mHandler.removeMessages(MESSAGE_PAOMADENG_TEST);
@@ -1604,7 +1594,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 							return;
 						}
 						/** 如果选择内容为多个，表示需要新建组 */
-						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+						Message msg = mHandler.obtainMessage(MESSAGE_OPEN_PREVIEW);
 						Bundle bundle = new Bundle();
 						if (f.size() > 1) {
 							msg = mHandler.obtainMessage(MESSAGE_OPEN_GROUP);
@@ -2039,7 +2029,7 @@ public class ControlTabActivity extends Fragment implements OnClickListener, Ink
 		                                 	int nRet=Paths.ListDirFiles( Apath[3]);
 		                                 	//if(nRet==1)
 		                                 	//{
-		                                 	Message msg = mHandler.obtainMessage(MESSAGE_OPEN_TLKFILE);
+		                                 	Message msg = mHandler.obtainMessage(MESSAGE_OPEN_PREVIEW);
 		                                 	Bundle bundle = new Bundle();
 		         							bundle.putString("file", mObjPath);  // f表示信息名称
 		         							msg.setData(bundle);
