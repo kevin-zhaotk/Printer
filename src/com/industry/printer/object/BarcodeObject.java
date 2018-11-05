@@ -477,38 +477,45 @@ public class BarcodeObject extends BaseObject {
     }
 	
 	public Bitmap getPrintBitmap(int totalW, int totalH, int w, int h, int y) {
-		BitMatrix matrix=null;
-		Debug.d(TAG, "--->getPrintBitmap : totalW = " + totalW + "  w = " + w);
-		MultiFormatWriter writer = new MultiFormatWriter();
-		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
-        hints.put(EncodeHintType.CHARACTER_SET, CODE);
-        try {
-			matrix = writer.encode(mContent,
-					BarcodeFormat.QR_CODE, w, w, hints);
-			matrix = deleteWhite(matrix);
-        } catch (Exception e) {
-        	return null;
-        }
-		int width = matrix.getWidth();
-		int height = matrix.getHeight();
-		int[] pixels = new int[width * height];
-		for (int y1 = 0; y1 < height; y1++) 
-		{
-			for (int x = 0; x < width; x++) 
-			{
-				if (matrix.get(x, y1)) 
-				{
-					pixels[y1 * width + x] = 0xff000000;
-				} else {
-					pixels[y1 * width + x] = 0xffffffff;
-				}
-			}
-		}
+//		BitMatrix matrix=null;
+//		Debug.d(TAG, "--->getPrintBitmap : totalW = " + totalW + "  w = " + w);
+//		MultiFormatWriter writer = new MultiFormatWriter();
+//		Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();  
+//        hints.put(EncodeHintType.CHARACTER_SET, CODE);
+//        try {
+//			matrix = writer.encode(mContent,
+//					BarcodeFormat.QR_CODE, w, w, hints);
+//			matrix = deleteWhite(matrix);
+//        } catch (Exception e) {
+//        	return null;
+//        }
+//		int width = matrix.getWidth();
+//		int height = matrix.getHeight();
+//		int[] pixels = new int[width * height];
+//		for (int y1 = 0; y1 < height; y1++) 
+//		{
+//			for (int x = 0; x < width; x++) 
+//			{
+//				if (matrix.get(x, y1)) 
+//				{
+//					pixels[y1 * width + x] = 0xff000000;
+//				} else {
+//					pixels[y1 * width + x] = 0xffffffff;
+//				}
+//			}
+//		}
 		Bitmap bg = Bitmap.createBitmap(totalW, totalH, Configs.BITMAP_CONFIG);
 		Canvas canvas = new Canvas(bg);
-		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
+//		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		
-		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+//		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+		
+		Bitmap bitmap = null;
+		if ("QR".equalsIgnoreCase(mFormat)) {
+			bitmap = drawQR(mContent, w, w);
+		} else {
+			bitmap = drawDataMatrix(mContent, w, w);
+		}
 		canvas.drawColor(Color.WHITE);
 		canvas.drawBitmap(Bitmap.createScaledBitmap(bitmap, w, h, true), 0, y, mPaint);
 		return bg;

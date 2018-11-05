@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.http.impl.conn.IdleConnectionHandler;
+
 import android.R.color;
 import android.R.integer;
 import android.app.PendingIntent.OnFinished;
@@ -108,36 +110,42 @@ public class DataTransferThread {
 	public void purge(final Context context) {
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
 		final int head = config.getParam(SystemConfigFile.INDEX_HEAD_TYPE);
+		final boolean dotHd = (head == MessageType.MESSAGE_TYPE_16_DOT || head == MessageType.MESSAGE_TYPE_32_DOT);
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				DataTask task = new DataTask(context, null);
-				Debug.e(TAG, "--->task: " + task);
+				Debug.e(TAG, "--->task: " + task + "   dotHD: " + dotHd);
+				
 				String purgeFile = "purge/single.bin";
-				if (head == MessageType.MESSAGE_TYPE_16_DOT || head == MessageType.MESSAGE_TYPE_32_DOT) {
+				if (dotHd) {
 					purgeFile = "purge/bigdot.bin";
 				}
+				
 				char[] buffer = task.preparePurgeBuffer(purgeFile);
-				Debug.e(TAG, "--->buffer len: " + buffer.length);
-				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
-				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				if (dotHd) {
+					purge(mContext, task, buffer, FpgaGpioOperation.SETTING_TYPE_PURGE1);
+					return;
 				}
-				FpgaGpioOperation.clean();
-				FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE2);
-				FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				FpgaGpioOperation.clean();
+				purge(mContext, task, buffer, FpgaGpioOperation.SETTING_TYPE_PURGE1);
+				purge(mContext, task, buffer, FpgaGpioOperation.SETTING_TYPE_PURGE2);
 			}
 		});
+	}
+	
+	private void purge(Context context, DataTask task, char[] buffer, int purgeType) {
+		
+		Debug.e(TAG, "--->buffer len: " + buffer.length);
+		FpgaGpioOperation.updateSettings(context, task, purgeType);
+		FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		FpgaGpioOperation.clean();
 	}
 	
 	public void clean(final Context context) {
@@ -157,6 +165,7 @@ public class DataTransferThread {
 				
 				for (int i = 0; i < 20; i++) {
 					Debug.e(TAG, "--->buffer len: " + buffer.length);
+					
 					FpgaGpioOperation.updateSettings(context, task, FpgaGpioOperation.SETTING_TYPE_PURGE1);
 					FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_PURGE, buffer, buffer.length*2);
 					try {
