@@ -180,9 +180,11 @@ public class BarcodeObject extends BaseObject {
 		mSource  = dynamic;
 		if (dynamic) {
 			mName = mContext.getString(R.string.object_dynamic_qr);
+			setContent("dynamic");
 		} else {
 			mName = mContext.getString(R.string.object_bar);
 		}
+		
 	}
 	
 	@Override

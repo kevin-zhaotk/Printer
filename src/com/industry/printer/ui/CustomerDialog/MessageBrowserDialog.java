@@ -257,7 +257,11 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				break;
 			case R.id.btn_delete:
 				mFileAdapter.delete();
+				if (mMode) {
+					clearMultiSelect();
+				}
 				break;
+				
 			case R.id.btn_multi_select:
 				switchMultiSelect();
 
@@ -300,6 +304,15 @@ public class MessageBrowserDialog extends CustomerDialogBase implements android.
 				mVSelected = view;
 			}*/
 
+	}
+
+
+	private void clearMultiSelect() {
+		
+		mMode = false;
+		mTitles.clear();
+		mFileAdapter.setMode(mMode);
+		mFileAdapter.notifyDataSetChanged();
 	}
 
 	private void switchMultiSelect() {

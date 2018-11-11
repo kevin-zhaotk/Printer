@@ -4,9 +4,11 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.industry.printer.BinInfo;
 import com.industry.printer.MessageTask;
@@ -386,18 +388,12 @@ public class MessageListAdater extends BaseAdapter {
 				Debug.d(TAG, "---transparent");
 				mHolder.mMark.setVisibility(View.GONE);
 			}
+			mHolder.mCheck.setVisibility(View.GONE);
 		}
 	 	dispPreview(Bmp_bak);	
 		return convertView;
 	}
 
-	
-	
-	
-	
-	
-	
-	
 	
 	private void dispPreview(Bitmap bmp) {
 		int x=0,y=0;
@@ -443,6 +439,14 @@ public class MessageListAdater extends BaseAdapter {
 	 * delete the selected message
 	 */
 	public void delete() {
+		if (mMultiMode) {
+			deleteMulti();
+		} else {
+			deleteSingle();
+		}
+	}
+	
+	public void deleteSingle() {
 		if (mSelected < 0 || mSelected >= mCntList.size()) {
 			return;
 		}
@@ -460,6 +464,33 @@ public class MessageListAdater extends BaseAdapter {
 		mCntList.remove(mSelected);
 		notifyDataSetChanged();
 	}
+	
+	public void deleteMulti() {
+		if (mMultiSelected == null) {
+			return;
+		}
+		Iterator<String> keys = mMultiSelected.keySet().iterator();
+		
+		while (keys.hasNext()) {
+			int index = Integer.parseInt(keys.next());
+			HashMap<String, Object> item = (HashMap<String, Object>)mCntList.get(index);
+			String title = (String) item.get(mKeys[0]);
+			File file = new File(ConfigPath.getTlkDir(title));
+			if (file.exists()) {
+				File[] list = file.listFiles();
+				for (int i = 0; i < list.length; i++) {
+					File f = list[i];
+					f.delete();
+				} 
+			}
+			file.delete();
+			mCntList.remove(index);
+		}
+		mMultiSelected.clear();
+//		mMultiMode = false;
+//		notifyDataSetChanged();
+	}
+	
 	public void Scroll(int left_rigt) 
 	{
 		
