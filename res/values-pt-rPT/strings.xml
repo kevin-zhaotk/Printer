@@ -92,6 +92,14 @@
 	    <item>33 mm Xaar dual</item>
 	    <item>38.1 mm HP Triple</item>
 	    <item>50.8 mm HP quadruple</item>
+	    <item>32 dot</item>
+	    <item>16 dot</item>
+	    <item>--</item>
+	    <item>25.4mm fast ONE INCH</item>
+	    <item>--</item>
+	    <item>25.4mm x2 fast</item>
+	    <item>9mm</item>
+	    <item>nova</item>
 	</string-array>
 	
 	<string-array name="strFontArray">

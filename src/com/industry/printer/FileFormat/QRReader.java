@@ -116,6 +116,7 @@ public class QRReader {
 		try {
 			String line = mReader.readLine();
 			if (TextUtils.isEmpty(line)) {
+				Debug.e("XXX", "--->read out null");
 				return null;
 			}
 			int index = line.indexOf(",");

@@ -6,8 +6,10 @@ import java.util.logging.Logger;
 
 import org.apache.http.impl.conn.IdleConnectionHandler;
 
+import android.R.bool;
 import android.R.color;
 import android.R.integer;
+import android.app.LauncherActivity;
 import android.app.PendingIntent.OnFinished;
 import android.content.Context;
 import android.os.Handler;
@@ -106,11 +108,20 @@ public class DataTransferThread {
 		return mIndex;
 	}
 	
-
+	boolean needRestore = false;
+	
 	public void purge(final Context context) {
 		SystemConfigFile config = SystemConfigFile.getInstance(mContext);
 		final int head = config.getParam(SystemConfigFile.INDEX_HEAD_TYPE);
 		final boolean dotHd = (head == MessageType.MESSAGE_TYPE_16_DOT || head == MessageType.MESSAGE_TYPE_32_DOT);
+		
+		if (isRunning()) {
+			FpgaGpioOperation.uninit();
+			finish();
+			FpgaGpioOperation.clean();
+			needRestore = true;
+		}
+		
 		ThreadPoolManager.mThreads.execute(new Runnable() {
 			
 			@Override
@@ -130,7 +141,14 @@ public class DataTransferThread {
 				}
 				purge(mContext, task, buffer, FpgaGpioOperation.SETTING_TYPE_PURGE1);
 				purge(mContext, task, buffer, FpgaGpioOperation.SETTING_TYPE_PURGE2);
+			
+				if (needRestore) {
+					launch(mContext);
+					needRestore = false;
+				}
+				
 			}
+		
 		});
 	}
 	

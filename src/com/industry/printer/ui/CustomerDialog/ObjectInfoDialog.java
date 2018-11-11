@@ -319,6 +319,9 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 			    mShow = (CheckBox) findViewById(R.id.check_Num_show);
 		    	//mContent.setEnabled(false);
 			    mTextsize = (EditText) findViewById(R.id.et_text_size);
+			    if (mObject.mSource) {
+					mContent.setEnabled(false);
+				}
 			} else if (mObject instanceof LetterHourObject) {
 				mContent.setEnabled(false);
 			} else if (mObject instanceof WeekOfYearObject) {
@@ -400,7 +403,10 @@ public class ObjectInfoDialog extends Dialog implements android.view.View.OnClic
 						}
 						else if(mObject instanceof BarcodeObject)
 						{
-							mObject.setContent(mContent.getText().toString());
+							if (!mObject.mSource) {
+								mObject.setContent(mContent.getText().toString());
+							}
+							
 							((BarcodeObject) mObject).setCode(mCode.getText().toString());
 							((BarcodeObject) mObject).setShow(mShow.isChecked());
 							((BarcodeObject) mObject).setTextsize(Integer.parseInt(mTextsize.getText().toString()));
