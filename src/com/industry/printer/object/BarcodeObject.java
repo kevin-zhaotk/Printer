@@ -99,6 +99,7 @@ public class BarcodeObject extends BaseObject {
 			mId = BaseObject.OBJECT_TYPE_QR;
 		} else if ("DM".equals(code)) {
 			mCode = 8;
+			mId = BaseObject.OBJECT_TYPE_QR;
 		} else {
 			return;
 		}
@@ -511,7 +512,7 @@ public class BarcodeObject extends BaseObject {
 //		Bitmap bitmap = Bitmap.createBitmap(width, height, Configs.BITMAP_CONFIG);
 		
 //		bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-		
+		Debug.d(TAG, "--->mFormat: " + mFormat);
 		Bitmap bitmap = null;
 		if ("QR".equalsIgnoreCase(mFormat)) {
 			bitmap = drawQR(mContent, w, w);
@@ -796,7 +797,9 @@ public class BarcodeObject extends BaseObject {
 				.append("^")
 				.append(BaseObject.boolToFormatString(mDragable, 3))
 				.append("^")
-				.append("000^000^000^")
+				.append("000^")
+				.append("DM".equalsIgnoreCase(mFormat) ? "001" : "000")
+				.append("^000^")
 				.append(BaseObject.boolToFormatString(mReverse, 3))
 				.append("^")
 				.append("000")
