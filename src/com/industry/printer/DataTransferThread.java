@@ -552,13 +552,9 @@ public class DataTransferThread {
 //							Debug.d(TAG, "===>buffer getPrintbuffer finish");
 //							isFirst = false;
 //						}
-						Debug.d(TAG, "===>buffer getPrintbuffer");
+						next();
 						buffer = mDataTask.get(index()).getPrintBuffer();
-						Debug.d(TAG, "===>buffer getPrintbuffer finish");
-						//BinCreater.saveBin("/mnt/sdcard/print_" + (testCount++) + ".bin", buffer, cH);
-						Debug.d(TAG, "===>write Data");
 						FpgaGpioOperation.writeData(FpgaGpioOperation.FPGA_STATE_OUTPUT, buffer, buffer.length * 2);
-						Debug.d(TAG, "===>write Data finish");
 						last = SystemClock.currentThreadTimeMillis();
 						countDown();
 						mInkListener.onCountChanged();
@@ -566,8 +562,6 @@ public class DataTransferThread {
 						if (mCallback != null) {
 							mCallback.onComplete();
 						}
-						next();
-						
 					}
 				}
 

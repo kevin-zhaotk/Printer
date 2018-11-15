@@ -484,8 +484,8 @@ public class MessageListAdater extends BaseAdapter {
 				} 
 			}
 			file.delete();
-			mCntList.remove(index);
 		}
+		mCntList.clear();
 		mMultiSelected.clear();
 //		mMultiMode = false;
 //		notifyDataSetChanged();
