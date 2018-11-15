@@ -73,7 +73,7 @@ public class QRReader {
 		
 		try {
 			if (!last.exists()) {
-				mRow = 1;
+				mRow = 0;
 				last.createNewFile();
 			}
 			FileReader reader = new FileReader(last);
@@ -82,11 +82,11 @@ public class QRReader {
 			try {
 				mRow = Integer.parseInt(row);
 			} catch (Exception e) {
-				mRow = 1;
+				mRow = 0;
 			}
 			Debug.d("XXX", "--->row: " + mRow);
-			if (mRow <= 0) {
-				mRow = 1;
+			if (mRow < 0) {
+				mRow = 0;
 			}
 			String path = null;
 			if (new File(Configs.QR_CSV).exists()) {
